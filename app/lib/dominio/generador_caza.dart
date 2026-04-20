@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'distrito.dart';
 import 'fragmento_en_tejado.dart';
+import 'mapeo_habilidades_puzzle.dart'
+    show operadorParaSkillId, tipoParaSkillId;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 
@@ -21,6 +23,31 @@ class GeneradorCaza {
 
   GeneradorCaza({int? semilla, this.distrito}) : _azar = math.Random(semilla);
 
+  /// Variante dirigida por skill_id: el motor adaptativo decide qué
+  /// habilidad tocar y este generador produce un Fragmento del tipo
+  /// correspondiente. Si el skill no tiene tipo mapeado, cae al
+  /// comportamiento normal.
+  FragmentoEnTejado siguienteParaSkill({
+    required String idHabilidad,
+    required int esquirlasAcumuladas,
+    required DateTime ahora,
+  }) {
+    final tipoObjetivo = tipoParaSkillId(idHabilidad);
+    if (tipoObjetivo == null) {
+      return siguiente(
+        esquirlasAcumuladas: esquirlasAcumuladas,
+        ahora: ahora,
+      );
+    }
+    final dificultad = _nivelDificultadSegunEsquirlas(esquirlasAcumuladas);
+    return _generarDeTipo(
+      tipo: tipoObjetivo,
+      dificultad: dificultad,
+      ahora: ahora,
+      operadorPreferido: operadorParaSkillId(idHabilidad),
+    );
+  }
+
   FragmentoEnTejado siguiente({
     required int esquirlasAcumuladas,
     required DateTime ahora,
@@ -29,6 +56,19 @@ class GeneradorCaza {
     final tipo = distrito != null
         ? _elegirTipoSegunDistrito(distrito!, dificultad)
         : _elegirTipo(dificultad);
+    return _generarDeTipo(
+      tipo: tipo,
+      dificultad: dificultad,
+      ahora: ahora,
+    );
+  }
+
+  FragmentoEnTejado _generarDeTipo({
+    required TipoFragmentoEnTejado tipo,
+    required int dificultad,
+    required DateTime ahora,
+    OperadorAritmetico? operadorPreferido,
+  }) {
 
     if (tipo == TipoFragmentoEnTejado.decimal) {
       final decimalElegido =
@@ -101,7 +141,10 @@ class GeneradorCaza {
     }
 
     if (tipo == TipoFragmentoEnTejado.operacionDecimal) {
-      final (textoA, textoB, operador) = _elegirOperacionDecimal(dificultad);
+      final (textoA, textoB, operador) = _elegirOperacionDecimal(
+        dificultad,
+        operadorPreferido: operadorPreferido,
+      );
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -120,7 +163,7 @@ class GeneradorCaza {
     }
 
     if (tipo == TipoFragmentoEnTejado.dual) {
-      final operador = _elegirOperadorDual(dificultad);
+      final operador = operadorPreferido ?? _elegirOperadorDual(dificultad);
       final (numA, denA, numB, denB) =
           _elegirSumandosDual(dificultad, operador);
       return FragmentoEnTejado(
@@ -246,15 +289,21 @@ class GeneradorCaza {
   /// Elige una operación decimal al azar: dos decimales amigables
   /// y un operador. Los resultados son decimales limpios por diseño
   /// (el generador de la pantalla re-evalúa desde los valores dados).
-  (String, String, OperadorAritmetico) _elegirOperacionDecimal(int dificultad) {
+  (String, String, OperadorAritmetico) _elegirOperacionDecimal(
+    int dificultad, {
+    OperadorAritmetico? operadorPreferido,
+  }) {
     final operadoresPorDificultad = <OperadorAritmetico>[
       OperadorAritmetico.suma,
       OperadorAritmetico.resta,
       if (dificultad >= 5) OperadorAritmetico.producto,
       if (dificultad >= 6) OperadorAritmetico.division,
     ];
-    final operador = operadoresPorDificultad[
-        _azar.nextInt(operadoresPorDificultad.length)];
+    final operador = operadorPreferido != null &&
+            operadoresPorDificultad.contains(operadorPreferido)
+        ? operadorPreferido
+        : operadoresPorDificultad[
+            _azar.nextInt(operadoresPorDificultad.length)];
 
     // Curado corto de casos por operador.
     switch (operador) {

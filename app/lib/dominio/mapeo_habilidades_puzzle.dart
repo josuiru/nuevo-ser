@@ -1,5 +1,84 @@
 import 'fragmento_en_tejado.dart';
 
+/// Conjunto de skill_ids del doc 02 que el MVP sí sabe plantear hoy
+/// (tiene algún TipoFragmentoEnTejado mapeado). El selector solo
+/// elige entre estos; los demás están documentados pero pendientes de
+/// diseño de puzzle.
+const Set<String> skillsConPuzzleImplementado = {
+  'FR.01',
+  'FR.09',
+  'FR.12',
+  'FR.14',
+  'FR.15',
+  'FR.16',
+  'FR.17',
+  'FR.18',
+  'FR.19',
+  'FR.20',
+  'FR.21',
+  'DEC.04',
+  'DEC.05',
+  'DEC.06',
+  'DEC.07',
+  'DEC.08',
+  'PROP.02',
+  'PROP.04',
+};
+
+/// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
+/// Si no hay mapeo, devuelve null (no debería ocurrir si el selector
+/// filtra por [skillsConPuzzleImplementado]).
+TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
+  if (skillId == 'FR.09') return TipoFragmentoEnTejado.espejo;
+  if (skillId == 'FR.12' || skillId == 'FR.13') {
+    return TipoFragmentoEnTejado.impropio;
+  }
+  if (skillId == 'FR.16' ||
+      skillId == 'FR.17' ||
+      skillId == 'FR.19' ||
+      skillId == 'FR.21') {
+    return TipoFragmentoEnTejado.dual;
+  }
+  if (skillId == 'DEC.08') return TipoFragmentoEnTejado.decimal;
+  if (skillId == 'DEC.04' ||
+      skillId == 'DEC.05' ||
+      skillId == 'DEC.06' ||
+      skillId == 'DEC.07') {
+    return TipoFragmentoEnTejado.operacionDecimal;
+  }
+  if (skillId == 'PROP.04') return TipoFragmentoEnTejado.porcentaje;
+  if (skillId == 'PROP.01' ||
+      skillId == 'PROP.02' ||
+      skillId == 'PROP.03') {
+    return TipoFragmentoEnTejado.proporcional;
+  }
+  if (skillId.startsWith('FR.')) return TipoFragmentoEnTejado.unitario;
+  return null;
+}
+
+/// Para Duales y OpDecimal, el operador concreto a forzar según
+/// skill_id. Null si la skill no exige operador específico.
+OperadorAritmetico? operadorParaSkillId(String skillId) {
+  switch (skillId) {
+    case 'FR.16':
+    case 'DEC.04':
+      return OperadorAritmetico.suma;
+    case 'FR.17':
+      return OperadorAritmetico.resta;
+    case 'FR.19':
+    case 'FR.18':
+    case 'DEC.05':
+    case 'DEC.06':
+      return OperadorAritmetico.producto;
+    case 'FR.21':
+    case 'FR.20':
+    case 'DEC.07':
+      return OperadorAritmetico.division;
+    default:
+      return null;
+  }
+}
+
 /// Dado un [FragmentoEnTejado], devuelve el id de la habilidad
 /// principal que el puzzle asociado ejercita, según el mapa
 /// pedagógico (docs/02).

@@ -13,6 +13,7 @@ import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
+import '../dominio/selector_habilidades.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
@@ -52,6 +53,7 @@ class _PantallaCazaState extends State<PantallaCaza>
 
   late final GeneradorCaza _generador;
   MotorMaestria? _motorMaestria;
+  SelectorHabilidades? _selectorHabilidades;
   final List<FragmentoEnTejado> _activos = [];
   final Map<String, DateTime> _instanteAperturaPuzzle = {};
 
@@ -84,6 +86,10 @@ class _PantallaCazaState extends State<PantallaCaza>
       catalogo: catalogo,
       cargarEstado: widget.repositorio.cargarEstadoHabilidad,
       guardarEstado: widget.repositorio.guardarEstadoHabilidad,
+    );
+    _selectorHabilidades = SelectorHabilidades(
+      catalogo: catalogo,
+      cargarEstado: widget.repositorio.cargarEstadoHabilidad,
     );
   }
 
@@ -120,16 +126,48 @@ class _PantallaCazaState extends State<PantallaCaza>
     _temporizadorSpawn = Timer(Duration(milliseconds: esperaMs), _intentarSpawn);
   }
 
-  void _intentarSpawn() {
+  Future<void> _intentarSpawn() async {
     if (!mounted) return;
     if (_activos.length < _maxFragmentosEnTejado) {
-      final nuevo = _generador.siguiente(
-        esquirlasAcumuladas: _esquirlasTotal + _esquirlasEstaSesion,
-        ahora: DateTime.now(),
-      );
+      final esquirlas = _esquirlasTotal + _esquirlasEstaSesion;
+      final ahora = DateTime.now();
+      // Cada varios spawns dejamos que el selector pida una habilidad;
+      // el resto del tiempo usamos el reparto del distrito para que
+      // aparezcan también los tipos sin skill implementada todavía
+      // (unitarios simples, proporcionales).
+      final usarSelector = _selectorHabilidades != null &&
+          math.Random().nextDouble() < 0.6;
+      final nuevo = usarSelector
+          ? await _generarDesdeSelector(esquirlas: esquirlas, ahora: ahora)
+          : _generador.siguiente(
+              esquirlasAcumuladas: esquirlas,
+              ahora: ahora,
+            );
+      if (!mounted) return;
       setState(() => _activos.add(nuevo));
     }
     _programarSiguienteSpawn();
+  }
+
+  Future<FragmentoEnTejado> _generarDesdeSelector({
+    required int esquirlas,
+    required DateTime ahora,
+  }) async {
+    final selector = _selectorHabilidades!;
+    final idHabilidad = await selector.elegirSiguienteHabilidad(
+      distrito: widget.distrito,
+    );
+    if (idHabilidad == null) {
+      return _generador.siguiente(
+        esquirlasAcumuladas: esquirlas,
+        ahora: ahora,
+      );
+    }
+    return _generador.siguienteParaSkill(
+      idHabilidad: idHabilidad,
+      esquirlasAcumuladas: esquirlas,
+      ahora: ahora,
+    );
   }
 
   void _arrancarTickDeEscapes() {
