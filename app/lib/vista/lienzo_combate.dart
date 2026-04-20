@@ -3,24 +3,22 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../dominio/fragmento.dart';
+import 'particulas_rotura.dart';
 import 'pintor_fragmento.dart';
 
-/// Lienzo central del combate. Widget "tonto": recibe la lista de radios
-/// confirmados y el radio en curso desde el padre, y solo:
-///
-/// 1. Dibuja el Fragmento con sus trazos.
-/// 2. Detecta nuevos gestos y los reporta al padre mediante callbacks.
-///
-/// Toda la lógica de estado (acumular, deshacer, evaluar) vive en
-/// [PantallaCombate] para que los botones de la UI puedan actuar sobre
-/// la misma fuente de verdad.
+/// Lienzo central del combate. Dibuja el Fragmento (con cara reactiva)
+/// encima del fondo de la pantalla, y superpone las partículas cuando
+/// [progresoRotura] es > 0.
 class LienzoCombate extends StatefulWidget {
   final FragmentoUnitario fragmento;
   final List<RadioTrazado> radiosConfirmados;
   final RadioTrazado? radioEnCurso;
+  final EstadoFragmento estadoFragmento;
   final bool destacarExito;
   final bool destacarFallo;
   final bool aceptaNuevosTrazos;
+  final double progresoRotura;
+  final List<Particula> particulasRotura;
   final ValueChanged<RadioTrazado> onAgregarRadio;
   final ValueChanged<RadioTrazado?> onActualizarRadioEnCurso;
 
@@ -29,9 +27,12 @@ class LienzoCombate extends StatefulWidget {
     required this.fragmento,
     required this.radiosConfirmados,
     required this.radioEnCurso,
+    required this.estadoFragmento,
     required this.destacarExito,
     required this.destacarFallo,
     required this.aceptaNuevosTrazos,
+    required this.progresoRotura,
+    required this.particulasRotura,
     required this.onAgregarRadio,
     required this.onActualizarRadioEnCurso,
   });
@@ -44,6 +45,7 @@ class _LienzoCombateState extends State<LienzoCombate>
     with SingleTickerProviderStateMixin {
   final GlobalKey _claveLienzo = GlobalKey();
   late AnimationController _controladorLatido;
+  Offset? _puntoDedo;
 
   @override
   void initState() {
@@ -78,11 +80,13 @@ class _LienzoCombateState extends State<LienzoCombate>
   }
 
   void _alIniciarTrazo(DragStartDetails detalle) {
+    setState(() => _puntoDedo = detalle.localPosition);
     if (!widget.aceptaNuevosTrazos) return;
     widget.onActualizarRadioEnCurso(_anguloDesdePunto(detalle.localPosition));
   }
 
   void _alActualizarTrazo(DragUpdateDetails detalle) {
+    setState(() => _puntoDedo = detalle.localPosition);
     if (!widget.aceptaNuevosTrazos) return;
     widget.onActualizarRadioEnCurso(_anguloDesdePunto(detalle.localPosition));
   }
@@ -90,9 +94,17 @@ class _LienzoCombateState extends State<LienzoCombate>
   void _alTerminarTrazo(DragEndDetails detalle) {
     final radio = widget.radioEnCurso;
     widget.onActualizarRadioEnCurso(null);
+    setState(() => _puntoDedo = null);
     if (radio == null) return;
     if (!widget.aceptaNuevosTrazos) return;
     widget.onAgregarRadio(radio);
+  }
+
+  double _opacidadFragmento() {
+    final progreso = widget.progresoRotura;
+    if (progreso <= 0) return 1.0;
+    if (progreso >= 0.3) return 0.0;
+    return 1.0 - (progreso / 0.3);
   }
 
   @override
@@ -104,17 +116,35 @@ class _LienzoCombateState extends State<LienzoCombate>
       child: AnimatedBuilder(
         animation: _controladorLatido,
         builder: (_, __) {
-          return CustomPaint(
-            key: _claveLienzo,
-            painter: PintorFragmento(
-              fragmento: widget.fragmento,
-              fasesLatido: _controladorLatido.value,
-              radiosConfirmados: widget.radiosConfirmados,
-              radioEnCurso: widget.radioEnCurso,
-              destacarExito: widget.destacarExito,
-              destacarFallo: widget.destacarFallo,
-            ),
-            size: Size.infinite,
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              CustomPaint(
+                key: _claveLienzo,
+                painter: PintorFragmento(
+                  fragmento: widget.fragmento,
+                  fasesLatido: _controladorLatido.value,
+                  radiosConfirmados: widget.radiosConfirmados,
+                  radioEnCurso: widget.radioEnCurso,
+                  estado: widget.estadoFragmento,
+                  puntoDeAtencion: _puntoDedo,
+                  destacarExito: widget.destacarExito,
+                  destacarFallo: widget.destacarFallo,
+                  opacidad: _opacidadFragmento(),
+                ),
+                size: Size.infinite,
+              ),
+              if (widget.progresoRotura > 0 && widget.progresoRotura < 1)
+                IgnorePointer(
+                  child: CustomPaint(
+                    painter: PintorRotura(
+                      progreso: widget.progresoRotura,
+                      particulas: widget.particulasRotura,
+                    ),
+                    size: Size.infinite,
+                  ),
+                ),
+            ],
           );
         },
       ),

@@ -6,6 +6,15 @@ import 'package:flutter/material.dart';
 import '../dominio/fragmento.dart';
 import '../nucleo/paleta.dart';
 
+/// Estado emocional del Fragmento, que determina cómo se dibuja la cara.
+enum EstadoFragmento {
+  tranquilo,
+  alerta,
+  nervioso,
+  sorprendido,
+  apacible,
+}
+
 class PintorFragmento extends CustomPainter {
   final FragmentoUnitario fragmento;
   final double fasesLatido;
@@ -13,33 +22,37 @@ class PintorFragmento extends CustomPainter {
   final RadioTrazado? radioEnCurso;
   final bool destacarExito;
   final bool destacarFallo;
+  final EstadoFragmento estado;
+  final Offset? puntoDeAtencion;
+  final double opacidad;
 
   PintorFragmento({
     required this.fragmento,
     required this.fasesLatido,
     required this.radiosConfirmados,
+    required this.estado,
     this.radioEnCurso,
+    this.puntoDeAtencion,
     this.destacarExito = false,
     this.destacarFallo = false,
+    this.opacidad = 1.0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (opacidad <= 0) return;
     final centro = Offset(size.width / 2, size.height / 2);
     final radioBase = math.min(size.width, size.height) / 2 - 24;
-    const amplitudLatido = 4.0;
-    final radioLatido =
-        radioBase + math.sin(fasesLatido * 2 * math.pi) * amplitudLatido;
+    final amplitudLatido = estado == EstadoFragmento.nervioso ? 7.0 : 4.0;
+    final velocidadLatido = estado == EstadoFragmento.nervioso ? 2.5 : 1.0;
+    final radioLatido = radioBase +
+        math.sin(fasesLatido * 2 * math.pi * velocidadLatido) * amplitudLatido;
 
-    final colorAura = destacarExito
-        ? PaletaNeon.exitoSuave
-        : destacarFallo
-            ? PaletaNeon.rosaAcento
-            : PaletaNeon.azulNeon;
+    final colorAura = _colorAuraSegunEstado();
 
     for (var capaAura = 4; capaAura >= 1; capaAura--) {
       final pinturaAura = Paint()
-        ..color = colorAura.withOpacity(0.08 * capaAura)
+        ..color = colorAura.withOpacity(0.08 * capaAura * opacidad)
         ..maskFilter = MaskFilter.blur(BlurStyle.normal, 8.0 * capaAura);
       canvas.drawCircle(centro, radioLatido + capaAura * 6.0, pinturaAura);
     }
@@ -49,17 +62,23 @@ class PintorFragmento extends CustomPainter {
         centro,
         radioLatido,
         [
-          PaletaNeon.violetaBase.withOpacity(0.9),
-          PaletaNeon.fondoMedio.withOpacity(0.6),
+          PaletaNeon.violetaBase.withOpacity(0.9 * opacidad),
+          PaletaNeon.fondoMedio.withOpacity(0.6 * opacidad),
         ],
       );
     canvas.drawCircle(centro, radioLatido, pinturaInterior);
 
     final pinturaBorde = Paint()
-      ..color = colorAura
+      ..color = colorAura.withOpacity(opacidad)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     canvas.drawCircle(centro, radioLatido, pinturaBorde);
+
+    _pintarCara(
+      canvas: canvas,
+      centro: centro,
+      radio: radioLatido,
+    );
 
     for (final radioConfirmado in radiosConfirmados) {
       _dibujarRadio(
@@ -91,6 +110,185 @@ class PintorFragmento extends CustomPainter {
     );
   }
 
+  Color _colorAuraSegunEstado() {
+    switch (estado) {
+      case EstadoFragmento.apacible:
+        return PaletaNeon.exitoSuave;
+      case EstadoFragmento.sorprendido:
+        return PaletaNeon.rosaAcento;
+      case EstadoFragmento.nervioso:
+        return PaletaNeon.rosaAcento;
+      case EstadoFragmento.alerta:
+        return PaletaNeon.azulNeon;
+      case EstadoFragmento.tranquilo:
+        return PaletaNeon.azulNeon;
+    }
+  }
+
+  void _pintarCara({
+    required Canvas canvas,
+    required Offset centro,
+    required double radio,
+  }) {
+    final distanciaOjo = radio * 0.3;
+    final ojoIzquierdo = Offset(centro.dx - distanciaOjo, centro.dy - radio * 0.08);
+    final ojoDerecho = Offset(centro.dx + distanciaOjo, centro.dy - radio * 0.08);
+    final alturaOjo = _alturaOjoSegunEstado();
+    final anchoOjo = radio * 0.13;
+
+    _pintarOjo(
+      canvas: canvas,
+      centroOjo: ojoIzquierdo,
+      ancho: anchoOjo,
+      alto: anchoOjo * alturaOjo,
+      atencion: puntoDeAtencion,
+    );
+    _pintarOjo(
+      canvas: canvas,
+      centroOjo: ojoDerecho,
+      ancho: anchoOjo,
+      alto: anchoOjo * alturaOjo,
+      atencion: puntoDeAtencion,
+    );
+
+    _pintarBoca(
+      canvas: canvas,
+      centro: centro,
+      radio: radio,
+    );
+  }
+
+  double _alturaOjoSegunEstado() {
+    switch (estado) {
+      case EstadoFragmento.apacible:
+        return 0.1;
+      case EstadoFragmento.sorprendido:
+        return 1.4;
+      case EstadoFragmento.nervioso:
+        return 1.2;
+      case EstadoFragmento.alerta:
+        return 1.05;
+      case EstadoFragmento.tranquilo:
+        return 0.9;
+    }
+  }
+
+  void _pintarOjo({
+    required Canvas canvas,
+    required Offset centroOjo,
+    required double ancho,
+    required double alto,
+    required Offset? atencion,
+  }) {
+    final blanco = Paint()
+      ..color = PaletaNeon.textoPrincipal.withOpacity(0.9 * opacidad);
+    canvas.drawOval(
+      Rect.fromCenter(center: centroOjo, width: ancho, height: alto),
+      blanco,
+    );
+
+    if (estado == EstadoFragmento.apacible) {
+      final trazoCerrado = Paint()
+        ..color = PaletaNeon.fondoProfundo.withOpacity(opacidad)
+        ..strokeWidth = 2
+        ..style = PaintingStyle.stroke;
+      canvas.drawLine(
+        Offset(centroOjo.dx - ancho / 2, centroOjo.dy),
+        Offset(centroOjo.dx + ancho / 2, centroOjo.dy),
+        trazoCerrado,
+      );
+      return;
+    }
+
+    final desplazamiento = _desplazamientoPupila(
+      centroOjo: centroOjo,
+      ancho: ancho,
+      alto: alto,
+      atencion: atencion,
+    );
+    final centroPupila = centroOjo + desplazamiento;
+    final colorPupila = estado == EstadoFragmento.sorprendido
+        ? PaletaNeon.rosaAcento
+        : PaletaNeon.violetaNeon;
+    final pupila = Paint()..color = colorPupila.withOpacity(opacidad);
+    canvas.drawCircle(centroPupila, ancho * 0.35, pupila);
+
+    final brillo = Paint()
+      ..color = PaletaNeon.textoPrincipal.withOpacity(0.9 * opacidad);
+    canvas.drawCircle(
+      centroPupila.translate(-ancho * 0.1, -ancho * 0.1),
+      ancho * 0.08,
+      brillo,
+    );
+  }
+
+  Offset _desplazamientoPupila({
+    required Offset centroOjo,
+    required double ancho,
+    required double alto,
+    required Offset? atencion,
+  }) {
+    if (atencion == null) return Offset.zero;
+    final vector = atencion - centroOjo;
+    final distancia = vector.distance;
+    if (distancia == 0) return Offset.zero;
+    final limite = ancho * 0.28;
+    final escala = math.min(limite / distancia, 1.0);
+    return Offset(vector.dx * escala, vector.dy * escala);
+  }
+
+  void _pintarBoca({
+    required Canvas canvas,
+    required Offset centro,
+    required double radio,
+  }) {
+    final alturaBoca = centro.dy + radio * 0.35;
+    final anchoBoca = radio * 0.35;
+    final pintura = Paint()
+      ..color = PaletaNeon.textoPrincipal.withOpacity(0.55 * opacidad)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+
+    final trazo = Path();
+    switch (estado) {
+      case EstadoFragmento.apacible:
+        trazo.moveTo(centro.dx - anchoBoca / 2, alturaBoca);
+        trazo.quadraticBezierTo(
+          centro.dx,
+          alturaBoca + 8,
+          centro.dx + anchoBoca / 2,
+          alturaBoca,
+        );
+        break;
+      case EstadoFragmento.sorprendido:
+        canvas.drawOval(
+          Rect.fromCenter(
+            center: Offset(centro.dx, alturaBoca),
+            width: anchoBoca * 0.4,
+            height: anchoBoca * 0.5,
+          ),
+          pintura,
+        );
+        return;
+      case EstadoFragmento.nervioso:
+        trazo.moveTo(centro.dx - anchoBoca / 2, alturaBoca);
+        trazo.quadraticBezierTo(
+          centro.dx,
+          alturaBoca - 5,
+          centro.dx + anchoBoca / 2,
+          alturaBoca,
+        );
+        break;
+      case EstadoFragmento.alerta:
+      case EstadoFragmento.tranquilo:
+        trazo.moveTo(centro.dx - anchoBoca / 2, alturaBoca);
+        trazo.lineTo(centro.dx + anchoBoca / 2, alturaBoca);
+        break;
+    }
+    canvas.drawPath(trazo, pintura);
+  }
+
   void _dibujarRadio({
     required Canvas lienzo,
     required Offset centro,
@@ -105,14 +303,14 @@ class PintorFragmento extends CustomPainter {
     );
 
     final pinturaResplandor = Paint()
-      ..color = color.withOpacity(0.5)
+      ..color = color.withOpacity(0.5 * opacidad)
       ..strokeWidth = grosor + 6
       ..strokeCap = StrokeCap.round
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
     lienzo.drawLine(centro, puntoExterior, pinturaResplandor);
 
     final pinturaLinea = Paint()
-      ..color = color
+      ..color = color.withOpacity(opacidad)
       ..strokeWidth = grosor
       ..strokeCap = StrokeCap.round;
     lienzo.drawLine(centro, puntoExterior, pinturaLinea);
@@ -126,12 +324,12 @@ class PintorFragmento extends CustomPainter {
     final constructor = ui.ParagraphBuilder(
       ui.ParagraphStyle(
         textAlign: TextAlign.center,
-        fontSize: 28,
+        fontSize: 20,
         fontWeight: FontWeight.w300,
       ),
     )
       ..pushStyle(ui.TextStyle(
-        color: PaletaNeon.textoPrincipal.withOpacity(0.85),
+        color: PaletaNeon.textoPrincipal.withOpacity(0.7 * opacidad),
         letterSpacing: 2,
       ))
       ..addText(texto);
@@ -139,7 +337,7 @@ class PintorFragmento extends CustomPainter {
       ..layout(const ui.ParagraphConstraints(width: 120));
     lienzo.drawParagraph(
       parrafo,
-      Offset(centro.dx - 60, centro.dy - parrafo.height / 2),
+      Offset(centro.dx - 60, centro.dy + 24),
     );
   }
 
@@ -152,6 +350,9 @@ class PintorFragmento extends CustomPainter {
     }
     if (oldDelegate.destacarExito != destacarExito) return true;
     if (oldDelegate.destacarFallo != destacarFallo) return true;
+    if (oldDelegate.estado != estado) return true;
+    if (oldDelegate.opacidad != opacidad) return true;
+    if (oldDelegate.puntoDeAtencion != puntoDeAtencion) return true;
     if (oldDelegate.radiosConfirmados.length != radiosConfirmados.length) {
       return true;
     }
