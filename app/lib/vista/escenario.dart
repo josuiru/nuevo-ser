@@ -7,10 +7,18 @@ import '../nucleo/paleta.dart';
 /// Escenario urbano nocturno: cielo con estrellas, silueta de la Montaña
 /// al fondo (biblia §4.7) y siluetas de edificios en primer plano, con
 /// ventanas cálidas encendidas. Se pinta detrás de todo lo demás.
+///
+/// [nivelRestauracion] varía entre 0 (noche apagada) y 1 (ciudad bien
+/// iluminada): más Fragmentos derrotados → más ventanas encendidas y
+/// estrellas más brillantes. Progresión diegética sin números visibles.
 class PintorEscenario extends CustomPainter {
   final double fasePulso;
+  final double nivelRestauracion;
 
-  PintorEscenario({required this.fasePulso});
+  PintorEscenario({
+    required this.fasePulso,
+    required this.nivelRestauracion,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -38,14 +46,16 @@ class PintorEscenario extends CustomPainter {
   void _pintarEstrellas(Canvas canvas, Size size) {
     final generador = math.Random(42);
     final pinturaEstrella = Paint()..color = PaletaNeon.textoTenue;
+    final refuerzoBrillo = 0.5 + nivelRestauracion * 0.5;
     for (var indice = 0; indice < 60; indice++) {
       final cordX = generador.nextDouble() * size.width;
       final cordY = generador.nextDouble() * size.height * 0.6;
       final brilloBase = 0.25 + generador.nextDouble() * 0.45;
       final parpadeo =
           math.sin((fasePulso * 2 * math.pi) + indice * 1.3) * 0.15 + 0.85;
-      pinturaEstrella.color =
-          PaletaNeon.textoTenue.withOpacity(brilloBase * parpadeo);
+      pinturaEstrella.color = PaletaNeon.textoTenue.withOpacity(
+        (brilloBase * parpadeo * refuerzoBrillo).clamp(0.0, 1.0),
+      );
       canvas.drawCircle(
         Offset(cordX, cordY),
         0.6 + generador.nextDouble() * 0.8,
@@ -117,22 +127,29 @@ class PintorEscenario extends CustomPainter {
   }
 
   void _pintarVentanas(Canvas canvas, Rect edificio, int semilla) {
-    final generador = math.Random(semilla * 17 + 3);
+    // Semilla fija por edificio: las mismas posiciones de ventana siempre.
+    // La cantidad que se enciende depende del nivel de restauración.
+    final generadorPosicion = math.Random(semilla * 17 + 3);
+    final generadorIntensidad = math.Random(semilla * 41 + 7);
     final pinturaVentana = Paint()..color = const Color(0xFFFFD08A);
     const tamanoVentana = 3.5;
     const margen = 6.0;
+    final umbralEncendido = 0.22 + nivelRestauracion * 0.48;
+
     for (var cordY = edificio.top + 12;
         cordY < edificio.bottom - margen;
         cordY += 10) {
       for (var cordX = edificio.left + margen;
           cordX < edificio.right - margen;
           cordX += 8) {
-        if (generador.nextDouble() < 0.35) {
+        final semillaPosicion = generadorPosicion.nextDouble();
+        final intensidadBase = generadorIntensidad.nextDouble();
+        if (semillaPosicion < umbralEncendido) {
           pinturaVentana.color = Color.fromRGBO(
             255,
             208,
             138,
-            0.55 + generador.nextDouble() * 0.35,
+            (0.4 + intensidadBase * 0.5).clamp(0.0, 1.0),
           );
           canvas.drawRect(
             Rect.fromLTWH(cordX, cordY, tamanoVentana, tamanoVentana),
@@ -145,6 +162,7 @@ class PintorEscenario extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant PintorEscenario oldDelegate) {
-    return oldDelegate.fasePulso != fasePulso;
+    return oldDelegate.fasePulso != fasePulso ||
+        oldDelegate.nivelRestauracion != nivelRestauracion;
   }
 }

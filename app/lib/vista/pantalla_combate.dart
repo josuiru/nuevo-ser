@@ -49,7 +49,9 @@ class _PantallaCombateState extends State<PantallaCombate>
   late final AnimationController _controladorRotura;
   late final AnimationController _controladorAparicion;
   late final AnimationController _controladorCielo;
+  late final AnimationController _controladorRestauracion;
   late final List<Particula> _particulasRotura;
+  double _nivelRestauracionObjetivo = 0;
 
   FragmentoUnitario get _fragmentoActivo =>
       FragmentoUnitario(_denominadorActivo);
@@ -87,6 +89,11 @@ class _PantallaCombateState extends State<PantallaCombate>
       duration: const Duration(milliseconds: 520),
       value: 0,
     );
+    _controladorRestauracion = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+      value: 0,
+    );
     _particulasRotura = PintorRotura.generar();
     _agendarIntroSora();
     _controladorAparicion.forward();
@@ -97,9 +104,26 @@ class _PantallaCombateState extends State<PantallaCombate>
     _controladorCielo.dispose();
     _controladorRotura.dispose();
     _controladorAparicion.dispose();
+    _controladorRestauracion.dispose();
     _temporizadorLineaSora?.cancel();
     _temporizadorPausa?.cancel();
     super.dispose();
+  }
+
+  /// El nivel de restauración satura en 12 victorias (ciudad completa).
+  /// Se anima suavemente cada vez que derrotamos un Fragmento.
+  void _actualizarRestauracion() {
+    const topeVictoriasParaSaturar = 12;
+    _nivelRestauracionObjetivo =
+        (_victoriasAcumuladas / topeVictoriasParaSaturar).clamp(0.0, 1.0);
+    final valorPrevio = _controladorRestauracion.value;
+    _controladorRestauracion.stop();
+    _controladorRestauracion.value = valorPrevio;
+    _controladorRestauracion.animateTo(
+      _nivelRestauracionObjetivo,
+      duration: const Duration(milliseconds: 1200),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   void _agendarIntroSora() {
@@ -189,6 +213,12 @@ class _PantallaCombateState extends State<PantallaCombate>
       _controladorRotura
         ..reset()
         ..forward();
+      // Encender otra ventana en la ciudad con un pequeño retardo
+      // para que se sincronice con la disipación de las partículas.
+      Future.delayed(const Duration(milliseconds: 350), () {
+        if (!mounted) return;
+        _actualizarRestauracion();
+      });
     } else {
       _fallosAcumulados++;
       HapticFeedback.vibrate();
@@ -245,13 +275,17 @@ class _PantallaCombateState extends State<PantallaCombate>
   Widget build(BuildContext contexto) {
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _controladorCielo,
+        animation: Listenable.merge(
+            [_controladorCielo, _controladorRestauracion]),
         builder: (_, __) {
           return Stack(
             fit: StackFit.expand,
             children: [
               CustomPaint(
-                painter: PintorEscenario(fasePulso: _controladorCielo.value),
+                painter: PintorEscenario(
+                  fasePulso: _controladorCielo.value,
+                  nivelRestauracion: _controladorRestauracion.value,
+                ),
               ),
               SafeArea(
                 child: Column(
