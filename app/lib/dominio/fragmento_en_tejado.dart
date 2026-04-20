@@ -1,5 +1,14 @@
 import 'package:flutter/foundation.dart';
 
+/// Tipo de puzzle que plantea este Fragmento al ser tocado.
+///
+/// - [unitario]: combate de cortes (Familia B y C). El niño corta en
+///   partes iguales tantas veces como indique numerador/denominador.
+/// - [espejo]: puzzle de equivalencia (Familia D). Se muestra la
+///   fracción del Fragmento y el niño elige su equivalente entre
+///   varios candidatos.
+enum TipoFragmentoEnTejado { unitario, espejo }
+
 /// Un Fragmento concreto flotando en el tejado a la espera de ser
 /// cazado. Se distingue de [FragmentoUnitario] en que carga datos de
 /// **presencia en el mundo**: posición en pantalla, cuándo apareció
@@ -9,6 +18,7 @@ class FragmentoEnTejado {
   final String identificador;
   final int numerador;
   final int denominador;
+  final TipoFragmentoEnTejado tipo;
 
   /// Coordenadas normalizadas (0-1) sobre el área de caza. El pintor
   /// las multiplica por el tamaño del lienzo al dibujar.
@@ -31,6 +41,7 @@ class FragmentoEnTejado {
     required this.yNormalizado,
     required this.instanteAparicion,
     required this.tiempoDeVida,
+    this.tipo = TipoFragmentoEnTejado.unitario,
   });
 
   bool get esCompuesto => numerador > 1;

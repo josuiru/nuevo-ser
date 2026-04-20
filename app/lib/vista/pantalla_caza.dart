@@ -10,6 +10,7 @@ import '../dominio/generador_caza.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
+import 'pantalla_espejo.dart';
 import 'pintor_fragmento_tejado.dart';
 import 'sora_presencia.dart';
 
@@ -115,18 +116,14 @@ class _PantallaCazaState extends State<PantallaCaza>
 
   Future<void> _alTocarFragmento(FragmentoEnTejado fragmento) async {
     HapticFeedback.selectionClick();
-    final capturado = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => PantallaCombateEnfoque(
-          numerador: fragmento.numerador,
-          denominador: fragmento.denominador,
-        ),
-      ),
-    );
+    final capturado = await _abrirPuzzleSegunTipo(fragmento);
     if (!mounted) return;
     setState(() => _activos.remove(fragmento));
     if (capturado == true) {
-      final esquirlasGanadas = fragmento.numerador;
+      final esquirlasGanadas =
+          fragmento.tipo == TipoFragmentoEnTejado.espejo
+              ? 2
+              : fragmento.numerador;
       setState(() {
         _esquirlasEstaSesion += esquirlasGanadas;
         _esquirlasTotal += esquirlasGanadas;
@@ -135,6 +132,29 @@ class _PantallaCazaState extends State<PantallaCaza>
       _comentarTrasCaptura();
     } else {
       _mostrarLineaAmbienteSora('Ya volverá otro.');
+    }
+  }
+
+  Future<bool?> _abrirPuzzleSegunTipo(FragmentoEnTejado fragmento) {
+    switch (fragmento.tipo) {
+      case TipoFragmentoEnTejado.espejo:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaEspejo(
+              numerador: fragmento.numerador,
+              denominador: fragmento.denominador,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.unitario:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaCombateEnfoque(
+              numerador: fragmento.numerador,
+              denominador: fragmento.denominador,
+            ),
+          ),
+        );
     }
   }
 

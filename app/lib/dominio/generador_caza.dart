@@ -19,19 +19,59 @@ class GeneradorCaza {
     required DateTime ahora,
   }) {
     final dificultad = _nivelDificultadSegunEsquirlas(esquirlasAcumuladas);
-    final denominador = _elegirDenominador(dificultad);
-    final numerador = _elegirNumerador(denominador, dificultad);
+    final tipo = _elegirTipo(dificultad);
+
+    final denominador = tipo == TipoFragmentoEnTejado.espejo
+        ? _elegirDenominadorEspejo(dificultad)
+        : _elegirDenominador(dificultad);
+    final numerador = tipo == TipoFragmentoEnTejado.espejo
+        ? _elegirNumeradorEspejo(denominador, dificultad)
+        : _elegirNumerador(denominador, dificultad);
 
     return FragmentoEnTejado(
       identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
           '${_azar.nextInt(9999)}',
       numerador: numerador,
       denominador: denominador,
+      tipo: tipo,
       xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
       yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
       instanteAparicion: ahora,
       tiempoDeVida: _tiempoDeVida(dificultad),
     );
+  }
+
+  /// Probabilidad de que el Fragmento sea de tipo Espejo (equivalencia).
+  /// Aparecen a partir de dificultad 2, cada vez con más frecuencia.
+  TipoFragmentoEnTejado _elegirTipo(int dificultad) {
+    if (dificultad < 2) return TipoFragmentoEnTejado.unitario;
+    final probEspejo = switch (dificultad) {
+      2 => 0.18,
+      3 => 0.22,
+      4 => 0.28,
+      5 => 0.3,
+      6 => 0.33,
+      _ => 0.35,
+    };
+    return _azar.nextDouble() < probEspejo
+        ? TipoFragmentoEnTejado.espejo
+        : TipoFragmentoEnTejado.unitario;
+  }
+
+  /// Para Espejos interesa más variedad de denominadores pequeños
+  /// (2, 3, 4, 5, 6, 8, 10) — equivalencias claras.
+  int _elegirDenominadorEspejo(int dificultad) {
+    final candidatos = <int>[2, 3, 4, 4, 5, 6, 6, 8];
+    if (dificultad >= 3) candidatos.addAll([10, 10, 12]);
+    if (dificultad >= 5) candidatos.addAll([9, 15]);
+    return candidatos[_azar.nextInt(candidatos.length)];
+  }
+
+  /// En Espejos el numerador puede ser cualquiera < denominador. Al
+  /// mostrar la fracción objetivo queremos que sea reducible y llamativa.
+  int _elegirNumeradorEspejo(int denominador, int dificultad) {
+    if (denominador <= 2) return 1;
+    return 1 + _azar.nextInt(denominador - 1);
   }
 
   /// Nivel de dificultad creciente sin tope. Cada "tier" mete
