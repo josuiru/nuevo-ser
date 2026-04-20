@@ -63,6 +63,9 @@ uno-roto/
 - Pantalla caza con spawn timer, combate enfoque sin dictado, pantalla habilidades debug.
 - Persistencia shared_preferences con keys `uroto.*`.
 - Ciudad con restauración progresiva según esquirlas.
+- **Sistema de cinemáticas v0.1** (dominio/): `VozPersonaje`, `PlanoEscena` (sealed con PlanoAmbiente + PlanoDialogo), `EscenaCinematica`, `CatalogoEscenas`. Player `PantallaCinematica` con reveal letra-a-letra, tap para completar/avanzar, botón saltar, fondo con PintorEscenario atenuado.
+- Escena 1.1 "La llegada" implementada (adaptada del storyboard 1 doc 13).
+- Flags narrativos persistidos como `uroto.flag.<nombre>`.
 
 **Gap frente a doc 03 / prompt maestro**:
 - Sin backend WordPress (doc 03 propone `wp-plugin/uno-roto-core`).
@@ -79,7 +82,7 @@ uno-roto/
 
 ## Backlog priorizado
 
-1. **Sistema de cinemáticas/diálogos** — bloqueante para storyboards y guiones.
+1. ~~**Sistema de cinemáticas/diálogos**~~ ✅ v0.1 funcional. Pendiente: PlanoEleccion (opciones con flags), carga desde JSON (ahora es Dart-native), más escenas (1.2-1.14 Arco 1).
 2. **Fragmentos nombrados** (Kurz, Zafrán, Vorax, Eco) como combates especiales.
 3. **Rangos** (Aprendiz I → Fraccionista Mayor) reemplazando contador crudo de esquirlas.
 4. **Paleta + tipografía canónicas** doc 11 (Inter + Cormorant Garamond + Cinzel).

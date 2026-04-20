@@ -71,6 +71,18 @@ class RepositorioProgreso {
     await prefs.setBool(_claveDistritoVisitado(idDistrito), true);
   }
 
+  String _claveFlagNarrativo(String flag) => 'uroto.flag.$flag';
+
+  Future<bool> flagNarrativoActivo(String flag) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_claveFlagNarrativo(flag)) ?? false;
+  }
+
+  Future<void> activarFlagNarrativo(String flag) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_claveFlagNarrativo(flag), true);
+  }
+
   static String _claveEstadoHabilidad(String id) =>
       'uroto.habilidad.$id';
 
