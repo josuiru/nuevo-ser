@@ -43,12 +43,18 @@ class PintorFragmento extends CustomPainter {
     if (opacidad <= 0) return;
     final centro = Offset(size.width / 2, size.height / 2);
     final radioBase = math.min(size.width, size.height) / 2 - 24;
-    final amplitudLatido = estado == EstadoFragmento.nervioso ? 7.0 : 4.0;
-    final velocidadLatido = estado == EstadoFragmento.nervioso ? 2.5 : 1.0;
+    final perfil = _PerfilTemperamento.paraFragmento(fragmento);
+
+    final amplitudLatido = estado == EstadoFragmento.nervioso
+        ? 7.0
+        : perfil.amplitudLatido;
+    final velocidadLatido = estado == EstadoFragmento.nervioso
+        ? 2.5
+        : perfil.velocidadLatido;
     final radioLatido = radioBase +
         math.sin(fasesLatido * 2 * math.pi * velocidadLatido) * amplitudLatido;
 
-    final colorAura = _colorAuraSegunEstado();
+    final colorAura = _colorAuraSegunEstado(perfil);
 
     for (var capaAura = 4; capaAura >= 1; capaAura--) {
       final pinturaAura = Paint()
@@ -110,7 +116,7 @@ class PintorFragmento extends CustomPainter {
     );
   }
 
-  Color _colorAuraSegunEstado() {
+  Color _colorAuraSegunEstado(_PerfilTemperamento perfil) {
     switch (estado) {
       case EstadoFragmento.apacible:
         return PaletaNeon.exitoSuave;
@@ -119,9 +125,8 @@ class PintorFragmento extends CustomPainter {
       case EstadoFragmento.nervioso:
         return PaletaNeon.rosaAcento;
       case EstadoFragmento.alerta:
-        return PaletaNeon.azulNeon;
       case EstadoFragmento.tranquilo:
-        return PaletaNeon.azulNeon;
+        return perfil.colorAura;
     }
   }
 
@@ -363,5 +368,56 @@ class PintorFragmento extends CustomPainter {
       }
     }
     return false;
+  }
+}
+
+/// Datos estéticos y de comportamiento derivados del temperamento del
+/// Fragmento. Dan personalidad sin revelar la solución matemática: el
+/// niño nota que "este es más nervioso" pero no ve pistas del número
+/// de sectores en que debe cortar.
+class _PerfilTemperamento {
+  final Color colorAura;
+  final double amplitudLatido;
+  final double velocidadLatido;
+  final double frecuenciaParpadeo;
+
+  const _PerfilTemperamento({
+    required this.colorAura,
+    required this.amplitudLatido,
+    required this.velocidadLatido,
+    required this.frecuenciaParpadeo,
+  });
+
+  static _PerfilTemperamento paraFragmento(FragmentoUnitario fragmento) {
+    switch (fragmento.temperamento) {
+      case TemperamentoFragmento.sereno:
+        return const _PerfilTemperamento(
+          colorAura: PaletaNeon.azulNeon,
+          amplitudLatido: 3.5,
+          velocidadLatido: 0.7,
+          frecuenciaParpadeo: 0.08,
+        );
+      case TemperamentoFragmento.estable:
+        return const _PerfilTemperamento(
+          colorAura: Color(0xFF7CB5FF),
+          amplitudLatido: 4.0,
+          velocidadLatido: 0.95,
+          frecuenciaParpadeo: 0.1,
+        );
+      case TemperamentoFragmento.metodico:
+        return const _PerfilTemperamento(
+          colorAura: Color(0xFF8A5CFF),
+          amplitudLatido: 4.5,
+          velocidadLatido: 1.1,
+          frecuenciaParpadeo: 0.12,
+        );
+      case TemperamentoFragmento.inquieto:
+        return const _PerfilTemperamento(
+          colorAura: Color(0xFFFF6FB3),
+          amplitudLatido: 5.5,
+          velocidadLatido: 1.6,
+          frecuenciaParpadeo: 0.22,
+        );
+    }
   }
 }

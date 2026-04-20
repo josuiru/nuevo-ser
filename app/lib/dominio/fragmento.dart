@@ -1,5 +1,13 @@
 import 'dart:math' as math;
 
+/// Clasificación cualitativa del temperamento del Fragmento, usada solo
+/// para diferenciar estética y comportamiento. NO afecta a la dificultad
+/// matemática: todos los unitarios se cortan con la misma regla.
+///
+/// Biblia §5.2 B: el Medio es "tranquilo", el Tercio "rota sobre sí
+/// mismo", el Cuarto "permite combos", el Quinto es "esquivo".
+enum TemperamentoFragmento { sereno, estable, metodico, inquieto }
+
 /// Fragmento unitario de la Familia B: valor 1/denominador.
 ///
 /// El jugador debe cortarlo en exactamente [denominador] sectores iguales
@@ -28,6 +36,20 @@ class FragmentoUnitario {
   /// Modelamos todo como "radios desde el centro" por uniformidad: cada
   /// trazo es una línea que sale del centro hacia el borde.
   int get radiosRequeridos => denominador;
+
+  TemperamentoFragmento get temperamento {
+    switch (denominador) {
+      case 2:
+        return TemperamentoFragmento.sereno;
+      case 3:
+        return TemperamentoFragmento.estable;
+      case 4:
+        return TemperamentoFragmento.metodico;
+      default:
+        // Los denominadores mayores o primos empiezan a ser "inquietos".
+        return TemperamentoFragmento.inquieto;
+    }
+  }
 }
 
 /// Un radio trazado por el jugador, descrito por su ángulo en radianes.

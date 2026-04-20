@@ -18,6 +18,7 @@ class LienzoCombate extends StatefulWidget {
   final bool destacarFallo;
   final bool aceptaNuevosTrazos;
   final double progresoRotura;
+  final double opacidadAparicion;
   final List<Particula> particulasRotura;
   final ValueChanged<RadioTrazado> onAgregarRadio;
   final ValueChanged<RadioTrazado?> onActualizarRadioEnCurso;
@@ -32,6 +33,7 @@ class LienzoCombate extends StatefulWidget {
     required this.destacarFallo,
     required this.aceptaNuevosTrazos,
     required this.progresoRotura,
+    required this.opacidadAparicion,
     required this.particulasRotura,
     required this.onAgregarRadio,
     required this.onActualizarRadioEnCurso,
@@ -102,9 +104,17 @@ class _LienzoCombateState extends State<LienzoCombate>
 
   double _opacidadFragmento() {
     final progreso = widget.progresoRotura;
-    if (progreso <= 0) return 1.0;
-    if (progreso >= 0.3) return 0.0;
-    return 1.0 - (progreso / 0.3);
+    final opacidadRotura = progreso <= 0
+        ? 1.0
+        : progreso >= 0.3
+            ? 0.0
+            : 1.0 - (progreso / 0.3);
+    return opacidadRotura * widget.opacidadAparicion;
+  }
+
+  double _escalaAparicion() {
+    // Aparecemos levemente más pequeños y crecemos hasta 1.0 al materializar.
+    return 0.88 + widget.opacidadAparicion * 0.12;
   }
 
   @override
@@ -119,20 +129,23 @@ class _LienzoCombateState extends State<LienzoCombate>
           return Stack(
             fit: StackFit.expand,
             children: [
-              CustomPaint(
-                key: _claveLienzo,
-                painter: PintorFragmento(
-                  fragmento: widget.fragmento,
-                  fasesLatido: _controladorLatido.value,
-                  radiosConfirmados: widget.radiosConfirmados,
-                  radioEnCurso: widget.radioEnCurso,
-                  estado: widget.estadoFragmento,
-                  puntoDeAtencion: _puntoDedo,
-                  destacarExito: widget.destacarExito,
-                  destacarFallo: widget.destacarFallo,
-                  opacidad: _opacidadFragmento(),
+              Transform.scale(
+                scale: _escalaAparicion(),
+                child: CustomPaint(
+                  key: _claveLienzo,
+                  painter: PintorFragmento(
+                    fragmento: widget.fragmento,
+                    fasesLatido: _controladorLatido.value,
+                    radiosConfirmados: widget.radiosConfirmados,
+                    radioEnCurso: widget.radioEnCurso,
+                    estado: widget.estadoFragmento,
+                    puntoDeAtencion: _puntoDedo,
+                    destacarExito: widget.destacarExito,
+                    destacarFallo: widget.destacarFallo,
+                    opacidad: _opacidadFragmento(),
+                  ),
+                  size: Size.infinite,
                 ),
-                size: Size.infinite,
               ),
               if (widget.progresoRotura > 0 && widget.progresoRotura < 1)
                 IgnorePointer(

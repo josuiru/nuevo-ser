@@ -47,6 +47,7 @@ class _PantallaCombateState extends State<PantallaCombate>
   Timer? _temporizadorPausa;
 
   late final AnimationController _controladorRotura;
+  late final AnimationController _controladorAparicion;
   late final AnimationController _controladorCielo;
   late final List<Particula> _particulasRotura;
 
@@ -81,14 +82,21 @@ class _PantallaCombateState extends State<PantallaCombate>
         _iniciarPausaTrasVictoria();
       }
     });
+    _controladorAparicion = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 520),
+      value: 0,
+    );
     _particulasRotura = PintorRotura.generar();
     _agendarIntroSora();
+    _controladorAparicion.forward();
   }
 
   @override
   void dispose() {
     _controladorCielo.dispose();
     _controladorRotura.dispose();
+    _controladorAparicion.dispose();
     _temporizadorLineaSora?.cancel();
     _temporizadorPausa?.cancel();
     super.dispose();
@@ -121,6 +129,9 @@ class _PantallaCombateState extends State<PantallaCombate>
       _fase = _FaseIntento.intro;
       _lineaSoraActiva = null;
     });
+    _controladorAparicion
+      ..reset()
+      ..forward();
     _agendarIntroSora();
   }
 
@@ -204,6 +215,9 @@ class _PantallaCombateState extends State<PantallaCombate>
         _lineaSoraActiva = null;
       });
       _controladorRotura.reset();
+      _controladorAparicion
+        ..reset()
+        ..forward();
       _agendarIntroSora();
     });
   }
@@ -251,7 +265,8 @@ class _PantallaCombateState extends State<PantallaCombate>
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: AnimatedBuilder(
-                          animation: _controladorRotura,
+                          animation: Listenable.merge(
+                              [_controladorRotura, _controladorAparicion]),
                           builder: (_, __) {
                             return LienzoCombate(
                               fragmento: _fragmentoActivo,
@@ -263,6 +278,7 @@ class _PantallaCombateState extends State<PantallaCombate>
                               destacarFallo: _destacarFallo,
                               aceptaNuevosTrazos: _aceptaNuevosTrazos,
                               progresoRotura: _controladorRotura.value,
+                              opacidadAparicion: _controladorAparicion.value,
                               particulasRotura: _particulasRotura,
                               onAgregarRadio: _agregarRadio,
                               onActualizarRadioEnCurso: _actualizarRadioEnCurso,
