@@ -14,23 +14,38 @@ import 'escenario.dart';
 /// - Silencios escritos (PlanoAmbiente auto-avanza tras su duración).
 /// - Reveal letra-a-letra para diálogos (doc 13 §2.1 planos duran).
 /// - Pausa entre frases del mismo personaje (pausaPrevia).
+/// - Opciones en PlanoEleccion — se revelan tras el prompt; al elegir,
+///   se muestra la respuesta como un sub-reveal y se activan flags.
 /// - Tap para completar el reveal o avanzar cuando está esperando.
 /// Al terminar invoca [alTerminar].
 class PantallaCinematica extends StatefulWidget {
   final EscenaCinematica escena;
   final VoidCallback alTerminar;
 
+  /// Callback invocado por cada flag narrativo establecido durante la
+  /// escena — típicamente para persistirlo en el repositorio.
+  final ValueChanged<String>? alEstablecerFlag;
+
   const PantallaCinematica({
     super.key,
     required this.escena,
     required this.alTerminar,
+    this.alEstablecerFlag,
   });
 
   @override
   State<PantallaCinematica> createState() => _PantallaCinematicaState();
 }
 
-enum _EstadoPlano { pausaPrevia, revelando, esperandoTap, saliendo }
+enum _FaseReproduccion {
+  pausaPrevia,
+  revelando,
+  esperandoTap,
+  mostrandoOpciones,
+  revelandoRespuesta,
+  esperandoTapRespuesta,
+  saliendo,
+}
 
 class _PantallaCinematicaState extends State<PantallaCinematica>
     with TickerProviderStateMixin {
@@ -42,8 +57,12 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
 
   int _indicePlano = 0;
   int _caracteresRevelados = 0;
-  _EstadoPlano _estado = _EstadoPlano.pausaPrevia;
+  _FaseReproduccion _fase = _FaseReproduccion.pausaPrevia;
   Timer? _temporizador;
+
+  /// Índice de la opción elegida en un PlanoEleccion. null mientras no
+  /// se haya elegido.
+  int? _indiceOpcionElegida;
 
   @override
   void initState() {
@@ -73,7 +92,8 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
   Future<void> _iniciarPlanoActual() async {
     _temporizador?.cancel();
     _caracteresRevelados = 0;
-    _estado = _EstadoPlano.pausaPrevia;
+    _indiceOpcionElegida = null;
+    _fase = _FaseReproduccion.pausaPrevia;
 
     await _controladorFade.forward();
     if (!mounted) return;
@@ -81,24 +101,61 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     final plano = _planoActual;
     switch (plano) {
       case PlanoAmbiente():
-        setState(() => _estado = _EstadoPlano.revelando);
+        setState(() => _fase = _FaseReproduccion.revelando);
         _temporizador = Timer(plano.duracion, _avanzar);
       case PlanoDialogo():
         if (plano.pausaPrevia > Duration.zero) {
-          _temporizador = Timer(plano.pausaPrevia, _empezarReveal);
+          _temporizador = Timer(plano.pausaPrevia, _empezarRevealDialogo);
         } else {
-          _empezarReveal();
+          _empezarRevealDialogo();
+        }
+      case PlanoEleccion():
+        if (plano.textoPrompt == null) {
+          setState(() => _fase = _FaseReproduccion.mostrandoOpciones);
+        } else {
+          _empezarRevealPrompt();
         }
     }
   }
 
-  void _empezarReveal() {
+  void _empezarRevealDialogo() {
     if (!mounted) return;
     final plano = _planoActual;
     if (plano is! PlanoDialogo) return;
+    _revelarTexto(plano.texto, faseAlTerminar: _FaseReproduccion.esperandoTap);
+  }
+
+  void _empezarRevealPrompt() {
+    final plano = _planoActual;
+    if (plano is! PlanoEleccion) return;
+    _revelarTexto(
+      plano.textoPrompt ?? '',
+      faseAlTerminar: _FaseReproduccion.mostrandoOpciones,
+    );
+  }
+
+  void _empezarRevealRespuesta() {
+    final plano = _planoActual;
+    if (plano is! PlanoEleccion) return;
+    final indice = _indiceOpcionElegida;
+    if (indice == null) return;
+    final respuesta = plano.opciones[indice].textoRespuesta;
+    if (respuesta == null || respuesta.isEmpty) {
+      _avanzar();
+      return;
+    }
+    _revelarTexto(
+      respuesta,
+      faseAlTerminar: _FaseReproduccion.esperandoTapRespuesta,
+    );
+  }
+
+  void _revelarTexto(String texto, {required _FaseReproduccion faseAlTerminar}) {
     setState(() {
-      _estado = _EstadoPlano.revelando;
       _caracteresRevelados = 0;
+      _fase = faseAlTerminar == _FaseReproduccion.esperandoTapRespuesta
+          ? _FaseReproduccion.revelandoRespuesta
+          : _FaseReproduccion.revelando;
     });
     _temporizador = Timer.periodic(_intervaloReveal, (timer) {
       if (!mounted) {
@@ -108,41 +165,72 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       setState(() {
         _caracteresRevelados++;
       });
-      if (_caracteresRevelados >= plano.texto.length) {
+      if (_caracteresRevelados >= texto.length) {
         timer.cancel();
-        setState(() => _estado = _EstadoPlano.esperandoTap);
+        setState(() => _fase = faseAlTerminar);
       }
     });
   }
 
+  void _elegirOpcion(int indice) {
+    final plano = _planoActual;
+    if (plano is! PlanoEleccion) return;
+    if (_fase != _FaseReproduccion.mostrandoOpciones) return;
+    HapticFeedback.selectionClick();
+    setState(() => _indiceOpcionElegida = indice);
+    for (final flag in plano.opciones[indice].flagsAEstablecer) {
+      widget.alEstablecerFlag?.call(flag);
+    }
+    _empezarRevealRespuesta();
+  }
+
   void _alPulsar() {
     final plano = _planoActual;
-    switch (plano) {
-      case PlanoAmbiente():
+    switch (_fase) {
+      case _FaseReproduccion.pausaPrevia:
+      case _FaseReproduccion.saliendo:
+      case _FaseReproduccion.mostrandoOpciones:
         return;
-      case PlanoDialogo():
-        switch (_estado) {
-          case _EstadoPlano.revelando:
-            _temporizador?.cancel();
-            HapticFeedback.selectionClick();
-            setState(() {
-              _caracteresRevelados = plano.texto.length;
-              _estado = _EstadoPlano.esperandoTap;
-            });
-          case _EstadoPlano.esperandoTap:
-            HapticFeedback.selectionClick();
-            _avanzar();
-          case _EstadoPlano.pausaPrevia:
-          case _EstadoPlano.saliendo:
-            return;
+      case _FaseReproduccion.revelando:
+        _completarRevealActual();
+        setState(() => _fase = _FaseReproduccion.esperandoTap);
+        if (plano is PlanoEleccion) {
+          setState(() => _fase = _FaseReproduccion.mostrandoOpciones);
         }
+      case _FaseReproduccion.revelandoRespuesta:
+        _completarRevealActual();
+        setState(() => _fase = _FaseReproduccion.esperandoTapRespuesta);
+      case _FaseReproduccion.esperandoTap:
+      case _FaseReproduccion.esperandoTapRespuesta:
+        HapticFeedback.selectionClick();
+        _avanzar();
     }
+  }
+
+  void _completarRevealActual() {
+    _temporizador?.cancel();
+    final plano = _planoActual;
+    int longitud = 0;
+    if (plano is PlanoDialogo) {
+      longitud = plano.texto.length;
+    } else if (plano is PlanoEleccion) {
+      if (_fase == _FaseReproduccion.revelando) {
+        longitud = (plano.textoPrompt ?? '').length;
+      } else if (_fase == _FaseReproduccion.revelandoRespuesta) {
+        final indice = _indiceOpcionElegida;
+        if (indice != null) {
+          longitud = (plano.opciones[indice].textoRespuesta ?? '').length;
+        }
+      }
+    }
+    HapticFeedback.selectionClick();
+    setState(() => _caracteresRevelados = longitud);
   }
 
   Future<void> _avanzar() async {
     if (!mounted) return;
     _temporizador?.cancel();
-    setState(() => _estado = _EstadoPlano.saliendo);
+    setState(() => _fase = _FaseReproduccion.saliendo);
     await _controladorFade.reverse();
     if (!mounted) return;
 
@@ -195,7 +283,15 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
         return _VistaDialogo(
           voz: plano.voz,
           textoRevelado: plano.texto.substring(0, _caracteresRevelados),
-          mostrandoIndicador: _estado == _EstadoPlano.esperandoTap,
+          mostrandoIndicador: _fase == _FaseReproduccion.esperandoTap,
+        );
+      case PlanoEleccion():
+        return _VistaEleccion(
+          plano: plano,
+          fase: _fase,
+          caracteresRevelados: _caracteresRevelados,
+          indiceElegida: _indiceOpcionElegida,
+          alElegir: _elegirOpcion,
         );
     }
   }
@@ -265,21 +361,158 @@ class _VistaDialogo extends StatelessWidget {
           AnimatedOpacity(
             opacity: mostrandoIndicador ? 0.55 : 0.0,
             duration: const Duration(milliseconds: 220),
-            child: Row(
-              children: [
-                Text(
-                  'toca para continuar',
-                  style: TextStyle(
-                    fontSize: 11,
-                    letterSpacing: 2.2,
-                    color: PaletaNeon.textoTenue.withOpacity(0.7),
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ],
+            child: Text(
+              'toca para continuar',
+              style: TextStyle(
+                fontSize: 11,
+                letterSpacing: 2.2,
+                color: PaletaNeon.textoTenue.withOpacity(0.7),
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _VistaEleccion extends StatelessWidget {
+  final PlanoEleccion plano;
+  final _FaseReproduccion fase;
+  final int caracteresRevelados;
+  final int? indiceElegida;
+  final ValueChanged<int> alElegir;
+
+  const _VistaEleccion({
+    required this.plano,
+    required this.fase,
+    required this.caracteresRevelados,
+    required this.indiceElegida,
+    required this.alElegir,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final nombre = plano.voz.nombreVisible;
+    final prompt = plano.textoPrompt ?? '';
+    final estaRevelandoPrompt = fase == _FaseReproduccion.revelando;
+    final estaMostrandoOpciones = fase == _FaseReproduccion.mostrandoOpciones;
+    final estaRevelandoRespuesta = fase == _FaseReproduccion.revelandoRespuesta;
+    final esperandoTapRespuesta =
+        fase == _FaseReproduccion.esperandoTapRespuesta;
+
+    final textoPromptRevelado = estaRevelandoPrompt
+        ? prompt.substring(0, caracteresRevelados.clamp(0, prompt.length))
+        : prompt;
+
+    final indiceResp = indiceElegida;
+    final respuesta = indiceResp != null
+        ? plano.opciones[indiceResp].textoRespuesta ?? ''
+        : '';
+    final textoRespuestaRevelado = estaRevelandoRespuesta
+        ? respuesta.substring(0, caracteresRevelados.clamp(0, respuesta.length))
+        : respuesta;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(28, 0, 28, 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (prompt.isNotEmpty) ...[
+            if (nombre.isNotEmpty)
+              Text(
+                nombre.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  letterSpacing: 4,
+                  color: plano.voz.colorNombre,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            const SizedBox(height: 10),
+            Text(textoPromptRevelado, style: plano.voz.estiloTextoCuerpo()),
+            const SizedBox(height: 22),
+          ],
+          if (estaMostrandoOpciones)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var indice = 0; indice < plano.opciones.length; indice++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _BotonOpcion(
+                      texto: plano.opciones[indice].textoJugador,
+                      alPulsar: () => alElegir(indice),
+                    ),
+                  ),
+              ],
+            ),
+          if (estaRevelandoRespuesta || esperandoTapRespuesta) ...[
+            const SizedBox(height: 8),
+            if (nombre.isNotEmpty)
+              Text(
+                nombre.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  letterSpacing: 4,
+                  color: plano.voz.colorNombre,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            const SizedBox(height: 10),
+            Text(textoRespuestaRevelado, style: plano.voz.estiloTextoCuerpo()),
+            const SizedBox(height: 18),
+            AnimatedOpacity(
+              opacity: esperandoTapRespuesta ? 0.55 : 0.0,
+              duration: const Duration(milliseconds: 220),
+              child: Text(
+                'toca para continuar',
+                style: TextStyle(
+                  fontSize: 11,
+                  letterSpacing: 2.2,
+                  color: PaletaNeon.textoTenue.withOpacity(0.7),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _BotonOpcion extends StatelessWidget {
+  final String texto;
+  final VoidCallback alPulsar;
+
+  const _BotonOpcion({required this.texto, required this.alPulsar});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return InkWell(
+      onTap: alPulsar,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: PaletaNeon.fondoMedio.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: PaletaNeon.azulNeon.withOpacity(0.35),
+            width: 1.2,
+          ),
+        ),
+        child: Text(
+          texto,
+          style: const TextStyle(
+            fontSize: 15,
+            color: PaletaNeon.textoPrincipal,
+            letterSpacing: 0.3,
+          ),
+        ),
       ),
     );
   }

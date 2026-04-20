@@ -63,9 +63,10 @@ uno-roto/
 - Pantalla caza con spawn timer, combate enfoque sin dictado, pantalla habilidades debug.
 - Persistencia shared_preferences con keys `uroto.*`.
 - Ciudad con restauración progresiva según esquirlas.
-- **Sistema de cinemáticas v0.1** (dominio/): `VozPersonaje`, `PlanoEscena` (sealed con PlanoAmbiente + PlanoDialogo), `EscenaCinematica`, `CatalogoEscenas`. Player `PantallaCinematica` con reveal letra-a-letra, tap para completar/avanzar, botón saltar, fondo con PintorEscenario atenuado.
-- Escena 1.1 "La llegada" implementada (adaptada del storyboard 1 doc 13).
+- **Sistema de cinemáticas v0.2** (dominio/): `VozPersonaje`, `PlanoEscena` sealed (PlanoAmbiente + PlanoDialogo + PlanoEleccion), `OpcionEleccion` con flags a establecer, `EscenaCinematica` con flagsRequeridos, `CatalogoEscenas`. Player `PantallaCinematica` con reveal letra-a-letra, opciones con respuesta, callback alEstablecerFlag, fade 300ms, botón saltar.
+- Escenas implementadas: 1.1 El tejado (completa con bloque Montaña), 1.3 El callejón (requiere `primera_sesion_combate_completa`), 1.4 Irune con las tres reglas (requiere `escena_1_3_vista`).
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
+- Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 
 **Gap frente a doc 03 / prompt maestro**:
 - Sin backend WordPress (doc 03 propone `wp-plugin/uno-roto-core`).

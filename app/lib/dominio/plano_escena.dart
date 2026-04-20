@@ -39,3 +39,44 @@ class PlanoDialogo extends PlanoEscena {
     this.pausaPrevia = Duration.zero,
   });
 }
+
+class PlanoEleccion extends PlanoEscena {
+  /// Quién está preguntando (para el nombre encima del prompt si existe).
+  final VozPersonaje voz;
+
+  /// Pregunta opcional mostrada antes de las opciones.
+  final String? textoPrompt;
+
+  /// Entre 2 y 4 opciones. El niño toca una.
+  final List<OpcionEleccion> opciones;
+
+  const PlanoEleccion({
+    required this.voz,
+    required this.opciones,
+    this.textoPrompt,
+  });
+}
+
+class OpcionEleccion {
+  /// Texto de la opción tal como la ve el niño, entre comillas cuando es
+  /// habla ("Vengo a entrenar."), o descriptivo cuando es actitud
+  /// ("— quedarte callado —").
+  final String textoJugador;
+
+  /// Respuesta opcional del personaje tras la elección.
+  final String? textoRespuesta;
+
+  /// Voz de la respuesta. Si es null, se usa la voz del PlanoEleccion.
+  final VozPersonaje? vozRespuesta;
+
+  /// Flags narrativos que se activan al elegir esta opción. Se persisten
+  /// en el repositorio como `uroto.flag.<nombre>`.
+  final Set<String> flagsAEstablecer;
+
+  const OpcionEleccion({
+    required this.textoJugador,
+    this.textoRespuesta,
+    this.vozRespuesta,
+    this.flagsAEstablecer = const {},
+  });
+}

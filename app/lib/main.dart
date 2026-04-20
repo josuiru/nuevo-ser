@@ -73,22 +73,31 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     await _resolverCinematicaPendienteOMapa();
   }
 
-  /// Busca la siguiente escena no vista y la reproduce. Si no hay
-  /// ninguna pendiente, va al mapa.
+  /// Busca la siguiente escena no vista **cuyos prerrequisitos se
+  /// cumplan** y la reproduce. Si no hay ninguna disponible, va al mapa.
   Future<void> _resolverCinematicaPendienteOMapa() async {
     for (final escena in CatalogoEscenas.todas) {
       final vista = await _repositorio.flagNarrativoActivo(escena.flagDeSalida);
-      if (!vista) {
-        if (!mounted) return;
-        setState(() {
-          _escenaPendiente = escena;
-          _fase = _FaseApp.cinematica;
-        });
-        return;
-      }
+      if (vista) continue;
+      final prerrequisitosOk =
+          await _todosLosFlagsActivos(escena.flagsRequeridos);
+      if (!prerrequisitosOk) continue;
+      if (!mounted) return;
+      setState(() {
+        _escenaPendiente = escena;
+        _fase = _FaseApp.cinematica;
+      });
+      return;
     }
     if (!mounted) return;
     setState(() => _fase = _FaseApp.mapa);
+  }
+
+  Future<bool> _todosLosFlagsActivos(Set<String> flags) async {
+    for (final flag in flags) {
+      if (!await _repositorio.flagNarrativoActivo(flag)) return false;
+    }
+    return true;
   }
 
   Future<void> _alTerminarCinematica() async {
@@ -116,6 +125,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         return PantallaCinematica(
           escena: escena,
           alTerminar: _alTerminarCinematica,
+          alEstablecerFlag: _repositorio.activarFlagNarrativo,
         );
       case _FaseApp.mapa:
         return PantallaMapa(repositorio: _repositorio);

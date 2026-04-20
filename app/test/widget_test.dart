@@ -22,12 +22,20 @@ void main() {
     expect(find.text('ROTO'), findsOneWidget);
   });
 
-  test('El catálogo contiene la escena 1.1 "La llegada"', () {
-    final llegada = CatalogoEscenas.porId('1.1');
-    expect(llegada, isNotNull);
-    expect(llegada!.titulo, 'La llegada');
-    expect(llegada.flagDeSalida, 'escena_1_1_vista');
-    expect(llegada.planos, isNotEmpty);
+  test('El catálogo contiene la escena 1.1 "El tejado"', () {
+    final tejado = CatalogoEscenas.porId('1.1');
+    expect(tejado, isNotNull);
+    expect(tejado!.titulo, 'El tejado');
+    expect(tejado.flagDeSalida, 'escena_1_1_vista');
+    expect(tejado.planos, isNotEmpty);
+  });
+
+  test('Las escenas 1.3 y 1.4 tienen flags requeridos', () {
+    final callejon = CatalogoEscenas.porId('1.3');
+    expect(callejon!.flagsRequeridos, contains('primera_sesion_combate_completa'));
+
+    final irune = CatalogoEscenas.porId('1.4');
+    expect(irune!.flagsRequeridos, contains('escena_1_3_vista'));
   });
 
   test('La escena 1.1 alterna ambientes y diálogos', () {
