@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../dominio/fragmento_en_tejado.dart' show OperadorAritmetico, SimboloOperador;
-import '../dominio/problema_dual.dart';
-import '../dominio/problema_espejo.dart';
+import '../dominio/fragmento_en_tejado.dart' show OperadorAritmetico;
+import '../dominio/problema_operacion_decimal.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 
-/// Puzzle de Familia F (Duales). Se muestra una suma a/b + c/d y el
-/// niño elige el resultado correcto entre cuatro candidatos.
-class PantallaDual extends StatefulWidget {
-  final int numeradorA;
-  final int denominadorA;
-  final int numeradorB;
-  final int denominadorB;
+/// Puzzle de operación con decimales: el niño ve "a OP b" con a y b
+/// decimales y elige el resultado correcto entre cuatro candidatos.
+class PantallaOperacionDecimal extends StatefulWidget {
+  final String etiquetaA;
+  final String etiquetaB;
   final OperadorAritmetico operador;
 
-  const PantallaDual({
+  const PantallaOperacionDecimal({
     super.key,
-    required this.numeradorA,
-    required this.denominadorA,
-    required this.numeradorB,
-    required this.denominadorB,
-    this.operador = OperadorAritmetico.suma,
+    required this.etiquetaA,
+    required this.etiquetaB,
+    required this.operador,
   });
 
   @override
-  State<PantallaDual> createState() => _PantallaDualState();
+  State<PantallaOperacionDecimal> createState() =>
+      _PantallaOperacionDecimalState();
 }
 
-class _PantallaDualState extends State<PantallaDual>
+class _PantallaOperacionDecimalState extends State<PantallaOperacionDecimal>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controladorCielo;
-  late ProblemaDual _problema;
+  late ProblemaOperacionDecimal _problema;
   int? _indiceSeleccionado;
   bool _revelado = false;
 
@@ -43,9 +39,9 @@ class _PantallaDualState extends State<PantallaDual>
       vsync: this,
       duration: const Duration(seconds: 16),
     )..repeat();
-    _problema = GeneradorDual().generarDesde(
-      sumandoA: Fraccion(widget.numeradorA, widget.denominadorA),
-      sumandoB: Fraccion(widget.numeradorB, widget.denominadorB),
+    _problema = GeneradorOperacionDecimal().generarDesde(
+      etiquetaA: widget.etiquetaA,
+      etiquetaB: widget.etiquetaB,
       operador: widget.operador,
     );
   }
@@ -128,7 +124,7 @@ class _PantallaDualState extends State<PantallaDual>
                           ),
                           const Spacer(),
                           const Text(
-                            'DUAL',
+                            'OP. DECIMAL',
                             style: TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
@@ -141,7 +137,7 @@ class _PantallaDualState extends State<PantallaDual>
                       ),
                       const SizedBox(height: 32),
                       const Text(
-                        'funde los dos en uno solo',
+                        'cuánto vale la operación',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: PaletaNeon.textoTenue,
@@ -150,7 +146,7 @@ class _PantallaDualState extends State<PantallaDual>
                         ),
                       ),
                       const SizedBox(height: 24),
-                      _TarjetaSuma(problema: _problema),
+                      _TarjetaOperacion(problema: _problema),
                       const SizedBox(height: 36),
                       Expanded(
                         child: GridView.count(
@@ -164,7 +160,7 @@ class _PantallaDualState extends State<PantallaDual>
                                 indice++)
                               _TarjetaCandidato(
                                 etiqueta:
-                                    _problema.candidatos[indice].etiqueta,
+                                    _problema.candidatos[indice],
                                 seleccionado: _indiceSeleccionado == indice,
                                 marcarCorrecto: _revelado &&
                                     _indiceSeleccionado == indice &&
@@ -189,14 +185,14 @@ class _PantallaDualState extends State<PantallaDual>
   }
 }
 
-class _TarjetaSuma extends StatelessWidget {
-  final ProblemaDual problema;
+class _TarjetaOperacion extends StatelessWidget {
+  final ProblemaOperacionDecimal problema;
 
-  const _TarjetaSuma({required this.problema});
+  const _TarjetaOperacion({required this.problema});
 
   @override
   Widget build(BuildContext contexto) {
-    const colorAcento = Color(0xFFFF9A6B);
+    const colorAcento = Color(0xFF79D1FF);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
@@ -210,36 +206,14 @@ class _TarjetaSuma extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            problema.sumandoA.etiqueta,
-            style: const TextStyle(
-              color: PaletaNeon.textoPrincipal,
-              fontSize: 34,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Text(
-            problema.operador.simbolo,
-            style: const TextStyle(
-              color: colorAcento,
-              fontSize: 34,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Text(
-            problema.sumandoB.etiqueta,
-            style: const TextStyle(
-              color: PaletaNeon.textoPrincipal,
-              fontSize: 34,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-        ],
+      child: Text(
+        problema.etiqueta,
+        style: const TextStyle(
+          color: PaletaNeon.textoPrincipal,
+          fontSize: 30,
+          fontWeight: FontWeight.w300,
+          letterSpacing: 1.1,
+        ),
       ),
     );
   }

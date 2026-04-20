@@ -17,6 +17,7 @@ import 'pantalla_decimal.dart';
 import 'pantalla_dual.dart';
 import 'pantalla_espejo.dart';
 import 'pantalla_impropio.dart';
+import 'pantalla_operacion_decimal.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pintor_fragmento_tejado.dart';
@@ -150,6 +151,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
+        TipoFragmentoEnTejado.operacionDecimal => 4,
         TipoFragmentoEnTejado.unitario => fragmento.numerador,
       };
       setState(() {
@@ -220,6 +222,17 @@ class _PantallaCazaState extends State<PantallaCaza>
               denominadorA: fragmento.denominador,
               numeradorB: fragmento.numeradorB ?? 1,
               denominadorB: fragmento.denominadorB ?? 2,
+              operador: fragmento.operador ?? OperadorAritmetico.suma,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.operacionDecimal:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaOperacionDecimal(
+              etiquetaA: fragmento.decimalA ?? '0,5',
+              etiquetaB: fragmento.decimalB ?? '0,5',
+              operador: fragmento.operador ?? OperadorAritmetico.suma,
             ),
           ),
         );

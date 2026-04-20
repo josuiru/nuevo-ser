@@ -100,8 +100,29 @@ class GeneradorCaza {
       );
     }
 
+    if (tipo == TipoFragmentoEnTejado.operacionDecimal) {
+      final (textoA, textoB, operador) = _elegirOperacionDecimal(dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: 0,
+        denominador: 1,
+        tipo: tipo,
+        operador: operador,
+        decimalA: textoA,
+        decimalB: textoB,
+        etiquetaDecimal: '$textoA${operador.simbolo}$textoB',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
     if (tipo == TipoFragmentoEnTejado.dual) {
-      final (numA, denA, numB, denB) = _elegirSumandosDual(dificultad);
+      final operador = _elegirOperadorDual(dificultad);
+      final (numA, denA, numB, denB) =
+          _elegirSumandosDual(dificultad, operador);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -110,7 +131,9 @@ class GeneradorCaza {
         numeradorB: numB,
         denominadorB: denB,
         tipo: tipo,
-        etiquetaDecimal: '$numA/$denA+$numB/$denB',
+        operador: operador,
+        etiquetaDecimal:
+            '$numA/$denA${operador.simbolo}$numB/$denB',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -191,8 +214,15 @@ class GeneradorCaza {
         ? 0.0
         : switch (dificultad) {
             5 => 0.08,
-            6 => 0.1,
-            _ => 0.12,
+            6 => 0.09,
+            _ => 0.1,
+          };
+    final probOperacionDecimal = dificultad < 5
+        ? 0.0
+        : switch (dificultad) {
+            5 => 0.06,
+            6 => 0.08,
+            _ => 0.1,
           };
 
     final tirada = _azar.nextDouble();
@@ -208,7 +238,70 @@ class GeneradorCaza {
     if (tirada < umbral) return TipoFragmentoEnTejado.proporcional;
     umbral += probDual;
     if (tirada < umbral) return TipoFragmentoEnTejado.dual;
+    umbral += probOperacionDecimal;
+    if (tirada < umbral) return TipoFragmentoEnTejado.operacionDecimal;
     return TipoFragmentoEnTejado.unitario;
+  }
+
+  /// Elige una operación decimal al azar: dos decimales amigables
+  /// y un operador. Los resultados son decimales limpios por diseño
+  /// (el generador de la pantalla re-evalúa desde los valores dados).
+  (String, String, OperadorAritmetico) _elegirOperacionDecimal(int dificultad) {
+    final operadoresPorDificultad = <OperadorAritmetico>[
+      OperadorAritmetico.suma,
+      OperadorAritmetico.resta,
+      if (dificultad >= 5) OperadorAritmetico.producto,
+      if (dificultad >= 6) OperadorAritmetico.division,
+    ];
+    final operador = operadoresPorDificultad[
+        _azar.nextInt(operadoresPorDificultad.length)];
+
+    // Curado corto de casos por operador.
+    switch (operador) {
+      case OperadorAritmetico.suma:
+        final pares = const [
+          ('0,5', '0,3'),
+          ('0,25', '0,75'),
+          ('0,1', '0,9'),
+          ('1,2', '0,8'),
+          ('0,6', '0,3'),
+          ('1,5', '2,5'),
+        ];
+        final par = pares[_azar.nextInt(pares.length)];
+        return (par.$1, par.$2, operador);
+      case OperadorAritmetico.resta:
+        final pares = const [
+          ('0,8', '0,3'),
+          ('1,0', '0,25'),
+          ('2,5', '1,2'),
+          ('0,75', '0,25'),
+          ('1,5', '0,3'),
+        ];
+        final par = pares[_azar.nextInt(pares.length)];
+        return (par.$1, par.$2, operador);
+      case OperadorAritmetico.producto:
+        final pares = const [
+          ('0,5', '0,4'),
+          ('0,3', '0,6'),
+          ('0,2', '0,5'),
+          ('1,5', '0,2'),
+          ('2,5', '0,4'),
+          ('0,25', '4'),
+        ];
+        final par = pares[_azar.nextInt(pares.length)];
+        return (par.$1, par.$2, operador);
+      case OperadorAritmetico.division:
+        final pares = const [
+          ('1,5', '3'),
+          ('2,4', '2'),
+          ('4,5', '5'),
+          ('0,8', '4'),
+          ('1,2', '0,4'),
+          ('2,0', '0,5'),
+        ];
+        final par = pares[_azar.nextInt(pares.length)];
+        return (par.$1, par.$2, operador);
+    }
   }
 
   /// Elige un tipo respetando la mezcla del [Distrito]. Si el distrito
@@ -256,26 +349,63 @@ class GeneradorCaza {
         return dificultad >= 3;
       case TipoFragmentoEnTejado.proporcional:
       case TipoFragmentoEnTejado.dual:
+      case TipoFragmentoEnTejado.operacionDecimal:
         return dificultad >= 4;
     }
   }
 
-  /// Dos fracciones a sumar. Los denominadores son distintos y los
-  /// numeradores siempre menores que sus denominadores para que la
-  /// suma se parezca a ejercicios típicos de 6º de primaria.
-  (int, int, int, int) _elegirSumandosDual(int dificultad) {
+  /// Elige un operador para el Dual según la dificultad: en niveles
+  /// medios solo suma y resta; producto y división aparecen cuando el
+  /// niño ya domina las bases.
+  OperadorAritmetico _elegirOperadorDual(int dificultad) {
+    final candidatos = <OperadorAritmetico>[
+      OperadorAritmetico.suma,
+      OperadorAritmetico.suma,
+    ];
+    if (dificultad >= 4) candidatos.add(OperadorAritmetico.resta);
+    if (dificultad >= 5) candidatos.add(OperadorAritmetico.producto);
+    if (dificultad >= 6) candidatos.add(OperadorAritmetico.division);
+    return candidatos[_azar.nextInt(candidatos.length)];
+  }
+
+  /// Dos fracciones para una operación dual. Los denominadores suelen
+  /// ser distintos (aunque producto y división no lo exigen) y los
+  /// numeradores menores que sus denominadores para mantener el
+  /// problema en rango de primaria.
+  (int, int, int, int) _elegirSumandosDual(
+    int dificultad,
+    OperadorAritmetico operador,
+  ) {
     final denominadoresPosibles = dificultad < 6
         ? const [2, 3, 3, 4, 4, 5, 6]
         : const [3, 4, 5, 6, 6, 8, 10, 12];
     final denA =
         denominadoresPosibles[_azar.nextInt(denominadoresPosibles.length)];
     int denB;
-    do {
+    final debeSerDistinto =
+        operador == OperadorAritmetico.suma ||
+            operador == OperadorAritmetico.resta;
+    if (debeSerDistinto) {
+      do {
+        denB = denominadoresPosibles[
+            _azar.nextInt(denominadoresPosibles.length)];
+      } while (denB == denA);
+    } else {
       denB = denominadoresPosibles[
           _azar.nextInt(denominadoresPosibles.length)];
-    } while (denB == denA);
+    }
     final numA = 1 + _azar.nextInt(math.max(1, denA - 1));
-    final numB = 1 + _azar.nextInt(math.max(1, denB - 1));
+    var numB = 1 + _azar.nextInt(math.max(1, denB - 1));
+    // Si es resta, nos aseguramos que el minuendo sea mayor que el
+    // sustraendo para no entrar en negativos.
+    if (operador == OperadorAritmetico.resta) {
+      final valorA = numA / denA;
+      final valorB = numB / denB;
+      if (valorA < valorB) {
+        // Intercambiamos.
+        return (numB, denB, numA, denA);
+      }
+    }
     return (numA, denA, numB, denB);
   }
 

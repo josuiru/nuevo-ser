@@ -21,6 +21,26 @@ enum TipoFragmentoEnTejado {
   impropio,
   proporcional,
   dual,
+  operacionDecimal,
+}
+
+/// Operador aritmético usado por los Fragmentos Duales y los de
+/// operación con decimales.
+enum OperadorAritmetico { suma, resta, producto, division }
+
+extension SimboloOperador on OperadorAritmetico {
+  String get simbolo {
+    switch (this) {
+      case OperadorAritmetico.suma:
+        return '+';
+      case OperadorAritmetico.resta:
+        return '−';
+      case OperadorAritmetico.producto:
+        return '×';
+      case OperadorAritmetico.division:
+        return '÷';
+    }
+  }
 }
 
 /// Un Fragmento concreto flotando en el tejado a la espera de ser
@@ -35,9 +55,21 @@ class FragmentoEnTejado {
   final TipoFragmentoEnTejado tipo;
 
   /// Segunda fracción — solo se usa en Fragmentos Duales (Familia F)
-  /// donde el puzzle es sumar a/b + c/d. Null en cualquier otro tipo.
+  /// donde el puzzle es una operación aritmética sobre a/b y c/d.
+  /// Null en cualquier otro tipo.
   final int? numeradorB;
   final int? denominadorB;
+
+  /// Operador que une la primera y segunda fracción en un Dual, o los
+  /// dos decimales en un Fragmento de operación decimal. Null en
+  /// Fragmentos que no tienen operación binaria explícita.
+  final OperadorAritmetico? operador;
+
+  /// Operandos decimales para [TipoFragmentoEnTejado.operacionDecimal].
+  /// Se guardan como texto ya formateado ("0,5", "1,25") para mostrar
+  /// tal cual en la pantalla, y como valor numérico para la evaluación.
+  final String? decimalA;
+  final String? decimalB;
 
   /// Etiqueta alternativa para Fragmentos decimales. Si está presente
   /// se muestra en el tejado en lugar de numerador/denominador.
@@ -68,6 +100,9 @@ class FragmentoEnTejado {
     this.etiquetaDecimal,
     this.numeradorB,
     this.denominadorB,
+    this.operador,
+    this.decimalA,
+    this.decimalB,
   });
 
   bool get esCompuesto => numerador > 1;

@@ -71,10 +71,11 @@ class CatalogoDistritos {
     xMapa: 0.5,
     yMapa: 0.72,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.decimal: 0.45,
-      TipoFragmentoEnTejado.impropio: 0.2,
-      TipoFragmentoEnTejado.unitario: 0.2,
-      TipoFragmentoEnTejado.porcentaje: 0.15,
+      TipoFragmentoEnTejado.decimal: 0.35,
+      TipoFragmentoEnTejado.operacionDecimal: 0.25,
+      TipoFragmentoEnTejado.impropio: 0.15,
+      TipoFragmentoEnTejado.unitario: 0.15,
+      TipoFragmentoEnTejado.porcentaje: 0.1,
     },
     saludoPrimeraVisita:
         'Industria. Aquí no valen los aproximados. Cifra por cifra.',
