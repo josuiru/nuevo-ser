@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'fragmento_en_tejado.dart';
+import 'problema_decimal.dart' show decimalesConocidos;
 
 /// Genera Fragmentos que aparecen en el tejado a lo largo de una
 /// sesión de caza. La dificultad sube **continuamente** con el número
@@ -20,6 +21,23 @@ class GeneradorCaza {
   }) {
     final dificultad = _nivelDificultadSegunEsquirlas(esquirlasAcumuladas);
     final tipo = _elegirTipo(dificultad);
+
+    if (tipo == TipoFragmentoEnTejado.decimal) {
+      final decimalElegido =
+          decimalesConocidos[_azar.nextInt(decimalesConocidos.length)];
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: decimalElegido.fraccionEquivalente.numerador,
+        denominador: decimalElegido.fraccionEquivalente.denominador,
+        tipo: tipo,
+        etiquetaDecimal: decimalElegido.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     final denominador = tipo == TipoFragmentoEnTejado.espejo
         ? _elegirDenominadorEspejo(dificultad)
@@ -41,21 +59,38 @@ class GeneradorCaza {
     );
   }
 
-  /// Probabilidad de que el Fragmento sea de tipo Espejo (equivalencia).
-  /// Aparecen a partir de dificultad 2, cada vez con más frecuencia.
+  /// Decide qué tipo de Fragmento aparece según el nivel.
+  ///
+  /// - Dificultad < 2: solo unitarios (el niño aún se hace al gesto).
+  /// - Dificultad 2-3: aparecen Espejos.
+  /// - Dificultad 3+: también aparecen Decimales.
   TipoFragmentoEnTejado _elegirTipo(int dificultad) {
     if (dificultad < 2) return TipoFragmentoEnTejado.unitario;
+
     final probEspejo = switch (dificultad) {
       2 => 0.18,
-      3 => 0.22,
-      4 => 0.28,
-      5 => 0.3,
-      6 => 0.33,
-      _ => 0.35,
+      3 => 0.2,
+      4 => 0.22,
+      5 => 0.22,
+      6 => 0.24,
+      _ => 0.26,
     };
-    return _azar.nextDouble() < probEspejo
-        ? TipoFragmentoEnTejado.espejo
-        : TipoFragmentoEnTejado.unitario;
+    final probDecimal = dificultad < 3
+        ? 0.0
+        : switch (dificultad) {
+            3 => 0.14,
+            4 => 0.18,
+            5 => 0.2,
+            6 => 0.22,
+            _ => 0.24,
+          };
+
+    final tirada = _azar.nextDouble();
+    if (tirada < probEspejo) return TipoFragmentoEnTejado.espejo;
+    if (tirada < probEspejo + probDecimal) {
+      return TipoFragmentoEnTejado.decimal;
+    }
+    return TipoFragmentoEnTejado.unitario;
   }
 
   /// Para Espejos interesa más variedad de denominadores pequeños

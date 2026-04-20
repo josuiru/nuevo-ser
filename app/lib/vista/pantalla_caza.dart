@@ -7,9 +7,11 @@ import 'package:flutter/services.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/fragmento_en_tejado.dart';
 import '../dominio/generador_caza.dart';
+import '../dominio/problema_decimal.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
+import 'pantalla_decimal.dart';
 import 'pantalla_espejo.dart';
 import 'pintor_fragmento_tejado.dart';
 import 'sora_presencia.dart';
@@ -120,10 +122,11 @@ class _PantallaCazaState extends State<PantallaCaza>
     if (!mounted) return;
     setState(() => _activos.remove(fragmento));
     if (capturado == true) {
-      final esquirlasGanadas =
-          fragmento.tipo == TipoFragmentoEnTejado.espejo
-              ? 2
-              : fragmento.numerador;
+      final esquirlasGanadas = switch (fragmento.tipo) {
+        TipoFragmentoEnTejado.espejo => 2,
+        TipoFragmentoEnTejado.decimal => 2,
+        TipoFragmentoEnTejado.unitario => fragmento.numerador,
+      };
       setState(() {
         _esquirlasEstaSesion += esquirlasGanadas;
         _esquirlasTotal += esquirlasGanadas;
@@ -146,6 +149,16 @@ class _PantallaCazaState extends State<PantallaCaza>
             ),
           ),
         );
+      case TipoFragmentoEnTejado.decimal:
+        final decimalObjetivo = _buscarDecimalConocido(
+          fragmento.etiquetaDecimal,
+        );
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) =>
+                PantallaDecimal(decimalObjetivo: decimalObjetivo),
+          ),
+        );
       case TipoFragmentoEnTejado.unitario:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
@@ -156,6 +169,14 @@ class _PantallaCazaState extends State<PantallaCaza>
           ),
         );
     }
+  }
+
+  DecimalConocido? _buscarDecimalConocido(String? etiqueta) {
+    if (etiqueta == null) return null;
+    for (final d in decimalesConocidos) {
+      if (d.etiqueta == etiqueta) return d;
+    }
+    return null;
   }
 
   void _comentarTrasCaptura() {

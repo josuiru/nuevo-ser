@@ -7,7 +7,10 @@ import 'package:flutter/foundation.dart';
 /// - [espejo]: puzzle de equivalencia (Familia D). Se muestra la
 ///   fracción del Fragmento y el niño elige su equivalente entre
 ///   varios candidatos.
-enum TipoFragmentoEnTejado { unitario, espejo }
+/// - [decimal]: puzzle de conversión (Familia G). El Fragmento se
+///   etiqueta con un decimal (0,25) y el niño elige la fracción
+///   equivalente entre cuatro candidatos.
+enum TipoFragmentoEnTejado { unitario, espejo, decimal }
 
 /// Un Fragmento concreto flotando en el tejado a la espera de ser
 /// cazado. Se distingue de [FragmentoUnitario] en que carga datos de
@@ -19,6 +22,10 @@ class FragmentoEnTejado {
   final int numerador;
   final int denominador;
   final TipoFragmentoEnTejado tipo;
+
+  /// Etiqueta alternativa para Fragmentos decimales. Si está presente
+  /// se muestra en el tejado en lugar de numerador/denominador.
+  final String? etiquetaDecimal;
 
   /// Coordenadas normalizadas (0-1) sobre el área de caza. El pintor
   /// las multiplica por el tamaño del lienzo al dibujar.
@@ -42,11 +49,12 @@ class FragmentoEnTejado {
     required this.instanteAparicion,
     required this.tiempoDeVida,
     this.tipo = TipoFragmentoEnTejado.unitario,
+    this.etiquetaDecimal,
   });
 
   bool get esCompuesto => numerador > 1;
 
-  String get etiqueta => '$numerador/$denominador';
+  String get etiqueta => etiquetaDecimal ?? '$numerador/$denominador';
 
   /// Fracción de vida consumida en este instante [ahora].
   /// 0.0 = acaba de aparecer, 1.0 = se le agotó el tiempo.
