@@ -10,87 +10,87 @@ SesionNoche primeraNoche() {
   return const SesionNoche(
     tituloDiegetico: 'Primera noche',
     lineasIntro: [
-      LineaSora('Eh. Eres tú, ¿no?'),
-      LineaSora('Me han dicho que tienes buen ojo.'),
-      LineaSora('Vamos a ver si es verdad.'),
-      LineaSora('Mira ahí abajo. En el callejón.'),
+      LineaDialogo('Eh. Eres tú, ¿no?'),
+      LineaDialogo('Me han dicho que tienes buen ojo.'),
+      LineaDialogo('Vamos a ver si es verdad.'),
+      LineaDialogo('Mira ahí abajo. En el callejón.'),
     ],
     contratos: [
       ContratoFragmento(
         denominador: 2,
         contextoNarrativo: 'se está comiendo el cartel de la esquina',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Ese se come el cartel de neón. Pártelo en dos.',
         ),
       ),
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come las agujas del reloj del kiosco',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Otro. Este va a por el reloj del kiosco. En tres.',
         ),
       ),
       ContratoFragmento(
         denominador: 2,
         contextoNarrativo: 'se come el letrero de la panadería',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Fácil. El letrero de la panadería. En dos.',
         ),
       ),
       ContratoFragmento(
         denominador: 4,
         contextoNarrativo: 'se ha tragado media ventana',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Ese se ha tragado media ventana. En cuatro iguales.',
         ),
       ),
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come los cables del metro',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Baja al metro ese. Tres trenes dependen de cómo cortes esto.',
         ),
       ),
       ContratoFragmento(
         denominador: 5,
         contextoNarrativo: 'se come palabras de una conversación',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Este es rápido. Se come lo que la gente intenta decir. En cinco.',
         ),
       ),
       ContratoFragmento(
         denominador: 4,
         contextoNarrativo: 'se come los escalones del portal',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Cuatro escalones, cuatro cortes. Mira el centro.',
         ),
       ),
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come banderines de un balcón',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Banderines. Cuélgalo tú otra vez. En tres.',
         ),
       ),
       ContratoFragmento(
         denominador: 5,
         contextoNarrativo: 'se come los segunderos de varios relojes',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Quíntuple. Si no lo pillas, toda la calle va a retraso.',
         ),
       ),
       ContratoFragmento(
         denominador: 4,
         contextoNarrativo: 'se come el espejo retrovisor de una moto',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Último de esta noche. El espejo de la moto. En cuatro.',
         ),
       ),
     ],
     lineasCierre: [
-      LineaSora('Ya está por hoy.'),
-      LineaSora('Diez Fragmentos. No se te da mal.'),
-      LineaSora('Vete a dormir. Mañana los cazamos más gordos.'),
+      LineaDialogo('Ya está por hoy.'),
+      LineaDialogo('Diez Fragmentos. No se te da mal.'),
+      LineaDialogo('Vete a dormir. Mañana los cazamos más gordos.'),
     ],
   );
 }
@@ -102,87 +102,87 @@ SesionNoche segundaNoche() {
   return const SesionNoche(
     tituloDiegetico: 'Segunda noche',
     lineasIntro: [
-      LineaSora('Anda, has vuelto.'),
-      LineaSora('Pensaba que te habías asustado.'),
-      LineaSora('Hoy hay más. Venga.'),
+      LineaDialogo('Anda, has vuelto.'),
+      LineaDialogo('Pensaba que te habías asustado.'),
+      LineaDialogo('Hoy hay más. Venga.'),
     ],
     contratos: [
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come los pedales de una bici abandonada',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Bici abandonada al fondo. Tres pedales quedan visibles.',
         ),
       ),
       ContratoFragmento(
         denominador: 2,
         contextoNarrativo: 'se come la sombra de un farol',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'La sombra del farol. En dos. Sin pensarlo mucho.',
         ),
       ),
       ContratoFragmento(
         denominador: 5,
         contextoNarrativo: 'se come las frecuencias de una radio',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Radio del vecino del cuarto. Cinco emisoras. No deja oír nada.',
         ),
       ),
       ContratoFragmento(
         denominador: 4,
         contextoNarrativo: 'se come las esquinas de un cartel',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Cartel roto. Cuatro esquinas que no cuadran.',
         ),
       ),
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come los colores de un semáforo',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Semáforo. Tres colores. Se está comiendo el amarillo.',
         ),
       ),
       ContratoFragmento(
         denominador: 5,
         contextoNarrativo: 'se come las aspas de un molinillo',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Molinillo en una ventana. Cinco aspas. Se ha parado por su culpa.',
         ),
       ),
       ContratoFragmento(
         denominador: 4,
         contextoNarrativo: 'se come los cuatro lados de una alcantarilla',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Alcantarilla cuadrada. Cuatro lados. Uno va a faltar.',
         ),
       ),
       ContratoFragmento(
         denominador: 2,
         contextoNarrativo: 'se come las alas de una paloma',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Paloma durmiendo en una cornisa. En dos. Sin hacer ruido.',
         ),
       ),
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come las estrofas de una canción',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Música de un bar. Tres estrofas. Se comen alternas.',
         ),
       ),
       ContratoFragmento(
         denominador: 5,
         contextoNarrativo: 'se come los segundos antes del amanecer',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Último. Este se come el tiempo antes de que salga el sol. Cinco.',
         ),
       ),
     ],
     lineasCierre: [
-      LineaSora('Mira. Ya es casi de día.'),
-      LineaSora('Veinte Fragmentos en dos noches.'),
-      LineaSora('No está mal.'),
-      LineaSora('Vete a descansar.'),
+      LineaDialogo('Mira. Ya es casi de día.'),
+      LineaDialogo('Veinte Fragmentos en dos noches.'),
+      LineaDialogo('No está mal.'),
+      LineaDialogo('Vete a descansar.'),
     ],
   );
 }
@@ -196,16 +196,16 @@ SesionNoche terceraNoche() {
   return const SesionNoche(
     tituloDiegetico: 'Tercera noche',
     lineasIntro: [
-      LineaSora('Vaya. Ya eres habitual.'),
-      LineaSora('Hoy no valen los fáciles.'),
-      LineaSora('Algunos Fragmentos son a trozos. No los partes de una vez.'),
-      LineaSora('Uno a uno. Como quien desata un nudo.'),
+      LineaDialogo('Vaya. Ya eres habitual.'),
+      LineaDialogo('Hoy no valen los fáciles.'),
+      LineaDialogo('Algunos Fragmentos son a trozos. No los partes de una vez.'),
+      LineaDialogo('Uno a uno. Como quien desata un nudo.'),
     ],
     contratos: [
       ContratoFragmento(
         denominador: 3,
         contextoNarrativo: 'se come un zapato solitario',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Entramos suaves. Un zapato olvidado. En tres.',
         ),
       ),
@@ -213,14 +213,14 @@ SesionNoche terceraNoche() {
         numerador: 2,
         denominador: 3,
         contextoNarrativo: 'se ha tragado dos tercios del callejón',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Ese ha mordido dos tercios. Son dos trozos de un tercio. Uno, y después otro.',
         ),
       ),
       ContratoFragmento(
         denominador: 4,
         contextoNarrativo: 'se come un grafiti en la pared',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Grafiti nuevo. Cuatro colores. Córtalo igual.',
         ),
       ),
@@ -228,14 +228,14 @@ SesionNoche terceraNoche() {
         numerador: 3,
         denominador: 4,
         contextoNarrativo: 'se come tres cuartos de una ventana',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Tres cuartos de la ventana del ático. Tres veces en cuatro.',
         ),
       ),
       ContratoFragmento(
         denominador: 5,
         contextoNarrativo: 'se come las cuerdas de una guitarra',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Guitarra en el balcón. Cinco cuerdas. Suave.',
         ),
       ),
@@ -243,7 +243,7 @@ SesionNoche terceraNoche() {
         numerador: 2,
         denominador: 5,
         contextoNarrativo: 'se come dos quintos de una marquesina',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Marquesina rota. Dos quintos. Dos pasadas en cinco.',
         ),
       ),
@@ -251,14 +251,14 @@ SesionNoche terceraNoche() {
         numerador: 5,
         denominador: 6,
         contextoNarrativo: 'se come cinco sextos de un mosaico',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Mosaico de la plaza. Cinco de seis baldosas. Concentra.',
         ),
       ),
       ContratoFragmento(
         denominador: 2,
         contextoNarrativo: 'se come el eco del último tren',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'El eco del último tren. En dos. Rápido antes de que pare.',
         ),
       ),
@@ -266,7 +266,7 @@ SesionNoche terceraNoche() {
         numerador: 3,
         denominador: 5,
         contextoNarrativo: 'se come tres quintos de los carteles electorales',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Ironía: Fragmento devora tres de cinco carteles. Tres trozos en cinco.',
         ),
       ),
@@ -274,16 +274,135 @@ SesionNoche terceraNoche() {
         numerador: 7,
         denominador: 8,
         contextoNarrativo: 'se come casi entero un reloj de pared',
-        invocacion: LineaSora(
+        invocacion: LineaDialogo(
           'Este se ha comido casi el reloj entero. Siete de ocho. Paciencia.',
         ),
       ),
     ],
     lineasCierre: [
-      LineaSora('Bien. Los compuestos no son un muro.'),
-      LineaSora('Son una cadena. Un eslabón cada vez.'),
-      LineaSora('Mañana te presento a alguien.'),
-      LineaSora('Vete a dormir.'),
+      LineaDialogo('Bien. Los compuestos no son un muro.'),
+      LineaDialogo('Son una cadena. Un eslabón cada vez.'),
+      LineaDialogo('Mañana te presento a alguien.'),
+      LineaDialogo('Vete a dormir.'),
+    ],
+  );
+}
+
+/// Cuarta sesión: aparece Kai (biblia §4.3) a mitad de la noche para
+/// humillar con elegancia al jugador y dejarle un Fragmento difícil
+/// "dedicado". Primera presencia del rival.
+SesionNoche cuartaNoche() {
+  return const SesionNoche(
+    tituloDiegetico: 'Cuarta noche — el rival',
+    lineasIntro: [
+      LineaDialogo('Venga, sin calentar.'),
+      LineaDialogo('Hoy vas con los ojos abiertos.'),
+      LineaDialogo('Y te aguantas lo que toque.'),
+    ],
+    contratos: [
+      ContratoFragmento(
+        denominador: 4,
+        contextoNarrativo: 'se come las cuatro farolas de la plaza',
+        invocacion: LineaDialogo(
+          'Plaza central. Cuatro farolas. Una a una.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 2,
+        denominador: 5,
+        contextoNarrativo: 'se come dos quintos del escaparate',
+        invocacion: LineaDialogo(
+          'Escaparate de la tintorería. Dos trozos en cinco.',
+        ),
+      ),
+      ContratoFragmento(
+        denominador: 3,
+        contextoNarrativo: 'se come las voces de tres vecinas',
+        invocacion: LineaDialogo(
+          'Vecinas discutiendo en el patio. En tres. Que vuelvan a oírse.',
+        ),
+      ),
+      // Aquí entra Kai. Ver interrupciones más abajo.
+      ContratoFragmento(
+        numerador: 5,
+        denominador: 7,
+        contextoNarrativo: 'es el que Kai te ha "regalado"',
+        invocacion: LineaDialogo(
+          'Ni me mires. El de Kai. Cinco trozos en siete. Tú solo.',
+        ),
+      ),
+      ContratoFragmento(
+        denominador: 5,
+        contextoNarrativo: 'se come el ritmo de una batería lejana',
+        invocacion: LineaDialogo(
+          'Respira. Batería de un bar. En cinco. Coge su compás.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 3,
+        denominador: 4,
+        contextoNarrativo: 'se come tres cuartos del mural',
+        invocacion: LineaDialogo(
+          'Mural pintado hace un mes. Tres cuartos. No dejes que se borre.',
+        ),
+      ),
+      ContratoFragmento(
+        denominador: 2,
+        contextoNarrativo: 'se come la mitad de una conversación',
+        invocacion: LineaDialogo(
+          'Conversación a medias. En dos. Que las dos partes se oigan.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 4,
+        denominador: 5,
+        contextoNarrativo: 'se come cuatro quintos del tejado',
+        invocacion: LineaDialogo(
+          'El tejado de este edificio. Casi entero. Cuatro en cinco.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 3,
+        denominador: 7,
+        contextoNarrativo: 'se come tres séptimos de una semana',
+        invocacion: LineaDialogo(
+          'Este se come los días. Tres de siete. Te los devuelves.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 5,
+        denominador: 8,
+        contextoNarrativo: 'se come cinco octavos de la calle',
+        invocacion: LineaDialogo(
+          'Último. Cinco octavos de la calle entera. Con calma.',
+        ),
+      ),
+    ],
+    interrupciones: [
+      InterrupcionNarrativa(
+        antesDelContrato: 3,
+        beats: [
+          LineaDialogo('Vaya, vaya.',
+              personaje: PersonajeDialogo.kai),
+          LineaDialogo('Tú eres el que se rumorea.',
+              personaje: PersonajeDialogo.kai),
+          LineaDialogo('Me han dicho que vas por el tercero en los tejados.',
+              personaje: PersonajeDialogo.kai),
+          LineaDialogo('Yo iba por el séptimo a tu edad.',
+              personaje: PersonajeDialogo.kai),
+          LineaDialogo('Toma. Este se me ha cruzado. Todo tuyo.',
+              personaje: PersonajeDialogo.kai),
+          LineaDialogo('A ver cómo sales.',
+              personaje: PersonajeDialogo.kai),
+          LineaDialogo('Déjalo. Ya se irá.'),
+          LineaDialogo('Y no le contestes. Le pone.'),
+        ],
+      ),
+    ],
+    lineasCierre: [
+      LineaDialogo('Ha estado bien. El de Kai lo has llevado.'),
+      LineaDialogo('No se lo digas. Ya lo sabe.'),
+      LineaDialogo('Vete a dormir. Mañana otra vez.'),
     ],
   );
 }

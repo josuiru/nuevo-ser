@@ -9,6 +9,7 @@ import '../dominio/sesion.dart';
 import '../nucleo/dialogos_sora.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import 'kai_presencia.dart';
 import 'lienzo_combate.dart';
 import 'particulas_rotura.dart';
 import 'pintor_fragmento.dart';
@@ -26,6 +27,7 @@ import 'sora_presencia.dart';
 /// - [sesionCompleta]: se notifica al padre para mostrar el cierre.
 enum _FaseSesion {
   presentacion,
+  interrupcion,
   invocando,
   dibujando,
   rompiendo,
@@ -54,13 +56,16 @@ class _PantallaCombateState extends State<PantallaCombate>
   int _indicePresentacion = 0;
   int _indiceContrato = 0;
   int _subCombatesResueltos = 0;
+  int _indiceInterrupcion = 0;
+  InterrupcionNarrativa? _interrupcionActiva;
   final List<RadioTrazado> _radiosConfirmados = [];
   RadioTrazado? _radioEnCurso;
   ResultadoIntento? _ultimoResultado;
   _FaseSesion _fase = _FaseSesion.presentacion;
   int _victoriasAcumuladas = 0;
   int _fallosAcumulados = 0;
-  String? _lineaSoraActiva;
+  String? _lineaActiva;
+  PersonajeDialogo _personajeActivo = PersonajeDialogo.sora;
   bool _lineaEsperaPulsacion = true;
 
   Timer? _temporizadorLineaSora;
@@ -98,7 +103,9 @@ class _PantallaCombateState extends State<PantallaCombate>
   bool get _hayTrazos => _radiosConfirmados.isNotEmpty;
 
   bool get _mostrarFragmento =>
-      _fase != _FaseSesion.presentacion && _fase != _FaseSesion.transicion;
+      _fase != _FaseSesion.presentacion &&
+      _fase != _FaseSesion.transicion &&
+      _fase != _FaseSesion.interrupcion;
 
   @override
   void initState() {
@@ -147,7 +154,8 @@ class _PantallaCombateState extends State<PantallaCombate>
     final linea = widget.sesion.lineasIntro[_indicePresentacion];
     setState(() {
       _fase = _FaseSesion.presentacion;
-      _lineaSoraActiva = linea.texto;
+      _lineaActiva = linea.texto;
+      _personajeActivo = linea.personaje;
       _lineaEsperaPulsacion = linea.esperaPulsacion;
     });
   }
@@ -158,6 +166,52 @@ class _PantallaCombateState extends State<PantallaCombate>
       setState(() => _indicePresentacion++);
       _mostrarLineaPresentacionActual();
     } else {
+      _avanzarAlSiguienteContrato();
+    }
+  }
+
+  /// Comprobación central que se ejecuta antes de empezar un contrato.
+  /// Si hay una interrupción narrativa programada para este índice,
+  /// entra en fase [_FaseSesion.interrupcion] y reproduce sus beats
+  /// antes de pasar al combate.
+  void _avanzarAlSiguienteContrato() {
+    final interrupcion =
+        widget.sesion.interrupcionAntesDe(_indiceContrato);
+    if (interrupcion != null && _interrupcionActiva != interrupcion) {
+      _iniciarInterrupcion(interrupcion);
+    } else {
+      _iniciarInvocacion();
+    }
+  }
+
+  /// ---- Fase: interrupción narrativa (aparición de Kai u otros) ----
+
+  void _iniciarInterrupcion(InterrupcionNarrativa interrupcion) {
+    _interrupcionActiva = interrupcion;
+    _indiceInterrupcion = 0;
+    _mostrarBeatInterrupcionActual();
+  }
+
+  void _mostrarBeatInterrupcionActual() {
+    final interrupcion = _interrupcionActiva;
+    if (interrupcion == null) return;
+    final beat = interrupcion.beats[_indiceInterrupcion];
+    setState(() {
+      _fase = _FaseSesion.interrupcion;
+      _lineaActiva = beat.texto;
+      _personajeActivo = beat.personaje;
+      _lineaEsperaPulsacion = beat.esperaPulsacion;
+    });
+  }
+
+  void _avanzarInterrupcion() {
+    HapticFeedback.selectionClick();
+    final interrupcion = _interrupcionActiva;
+    if (interrupcion == null) return;
+    if (_indiceInterrupcion < interrupcion.beats.length - 1) {
+      setState(() => _indiceInterrupcion++);
+      _mostrarBeatInterrupcionActual();
+    } else {
       _iniciarInvocacion();
     }
   }
@@ -167,7 +221,8 @@ class _PantallaCombateState extends State<PantallaCombate>
   void _iniciarInvocacion() {
     setState(() {
       _fase = _FaseSesion.invocando;
-      _lineaSoraActiva = _contratoActivo.invocacion.texto;
+      _lineaActiva = _contratoActivo.invocacion.texto;
+      _personajeActivo = _contratoActivo.invocacion.personaje;
       _lineaEsperaPulsacion = true;
       _subCombatesResueltos = 0;
       _radiosConfirmados.clear();
@@ -190,7 +245,8 @@ class _PantallaCombateState extends State<PantallaCombate>
       _radioEnCurso = null;
       _ultimoResultado = null;
       _fase = _FaseSesion.invocando;
-      _lineaSoraActiva = mensajeEntre;
+      _lineaActiva = mensajeEntre;
+      _personajeActivo = PersonajeDialogo.sora;
       _lineaEsperaPulsacion = true;
     });
     _controladorRotura.reset();
@@ -203,7 +259,8 @@ class _PantallaCombateState extends State<PantallaCombate>
     HapticFeedback.selectionClick();
     setState(() {
       _fase = _FaseSesion.dibujando;
-      _lineaSoraActiva = null;
+      _lineaActiva = null;
+      _personajeActivo = PersonajeDialogo.sora;
     });
   }
 
@@ -215,7 +272,7 @@ class _PantallaCombateState extends State<PantallaCombate>
     setState(() {
       _radiosConfirmados.add(radio);
       _ultimoResultado = null;
-      _lineaSoraActiva = null;
+      _lineaActiva = null;
     });
   }
 
@@ -258,9 +315,10 @@ class _PantallaCombateState extends State<PantallaCombate>
           _subCombatesResueltos >= _subCombatesTotales;
       setState(() {
         _fase = _FaseSesion.rompiendo;
-        _lineaSoraActiva = esUltimoSubCombate
+        _lineaActiva = esUltimoSubCombate
             ? DialogosSora.felicitacionPara(_victoriasAcumuladas - 1)
             : null;
+        _personajeActivo = PersonajeDialogo.sora;
         _lineaEsperaPulsacion = false;
       });
       _controladorRotura
@@ -274,8 +332,9 @@ class _PantallaCombateState extends State<PantallaCombate>
       _fallosAcumulados++;
       HapticFeedback.vibrate();
       setState(() {
-        _lineaSoraActiva =
+        _lineaActiva =
             DialogosSora.animoTrasFallo(_fallosAcumulados - 1);
+        _personajeActivo = PersonajeDialogo.sora;
         _lineaEsperaPulsacion = false;
       });
     }
@@ -308,7 +367,7 @@ class _PantallaCombateState extends State<PantallaCombate>
           _ultimoResultado = null;
         });
         _controladorRotura.reset();
-        _iniciarInvocacion();
+        _avanzarAlSiguienteContrato();
       } else {
         setState(() => _fase = _FaseSesion.sesionCompleta);
         widget.alTerminarSesion();
@@ -345,6 +404,9 @@ class _PantallaCombateState extends State<PantallaCombate>
     switch (_fase) {
       case _FaseSesion.presentacion:
         _avanzarPresentacion();
+        break;
+      case _FaseSesion.interrupcion:
+        _avanzarInterrupcion();
         break;
       case _FaseSesion.invocando:
         _avanzarInvocacion();
@@ -447,14 +509,22 @@ class _PantallaCombateState extends State<PantallaCombate>
                           ),
                         ],
                       ),
-                    SoraPresencia(
-                      textoActivo: _lineaSoraActiva,
-                      alTocarBocadillo: _lineaEsperaPulsacion
-                          ? _alTocarBocadillo
-                          : null,
-                    ),
+                    _personajeActivo == PersonajeDialogo.kai
+                        ? KaiPresencia(
+                            textoActivo: _lineaActiva,
+                            alTocarBocadillo: _lineaEsperaPulsacion
+                                ? _alTocarBocadillo
+                                : null,
+                          )
+                        : SoraPresencia(
+                            textoActivo: _lineaActiva,
+                            alTocarBocadillo: _lineaEsperaPulsacion
+                                ? _alTocarBocadillo
+                                : null,
+                          ),
                     if (_lineaEsperaPulsacion &&
                         (_fase == _FaseSesion.presentacion ||
+                            _fase == _FaseSesion.interrupcion ||
                             _fase == _FaseSesion.invocando))
                       const Padding(
                         padding: EdgeInsets.only(bottom: 10),
