@@ -7,6 +7,7 @@ class RepositorioProgreso {
   static const _claveSiguienteNoche = 'uroto.siguiente_noche';
   static const _claveUltimaAperturaMs = 'uroto.ultima_apertura_ms';
   static const _claveYaVioApertura = 'uroto.ya_vio_apertura';
+  static const _claveEsquirlasTotal = 'uroto.esquirlas_total';
 
   Future<int> cargarSiguienteNoche() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,6 +44,16 @@ class RepositorioProgreso {
     );
   }
 
+  Future<int> cargarEsquirlas() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_claveEsquirlasTotal) ?? 0;
+  }
+
+  Future<void> guardarEsquirlas(int total) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_claveEsquirlasTotal, total);
+  }
+
   /// Útil para reiniciar desde el principio (modo desarrollo o niño que
   /// quiere rejugarlo desde cero).
   Future<void> reiniciar() async {
@@ -50,5 +61,6 @@ class RepositorioProgreso {
     await prefs.remove(_claveSiguienteNoche);
     await prefs.remove(_claveUltimaAperturaMs);
     await prefs.remove(_claveYaVioApertura);
+    await prefs.remove(_claveEsquirlasTotal);
   }
 }

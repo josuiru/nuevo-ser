@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'datos/repositorio_progreso.dart';
-import 'dominio/sesion.dart';
-import 'nucleo/guion_primera_noche.dart';
 import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
-import 'vista/pantalla_cierre.dart';
-import 'vista/pantalla_combate.dart';
+import 'vista/pantalla_caza.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +33,7 @@ class AppUnoRoto extends StatelessWidget {
   }
 }
 
-enum _FaseApp { cargando, apertura, sesion, cierre }
+enum _FaseApp { cargando, apertura, caza }
 
 class OrquestadorFases extends StatefulWidget {
   const OrquestadorFases({super.key});
@@ -47,71 +44,27 @@ class OrquestadorFases extends StatefulWidget {
 
 class _OrquestadorFasesState extends State<OrquestadorFases> {
   final RepositorioProgreso _repositorio = RepositorioProgreso();
-
   _FaseApp _fase = _FaseApp.cargando;
-  int _indiceNoche = 0;
-  SesionNoche _sesionActual = primeraNoche();
 
   @override
   void initState() {
     super.initState();
-    _cargarProgreso();
+    _inicializar();
   }
 
-  Future<void> _cargarProgreso() async {
-    final indiceGuardado = await _repositorio.cargarSiguienteNoche();
+  Future<void> _inicializar() async {
     final yaVioApertura = await _repositorio.yaVioLaApertura();
     await _repositorio.guardarAhoraComoUltimaApertura();
-
     if (!mounted) return;
     setState(() {
-      _indiceNoche = indiceGuardado;
-      _sesionActual = _sesionParaIndice(indiceGuardado);
-      // Primera vez: splash + sesión. En reaperturas saltamos al combate
-      // directamente para respetar el tiempo del niño.
-      _fase = yaVioApertura ? _FaseApp.sesion : _FaseApp.apertura;
+      _fase = yaVioApertura ? _FaseApp.caza : _FaseApp.apertura;
     });
-  }
-
-  SesionNoche _sesionParaIndice(int indice) {
-    switch (indice) {
-      case 0:
-        return primeraNoche();
-      case 1:
-        return segundaNoche();
-      case 2:
-        return terceraNoche();
-      case 3:
-        return cuartaNoche();
-      default:
-        return cuartaNoche();
-    }
   }
 
   Future<void> _alTerminarApertura() async {
     await _repositorio.marcarAperturaVista();
     if (!mounted) return;
-    setState(() => _fase = _FaseApp.sesion);
-  }
-
-  Future<void> _alTerminarSesion() async {
-    final siguienteIndice = _indiceNoche + 1;
-    await _repositorio.guardarSiguienteNoche(siguienteIndice);
-    if (!mounted) return;
-    setState(() => _fase = _FaseApp.cierre);
-  }
-
-  void _alSeguirPracticando() {
-    setState(() {
-      _indiceNoche++;
-      _sesionActual = _sesionParaIndice(_indiceNoche);
-      _fase = _FaseApp.sesion;
-    });
-  }
-
-  void _alCerrar() {
-    // El botón "Buenas noches" ya llama a SystemNavigator.pop() en la
-    // propia PantallaCierre. Aquí no hacemos nada adicional.
+    setState(() => _fase = _FaseApp.caza);
   }
 
   @override
@@ -121,19 +74,8 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         return const ColoredBox(color: PaletaNeon.fondoProfundo);
       case _FaseApp.apertura:
         return PantallaApertura(alTerminarApertura: _alTerminarApertura);
-      case _FaseApp.sesion:
-        return PantallaCombate(
-          key: ValueKey('noche_$_indiceNoche'),
-          sesion: _sesionActual,
-          alTerminarSesion: _alTerminarSesion,
-        );
-      case _FaseApp.cierre:
-        return PantallaCierre(
-          lineasDeSora:
-              _sesionActual.lineasCierre.map((l) => l.texto).toList(),
-          alCerrar: _alCerrar,
-          alSeguirPracticando: _alSeguirPracticando,
-        );
+      case _FaseApp.caza:
+        return PantallaCaza(repositorio: _repositorio);
     }
   }
 }
