@@ -48,7 +48,21 @@ class OrquestadorFases extends StatefulWidget {
 
 class _OrquestadorFasesState extends State<OrquestadorFases> {
   _FaseApp _fase = _FaseApp.apertura;
+  int _indiceNoche = 0;
   SesionNoche _sesionActual = primeraNoche();
+
+  SesionNoche _sesionParaIndice(int indice) {
+    switch (indice) {
+      case 0:
+        return primeraNoche();
+      case 1:
+        return segundaNoche();
+      default:
+        // Si el niño quiere seguir más allá, reciclamos la segunda noche
+        // como práctica libre hasta que diseñemos la tercera.
+        return segundaNoche();
+    }
+  }
 
   void _alTerminarApertura() {
     setState(() => _fase = _FaseApp.sesion);
@@ -60,7 +74,8 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
 
   void _alSeguirPracticando() {
     setState(() {
-      _sesionActual = primeraNoche();
+      _indiceNoche++;
+      _sesionActual = _sesionParaIndice(_indiceNoche);
       _fase = _FaseApp.sesion;
     });
   }
