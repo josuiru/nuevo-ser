@@ -13,6 +13,7 @@ import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_decimal.dart';
+import 'pantalla_dual.dart';
 import 'pantalla_espejo.dart';
 import 'pantalla_impropio.dart';
 import 'pantalla_porcentaje.dart';
@@ -132,6 +133,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.porcentaje => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
+        TipoFragmentoEnTejado.dual => 4,
         TipoFragmentoEnTejado.unitario => fragmento.numerador,
       };
       setState(() {
@@ -191,6 +193,17 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaProporcional(
               a: fragmento.numerador,
               b: fragmento.denominador,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.dual:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaDual(
+              numeradorA: fragmento.numerador,
+              denominadorA: fragmento.denominador,
+              numeradorB: fragmento.numeradorB ?? 1,
+              denominadorB: fragmento.denominadorB ?? 2,
             ),
           ),
         );

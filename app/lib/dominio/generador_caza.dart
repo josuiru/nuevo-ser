@@ -93,6 +93,24 @@ class GeneradorCaza {
       );
     }
 
+    if (tipo == TipoFragmentoEnTejado.dual) {
+      final (numA, denA, numB, denB) = _elegirSumandosDual(dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: numA,
+        denominador: denA,
+        numeradorB: numB,
+        denominadorB: denB,
+        tipo: tipo,
+        etiquetaDecimal: '$numA/$denA+$numB/$denB',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
     final denominador = tipo == TipoFragmentoEnTejado.espejo
         ? _elegirDenominadorEspejo(dificultad)
         : _elegirDenominador(dificultad);
@@ -158,6 +176,13 @@ class GeneradorCaza {
     final probProporcional = dificultad < 5
         ? 0.0
         : switch (dificultad) {
+            5 => 0.07,
+            6 => 0.09,
+            _ => 0.1,
+          };
+    final probDual = dificultad < 5
+        ? 0.0
+        : switch (dificultad) {
             5 => 0.08,
             6 => 0.1,
             _ => 0.12,
@@ -174,7 +199,28 @@ class GeneradorCaza {
     if (tirada < umbral) return TipoFragmentoEnTejado.impropio;
     umbral += probProporcional;
     if (tirada < umbral) return TipoFragmentoEnTejado.proporcional;
+    umbral += probDual;
+    if (tirada < umbral) return TipoFragmentoEnTejado.dual;
     return TipoFragmentoEnTejado.unitario;
+  }
+
+  /// Dos fracciones a sumar. Los denominadores son distintos y los
+  /// numeradores siempre menores que sus denominadores para que la
+  /// suma se parezca a ejercicios típicos de 6º de primaria.
+  (int, int, int, int) _elegirSumandosDual(int dificultad) {
+    final denominadoresPosibles = dificultad < 6
+        ? const [2, 3, 3, 4, 4, 5, 6]
+        : const [3, 4, 5, 6, 6, 8, 10, 12];
+    final denA =
+        denominadoresPosibles[_azar.nextInt(denominadoresPosibles.length)];
+    int denB;
+    do {
+      denB = denominadoresPosibles[
+          _azar.nextInt(denominadoresPosibles.length)];
+    } while (denB == denA);
+    final numA = 1 + _azar.nextInt(math.max(1, denA - 1));
+    final numB = 1 + _azar.nextInt(math.max(1, denB - 1));
+    return (numA, denA, numB, denB);
   }
 
   int _elegirDenominadorImpropio(int dificultad) {

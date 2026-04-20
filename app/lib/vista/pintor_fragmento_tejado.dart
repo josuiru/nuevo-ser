@@ -37,6 +37,7 @@ class PintorFragmentoTejado extends CustomPainter {
     final esImpropio = fragmento.tipo == TipoFragmentoEnTejado.impropio;
     final esProporcional =
         fragmento.tipo == TipoFragmentoEnTejado.proporcional;
+    final esDual = fragmento.tipo == TipoFragmentoEnTejado.dual;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -49,7 +50,9 @@ class PintorFragmentoTejado extends CustomPainter {
                         ? const Color(0xFFFFA552)
                         : esProporcional
                             ? const Color(0xFFB392FF)
-                            : PaletaNeon.azulNeon;
+                            : esDual
+                                ? const Color(0xFFFF9A6B)
+                                : PaletaNeon.azulNeon;
 
     if (esEspejo && !escapando) {
       // Aro fantasma que insinúa el "espejo" del Fragmento.
@@ -84,18 +87,20 @@ class PintorFragmentoTejado extends CustomPainter {
       ..strokeWidth = 1.6;
     canvas.drawCircle(centro, radio, pinturaBorde);
 
-    // Etiqueta.
+    // Etiqueta. Para etiquetas largas (duales, decimales con muchas
+    // cifras) reducimos el tamaño para que quepa en el círculo.
+    final factorTamano = fragmento.etiqueta.length > 4 ? 0.32 : 0.5;
     final textoEstilo = TextStyle(
       color: PaletaNeon.textoPrincipal.withOpacity(0.9 * opacidad),
-      fontSize: radio * 0.55,
+      fontSize: radio * factorTamano,
       fontWeight: FontWeight.w300,
-      letterSpacing: 1.1,
+      letterSpacing: 0.8,
     );
     final pintorTexto = TextPainter(
       text: TextSpan(text: fragmento.etiqueta, style: textoEstilo),
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
-    )..layout();
+    )..layout(maxWidth: radio * 1.8);
     pintorTexto.paint(
       canvas,
       Offset(

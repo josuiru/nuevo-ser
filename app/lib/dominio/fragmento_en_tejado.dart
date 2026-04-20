@@ -20,6 +20,7 @@ enum TipoFragmentoEnTejado {
   porcentaje,
   impropio,
   proporcional,
+  dual,
 }
 
 /// Un Fragmento concreto flotando en el tejado a la espera de ser
@@ -32,6 +33,11 @@ class FragmentoEnTejado {
   final int numerador;
   final int denominador;
   final TipoFragmentoEnTejado tipo;
+
+  /// Segunda fracción — solo se usa en Fragmentos Duales (Familia F)
+  /// donde el puzzle es sumar a/b + c/d. Null en cualquier otro tipo.
+  final int? numeradorB;
+  final int? denominadorB;
 
   /// Etiqueta alternativa para Fragmentos decimales. Si está presente
   /// se muestra en el tejado en lugar de numerador/denominador.
@@ -60,6 +66,8 @@ class FragmentoEnTejado {
     required this.tiempoDeVida,
     this.tipo = TipoFragmentoEnTejado.unitario,
     this.etiquetaDecimal,
+    this.numeradorB,
+    this.denominadorB,
   });
 
   bool get esCompuesto => numerador > 1;
