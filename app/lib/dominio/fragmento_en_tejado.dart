@@ -19,6 +19,7 @@ enum TipoFragmentoEnTejado {
   decimal,
   porcentaje,
   impropio,
+  proporcional,
 }
 
 /// Un Fragmento concreto flotando en el tejado a la espera de ser

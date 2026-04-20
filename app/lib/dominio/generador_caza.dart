@@ -73,6 +73,26 @@ class GeneradorCaza {
       );
     }
 
+    if (tipo == TipoFragmentoEnTejado.proporcional) {
+      // Una razón "a:b" con a,b pequeños; el numerador/denominador del
+      // Fragmento almacenan esos valores para que la pantalla use la
+      // misma razón mostrada en el tejado.
+      final a = 2 + _azar.nextInt(6);
+      final b = 3 + _azar.nextInt(7);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: a,
+        denominador: b,
+        tipo: tipo,
+        etiquetaDecimal: '$a:$b',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
     final denominador = tipo == TipoFragmentoEnTejado.espejo
         ? _elegirDenominadorEspejo(dificultad)
         : _elegirDenominador(dificultad);
@@ -131,9 +151,16 @@ class GeneradorCaza {
         ? 0.0
         : switch (dificultad) {
             4 => 0.1,
-            5 => 0.12,
-            6 => 0.14,
-            _ => 0.16,
+            5 => 0.11,
+            6 => 0.12,
+            _ => 0.13,
+          };
+    final probProporcional = dificultad < 5
+        ? 0.0
+        : switch (dificultad) {
+            5 => 0.08,
+            6 => 0.1,
+            _ => 0.12,
           };
 
     final tirada = _azar.nextDouble();
@@ -145,6 +172,8 @@ class GeneradorCaza {
     if (tirada < umbral) return TipoFragmentoEnTejado.porcentaje;
     umbral += probImpropio;
     if (tirada < umbral) return TipoFragmentoEnTejado.impropio;
+    umbral += probProporcional;
+    if (tirada < umbral) return TipoFragmentoEnTejado.proporcional;
     return TipoFragmentoEnTejado.unitario;
   }
 
