@@ -14,6 +14,7 @@ import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_espejo.dart';
+import 'pantalla_impropio.dart';
 import 'pantalla_porcentaje.dart';
 import 'pintor_fragmento_tejado.dart';
 import 'sora_presencia.dart';
@@ -128,6 +129,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.espejo => 2,
         TipoFragmentoEnTejado.decimal => 2,
         TipoFragmentoEnTejado.porcentaje => 2,
+        TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.unitario => fragmento.numerador,
       };
       setState(() {
@@ -170,6 +172,15 @@ class _PantallaCazaState extends State<PantallaCaza>
           MaterialPageRoute(
             builder: (_) =>
                 PantallaPorcentaje(porcentajeObjetivo: porcentajeObjetivo),
+          ),
+        );
+      case TipoFragmentoEnTejado.impropio:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaImpropio(
+              numerador: fragmento.numerador,
+              denominador: fragmento.denominador,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.unitario:

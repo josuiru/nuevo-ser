@@ -13,7 +13,13 @@ import 'package:flutter/foundation.dart';
 /// - [porcentaje]: puzzle de conversión (Familia H). El Fragmento se
 ///   etiqueta con un porcentaje (25%) y el niño elige la fracción
 ///   equivalente.
-enum TipoFragmentoEnTejado { unitario, espejo, decimal, porcentaje }
+enum TipoFragmentoEnTejado {
+  unitario,
+  espejo,
+  decimal,
+  porcentaje,
+  impropio,
+}
 
 /// Un Fragmento concreto flotando en el tejado a la espera de ser
 /// cazado. Se distingue de [FragmentoUnitario] en que carga datos de

@@ -57,6 +57,22 @@ class GeneradorCaza {
       );
     }
 
+    if (tipo == TipoFragmentoEnTejado.impropio) {
+      final denominadorImp = _elegirDenominadorImpropio(dificultad);
+      final numeradorImp = _elegirNumeradorImpropio(denominadorImp, dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: numeradorImp,
+        denominador: denominadorImp,
+        tipo: tipo,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
     final denominador = tipo == TipoFragmentoEnTejado.espejo
         ? _elegirDenominadorEspejo(dificultad)
         : _elegirDenominador(dificultad);
@@ -106,10 +122,18 @@ class GeneradorCaza {
         ? 0.0
         : switch (dificultad) {
             3 => 0.1,
-            4 => 0.13,
-            5 => 0.15,
-            6 => 0.17,
-            _ => 0.18,
+            4 => 0.12,
+            5 => 0.13,
+            6 => 0.14,
+            _ => 0.15,
+          };
+    final probImpropio = dificultad < 4
+        ? 0.0
+        : switch (dificultad) {
+            4 => 0.1,
+            5 => 0.12,
+            6 => 0.14,
+            _ => 0.16,
           };
 
     final tirada = _azar.nextDouble();
@@ -119,7 +143,25 @@ class GeneradorCaza {
     if (tirada < umbral) return TipoFragmentoEnTejado.decimal;
     umbral += probPorcentaje;
     if (tirada < umbral) return TipoFragmentoEnTejado.porcentaje;
+    umbral += probImpropio;
+    if (tirada < umbral) return TipoFragmentoEnTejado.impropio;
     return TipoFragmentoEnTejado.unitario;
+  }
+
+  int _elegirDenominadorImpropio(int dificultad) {
+    final candidatos = <int>[2, 3, 3, 4, 4, 5];
+    if (dificultad >= 5) candidatos.addAll([6, 7]);
+    if (dificultad >= 6) candidatos.addAll([8, 9]);
+    return candidatos[_azar.nextInt(candidatos.length)];
+  }
+
+  int _elegirNumeradorImpropio(int denominador, int dificultad) {
+    // Impropia: numerador > denominador. Cota superior más modesta para
+    // que la parte entera no sea demasiado grande (1-3).
+    final minimo = denominador + 1;
+    final maximoBase = denominador * 3;
+    final maximo = maximoBase - (_azar.nextInt(2));
+    return minimo + _azar.nextInt(math.max(1, maximo - minimo));
   }
 
   /// Para Espejos interesa más variedad de denominadores pequeños
