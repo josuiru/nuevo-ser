@@ -36,6 +36,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # Persistencia local simple clave-valor: índice de la noche actual,
+  # timestamp de la última sesión, cualquier ajuste en el futuro.
+  shared_preferences: ^2.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
