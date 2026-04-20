@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'distrito.dart';
 import 'fragmento_en_tejado.dart';
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
@@ -14,14 +15,20 @@ import 'problema_porcentaje.dart' show porcentajesConocidos;
 class GeneradorCaza {
   final math.Random _azar;
 
-  GeneradorCaza({int? semilla}) : _azar = math.Random(semilla);
+  /// Si viene un distrito, el generador usa su mezcla de puzzles como
+  /// sesgo fuerte. Si es null, cae al reparto general por dificultad.
+  final Distrito? distrito;
+
+  GeneradorCaza({int? semilla, this.distrito}) : _azar = math.Random(semilla);
 
   FragmentoEnTejado siguiente({
     required int esquirlasAcumuladas,
     required DateTime ahora,
   }) {
     final dificultad = _nivelDificultadSegunEsquirlas(esquirlasAcumuladas);
-    final tipo = _elegirTipo(dificultad);
+    final tipo = distrito != null
+        ? _elegirTipoSegunDistrito(distrito!, dificultad)
+        : _elegirTipo(dificultad);
 
     if (tipo == TipoFragmentoEnTejado.decimal) {
       final decimalElegido =
@@ -202,6 +209,55 @@ class GeneradorCaza {
     umbral += probDual;
     if (tirada < umbral) return TipoFragmentoEnTejado.dual;
     return TipoFragmentoEnTejado.unitario;
+  }
+
+  /// Elige un tipo respetando la mezcla del [Distrito]. Si el distrito
+  /// pide un tipo que aún no se ha desbloqueado por dificultad (p. ej.
+  /// el Mercado pide porcentajes pero estamos en dificultad 1), caemos
+  /// al reparto general para que el niño no se quede sin Fragmentos en
+  /// sus primeras visitas.
+  TipoFragmentoEnTejado _elegirTipoSegunDistrito(
+    Distrito distritoElegido,
+    int dificultad,
+  ) {
+    final pesoTotal = distritoElegido.mezclaPuzzles.values
+        .fold<double>(0, (acum, peso) => acum + peso);
+    if (pesoTotal <= 0) return _elegirTipo(dificultad);
+
+    final tirada = _azar.nextDouble() * pesoTotal;
+    var acumulado = 0.0;
+    for (final entrada in distritoElegido.mezclaPuzzles.entries) {
+      acumulado += entrada.value;
+      if (tirada < acumulado) {
+        // Comprobamos que el tipo esté disponible por dificultad; si no,
+        // nos quedamos con unitario en su lugar.
+        if (_tipoDisponibleEnDificultad(entrada.key, dificultad)) {
+          return entrada.key;
+        }
+        return TipoFragmentoEnTejado.unitario;
+      }
+    }
+    return TipoFragmentoEnTejado.unitario;
+  }
+
+  bool _tipoDisponibleEnDificultad(
+    TipoFragmentoEnTejado tipo,
+    int dificultad,
+  ) {
+    switch (tipo) {
+      case TipoFragmentoEnTejado.unitario:
+        return true;
+      case TipoFragmentoEnTejado.espejo:
+        return dificultad >= 1;
+      case TipoFragmentoEnTejado.decimal:
+      case TipoFragmentoEnTejado.porcentaje:
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.impropio:
+        return dificultad >= 3;
+      case TipoFragmentoEnTejado.proporcional:
+      case TipoFragmentoEnTejado.dual:
+        return dificultad >= 4;
+    }
   }
 
   /// Dos fracciones a sumar. Los denominadores son distintos y los

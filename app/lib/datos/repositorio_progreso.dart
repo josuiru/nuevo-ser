@@ -54,6 +54,19 @@ class RepositorioProgreso {
     await prefs.setInt(_claveEsquirlasTotal, total);
   }
 
+  String _claveDistritoVisitado(String idDistrito) =>
+      'uroto.distrito_visitado.$idDistrito';
+
+  Future<bool> distritoVisitado(String idDistrito) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_claveDistritoVisitado(idDistrito)) ?? false;
+  }
+
+  Future<void> marcarDistritoComoVisitado(String idDistrito) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_claveDistritoVisitado(idDistrito), true);
+  }
+
   /// Útil para reiniciar desde el principio (modo desarrollo o niño que
   /// quiere rejugarlo desde cero).
   Future<void> reiniciar() async {

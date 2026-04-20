@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'datos/repositorio_progreso.dart';
 import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
-import 'vista/pantalla_caza.dart';
+import 'vista/pantalla_mapa.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ class AppUnoRoto extends StatelessWidget {
   }
 }
 
-enum _FaseApp { cargando, apertura, caza }
+enum _FaseApp { cargando, apertura, mapa }
 
 class OrquestadorFases extends StatefulWidget {
   const OrquestadorFases({super.key});
@@ -57,14 +57,14 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     await _repositorio.guardarAhoraComoUltimaApertura();
     if (!mounted) return;
     setState(() {
-      _fase = yaVioApertura ? _FaseApp.caza : _FaseApp.apertura;
+      _fase = yaVioApertura ? _FaseApp.mapa : _FaseApp.apertura;
     });
   }
 
   Future<void> _alTerminarApertura() async {
     await _repositorio.marcarAperturaVista();
     if (!mounted) return;
-    setState(() => _fase = _FaseApp.caza);
+    setState(() => _fase = _FaseApp.mapa);
   }
 
   @override
@@ -74,8 +74,8 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         return const ColoredBox(color: PaletaNeon.fondoProfundo);
       case _FaseApp.apertura:
         return PantallaApertura(alTerminarApertura: _alTerminarApertura);
-      case _FaseApp.caza:
-        return PantallaCaza(repositorio: _repositorio);
+      case _FaseApp.mapa:
+        return PantallaMapa(repositorio: _repositorio);
     }
   }
 }

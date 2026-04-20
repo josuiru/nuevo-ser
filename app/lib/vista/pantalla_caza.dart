@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../datos/repositorio_progreso.dart';
+import '../dominio/distrito.dart';
 import '../dominio/fragmento_en_tejado.dart';
 import '../dominio/generador_caza.dart';
 import '../dominio/problema_decimal.dart';
@@ -28,8 +29,13 @@ import 'sora_presencia.dart';
 /// derecha.
 class PantallaCaza extends StatefulWidget {
   final RepositorioProgreso repositorio;
+  final Distrito distrito;
 
-  const PantallaCaza({super.key, required this.repositorio});
+  const PantallaCaza({
+    super.key,
+    required this.repositorio,
+    required this.distrito,
+  });
 
   @override
   State<PantallaCaza> createState() => _PantallaCazaState();
@@ -40,7 +46,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   static const int _maxFragmentosEnTejado = 3;
   static const Duration _tickPeriodo = Duration(milliseconds: 120);
 
-  final GeneradorCaza _generador = GeneradorCaza();
+  late final GeneradorCaza _generador;
   final List<FragmentoEnTejado> _activos = [];
 
   int _esquirlasTotal = 0;
@@ -56,6 +62,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   @override
   void initState() {
     super.initState();
+    _generador = GeneradorCaza(distrito: widget.distrito);
     _controladorCielo = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 16),
@@ -65,11 +72,20 @@ class _PantallaCazaState extends State<PantallaCaza>
 
   Future<void> _cargarEstadoInicial() async {
     final total = await widget.repositorio.cargarEsquirlas();
+    final yaVisitado = await widget.repositorio
+        .distritoVisitado(widget.distrito.identificador);
     if (!mounted) return;
     setState(() => _esquirlasTotal = total);
     _programarSiguienteSpawn();
     _arrancarTickDeEscapes();
-    _mostrarLineaAmbienteSora('Vamos. Los Fragmentos ya salen.');
+    final saludo = yaVisitado
+        ? 'Vamos.'
+        : widget.distrito.saludoPrimeraVisita;
+    _mostrarLineaAmbienteSora(saludo);
+    if (!yaVisitado) {
+      await widget.repositorio
+          .marcarDistritoComoVisitado(widget.distrito.identificador);
+    }
   }
 
   @override
@@ -296,8 +312,10 @@ class _PantallaCazaState extends State<PantallaCaza>
                 child: Column(
                   children: [
                     _BarraSuperior(
+                      nombreDistrito: widget.distrito.nombre,
                       esquirlas: _esquirlasTotal,
                       esquirlasNuevasDestello: _esquirlasEstaSesion,
+                      alVolverAlMapa: () => Navigator.of(context).pop(),
                     ),
                     Expanded(
                       child: LayoutBuilder(
@@ -331,30 +349,59 @@ class _PantallaCazaState extends State<PantallaCaza>
 }
 
 class _BarraSuperior extends StatelessWidget {
+  final String nombreDistrito;
   final int esquirlas;
   final int esquirlasNuevasDestello;
+  final VoidCallback alVolverAlMapa;
 
   const _BarraSuperior({
+    required this.nombreDistrito,
     required this.esquirlas,
     required this.esquirlasNuevasDestello,
+    required this.alVolverAlMapa,
   });
 
   @override
   Widget build(BuildContext contexto) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
+      padding: const EdgeInsets.fromLTRB(16, 14, 20, 8),
       child: Row(
         children: [
-          const Text(
-            'UNO ROTO',
-            style: TextStyle(
-              fontSize: 14,
-              letterSpacing: 5,
-              color: PaletaNeon.textoTenue,
-              fontWeight: FontWeight.w300,
+          GestureDetector(
+            onTap: alVolverAlMapa,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: PaletaNeon.violetaBase,
+                  width: 1.2,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                '‹ mapa',
+                style: TextStyle(
+                  color: PaletaNeon.textoTenue,
+                  fontSize: 12,
+                  letterSpacing: 1.4,
+                ),
+              ),
             ),
           ),
-          const Spacer(),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              nombreDistrito.toUpperCase(),
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                letterSpacing: 3,
+                color: PaletaNeon.textoTenue,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ),
           _ContadorEsquirlas(
             total: esquirlas,
             pulso: esquirlasNuevasDestello,
