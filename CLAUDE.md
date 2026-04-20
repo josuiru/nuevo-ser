@@ -63,13 +63,15 @@ uno-roto/
 - Pantalla caza con spawn timer, combate enfoque sin dictado, pantalla habilidades debug.
 - Persistencia shared_preferences con keys `uroto.*`.
 - Ciudad con restauración progresiva según esquirlas.
-- **Sistema de cinemáticas v0.3** (dominio/): `VozPersonaje`, `PlanoEscena` sealed (PlanoAmbiente + PlanoDialogo + PlanoEleccion + PlanoInteractivo), `OpcionEleccion` con flags, `EscenaCinematica` con flagsRequeridos. Player con reveal letra-a-letra, opciones con respuesta, widget tutorial jugable (Pleno → mitades → desfragmentar), callback alEstablecerFlag, fade 300ms, botón saltar.
+- **Sistema de cinemáticas v0.4** (dominio/): `VozPersonaje`, `PlanoEscena` sealed (PlanoAmbiente + PlanoDialogo + PlanoEleccion + PlanoInteractivo), `OpcionEleccion` con flags, `EscenaCinematica` con flagsRequeridos. Player con reveal letra-a-letra, opciones con respuesta, widget tutorial jugable (Pleno → mitades → desfragmentar), callback alEstablecerFlag, fade 300ms, botón saltar. **Sustitución `{nombre}`** vía `aplicarTokens(texto, nombre)`.
+- **Sistema de nombre del jugador**: `PantallaNombre` con TextField + botón continuar. Persistido como `uroto.nombre_jugador`. Token `{nombre}` en escenas se sustituye automáticamente.
 - Escenas del Arco 1 implementadas y encadenadas:
-  - **1.1 El tejado** (completa, incluye bloque Montaña + elección).
+  - **1.1 El tejado** (completa, incluye bloque Montaña + elección + `{nombre}, ¿verdad?`).
   - **1.2 La primera ventana** — tutorial FR.01: Sora guía a dividir un Pleno y desfragmentar las mitades con gestos reales.
   - **1.3 El callejón** — mujer desorientada, 4 opciones.
-  - **1.4 Irune** — las tres reglas.
-  Cadena de flagsRequeridos: 1.1 → 1.2 → 1.3 → 1.4.
+  - **1.4 Irune** — las tres reglas, dirigidas a `{nombre}`.
+  - **1.5 Kurz aparece** — primer Fragmento nombrado con voz en itálica (Cormorant pendiente). Cinemática-puente: el combate real está calibrado a derrota pero aún no implementado (la 1.6 cerrará la derrota).
+  Cadena de flagsRequeridos: 1.1 → 1.2 → 1.3 → 1.4 → 1.5.
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.

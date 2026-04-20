@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uno_roto/dominio/catalogo_escenas.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/main.dart';
+import 'package:uno_roto/vista/pantalla_cinematica.dart';
 
 void main() {
   setUp(() {
@@ -30,6 +31,16 @@ void main() {
     expect(tejado.planos, isNotEmpty);
   });
 
+  test('aplicarTokens sustituye {nombre} por el nombre real', () {
+    expect(aplicarTokens('Hola, {nombre}.', 'Leo'), 'Hola, Leo.');
+    expect(
+      aplicarTokens('{nombre}, {nombre}, {nombre}.', 'Lía'),
+      'Lía, Lía, Lía.',
+    );
+    expect(aplicarTokens('Sin token.', 'Leo'), 'Sin token.');
+    expect(aplicarTokens('{nombre}', ''), '{nombre}');
+  });
+
   test('Las escenas 1.2/1.3/1.4 encadenan prerrequisitos', () {
     final ventana = CatalogoEscenas.porId('1.2');
     expect(ventana!.flagsRequeridos, contains('escena_1_1_vista'));
@@ -54,6 +65,7 @@ void main() {
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
         'uroto.ya_vio_apertura': true,
+        'uroto.nombre_jugador': 'Leo',
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();
@@ -65,14 +77,31 @@ void main() {
   );
 
   testWidgets(
+    'Si la apertura ha pasado pero falta el nombre, se pide el nombre',
+    (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({
+        'uroto.ya_vio_apertura': true,
+      });
+      await tester.pumpWidget(const AppUnoRoto());
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('¿Cómo te llamas?'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
     'Si todas las escenas del Arco 1 abierto están vistas, va al mapa',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
         'uroto.ya_vio_apertura': true,
+        'uroto.nombre_jugador': 'Leo',
         'uroto.flag.escena_1_1_vista': true,
         'uroto.flag.escena_1_2_vista': true,
         'uroto.flag.escena_1_3_vista': true,
         'uroto.flag.escena_1_4_vista': true,
+        'uroto.flag.escena_1_5_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();
@@ -89,6 +118,7 @@ void main() {
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
         'uroto.ya_vio_apertura': true,
+        'uroto.nombre_jugador': 'Leo',
         'uroto.flag.escena_1_1_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());

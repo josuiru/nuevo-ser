@@ -34,6 +34,11 @@ class CatalogoEscenas {
       ),
       PlanoDialogo(
         voz: VozPersonaje.sora,
+        texto: '{nombre}, ¿verdad?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
         texto: 'Mm.',
         pausaPrevia: Duration(milliseconds: 500),
       ),
@@ -288,7 +293,7 @@ class CatalogoEscenas {
       ),
       PlanoDialogo(
         voz: VozPersonaje.irune,
-        texto: 'Tres cosas. Escucha.',
+        texto: 'Tres cosas, {nombre}. Escucha.',
         pausaPrevia: Duration(milliseconds: 700),
       ),
       PlanoDialogo(
@@ -326,11 +331,112 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 1.5 — Kurz aparece. Primer Fragmento nombrado con voz propia (en
+  /// itálica). Sora lo invoca tras la primera sesión completa. Combate
+  /// calibrado a derrota — el cierre emocional es la escena 1.6. Doc 07
+  /// §1.5.
+  static const EscenaCinematica kurzAparece = EscenaCinematica(
+    id: '1.5',
+    titulo: 'Kurz aparece',
+    flagDeSalida: 'escena_1_5_vista',
+    flagsRequeridos: {'escena_1_4_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'De vuelta a la azotea. La noche más cerrada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Mejor.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No tan mal.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Vale. Hoy tienes un regalo.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Sora silba. Algo grande baja del cielo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Brazos largos. Cabeza redonda. Ojos. Sobre él, el valor 3/4.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Otro.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Pequeño.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Es Kurz. Lleva aquí más tiempo que yo. Es un Fragmento nombrado. No se disuelve — se retira y vuelve.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Sirve para poneros a prueba. No es malo.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Pero es mejor que tú. Todavía.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: '¿Empezamos?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'El combate llega y se va. No hay forma de ganar hoy.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Muy lento.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Otra vez mal.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Tenías que haberlo visto venir.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Kurz se acerca. Calmo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Ya está. No pasa nada.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
     callejon,
     presentacionIrune,
+    kurzAparece,
   ];
 
   static EscenaCinematica? porId(String id) {

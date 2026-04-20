@@ -8,6 +8,7 @@ import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_mapa.dart';
+import 'vista/pantalla_nombre.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,7 @@ class AppUnoRoto extends StatelessWidget {
   }
 }
 
-enum _FaseApp { cargando, apertura, cinematica, mapa }
+enum _FaseApp { cargando, apertura, nombre, cinematica, mapa }
 
 class OrquestadorFases extends StatefulWidget {
   const OrquestadorFases({super.key});
@@ -49,6 +50,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   final RepositorioProgreso _repositorio = RepositorioProgreso();
   _FaseApp _fase = _FaseApp.cargando;
   EscenaCinematica? _escenaPendiente;
+  String? _nombreJugador;
 
   @override
   void initState() {
@@ -59,16 +61,32 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   Future<void> _inicializar() async {
     final yaVioApertura = await _repositorio.yaVioLaApertura();
     await _repositorio.guardarAhoraComoUltimaApertura();
+    _nombreJugador = await _repositorio.cargarNombreJugador();
     if (!mounted) return;
-    if (yaVioApertura) {
-      await _resolverCinematicaPendienteOMapa();
-    } else {
+    if (!yaVioApertura) {
       setState(() => _fase = _FaseApp.apertura);
+      return;
     }
+    if (_nombreJugador == null) {
+      setState(() => _fase = _FaseApp.nombre);
+      return;
+    }
+    await _resolverCinematicaPendienteOMapa();
   }
 
   Future<void> _alTerminarApertura() async {
     await _repositorio.marcarAperturaVista();
+    if (!mounted) return;
+    if (_nombreJugador == null) {
+      setState(() => _fase = _FaseApp.nombre);
+      return;
+    }
+    await _resolverCinematicaPendienteOMapa();
+  }
+
+  Future<void> _alConfirmarNombre(String nombre) async {
+    await _repositorio.guardarNombreJugador(nombre);
+    _nombreJugador = nombre;
     if (!mounted) return;
     await _resolverCinematicaPendienteOMapa();
   }
@@ -117,6 +135,8 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         return const ColoredBox(color: PaletaNeon.fondoProfundo);
       case _FaseApp.apertura:
         return PantallaApertura(alTerminarApertura: _alTerminarApertura);
+      case _FaseApp.nombre:
+        return PantallaNombre(alConfirmar: _alConfirmarNombre);
       case _FaseApp.cinematica:
         final escena = _escenaPendiente;
         if (escena == null) {
@@ -124,6 +144,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         }
         return PantallaCinematica(
           escena: escena,
+          nombreJugador: _nombreJugador ?? '',
           alTerminar: _alTerminarCinematica,
           alEstablecerFlag: _repositorio.activarFlagNarrativo,
         );

@@ -12,6 +12,7 @@ class RepositorioProgreso {
   static const _claveUltimaAperturaMs = 'uroto.ultima_apertura_ms';
   static const _claveYaVioApertura = 'uroto.ya_vio_apertura';
   static const _claveEsquirlasTotal = 'uroto.esquirlas_total';
+  static const _claveNombreJugador = 'uroto.nombre_jugador';
 
   Future<int> cargarSiguienteNoche() async {
     final prefs = await SharedPreferences.getInstance();
@@ -31,6 +32,18 @@ class RepositorioProgreso {
   Future<void> marcarAperturaVista() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_claveYaVioApertura, true);
+  }
+
+  Future<String?> cargarNombreJugador() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nombre = prefs.getString(_claveNombreJugador);
+    if (nombre == null || nombre.trim().isEmpty) return null;
+    return nombre;
+  }
+
+  Future<void> guardarNombreJugador(String nombre) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_claveNombreJugador, nombre.trim());
   }
 
   Future<DateTime?> cargarUltimaApertura() async {

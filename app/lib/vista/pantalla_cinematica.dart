@@ -23,6 +23,10 @@ class PantallaCinematica extends StatefulWidget {
   final EscenaCinematica escena;
   final VoidCallback alTerminar;
 
+  /// Nombre del jugador. Se sustituye en los textos cada vez que aparece
+  /// el token `{nombre}` — guion del Arco 1.
+  final String nombreJugador;
+
   /// Callback invocado por cada flag narrativo establecido durante la
   /// escena — típicamente para persistirlo en el repositorio.
   final ValueChanged<String>? alEstablecerFlag;
@@ -31,11 +35,19 @@ class PantallaCinematica extends StatefulWidget {
     super.key,
     required this.escena,
     required this.alTerminar,
+    this.nombreJugador = '',
     this.alEstablecerFlag,
   });
 
   @override
   State<PantallaCinematica> createState() => _PantallaCinematicaState();
+}
+
+/// Sustituye `{nombre}` por el nombre real del jugador. Se mantiene como
+/// función pura para poder usarla desde tests.
+String aplicarTokens(String texto, String nombreJugador) {
+  if (nombreJugador.isEmpty) return texto;
+  return texto.replaceAll('{nombre}', nombreJugador);
 }
 
 enum _FaseReproduccion {
@@ -122,18 +134,23 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     }
   }
 
+  String _conTokens(String texto) => aplicarTokens(texto, widget.nombreJugador);
+
   void _empezarRevealDialogo() {
     if (!mounted) return;
     final plano = _planoActual;
     if (plano is! PlanoDialogo) return;
-    _revelarTexto(plano.texto, faseAlTerminar: _FaseReproduccion.esperandoTap);
+    _revelarTexto(
+      _conTokens(plano.texto),
+      faseAlTerminar: _FaseReproduccion.esperandoTap,
+    );
   }
 
   void _empezarRevealPrompt() {
     final plano = _planoActual;
     if (plano is! PlanoEleccion) return;
     _revelarTexto(
-      plano.textoPrompt ?? '',
+      _conTokens(plano.textoPrompt ?? ''),
       faseAlTerminar: _FaseReproduccion.mostrandoOpciones,
     );
   }
@@ -143,8 +160,8 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     if (plano is! PlanoEleccion) return;
     final indice = _indiceOpcionElegida;
     if (indice == null) return;
-    final respuesta = plano.opciones[indice].textoRespuesta;
-    if (respuesta == null || respuesta.isEmpty) {
+    final respuesta = _conTokens(plano.opciones[indice].textoRespuesta ?? '');
+    if (respuesta.isEmpty) {
       _avanzar();
       return;
     }
@@ -217,14 +234,15 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     final plano = _planoActual;
     int longitud = 0;
     if (plano is PlanoDialogo) {
-      longitud = plano.texto.length;
+      longitud = _conTokens(plano.texto).length;
     } else if (plano is PlanoEleccion) {
       if (_fase == _FaseReproduccion.revelando) {
-        longitud = (plano.textoPrompt ?? '').length;
+        longitud = _conTokens(plano.textoPrompt ?? '').length;
       } else if (_fase == _FaseReproduccion.revelandoRespuesta) {
         final indice = _indiceOpcionElegida;
         if (indice != null) {
-          longitud = (plano.opciones[indice].textoRespuesta ?? '').length;
+          longitud =
+              _conTokens(plano.opciones[indice].textoRespuesta ?? '').length;
         }
       }
     }
@@ -283,16 +301,24 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     final plano = _planoActual;
     switch (plano) {
       case PlanoAmbiente():
-        return _VistaAmbiente(textoLectura: plano.textoLectura);
+        final lectura = plano.textoLectura;
+        return _VistaAmbiente(
+          textoLectura: lectura == null ? null : _conTokens(lectura),
+        );
       case PlanoDialogo():
+        final completo = _conTokens(plano.texto);
         return _VistaDialogo(
           voz: plano.voz,
-          textoRevelado: plano.texto.substring(0, _caracteresRevelados),
+          textoRevelado: completo.substring(
+            0,
+            _caracteresRevelados.clamp(0, completo.length),
+          ),
           mostrandoIndicador: _fase == _FaseReproduccion.esperandoTap,
         );
       case PlanoEleccion():
         return _VistaEleccion(
           plano: plano,
+          nombreJugador: widget.nombreJugador,
           fase: _fase,
           caracteresRevelados: _caracteresRevelados,
           indiceElegida: _indiceOpcionElegida,
@@ -301,6 +327,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       case PlanoInteractivo():
         return _VistaInteractiva(
           plano: plano,
+          instruccion: _conTokens(plano.instruccion),
           alCompletar: _avanzar,
         );
     }
@@ -389,6 +416,7 @@ class _VistaDialogo extends StatelessWidget {
 
 class _VistaEleccion extends StatelessWidget {
   final PlanoEleccion plano;
+  final String nombreJugador;
   final _FaseReproduccion fase;
   final int caracteresRevelados;
   final int? indiceElegida;
@@ -396,6 +424,7 @@ class _VistaEleccion extends StatelessWidget {
 
   const _VistaEleccion({
     required this.plano,
+    required this.nombreJugador,
     required this.fase,
     required this.caracteresRevelados,
     required this.indiceElegida,
@@ -405,7 +434,7 @@ class _VistaEleccion extends StatelessWidget {
   @override
   Widget build(BuildContext contexto) {
     final nombre = plano.voz.nombreVisible;
-    final prompt = plano.textoPrompt ?? '';
+    final prompt = aplicarTokens(plano.textoPrompt ?? '', nombreJugador);
     final estaRevelandoPrompt = fase == _FaseReproduccion.revelando;
     final estaMostrandoOpciones = fase == _FaseReproduccion.mostrandoOpciones;
     final estaRevelandoRespuesta = fase == _FaseReproduccion.revelandoRespuesta;
@@ -418,7 +447,10 @@ class _VistaEleccion extends StatelessWidget {
 
     final indiceResp = indiceElegida;
     final respuesta = indiceResp != null
-        ? plano.opciones[indiceResp].textoRespuesta ?? ''
+        ? aplicarTokens(
+            plano.opciones[indiceResp].textoRespuesta ?? '',
+            nombreJugador,
+          )
         : '';
     final textoRespuestaRevelado = estaRevelandoRespuesta
         ? respuesta.substring(0, caracteresRevelados.clamp(0, respuesta.length))
@@ -453,7 +485,10 @@ class _VistaEleccion extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: _BotonOpcion(
-                      texto: plano.opciones[indice].textoJugador,
+                      texto: aplicarTokens(
+                        plano.opciones[indice].textoJugador,
+                        nombreJugador,
+                      ),
                       alPulsar: () => alElegir(indice),
                     ),
                   ),
@@ -530,10 +565,12 @@ class _BotonOpcion extends StatelessWidget {
 
 class _VistaInteractiva extends StatelessWidget {
   final PlanoInteractivo plano;
+  final String instruccion;
   final VoidCallback alCompletar;
 
   const _VistaInteractiva({
     required this.plano,
+    required this.instruccion,
     required this.alCompletar,
   });
 
@@ -557,7 +594,7 @@ class _VistaInteractiva extends StatelessWidget {
             ),
           const SizedBox(height: 10),
           Text(
-            plano.instruccion,
+            instruccion,
             textAlign: TextAlign.center,
             style: plano.vozInstruccion.estiloTextoCuerpo(),
           ),
