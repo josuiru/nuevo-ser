@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'fragmento_en_tejado.dart';
 import 'problema_decimal.dart' show decimalesConocidos;
+import 'problema_porcentaje.dart' show porcentajesConocidos;
 
 /// Genera Fragmentos que aparecen en el tejado a lo largo de una
 /// sesión de caza. La dificultad sube **continuamente** con el número
@@ -32,6 +33,23 @@ class GeneradorCaza {
         denominador: decimalElegido.fraccionEquivalente.denominador,
         tipo: tipo,
         etiquetaDecimal: decimalElegido.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.porcentaje) {
+      final porcentajeElegido =
+          porcentajesConocidos[_azar.nextInt(porcentajesConocidos.length)];
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: porcentajeElegido.fraccionEquivalente.numerador,
+        denominador: porcentajeElegido.fraccionEquivalente.denominador,
+        tipo: tipo,
+        etiquetaDecimal: porcentajeElegido.etiqueta,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -78,18 +96,29 @@ class GeneradorCaza {
     final probDecimal = dificultad < 3
         ? 0.0
         : switch (dificultad) {
-            3 => 0.14,
-            4 => 0.18,
-            5 => 0.2,
-            6 => 0.22,
-            _ => 0.24,
+            3 => 0.12,
+            4 => 0.14,
+            5 => 0.15,
+            6 => 0.17,
+            _ => 0.18,
+          };
+    final probPorcentaje = dificultad < 3
+        ? 0.0
+        : switch (dificultad) {
+            3 => 0.1,
+            4 => 0.13,
+            5 => 0.15,
+            6 => 0.17,
+            _ => 0.18,
           };
 
     final tirada = _azar.nextDouble();
-    if (tirada < probEspejo) return TipoFragmentoEnTejado.espejo;
-    if (tirada < probEspejo + probDecimal) {
-      return TipoFragmentoEnTejado.decimal;
-    }
+    var umbral = probEspejo;
+    if (tirada < umbral) return TipoFragmentoEnTejado.espejo;
+    umbral += probDecimal;
+    if (tirada < umbral) return TipoFragmentoEnTejado.decimal;
+    umbral += probPorcentaje;
+    if (tirada < umbral) return TipoFragmentoEnTejado.porcentaje;
     return TipoFragmentoEnTejado.unitario;
   }
 

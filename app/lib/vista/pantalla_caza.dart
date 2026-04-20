@@ -8,11 +8,13 @@ import '../datos/repositorio_progreso.dart';
 import '../dominio/fragmento_en_tejado.dart';
 import '../dominio/generador_caza.dart';
 import '../dominio/problema_decimal.dart';
+import '../dominio/problema_porcentaje.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_espejo.dart';
+import 'pantalla_porcentaje.dart';
 import 'pintor_fragmento_tejado.dart';
 import 'sora_presencia.dart';
 
@@ -125,6 +127,7 @@ class _PantallaCazaState extends State<PantallaCaza>
       final esquirlasGanadas = switch (fragmento.tipo) {
         TipoFragmentoEnTejado.espejo => 2,
         TipoFragmentoEnTejado.decimal => 2,
+        TipoFragmentoEnTejado.porcentaje => 2,
         TipoFragmentoEnTejado.unitario => fragmento.numerador,
       };
       setState(() {
@@ -159,6 +162,16 @@ class _PantallaCazaState extends State<PantallaCaza>
                 PantallaDecimal(decimalObjetivo: decimalObjetivo),
           ),
         );
+      case TipoFragmentoEnTejado.porcentaje:
+        final porcentajeObjetivo = _buscarPorcentajeConocido(
+          fragmento.etiquetaDecimal,
+        );
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) =>
+                PantallaPorcentaje(porcentajeObjetivo: porcentajeObjetivo),
+          ),
+        );
       case TipoFragmentoEnTejado.unitario:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
@@ -175,6 +188,14 @@ class _PantallaCazaState extends State<PantallaCaza>
     if (etiqueta == null) return null;
     for (final d in decimalesConocidos) {
       if (d.etiqueta == etiqueta) return d;
+    }
+    return null;
+  }
+
+  PorcentajeConocido? _buscarPorcentajeConocido(String? etiqueta) {
+    if (etiqueta == null) return null;
+    for (final p in porcentajesConocidos) {
+      if (p.etiqueta == etiqueta) return p;
     }
     return null;
   }

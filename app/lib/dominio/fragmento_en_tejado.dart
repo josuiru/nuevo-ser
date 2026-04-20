@@ -10,7 +10,10 @@ import 'package:flutter/foundation.dart';
 /// - [decimal]: puzzle de conversión (Familia G). El Fragmento se
 ///   etiqueta con un decimal (0,25) y el niño elige la fracción
 ///   equivalente entre cuatro candidatos.
-enum TipoFragmentoEnTejado { unitario, espejo, decimal }
+/// - [porcentaje]: puzzle de conversión (Familia H). El Fragmento se
+///   etiqueta con un porcentaje (25%) y el niño elige la fracción
+///   equivalente.
+enum TipoFragmentoEnTejado { unitario, espejo, decimal, porcentaje }
 
 /// Un Fragmento concreto flotando en el tejado a la espera de ser
 /// cazado. Se distingue de [FragmentoUnitario] en que carga datos de
