@@ -30,9 +30,12 @@ void main() {
     expect(tejado.planos, isNotEmpty);
   });
 
-  test('Las escenas 1.3 y 1.4 tienen flags requeridos', () {
+  test('Las escenas 1.2/1.3/1.4 encadenan prerrequisitos', () {
+    final ventana = CatalogoEscenas.porId('1.2');
+    expect(ventana!.flagsRequeridos, contains('escena_1_1_vista'));
+
     final callejon = CatalogoEscenas.porId('1.3');
-    expect(callejon!.flagsRequeridos, contains('primera_sesion_combate_completa'));
+    expect(callejon!.flagsRequeridos, contains('escena_1_2_vista'));
 
     final irune = CatalogoEscenas.porId('1.4');
     expect(irune!.flagsRequeridos, contains('escena_1_3_vista'));
@@ -62,7 +65,27 @@ void main() {
   );
 
   testWidgets(
-    'Si la escena 1.1 ya fue vista, arranca directamente en el mapa',
+    'Si todas las escenas del Arco 1 abierto están vistas, va al mapa',
+    (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({
+        'uroto.ya_vio_apertura': true,
+        'uroto.flag.escena_1_1_vista': true,
+        'uroto.flag.escena_1_2_vista': true,
+        'uroto.flag.escena_1_3_vista': true,
+        'uroto.flag.escena_1_4_vista': true,
+      });
+      await tester.pumpWidget(const AppUnoRoto());
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('UNO ROTO'), findsOneWidget);
+      expect(find.text('LA MONTAÑA'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Tras la 1.1, si la 1.2 no está vista, se dispara la 1.2',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
         'uroto.ya_vio_apertura': true,
@@ -73,8 +96,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
       await tester.pump(const Duration(milliseconds: 400));
 
-      expect(find.text('UNO ROTO'), findsOneWidget);
-      expect(find.text('LA MONTAÑA'), findsOneWidget);
+      // La cinemática 1.2 se reproduce: indicador "saltar" presente.
+      expect(find.text('saltar'), findsOneWidget);
     },
   );
 }

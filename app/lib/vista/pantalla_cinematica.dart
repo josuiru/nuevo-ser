@@ -8,6 +8,7 @@ import '../dominio/plano_escena.dart';
 import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import 'widget_fragmento_tutorial.dart';
 
 /// Reproductor de escenas cinemáticas. Recorre los planos uno a uno
 /// respetando:
@@ -44,6 +45,7 @@ enum _FaseReproduccion {
   mostrandoOpciones,
   revelandoRespuesta,
   esperandoTapRespuesta,
+  esperandoAccionInteractiva,
   saliendo,
 }
 
@@ -115,6 +117,8 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
         } else {
           _empezarRevealPrompt();
         }
+      case PlanoInteractivo():
+        setState(() => _fase = _FaseReproduccion.esperandoAccionInteractiva);
     }
   }
 
@@ -190,6 +194,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       case _FaseReproduccion.pausaPrevia:
       case _FaseReproduccion.saliendo:
       case _FaseReproduccion.mostrandoOpciones:
+      case _FaseReproduccion.esperandoAccionInteractiva:
         return;
       case _FaseReproduccion.revelando:
         _completarRevealActual();
@@ -292,6 +297,11 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
           caracteresRevelados: _caracteresRevelados,
           indiceElegida: _indiceOpcionElegida,
           alElegir: _elegirOpcion,
+        );
+      case PlanoInteractivo():
+        return _VistaInteractiva(
+          plano: plano,
+          alCompletar: _avanzar,
         );
     }
   }
@@ -513,6 +523,77 @@ class _BotonOpcion extends StatelessWidget {
             letterSpacing: 0.3,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _VistaInteractiva extends StatelessWidget {
+  final PlanoInteractivo plano;
+  final VoidCallback alCompletar;
+
+  const _VistaInteractiva({
+    required this.plano,
+    required this.alCompletar,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final nombre = plano.vozInstruccion.nombreVisible;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        children: [
+          const Spacer(flex: 2),
+          if (nombre.isNotEmpty)
+            Text(
+              nombre.toUpperCase(),
+              style: TextStyle(
+                fontSize: 11,
+                letterSpacing: 4,
+                color: plano.vozInstruccion.colorNombre,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          const SizedBox(height: 10),
+          Text(
+            plano.instruccion,
+            textAlign: TextAlign.center,
+            style: plano.vozInstruccion.estiloTextoCuerpo(),
+          ),
+          const SizedBox(height: 36),
+          WidgetFragmentoTutorial(
+            accionEsperada: plano.accion,
+            estadoInicial: plano.estadoInicial,
+            alCompletar: alCompletar,
+          ),
+          const Spacer(flex: 3),
+          _PistaGesto(accion: plano.accion),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _PistaGesto extends StatelessWidget {
+  final AccionEsperada accion;
+
+  const _PistaGesto({required this.accion});
+
+  @override
+  Widget build(BuildContext contexto) {
+    final pista = switch (accion) {
+      AccionEsperada.dividirPleno => 'desliza para dividir',
+      AccionEsperada.desfragmentarMitades => 'toca cada mitad',
+    };
+    return Text(
+      pista,
+      style: TextStyle(
+        fontSize: 11,
+        letterSpacing: 2.4,
+        fontStyle: FontStyle.italic,
+        color: PaletaNeon.textoTenue.withOpacity(0.6),
       ),
     );
   }

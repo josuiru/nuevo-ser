@@ -96,6 +96,79 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 1.2 — La primera ventana. Tutorial: Sora muestra un Pleno y guía al
+  /// niño a dividirlo y desfragmentar las mitades. Doc 07 §1.2.
+  /// Habilidad introducida: FR.01.
+  static const EscenaCinematica primeraVentana = EscenaCinematica(
+    id: '1.2',
+    titulo: 'La primera ventana',
+    flagDeSalida: 'escena_1_2_vista',
+    flagsRequeridos: {'escena_1_1_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Una azotea contigua. Algo flota sobre el suelo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Eso.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Eso es un Fragmento. Pequeño. Inofensivo, casi.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Es un Pleno. Vale uno. Un entero. ¿Ves?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Dividirlo es romperlo en partes iguales. Prueba.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoInteractivo(
+        vozInstruccion: VozPersonaje.sora,
+        instruccion: 'Desliza el dedo sobre el Pleno.',
+        accion: AccionEsperada.dividirPleno,
+        estadoInicial: EstadoFragmentoTutorial.plenoCompleto,
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Un medio. Eso es un medio.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoInteractivo(
+        vozInstruccion: VozPersonaje.sora,
+        instruccion: 'Toca cada mitad para desfragmentarla.',
+        accion: AccionEsperada.desfragmentarMitades,
+        estadoInicial: EstadoFragmentoTutorial.dosMitades,
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Se llama desfragmentar.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No los matas. Los vuelves al sitio del que salieron.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Vamos.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+    ],
+  );
+
   /// 1.3 — El callejón. Una mujer mayor desorientada delante de una
   /// puerta. Sora explica el efecto residual de los Fragmentos en los
   /// adultos. Doc 07 §1.3.
@@ -103,7 +176,7 @@ class CatalogoEscenas {
     id: '1.3',
     titulo: 'El callejón',
     flagDeSalida: 'escena_1_3_vista',
-    flagsRequeridos: {'primera_sesion_combate_completa'},
+    flagsRequeridos: {'escena_1_2_vista'},
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2000),
@@ -255,6 +328,7 @@ class CatalogoEscenas {
 
   static const List<EscenaCinematica> todas = [
     llegada,
+    primeraVentana,
     callejon,
     presentacionIrune,
   ];
