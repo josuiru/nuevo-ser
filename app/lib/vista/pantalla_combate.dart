@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../dominio/fragmento.dart';
 import '../dominio/resolucion_corte.dart';
+import '../dominio/sesion.dart';
 import '../nucleo/dialogos_sora.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -13,17 +14,34 @@ import 'particulas_rotura.dart';
 import 'pintor_fragmento.dart';
 import 'sora_presencia.dart';
 
-/// Estado del ciclo del intento.
+/// Fases de la sesión narrativa.
 ///
-/// - [intro]: Sora acaba de presentar un Fragmento nuevo; el jugador
-///   todavía no ha tocado nada.
-/// - [dibujando]: trazando radios, puede deshacer o cortar.
-/// - [rompiendo]: acertó; animación de rotura en curso.
-/// - [pausa]: breve pausa antes de que aparezca el siguiente Fragmento.
-enum _FaseIntento { intro, dibujando, rompiendo, pausa }
+/// - [presentacion]: Sora suelta las líneas iniciales. El jugador toca
+///   el bocadillo para avanzar.
+/// - [invocando]: Sora pronuncia la línea del contrato y el Fragmento
+///   desciende del cielo.
+/// - [dibujando]: combate propiamente dicho.
+/// - [rompiendo]: partículas del Fragmento derrotado.
+/// - [transicion]: una línea breve entre combates ("Ahí viene otro").
+/// - [sesionCompleta]: se notifica al padre para mostrar el cierre.
+enum _FaseSesion {
+  presentacion,
+  invocando,
+  dibujando,
+  rompiendo,
+  transicion,
+  sesionCompleta,
+}
 
 class PantallaCombate extends StatefulWidget {
-  const PantallaCombate({super.key});
+  final SesionNoche sesion;
+  final VoidCallback alTerminarSesion;
+
+  const PantallaCombate({
+    super.key,
+    required this.sesion,
+    required this.alTerminarSesion,
+  });
 
   @override
   State<PantallaCombate> createState() => _PantallaCombateState();
@@ -31,18 +49,19 @@ class PantallaCombate extends StatefulWidget {
 
 class _PantallaCombateState extends State<PantallaCombate>
     with TickerProviderStateMixin {
-  static const _denominadoresDisponibles = [2, 3, 4, 5];
   static const _evaluador = EvaluadorCorte();
 
-  int _denominadorActivo = 2;
+  int _indicePresentacion = 0;
+  int _indiceContrato = 0;
   final List<RadioTrazado> _radiosConfirmados = [];
   RadioTrazado? _radioEnCurso;
   ResultadoIntento? _ultimoResultado;
-  _FaseIntento _fase = _FaseIntento.intro;
+  _FaseSesion _fase = _FaseSesion.presentacion;
   int _victoriasAcumuladas = 0;
   int _fallosAcumulados = 0;
-  bool _esPrimerCombate = true;
   String? _lineaSoraActiva;
+  bool _lineaEsperaPulsacion = true;
+
   Timer? _temporizadorLineaSora;
   Timer? _temporizadorPausa;
 
@@ -51,22 +70,26 @@ class _PantallaCombateState extends State<PantallaCombate>
   late final AnimationController _controladorCielo;
   late final AnimationController _controladorRestauracion;
   late final List<Particula> _particulasRotura;
-  double _nivelRestauracionObjetivo = 0;
 
-  FragmentoUnitario get _fragmentoActivo =>
-      FragmentoUnitario(_denominadorActivo);
+  ContratoFragmento get _contratoActivo =>
+      widget.sesion.contratos[_indiceContrato];
+
+  FragmentoUnitario get _fragmentoActivo => _contratoActivo.aFragmento();
 
   int get _radiosObjetivo => _fragmentoActivo.radiosRequeridos;
 
   bool get _aceptaNuevosTrazos =>
-      _fase == _FaseIntento.dibujando &&
+      _fase == _FaseSesion.dibujando &&
       _radiosConfirmados.length < _radiosObjetivo;
 
   bool get _puedeCortarAhora =>
-      _fase == _FaseIntento.dibujando &&
+      _fase == _FaseSesion.dibujando &&
       _radiosConfirmados.length == _radiosObjetivo;
 
   bool get _hayTrazos => _radiosConfirmados.isNotEmpty;
+
+  bool get _mostrarFragmento =>
+      _fase != _FaseSesion.presentacion && _fase != _FaseSesion.transicion;
 
   @override
   void initState() {
@@ -81,12 +104,12 @@ class _PantallaCombateState extends State<PantallaCombate>
     );
     _controladorRotura.addStatusListener((estadoAnim) {
       if (estadoAnim == AnimationStatus.completed) {
-        _iniciarPausaTrasVictoria();
+        _iniciarTransicion();
       }
     });
     _controladorAparicion = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 520),
+      duration: const Duration(milliseconds: 620),
       value: 0,
     );
     _controladorRestauracion = AnimationController(
@@ -95,8 +118,7 @@ class _PantallaCombateState extends State<PantallaCombate>
       value: 0,
     );
     _particulasRotura = PintorRotura.generar();
-    _agendarIntroSora();
-    _controladorAparicion.forward();
+    _mostrarLineaPresentacionActual();
   }
 
   @override
@@ -110,54 +132,52 @@ class _PantallaCombateState extends State<PantallaCombate>
     super.dispose();
   }
 
-  /// El nivel de restauración satura en 12 victorias (ciudad completa).
-  /// Se anima suavemente cada vez que derrotamos un Fragmento.
-  void _actualizarRestauracion() {
-    const topeVictoriasParaSaturar = 12;
-    _nivelRestauracionObjetivo =
-        (_victoriasAcumuladas / topeVictoriasParaSaturar).clamp(0.0, 1.0);
-    final valorPrevio = _controladorRestauracion.value;
-    _controladorRestauracion.stop();
-    _controladorRestauracion.value = valorPrevio;
-    _controladorRestauracion.animateTo(
-      _nivelRestauracionObjetivo,
-      duration: const Duration(milliseconds: 1200),
-      curve: Curves.easeOutCubic,
-    );
-  }
+  /// ---- Fase: presentación de Sora ---------------------------------
 
-  void _agendarIntroSora() {
-    _temporizadorLineaSora?.cancel();
-    _temporizadorLineaSora = Timer(const Duration(milliseconds: 450), () {
-      if (!mounted) return;
-      setState(() {
-        _lineaSoraActiva = DialogosSora.inicioCombate(
-          denominador: _denominadorActivo,
-          esPrimerCombate: _esPrimerCombate,
-        );
-        _fase = _FaseIntento.dibujando;
-      });
+  void _mostrarLineaPresentacionActual() {
+    final linea = widget.sesion.lineasIntro[_indicePresentacion];
+    setState(() {
+      _fase = _FaseSesion.presentacion;
+      _lineaSoraActiva = linea.texto;
+      _lineaEsperaPulsacion = linea.esperaPulsacion;
     });
   }
 
-  void _elegirDenominador(int denominador) {
-    if (_fase == _FaseIntento.rompiendo) return;
-    _temporizadorLineaSora?.cancel();
-    _temporizadorPausa?.cancel();
-    _controladorRotura.reset();
+  void _avanzarPresentacion() {
+    HapticFeedback.selectionClick();
+    if (_indicePresentacion < widget.sesion.lineasIntro.length - 1) {
+      setState(() => _indicePresentacion++);
+      _mostrarLineaPresentacionActual();
+    } else {
+      _iniciarInvocacion();
+    }
+  }
+
+  /// ---- Fase: invocación del Fragmento -----------------------------
+
+  void _iniciarInvocacion() {
     setState(() {
-      _denominadorActivo = denominador;
+      _fase = _FaseSesion.invocando;
+      _lineaSoraActiva = _contratoActivo.invocacion.texto;
+      _lineaEsperaPulsacion = true;
       _radiosConfirmados.clear();
       _radioEnCurso = null;
       _ultimoResultado = null;
-      _fase = _FaseIntento.intro;
-      _lineaSoraActiva = null;
     });
     _controladorAparicion
       ..reset()
       ..forward();
-    _agendarIntroSora();
   }
+
+  void _avanzarInvocacion() {
+    HapticFeedback.selectionClick();
+    setState(() {
+      _fase = _FaseSesion.dibujando;
+      _lineaSoraActiva = null;
+    });
+  }
+
+  /// ---- Fase: combate ----------------------------------------------
 
   void _agregarRadio(RadioTrazado radio) {
     if (!_aceptaNuevosTrazos) return;
@@ -175,7 +195,7 @@ class _PantallaCombateState extends State<PantallaCombate>
 
   void _deshacerUltimo() {
     if (!_hayTrazos) return;
-    if (_fase != _FaseIntento.dibujando) return;
+    if (_fase != _FaseSesion.dibujando) return;
     HapticFeedback.lightImpact();
     setState(() {
       _radiosConfirmados.removeLast();
@@ -184,7 +204,7 @@ class _PantallaCombateState extends State<PantallaCombate>
   }
 
   void _reiniciarIntento() {
-    if (_fase != _FaseIntento.dibujando) return;
+    if (_fase != _FaseSesion.dibujando) return;
     setState(() {
       _radiosConfirmados.clear();
       _radioEnCurso = null;
@@ -194,27 +214,24 @@ class _PantallaCombateState extends State<PantallaCombate>
 
   void _evaluarAhora() {
     if (!_puedeCortarAhora) return;
-
     final resultado = _evaluador.evaluar(
       fragmento: _fragmentoActivo,
       radios: _radiosConfirmados,
     );
-
     setState(() => _ultimoResultado = resultado);
 
     if (resultado.esExito) {
       _victoriasAcumuladas++;
       HapticFeedback.heavyImpact();
       setState(() {
-        _fase = _FaseIntento.rompiendo;
+        _fase = _FaseSesion.rompiendo;
         _lineaSoraActiva =
             DialogosSora.felicitacionPara(_victoriasAcumuladas - 1);
+        _lineaEsperaPulsacion = false;
       });
       _controladorRotura
         ..reset()
         ..forward();
-      // Encender otra ventana en la ciudad con un pequeño retardo
-      // para que se sincronice con la disipación de las partículas.
       Future.delayed(const Duration(milliseconds: 350), () {
         if (!mounted) return;
         _actualizarRestauracion();
@@ -225,35 +242,72 @@ class _PantallaCombateState extends State<PantallaCombate>
       setState(() {
         _lineaSoraActiva =
             DialogosSora.animoTrasFallo(_fallosAcumulados - 1);
+        _lineaEsperaPulsacion = false;
       });
     }
   }
 
-  void _iniciarPausaTrasVictoria() {
-    setState(() {
-      _fase = _FaseIntento.pausa;
-    });
+  /// ---- Fase: transición entre contratos ---------------------------
+
+  void _iniciarTransicion() {
+    setState(() => _fase = _FaseSesion.transicion);
     _temporizadorPausa?.cancel();
-    _temporizadorPausa = Timer(const Duration(milliseconds: 700), () {
+    _temporizadorPausa = Timer(const Duration(milliseconds: 800), () {
       if (!mounted) return;
-      setState(() {
-        _radiosConfirmados.clear();
-        _radioEnCurso = null;
-        _ultimoResultado = null;
-        _esPrimerCombate = false;
-        _fase = _FaseIntento.intro;
-        _lineaSoraActiva = null;
-      });
-      _controladorRotura.reset();
-      _controladorAparicion
-        ..reset()
-        ..forward();
-      _agendarIntroSora();
+      final hayMasContratos =
+          _indiceContrato < widget.sesion.contratos.length - 1;
+      if (hayMasContratos) {
+        setState(() {
+          _indiceContrato++;
+          _radiosConfirmados.clear();
+          _radioEnCurso = null;
+          _ultimoResultado = null;
+        });
+        _controladorRotura.reset();
+        _iniciarInvocacion();
+      } else {
+        setState(() => _fase = _FaseSesion.sesionCompleta);
+        widget.alTerminarSesion();
+      }
     });
   }
 
+  /// ---- Restauración diegética de la ciudad ------------------------
+
+  double _nivelRestauracionObjetivo = 0;
+
+  void _actualizarRestauracion() {
+    final totalVictoriasEsperadas = widget.sesion.numeroCombates;
+    _nivelRestauracionObjetivo =
+        (_victoriasAcumuladas / totalVictoriasEsperadas).clamp(0.0, 1.0);
+    final valorPrevio = _controladorRestauracion.value;
+    _controladorRestauracion.stop();
+    _controladorRestauracion.value = valorPrevio;
+    _controladorRestauracion.animateTo(
+      _nivelRestauracionObjetivo,
+      duration: const Duration(milliseconds: 1200),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  /// ---- Callbacks de la UI ----------------------------------------
+
+  void _alTocarBocadillo() {
+    if (!_lineaEsperaPulsacion) return;
+    switch (_fase) {
+      case _FaseSesion.presentacion:
+        _avanzarPresentacion();
+        break;
+      case _FaseSesion.invocando:
+        _avanzarInvocacion();
+        break;
+      default:
+        break;
+    }
+  }
+
   EstadoFragmento get _estadoFragmento {
-    if (_fase == _FaseIntento.rompiendo || _fase == _FaseIntento.pausa) {
+    if (_fase == _FaseSesion.rompiendo || _fase == _FaseSesion.transicion) {
       return EstadoFragmento.apacible;
     }
     if (_ultimoResultado != null && !_ultimoResultado!.esExito) {
@@ -265,7 +319,7 @@ class _PantallaCombateState extends State<PantallaCombate>
   }
 
   bool get _destacarExito =>
-      _fase == _FaseIntento.rompiendo ||
+      _fase == _FaseSesion.rompiendo ||
       _ultimoResultado?.esExito == true;
 
   bool get _destacarFallo =>
@@ -290,151 +344,80 @@ class _PantallaCombateState extends State<PantallaCombate>
               SafeArea(
                 child: Column(
                   children: [
-                    _BarraSuperior(
-                      denominadoresDisponibles: _denominadoresDisponibles,
-                      denominadorActivo: _denominadorActivo,
-                      alElegir: _elegirDenominador,
-                    ),
+                    const SizedBox(height: 20),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: AnimatedBuilder(
-                          animation: Listenable.merge(
-                              [_controladorRotura, _controladorAparicion]),
-                          builder: (_, __) {
-                            return LienzoCombate(
-                              fragmento: _fragmentoActivo,
-                              radiosConfirmados:
-                                  List.unmodifiable(_radiosConfirmados),
-                              radioEnCurso: _radioEnCurso,
-                              estadoFragmento: _estadoFragmento,
-                              destacarExito: _destacarExito,
-                              destacarFallo: _destacarFallo,
-                              aceptaNuevosTrazos: _aceptaNuevosTrazos,
-                              progresoRotura: _controladorRotura.value,
-                              opacidadAparicion: _controladorAparicion.value,
-                              particulasRotura: _particulasRotura,
-                              onAgregarRadio: _agregarRadio,
-                              onActualizarRadioEnCurso: _actualizarRadioEnCurso,
-                            );
-                          },
-                        ),
+                        child: _mostrarFragmento
+                            ? AnimatedBuilder(
+                                animation: Listenable.merge([
+                                  _controladorRotura,
+                                  _controladorAparicion,
+                                ]),
+                                builder: (_, __) {
+                                  return LienzoCombate(
+                                    fragmento: _fragmentoActivo,
+                                    radiosConfirmados:
+                                        List.unmodifiable(_radiosConfirmados),
+                                    radioEnCurso: _radioEnCurso,
+                                    estadoFragmento: _estadoFragmento,
+                                    destacarExito: _destacarExito,
+                                    destacarFallo: _destacarFallo,
+                                    aceptaNuevosTrazos: _aceptaNuevosTrazos,
+                                    progresoRotura: _controladorRotura.value,
+                                    opacidadAparicion:
+                                        _controladorAparicion.value,
+                                    particulasRotura: _particulasRotura,
+                                    onAgregarRadio: _agregarRadio,
+                                    onActualizarRadioEnCurso:
+                                        _actualizarRadioEnCurso,
+                                  );
+                                },
+                              )
+                            : const SizedBox.shrink(),
                       ),
                     ),
-                    _IndicadorProgreso(
-                      trazosHechos: _radiosConfirmados.length,
-                      trazosObjetivo: _radiosObjetivo,
+                    if (_fase == _FaseSesion.dibujando)
+                      _IndicadorProgreso(
+                        trazosHechos: _radiosConfirmados.length,
+                        trazosObjetivo: _radiosObjetivo,
+                      ),
+                    SoraPresencia(
+                      textoActivo: _lineaSoraActiva,
+                      alTocarBocadillo: _lineaEsperaPulsacion
+                          ? _alTocarBocadillo
+                          : null,
                     ),
-                    SoraPresencia(textoActivo: _lineaSoraActiva),
-                    _BarraAcciones(
-                      hayTrazos: _hayTrazos,
-                      puedeCortar: _puedeCortarAhora,
-                      estaInactivo: _fase != _FaseIntento.dibujando,
-                      alDeshacer: _deshacerUltimo,
-                      alReiniciar: _reiniciarIntento,
-                      alCortar: _evaluarAhora,
-                    ),
+                    if (_lineaEsperaPulsacion &&
+                        (_fase == _FaseSesion.presentacion ||
+                            _fase == _FaseSesion.invocando))
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          'toca para continuar',
+                          style: TextStyle(
+                            color: PaletaNeon.textoTenue,
+                            fontSize: 11,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                    if (_fase == _FaseSesion.dibujando)
+                      _BarraAcciones(
+                        hayTrazos: _hayTrazos,
+                        puedeCortar: _puedeCortarAhora,
+                        alDeshacer: _deshacerUltimo,
+                        alReiniciar: _reiniciarIntento,
+                        alCortar: _evaluarAhora,
+                      )
+                    else
+                      const SizedBox(height: 72),
                   ],
                 ),
               ),
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _BarraSuperior extends StatelessWidget {
-  final List<int> denominadoresDisponibles;
-  final int denominadorActivo;
-  final ValueChanged<int> alElegir;
-
-  const _BarraSuperior({
-    required this.denominadoresDisponibles,
-    required this.denominadorActivo,
-    required this.alElegir,
-  });
-
-  @override
-  Widget build(BuildContext contexto) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'UNO ROTO',
-            style: TextStyle(
-              fontSize: 16,
-              letterSpacing: 6,
-              color: PaletaNeon.textoTenue,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 10,
-            children: [
-              for (final denominador in denominadoresDisponibles)
-                _BotonDenominador(
-                  denominador: denominador,
-                  activo: denominador == denominadorActivo,
-                  alPulsar: () => alElegir(denominador),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BotonDenominador extends StatelessWidget {
-  final int denominador;
-  final bool activo;
-  final VoidCallback alPulsar;
-
-  const _BotonDenominador({
-    required this.denominador,
-    required this.activo,
-    required this.alPulsar,
-  });
-
-  @override
-  Widget build(BuildContext contexto) {
-    final colorBorde = activo ? PaletaNeon.azulNeon : PaletaNeon.violetaBase;
-    final colorTexto =
-        activo ? PaletaNeon.textoPrincipal : PaletaNeon.textoTenue;
-    return GestureDetector(
-      onTap: alPulsar,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: activo
-              ? PaletaNeon.violetaBase.withOpacity(0.4)
-              : Colors.transparent,
-          border: Border.all(color: colorBorde, width: 1.5),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: activo
-              ? [
-                  BoxShadow(
-                    color: PaletaNeon.azulNeon.withOpacity(0.35),
-                    blurRadius: 14,
-                  ),
-                ]
-              : const [],
-        ),
-        child: Text(
-          '1/$denominador',
-          style: TextStyle(
-            color: colorTexto,
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 1.2,
-          ),
-        ),
       ),
     );
   }
@@ -488,7 +471,6 @@ class _IndicadorProgreso extends StatelessWidget {
 class _BarraAcciones extends StatelessWidget {
   final bool hayTrazos;
   final bool puedeCortar;
-  final bool estaInactivo;
   final VoidCallback alDeshacer;
   final VoidCallback alReiniciar;
   final VoidCallback alCortar;
@@ -496,7 +478,6 @@ class _BarraAcciones extends StatelessWidget {
   const _BarraAcciones({
     required this.hayTrazos,
     required this.puedeCortar,
-    required this.estaInactivo,
     required this.alDeshacer,
     required this.alReiniciar,
     required this.alCortar,
@@ -504,9 +485,6 @@ class _BarraAcciones extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
-    final deshacerActivo = hayTrazos && !estaInactivo;
-    final cortarActivo = puedeCortar && !estaInactivo;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
       child: Row(
@@ -514,19 +492,19 @@ class _BarraAcciones extends StatelessWidget {
         children: [
           _BotonAccion(
             etiqueta: 'Deshacer',
-            habilitado: deshacerActivo,
+            habilitado: hayTrazos,
             acentuado: false,
             alPulsar: alDeshacer,
           ),
           _BotonAccion(
             etiqueta: 'De nuevo',
-            habilitado: deshacerActivo,
+            habilitado: hayTrazos,
             acentuado: false,
             alPulsar: alReiniciar,
           ),
           _BotonAccion(
             etiqueta: 'Cortar',
-            habilitado: cortarActivo,
+            habilitado: puedeCortar,
             acentuado: true,
             alPulsar: alCortar,
           ),
