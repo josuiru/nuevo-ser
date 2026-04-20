@@ -57,10 +57,12 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         return primeraNoche();
       case 1:
         return segundaNoche();
+      case 2:
+        return terceraNoche();
       default:
-        // Si el niño quiere seguir más allá, reciclamos la segunda noche
-        // como práctica libre hasta que diseñemos la tercera.
-        return segundaNoche();
+        // A partir de aquí el niño querrá más contenido; reciclamos la
+        // tercera noche hasta que diseñemos la cuarta.
+        return terceraNoche();
     }
   }
 

@@ -53,6 +53,7 @@ class _PantallaCombateState extends State<PantallaCombate>
 
   int _indicePresentacion = 0;
   int _indiceContrato = 0;
+  int _subCombatesResueltos = 0;
   final List<RadioTrazado> _radiosConfirmados = [];
   RadioTrazado? _radioEnCurso;
   ResultadoIntento? _ultimoResultado;
@@ -74,9 +75,17 @@ class _PantallaCombateState extends State<PantallaCombate>
   ContratoFragmento get _contratoActivo =>
       widget.sesion.contratos[_indiceContrato];
 
-  FragmentoUnitario get _fragmentoActivo => _contratoActivo.aFragmento();
+  FragmentoUnitario get _fragmentoActivo =>
+      _contratoActivo.aFragmentoUnitario();
 
   int get _radiosObjetivo => _fragmentoActivo.radiosRequeridos;
+
+  bool get _contratoActualEsCompuesto => _contratoActivo.esCompuesto;
+
+  int get _subCombatesTotales => _contratoActivo.numerador;
+
+  int get _subCombatesRestantes =>
+      _subCombatesTotales - _subCombatesResueltos;
 
   bool get _aceptaNuevosTrazos =>
       _fase == _FaseSesion.dibujando &&
@@ -160,10 +169,31 @@ class _PantallaCombateState extends State<PantallaCombate>
       _fase = _FaseSesion.invocando;
       _lineaSoraActiva = _contratoActivo.invocacion.texto;
       _lineaEsperaPulsacion = true;
+      _subCombatesResueltos = 0;
       _radiosConfirmados.clear();
       _radioEnCurso = null;
       _ultimoResultado = null;
     });
+    _controladorAparicion
+      ..reset()
+      ..forward();
+  }
+
+  /// Al cerrar un sub-combate de un Compuesto, arrancamos el siguiente
+  /// sub-combate del mismo contrato sin volver a la invocación.
+  void _iniciarSubCombateSiguiente() {
+    final mensajeEntre = _subCombatesRestantes == 1
+        ? 'Último trozo.'
+        : 'Otro trozo.';
+    setState(() {
+      _radiosConfirmados.clear();
+      _radioEnCurso = null;
+      _ultimoResultado = null;
+      _fase = _FaseSesion.invocando;
+      _lineaSoraActiva = mensajeEntre;
+      _lineaEsperaPulsacion = true;
+    });
+    _controladorRotura.reset();
     _controladorAparicion
       ..reset()
       ..forward();
@@ -222,11 +252,15 @@ class _PantallaCombateState extends State<PantallaCombate>
 
     if (resultado.esExito) {
       _victoriasAcumuladas++;
+      _subCombatesResueltos++;
       HapticFeedback.heavyImpact();
+      final esUltimoSubCombate = !_contratoActualEsCompuesto ||
+          _subCombatesResueltos >= _subCombatesTotales;
       setState(() {
         _fase = _FaseSesion.rompiendo;
-        _lineaSoraActiva =
-            DialogosSora.felicitacionPara(_victoriasAcumuladas - 1);
+        _lineaSoraActiva = esUltimoSubCombate
+            ? DialogosSora.felicitacionPara(_victoriasAcumuladas - 1)
+            : null;
         _lineaEsperaPulsacion = false;
       });
       _controladorRotura
@@ -250,6 +284,15 @@ class _PantallaCombateState extends State<PantallaCombate>
   /// ---- Fase: transición entre contratos ---------------------------
 
   void _iniciarTransicion() {
+    // Si el contrato era compuesto y aún le quedan sub-combates, abrimos
+    // el siguiente sub-combate sin pasar por la transición al contrato
+    // siguiente.
+    if (_contratoActualEsCompuesto &&
+        _subCombatesResueltos < _subCombatesTotales) {
+      _iniciarSubCombateSiguiente();
+      return;
+    }
+
     setState(() => _fase = _FaseSesion.transicion);
     _temporizadorPausa?.cancel();
     _temporizadorPausa = Timer(const Duration(milliseconds: 800), () {
@@ -259,6 +302,7 @@ class _PantallaCombateState extends State<PantallaCombate>
       if (hayMasContratos) {
         setState(() {
           _indiceContrato++;
+          _subCombatesResueltos = 0;
           _radiosConfirmados.clear();
           _radioEnCurso = null;
           _ultimoResultado = null;
@@ -277,9 +321,13 @@ class _PantallaCombateState extends State<PantallaCombate>
   double _nivelRestauracionObjetivo = 0;
 
   void _actualizarRestauracion() {
-    final totalVictoriasEsperadas = widget.sesion.numeroCombates;
+    // Sumamos todos los sub-combates reales del guión, así un compuesto
+    // 3/4 aporta 3 ventanas y un unitario 1/2 aporta 1.
+    final totalSubCombates = widget.sesion.contratos
+        .fold<int>(0, (acum, c) => acum + c.numerador);
+    if (totalSubCombates == 0) return;
     _nivelRestauracionObjetivo =
-        (_victoriasAcumuladas / totalVictoriasEsperadas).clamp(0.0, 1.0);
+        (_victoriasAcumuladas / totalSubCombates).clamp(0.0, 1.0);
     final valorPrevio = _controladorRestauracion.value;
     _controladorRestauracion.stop();
     _controladorRestauracion.value = valorPrevio;
@@ -378,9 +426,26 @@ class _PantallaCombateState extends State<PantallaCombate>
                       ),
                     ),
                     if (_fase == _FaseSesion.dibujando)
-                      _IndicadorProgreso(
-                        trazosHechos: _radiosConfirmados.length,
-                        trazosObjetivo: _radiosObjetivo,
+                      Column(
+                        children: [
+                          if (_contratoActualEsCompuesto)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                'Trozo ${_subCombatesResueltos + 1} de $_subCombatesTotales '
+                                '· ${_contratoActivo.etiquetaCompuesto}',
+                                style: const TextStyle(
+                                  color: PaletaNeon.textoTenue,
+                                  fontSize: 12,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ),
+                          _IndicadorProgreso(
+                            trazosHechos: _radiosConfirmados.length,
+                            trazosObjetivo: _radiosObjetivo,
+                          ),
+                        ],
                       ),
                     SoraPresencia(
                       textoActivo: _lineaSoraActiva,

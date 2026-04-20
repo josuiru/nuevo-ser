@@ -12,20 +12,32 @@ class LineaSora {
   const LineaSora(this.texto, {this.esperaPulsacion = true});
 }
 
-/// Un encuentro con un Fragmento dentro de una sesión: qué denominador,
-/// qué se está comiendo en el mundo, y cómo lo invoca Sora.
+/// Un encuentro con un Fragmento dentro de una sesión.
+///
+/// Si [numerador] es 1, es un Fragmento unitario (Familia B): un único
+/// combate. Si [numerador] > 1, es un Fragmento compuesto (Familia C):
+/// el jugador debe resolver [numerador] sub-combates consecutivos del
+/// mismo unitario 1/[denominador] hasta "descomponer" el compuesto
+/// entero. Biblia §5.2 C: "una fracción no unitaria es una suma de
+/// unitarias; el niño lo vive físicamente".
 class ContratoFragmento {
+  final int numerador;
   final int denominador;
   final String contextoNarrativo;
   final LineaSora invocacion;
 
   const ContratoFragmento({
+    this.numerador = 1,
     required this.denominador,
     required this.contextoNarrativo,
     required this.invocacion,
-  });
+  }) : assert(numerador >= 1 && numerador < denominador);
 
-  FragmentoUnitario aFragmento() => FragmentoUnitario(denominador);
+  bool get esCompuesto => numerador > 1;
+
+  String get etiquetaCompuesto => '$numerador/$denominador';
+
+  FragmentoUnitario aFragmentoUnitario() => FragmentoUnitario(denominador);
 }
 
 /// Una sesión completa: líneas de presentación de Sora, varios contratos

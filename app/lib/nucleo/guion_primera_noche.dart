@@ -186,3 +186,104 @@ SesionNoche segundaNoche() {
     ],
   );
 }
+
+/// Tercera sesión: entran los Compuestos (Familia C, biblia §5.2 C).
+///
+/// Alguno 2/3, 3/4, 5/6: no se corta directo, se va cortando pedazo a
+/// pedazo tantas veces como diga el numerador. El niño vive físicamente
+/// que una fracción no unitaria es suma de unitarias (habilidad H-B01).
+SesionNoche terceraNoche() {
+  return const SesionNoche(
+    tituloDiegetico: 'Tercera noche',
+    lineasIntro: [
+      LineaSora('Vaya. Ya eres habitual.'),
+      LineaSora('Hoy no valen los fáciles.'),
+      LineaSora('Algunos Fragmentos son a trozos. No los partes de una vez.'),
+      LineaSora('Uno a uno. Como quien desata un nudo.'),
+    ],
+    contratos: [
+      ContratoFragmento(
+        denominador: 3,
+        contextoNarrativo: 'se come un zapato solitario',
+        invocacion: LineaSora(
+          'Entramos suaves. Un zapato olvidado. En tres.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 2,
+        denominador: 3,
+        contextoNarrativo: 'se ha tragado dos tercios del callejón',
+        invocacion: LineaSora(
+          'Ese ha mordido dos tercios. Son dos trozos de un tercio. Uno, y después otro.',
+        ),
+      ),
+      ContratoFragmento(
+        denominador: 4,
+        contextoNarrativo: 'se come un grafiti en la pared',
+        invocacion: LineaSora(
+          'Grafiti nuevo. Cuatro colores. Córtalo igual.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 3,
+        denominador: 4,
+        contextoNarrativo: 'se come tres cuartos de una ventana',
+        invocacion: LineaSora(
+          'Tres cuartos de la ventana del ático. Tres veces en cuatro.',
+        ),
+      ),
+      ContratoFragmento(
+        denominador: 5,
+        contextoNarrativo: 'se come las cuerdas de una guitarra',
+        invocacion: LineaSora(
+          'Guitarra en el balcón. Cinco cuerdas. Suave.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 2,
+        denominador: 5,
+        contextoNarrativo: 'se come dos quintos de una marquesina',
+        invocacion: LineaSora(
+          'Marquesina rota. Dos quintos. Dos pasadas en cinco.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 5,
+        denominador: 6,
+        contextoNarrativo: 'se come cinco sextos de un mosaico',
+        invocacion: LineaSora(
+          'Mosaico de la plaza. Cinco de seis baldosas. Concentra.',
+        ),
+      ),
+      ContratoFragmento(
+        denominador: 2,
+        contextoNarrativo: 'se come el eco del último tren',
+        invocacion: LineaSora(
+          'El eco del último tren. En dos. Rápido antes de que pare.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 3,
+        denominador: 5,
+        contextoNarrativo: 'se come tres quintos de los carteles electorales',
+        invocacion: LineaSora(
+          'Ironía: Fragmento devora tres de cinco carteles. Tres trozos en cinco.',
+        ),
+      ),
+      ContratoFragmento(
+        numerador: 7,
+        denominador: 8,
+        contextoNarrativo: 'se come casi entero un reloj de pared',
+        invocacion: LineaSora(
+          'Este se ha comido casi el reloj entero. Siete de ocho. Paciencia.',
+        ),
+      ),
+    ],
+    lineasCierre: [
+      LineaSora('Bien. Los compuestos no son un muro.'),
+      LineaSora('Son una cadena. Un eslabón cada vez.'),
+      LineaSora('Mañana te presento a alguien.'),
+      LineaSora('Vete a dormir.'),
+    ],
+  );
+}
