@@ -33,7 +33,7 @@ class GeneradorOperacionDecimal {
   /// que los resultados sean decimales limpios. Mantener esta lista
   /// curada evita problemas de redondeo y hace que las operaciones
   /// "canten" cuando el niño las interioriza.
-  static final List<_CasoDecimal> _casos = [
+  static const List<_CasoDecimal> _casos = [
     // Sumas y restas sencillas.
     _CasoDecimal(0.5, 0.3, OperadorAritmetico.suma),
     _CasoDecimal(0.25, 0.75, OperadorAritmetico.suma),

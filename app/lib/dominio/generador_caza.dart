@@ -259,7 +259,7 @@ class GeneradorCaza {
     // Curado corto de casos por operador.
     switch (operador) {
       case OperadorAritmetico.suma:
-        final pares = const [
+        const pares = [
           ('0,5', '0,3'),
           ('0,25', '0,75'),
           ('0,1', '0,9'),
@@ -270,7 +270,7 @@ class GeneradorCaza {
         final par = pares[_azar.nextInt(pares.length)];
         return (par.$1, par.$2, operador);
       case OperadorAritmetico.resta:
-        final pares = const [
+        const pares = [
           ('0,8', '0,3'),
           ('1,0', '0,25'),
           ('2,5', '1,2'),
@@ -280,7 +280,7 @@ class GeneradorCaza {
         final par = pares[_azar.nextInt(pares.length)];
         return (par.$1, par.$2, operador);
       case OperadorAritmetico.producto:
-        final pares = const [
+        const pares = [
           ('0,5', '0,4'),
           ('0,3', '0,6'),
           ('0,2', '0,5'),
@@ -291,7 +291,7 @@ class GeneradorCaza {
         final par = pares[_azar.nextInt(pares.length)];
         return (par.$1, par.$2, operador);
       case OperadorAritmetico.division:
-        final pares = const [
+        const pares = [
           ('1,5', '3'),
           ('2,4', '2'),
           ('4,5', '5'),

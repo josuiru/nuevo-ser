@@ -4,10 +4,13 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../datos/catalogo_habilidades.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/distrito.dart';
 import '../dominio/fragmento_en_tejado.dart';
 import '../dominio/generador_caza.dart';
+import '../dominio/mapeo_habilidades_puzzle.dart';
+import '../dominio/motor_maestria.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../nucleo/paleta.dart';
@@ -48,7 +51,9 @@ class _PantallaCazaState extends State<PantallaCaza>
   static const Duration _tickPeriodo = Duration(milliseconds: 120);
 
   late final GeneradorCaza _generador;
+  MotorMaestria? _motorMaestria;
   final List<FragmentoEnTejado> _activos = [];
+  final Map<String, DateTime> _instanteAperturaPuzzle = {};
 
   int _esquirlasTotal = 0;
   int _esquirlasEstaSesion = 0;
@@ -69,6 +74,17 @@ class _PantallaCazaState extends State<PantallaCaza>
       duration: const Duration(seconds: 16),
     )..repeat();
     _cargarEstadoInicial();
+    _inicializarMotorMaestria();
+  }
+
+  Future<void> _inicializarMotorMaestria() async {
+    final catalogo = await CatalogoHabilidades.cargar();
+    if (!mounted) return;
+    _motorMaestria = MotorMaestria(
+      catalogo: catalogo,
+      cargarEstado: widget.repositorio.cargarEstadoHabilidad,
+      guardarEstado: widget.repositorio.guardarEstadoHabilidad,
+    );
   }
 
   Future<void> _cargarEstadoInicial() async {
@@ -140,8 +156,10 @@ class _PantallaCazaState extends State<PantallaCaza>
 
   Future<void> _alTocarFragmento(FragmentoEnTejado fragmento) async {
     HapticFeedback.selectionClick();
+    _instanteAperturaPuzzle[fragmento.identificador] = DateTime.now();
     final capturado = await _abrirPuzzleSegunTipo(fragmento);
     if (!mounted) return;
+    _registrarResultadoMaestria(fragmento, capturado == true);
     setState(() => _activos.remove(fragmento));
     if (capturado == true) {
       final esquirlasGanadas = switch (fragmento.tipo) {
@@ -262,6 +280,28 @@ class _PantallaCazaState extends State<PantallaCaza>
       if (p.etiqueta == etiqueta) return p;
     }
     return null;
+  }
+
+  /// Registra el intento contra el motor de maestría. Silencioso: si
+  /// el motor aún no se ha cargado (carga asíncrona), simplemente no
+  /// registra; la siguiente partida lo hará.
+  Future<void> _registrarResultadoMaestria(
+    FragmentoEnTejado fragmento,
+    bool acertado,
+  ) async {
+    final motor = _motorMaestria;
+    if (motor == null) return;
+    final instanteAbierto =
+        _instanteAperturaPuzzle.remove(fragmento.identificador);
+    final duracionSeg = instanteAbierto == null
+        ? 15
+        : DateTime.now().difference(instanteAbierto).inSeconds.clamp(1, 600);
+    await motor.registrarResultado(
+      idHabilidad: idHabilidadPrincipal(fragmento),
+      acierto: acertado,
+      dificultad: dificultadEstimadaDelPuzzle(fragmento),
+      duracionSegundos: duracionSeg,
+    );
   }
 
   void _comentarTrasCaptura() {

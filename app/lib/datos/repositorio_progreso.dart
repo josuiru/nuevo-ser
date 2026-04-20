@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../dominio/habilidad.dart';
 
 /// Persistencia mínima del progreso del jugador: en qué noche va y
 /// cuándo abrió la app por última vez. Todo local, sin sincronización,
@@ -67,13 +71,41 @@ class RepositorioProgreso {
     await prefs.setBool(_claveDistritoVisitado(idDistrito), true);
   }
 
+  static String _claveEstadoHabilidad(String id) =>
+      'uroto.habilidad.$id';
+
+  Future<EstadoHabilidad?> cargarEstadoHabilidad(String idHabilidad) async {
+    final prefs = await SharedPreferences.getInstance();
+    final texto = prefs.getString(_claveEstadoHabilidad(idHabilidad));
+    if (texto == null) return null;
+    try {
+      return EstadoHabilidad.desdeJson(
+        jsonDecode(texto) as Map<String, dynamic>,
+      );
+    } catch (_) {
+      // Formato corrupto: borramos para no bloquear al niño.
+      await prefs.remove(_claveEstadoHabilidad(idHabilidad));
+      return null;
+    }
+  }
+
+  Future<void> guardarEstadoHabilidad(EstadoHabilidad estado) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _claveEstadoHabilidad(estado.identificadorHabilidad),
+      jsonEncode(estado.aJson()),
+    );
+  }
+
   /// Útil para reiniciar desde el principio (modo desarrollo o niño que
   /// quiere rejugarlo desde cero).
   Future<void> reiniciar() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_claveSiguienteNoche);
-    await prefs.remove(_claveUltimaAperturaMs);
-    await prefs.remove(_claveYaVioApertura);
-    await prefs.remove(_claveEsquirlasTotal);
+    final todasLasClaves = prefs.getKeys();
+    final clavesUroto =
+        todasLasClaves.where((k) => k.startsWith('uroto.')).toList();
+    for (final clave in clavesUroto) {
+      await prefs.remove(clave);
+    }
   }
 }
