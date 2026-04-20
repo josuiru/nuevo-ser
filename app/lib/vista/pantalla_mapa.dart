@@ -7,6 +7,7 @@ import '../dominio/distrito.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_caza.dart';
+import 'pantalla_habilidades.dart';
 
 /// Mapa de la ciudad. Muestra los distritos del catálogo posicionados
 /// según biblia §3.4 y la Montaña al fondo. Los distritos bloqueados
@@ -86,7 +87,19 @@ class _PantallaMapaState extends State<PantallaMapa>
               SafeArea(
                 child: Column(
                   children: [
-                    _Encabezado(esquirlas: _esquirlas),
+                    GestureDetector(
+                      onLongPress: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => PantallaHabilidades(
+                              repositorio: widget.repositorio,
+                            ),
+                          ),
+                        );
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: _Encabezado(esquirlas: _esquirlas),
+                    ),
                     Expanded(
                       child: _cargado
                           ? LayoutBuilder(
