@@ -1,0 +1,44 @@
+# Flutter build artifacts
+app/build/
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/.packages
+app/.pub-cache/
+app/.pub/
+app/**/generated_plugin_registrant.dart
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.metadata
+
+# Android
+app/android/.gradle/
+app/android/app/debug/
+app/android/app/profile/
+app/android/app/release/
+app/android/captures/
+app/android/gradlew
+app/android/gradlew.bat
+app/android/gradle/wrapper/gradle-wrapper.jar
+app/android/local.properties
+app/android/key.properties
+
+# Linux / Windows / macOS desktop build output
+app/linux/flutter/ephemeral/
+app/windows/flutter/ephemeral/
+app/macos/Flutter/ephemeral/
+
+# Coverage
+app/coverage/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
