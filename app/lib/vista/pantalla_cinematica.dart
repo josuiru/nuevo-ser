@@ -58,6 +58,7 @@ enum _FaseReproduccion {
   revelandoRespuesta,
   esperandoTapRespuesta,
   esperandoAccionInteractiva,
+  mostrandoCierreAmable,
   saliendo,
 }
 
@@ -131,6 +132,18 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
         }
       case PlanoInteractivo():
         setState(() => _fase = _FaseReproduccion.esperandoAccionInteractiva);
+      case PlanoCierreAmable():
+        if (plano.pausaPrevia > Duration.zero) {
+          _temporizador = Timer(
+            plano.pausaPrevia,
+            () {
+              if (!mounted) return;
+              setState(() => _fase = _FaseReproduccion.mostrandoCierreAmable);
+            },
+          );
+        } else {
+          setState(() => _fase = _FaseReproduccion.mostrandoCierreAmable);
+        }
     }
   }
 
@@ -212,6 +225,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       case _FaseReproduccion.saliendo:
       case _FaseReproduccion.mostrandoOpciones:
       case _FaseReproduccion.esperandoAccionInteractiva:
+      case _FaseReproduccion.mostrandoCierreAmable:
         return;
       case _FaseReproduccion.revelando:
         _completarRevealActual();
@@ -329,6 +343,12 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
           plano: plano,
           instruccion: _conTokens(plano.instruccion),
           alCompletar: _avanzar,
+        );
+      case PlanoCierreAmable():
+        return _VistaCierreAmable(
+          textoBoton: plano.textoBoton,
+          visible: _fase == _FaseReproduccion.mostrandoCierreAmable,
+          alPulsar: _avanzar,
         );
     }
   }
@@ -631,6 +651,49 @@ class _PistaGesto extends StatelessWidget {
         letterSpacing: 2.4,
         fontStyle: FontStyle.italic,
         color: PaletaNeon.textoTenue.withOpacity(0.6),
+      ),
+    );
+  }
+}
+
+class _VistaCierreAmable extends StatelessWidget {
+  final String textoBoton;
+  final bool visible;
+  final VoidCallback alPulsar;
+
+  const _VistaCierreAmable({
+    required this.textoBoton,
+    required this.visible,
+    required this.alPulsar,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Center(
+      child: AnimatedOpacity(
+        opacity: visible ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 420),
+        child: TextButton(
+          onPressed: visible ? alPulsar : null,
+          style: TextButton.styleFrom(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 36, vertical: 18),
+            foregroundColor: PaletaNeon.textoPrincipal,
+            side: BorderSide(
+              color: PaletaNeon.violetaNeon.withOpacity(0.55),
+              width: 1.2,
+            ),
+            backgroundColor: PaletaNeon.fondoMedio.withOpacity(0.35),
+          ),
+          child: Text(
+            textoBoton,
+            style: const TextStyle(
+              fontSize: 13,
+              letterSpacing: 5,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
       ),
     );
   }

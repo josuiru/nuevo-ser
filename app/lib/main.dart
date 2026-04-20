@@ -124,7 +124,14 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
       await _repositorio.activarFlagNarrativo(escena.flagDeSalida);
     }
     if (!mounted) return;
+    final eraCierreAmable = escena?.esCierreAmable ?? false;
     _escenaPendiente = null;
+    if (eraCierreAmable) {
+      // Respeto del principio de cierre: no encadenamos otra cinemática
+      // en esta misma sesión — vamos directamente al mapa.
+      setState(() => _fase = _FaseApp.mapa);
+      return;
+    }
     await _resolverCinematicaPendienteOMapa();
   }
 

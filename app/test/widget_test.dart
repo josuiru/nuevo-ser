@@ -41,6 +41,13 @@ void main() {
     expect(aplicarTokens('{nombre}', ''), '{nombre}');
   });
 
+  test('La escena 1.6 es cierre amable y usa PlanoCierreAmable', () {
+    final derrota = CatalogoEscenas.porId('1.6');
+    expect(derrota, isNotNull);
+    expect(derrota!.esCierreAmable, isTrue);
+    expect(derrota.planos.last, isA<PlanoCierreAmable>());
+  });
+
   test('Las escenas 1.2/1.3/1.4 encadenan prerrequisitos', () {
     final ventana = CatalogoEscenas.porId('1.2');
     expect(ventana!.flagsRequeridos, contains('escena_1_1_vista'));
@@ -102,6 +109,7 @@ void main() {
         'uroto.flag.escena_1_3_vista': true,
         'uroto.flag.escena_1_4_vista': true,
         'uroto.flag.escena_1_5_vista': true,
+        'uroto.flag.escena_1_6_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

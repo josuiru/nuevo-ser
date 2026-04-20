@@ -431,12 +431,99 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 1.6 — La derrota. Cierre emocional tras perder contra Kurz. Primera
+  /// media sonrisa de Sora y primera aparición del botón HASTA MAÑANA.
+  /// Doc 07 §1.6. Doc 13 storyboard 2.
+  static const EscenaCinematica primeraDerrota = EscenaCinematica(
+    id: '1.6',
+    titulo: 'La derrota',
+    flagDeSalida: 'escena_1_6_vista',
+    flagsRequeridos: {'escena_1_5_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Negro. La azotea vuelve. Sentado en el suelo. Kurz se aleja.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Sora se acerca. Tiende la mano.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'En serio. Bien.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'La primera vez se pierde. Siempre. Yo también perdí contra Kurz mi primera vez.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Y la segunda.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Y la tercera.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura:
+            'Primera media sonrisa. Apenas un ángulo de la boca.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'La cuarta gané. Y no se olvida.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Kurz va a volver. Cuando estés listo, vuelves tú a él. Y le ganas.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.sora,
+        textoPrompt: '¿Lo pillas?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Sí.',
+            textoRespuesta: 'Mm.',
+            flagsAEstablecer: {'derrota_respuesta_si'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Y si no puedo?',
+            textoRespuesta: 'Puedes. No hoy. Pero puedes.',
+            flagsAEstablecer: {'derrota_respuesta_duda'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vale. Vamos a descansar.',
+            flagsAEstablecer: {'derrota_respuesta_silencio'},
+          ),
+        ],
+      ),
+      PlanoCierreAmable(),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
     callejon,
     presentacionIrune,
     kurzAparece,
+    primeraDerrota,
   ];
 
   static EscenaCinematica? porId(String id) {

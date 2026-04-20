@@ -92,6 +92,20 @@ enum EstadoFragmentoTutorial {
   vacio,
 }
 
+/// Cierre ritual de una sesión. Muestra un botón grande centrado con
+/// texto tipo "HASTA MAÑANA". Al pulsarlo se completa la escena. Doc 01
+/// principio "si necesitas irte, te vas. Esto no es una cárcel." + doc 07
+/// §1.6 (primera aparición del botón).
+class PlanoCierreAmable extends PlanoEscena {
+  final String textoBoton;
+  final Duration pausaPrevia;
+
+  const PlanoCierreAmable({
+    this.textoBoton = 'HASTA MAÑANA',
+    this.pausaPrevia = const Duration(milliseconds: 500),
+  });
+}
+
 class OpcionEleccion {
   /// Texto de la opción tal como la ve el niño, entre comillas cuando es
   /// habla ("Vengo a entrenar."), o descriptivo cuando es actitud

@@ -23,11 +23,19 @@ class EscenaCinematica {
   /// (doc 07 §1.3 "activa tras 1.2").
   final Set<String> flagsRequeridos;
 
+  /// Si es `true`, al terminar la escena el orquestador NO intenta
+  /// disparar la siguiente escena encadenada en la misma sesión — va
+  /// directamente al mapa. Esto respeta el principio del cierre suave
+  /// (doc 01 "si necesitas irte, te vas") y la nota del doc 07
+  /// "no cargar arco 2 en la misma sesión que cierra arco 1".
+  final bool esCierreAmable;
+
   const EscenaCinematica({
     required this.id,
     required this.titulo,
     required this.planos,
     required this.flagDeSalida,
     this.flagsRequeridos = const {},
+    this.esCierreAmable = false,
   });
 }
