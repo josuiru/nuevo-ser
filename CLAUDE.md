@@ -107,8 +107,8 @@ uno-roto/
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.
 
 **Gap frente a doc 03 / prompt maestro**:
-- Sin backend WordPress (doc 03 propone `wp-plugin/uno-roto-core`).
-- Sin sync, sin auth, sin JWT.
+- Backend WordPress `wp-plugin/uno-roto-core/` v0.1 escrito pero sin probar en WP real (plugin standalone, no integrado con el cliente todavía).
+- Sin integración cliente-backend aún: falta wire de HTTP en Flutter.
 - Sin Isar (usamos shared_preferences).
 - Sin Flame (CustomPainter puro).
 - Sin Riverpod.
@@ -121,14 +121,16 @@ uno-roto/
 
 ## Backlog priorizado
 
-1. ~~**Sistema de cinemáticas/diálogos**~~ ✅ v0.1 funcional. Pendiente: PlanoEleccion (opciones con flags), carga desde JSON (ahora es Dart-native), más escenas (1.2-1.14 Arco 1).
-2. **Fragmentos nombrados** (Kurz, Zafrán, Vorax, Eco) como combates especiales.
-3. **Rangos** (Aprendiz I → Fraccionista Mayor) reemplazando contador crudo de esquirlas.
-4. **Paleta + tipografía canónicas** doc 11 (Inter + Cormorant Garamond + Cinzel).
-5. **Capa sonora** doc 12 (ambient por distrito + motivos).
-6. **Pruebas de Ascenso** (Fuego, Sendero, Espejo).
-7. **Backend WordPress + sync + auth** cuando el prototipo local esté estable.
+1. ~~Sistema de cinemáticas~~ ✅
+2. ~~Fragmentos nombrados~~ ✅ (Kurz×3 + Zafrán + Vorax + Eco + Duel Kai)
+3. ~~Rangos~~ ✅
+4. ~~Cormorant Garamond~~ ✅
+5. **Capa sonora** doc 12 (pendiente)
+6. ~~Pruebas de Ascenso~~ ✅ (las tres implementadas)
+7. ~~Backend WordPress~~ ✅ **v0.1 escrito**. Pendiente: probarlo en WP real + wire del cliente Flutter a HTTP.
 8. **Migración a Flame + Isar** según se necesite, no antes.
+9. **Tutor IA Claude API** (doc 03 §9, fase 9).
+10. **Assets reales** (arte + música), sustituyendo placeholders programáticos.
 
 ## Comandos habituales
 
