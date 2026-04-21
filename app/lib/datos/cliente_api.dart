@@ -18,7 +18,15 @@ import 'package:http/http.dart' as http;
 /// - Errores tipados vía `ExcepcionApi`.
 class ClienteApi {
   /// URL base del backend, sin barra final. Ej: `https://unoroto.example.org`.
+  /// En desarrollo con Local WP puede ser `http://127.0.0.1:10063` + el
+  /// parámetro [hostOverride] a `uno-roto.local`.
   final String urlBase;
+
+  /// Si se define, se envía como cabecera `Host:` en cada petición.
+  /// Necesario cuando apuntamos a un nginx de Local WP por IP/puerto en
+  /// vez del dominio virtual (`http://127.0.0.1:10063` con Host
+  /// `uno-roto.local`).
+  final String? hostOverride;
 
   /// Timeout para cada petición. 10s es amplio para conexiones móviles.
   final Duration tiempoEspera;
@@ -29,6 +37,7 @@ class ClienteApi {
   ClienteApi({
     required this.urlBase,
     http.Client? cliente,
+    this.hostOverride,
     this.tiempoEspera = const Duration(seconds: 10),
   }) : _cliente = cliente ?? http.Client();
 
@@ -40,6 +49,9 @@ class ClienteApi {
     final base = {'Content-Type': 'application/json'};
     if (token != null && token.isNotEmpty) {
       base['Authorization'] = 'Bearer $token';
+    }
+    if (hostOverride != null) {
+      base['Host'] = hostOverride!;
     }
     return base;
   }

@@ -108,9 +108,17 @@ class UROTO_Repositorio {
 		if ( ! $fila ) {
 			return null;
 		}
-		$fila['flags'] = json_decode( $fila['flags_json'] ?: '{}', true ) ?: array();
-		unset( $fila['flags_json'] );
-		return $fila;
+		// MySQL devuelve todo como string; casteamos a los tipos que
+		// el cliente Dart espera.
+		return array(
+			'nino_id'         => (int) $fila['nino_id'],
+			'nombre_jugador'  => (string) $fila['nombre_jugador'],
+			'esquirlas_total' => (int) $fila['esquirlas_total'],
+			'rango'           => (int) $fila['rango'],
+			'arco_actual'     => (int) $fila['arco_actual'],
+			'flags'           => json_decode( $fila['flags_json'] ?: '{}', true ) ?: array(),
+			'actualizado_en'  => (string) $fila['actualizado_en'],
+		);
 	}
 
 	/**
@@ -156,12 +164,21 @@ class UROTO_Repositorio {
 		) ?: array();
 		$normales = array();
 		foreach ( $filas as $fila ) {
-			$fila['intentos_recientes'] = json_decode(
-				$fila['intentos_recientes_json'] ?: '[]',
-				true
-			) ?: array();
-			unset( $fila['intentos_recientes_json'] );
-			$normales[] = $fila;
+			$normales[] = array(
+				'nino_id'                      => (int) $fila['nino_id'],
+				'id_habilidad'                 => (string) $fila['id_habilidad'],
+				'nivel'                        => (int) $fila['nivel'],
+				'precision_ponderada'          => (float) $fila['precision_ponderada'],
+				'tiempo_mediano_seg'           => (float) $fila['tiempo_mediano_seg'],
+				'total_exposiciones'           => (int) $fila['total_exposiciones'],
+				'sesiones_consecutivas_buenas' => (int) $fila['sesiones_consecutivas_buenas'],
+				'ultima_practica'              => (string) $fila['ultima_practica'],
+				'intentos_recientes'           => json_decode(
+					$fila['intentos_recientes_json'] ?: '[]',
+					true
+				) ?: array(),
+				'actualizado_en'               => (string) $fila['actualizado_en'],
+			);
 		}
 		return $normales;
 	}

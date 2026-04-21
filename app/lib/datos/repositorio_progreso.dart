@@ -210,4 +210,60 @@ class RepositorioProgreso {
       await prefs.remove(clave);
     }
   }
+
+  /// Exporta el estado local en el formato que espera
+  /// `POST /sync/progress` del plugin WP. Los flags narrativos viven
+  /// como claves `uroto.flag.<nombre>` con valor bool; aquí los
+  /// empaquetamos en un mapa plano `{nombre: true}`.
+  Future<Map<String, dynamic>> exportarProgresoParaSync() async {
+    final prefs = await SharedPreferences.getInstance();
+    final flags = <String, bool>{};
+    for (final clave in prefs.getKeys()) {
+      if (clave.startsWith('uroto.flag.')) {
+        final nombre = clave.substring('uroto.flag.'.length);
+        final valor = prefs.getBool(clave);
+        if (valor == true) flags[nombre] = true;
+      }
+    }
+
+    final ultima = await cargarUltimaApertura();
+    final ahoraMysql = _aFechaMysql(ultima ?? DateTime.now());
+
+    return {
+      'nombre_jugador': await cargarNombreJugador() ?? '',
+      'esquirlas_total': await cargarEsquirlas(),
+      'rango': (await cargarRango()).valor,
+      'arco_actual': 1,
+      'flags': flags,
+      'actualizado_en': ahoraMysql,
+    };
+  }
+
+  /// Aplica el estado devuelto por `/sync/progress` o `/progress`.
+  /// Si el servidor ganó el LWW y trae datos distintos, los
+  /// persiste localmente.
+  Future<void> importarProgresoDesdeSync(Map<String, dynamic> progreso) async {
+    final nombre = progreso['nombre_jugador'] as String? ?? '';
+    if (nombre.isNotEmpty) await guardarNombreJugador(nombre);
+    await guardarEsquirlas((progreso['esquirlas_total'] as num?)?.toInt() ?? 0);
+    final rangoIdx = (progreso['rango'] as num?)?.toInt() ?? 0;
+    if (rangoIdx >= 0 && rangoIdx < RangoNarrativo.values.length) {
+      await guardarRango(RangoNarrativo.values[rangoIdx]);
+    }
+    final flags = progreso['flags'];
+    if (flags is Map) {
+      for (final entry in flags.entries) {
+        if (entry.value == true) {
+          await activarFlagNarrativo(entry.key as String);
+        }
+      }
+    }
+  }
+
+  String _aFechaMysql(DateTime fecha) {
+    final utc = fecha.toUtc();
+    String pad(int v, [int n = 2]) => v.toString().padLeft(n, '0');
+    return '${utc.year}-${pad(utc.month)}-${pad(utc.day)} '
+        '${pad(utc.hour)}:${pad(utc.minute)}:${pad(utc.second)}';
+  }
 }
