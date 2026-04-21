@@ -31,6 +31,7 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
     with TickerProviderStateMixin {
   late final AnimationController _controladorCielo;
   late final AnimationController _controladorPulso;
+  late final AnimationController _controladorEntrada;
 
   int _indicePregunta = 0;
   int _ki = 0;
@@ -55,6 +56,10 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     )..repeat(reverse: true);
+    _controladorEntrada = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..forward();
     _arrancarTemporizadorPregunta();
   }
 
@@ -62,6 +67,7 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
   void dispose() {
     _controladorCielo.dispose();
     _controladorPulso.dispose();
+    _controladorEntrada.dispose();
     _temporizadorPregunta?.cancel();
     _temporizadorFrase?.cancel();
     super.dispose();
@@ -191,10 +197,24 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
             child: Column(
               children: [
                 const SizedBox(height: 12),
-                _CabeceraKurz(
-                  valor: valorKurz,
-                  pulso: _controladorPulso,
-                  fraseReciente: _frasePresente,
+                AnimatedBuilder(
+                  animation: _controladorEntrada,
+                  builder: (_, hijo) {
+                    final progreso = Curves.easeOutCubic
+                        .transform(_controladorEntrada.value);
+                    return Opacity(
+                      opacity: progreso,
+                      child: Transform.scale(
+                        scale: 0.78 + 0.22 * progreso,
+                        child: hijo,
+                      ),
+                    );
+                  },
+                  child: _CabeceraKurz(
+                    valor: valorKurz,
+                    pulso: _controladorPulso,
+                    fraseReciente: _frasePresente,
+                  ),
                 ),
                 const Spacer(),
                 _PreguntaArea(
