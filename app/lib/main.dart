@@ -52,6 +52,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   final RepositorioProgreso _repositorio = RepositorioProgreso();
   _FaseApp _fase = _FaseApp.cargando;
   EscenaCinematica? _escenaPendiente;
+  DesafioKurz? _desafioKurzActivo;
   String? _nombreJugador;
 
   @override
@@ -93,14 +94,39 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     await _resolverCinematicaPendienteOMapa();
   }
 
+  /// Combate Kurz pendiente — devuelve el desafío correspondiente o
+  /// null si no hay ninguno pendiente. Permite añadir combates futuros
+  /// sin tocar el orquestador principal.
+  Future<DesafioKurz?> _combateKurzPendiente() async {
+    final vio15 = await _repositorio.flagNarrativoActivo('escena_1_5_vista');
+    final completo1 =
+        await _repositorio.flagNarrativoActivo('combate_kurz_1_completado');
+    if (vio15 && !completo1) return DesafioKurz.primero;
+    final vio110pre =
+        await _repositorio.flagNarrativoActivo('escena_1_10_pre_vista');
+    final completo2 =
+        await _repositorio.flagNarrativoActivo('combate_kurz_2_completado');
+    if (vio110pre && !completo2) return DesafioKurz.segundo;
+    final vio112pre =
+        await _repositorio.flagNarrativoActivo('escena_1_12_pre_vista');
+    final completo3 =
+        await _repositorio.flagNarrativoActivo('combate_kurz_3_completado');
+    if (vio112pre && !completo3) return DesafioKurz.tercero;
+    return null;
+  }
+
   /// Busca la siguiente escena no vista **cuyos prerrequisitos se
   /// cumplan** y la reproduce. Antes de buscar la siguiente cinemática,
   /// comprueba si toca un combate jugable (Kurz). Si no hay ni combate
   /// ni cinemática disponible, va al mapa.
   Future<void> _resolverCinematicaPendienteOMapa() async {
-    if (await _tocaCombateKurz1()) {
+    final combatePendiente = await _combateKurzPendiente();
+    if (combatePendiente != null) {
       if (!mounted) return;
-      setState(() => _fase = _FaseApp.combateKurz);
+      setState(() {
+        _desafioKurzActivo = combatePendiente;
+        _fase = _FaseApp.combateKurz;
+      });
       return;
     }
     for (final escena in CatalogoEscenas.todas) {
@@ -120,23 +146,17 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     setState(() => _fase = _FaseApp.mapa);
   }
 
-  /// El primer combate jugable contra Kurz toca cuando la escena 1.5
-  /// (Kurz aparece) ya se vio pero el combate todavía no se ha resuelto.
-  Future<bool> _tocaCombateKurz1() async {
-    final vio15 = await _repositorio.flagNarrativoActivo('escena_1_5_vista');
-    final yaCombatio =
-        await _repositorio.flagNarrativoActivo('combate_kurz_1_completado');
-    return vio15 && !yaCombatio;
-  }
-
-  Future<void> _alTerminarCombateKurz1(ResultadoCombateKurz resultado) async {
-    await _repositorio.activarFlagNarrativo('combate_kurz_1_completado');
-    if (resultado.victoria) {
-      await _repositorio.activarFlagNarrativo('victoria_kurz_1');
-    } else {
-      await _repositorio.activarFlagNarrativo('derrota_kurz_1');
+  Future<void> _alTerminarCombateKurz(ResultadoCombateKurz resultado) async {
+    final desafio = _desafioKurzActivo;
+    if (desafio != null) {
+      final id = desafio.identificador;
+      await _repositorio.activarFlagNarrativo('combate_${id}_completado');
+      await _repositorio.activarFlagNarrativo(
+        resultado.victoria ? 'victoria_$id' : 'derrota_$id',
+      );
     }
     if (!mounted) return;
+    _desafioKurzActivo = null;
     await _resolverCinematicaPendienteOMapa();
   }
 
@@ -185,9 +205,13 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
           alEstablecerFlag: _repositorio.activarFlagNarrativo,
         );
       case _FaseApp.combateKurz:
+        final desafio = _desafioKurzActivo;
+        if (desafio == null) {
+          return const ColoredBox(color: PaletaNeon.fondoProfundo);
+        }
         return PantallaCombateKurz(
-          desafio: DesafioKurz.primero,
-          alTerminar: _alTerminarCombateKurz1,
+          desafio: desafio,
+          alTerminar: _alTerminarCombateKurz,
         );
       case _FaseApp.mapa:
         return PantallaMapa(repositorio: _repositorio);

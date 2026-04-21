@@ -120,12 +120,46 @@ void main() {
   });
 
   test('DesafioKurz.primero está calibrado a derrota probable', () {
-    final desafio = DesafioKurz.primero;
+    const desafio = DesafioKurz.primero;
     expect(desafio.identificador, 'kurz_1');
     expect(desafio.kiInicial, 2);
     expect(desafio.segundosPorPregunta, lessThanOrEqualTo(5));
     expect(desafio.preguntas.length, 3);
     expect(desafio.fraseDerrota, contains('No pasa nada'));
+  });
+
+  test('DesafioKurz.tercero está calibrado a victoria', () {
+    const desafio = DesafioKurz.tercero;
+    expect(desafio.identificador, 'kurz_3');
+    expect(desafio.kiInicial, greaterThanOrEqualTo(4));
+    expect(desafio.segundosPorPregunta, greaterThanOrEqualTo(7));
+    expect(desafio.fraseVictoria, contains('Iniciado'));
+  });
+
+  test('DesafioKurz.segundo es más generoso pero aún calibrado', () {
+    const desafio = DesafioKurz.segundo;
+    expect(desafio.identificador, 'kurz_2');
+    expect(desafio.kiInicial, greaterThan(DesafioKurz.primero.kiInicial));
+    expect(
+      desafio.segundosPorPregunta,
+      greaterThan(DesafioKurz.primero.segundosPorPregunta),
+    );
+    expect(desafio.fraseDerrota, contains('Otra vez la semana'));
+    expect(desafio.fraseVictoria, contains('otra cosa'));
+  });
+
+  test('Las escenas 1.10 cierran ambas con escena_1_10_resuelta', () {
+    final pre = CatalogoEscenas.porId('1.10pre');
+    expect(pre, isNotNull);
+    expect(pre!.flagsRequeridos, contains('escena_1_11_vista'));
+
+    final derrota = CatalogoEscenas.porId('1.10derrota');
+    expect(derrota!.flagDeSalida, 'escena_1_10_resuelta');
+    expect(derrota.flagsRequeridos, contains('derrota_kurz_2'));
+
+    final victoria = CatalogoEscenas.porId('1.10victoria');
+    expect(victoria!.flagDeSalida, 'escena_1_10_resuelta');
+    expect(victoria.flagsRequeridos, contains('victoria_kurz_2'));
   });
 
   test('La 1.6 ahora requiere combate_kurz_1_completado', () {
@@ -181,6 +215,18 @@ void main() {
       RangoNarrativo.iniciado.flagAlcanzado,
       'rango_iniciado_alcanzado',
     );
+  });
+
+  test('La 1.12 victoria es la cinemática que abre la 1.13', () {
+    final pre = CatalogoEscenas.porId('1.12pre');
+    expect(pre!.flagsRequeridos, contains('escena_1_10_resuelta'));
+
+    final victoria = CatalogoEscenas.porId('1.12victoria');
+    expect(victoria!.flagDeSalida, 'escena_1_12_vista');
+    expect(victoria.flagsRequeridos, contains('victoria_kurz_3'));
+
+    final irune = CatalogoEscenas.porId('1.13');
+    expect(irune!.flagsRequeridos, contains('escena_1_12_vista'));
   });
 
   test('Las escenas 1.13 y 1.14 quedan latentes hasta sus prereqs', () {
@@ -261,6 +307,14 @@ void main() {
         'uroto.flag.escena_1_6_vista': true,
         'uroto.flag.escena_1_7_vista': true,
         'uroto.flag.escena_1_11_vista': true,
+        'uroto.flag.escena_1_10_pre_vista': true,
+        'uroto.flag.combate_kurz_2_completado': true,
+        'uroto.flag.derrota_kurz_2': true,
+        'uroto.flag.escena_1_10_resuelta': true,
+        'uroto.flag.escena_1_12_pre_vista': true,
+        'uroto.flag.combate_kurz_3_completado': true,
+        'uroto.flag.derrota_kurz_3': true,
+        'uroto.flag.escena_1_12_derrota_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

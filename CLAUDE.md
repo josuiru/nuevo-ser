@@ -77,12 +77,18 @@ uno-roto/
   Cadena: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 (cierre) → 1.7 (cierre) → [latente: 1.9 cuando FR.05 competente].
 - **Escenas pendientes** (requieren combate jugable o sistema de rangos): 1.8 (variantes entrenamiento), 1.10 (2ª derrota Kurz), 1.11 (cena silenciosa), 1.12 (Kurz vencido), 1.13 (ceremonia Aprendiz II), 1.14 (Canales desde arriba).
 - **Conexión motor → flags narrativos**: `MotorMaestria.alSubirNivel` callback se invoca cuando una habilidad sube de nivel estricto. `MotorMaestria.flagDeMaestria(id, nivel)` produce flags estables tipo `fr_05_competente`. `pantalla_caza.dart` engancha el callback al repositorio. La escena 1.9 se desbloquea automáticamente cuando el niño domina FR.05.
-- **Combate jugable de Kurz v0.1** (`dominio/desafio_kurz.dart` + `vista/pantalla_combate_kurz.dart`): Fragmento nombrado pintado con esfera radial violeta + ojos, valor flotante grande, frases de Kurz reactivas. 3 preguntas multiple-choice con tiempo límite (4s en kurz_1). El primer combate (DesafioKurz.primero) está calibrado a derrota: ki=2, tiempo cortísimo. El orquestador detecta tras la 1.5 que toca combate, lo lanza, marca `combate_kurz_1_completado` + `derrota_kurz_1`/`victoria_kurz_1`, y la 1.6 se dispara independientemente del resultado.
+- **Combate jugable de Kurz v0.2** (`dominio/desafio_kurz.dart` + `vista/pantalla_combate_kurz.dart`): Fragmento nombrado pintado con esfera radial violeta + ojos, valor flotante grande, frases de Kurz reactivas. Tres desafíos calibrados:
+  - **kurz_1**: 3 preguntas, ki=2, 4s/pregunta. Calibrado a derrota (1.5).
+  - **kurz_2**: 5 preguntas, ki=3, 6s/pregunta. Probable derrota, posible victoria (1.10).
+  - **kurz_3**: 4 preguntas, ki=4, 8s/pregunta. Calibrado a victoria (1.12).
+  El orquestador detecta combate pendiente vía `_combateKurzPendiente()` antes de buscar siguiente cinemática. Tras combate marca `combate_<id>_completado` + `victoria_<id>`/`derrota_<id>`.
 - **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Disparador provisional `rangoSegunEsquirlas(int)` con umbrales 0/30/100/250 — proxy hasta que tengamos hitos pedagógicos/narrativos reales. `pantalla_caza` verifica subida tras cada esquirla ganada y activa el flag.
 - **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO".
 - Escenas adicionales del Arco 1:
   - **1.11 La cena que no se ve** (cierre amable, requiere 1.7).
-  - **1.13 Las palabras de Irune** (latente, requiere `escena_1_12_vista` + `rango_aprendiz_ii_alcanzado`). Termina con `PlanoCierreAmable`.
+  - **1.10pre Kurz vuelve** + **combate kurz_2** + **1.10derrota/1.10victoria** — bloque del 2º combate. Ambas cierres marcan `escena_1_10_resuelta` para encadenar la 1.12.
+  - **1.12pre Hoy** + **combate kurz_3** + **1.12victoria/1.12derrota** — bloque del 3er combate. La victoria activa `escena_1_12_vista` que abre la 1.13.
+  - **1.13 Las palabras de Irune** (sigue latente porque también requiere `rango_aprendiz_ii_alcanzado`). Termina con `PlanoCierreAmable`.
   - **1.14 Los Canales desde arriba** (latente, requiere 1.13). Cierre del Arco I con HASTA MAÑANA explícito.
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.

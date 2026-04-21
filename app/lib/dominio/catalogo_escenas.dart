@@ -733,6 +733,232 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 1.10pre — Kurz vuelve. Cinemática breve antes del segundo combate.
+  /// Doc 07 §1.10. Se dispara cuando el niño ya pasó la cena (proxy de
+  /// "tras 2-3 entrenamientos").
+  static const EscenaCinematica kurzVuelve = EscenaCinematica(
+    id: '1.10pre',
+    titulo: 'Kurz vuelve',
+    flagDeSalida: 'escena_1_10_pre_vista',
+    flagsRequeridos: {'escena_1_11_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'La azotea otra vez. Otra noche. Sora silba.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Kurz baja del cielo. Más grande. Sobre él, el valor 5/6.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Otra vez.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'A ver.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+    ],
+  );
+
+  /// 1.10cierre (derrota) — frase corta, mano de Sora un instante.
+  /// Doc 07 §1.10 rama "Si pierde".
+  static const EscenaCinematica kurzVuelveDerrota = EscenaCinematica(
+    id: '1.10derrota',
+    titulo: 'Kurz vuelve — cierre derrota',
+    flagDeSalida: 'escena_1_10_resuelta',
+    flagsRequeridos: {'derrota_kurz_2'},
+    esCierreAmable: true,
+    planos: [
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Casi.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Otra vez la semana que viene.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Has durado más.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Bastante más.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Sora pone la mano en tu hombro un instante. La aparta rápido.',
+      ),
+    ],
+  );
+
+  /// 1.10cierre (victoria) — raro pero posible. Doc 07 §1.10 rama
+  /// "Si gana".
+  static const EscenaCinematica kurzVuelveVictoria = EscenaCinematica(
+    id: '1.10victoria',
+    titulo: 'Kurz vuelve — cierre victoria',
+    flagDeSalida: 'escena_1_10_resuelta',
+    flagsRequeridos: {'victoria_kurz_2'},
+    esCierreAmable: true,
+    planos: [
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Vaya.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Tú ya eres otra cosa.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Has ganado.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No suelen ganar la segunda.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Irune querrá verte.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
+  /// 1.12pre — Hoy. Doc 07 §1.12. Sora declara que el niño está listo,
+  /// silba, Kurz baja por última vez. La azotea está al atardecer
+  /// (única escena con luz distinta). Se dispara tras la 1.10 resuelta.
+  static const EscenaCinematica kurzVencidoPre = EscenaCinematica(
+    id: '1.12pre',
+    titulo: 'Hoy',
+    flagDeSalida: 'escena_1_12_pre_vista',
+    flagsRequeridos: {'escena_1_10_resuelta'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'La azotea al atardecer. Por primera vez no es de noche.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Hoy.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Hoy estás listo.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Silba. Kurz baja. La azotea tiembla un poco. 7/8 sobre él.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Ah.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Te noto distinto.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Vamos.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+    ],
+  );
+
+  /// 1.12cierre (victoria) — esperado. Doc 07 §1.12. Activa
+  /// `escena_1_12_vista` para que la 1.13 ceremonia se dispare.
+  static const EscenaCinematica kurzVencidoVictoria = EscenaCinematica(
+    id: '1.12victoria',
+    titulo: 'Kurz vencido',
+    flagDeSalida: 'escena_1_12_vista',
+    flagsRequeridos: {'victoria_kurz_3'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura: 'Kurz se hace pequeño. Sube despacio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Nos veremos cuando seas Iniciado.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Sora asiente una vez, muy despacio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ya está.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ya eres algo más que un aprendiz.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Mira hacia la puerta. Irune está ahí. Asiente de lejos. Entra.',
+      ),
+    ],
+  );
+
+  /// 1.12cierre (derrota) — el niño aún no estaba listo. Vuelve a casa
+  /// sin avance. Tendrá que rejugarlo otra vez (en el prototipo basta
+  /// con activar el mismo flag combate_kurz_3_completado para volver a
+  /// disparar el combate la próxima sesión... no implementado todavía).
+  static const EscenaCinematica kurzVencidoDerrota = EscenaCinematica(
+    id: '1.12derrota',
+    titulo: 'Hoy aún no',
+    flagDeSalida: 'escena_1_12_derrota_vista',
+    flagsRequeridos: {'derrota_kurz_3'},
+    esCierreAmable: true,
+    planos: [
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoKurz,
+        texto: 'Otra vez. La semana que viene.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Mañana.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Estabas cerca.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
   /// 1.13 — Las palabras de Irune. Ceremonia de Aprendiz II. Doc 07
   /// §1.13. Latente hasta que el jugador derrote a Kurz por segunda vez
   /// (`escena_1_12_vista`) y haya alcanzado el rango Aprendiz II.
@@ -936,6 +1162,12 @@ class CatalogoEscenas {
     kaiVistoDeLejos,
     losPlenos,
     laCena,
+    kurzVuelve,
+    kurzVuelveDerrota,
+    kurzVuelveVictoria,
+    kurzVencidoPre,
+    kurzVencidoVictoria,
+    kurzVencidoDerrota,
     palabrasDeIrune,
     canalesDesdeArriba,
   ];
