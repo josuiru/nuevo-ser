@@ -62,12 +62,72 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           ),
         ),
         iconTheme: const IconThemeData(color: PaletaNeon.textoTenue),
+        actions: [
+          IconButton(
+            tooltip: 'Reiniciar progreso (debug)',
+            onPressed: _confirmarYReiniciar,
+            icon: Icon(
+              Icons.refresh,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+        ],
       ),
       body: _cargando
           ? const Center(
               child: CircularProgressIndicator(color: PaletaNeon.azulNeon),
             )
           : _listaPorDominio(),
+    );
+  }
+
+  Future<void> _confirmarYReiniciar() async {
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (contextoDialog) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: const Text(
+          'Reiniciar progreso',
+          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+        content: const Text(
+          'Borra escenas vistas, habilidades, esquirlas y rango. '
+          'La próxima vez que abras la app, empezarás desde la apertura.',
+          style: TextStyle(color: PaletaNeon.textoTenue),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contextoDialog).pop(false),
+            child: const Text(
+              'cancelar',
+              style: TextStyle(color: PaletaNeon.textoTenue, letterSpacing: 2),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(contextoDialog).pop(true),
+            child: const Text(
+              'reiniciar',
+              style: TextStyle(
+                color: PaletaNeon.rosaAcento,
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmar != true) return;
+    await widget.repositorio.reiniciar();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: PaletaNeon.fondoMedio,
+        content: Text(
+          'Progreso reiniciado. Cierra la app y vuélvela a abrir.',
+          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+        duration: Duration(seconds: 5),
+      ),
     );
   }
 
