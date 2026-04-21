@@ -76,6 +76,7 @@ uno-roto/
   - **1.9 Los Plenos** — latente en catálogo. Requiere `fr_05_competente` (flag que activará el motor de maestría cuando el niño domine FR.05). Intro de Impropios.
   Cadena: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 (cierre) → 1.7 (cierre) → [latente: 1.9 cuando FR.05 competente].
 - **Escenas pendientes** (requieren combate jugable o sistema de rangos): 1.8 (variantes entrenamiento), 1.10 (2ª derrota Kurz), 1.11 (cena silenciosa), 1.12 (Kurz vencido), 1.13 (ceremonia Aprendiz II), 1.14 (Canales desde arriba).
+- **Conexión motor → flags narrativos**: `MotorMaestria.alSubirNivel` callback se invoca cuando una habilidad sube de nivel estricto. `MotorMaestria.flagDeMaestria(id, nivel)` produce flags estables tipo `fr_05_competente`. `pantalla_caza.dart` engancha el callback al repositorio. La escena 1.9 se desbloquea automáticamente cuando el niño domina FR.05.
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.

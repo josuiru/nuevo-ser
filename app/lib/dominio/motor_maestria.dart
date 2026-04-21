@@ -13,6 +13,7 @@ class MotorMaestria {
     required this.catalogo,
     required this.cargarEstado,
     required this.guardarEstado,
+    this.alSubirNivel,
   });
 
   final CatalogoHabilidades catalogo;
@@ -23,6 +24,12 @@ class MotorMaestria {
 
   /// Persiste el estado actualizado.
   final Future<void> Function(EstadoHabilidad estado) guardarEstado;
+
+  /// Notificación cada vez que una habilidad sube de nivel (estricto:
+  /// nuevo > previo). Sirve para conectar progreso pedagógico con flags
+  /// narrativos — el catálogo de escenas reacciona a esos flags.
+  final void Function(String idHabilidad, NivelMaestria nuevoNivel)?
+      alSubirNivel;
 
   static const int _maxIntentosRecientes = 20;
 
@@ -80,7 +87,34 @@ class MotorMaestria {
       intentosRecientes: intentos,
     );
     await guardarEstado(estadoNuevo);
+    if (estadoNuevo.nivel.valor > estadoPrevio.nivel.valor) {
+      alSubirNivel?.call(idHabilidad, estadoNuevo.nivel);
+    }
     return estadoNuevo;
+  }
+
+  /// Convención estable de flags narrativos derivados de un nivel de
+  /// maestría: `<id_habilidad_normalizado>_<nivel>`. Por ejemplo,
+  /// FR.05 + competente → "fr_05_competente". Usado por el catálogo de
+  /// escenas para gating narrativo.
+  static String flagDeMaestria(String idHabilidad, NivelMaestria nivel) {
+    final idNormalizado = idHabilidad.toLowerCase().replaceAll('.', '_');
+    return '${idNormalizado}_${_sufijoNivel(nivel)}';
+  }
+
+  static String _sufijoNivel(NivelMaestria nivel) {
+    switch (nivel) {
+      case NivelMaestria.inexplorada:
+        return 'inexplorada';
+      case NivelMaestria.introducida:
+        return 'introducida';
+      case NivelMaestria.enDesarrollo:
+        return 'en_desarrollo';
+      case NivelMaestria.competente:
+        return 'competente';
+      case NivelMaestria.maestria:
+        return 'maestria';
+    }
   }
 
   /// Aplica decaimiento a un estado según el tiempo transcurrido.

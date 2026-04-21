@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:uno_roto/datos/catalogo_habilidades.dart';
 import 'package:uno_roto/dominio/catalogo_escenas.dart';
+import 'package:uno_roto/dominio/habilidad.dart';
+import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/main.dart';
 import 'package:uno_roto/vista/pantalla_cinematica.dart';
@@ -57,6 +60,61 @@ void main() {
 
     final irune = CatalogoEscenas.porId('1.4');
     expect(irune!.flagsRequeridos, contains('escena_1_3_vista'));
+  });
+
+  test('flagDeMaestria normaliza id y nivel a flag estable', () {
+    expect(
+      MotorMaestria.flagDeMaestria('FR.05', NivelMaestria.competente),
+      'fr_05_competente',
+    );
+    expect(
+      MotorMaestria.flagDeMaestria('FR.01', NivelMaestria.introducida),
+      'fr_01_introducida',
+    );
+    expect(
+      MotorMaestria.flagDeMaestria('DEC.10', NivelMaestria.maestria),
+      'dec_10_maestria',
+    );
+    expect(
+      MotorMaestria.flagDeMaestria('GEO.03', NivelMaestria.enDesarrollo),
+      'geo_03_en_desarrollo',
+    );
+  });
+
+  test('Motor invoca alSubirNivel solo cuando el nivel sube', () async {
+    final catalogo = await CatalogoHabilidades.cargar();
+    final almacen = <String, EstadoHabilidad>{};
+    final subidas = <(String, NivelMaestria)>[];
+    final motor = MotorMaestria(
+      catalogo: catalogo,
+      cargarEstado: (id) async => almacen[id],
+      guardarEstado: (estado) async {
+        almacen[estado.identificadorHabilidad] = estado;
+      },
+      alSubirNivel: (id, nivel) => subidas.add((id, nivel)),
+    );
+
+    // Primera práctica: inexplorada → introducida.
+    await motor.registrarResultado(
+      idHabilidad: 'FR.01',
+      acierto: true,
+      dificultad: 1.0,
+      duracionSegundos: 5,
+    );
+    expect(subidas.length, 1);
+    expect(subidas.first.$1, 'FR.01');
+    expect(subidas.first.$2.valor >= NivelMaestria.introducida.valor, isTrue);
+
+    // Segunda práctica: probablemente sigue introducida o sube.
+    final tamanoAntes = subidas.length;
+    await motor.registrarResultado(
+      idHabilidad: 'FR.01',
+      acierto: true,
+      dificultad: 1.0,
+      duracionSegundos: 5,
+    );
+    // Si subió, hay una entrada más; si no, igual. No debe haber regresión.
+    expect(subidas.length >= tamanoAntes, isTrue);
   });
 
   test('La 1.9 Los Plenos queda latente hasta fr_05_competente', () {

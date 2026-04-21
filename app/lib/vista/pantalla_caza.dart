@@ -86,6 +86,11 @@ class _PantallaCazaState extends State<PantallaCaza>
       catalogo: catalogo,
       cargarEstado: widget.repositorio.cargarEstadoHabilidad,
       guardarEstado: widget.repositorio.guardarEstadoHabilidad,
+      alSubirNivel: (idHabilidad, nivel) {
+        widget.repositorio.activarFlagNarrativo(
+          MotorMaestria.flagDeMaestria(idHabilidad, nivel),
+        );
+      },
     );
     _selectorHabilidades = SelectorHabilidades(
       catalogo: catalogo,
