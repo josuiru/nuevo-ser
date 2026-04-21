@@ -5,6 +5,7 @@ import '../datos/cliente_api.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/habilidad.dart';
+import '../dominio/ritmo_juego.dart';
 import '../nucleo/paleta.dart';
 
 /// Panel que lista las 66 habilidades del mapa pedagógico y muestra
@@ -66,6 +67,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         iconTheme: const IconThemeData(color: PaletaNeon.textoTenue),
         actions: [
           IconButton(
+            tooltip: 'Cambiar ritmo del juego',
+            onPressed: _abrirDialogoRitmo,
+            icon: Icon(
+              Icons.speed,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+          IconButton(
             tooltip: 'Probar sync con backend (debug)',
             onPressed: _probarSync,
             icon: Icon(
@@ -88,6 +97,60 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
               child: CircularProgressIndicator(color: PaletaNeon.azulNeon),
             )
           : _listaPorDominio(),
+    );
+  }
+
+  Future<void> _abrirDialogoRitmo() async {
+    final actual = await widget.repositorio.cargarRitmo();
+    if (!mounted) return;
+    final elegido = await showDialog<RitmoJuego>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: const Text(
+          'Ritmo del juego',
+          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final ritmo in RitmoJuego.values)
+              RadioListTile<RitmoJuego>(
+                value: ritmo,
+                groupValue: actual,
+                activeColor: PaletaNeon.violetaNeon,
+                title: Text(
+                  ritmo.nombreVisible,
+                  style: const TextStyle(
+                    color: PaletaNeon.textoPrincipal,
+                    fontSize: 14,
+                  ),
+                ),
+                subtitle: Text(
+                  ritmo.descripcionCorta,
+                  style: TextStyle(
+                    color: PaletaNeon.textoTenue.withOpacity(0.75),
+                    fontSize: 11,
+                  ),
+                ),
+                onChanged: (v) => Navigator.of(ctx).pop(v),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (elegido == null || elegido == actual) return;
+    await widget.repositorio.guardarRitmo(elegido);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: PaletaNeon.fondoMedio,
+        duration: const Duration(seconds: 3),
+        content: Text(
+          'Ritmo "${elegido.nombreVisible}". Se aplicará en la próxima escena.',
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+      ),
     );
   }
 

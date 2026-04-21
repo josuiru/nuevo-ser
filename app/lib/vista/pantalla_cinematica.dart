@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../dominio/escena_cinematica.dart';
 import '../dominio/plano_escena.dart';
+import '../dominio/ritmo_juego.dart';
 import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -31,12 +32,17 @@ class PantallaCinematica extends StatefulWidget {
   /// escena — típicamente para persistirlo en el repositorio.
   final ValueChanged<String>? alEstablecerFlag;
 
+  /// Ritmo del juego — afecta velocidad de reveal y duración de
+  /// ambientes. Si se omite, usa estándar.
+  final RitmoJuego ritmo;
+
   const PantallaCinematica({
     super.key,
     required this.escena,
     required this.alTerminar,
     this.nombreJugador = '',
     this.alEstablecerFlag,
+    this.ritmo = RitmoJuego.estandar,
   });
 
   @override
@@ -65,7 +71,18 @@ enum _FaseReproduccion {
 class _PantallaCinematicaState extends State<PantallaCinematica>
     with TickerProviderStateMixin {
   static const Duration _duracionFade = Duration(milliseconds: 420);
-  static const Duration _intervaloReveal = Duration(milliseconds: 32);
+  static const Duration _intervaloRevealBase = Duration(milliseconds: 32);
+
+  Duration get _intervaloReveal => Duration(
+        milliseconds: (_intervaloRevealBase.inMilliseconds *
+                widget.ritmo.multiplicadorReveal)
+            .round(),
+      );
+
+  Duration _duracionAmbiente(Duration base) => Duration(
+        milliseconds:
+            (base.inMilliseconds * widget.ritmo.multiplicadorAmbiente).round(),
+      );
 
   late final AnimationController _controladorCielo;
   late final AnimationController _controladorFade;
@@ -126,7 +143,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     switch (plano) {
       case PlanoAmbiente():
         setState(() => _fase = _FaseReproduccion.revelando);
-        _temporizador = Timer(plano.duracion, _avanzar);
+        _temporizador = Timer(_duracionAmbiente(plano.duracion), _avanzar);
       case PlanoDialogo():
         if (plano.pausaPrevia > Duration.zero) {
           _temporizador = Timer(plano.pausaPrevia, _empezarRevealDialogo);

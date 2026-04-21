@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/desafio_kurz.dart';
+import '../dominio/ritmo_juego.dart';
 import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -19,12 +20,14 @@ class PantallaCombateKurz extends StatefulWidget {
   final DesafioKurz desafio;
   final String nombreJugador;
   final ValueChanged<ResultadoCombateKurz> alTerminar;
+  final RitmoJuego ritmo;
 
   const PantallaCombateKurz({
     super.key,
     required this.desafio,
     required this.alTerminar,
     this.nombreJugador = '',
+    this.ritmo = RitmoJuego.estandar,
   });
 
   @override
@@ -47,11 +50,15 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
   Timer? _temporizadorPregunta;
   Timer? _temporizadorFrase;
 
+  int get _segundosMaxAjustados => (widget.desafio.segundosPorPregunta *
+          widget.ritmo.multiplicadorTiempoCombate)
+      .round();
+
   @override
   void initState() {
     super.initState();
     _ki = widget.desafio.kiInicial;
-    _segundosRestantes = widget.desafio.segundosPorPregunta;
+    _segundosRestantes = _segundosMaxAjustados;
     _controladorCielo = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 16),
@@ -80,7 +87,7 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
   void _arrancarTemporizadorPregunta() {
     _temporizadorPregunta?.cancel();
     setState(() {
-      _segundosRestantes = widget.desafio.segundosPorPregunta;
+      _segundosRestantes = _segundosMaxAjustados;
     });
     _temporizadorPregunta =
         Timer.periodic(const Duration(seconds: 1), (timer) {

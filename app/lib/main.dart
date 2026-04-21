@@ -6,6 +6,7 @@ import 'dominio/catalogo_escenas.dart';
 import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
 import 'dominio/rango_narrativo.dart';
+import 'dominio/ritmo_juego.dart';
 import 'dominio/variantes_entrenamiento.dart';
 import 'dominio/variantes_puentes.dart';
 import 'nucleo/paleta.dart';
@@ -57,6 +58,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   EscenaCinematica? _escenaPendiente;
   DesafioKurz? _desafioKurzActivo;
   String? _nombreJugador;
+  RitmoJuego _ritmo = RitmoJuego.estandar;
 
   /// Impide que se dispare más de una variante de entrenamiento por
   /// transición — sin esto, al volver de la variante el orquestador
@@ -73,6 +75,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     final yaVioApertura = await _repositorio.yaVioLaApertura();
     await _repositorio.guardarAhoraComoUltimaApertura();
     _nombreJugador = await _repositorio.cargarNombreJugador();
+    _ritmo = await _repositorio.cargarRitmo();
     if (!mounted) return;
     if (!yaVioApertura) {
       setState(() => _fase = _FaseApp.apertura);
@@ -301,6 +304,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
           nombreJugador: _nombreJugador ?? '',
           alTerminar: _alTerminarCinematica,
           alEstablecerFlag: _repositorio.activarFlagNarrativo,
+          ritmo: _ritmo,
         );
       case _FaseApp.combateKurz:
         final desafio = _desafioKurzActivo;
@@ -311,6 +315,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
           desafio: desafio,
           nombreJugador: _nombreJugador ?? '',
           alTerminar: _alTerminarCombateKurz,
+          ritmo: _ritmo,
         );
       case _FaseApp.mapa:
         return PantallaMapa(repositorio: _repositorio);

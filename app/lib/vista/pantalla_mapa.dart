@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/catalogo_distritos.dart';
+import '../dominio/cuaderno.dart';
 import '../dominio/distrito.dart';
 import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_caza.dart';
+import 'pantalla_cuaderno.dart';
 import 'pantalla_habilidades.dart';
 
 /// Mapa de la ciudad. Muestra los distritos del catálogo posicionados
@@ -31,6 +33,7 @@ class _PantallaMapaState extends State<PantallaMapa>
   RangoNarrativo _rango = RangoNarrativo.aprendiz1;
   ProgresoArco _arcoMostrado = ProgresoArco.arco1;
   int _escenasDelArcoVistas = 0;
+  int _entradasCuadernoDisponibles = 0;
   bool _cargado = false;
 
   @override
@@ -58,14 +61,28 @@ class _PantallaMapaState extends State<PantallaMapa>
     final vistas = await arco.contarVistas(
       widget.repositorio.flagNarrativoActivo,
     );
+    final entradas = await CatalogoCuaderno.disponibles(
+      widget.repositorio.flagNarrativoActivo,
+    );
     if (!mounted) return;
     setState(() {
       _esquirlas = total;
       _rango = rango;
       _arcoMostrado = arco;
       _escenasDelArcoVistas = vistas;
+      _entradasCuadernoDisponibles = entradas.length;
       _cargado = true;
     });
+  }
+
+  Future<void> _abrirCuaderno() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaCuaderno(repositorio: widget.repositorio),
+      ),
+    );
+    // Recargamos por si se abrieron nuevas entradas desde dentro.
+    _cargar();
   }
 
   Future<void> _entrarADistrito(Distrito distrito) async {
@@ -118,6 +135,8 @@ class _PantallaMapaState extends State<PantallaMapa>
                         rango: _rango,
                         arco: _arcoMostrado,
                         escenasVistasDelArco: _escenasDelArcoVistas,
+                        entradasCuaderno: _entradasCuadernoDisponibles,
+                        alAbrirCuaderno: _abrirCuaderno,
                       ),
                     ),
                     Expanded(
@@ -147,12 +166,16 @@ class _Encabezado extends StatelessWidget {
   final RangoNarrativo rango;
   final ProgresoArco arco;
   final int escenasVistasDelArco;
+  final int entradasCuaderno;
+  final VoidCallback alAbrirCuaderno;
 
   const _Encabezado({
     required this.esquirlas,
     required this.rango,
     required this.arco,
     required this.escenasVistasDelArco,
+    required this.entradasCuaderno,
+    required this.alAbrirCuaderno,
   });
 
   @override
@@ -196,6 +219,44 @@ class _Encabezado extends StatelessWidget {
             ],
           ),
           const Spacer(),
+          if (entradasCuaderno > 0)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: InkWell(
+                onTap: alAbrirCuaderno,
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: PaletaNeon.violetaNeon.withOpacity(0.5),
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.auto_stories,
+                        size: 13,
+                        color: PaletaNeon.violetaNeon.withOpacity(0.85),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '$entradasCuaderno',
+                        style: TextStyle(
+                          color: PaletaNeon.violetaNeon.withOpacity(0.85),
+                          fontSize: 11,
+                          letterSpacing: 1.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           Container(
             padding: const EdgeInsets.symmetric(
                 horizontal: 12, vertical: 6),

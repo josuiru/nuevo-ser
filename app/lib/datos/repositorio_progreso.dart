@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dominio/habilidad.dart';
 import '../dominio/rango_narrativo.dart';
+import '../dominio/ritmo_juego.dart';
 
 /// Persistencia mínima del progreso del jugador: en qué noche va y
 /// cuándo abrió la app por última vez. Todo local, sin sincronización,
@@ -19,6 +20,7 @@ class RepositorioProgreso {
       'uroto.variantes_entrenamiento_usadas';
   static const _claveVariantesPuentesUsadas =
       'uroto.variantes_puentes_usadas';
+  static const _claveRitmoJuego = 'uroto.ritmo_juego';
 
   Future<int> cargarSiguienteNoche() async {
     final prefs = await SharedPreferences.getInstance();
@@ -107,6 +109,31 @@ class RepositorioProgreso {
   Future<void> resetearVariantesPuentes() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_claveVariantesPuentesUsadas);
+  }
+
+  Future<RitmoJuego> cargarRitmo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final guardado = prefs.getInt(_claveRitmoJuego) ?? RitmoJuego.estandar.valor;
+    final indice = guardado.clamp(0, RitmoJuego.values.length - 1);
+    return RitmoJuego.values[indice];
+  }
+
+  Future<void> guardarRitmo(RitmoJuego ritmo) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_claveRitmoJuego, ritmo.valor);
+  }
+
+  String _claveEntradaLeida(String idEntrada) =>
+      'uroto.cuaderno.leida.$idEntrada';
+
+  Future<bool> entradaCuadernoLeida(String idEntrada) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_claveEntradaLeida(idEntrada)) ?? false;
+  }
+
+  Future<void> marcarEntradaCuadernoLeida(String idEntrada) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_claveEntradaLeida(idEntrada), true);
   }
 
   /// Asegura que el rango sea al menos [minimo]. Si ya es igual o
