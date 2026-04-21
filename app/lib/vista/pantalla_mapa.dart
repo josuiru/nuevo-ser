@@ -29,7 +29,8 @@ class _PantallaMapaState extends State<PantallaMapa>
   late final AnimationController _controladorCielo;
   int _esquirlas = 0;
   RangoNarrativo _rango = RangoNarrativo.aprendiz1;
-  int _escenasArco1Vistas = 0;
+  ProgresoArco _arcoMostrado = ProgresoArco.arco1;
+  int _escenasDelArcoVistas = 0;
   bool _cargado = false;
 
   @override
@@ -51,14 +52,18 @@ class _PantallaMapaState extends State<PantallaMapa>
   Future<void> _cargar() async {
     final total = await widget.repositorio.cargarEsquirlas();
     final rango = await widget.repositorio.cargarRango();
-    final vistas = await ProgresoArco.arco1.contarVistas(
+    final arco = await ProgresoArco.arcoActual(
+      widget.repositorio.flagNarrativoActivo,
+    );
+    final vistas = await arco.contarVistas(
       widget.repositorio.flagNarrativoActivo,
     );
     if (!mounted) return;
     setState(() {
       _esquirlas = total;
       _rango = rango;
-      _escenasArco1Vistas = vistas;
+      _arcoMostrado = arco;
+      _escenasDelArcoVistas = vistas;
       _cargado = true;
     });
   }
@@ -111,8 +116,8 @@ class _PantallaMapaState extends State<PantallaMapa>
                       child: _Encabezado(
                         esquirlas: _esquirlas,
                         rango: _rango,
-                        escenasArco1Vistas: _escenasArco1Vistas,
-                        totalEscenasArco1: ProgresoArco.arco1.totalEscenas,
+                        arco: _arcoMostrado,
+                        escenasVistasDelArco: _escenasDelArcoVistas,
                       ),
                     ),
                     Expanded(
@@ -140,14 +145,14 @@ class _PantallaMapaState extends State<PantallaMapa>
 class _Encabezado extends StatelessWidget {
   final int esquirlas;
   final RangoNarrativo rango;
-  final int escenasArco1Vistas;
-  final int totalEscenasArco1;
+  final ProgresoArco arco;
+  final int escenasVistasDelArco;
 
   const _Encabezado({
     required this.esquirlas,
     required this.rango,
-    required this.escenasArco1Vistas,
-    required this.totalEscenasArco1,
+    required this.arco,
+    required this.escenasVistasDelArco,
   });
 
   @override
@@ -180,7 +185,7 @@ class _Encabezado extends StatelessWidget {
               ),
               const SizedBox(height: 1),
               Text(
-                'Arco ${ProgresoArco.arco1.nombreRomano} · $escenasArco1Vistas/$totalEscenasArco1',
+                'Arco ${arco.nombreRomano} · $escenasVistasDelArco/${arco.totalEscenas}',
                 style: TextStyle(
                   fontSize: 9,
                   letterSpacing: 2,

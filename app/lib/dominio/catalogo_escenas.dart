@@ -1152,6 +1152,249 @@ class CatalogoEscenas {
     ],
   );
 
+  // ============================================================
+  // Arco 2 — Canales y Zafrán. Doc 08.
+  // ============================================================
+
+  /// 2.1 — Bajar solo. Sora despide al jugador en la escalera del
+  /// Edificio de los Tejados. Primera vez que va por la ciudad sin ella.
+  /// Doc 08 §2.1.
+  static const EscenaCinematica bajarSolo = EscenaCinematica(
+    id: '2.1',
+    titulo: 'Bajar solo',
+    flagDeSalida: 'escena_2_1_vista',
+    flagsRequeridos: {'escena_1_14_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Escalera que baja del Edificio de los Tejados. Niebla baja en las calles.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ya.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Vete.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Si te pasa algo, vuelves corriendo. No te hagas el valiente.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Y si tardas mucho, voy yo.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Calles estrechas. Una pareja en un portal. Un gato dormido. Un Fragmento tonto se disuelve solo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'La luz cambia — más amarilla. El agua aparece entre las piedras.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura: 'BARRIO DE LOS CANALES',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Al otro lado de un puente, un hombre mayor sentado en un saliente. Lee. Levanta la vista. Sonríe.',
+      ),
+    ],
+  );
+
+  /// 2.2 — Rexán. Primer encuentro con el Maestro de los Canales.
+  /// Introduce la equivalencia de fracciones (FR.09). Doc 08 §2.2.
+  static const EscenaCinematica conocerARexan = EscenaCinematica(
+    id: '2.2',
+    titulo: 'Rexán',
+    flagDeSalida: 'escena_2_2_vista',
+    flagsRequeridos: {'escena_2_1_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura: 'Se levanta. Cojea. No lo esconde ni lo señala.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'A ver, a ver.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Primera sonrisa abierta de un adulto en el juego.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Tú eres el que Sora manda.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Tiende la mano.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Rexán. Maestro de los Canales, dicen. Yo me llamo Rexán. Sin más.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Tú ya sabes lo que es un Fragmento. Sabes sumar trozos cuando son iguales. Ya eres Aprendiz II. No está mal.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Aquí vas a aprender algo distinto.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Señala el canal. Dos Fragmentos flotan sobre el agua: 1/2 y 2/4.',
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.rexan,
+        textoPrompt: '¿Cuál es más grande?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'El segundo.',
+            textoRespuesta:
+                'Mm. ¿Seguro? Míralos otra vez. Mira el agua.',
+            flagsAEstablecer: {'rexan_equivalencia_error'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'El primero.',
+            textoRespuesta:
+                'Mm. ¿Seguro? Míralos otra vez. Mira el agua.',
+            flagsAEstablecer: {'rexan_equivalencia_error'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Son iguales.',
+            textoRespuesta: 'Bien, {nombre}. Bien.',
+            flagsAEstablecer: {'rexan_equivalencia_acierto'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Los dos Fragmentos orbitan despacio y se fusionan en uno.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Son la misma cosa. Con nombres distintos.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Un medio. Dos cuartos. Mismo trozo de mundo.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Eso se llama equivaler.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Toda verdad tiene otra forma igualmente verdadera.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Es lo que aprendes aquí. Lo demás viene después.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Vamos. Te enseño el barrio.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+    ],
+  );
+
+  /// 2.3 — El primer Fragmento Espejo. Tutorial narrativo de familia D
+  /// (Espejo) + mecánica de emparejar por equivalencia. La mecánica
+  /// real se experimenta en el cazadero libre. Doc 08 §2.3.
+  static const EscenaCinematica primerEspejo = EscenaCinematica(
+    id: '2.3',
+    titulo: 'El primer Fragmento Espejo',
+    flagDeSalida: 'escena_2_3_vista',
+    flagsRequeridos: {'escena_2_2_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Callejón junto al canal. Dos Fragmentos emergen a la vez, con el mismo halo: 3/4 y 6/8.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Fragmentos Espejo.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Se llaman así porque van en pareja. Uno parece el reflejo del otro.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Y casi siempre lo es.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Míralos bien, {nombre}. ¿Son equivalentes?',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Tres de cuatro. Seis de ocho. Simplifica seis de ocho y tienes tres de cuatro.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Cuando encuentres dos así, los emparejas y se disuelven juntos. Es el gesto más limpio que puedes hacer.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'A veces no son equivalentes. Entonces tienes que reconocerlo y atacar por separado. No pasa nada.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Si los emparejas mal, hacen ruido. Los oyes.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Te guiña un ojo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Vas a aprender a oírlos.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -1170,6 +1413,10 @@ class CatalogoEscenas {
     kurzVencidoDerrota,
     palabrasDeIrune,
     canalesDesdeArriba,
+    // Arco 2.
+    bajarSolo,
+    conocerARexan,
+    primerEspejo,
   ];
 
   static EscenaCinematica? porId(String id) {

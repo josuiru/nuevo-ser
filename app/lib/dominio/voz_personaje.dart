@@ -15,6 +15,7 @@ enum VozPersonaje {
   naini,
   brina,
   rexan,
+  ari,
   fragmentoKurz,
   fragmentoEco,
   fragmentoZafran,
@@ -41,6 +42,8 @@ extension EstiloVozPersonaje on VozPersonaje {
         return 'Brina';
       case VozPersonaje.rexan:
         return 'Rexán';
+      case VozPersonaje.ari:
+        return 'Ari';
       case VozPersonaje.fragmentoKurz:
         return 'Kurz';
       case VozPersonaje.fragmentoEco:
@@ -70,7 +73,9 @@ extension EstiloVozPersonaje on VozPersonaje {
       case VozPersonaje.naini:
         return PaletaNeon.rosaAcento;
       case VozPersonaje.rexan:
-        return PaletaNeon.textoTenue;
+        return PaletaNeon.ambarCanales;
+      case VozPersonaje.ari:
+        return PaletaNeon.exitoSuave;
       case VozPersonaje.aprendizNiko:
         return PaletaNeon.azulNeon;
       case VozPersonaje.fragmentoKurz:

@@ -220,6 +220,34 @@ void main() {
     );
   });
 
+  test('Arco 2: escenas 2.1/2.2/2.3 se encadenan tras 1.14', () {
+    final bajar = CatalogoEscenas.porId('2.1');
+    expect(bajar, isNotNull);
+    expect(bajar!.flagsRequeridos, contains('escena_1_14_vista'));
+
+    final rexan = CatalogoEscenas.porId('2.2');
+    expect(rexan!.flagsRequeridos, contains('escena_2_1_vista'));
+
+    final espejo = CatalogoEscenas.porId('2.3');
+    expect(espejo!.flagsRequeridos, contains('escena_2_2_vista'));
+    expect(espejo.esCierreAmable, isTrue);
+  });
+
+  test('ProgresoArco.arco2 declara 16 escenas', () {
+    expect(ProgresoArco.arco2.totalEscenas, 16);
+    expect(ProgresoArco.arco2.nombreRomano, 'II');
+    expect(ProgresoArco.arco2.titulo, 'Canales y Zafrán');
+  });
+
+  test('arcoActual cambia al Arco 2 cuando hay progreso en él', () async {
+    Future<bool> ninguno(String f) async => false;
+    expect(await ProgresoArco.arcoActual(ninguno), ProgresoArco.arco1);
+
+    final activos = {'escena_2_1_vista'};
+    Future<bool> enSet(String f) async => activos.contains(f);
+    expect(await ProgresoArco.arcoActual(enSet), ProgresoArco.arco2);
+  });
+
   test(
     'ProgresoArco.arco1 cubre las 14 escenas del guion',
     () async {
@@ -437,6 +465,9 @@ void main() {
         'uroto.flag.derrota_kurz_3': true,
         'uroto.flag.escena_1_12_derrota_vista': true,
         'uroto.flag.escena_1_14_vista': true,
+        'uroto.flag.escena_2_1_vista': true,
+        'uroto.flag.escena_2_2_vista': true,
+        'uroto.flag.escena_2_3_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

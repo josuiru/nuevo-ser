@@ -64,4 +64,44 @@ class ProgresoArco {
       ['escena_1_14_vista'],
     ],
   );
+
+  /// Arco 2 — Canales y Zafrán (doc 08). 16 escenas en el guion —
+  /// algunas aún no implementadas en el catálogo.
+  static const ProgresoArco arco2 = ProgresoArco(
+    nombreRomano: 'II',
+    titulo: 'Canales y Zafrán',
+    flagsPorEscena: [
+      ['escena_2_1_vista'],
+      ['escena_2_2_vista'],
+      ['escena_2_3_vista'],
+      ['escena_2_4_vista'], // plantilla variantes
+      ['escena_2_5_vista'],
+      ['escena_2_6_vista'],
+      ['escena_2_7_vista'],
+      ['escena_2_8_vista'],
+      ['escena_2_9_vista'],
+      ['escena_2_10_vista'],
+      ['escena_2_11_vista'],
+      ['escena_2_12_vista'],
+      ['combate_zafran_1_completado'],
+      ['escena_2_14_vista'],
+      ['escena_2_15_vista'],
+      ['escena_2_16_vista'],
+    ],
+  );
+
+  /// Arcos disponibles, en orden canónico. El HUD elige el arco
+  /// actual como el primero con al menos una escena completa cuyo
+  /// predecesor esté cerrado — o el arco1 si no se ha empezado nada.
+  static const List<ProgresoArco> todos = [arco1, arco2];
+
+  /// Decide qué arco mostrar en el HUD según los flags. Si el Arco 2
+  /// tiene algo visto, muestra Arco 2. Si no, Arco 1.
+  static Future<ProgresoArco> arcoActual(
+    Future<bool> Function(String flag) flagActivo,
+  ) async {
+    final vistasArco2 = await arco2.contarVistas(flagActivo);
+    if (vistasArco2 > 0) return arco2;
+    return arco1;
+  }
 }
