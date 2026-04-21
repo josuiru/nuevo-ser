@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/catalogo_distritos.dart';
 import '../dominio/distrito.dart';
+import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -28,6 +29,7 @@ class _PantallaMapaState extends State<PantallaMapa>
   late final AnimationController _controladorCielo;
   int _esquirlas = 0;
   RangoNarrativo _rango = RangoNarrativo.aprendiz1;
+  int _escenasArco1Vistas = 0;
   bool _cargado = false;
 
   @override
@@ -49,10 +51,14 @@ class _PantallaMapaState extends State<PantallaMapa>
   Future<void> _cargar() async {
     final total = await widget.repositorio.cargarEsquirlas();
     final rango = await widget.repositorio.cargarRango();
+    final vistas = await ProgresoArco.arco1.contarVistas(
+      widget.repositorio.flagNarrativoActivo,
+    );
     if (!mounted) return;
     setState(() {
       _esquirlas = total;
       _rango = rango;
+      _escenasArco1Vistas = vistas;
       _cargado = true;
     });
   }
@@ -105,6 +111,8 @@ class _PantallaMapaState extends State<PantallaMapa>
                       child: _Encabezado(
                         esquirlas: _esquirlas,
                         rango: _rango,
+                        escenasArco1Vistas: _escenasArco1Vistas,
+                        totalEscenasArco1: ProgresoArco.arco1.totalEscenas,
                       ),
                     ),
                     Expanded(
@@ -132,8 +140,15 @@ class _PantallaMapaState extends State<PantallaMapa>
 class _Encabezado extends StatelessWidget {
   final int esquirlas;
   final RangoNarrativo rango;
+  final int escenasArco1Vistas;
+  final int totalEscenasArco1;
 
-  const _Encabezado({required this.esquirlas, required this.rango});
+  const _Encabezado({
+    required this.esquirlas,
+    required this.rango,
+    required this.escenasArco1Vistas,
+    required this.totalEscenasArco1,
+  });
 
   @override
   Widget build(BuildContext contexto) {
@@ -161,6 +176,16 @@ class _Encabezado extends StatelessWidget {
                   letterSpacing: 2.5,
                   color: PaletaNeon.violetaNeon.withOpacity(0.85),
                   fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 1),
+              Text(
+                'Arco ${ProgresoArco.arco1.nombreRomano} · $escenasArco1Vistas/$totalEscenasArco1',
+                style: TextStyle(
+                  fontSize: 9,
+                  letterSpacing: 2,
+                  color: PaletaNeon.textoTenue.withOpacity(0.55),
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],

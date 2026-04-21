@@ -8,6 +8,7 @@ import 'package:uno_roto/dominio/desafio_kurz.dart';
 import 'package:uno_roto/dominio/habilidad.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
+import 'package:uno_roto/dominio/progreso_arco.dart';
 import 'package:uno_roto/dominio/rango_narrativo.dart';
 import 'package:uno_roto/dominio/variantes_entrenamiento.dart';
 import 'package:uno_roto/main.dart';
@@ -218,6 +219,38 @@ void main() {
       'rango_iniciado_alcanzado',
     );
   });
+
+  test(
+    'ProgresoArco.arco1 cubre las 14 escenas del guion',
+    () async {
+      expect(ProgresoArco.arco1.totalEscenas, 14);
+
+      // Sin flags activos, 0 escenas vistas.
+      Future<bool> siempreFalso(String flag) async => false;
+      expect(await ProgresoArco.arco1.contarVistas(siempreFalso), 0);
+
+      // Solo 1.1: 1.
+      Future<bool> solo11(String flag) async => flag == 'escena_1_1_vista';
+      expect(await ProgresoArco.arco1.contarVistas(solo11), 1);
+
+      // 1.10 con rama victoria o derrota cuenta igual.
+      final activados = <String>{
+        'escena_1_1_vista',
+        'escena_1_10_resuelta',
+      };
+      Future<bool> enSet(String flag) async => activados.contains(flag);
+      expect(await ProgresoArco.arco1.contarVistas(enSet), 2);
+
+      // Cualquier variante de 1.8 cuenta la escena 1.8.
+      activados.add('variante_1_8_c_usada');
+      expect(await ProgresoArco.arco1.contarVistas(enSet), 3);
+
+      // 1.12 victoria y derrota se cuentan como una sola escena.
+      activados.add('escena_1_12_vista');
+      activados.add('escena_1_12_derrota_vista');
+      expect(await ProgresoArco.arco1.contarVistas(enSet), 4);
+    },
+  );
 
   test(
     'VariantesEntrenamiento.elegirSiguiente evita las usadas',

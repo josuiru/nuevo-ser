@@ -85,7 +85,8 @@ uno-roto/
 - **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Dos disparadores:
   - **Por esquirlas**: umbrales 0/30/100/250 — proxy. `pantalla_caza` verifica subida tras cada esquirla ganada.
   - **Narrativos**: `repositorio.forzarRangoMinimo(rango)` sube si el actual es menor y activa flag. Usado tras kurz_3 victoria → garantiza Aprendiz II → desbloquea 1.13 ceremonia.
-- **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO".
+- **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO", seguido del progreso del arco ("Arco I · X/14") en tamaño pequeño y tenue.
+- **ProgresoArco** (`dominio/progreso_arco.dart`): mapeo de las 14 escenas oficiales del Arco 1 a sus flags equivalentes (1.10 y 1.12 agrupan sus ramas, 1.8 agrupa variantes). `contarVistas(flagActivo)` devuelve cuántas están completas — se muestra en el HUD para que el niño vea dónde está.
 - **Variantes de entrenamiento (1.8)** (`dominio/variantes_entrenamiento.dart`): 5 mini-cinemáticas recurrentes (noche despejada, niebla, lluvia ligera, pregunta sobre la Montaña con 4 opciones, buen entrenamiento). Se disparan antes de ir al mapa cuando la 1.7 está vista y el Arco 1 aún no cerró (1.14 no vista). `VariantesEntrenamiento.elegirSiguiente(Set)` devuelve la primera no usada, o null si el pool se agotó (el orquestador resetea y reelige). Persistido en repositorio como `uroto.variantes_entrenamiento_usadas`. Una variante por transición (flag `_varianteYaDisparadaEnEstaTransicion`) para no encadenar.
 - Escenas adicionales del Arco 1:
   - **1.11 La cena que no se ve** (cierre amable, requiere 1.7).
