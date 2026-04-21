@@ -64,11 +64,12 @@ enum _FaseReproduccion {
 
 class _PantallaCinematicaState extends State<PantallaCinematica>
     with TickerProviderStateMixin {
-  static const Duration _duracionFade = Duration(milliseconds: 300);
+  static const Duration _duracionFade = Duration(milliseconds: 420);
   static const Duration _intervaloReveal = Duration(milliseconds: 32);
 
   late final AnimationController _controladorCielo;
   late final AnimationController _controladorFade;
+  late final Animation<Offset> _desplazamientoEntrada;
 
   int _indicePlano = 0;
   int _caracteresRevelados = 0;
@@ -91,6 +92,14 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       duration: _duracionFade,
       value: 0,
     );
+    _desplazamientoEntrada = Tween<Offset>(
+      begin: const Offset(0, 0.028),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controladorFade,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    ));
     _iniciarPlanoActual();
   }
 
@@ -301,7 +310,10 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
             SafeArea(
               child: FadeTransition(
                 opacity: _controladorFade,
-                child: _construirContenidoDePlano(),
+                child: SlideTransition(
+                  position: _desplazamientoEntrada,
+                  child: _construirContenidoDePlano(),
+                ),
               ),
             ),
             _IndicadorSaltar(alPulsar: widget.alTerminar),
