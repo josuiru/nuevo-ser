@@ -6,6 +6,7 @@ import 'dominio/catalogo_escenas.dart';
 import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
 import 'dominio/rango_narrativo.dart';
+import 'dominio/variantes_entrenamiento.dart';
 import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
@@ -55,6 +56,11 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   EscenaCinematica? _escenaPendiente;
   DesafioKurz? _desafioKurzActivo;
   String? _nombreJugador;
+
+  /// Impide que se dispare más de una variante de entrenamiento por
+  /// transición — sin esto, al volver de la variante el orquestador
+  /// intentaría disparar otra en bucle.
+  bool _varianteYaDisparadaEnEstaTransicion = false;
 
   @override
   void initState() {
@@ -143,8 +149,43 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
       });
       return;
     }
+    if (await _intentarDispararVarianteEntrenamiento()) return;
     if (!mounted) return;
-    setState(() => _fase = _FaseApp.mapa);
+    setState(() {
+      _fase = _FaseApp.mapa;
+      _varianteYaDisparadaEnEstaTransicion = false;
+    });
+  }
+
+  /// Si la 1.7 ya ocurrió y el Arco 1 sigue en curso (1.14 aún no vista),
+  /// dispara la siguiente variante de entrenamiento no usada. Al agotar
+  /// el pool, lo resetea y elige una nueva. Solo dispara una por
+  /// transición para no encadenarlas.
+  Future<bool> _intentarDispararVarianteEntrenamiento() async {
+    if (_varianteYaDisparadaEnEstaTransicion) return false;
+    final puedeSalir =
+        await _repositorio.flagNarrativoActivo('escena_1_7_vista');
+    if (!puedeSalir) return false;
+    final arcoCerrado =
+        await _repositorio.flagNarrativoActivo('escena_1_14_vista');
+    if (arcoCerrado) return false;
+    var usadas =
+        await _repositorio.cargarVariantesEntrenamientoUsadas();
+    var siguiente = VariantesEntrenamiento.elegirSiguiente(usadas);
+    if (siguiente == null) {
+      await _repositorio.resetearVariantesEntrenamiento();
+      usadas = {};
+      siguiente = VariantesEntrenamiento.elegirSiguiente(usadas);
+    }
+    if (siguiente == null) return false;
+    await _repositorio.marcarVarianteEntrenamientoUsada(siguiente.id);
+    if (!mounted) return false;
+    setState(() {
+      _escenaPendiente = siguiente;
+      _fase = _FaseApp.cinematica;
+      _varianteYaDisparadaEnEstaTransicion = true;
+    });
+    return true;
   }
 
   Future<void> _alTerminarCombateKurz(ResultadoCombateKurz resultado) async {

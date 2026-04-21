@@ -9,6 +9,7 @@ import 'package:uno_roto/dominio/habilidad.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/dominio/rango_narrativo.dart';
+import 'package:uno_roto/dominio/variantes_entrenamiento.dart';
 import 'package:uno_roto/main.dart';
 import 'package:uno_roto/vista/pantalla_cinematica.dart';
 
@@ -218,6 +219,65 @@ void main() {
     );
   });
 
+  test(
+    'VariantesEntrenamiento.elegirSiguiente evita las usadas',
+    () {
+      final primera =
+          VariantesEntrenamiento.elegirSiguiente(const {});
+      expect(primera, isNotNull);
+      expect(primera!.id, '1.8a');
+
+      final sinPrimera =
+          VariantesEntrenamiento.elegirSiguiente(const {'1.8a'});
+      expect(sinPrimera!.id, '1.8b');
+
+      final todasMenosUltima = VariantesEntrenamiento.todas
+          .take(VariantesEntrenamiento.todas.length - 1)
+          .map((e) => e.id)
+          .toSet();
+      final ultima =
+          VariantesEntrenamiento.elegirSiguiente(todasMenosUltima);
+      expect(ultima!.id, VariantesEntrenamiento.todas.last.id);
+
+      final todas = VariantesEntrenamiento.todas
+          .map((e) => e.id)
+          .toSet();
+      expect(
+        VariantesEntrenamiento.elegirSiguiente(todas),
+        isNull,
+        reason: 'Cuando el pool se agota devuelve null.',
+      );
+    },
+  );
+
+  test(
+    'Variantes de entrenamiento se marcan y se pueden resetear',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final repo = RepositorioProgreso();
+
+      expect(
+        await repo.cargarVariantesEntrenamientoUsadas(),
+        isEmpty,
+      );
+
+      await repo.marcarVarianteEntrenamientoUsada('1.8a');
+      await repo.marcarVarianteEntrenamientoUsada('1.8b');
+      await repo.marcarVarianteEntrenamientoUsada('1.8a'); // idempotente
+
+      expect(
+        await repo.cargarVariantesEntrenamientoUsadas(),
+        {'1.8a', '1.8b'},
+      );
+
+      await repo.resetearVariantesEntrenamiento();
+      expect(
+        await repo.cargarVariantesEntrenamientoUsadas(),
+        isEmpty,
+      );
+    },
+  );
+
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
     SharedPreferences.setMockInitialValues({});
     final repo = RepositorioProgreso();
@@ -343,6 +403,7 @@ void main() {
         'uroto.flag.combate_kurz_3_completado': true,
         'uroto.flag.derrota_kurz_3': true,
         'uroto.flag.escena_1_12_derrota_vista': true,
+        'uroto.flag.escena_1_14_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

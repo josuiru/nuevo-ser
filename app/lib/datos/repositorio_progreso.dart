@@ -15,6 +15,8 @@ class RepositorioProgreso {
   static const _claveEsquirlasTotal = 'uroto.esquirlas_total';
   static const _claveNombreJugador = 'uroto.nombre_jugador';
   static const _claveRangoActual = 'uroto.rango_actual';
+  static const _claveVariantesEntrenamientoUsadas =
+      'uroto.variantes_entrenamiento_usadas';
 
   Future<int> cargarSiguienteNoche() async {
     final prefs = await SharedPreferences.getInstance();
@@ -58,6 +60,29 @@ class RepositorioProgreso {
   Future<void> guardarRango(RangoNarrativo rango) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_claveRangoActual, rango.valor);
+  }
+
+  Future<Set<String>> cargarVariantesEntrenamientoUsadas() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lista =
+        prefs.getStringList(_claveVariantesEntrenamientoUsadas) ?? [];
+    return lista.toSet();
+  }
+
+  Future<void> marcarVarianteEntrenamientoUsada(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usadas = await cargarVariantesEntrenamientoUsadas();
+    if (usadas.contains(id)) return;
+    usadas.add(id);
+    await prefs.setStringList(
+      _claveVariantesEntrenamientoUsadas,
+      usadas.toList(),
+    );
+  }
+
+  Future<void> resetearVariantesEntrenamiento() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_claveVariantesEntrenamientoUsadas);
   }
 
   /// Asegura que el rango sea al menos [minimo]. Si ya es igual o

@@ -86,6 +86,7 @@ uno-roto/
   - **Por esquirlas**: umbrales 0/30/100/250 — proxy. `pantalla_caza` verifica subida tras cada esquirla ganada.
   - **Narrativos**: `repositorio.forzarRangoMinimo(rango)` sube si el actual es menor y activa flag. Usado tras kurz_3 victoria → garantiza Aprendiz II → desbloquea 1.13 ceremonia.
 - **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO".
+- **Variantes de entrenamiento (1.8)** (`dominio/variantes_entrenamiento.dart`): 5 mini-cinemáticas recurrentes (noche despejada, niebla, lluvia ligera, pregunta sobre la Montaña con 4 opciones, buen entrenamiento). Se disparan antes de ir al mapa cuando la 1.7 está vista y el Arco 1 aún no cerró (1.14 no vista). `VariantesEntrenamiento.elegirSiguiente(Set)` devuelve la primera no usada, o null si el pool se agotó (el orquestador resetea y reelige). Persistido en repositorio como `uroto.variantes_entrenamiento_usadas`. Una variante por transición (flag `_varianteYaDisparadaEnEstaTransicion`) para no encadenar.
 - Escenas adicionales del Arco 1:
   - **1.11 La cena que no se ve** (cierre amable, requiere 1.7).
   - **1.10pre Kurz vuelve** + **combate kurz_2** + **1.10derrota/1.10victoria** — bloque del 2º combate. Ambas cierres marcan `escena_1_10_resuelta` para encadenar la 1.12.
