@@ -299,6 +299,25 @@ void main() {
     );
   });
 
+  test('Arco 3: cierre 3.14→3.15→3.16→3.17→3.18 (Montaña + Irune)', () {
+    final kaiVuelve = CatalogoEscenas.porId('3.14');
+    expect(kaiVuelve!.flagsRequeridos, contains('escena_3_13_vista'));
+
+    final mision = CatalogoEscenas.porId('3.15');
+    expect(mision!.flagsRequeridos, contains('escena_3_14_vista'));
+
+    final brina = CatalogoEscenas.porId('3.16');
+    expect(brina!.flagsRequeridos, contains('escena_3_15_vista'));
+
+    final montana = CatalogoEscenas.porId('3.17');
+    expect(montana!.flagsRequeridos, contains('escena_3_16_vista'));
+
+    final cierre = CatalogoEscenas.porId('3.18');
+    expect(cierre!.flagsRequeridos, contains('escena_3_17_vista'));
+    expect(cierre.esCierreAmable, isTrue);
+    expect(cierre.planos.last, isA<PlanoCierreAmable>());
+  });
+
   test('Arco 3: bloque Coleccionistas 3.10→3.11→3.12→3.13 encadena', () {
     final oryn = CatalogoEscenas.porId('3.10');
     expect(oryn!.flagsRequeridos, contains('escena_3_9_vista'));
@@ -623,6 +642,11 @@ void main() {
         'uroto.flag.escena_3_11_vista': true,
         'uroto.flag.escena_3_12_vista': true,
         'uroto.flag.escena_3_13_vista': true,
+        'uroto.flag.escena_3_14_vista': true,
+        'uroto.flag.escena_3_15_vista': true,
+        'uroto.flag.escena_3_16_vista': true,
+        'uroto.flag.escena_3_17_vista': true,
+        'uroto.flag.escena_3_18_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

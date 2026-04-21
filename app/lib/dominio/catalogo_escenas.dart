@@ -3317,6 +3317,504 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 3.14 — Kai vuelve. Azotea. Kai confiesa sospechas sobre su padre.
+  /// Doc 09 §3.14.
+  static const EscenaCinematica kaiVuelve = EscenaCinematica(
+    id: '3.14',
+    titulo: 'Kai vuelve',
+    flagDeSalida: 'escena_3_14_vista',
+    flagsRequeridos: {'escena_3_13_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Azotea principal. Sora al fondo sin acercarse. Kai sentado contra un respiradero mirando el cielo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Te está esperando.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Hombre.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Me enteré de lo del muelle 7.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'No vas a creerme, pero...',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto:
+            'Yo llevaba un mes sospechando algo así en la calle donde vive mi padre.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Kai sin máscara. No es la primera vez que baja la guardia contigo pero sí es la más honda.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto:
+            'No tengo pruebas. Pero cuando la gente entra a cenar con mi padre, salen distintas.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'No lo he hablado con nadie.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Necesito ayuda.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.kai,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Cuéntame.',
+            textoRespuesta:
+                'La oficina cerrada. La gente que sale confusa. Dos veces al mes. Mucha gente.',
+            flagsAEstablecer: {'kai_padre_contar'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Por qué me lo cuentas a mí?',
+            textoRespuesta:
+                'Porque ya no confío en los que llevo años conociendo. Y tú acabas de hacer algo que yo no sabía hacer.',
+            flagsAEstablecer: {'kai_padre_confianza'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— escuchar sin preguntar —',
+            textoRespuesta: 'Gracias por no preguntar nada.',
+            flagsAEstablecer: {'kai_padre_silencio'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Mañana te cuento más.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Has estado bien. En el duelo.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Sora murmura al fondo, casi para sí misma:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Vaya.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+    ],
+  );
+
+  /// 3.15 — La misión conjunta. Fragmento Impropio 9/5. Irune la
+  /// impone. Combate coordinado narrativo. Doc 09 §3.15.
+  static const EscenaCinematica misionConjunta = EscenaCinematica(
+    id: '3.15',
+    titulo: 'La misión conjunta',
+    flagDeSalida: 'escena_3_15_vista',
+    flagsRequeridos: {'escena_3_14_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Barrio residencial entre Canales e Industria. Portal de una casa cualquiera. Un Fragmento Impropio de valor 9/5 flota a media altura.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Impropio.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Si lo convertimos en mixto, es 1 y 4/5.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.kai,
+        textoPrompt: '¿Lo estabilizas tú o yo?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Yo.',
+            textoRespuesta: 'Vale. Yo ataco.',
+            flagsAEstablecer: {'kai_coop_yo'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Tú.',
+            textoRespuesta: 'Vale. Tú atacas.',
+            flagsAEstablecer: {'kai_coop_tu'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Juntos.',
+            textoRespuesta: 'Vale. Juntos.',
+            flagsAEstablecer: {'kai_coop_juntos'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura: 'El Fragmento se estabiliza. Kai, ya de compañero:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Espera.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Ahora.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Tu turno.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'El Fragmento se disuelve limpio. Kai guarda algo en el bolsillo. No dice qué.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Mañana te paso algo por escrito.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'De lo de mi padre.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Por si no te vuelvo a ver en un tiempo.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 3.16 — Brina. Afueras, observatorio. 17% crecimiento trimestral
+  /// de Fragmentos. Doc 09 §3.16.
+  static const EscenaCinematica conocerABrina = EscenaCinematica(
+    id: '3.16',
+    titulo: 'Brina',
+    flagDeSalida: 'escena_3_16_vista',
+    flagsRequeridos: {'escena_3_15_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Observatorio antiguo al borde de un campo. Cielo estrellado. Dos lunas esta noche.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Ah, tú.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'Brina. Maestra de las Afueras. Y profesora, pero eso es otra cosa.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Déjame pensar.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'Tú eres el que hizo lo de Zafrán con Sora y acaba de descubrir algo en el Puerto con Ari y trabajó ayer con Kai.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Meses resumidos en una frase.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Interesante.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Siéntate.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Aquí trabajamos con datos. Probabilidades. Tendencias.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'Te voy a enseñar una cosa que te va a parecer aburrida. No lo es.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Te pone una tabla delante. Fechas en una columna. Números que suben en la otra.',
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.brina,
+        textoPrompt: '¿Qué ves?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Los números suben.',
+            textoRespuesta: 'Bien. ¿Sabes qué miden?',
+            flagsAEstablecer: {'brina_grafico_suben'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Qué son?',
+            textoRespuesta: 'Te lo iba a contar igual.',
+            flagsAEstablecer: {'brina_grafico_pregunta'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Son Fragmentos. Fragmentos aparecidos en Azula cada mes.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'En los últimos dos años han subido un 17% cada trimestre.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'Nadie se lo cuenta a los Fraccionistas nuevos. No quieren asustar.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Pero tú ya eres Iniciado III. Tienes que saber.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Azula está peor cada año.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Y no sabemos por qué.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+    ],
+  );
+
+  /// 3.17 — La Montaña se nombra. Primera mención del Algebrista.
+  /// Doc 09 §3.17.
+  static const EscenaCinematica laMontanaSeNombra = EscenaCinematica(
+    id: '3.17',
+    titulo: 'La Montaña se nombra',
+    flagDeSalida: 'escena_3_17_vista',
+    flagsRequeridos: {'escena_3_16_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Mirador al borde de Afueras. Vista clara a la Montaña. La luna recorta su silueta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Todos acaban mirándola.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: '¿Irune te ha hablado de ella?',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Niegas con la cabeza.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'Ahí arriba vive alguien que todavía cree que puede repararse.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.brina,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Repararse qué?',
+            textoRespuesta: 'El Uno. Lo que se rompió.',
+            flagsAEstablecer: {'montana_reparar_que'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Quién vive?',
+            textoRespuesta: 'El Algebrista.',
+            flagsAEstablecer: {'montana_quien_vive'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte mirando —',
+            textoRespuesta: 'Vale. Te lo cuento.',
+            flagsAEstablecer: {'montana_silencio'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'El Algebrista.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Hace décadas que nadie sube. Irune no sube.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Algunos dicen que ya no vive. Yo creo que sí.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Algún día vas a querer subir.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'No hoy. No este año. Pero algún día.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto:
+            'Cuando te toque, alguien te ayudará a ir. Irune. Sora. Alguien.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
+  /// 3.18 — Irune al fondo. Cierre del Arco 3. Irune menciona Eco por
+  /// su nombre — sabe. Doc 09 §3.18.
+  static const EscenaCinematica iruneAlFondo = EscenaCinematica(
+    id: '3.18',
+    titulo: 'Irune al fondo',
+    flagDeSalida: 'escena_3_18_vista',
+    flagsRequeridos: {'escena_3_17_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Sala de Irune. Chimenea encendida. Sora al fondo con un libro cerrado. Irune sirve té.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Han pasado muchas cosas.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Zafrán. El muelle 7. Kai. Eco.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'La última palabra con un tono distinto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Sí. Sé lo de Eco.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'No te preocupes por él. De momento.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Has conocido a todos los maestros menos a Oryn bien. Eso te falta.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Y cuando lo conozcas, estarás listo.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Iniciado III, pronto. Fraccionista, en unos meses.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Mira a Sora un momento. Sora no se mueve.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Cuando seas Fraccionista, ya no hace falta que nadie vaya contigo a ningún sitio.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Entonces vas a tener que empezar a decidir tú qué hacer con lo que sabes.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Es menos cómodo de lo que parece.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Sonrisa pequeña.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Descansa. Vete con Sora.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Azotea. Borde. Sora apoyada. Tú a su lado. Ninguno habla. Azula abajo, todos sus distritos, la Montaña al fondo.',
+      ),
+      PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -3363,6 +3861,11 @@ class CatalogoEscenas {
     ariEnElMuelle,
     elSantuario,
     interrogatorioDeNaini,
+    kaiVuelve,
+    misionConjunta,
+    conocerABrina,
+    laMontanaSeNombra,
+    iruneAlFondo,
   ];
 
   static EscenaCinematica? porId(String id) {
