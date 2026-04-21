@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:uno_roto/datos/catalogo_habilidades.dart';
+import 'package:uno_roto/datos/repositorio_progreso.dart';
 import 'package:uno_roto/dominio/catalogo_escenas.dart';
 import 'package:uno_roto/dominio/desafio_kurz.dart';
 import 'package:uno_roto/dominio/habilidad.dart';
@@ -215,6 +216,33 @@ void main() {
       RangoNarrativo.iniciado.flagAlcanzado,
       'rango_iniciado_alcanzado',
     );
+  });
+
+  test('forzarRangoMinimo sube y activa flag, no baja', () async {
+    SharedPreferences.setMockInitialValues({});
+    final repo = RepositorioProgreso();
+
+    expect(await repo.cargarRango(), RangoNarrativo.aprendiz1);
+
+    final subio =
+        await repo.forzarRangoMinimo(RangoNarrativo.aprendiz2);
+    expect(subio, isTrue);
+    expect(await repo.cargarRango(), RangoNarrativo.aprendiz2);
+    expect(
+      await repo.flagNarrativoActivo('rango_aprendiz_ii_alcanzado'),
+      isTrue,
+    );
+
+    // Llamar de nuevo con el mismo mínimo no hace nada.
+    final subioOtraVez =
+        await repo.forzarRangoMinimo(RangoNarrativo.aprendiz2);
+    expect(subioOtraVez, isFalse);
+
+    // Pedir un mínimo inferior al actual no baja.
+    final intento =
+        await repo.forzarRangoMinimo(RangoNarrativo.aprendiz1);
+    expect(intento, isFalse);
+    expect(await repo.cargarRango(), RangoNarrativo.aprendiz2);
   });
 
   test('La 1.12 victoria es la cinemática que abre la 1.13', () {

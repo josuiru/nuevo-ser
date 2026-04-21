@@ -5,6 +5,7 @@ import 'datos/repositorio_progreso.dart';
 import 'dominio/catalogo_escenas.dart';
 import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
+import 'dominio/rango_narrativo.dart';
 import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
@@ -154,6 +155,12 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
       await _repositorio.activarFlagNarrativo(
         resultado.victoria ? 'victoria_$id' : 'derrota_$id',
       );
+      // Vencer a Kurz por tercera vez es el hito narrativo del Arco I:
+      // garantiza Aprendiz II aunque no se haya alcanzado por esquirlas,
+      // así la 1.13 (ceremonia) puede dispararse.
+      if (id == 'kurz_3' && resultado.victoria) {
+        await _repositorio.forzarRangoMinimo(RangoNarrativo.aprendiz2);
+      }
     }
     if (!mounted) return;
     _desafioKurzActivo = null;

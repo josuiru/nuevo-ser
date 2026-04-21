@@ -82,7 +82,9 @@ uno-roto/
   - **kurz_2**: 5 preguntas, ki=3, 6s/pregunta. Probable derrota, posible victoria (1.10).
   - **kurz_3**: 4 preguntas, ki=4, 8s/pregunta. Calibrado a victoria (1.12).
   El orquestador detecta combate pendiente vía `_combateKurzPendiente()` antes de buscar siguiente cinemática. Tras combate marca `combate_<id>_completado` + `victoria_<id>`/`derrota_<id>`.
-- **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Disparador provisional `rangoSegunEsquirlas(int)` con umbrales 0/30/100/250 — proxy hasta que tengamos hitos pedagógicos/narrativos reales. `pantalla_caza` verifica subida tras cada esquirla ganada y activa el flag.
+- **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Dos disparadores:
+  - **Por esquirlas**: umbrales 0/30/100/250 — proxy. `pantalla_caza` verifica subida tras cada esquirla ganada.
+  - **Narrativos**: `repositorio.forzarRangoMinimo(rango)` sube si el actual es menor y activa flag. Usado tras kurz_3 victoria → garantiza Aprendiz II → desbloquea 1.13 ceremonia.
 - **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO".
 - Escenas adicionales del Arco 1:
   - **1.11 La cena que no se ve** (cierre amable, requiere 1.7).

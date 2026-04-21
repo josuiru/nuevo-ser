@@ -60,6 +60,20 @@ class RepositorioProgreso {
     await prefs.setInt(_claveRangoActual, rango.valor);
   }
 
+  /// Asegura que el rango sea al menos [minimo]. Si ya es igual o
+  /// superior, no hace nada y devuelve `false`. Si sube, persiste el
+  /// nuevo rango, activa su `flagAlcanzado` y devuelve `true`.
+  /// Pensado para hitos narrativos que garantizan rango (kurz_3
+  /// victoria → Aprendiz II), evitando que el niño quede sin escenas
+  /// posteriores por no haber acumulado esquirlas suficientes.
+  Future<bool> forzarRangoMinimo(RangoNarrativo minimo) async {
+    final actual = await cargarRango();
+    if (actual.valor >= minimo.valor) return false;
+    await guardarRango(minimo);
+    await activarFlagNarrativo(minimo.flagAlcanzado);
+    return true;
+  }
+
   Future<DateTime?> cargarUltimaApertura() async {
     final prefs = await SharedPreferences.getInstance();
     final ms = prefs.getInt(_claveUltimaAperturaMs);
