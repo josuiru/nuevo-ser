@@ -2935,6 +2935,388 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 3.10 — Oryn. Entrada al Puerto Silencioso. Monosilábico, pausas
+  /// largas. Introduce FR.18/FR.19 (multiplicación y división de
+  /// fracciones). Doc 09 §3.10.
+  static const EscenaCinematica conocerAOryn = EscenaCinematica(
+    id: '3.10',
+    titulo: 'Oryn',
+    flagDeSalida: 'escena_3_10_vista',
+    flagsRequeridos: {'escena_3_9_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Muelle largo del Puerto Silencioso. Faro lejano parpadea. Mar negro.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Hm.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura: 'Pausa muy larga. Ocho segundos contados.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Siéntate si quieres.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura: 'Algo se mueve lejos en el mar. Se sumerge.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Oryn.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: '¿Nombre?',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Dices tu nombre.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Hm.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Aquí aprendes a multiplicar y a dividir.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Fracciones. Fracciones entre ellas.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'No es rápido.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Te mira lo justo para incomodarte.',
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.oryn,
+        textoPrompt: '¿Preguntas?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Por qué es silencioso el Puerto?',
+            textoRespuesta:
+                'Trabajamos de noche. Y el mar pide silencio. Algunos piensan que el mar escucha.',
+            flagsAEstablecer: {'oryn_pregunta_silencio'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Conociste a Rexán?',
+            textoRespuesta: 'Hm. Mucho.',
+            flagsAEstablecer: {'oryn_pregunta_rexan'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vale.',
+            flagsAEstablecer: {'oryn_silencio'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Vuelve mañana. Empezamos.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+    ],
+  );
+
+  /// 3.11 — Ari en el muelle. Cafetería nocturna. Ari ha visto algo
+  /// raro en el muelle 7. Te pide que la acompañes. Doc 09 §3.11.
+  static const EscenaCinematica ariEnElMuelle = EscenaCinematica(
+    id: '3.11',
+    titulo: 'Ari en el muelle',
+    flagDeSalida: 'escena_3_11_vista',
+    flagsRequeridos: {'escena_3_10_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Cafetería nocturna del Puerto. Ari ya ha pedido bebida para los dos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: '¡Eh!',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'No te esperaba aquí.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto:
+            'Bueno, sí. Todo el mundo acaba pasando por el Puerto tarde o temprano.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Oye. ¿Te puedo pedir una cosa?',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto:
+            'Llevo dos semanas viendo algo raro en el muelle 7. No voy a decir más aquí.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'No es un Fragmento normal. Creo que es... otra cosa.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.ari,
+        textoPrompt:
+            'Yo sola no voy. ¿Me acompañas mañana por la noche?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Vale.',
+            textoRespuesta:
+                'Gracias, {nombre}. En serio. Aquí mismo mañana, a la misma hora.',
+            flagsAEstablecer: {'ari_mision_si'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿No se lo has dicho a Oryn?',
+            textoRespuesta:
+                'No. No sé cómo reaccionaría. Y además... quiero ver qué es primero.',
+            flagsAEstablecer: {'ari_mision_oryn'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Y si es peligroso?',
+            textoRespuesta: 'Por eso te lo pido a ti.',
+            flagsAEstablecer: {'ari_mision_peligro'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 3.12 — El santuario. Muelle 7. Altar con Fragmento enjaulado
+  /// entre espejos, reloj parado, rosa disecada, agua turbia. Ari
+  /// pregunta a quién contárselo. Doc 09 §3.12.
+  static const EscenaCinematica elSantuario = EscenaCinematica(
+    id: '3.12',
+    titulo: 'El santuario',
+    flagDeSalida: 'escena_3_12_vista',
+    flagsRequeridos: {'escena_3_11_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Muelle 7. Un almacén viejo con la puerta entornada. Luz rojiza dentro.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2800),
+        textoLectura:
+            'Un altar improvisado. Un Fragmento de valor 3/4 en una caja de cristal con filtros metálicos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2800),
+        textoLectura:
+            'Alrededor: espejos antiguos, un reloj parado, una rosa disecada, un frasco con agua turbia.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Los objetos fuera del altar —silla, mesa— están mal proporcionados. Como si el espacio doblara.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: '¿Ves?',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Eso no es un Fragmento cualquiera.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Alguien lo está usando.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura: 'Una puerta se cierra dentro del almacén. Pasos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Vámonos.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Corréis. Atravesáis el muelle 7 en silencio. Al parar, Ari respira hondo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Hay que contárselo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'A alguien. No sé a quién.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.ari,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'A Sora.',
+            textoRespuesta:
+                'Sora... no sé. Ella es de Tejados. Mejor a uno del distrito de aquí.',
+            flagsAEstablecer: {'santuario_escoge_sora'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'A Oryn.',
+            textoRespuesta:
+                'Oryn sabrá. Pero no sé si es la persona adecuada. Siempre me da la sensación de que sabe más cosas de las que dice.',
+            flagsAEstablecer: {'santuario_escoge_oryn'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'A Naini.',
+            textoRespuesta:
+                'Sí. Ella sí. Naini reacciona. Los otros piensan demasiado antes.',
+            flagsAEstablecer: {'santuario_escoge_naini'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 3.13 — El interrogatorio de Naini. Despacho pequeño al fondo
+  /// del Mercado. Naini sin sonrisa por primera vez. Revela qué son
+  /// los Coleccionistas. Primer "gracias" de un maestro al jugador.
+  /// Doc 09 §3.13.
+  static const EscenaCinematica interrogatorioDeNaini = EscenaCinematica(
+    id: '3.13',
+    titulo: 'El interrogatorio de Naini',
+    flagDeSalida: 'escena_3_13_vista',
+    flagsRequeridos: {'escena_3_12_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Despacho pequeño al fondo del Mercado. Una lámpara de mesa. Naini sin sonrisa por primera vez.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Contádmelo. Paso a paso.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Escucha sin interrumpir. Toma notas. Hace un círculo en el papel.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Esto no es un Fragmento silvestre. Esto es una infraestructura.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Alguien está capturando Fragmentos y manteniéndolos vivos para que funcionen en un lugar concreto.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Se llaman Coleccionistas. Algunos ricos que descubrieron hace décadas que un Fragmento grande, enjaulado, distorsiona el espacio a su alrededor.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Y si lo pones bien, distorsiona a tu favor.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Contratos que firmas dentro te favorecen. Reuniones duran lo que te conviene.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Gente que visita tu oficina olvida la mitad de lo que iba a decirte.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Es difícil de probar. Y es muy viejo.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Ari, esto lo has hecho bien.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: '{nombre}, tú también.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Primera vez que un maestro os mira como colegas. No como alumnos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Lo voy a llevar al Cónclave. Es nivel Fraccionista Mayor.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Gracias.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Primera vez que un maestro te da las gracias. Ari te mira de reojo. Tú también a ella.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Vosotros dos no habéis estado nunca en ese muelle. ¿De acuerdo?',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Bien. Hala. Id a descansar.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -2977,6 +3359,10 @@ class CatalogoEscenas {
     conocerAVadic,
     segundaPintada,
     eco,
+    conocerAOryn,
+    ariEnElMuelle,
+    elSantuario,
+    interrogatorioDeNaini,
   ];
 
   static EscenaCinematica? porId(String id) {

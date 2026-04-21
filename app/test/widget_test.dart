@@ -299,6 +299,21 @@ void main() {
     );
   });
 
+  test('Arco 3: bloque Coleccionistas 3.10→3.11→3.12→3.13 encadena', () {
+    final oryn = CatalogoEscenas.porId('3.10');
+    expect(oryn!.flagsRequeridos, contains('escena_3_9_vista'));
+
+    final ari = CatalogoEscenas.porId('3.11');
+    expect(ari!.flagsRequeridos, contains('escena_3_10_vista'));
+
+    final santuario = CatalogoEscenas.porId('3.12');
+    expect(santuario!.flagsRequeridos, contains('escena_3_11_vista'));
+
+    final naini = CatalogoEscenas.porId('3.13');
+    expect(naini!.flagsRequeridos, contains('escena_3_12_vista'));
+    expect(naini.esCierreAmable, isTrue);
+  });
+
   test('Arco 3: 3.6/3.8/3.9 encadenan tras 3.5', () {
     final vadic = CatalogoEscenas.porId('3.6');
     expect(vadic!.flagsRequeridos, contains('escena_3_5_vista'));
@@ -604,6 +619,10 @@ void main() {
         'uroto.flag.escena_3_6_vista': true,
         'uroto.flag.escena_3_8_vista': true,
         'uroto.flag.escena_3_9_vista': true,
+        'uroto.flag.escena_3_10_vista': true,
+        'uroto.flag.escena_3_11_vista': true,
+        'uroto.flag.escena_3_12_vista': true,
+        'uroto.flag.escena_3_13_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();
