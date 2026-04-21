@@ -59,6 +59,14 @@ void main() {
     expect(irune!.flagsRequeridos, contains('escena_1_3_vista'));
   });
 
+  test('La 1.9 Los Plenos queda latente hasta fr_05_competente', () {
+    final plenos = CatalogoEscenas.porId('1.9');
+    expect(plenos, isNotNull);
+    expect(plenos!.flagsRequeridos, contains('fr_05_competente'));
+    expect(plenos.flagsRequeridos, contains('escena_1_7_vista'));
+    expect(plenos.esCierreAmable, isTrue);
+  });
+
   test('La escena 1.1 alterna ambientes y diálogos', () {
     final planos = CatalogoEscenas.llegada.planos;
     final hayAmbiente = planos.any((p) => p is PlanoAmbiente);
@@ -110,6 +118,7 @@ void main() {
         'uroto.flag.escena_1_4_vista': true,
         'uroto.flag.escena_1_5_vista': true,
         'uroto.flag.escena_1_6_vista': true,
+        'uroto.flag.escena_1_7_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

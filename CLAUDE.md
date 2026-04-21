@@ -71,8 +71,11 @@ uno-roto/
   - **1.3 El callejón** — mujer desorientada, 4 opciones.
   - **1.4 Irune** — las tres reglas, dirigidas a `{nombre}`.
   - **1.5 Kurz aparece** — primer Fragmento nombrado con voz en itálica (Cormorant pendiente). Cinemática-puente: el combate real está calibrado a derrota pero aún no implementado jugable.
-  - **1.6 La derrota** — cierre emocional: mano tendida, "La cuarta gané", tres opciones de respuesta, botón HASTA MAÑANA. Primer `esCierreAmable: true` — al terminar va directo al mapa sin encadenar más.
-  Cadena de flagsRequeridos: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6.
+  - **1.6 La derrota** — cierre emocional: mano tendida, "La cuarta gané", tres opciones de respuesta, botón HASTA MAÑANA. Primer `esCierreAmable: true`.
+  - **1.7 Kai visto de lejos** — pausa en punto elevado, Sora presenta a Kai ("va dos rangos por delante"). `esCierreAmable: true`. Se dispara al siguiente login.
+  - **1.9 Los Plenos** — latente en catálogo. Requiere `fr_05_competente` (flag que activará el motor de maestría cuando el niño domine FR.05). Intro de Impropios.
+  Cadena: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 (cierre) → 1.7 (cierre) → [latente: 1.9 cuando FR.05 competente].
+- **Escenas pendientes** (requieren combate jugable o sistema de rangos): 1.8 (variantes entrenamiento), 1.10 (2ª derrota Kurz), 1.11 (cena silenciosa), 1.12 (Kurz vencido), 1.13 (ceremonia Aprendiz II), 1.14 (Canales desde arriba).
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.

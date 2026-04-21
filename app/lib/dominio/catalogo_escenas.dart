@@ -517,6 +517,155 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 1.7 — Kai visto de lejos. Pausa en un punto elevado, Sora señala a
+  /// otro aprendiz. Kai asiente sin sonrisa y se va. Doc 07 §1.7.
+  /// Cierre amable: al terminar, vuelta al mapa en lugar de encadenar.
+  static const EscenaCinematica kaiVistoDeLejos = EscenaCinematica(
+    id: '1.7',
+    titulo: 'Kai visto de lejos',
+    flagDeSalida: 'escena_1_7_vista',
+    flagsRequeridos: {'escena_1_6_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Otra noche. Punto elevado de la azotea. Otro aprendiz entrena a 30 metros.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Se mueve con soltura. No es el primer día que lo hace.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ese es Kai.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Lleva cuatro años entrenando.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Es bueno.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Kai termina, se echa la mochila al hombro. Pasa cerca.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Asiente a Sora — saludo profesional. A ti te mira un segundo. Sin sonrisa. Registrando.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Sigue bajando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Él va dos rangos por delante.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Algún día te lo vas a encontrar de verdad.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Sora te ofrece una cantimplora.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Bebe. Toca otra ronda.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+    ],
+  );
+
+  /// 1.9 — Los Plenos. Sora introduce el concepto de Impropio sumando
+  /// tres medios. Doc 07 §1.9. Requiere `fr_05_competente` — activado por
+  /// el motor de maestría cuando el niño domina FR.05 (suma de
+  /// fracciones con mismo denominador). Hasta entonces la escena queda
+  /// latente en el catálogo.
+  static const EscenaCinematica losPlenos = EscenaCinematica(
+    id: '1.9',
+    titulo: 'Los Plenos',
+    flagDeSalida: 'escena_1_9_vista',
+    flagsRequeridos: {'escena_1_7_vista', 'fr_05_competente'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Azotea nueva al norte. Cinco Fragmentos orbitan.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Tres medios. Dos tercios. Todos flotando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Mira.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.sora,
+        textoPrompt: '¿Cuántos medios ves?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Tres.',
+            textoRespuesta: 'Bien.',
+            flagsAEstablecer: {'plenos_respuesta_correcta'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Cinco.',
+            textoRespuesta:
+                'No. Cinco son todos. Tres son los medios. Otra vez.',
+            flagsAEstablecer: {'plenos_respuesta_incorrecta'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Si sumas los tres medios...',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: '¿Cuánto tienes?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura: 'Los tres medios se fusionan. 3/2. Se desborda.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Tres medios. Más de uno entero.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Cuando pasa de uno, se llama impropio.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Son más grandes. Más trabajo.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Pero aún no. Hoy, solo practica la suma.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -524,6 +673,8 @@ class CatalogoEscenas {
     presentacionIrune,
     kurzAparece,
     primeraDerrota,
+    kaiVistoDeLejos,
+    losPlenos,
   ];
 
   static EscenaCinematica? porId(String id) {
