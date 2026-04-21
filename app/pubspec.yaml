@@ -40,6 +40,11 @@ dependencies:
   # timestamp de la última sesión, cualquier ajuste en el futuro.
   shared_preferences: ^2.2.2
 
+  # Cliente HTTP para el sync con el backend WordPress (doc 03 §5).
+  # Se usa la librería oficial de Dart; basta para los cinco endpoints
+  # del plugin. No añadimos `dio` — menos deps.
+  http: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
