@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../datos/catalogo_habilidades.dart';
+import '../datos/cliente_api.dart';
+import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/habilidad.dart';
 import '../nucleo/paleta.dart';
@@ -64,6 +66,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         iconTheme: const IconThemeData(color: PaletaNeon.textoTenue),
         actions: [
           IconButton(
+            tooltip: 'Probar sync con backend (debug)',
+            onPressed: _probarSync,
+            icon: Icon(
+              Icons.cloud_upload,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+          IconButton(
             tooltip: 'Reiniciar progreso (debug)',
             onPressed: _confirmarYReiniciar,
             icon: Icon(
@@ -79,6 +89,88 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             )
           : _listaPorDominio(),
     );
+  }
+
+  Future<void> _probarSync() async {
+    final api = ClienteApi(
+      urlBase: ConfigApi.urlBaseLocal,
+      hostOverride: ConfigApi.hostLocal,
+    );
+    final mensajero = ScaffoldMessenger.of(context);
+    try {
+      mensajero.showSnackBar(
+        const SnackBar(
+          backgroundColor: PaletaNeon.fondoMedio,
+          content: Text(
+            'Registrando usuario de prueba…',
+            style: TextStyle(color: PaletaNeon.textoTenue),
+          ),
+        ),
+      );
+      final sufijo = DateTime.now().millisecondsSinceEpoch;
+      final nombreJugador =
+          await widget.repositorio.cargarNombreJugador() ?? 'Test';
+      final auth = await api.registrar(
+        email: 'sync-$sufijo@test.local',
+        password: 'clave-prueba-${sufijo % 10000}',
+        nombreTutor: 'Tutor Prueba',
+        nombreNino: nombreJugador,
+      );
+
+      final progreso =
+          await widget.repositorio.exportarProgresoParaSync();
+      final resp = await api.sincronizar(
+        token: auth.token,
+        progreso: progreso,
+        habilidades: const [],
+      );
+      final devuelto = resp['progreso'] as Map<String, dynamic>?;
+      final esquirlas = (devuelto?['esquirlas_total'] as num?)?.toInt();
+      final flagsServidor = devuelto?['flags'] as Map? ?? const {};
+
+      if (!mounted) return;
+      mensajero.hideCurrentSnackBar();
+      mensajero.showSnackBar(
+        SnackBar(
+          backgroundColor: PaletaNeon.fondoMedio,
+          duration: const Duration(seconds: 8),
+          content: Text(
+            'Sync OK. Niño #${auth.ninoId}. '
+            'Esquirlas ${esquirlas ?? 0}. '
+            '${flagsServidor.length} flags en el servidor.',
+            style: const TextStyle(color: PaletaNeon.exitoSuave),
+          ),
+        ),
+      );
+    } on ExcepcionApi catch (e) {
+      if (!mounted) return;
+      mensajero.hideCurrentSnackBar();
+      mensajero.showSnackBar(
+        SnackBar(
+          backgroundColor: PaletaNeon.fondoMedio,
+          duration: const Duration(seconds: 8),
+          content: Text(
+            'API ${e.codigo}: ${e.mensaje}',
+            style: const TextStyle(color: PaletaNeon.rosaAcento),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      mensajero.hideCurrentSnackBar();
+      mensajero.showSnackBar(
+        SnackBar(
+          backgroundColor: PaletaNeon.fondoMedio,
+          duration: const Duration(seconds: 8),
+          content: Text(
+            'Red: $e',
+            style: const TextStyle(color: PaletaNeon.rosaAcento),
+          ),
+        ),
+      );
+    } finally {
+      api.cerrar();
+    }
   }
 
   Future<void> _confirmarYReiniciar() async {
