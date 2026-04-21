@@ -63,6 +63,7 @@ uno-roto/
 - Pantalla caza con spawn timer, combate enfoque sin dictado, pantalla habilidades debug.
 - Persistencia shared_preferences con keys `uroto.*`.
 - Ciudad con restauración progresiva según esquirlas.
+- **Tipografía Cormorant Garamond** en `app/assets/fonts/` (variable + variable italic, OFL desde google/fonts). Registrada en pubspec como familia `CormorantGaramond`. Usada por `VozPersonaje.estiloTextoCuerpo()` para voces de Fragmentos nombrados — la serif que distingue visualmente a Kurz/Eco/Zafrán/Vorax del habla humana (doc 11 §5).
 - **Sistema de cinemáticas v0.5** (dominio/): `VozPersonaje`, `PlanoEscena` sealed (PlanoAmbiente + PlanoDialogo + PlanoEleccion + PlanoInteractivo + PlanoCierreAmable), `OpcionEleccion` con flags, `EscenaCinematica` con flagsRequeridos + esCierreAmable. Player con reveal letra-a-letra, opciones con respuesta, widget tutorial jugable, botón de cierre "HASTA MAÑANA", callback alEstablecerFlag, fade 300ms, botón saltar. **Sustitución `{nombre}`** vía `aplicarTokens(texto, nombre)`.
 - **Sistema de nombre del jugador**: `PantallaNombre` con TextField + botón continuar. Persistido como `uroto.nombre_jugador`. Token `{nombre}` en escenas se sustituye automáticamente.
 - Escenas del Arco 1 implementadas y encadenadas:

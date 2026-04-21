@@ -93,17 +93,19 @@ extension EstiloVozPersonaje on VozPersonaje {
     }
   }
 
-  /// Los Fragmentos con voz se distinguen con itálica y color de acento
-  /// hasta que tengamos Cormorant Garamond en assets — guía visual §5.
+  /// Los Fragmentos con voz usan Cormorant Garamond italic — guía
+  /// visual §5. Tipografía serif distinta del humano (sans Inter por
+  /// defecto del tema), perceptible incluso sin saber qué fuente es.
   TextStyle estiloTextoCuerpo() {
     if (esFragmento) {
       return const TextStyle(
-        fontSize: 20,
-        height: 1.5,
+        fontFamily: 'CormorantGaramond',
+        fontSize: 22,
+        height: 1.45,
         color: PaletaNeon.textoPrincipal,
         fontStyle: FontStyle.italic,
-        letterSpacing: 0.6,
-        fontWeight: FontWeight.w300,
+        letterSpacing: 0.4,
+        fontWeight: FontWeight.w400,
       );
     }
     return const TextStyle(
