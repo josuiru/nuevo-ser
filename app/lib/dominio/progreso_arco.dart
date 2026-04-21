@@ -74,7 +74,13 @@ class ProgresoArco {
       ['escena_2_1_vista'],
       ['escena_2_2_vista'],
       ['escena_2_3_vista'],
-      ['escena_2_4_vista'], // plantilla variantes
+      [
+        // 2.4: cualquier variante de puentes cuenta.
+        'variante_2_4_a_usada',
+        'variante_2_4_b_usada',
+        'variante_2_4_c_usada',
+        'variante_2_4_d_usada',
+      ],
       ['escena_2_5_vista'],
       ['escena_2_6_vista'],
       ['escena_2_7_vista'],

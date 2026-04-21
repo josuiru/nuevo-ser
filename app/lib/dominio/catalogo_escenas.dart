@@ -1395,6 +1395,240 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 2.5 — Una pintada rara. Primera semilla visible del conflicto de
+  /// los Opacos. Rexán la esquiva sin miedo, con cansancio. Doc 08
+  /// §2.5. Canónicamente aleatoria; aquí se encadena tras 2.3 para
+  /// asegurar exposición.
+  static const EscenaCinematica pintadaRara = EscenaCinematica(
+    id: '2.5',
+    titulo: 'Una pintada rara',
+    flagDeSalida: 'escena_2_5_vista',
+    flagsRequeridos: {'escena_2_3_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Callejón. Pared vieja con una pintada reciente: un círculo roto con cuatro líneas hacia fuera.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura: 'Debajo, en letra temblorosa: "El uno era la cárcel."',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Vámonos, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.rexan,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Qué es esto?',
+            textoRespuesta: 'Pintadas. No importantes.',
+            flagsAEstablecer: {'pintada_preguntado_que'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Por qué dice eso?',
+            textoRespuesta: 'Porque algunos piensan así. Vamos.',
+            flagsAEstablecer: {'pintada_preguntado_porque'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vamos.',
+            flagsAEstablecer: {'pintada_silencio'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'No gira la cabeza hacia la pintada. Su voz no tiene miedo. Tiene cansancio.',
+      ),
+    ],
+  );
+
+  /// 2.6 — La primera vez que Zafrán se menciona. Latente: requiere que
+  /// el motor active `fr_09_competente`. Doc 08 §2.6.
+  static const EscenaCinematica zafranMencionado = EscenaCinematica(
+    id: '2.6',
+    titulo: 'La primera vez que Zafrán se menciona',
+    flagDeSalida: 'escena_2_6_vista',
+    flagsRequeridos: {'escena_2_5_vista', 'fr_09_competente'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Terraza de un bar cerrado. Sillas apiladas. Dos monedas antiguas en la mesa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Oye.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: '¿Sora te ha hablado de Zafrán alguna vez?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Niegas con la cabeza.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Bueno. Yo te digo el nombre al menos.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Es un Fragmento grande. Muy viejo. Vive por aquí.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Ahora mismo no te preocupes de él. No te va a ver. No te tiene que ver.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Pero si alguna vez oyes un silbido largo y raro por la noche, de los canales... te vuelves al Edificio de los Tejados.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.rexan,
+        textoPrompt: 'Sin pensarlo. ¿De acuerdo?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Por qué?',
+            textoRespuesta:
+                'Porque sí. Confía en mí una vez y hazme caso. Solo una vez.',
+            flagsAEstablecer: {'zafran_preguntado_porque'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Vale.',
+            textoRespuesta: 'Bien. Gracias.',
+            flagsAEstablecer: {'zafran_acepta'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: '¿Has visto la luna esta noche? Solo una. Qué pena.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 2.7 — Un Dual en el puente. Tutorial narrativo de familia F
+  /// (Duales) y MCM (DIV.07). Latente: requiere motor activando
+  /// `fr_16_introducida`. Doc 08 §2.7.
+  static const EscenaCinematica dualEnPuente = EscenaCinematica(
+    id: '2.7',
+    titulo: 'Un Dual en el puente',
+    flagDeSalida: 'escena_2_7_vista',
+    flagsRequeridos: {'escena_2_6_vista', 'fr_16_introducida'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Puente grande. Niebla leve. Dos Fragmentos flotan unidos por una línea de luz densa: 1/3 y 1/4.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Duales.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Esto es lo nuevo. Esto es lo que querías ver.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Con los Duales, no puedes atacar a uno solo. Están enganchados.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Tienes que unirlos primero. Volverlos un solo Fragmento. Y entonces los atacas.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Para unirlos, tienen que hablar el mismo idioma. Mismo denominador.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Un tercio y un cuarto no hablan el mismo idioma. Mira.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Los Fragmentos se rozan. Un chirrido desagradable. Rebotan.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: '¿Lo oyes? Así suena cuando los unes mal.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Busca un número que sea múltiplo de los dos. De tres y de cuatro.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Doce. 1/3 se vuelve 4/12. 1/4 se vuelve 3/12. Se funden en 7/12.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Doce es lo más pequeño que los dos comparten. Se llama mínimo común múltiplo. MCM, para ir rápido.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Ahora ya es un Fragmento normal. Atácalo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Rexán sonríe de medio lado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Esto es lo más bonito que se aprende aquí.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'En serio. Cuando esto lo tienes, el resto es juego.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -1417,6 +1651,9 @@ class CatalogoEscenas {
     bajarSolo,
     conocerARexan,
     primerEspejo,
+    pintadaRara,
+    zafranMencionado,
+    dualEnPuente,
   ];
 
   static EscenaCinematica? porId(String id) {

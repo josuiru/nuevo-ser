@@ -17,6 +17,8 @@ class RepositorioProgreso {
   static const _claveRangoActual = 'uroto.rango_actual';
   static const _claveVariantesEntrenamientoUsadas =
       'uroto.variantes_entrenamiento_usadas';
+  static const _claveVariantesPuentesUsadas =
+      'uroto.variantes_puentes_usadas';
 
   Future<int> cargarSiguienteNoche() async {
     final prefs = await SharedPreferences.getInstance();
@@ -83,6 +85,28 @@ class RepositorioProgreso {
   Future<void> resetearVariantesEntrenamiento() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_claveVariantesEntrenamientoUsadas);
+  }
+
+  Future<Set<String>> cargarVariantesPuentesUsadas() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lista = prefs.getStringList(_claveVariantesPuentesUsadas) ?? [];
+    return lista.toSet();
+  }
+
+  Future<void> marcarVariantePuenteUsada(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usadas = await cargarVariantesPuentesUsadas();
+    if (usadas.contains(id)) return;
+    usadas.add(id);
+    await prefs.setStringList(
+      _claveVariantesPuentesUsadas,
+      usadas.toList(),
+    );
+  }
+
+  Future<void> resetearVariantesPuentes() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_claveVariantesPuentesUsadas);
   }
 
   /// Asegura que el rango sea al menos [minimo]. Si ya es igual o

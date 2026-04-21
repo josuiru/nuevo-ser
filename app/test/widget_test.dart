@@ -11,6 +11,7 @@ import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/dominio/progreso_arco.dart';
 import 'package:uno_roto/dominio/rango_narrativo.dart';
 import 'package:uno_roto/dominio/variantes_entrenamiento.dart';
+import 'package:uno_roto/dominio/variantes_puentes.dart';
 import 'package:uno_roto/main.dart';
 import 'package:uno_roto/vista/pantalla_cinematica.dart';
 
@@ -218,6 +219,29 @@ void main() {
       RangoNarrativo.iniciado.flagAlcanzado,
       'rango_iniciado_alcanzado',
     );
+  });
+
+  test(
+    'VariantesPuentes.elegirSiguiente evita las usadas',
+    () {
+      final primera = VariantesPuentes.elegirSiguiente(const {});
+      expect(primera!.id, '2.4a');
+
+      final todas = VariantesPuentes.todas.map((e) => e.id).toSet();
+      expect(
+        VariantesPuentes.elegirSiguiente(todas),
+        isNull,
+      );
+    },
+  );
+
+  test('Arco 2: 2.6 y 2.7 quedan latentes hasta maestría', () {
+    final zafran = CatalogoEscenas.porId('2.6');
+    expect(zafran!.flagsRequeridos, contains('fr_09_competente'));
+
+    final dual = CatalogoEscenas.porId('2.7');
+    expect(dual!.flagsRequeridos, contains('fr_16_introducida'));
+    expect(dual.flagsRequeridos, contains('escena_2_6_vista'));
   });
 
   test('Arco 2: escenas 2.1/2.2/2.3 se encadenan tras 1.14', () {
@@ -468,6 +492,8 @@ void main() {
         'uroto.flag.escena_2_1_vista': true,
         'uroto.flag.escena_2_2_vista': true,
         'uroto.flag.escena_2_3_vista': true,
+        'uroto.flag.escena_2_5_vista': true,
+        'uroto.flag.escena_2_16_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

@@ -7,6 +7,7 @@ import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
 import 'dominio/rango_narrativo.dart';
 import 'dominio/variantes_entrenamiento.dart';
+import 'dominio/variantes_puentes.dart';
 import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
@@ -157,18 +158,33 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     });
   }
 
-  /// Si la 1.7 ya ocurrió y el Arco 1 sigue en curso (1.14 aún no vista),
-  /// dispara la siguiente variante de entrenamiento no usada. Al agotar
-  /// el pool, lo resetea y elige una nueva. Solo dispara una por
-  /// transición para no encadenarlas.
+  /// Dispara la siguiente variante recurrente adecuada al arco en
+  /// curso. Prioridad: Arco 2 (puentes con Rexán) si ya visitamos la
+  /// 2.3 y no cerramos el Arco 2; Arco 1 (entrenamiento con Sora) si
+  /// ya vimos 1.7 y no cerramos el Arco 1. Solo una por transición.
   Future<bool> _intentarDispararVarianteEntrenamiento() async {
     if (_varianteYaDisparadaEnEstaTransicion) return false;
-    final puedeSalir =
+
+    final arco2Empezado =
+        await _repositorio.flagNarrativoActivo('escena_2_3_vista');
+    final arco2Cerrado =
+        await _repositorio.flagNarrativoActivo('escena_2_16_vista');
+    if (arco2Empezado && !arco2Cerrado) {
+      return _dispararVariantePuente();
+    }
+
+    final arco1Empezado =
         await _repositorio.flagNarrativoActivo('escena_1_7_vista');
-    if (!puedeSalir) return false;
-    final arcoCerrado =
+    final arco1Cerrado =
         await _repositorio.flagNarrativoActivo('escena_1_14_vista');
-    if (arcoCerrado) return false;
+    if (arco1Empezado && !arco1Cerrado) {
+      return _dispararVarianteEntrenamientoArco1();
+    }
+
+    return false;
+  }
+
+  Future<bool> _dispararVarianteEntrenamientoArco1() async {
     var usadas =
         await _repositorio.cargarVariantesEntrenamientoUsadas();
     var siguiente = VariantesEntrenamiento.elegirSiguiente(usadas);
@@ -179,6 +195,25 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     }
     if (siguiente == null) return false;
     await _repositorio.marcarVarianteEntrenamientoUsada(siguiente.id);
+    if (!mounted) return false;
+    setState(() {
+      _escenaPendiente = siguiente;
+      _fase = _FaseApp.cinematica;
+      _varianteYaDisparadaEnEstaTransicion = true;
+    });
+    return true;
+  }
+
+  Future<bool> _dispararVariantePuente() async {
+    var usadas = await _repositorio.cargarVariantesPuentesUsadas();
+    var siguiente = VariantesPuentes.elegirSiguiente(usadas);
+    if (siguiente == null) {
+      await _repositorio.resetearVariantesPuentes();
+      usadas = {};
+      siguiente = VariantesPuentes.elegirSiguiente(usadas);
+    }
+    if (siguiente == null) return false;
+    await _repositorio.marcarVariantePuenteUsada(siguiente.id);
     if (!mounted) return false;
     setState(() {
       _escenaPendiente = siguiente;
