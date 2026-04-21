@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/desafio_kurz.dart';
+import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import 'pantalla_cinematica.dart' show aplicarTokens;
 
 /// Combate jugable contra Kurz. Doc 07 §1.5 / §1.10 / §1.12.
 ///
@@ -15,12 +17,14 @@ import 'escenario.dart';
 /// llega a 0 (derrota).
 class PantallaCombateKurz extends StatefulWidget {
   final DesafioKurz desafio;
+  final String nombreJugador;
   final ValueChanged<ResultadoCombateKurz> alTerminar;
 
   const PantallaCombateKurz({
     super.key,
     required this.desafio,
     required this.alTerminar,
+    this.nombreJugador = '',
   });
 
   @override
@@ -105,6 +109,9 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
     }
   }
 
+  String _conTokens(String texto) =>
+      aplicarTokens(texto, widget.nombreJugador);
+
   void _registrarAcierto() {
     _temporizadorPregunta?.cancel();
     HapticFeedback.mediumImpact();
@@ -113,7 +120,7 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
       _aciertos++;
       _indiceValor = (_indiceValor + 1)
           .clamp(0, widget.desafio.secuenciaValores.length - 1);
-      _frasePresente = widget.desafio.fraseAcierto;
+      _frasePresente = _conTokens(widget.desafio.fraseAcierto);
     });
     _temporizadorFrase?.cancel();
     _temporizadorFrase = Timer(
@@ -128,7 +135,7 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
     setState(() {
       _bloqueado = true;
       _ki = (_ki - 1).clamp(0, widget.desafio.kiInicial);
-      _frasePresente = pregunta.fraseFalloKurz;
+      _frasePresente = _conTokens(pregunta.fraseFalloKurz);
     });
     _temporizadorFrase?.cancel();
     _temporizadorFrase = Timer(
@@ -160,9 +167,11 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
         _aciertos >= widget.desafio.preguntas.length;
     setState(() {
       _bloqueado = true;
-      _frasePresente = victoria
-          ? widget.desafio.fraseVictoria
-          : widget.desafio.fraseDerrota;
+      _frasePresente = _conTokens(
+        victoria
+            ? widget.desafio.fraseVictoria
+            : widget.desafio.fraseDerrota,
+      );
     });
     Future.delayed(const Duration(milliseconds: 1600), () {
       if (!mounted) return;
@@ -211,9 +220,13 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
                     );
                   },
                   child: _CabeceraKurz(
+                    nombreFragmento: widget.desafio.nombreFragmento,
                     valor: valorKurz,
                     pulso: _controladorPulso,
                     fraseReciente: _frasePresente,
+                    vozQueHabla: widget.desafio.vozQueHabla,
+                    colorHalo: _colorHaloDe(widget.desafio),
+                    mostrarOjos: widget.desafio.mostrarOjos,
                   ),
                 ),
                 const Spacer(),
@@ -239,29 +252,45 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
   }
 }
 
+Color _colorHaloDe(DesafioKurz desafio) {
+  if (desafio.identificador.startsWith('zafran')) {
+    return PaletaNeon.rojoOxidado;
+  }
+  return PaletaNeon.violetaNeon;
+}
+
 class _CabeceraKurz extends StatelessWidget {
+  final String nombreFragmento;
   final String valor;
   final Animation<double> pulso;
   final String? fraseReciente;
+  final VozPersonaje vozQueHabla;
+  final Color colorHalo;
+  final bool mostrarOjos;
 
   const _CabeceraKurz({
+    required this.nombreFragmento,
     required this.valor,
     required this.pulso,
     required this.fraseReciente,
+    required this.vozQueHabla,
+    required this.colorHalo,
+    required this.mostrarOjos,
   });
 
   @override
   Widget build(BuildContext contexto) {
+    final nombreVoz = vozQueHabla.nombreVisible;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
           Text(
-            'KURZ',
+            nombreFragmento,
             style: TextStyle(
               fontSize: 12,
               letterSpacing: 6,
-              color: PaletaNeon.violetaNeon.withOpacity(0.85),
+              color: colorHalo.withOpacity(0.85),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -277,15 +306,15 @@ class _CabeceraKurz extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      PaletaNeon.violetaNeon.withOpacity(0.85),
-                      PaletaNeon.violetaBase.withOpacity(0.5),
+                      colorHalo.withOpacity(0.85),
+                      colorHalo.withOpacity(0.4),
                       PaletaNeon.fondoMedio.withOpacity(0.0),
                     ],
                     stops: const [0.25, 0.75, 1.0],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: PaletaNeon.violetaNeon.withOpacity(0.35),
+                      color: colorHalo.withOpacity(0.35),
                       blurRadius: 36,
                       spreadRadius: 6,
                     ),
@@ -303,17 +332,18 @@ class _CabeceraKurz extends StatelessWidget {
                         letterSpacing: 0.5,
                       ),
                     ),
-                    const Positioned(
-                      top: 60,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _Ojo(),
-                          SizedBox(width: 18),
-                          _Ojo(),
-                        ],
+                    if (mostrarOjos)
+                      const Positioned(
+                        top: 60,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _Ojo(),
+                            SizedBox(width: 18),
+                            _Ojo(),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               );
@@ -321,21 +351,34 @@ class _CabeceraKurz extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           SizedBox(
-            height: 28,
+            height: 64,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 280),
               child: fraseReciente == null
                   ? const SizedBox.shrink()
-                  : Text(
-                      fraseReciente!,
+                  : Column(
                       key: ValueKey(fraseReciente),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: PaletaNeon.textoPrincipal,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 0.3,
-                      ),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (nombreVoz.isNotEmpty)
+                          Text(
+                            nombreVoz.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 10,
+                              letterSpacing: 3.5,
+                              color: vozQueHabla.colorNombre,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        const SizedBox(height: 6),
+                        Text(
+                          fraseReciente!,
+                          textAlign: TextAlign.center,
+                          style: vozQueHabla
+                              .estiloTextoCuerpo()
+                              .copyWith(fontSize: 16),
+                        ),
+                      ],
                     ),
             ),
           ),

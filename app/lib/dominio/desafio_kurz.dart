@@ -1,13 +1,27 @@
-/// Configuración de un combate contra Kurz. Cada combate (1.5, 1.10,
-/// 1.12) tiene su propio set de preguntas, valor inicial y tiempo
-/// límite. La primera vez (1.5) está calibrada a derrota — el guion
-/// del doc 07 lo dice explícitamente.
+import 'voz_personaje.dart';
+
+/// Configuración de un combate contra un Fragmento nombrado (Kurz,
+/// Zafrán...). Cada combate tiene su propio set de preguntas, valor
+/// inicial, tiempo límite y vocero — Kurz habla por sí mismo, Zafrán
+/// no habla y es Sora quien guía entre preguntas.
 class DesafioKurz {
-  /// Identificador estable para flags y persistencia: "kurz_1", "kurz_2",
-  /// "kurz_3".
+  /// Identificador estable para flags y persistencia: "kurz_1", "zafran".
   final String identificador;
 
-  /// Valor inicial del Fragmento Kurz que el jugador ve. Decrece con
+  /// Nombre que aparece en el HUD como título del Fragmento.
+  final String nombreFragmento;
+
+  /// Quién dice las frases entre preguntas. Su color y nombre se usan
+  /// como etiqueta encima de cada frase. Kurz habla por sí mismo
+  /// (VozPersonaje.fragmentoKurz); Zafrán no habla, Sora guía
+  /// (VozPersonaje.sora).
+  final VozPersonaje vozQueHabla;
+
+  /// Si es true, el Fragmento se pinta con dos óvalos como ojos.
+  /// Kurz los tiene; Zafrán no (es Dual, más antiguo y siniestro).
+  final bool mostrarOjos;
+
+  /// Valor inicial del Fragmento que el jugador ve. Decrece con
   /// cada acierto.
   final List<String> secuenciaValores;
 
@@ -22,12 +36,10 @@ class DesafioKurz {
   /// después.
   final int segundosPorPregunta;
 
-  /// Frase de Kurz cuando el jugador acierta. Rara: la primera vez ni
-  /// debería oírse.
+  /// Frase del vocero cuando el jugador acierta.
   final String fraseAcierto;
 
-  /// Frase mostrada al perder (ki = 0). Para kurz_1: "Ya está. No pasa
-  /// nada."
+  /// Frase mostrada al perder (ki = 0).
   final String fraseDerrota;
 
   /// Frase mostrada al ganar.
@@ -42,6 +54,9 @@ class DesafioKurz {
     required this.fraseAcierto,
     required this.fraseDerrota,
     required this.fraseVictoria,
+    this.nombreFragmento = 'KURZ',
+    this.vozQueHabla = VozPersonaje.fragmentoKurz,
+    this.mostrarOjos = true,
   });
 
   /// Total de aciertos necesarios para victoria — coincide con el
@@ -161,6 +176,58 @@ class DesafioKurz {
     fraseAcierto: 'Mm.',
     fraseDerrota: 'Otra vez. La semana que viene.',
     fraseVictoria: 'Nos veremos cuando seas Iniciado.',
+  );
+
+  /// Combate contra Zafrán. Doc 08 §2.13. Dual con denominadores primos
+  /// 7 y 11 — el ejercicio consiste en encontrar el MCM (77) y
+  /// amplificar ambos valores. Zafrán no habla: Sora guía.
+  ///
+  /// El niño siempre termina con victoria narrativa (Zafrán escapa
+  /// debilitado, no se le derrota del todo). Por eso kiInicial es
+  /// generoso y las preguntas son sobre el pipeline MCM → fusión.
+  static const DesafioKurz zafran = DesafioKurz(
+    identificador: 'zafran',
+    nombreFragmento: 'ZAFRÁN',
+    vozQueHabla: VozPersonaje.sora,
+    mostrarOjos: false,
+    secuenciaValores: ['76/77', '38/77', '19/77', '3/77', '—'],
+    kiInicial: 5,
+    segundosPorPregunta: 10,
+    preguntas: [
+      PreguntaKurz(
+        enunciado: '¿Cuál es el MCM de 7 y 11?',
+        opciones: ['18', '44', '77', '88'],
+        indiceCorrecto: 2,
+        fraseFalloKurz: 'Amplifica. Busca un múltiplo de los dos.',
+      ),
+      PreguntaKurz(
+        enunciado: '¿A qué equivale 5/7 con denominador 77?',
+        opciones: ['35/77', '45/77', '55/77', '77/77'],
+        indiceCorrecto: 2,
+        fraseFalloKurz: 'Siete por once son 77. Cinco por once.',
+      ),
+      PreguntaKurz(
+        enunciado: '¿A qué equivale 3/11 con denominador 77?',
+        opciones: ['11/77', '21/77', '33/77', '44/77'],
+        indiceCorrecto: 1,
+        fraseFalloKurz: 'Once por siete. Tres por siete.',
+      ),
+      PreguntaKurz(
+        enunciado: '¿Cuánto es 55/77 + 21/77?',
+        opciones: ['74/77', '75/77', '76/77', '77/77'],
+        indiceCorrecto: 2,
+        fraseFalloKurz: 'Suma los numeradores. ¡Ahora!',
+      ),
+      PreguntaKurz(
+        enunciado: '¿Cuánto le falta a 76/77 para ser un entero?',
+        opciones: ['1/77', '2/77', '7/77', '11/77'],
+        indiceCorrecto: 0,
+        fraseFalloKurz: 'Sigue. No pares.',
+      ),
+    ],
+    fraseAcierto: 'Bien.',
+    fraseDerrota: 'Déjame a mí. Cuando puedas, seguimos.',
+    fraseVictoria: 'Muy bien, {nombre}.',
   );
 }
 

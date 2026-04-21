@@ -89,7 +89,7 @@ class ProgresoArco {
       ['escena_2_10_vista'],
       ['escena_2_11_vista'],
       ['escena_2_12_vista'],
-      ['combate_zafran_1_completado'],
+      ['escena_2_13_vista'],
       ['escena_2_14_vista'],
       ['escena_2_15_vista'],
       ['escena_2_16_vista'],

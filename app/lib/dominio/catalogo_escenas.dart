@@ -2095,6 +2095,295 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 2.13 — Tras el combate. Zafrán escapa debilitado al pozo. "Se va.
+  /// Otra vez. Pero le hemos hecho daño. Lo has hecho bien. Muy bien,
+  /// {nombre}." Doc 08 §2.13 (parte post-combate). Primera vez que
+  /// Sora usa "muy" en el juego.
+  static const EscenaCinematica zafranEscapa = EscenaCinematica(
+    id: '2.13',
+    titulo: 'Zafrán escapa',
+    flagDeSalida: 'escena_2_13_vista',
+    flagsRequeridos: {'combate_zafran_completado'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Zafrán se hace pequeño. Al llegar a 1/16, escapa al pozo con un chirrido. La reja cae con un golpe seco.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Silencio. Sora se limpia la cara con el dorso de la mano.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Se va.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Otra vez.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Pero le hemos hecho daño.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Algo en su cara más abierto que nunca lo has visto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Lo has hecho bien.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Muy bien, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+    ],
+  );
+
+  /// 2.14 — Después. Sora sentada, golpe en la pierna. Saca otra
+  /// marca vieja y revela que era de su maestra anterior. Doc 08 §2.14.
+  static const EscenaCinematica despuesDeZafran = EscenaCinematica(
+    id: '2.14',
+    titulo: 'Después',
+    flagDeSalida: 'escena_2_14_vista',
+    flagsRequeridos: {'escena_2_13_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Sora sentada en el suelo contra el pozo. Mano en la rodilla izquierda.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No es grave.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Solo el golpe. Mañana estará.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Saca la pequeña marca vieja. La mira. La aprieta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Esta era de alguien.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'De mi maestra. Antes de Irune.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.sora,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Qué le pasó?',
+            textoRespuesta:
+                'Lo mismo que a Rexán, más o menos. Peor.',
+            flagsAEstablecer: {'sora_maestra_pregunta_que'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Fue Zafrán?',
+            textoRespuesta:
+                'No. Eso fue otra cosa. Otra ciudad.',
+            flagsAEstablecer: {'sora_maestra_pregunta_zafran'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte con ella en silencio —',
+            textoRespuesta: 'Gracias.',
+            flagsAEstablecer: {'sora_maestra_silencio'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ayúdame a levantarme.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Acepta tu mano más tiempo del necesario. Cojea dos o tres pasos. Recupera su ritmo.',
+      ),
+    ],
+  );
+
+  /// 2.15 — Rexán espera. Al volver, marca plateada con un nuevo
+  /// filete azul. Rexán abre el cuello: su marca tiene varios
+  /// filetes. Doc 08 §2.15.
+  static const EscenaCinematica rexanEspera = EscenaCinematica(
+    id: '2.15',
+    titulo: 'Rexán espera',
+    flagDeSalida: 'escena_2_15_vista',
+    flagsRequeridos: {'escena_2_14_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Al volver al Edificio de los Tejados, Rexán está apoyado en el muro de la entrada con el bastón.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Sora se queda atrás dando espacio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'A ver. Enséñame.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Enseñas la marca de Aprendiz II. Tiene ahora un pequeño filete azul — señal de haber sobrevivido a un combate con un Fragmento nombrado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Bonita.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'La mía también la tiene.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Se abre el cuello. Su marca con varios filetes azules, algunos viejos, uno muy desteñido.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Gracias.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Sora.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Rexán.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Sube. Irune quiere verte.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Y duerme, {nombre}. Mañana es otro día y hoy ya estuvo.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Al entrar, Rexán y Sora se quedan fuera juntos. Sin hablar. Solo estando.',
+      ),
+    ],
+  );
+
+  /// 2.16 — Los Canales en silencio. Cierre del Arco 2. Sora menciona
+  /// su ciudad sin cortar. "Aún." Doc 08 §2.16.
+  static const EscenaCinematica canalesEnSilencio = EscenaCinematica(
+    id: '2.16',
+    titulo: 'Los Canales en silencio',
+    flagDeSalida: 'escena_2_16_vista',
+    flagsRequeridos: {'escena_2_15_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Azotea. Borde norte. Sora con las piernas colgando, como al final del Arco 1. La niebla disipada, luces reflejadas en el agua.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura: 'Un minuto de silencio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Oye.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Cuando era pequeña, en mi ciudad...',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: '...tenía una ventana que daba a un canal.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Se parece a estos.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Mirada breve. Vuelve al paisaje. Primera vez que menciona su ciudad sin cortar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No es importante. No sé por qué lo he dicho.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Mañana, si quieres, puedes bajar al Mercado. Conocer a Naini.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Yo no voy. Ella y yo ya nos conocemos.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Pero tú vas a querer ir. Te va a caer bien.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'La ciudad ya es tuya. Todos los distritos.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Bueno. Casi todos. La Montaña no.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Segunda media sonrisa de Sora.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Aún.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -2125,6 +2414,10 @@ class CatalogoEscenas {
     silbidoLejano,
     soraVuelveABajar,
     nocheDeZafran,
+    zafranEscapa,
+    despuesDeZafran,
+    rexanEspera,
+    canalesEnSilencio,
   ];
 
   static EscenaCinematica? porId(String id) {

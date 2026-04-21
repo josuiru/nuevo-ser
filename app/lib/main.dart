@@ -120,6 +120,11 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     final completo3 =
         await _repositorio.flagNarrativoActivo('combate_kurz_3_completado');
     if (vio112pre && !completo3) return DesafioKurz.tercero;
+    final vio212 =
+        await _repositorio.flagNarrativoActivo('escena_2_12_vista');
+    final completoZafran =
+        await _repositorio.flagNarrativoActivo('combate_zafran_completado');
+    if (vio212 && !completoZafran) return DesafioKurz.zafran;
     return null;
   }
 
@@ -294,6 +299,7 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         }
         return PantallaCombateKurz(
           desafio: desafio,
+          nombreJugador: _nombreJugador ?? '',
           alTerminar: _alTerminarCombateKurz,
         );
       case _FaseApp.mapa:

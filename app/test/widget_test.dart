@@ -7,6 +7,7 @@ import 'package:uno_roto/dominio/catalogo_escenas.dart';
 import 'package:uno_roto/dominio/desafio_kurz.dart';
 import 'package:uno_roto/dominio/habilidad.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
+import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/dominio/progreso_arco.dart';
 import 'package:uno_roto/dominio/rango_narrativo.dart';
@@ -130,6 +131,16 @@ void main() {
     expect(desafio.segundosPorPregunta, lessThanOrEqualTo(5));
     expect(desafio.preguntas.length, 3);
     expect(desafio.fraseDerrota, contains('No pasa nada'));
+  });
+
+  test('DesafioKurz.zafran usa Sora como voz y no muestra ojos', () {
+    const desafio = DesafioKurz.zafran;
+    expect(desafio.identificador, 'zafran');
+    expect(desafio.nombreFragmento, 'ZAFRÁN');
+    expect(desafio.vozQueHabla, isNot(VozPersonaje.fragmentoKurz));
+    expect(desafio.mostrarOjos, isFalse);
+    expect(desafio.preguntas.length, 5);
+    expect(desafio.fraseVictoria, contains('{nombre}'));
   });
 
   test('DesafioKurz.tercero está calibrado a victoria', () {
@@ -522,6 +533,13 @@ void main() {
         'uroto.flag.escena_2_5_vista': true,
         'uroto.flag.escena_2_8_vista': true,
         'uroto.flag.escena_2_9_vista': true,
+        'uroto.flag.escena_2_11_vista': true,
+        'uroto.flag.escena_2_12_vista': true,
+        'uroto.flag.combate_zafran_completado': true,
+        'uroto.flag.victoria_zafran': true,
+        'uroto.flag.escena_2_13_vista': true,
+        'uroto.flag.escena_2_14_vista': true,
+        'uroto.flag.escena_2_15_vista': true,
         'uroto.flag.escena_2_16_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
