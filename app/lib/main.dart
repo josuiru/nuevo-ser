@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'datos/repositorio_progreso.dart';
 import 'dominio/catalogo_escenas.dart';
+import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
 import 'nucleo/paleta.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
+import 'vista/pantalla_combate_kurz.dart';
 import 'vista/pantalla_mapa.dart';
 import 'vista/pantalla_nombre.dart';
 
@@ -37,7 +39,7 @@ class AppUnoRoto extends StatelessWidget {
   }
 }
 
-enum _FaseApp { cargando, apertura, nombre, cinematica, mapa }
+enum _FaseApp { cargando, apertura, nombre, cinematica, combateKurz, mapa }
 
 class OrquestadorFases extends StatefulWidget {
   const OrquestadorFases({super.key});
@@ -92,8 +94,15 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   }
 
   /// Busca la siguiente escena no vista **cuyos prerrequisitos se
-  /// cumplan** y la reproduce. Si no hay ninguna disponible, va al mapa.
+  /// cumplan** y la reproduce. Antes de buscar la siguiente cinemática,
+  /// comprueba si toca un combate jugable (Kurz). Si no hay ni combate
+  /// ni cinemática disponible, va al mapa.
   Future<void> _resolverCinematicaPendienteOMapa() async {
+    if (await _tocaCombateKurz1()) {
+      if (!mounted) return;
+      setState(() => _fase = _FaseApp.combateKurz);
+      return;
+    }
     for (final escena in CatalogoEscenas.todas) {
       final vista = await _repositorio.flagNarrativoActivo(escena.flagDeSalida);
       if (vista) continue;
@@ -109,6 +118,26 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     }
     if (!mounted) return;
     setState(() => _fase = _FaseApp.mapa);
+  }
+
+  /// El primer combate jugable contra Kurz toca cuando la escena 1.5
+  /// (Kurz aparece) ya se vio pero el combate todavía no se ha resuelto.
+  Future<bool> _tocaCombateKurz1() async {
+    final vio15 = await _repositorio.flagNarrativoActivo('escena_1_5_vista');
+    final yaCombatio =
+        await _repositorio.flagNarrativoActivo('combate_kurz_1_completado');
+    return vio15 && !yaCombatio;
+  }
+
+  Future<void> _alTerminarCombateKurz1(ResultadoCombateKurz resultado) async {
+    await _repositorio.activarFlagNarrativo('combate_kurz_1_completado');
+    if (resultado.victoria) {
+      await _repositorio.activarFlagNarrativo('victoria_kurz_1');
+    } else {
+      await _repositorio.activarFlagNarrativo('derrota_kurz_1');
+    }
+    if (!mounted) return;
+    await _resolverCinematicaPendienteOMapa();
   }
 
   Future<bool> _todosLosFlagsActivos(Set<String> flags) async {
@@ -154,6 +183,11 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
           nombreJugador: _nombreJugador ?? '',
           alTerminar: _alTerminarCinematica,
           alEstablecerFlag: _repositorio.activarFlagNarrativo,
+        );
+      case _FaseApp.combateKurz:
+        return PantallaCombateKurz(
+          desafio: DesafioKurz.primero,
+          alTerminar: _alTerminarCombateKurz1,
         );
       case _FaseApp.mapa:
         return PantallaMapa(repositorio: _repositorio);

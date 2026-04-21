@@ -71,12 +71,13 @@ uno-roto/
   - **1.3 El callejón** — mujer desorientada, 4 opciones.
   - **1.4 Irune** — las tres reglas, dirigidas a `{nombre}`.
   - **1.5 Kurz aparece** — primer Fragmento nombrado con voz en itálica (Cormorant pendiente). Cinemática-puente: el combate real está calibrado a derrota pero aún no implementado jugable.
-  - **1.6 La derrota** — cierre emocional: mano tendida, "La cuarta gané", tres opciones de respuesta, botón HASTA MAÑANA. Primer `esCierreAmable: true`.
+  - **1.6 La derrota** — cierre emocional tras el combate jugable de Kurz. Requiere `combate_kurz_1_completado`.
   - **1.7 Kai visto de lejos** — pausa en punto elevado, Sora presenta a Kai ("va dos rangos por delante"). `esCierreAmable: true`. Se dispara al siguiente login.
   - **1.9 Los Plenos** — latente en catálogo. Requiere `fr_05_competente` (flag que activará el motor de maestría cuando el niño domine FR.05). Intro de Impropios.
   Cadena: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 (cierre) → 1.7 (cierre) → [latente: 1.9 cuando FR.05 competente].
 - **Escenas pendientes** (requieren combate jugable o sistema de rangos): 1.8 (variantes entrenamiento), 1.10 (2ª derrota Kurz), 1.11 (cena silenciosa), 1.12 (Kurz vencido), 1.13 (ceremonia Aprendiz II), 1.14 (Canales desde arriba).
 - **Conexión motor → flags narrativos**: `MotorMaestria.alSubirNivel` callback se invoca cuando una habilidad sube de nivel estricto. `MotorMaestria.flagDeMaestria(id, nivel)` produce flags estables tipo `fr_05_competente`. `pantalla_caza.dart` engancha el callback al repositorio. La escena 1.9 se desbloquea automáticamente cuando el niño domina FR.05.
+- **Combate jugable de Kurz v0.1** (`dominio/desafio_kurz.dart` + `vista/pantalla_combate_kurz.dart`): Fragmento nombrado pintado con esfera radial violeta + ojos, valor flotante grande, frases de Kurz reactivas. 3 preguntas multiple-choice con tiempo límite (4s en kurz_1). El primer combate (DesafioKurz.primero) está calibrado a derrota: ki=2, tiempo cortísimo. El orquestador detecta tras la 1.5 que toca combate, lo lanza, marca `combate_kurz_1_completado` + `derrota_kurz_1`/`victoria_kurz_1`, y la 1.6 se dispara independientemente del resultado.
 - **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Disparador provisional `rangoSegunEsquirlas(int)` con umbrales 0/30/100/250 — proxy hasta que tengamos hitos pedagógicos/narrativos reales. `pantalla_caza` verifica subida tras cada esquirla ganada y activa el flag.
 - **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO".
 - Escenas adicionales del Arco 1:

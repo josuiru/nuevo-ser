@@ -438,7 +438,7 @@ class CatalogoEscenas {
     id: '1.6',
     titulo: 'La derrota',
     flagDeSalida: 'escena_1_6_vista',
-    flagsRequeridos: {'escena_1_5_vista'},
+    flagsRequeridos: {'combate_kurz_1_completado'},
     esCierreAmable: true,
     planos: [
       PlanoAmbiente(

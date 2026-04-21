@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:uno_roto/datos/catalogo_habilidades.dart';
 import 'package:uno_roto/dominio/catalogo_escenas.dart';
+import 'package:uno_roto/dominio/desafio_kurz.dart';
 import 'package:uno_roto/dominio/habilidad.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -118,6 +119,48 @@ void main() {
     expect(subidas.length >= tamanoAntes, isTrue);
   });
 
+  test('DesafioKurz.primero está calibrado a derrota probable', () {
+    final desafio = DesafioKurz.primero;
+    expect(desafio.identificador, 'kurz_1');
+    expect(desafio.kiInicial, 2);
+    expect(desafio.segundosPorPregunta, lessThanOrEqualTo(5));
+    expect(desafio.preguntas.length, 3);
+    expect(desafio.fraseDerrota, contains('No pasa nada'));
+  });
+
+  test('La 1.6 ahora requiere combate_kurz_1_completado', () {
+    final derrota = CatalogoEscenas.porId('1.6');
+    expect(derrota!.flagsRequeridos, contains('combate_kurz_1_completado'));
+    expect(
+      derrota.flagsRequeridos.contains('escena_1_5_vista'),
+      isFalse,
+      reason:
+          'La 1.6 cuelga del combate, no de la cinemática preliminar.',
+    );
+  });
+
+  testWidgets(
+    'Tras la 1.5, si el combate de Kurz no se ha resuelto, se lanza',
+    (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({
+        'uroto.ya_vio_apertura': true,
+        'uroto.nombre_jugador': 'Leo',
+        'uroto.flag.escena_1_1_vista': true,
+        'uroto.flag.escena_1_2_vista': true,
+        'uroto.flag.escena_1_3_vista': true,
+        'uroto.flag.escena_1_4_vista': true,
+        'uroto.flag.escena_1_5_vista': true,
+      });
+      await tester.pumpWidget(const AppUnoRoto());
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      // El combate muestra el nombre del Fragmento.
+      expect(find.text('KURZ'), findsOneWidget);
+    },
+  );
+
   test('rangoSegunEsquirlas devuelve el rango por umbrales', () {
     expect(rangoSegunEsquirlas(0), RangoNarrativo.aprendiz1);
     expect(rangoSegunEsquirlas(29), RangoNarrativo.aprendiz1);
@@ -213,6 +256,8 @@ void main() {
         'uroto.flag.escena_1_3_vista': true,
         'uroto.flag.escena_1_4_vista': true,
         'uroto.flag.escena_1_5_vista': true,
+        'uroto.flag.combate_kurz_1_completado': true,
+        'uroto.flag.derrota_kurz_1': true,
         'uroto.flag.escena_1_6_vista': true,
         'uroto.flag.escena_1_7_vista': true,
         'uroto.flag.escena_1_11_vista': true,
