@@ -299,6 +299,22 @@ void main() {
     );
   });
 
+  test('Arco 3: 3.6/3.8/3.9 encadenan tras 3.5', () {
+    final vadic = CatalogoEscenas.porId('3.6');
+    expect(vadic!.flagsRequeridos, contains('escena_3_5_vista'));
+
+    final pintada = CatalogoEscenas.porId('3.8');
+    expect(pintada!.flagsRequeridos, contains('escena_3_6_vista'));
+    expect(pintada.esCierreAmable, isTrue);
+
+    final eco = CatalogoEscenas.porId('3.9');
+    expect(eco!.flagsRequeridos, contains('escena_3_8_vista'));
+    expect(eco.esCierreAmable, isTrue);
+    // Eco no es combate jugable: todo es cinemática pura con opciones.
+    final tieneInteractivo = eco.planos.any((p) => p is PlanoInteractivo);
+    expect(tieneInteractivo, isFalse);
+  });
+
   test('DesafioKurz.duelKai usa a Kai como voz, sin ojos, halo rosa', () {
     const desafio = DesafioKurz.duelKai;
     expect(desafio.identificador, 'duel_kai');
@@ -585,6 +601,9 @@ void main() {
         'uroto.flag.combate_duel_kai_completado': true,
         'uroto.flag.victoria_duel_kai': true,
         'uroto.flag.escena_3_5_vista': true,
+        'uroto.flag.escena_3_6_vista': true,
+        'uroto.flag.escena_3_8_vista': true,
+        'uroto.flag.escena_3_9_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

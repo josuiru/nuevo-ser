@@ -2684,6 +2684,257 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 3.6 — Vadic. Entrada a Industria. Maestro que mide con calibre.
+  /// Introduce DEC.01 (unidades y conversión). Doc 09 §3.6.
+  static const EscenaCinematica conocerAVadic = EscenaCinematica(
+    id: '3.6',
+    titulo: 'Vadic',
+    flagDeSalida: 'escena_3_6_vista',
+    flagsRequeridos: {'escena_3_5_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Galpón de ladrillo rojo. Luz gris. Un hombre mide algo con un calibre. No levanta la vista.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Un momento.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Anota. Guarda el calibre. Ahora mira.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Vadic.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: '¿Nombre?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Dices tu nombre. Asiente una vez.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.vadic,
+        textoPrompt: 'Esto mide 2,34 metros. ¿Cuántos centímetros son?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '23,4.',
+            textoRespuesta: 'No. Un metro son cien centímetros.',
+            flagsAEstablecer: {'vadic_cm_fallo'},
+          ),
+          OpcionEleccion(
+            textoJugador: '234.',
+            textoRespuesta: 'Correcto.',
+            flagsAEstablecer: {'vadic_cm_acierto'},
+          ),
+          OpcionEleccion(
+            textoJugador: '2340.',
+            textoRespuesta: 'No. Eso serían milímetros.',
+            flagsAEstablecer: {'vadic_cm_fallo'},
+          ),
+        ],
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.vadic,
+        textoPrompt: '¿Y en milímetros?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '234.',
+            textoRespuesta: 'No. Diez veces más.',
+            flagsAEstablecer: {'vadic_mm_fallo'},
+          ),
+          OpcionEleccion(
+            textoJugador: '2340.',
+            textoRespuesta: 'Correcto.',
+            flagsAEstablecer: {'vadic_mm_acierto'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Aprendiz tres, Iniciado II. Bien para trabajar aquí.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto:
+            'Aquí las cosas se miden bien o no se miden. No hay término medio.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.vadic,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Qué hago aquí?',
+            textoRespuesta:
+                'Lo que yo te diga, cuando yo te lo diga. Pero aprender a medir. Eso siempre.',
+            flagsAEstablecer: {'vadic_pregunta_trabajo'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Cuánto tiempo llevas aquí?',
+            textoRespuesta: 'Veintidós años.',
+            flagsAEstablecer: {'vadic_pregunta_veterano'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vuelve mañana. Tengo trabajo.',
+            flagsAEstablecer: {'vadic_silencio'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 3.8 — Segunda pintada Opaca. En un callejón entre galpones.
+  /// "La unidad es la medida de la obediencia." Vadic casi no reacciona.
+  /// Doc 09 §3.8.
+  static const EscenaCinematica segundaPintada = EscenaCinematica(
+    id: '3.8',
+    titulo: 'Una segunda pintada',
+    flagDeSalida: 'escena_3_8_vista',
+    flagsRequeridos: {'escena_3_6_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Callejón estrecho entre galpones. Pared de ladrillo. La misma mano que en los Canales.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Letra temblorosa: "La unidad es la medida de la obediencia."',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Hay más últimamente.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Camina.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.9 — Eco. Escena clave del Arco 3. Un Fragmento que habla, que
+  /// no se puede atacar. El mundo baja de volumen a su alrededor.
+  /// Hace una pregunta filosófica sin respuesta correcta. Doc 09 §3.9.
+  /// Las frases de Eco van en VozPersonaje.fragmentoEco (Cormorant
+  /// Garamond italic por el estilo del vocero Fragmento).
+  static const EscenaCinematica eco = EscenaCinematica(
+    id: '3.9',
+    titulo: 'Eco',
+    flagDeSalida: 'escena_3_9_vista',
+    flagsRequeridos: {'escena_3_8_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Callejón cualquiera. De repente el mundo baja de volumen. Los pasos se apagan.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Un Fragmento pequeño flota delante de ti. Muestra dos valores a la vez: 2/4 y 1/2.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoEco,
+        texto: 'Hola.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoEco,
+        texto: 'Otro nuevo.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.fragmentoEco,
+        textoPrompt: '¿Vas a desfragmentarme, Aprendiz?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Iniciado.',
+            textoRespuesta: 'Ah. Disculpa. Mejor así.',
+            flagsAEstablecer: {'eco_correccion_rango'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'No sé.',
+            textoRespuesta: 'Eso es honesto. Mejor así.',
+            flagsAEstablecer: {'eco_no_se_rango'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vale. No hablas. Bien.',
+            flagsAEstablecer: {'eco_silencio_rango'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Eco gira despacio sobre sí mismo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoEco,
+        texto: 'Tengo una pregunta.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.fragmentoEco,
+        texto:
+            'Si tú y yo fuéramos el mismo pedazo de algo mayor, con nombres distintos, ¿seríamos la misma cosa?',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Eco espera sin reloj.',
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.fragmentoEco,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Sí.',
+            textoRespuesta: 'Entonces tú y yo ya somos.',
+            flagsAEstablecer: {'eco_respuesta_si'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'No.',
+            textoRespuesta: 'Entonces tú y yo todavía no somos.',
+            flagsAEstablecer: {'eco_respuesta_no'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'No lo sé.',
+            textoRespuesta: 'Yo tampoco. Ven a verme otra vez cuando sepas.',
+            flagsAEstablecer: {'eco_respuesta_no_se'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte en silencio largo rato —',
+            textoRespuesta: 'Otra vez será.',
+            flagsAEstablecer: {'eco_respuesta_silencio'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Eco se desvanece en partículas que suben. No bajan. El mundo vuelve a su volumen.',
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -2723,6 +2974,9 @@ class CatalogoEscenas {
     mercadoDeLaLuz,
     kaiOtraVez,
     kaiDesaparece,
+    conocerAVadic,
+    segundaPintada,
+    eco,
   ];
 
   static EscenaCinematica? porId(String id) {
