@@ -365,7 +365,7 @@ class _VistaAmbiente extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(32, 0, 32, 80),
+        padding: const EdgeInsets.fromLTRB(32, 0, 32, 140),
         child: Text(
           textoLectura!,
           textAlign: TextAlign.center,
@@ -397,7 +397,7 @@ class _VistaDialogo extends StatelessWidget {
   Widget build(BuildContext contexto) {
     final nombre = voz.nombreVisible;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 0, 28, 56),
+      padding: const EdgeInsets.fromLTRB(28, 0, 28, 120),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -477,7 +477,7 @@ class _VistaEleccion extends StatelessWidget {
         : respuesta;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 0, 28, 40),
+      padding: const EdgeInsets.fromLTRB(28, 0, 28, 110),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -626,7 +626,7 @@ class _VistaInteractiva extends StatelessWidget {
           ),
           const Spacer(flex: 3),
           _PistaGesto(accion: plano.accion),
-          const SizedBox(height: 24),
+          const SizedBox(height: 90),
         ],
       ),
     );
