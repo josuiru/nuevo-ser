@@ -1629,6 +1629,472 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 2.8 — Rexán y el agua. Muelle pequeño, silencio largo. Rexán
+  /// menciona a Oryn y su herida vieja. "El mar acuerda. Los canales
+  /// olvidan." Doc 08 §2.8.
+  static const EscenaCinematica rexanYElAgua = EscenaCinematica(
+    id: '2.8',
+    titulo: 'Rexán y el agua',
+    flagDeSalida: 'escena_2_8_vista',
+    flagsRequeridos: {'escena_2_7_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Muelle pequeño al borde de un canal ancho. Pies casi tocando el agua.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura: 'Un minuto de silencio. Solo el agua.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Yo me formé en el Puerto, ¿sabes?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Oryn me entrenó. Hace muchos años. Él era joven todavía, como Sora ahora.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Desde entonces, el agua me gusta.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Tira una piedrita al agua.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Cuando me pasó lo de la pierna, hace ya, volví al Puerto a recuperar.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Estuve un año entero viendo el agua desde un muelle como este.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Cuando pude caminar otra vez, me preguntaron si quería volver a ser Maestro.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Les dije que sí, pero aquí, en los Canales. Porque los canales tienen agua también, y no son el mar.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'El mar acuerda. Los canales olvidan.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Eso no lo entiendes todavía. No importa.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.rexan,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Qué te pasó?',
+            textoRespuesta: 'Otro día, {nombre}. Hoy no.',
+            flagsAEstablecer: {'rexan_pregunta_pierna'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Sora conoce a Oryn?',
+            textoRespuesta:
+                'Sora no baja al Puerto. No le gusta el agua. Aún.',
+            flagsAEstablecer: {'rexan_pregunta_sora_oryn'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            flagsAEstablecer: {'rexan_silencio_agua'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Tira otra piedrita. Se levanta apoyándose en el bastón.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Venga. Antes de que nos durmamos los dos.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+    ],
+  );
+
+  /// 2.9 — Ari. Primer encuentro con otra aprendiz. 12 años,
+  /// discípula de Vadic. Doc 08 §2.9.
+  static const EscenaCinematica conocerAAri = EscenaCinematica(
+    id: '2.9',
+    titulo: 'Ari',
+    flagDeSalida: 'escena_2_9_vista',
+    flagsRequeridos: {'escena_2_8_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Esquina cerca del Edificio de los Tejados. Una chica de tu edad, mochila cruzada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Hola.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: '¿Tú también eres nuevo?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Soy Ari. Llegué hace seis meses.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.ari,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Yo soy {nombre}.',
+            textoRespuesta: 'Mm.',
+            flagsAEstablecer: {'ari_presentado'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— solo asentir —',
+            textoRespuesta: 'Poco hablador, tú. Me gusta.',
+            flagsAEstablecer: {'ari_silencio'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Oye. Estoy con el Maestro Vadic. Industria. ¿Tú?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.ari,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Con Rexán, de Canales.',
+            textoRespuesta:
+                'Ah, Rexán. Me cae bien. Luego te caerá a ti.',
+            flagsAEstablecer: {'ari_sabe_rexan'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'No lo sé todavía.',
+            textoRespuesta:
+                'Vale, vale, no preguntaba por preguntar. Solo curiosidad.',
+            flagsAEstablecer: {'ari_no_sabe'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto:
+            'Bueno. Me tengo que ir. Mis padres no saben que ando por aquí a esta hora.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Nos vemos por los tejados.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Echa a correr. Se gira al correr:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto:
+            'No te metas con los Espejo los lunes, eh. No sé por qué pero los lunes son raros.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+    ],
+  );
+
+  /// 2.10 — El silbido lejano. Rexán lo oye, se queda quieto, manda
+  /// al Edificio de los Tejados. Sora espera al jugador con "Pasa.
+  /// Irune quiere verte." LATENTE: requiere `fr_16_competente`.
+  /// Doc 08 §2.10.
+  static const EscenaCinematica silbidoLejano = EscenaCinematica(
+    id: '2.10',
+    titulo: 'El silbido lejano',
+    flagDeSalida: 'escena_2_10_vista',
+    flagsRequeridos: {'escena_2_9_vista', 'fr_16_competente'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Mitad de un entrenamiento con Rexán. Un silbido largo y grave rompe el aire.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Tres segundos. Un quiebro extraño al final. Ni pájaro ni sirena.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Rexán se queda completamente quieto. Deja caer el bastón sin darse cuenta. Lo recoge despacio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Se acabó por hoy.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Intenta sonreír. No lo consigue del todo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Vete al Edificio de los Tejados. Ahora. Despacio pero ya.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Y no pasas por la calle del mercado nocturno.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Dile a Irune que he oído a Zafrán.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Se va en dirección contraria. La cojera se nota más. Calles silenciosas. Puestos cerrando antes. Ventanas apagándose al pasar.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Al subir al Edificio, Sora en la puerta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Pasa. Irune quiere verte.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+    ],
+  );
+
+  /// 2.11 — Sora vuelve a bajar. Amanecer, Sora con bolsa cruzada, va
+  /// contigo al combate. Doc 08 §2.11.
+  static const EscenaCinematica soraVuelveABajar = EscenaCinematica(
+    id: '2.11',
+    titulo: 'Sora vuelve a bajar',
+    flagDeSalida: 'escena_2_11_vista',
+    flagsRequeridos: {'escena_2_10_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Azotea al amanecer. Sora con cazadora gruesa y una bolsa pequeña cruzada al cuerpo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Hoy voy contigo.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No al entrenamiento. Al combate.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Rexán no puede. No debe. Así que voy yo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Irune aparece en la puerta sin cruzar. Asiente a Sora. Desaparece.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Zafrán es un Fragmento Dual muy viejo. Enorme. Vive entre los canales, en la zona más profunda del distrito.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'No ataca todo el tiempo. A veces está dormido años. Y de vez en cuando sale.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'La última vez fue hace dos semanas. Un ruido en el mercado. No fue mucho. Rexán lo contuvo.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'La anterior, hace veinte años, le dejó la pierna como la tiene.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Esta no la aguanta solo. Irune no quiere que vaya él. Voy yo.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Y tú.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Primera mirada sin distancia.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'No porque seas bueno. Porque es tu distrito ahora. Tienes que verlo con tus ojos.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Te quedas atrás. Atacas cuando te digo. No haces nada que no te diga.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.sora,
+        textoPrompt: '¿Vale?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Vale.',
+            textoRespuesta: 'Mm.',
+            flagsAEstablecer: {'sora_zafran_asiento'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Voy a estar bien?',
+            textoRespuesta: 'Mientras me hagas caso, sí.',
+            flagsAEstablecer: {'sora_zafran_miedo'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vale. Vamos.',
+            flagsAEstablecer: {'sora_zafran_silencio'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 2.12 — La noche de Zafrán. Pre-combate. Plaza del pozo. Marca
+  /// vieja de Sora. "Esta es por Rexán." Al terminar esta cinemática,
+  /// el orquestador lanzará el combate jugable de Zafrán (pendiente).
+  /// Doc 08 §2.12.
+  static const EscenaCinematica nocheDeZafran = EscenaCinematica(
+    id: '2.12',
+    titulo: 'La noche de Zafrán',
+    flagDeSalida: 'escena_2_12_vista',
+    flagsRequeridos: {'escena_2_11_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'La parte más profunda y vieja del Barrio. Plaza circular pequeña. Pozo viejo de piedra cubierto con reja oxidada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Aquí.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Sale de ahí.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Cuando salga, será grande. Más que todo lo que has visto.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Va a tener dos valores distintos. Denominadores diferentes. Tú y yo los vamos a fusionar.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Yo uno. Tú otro.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Como en los puentes con Rexán.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Si fallas, no pasa nada. Yo fusiono los dos. Pero va a tardar más. Y va a doler más.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Atrás.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'La reja tiembla. Salta. Emerge Zafrán: altura de una casa, dos cuerpos conectados por una línea de luz densa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Izquierdo 5/7. Derecho 3/11. Cuerpo agrietado en patrones viejos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Un sonido vibrante hace temblar las piedras. La respiración de Sora se acelera. Rabia, no miedo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Hola, Zafrán.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Sí. Me acuerdo.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Saca una marca pequeña del bolsillo. Vieja. Oxidada. Distinta de la del cuello. La aprieta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Esta es por Rexán.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -1654,6 +2120,11 @@ class CatalogoEscenas {
     pintadaRara,
     zafranMencionado,
     dualEnPuente,
+    rexanYElAgua,
+    conocerAAri,
+    silbidoLejano,
+    soraVuelveABajar,
+    nocheDeZafran,
   ];
 
   static EscenaCinematica? porId(String id) {

@@ -235,6 +235,33 @@ void main() {
     },
   );
 
+  test(
+    'Arco 2: 2.8/2.9/2.11/2.12 encadenan; 2.10 latente por FR.16',
+    () {
+      final agua = CatalogoEscenas.porId('2.8');
+      expect(agua!.flagsRequeridos, contains('escena_2_7_vista'));
+
+      final ari = CatalogoEscenas.porId('2.9');
+      expect(ari!.flagsRequeridos, contains('escena_2_8_vista'));
+
+      final silbido = CatalogoEscenas.porId('2.10');
+      expect(silbido!.flagsRequeridos, contains('fr_16_competente'));
+      expect(silbido.flagsRequeridos, contains('escena_2_9_vista'));
+
+      final sora = CatalogoEscenas.porId('2.11');
+      expect(sora!.flagsRequeridos, contains('escena_2_10_vista'));
+
+      final noche = CatalogoEscenas.porId('2.12');
+      expect(noche!.flagsRequeridos, contains('escena_2_11_vista'));
+      expect(
+        noche.esCierreAmable,
+        isFalse,
+        reason:
+            'La 2.12 no cierra: tras ella va el combate de Zafrán.',
+      );
+    },
+  );
+
   test('Arco 2: 2.6 y 2.7 quedan latentes hasta maestría', () {
     final zafran = CatalogoEscenas.porId('2.6');
     expect(zafran!.flagsRequeridos, contains('fr_09_competente'));
@@ -493,6 +520,8 @@ void main() {
         'uroto.flag.escena_2_2_vista': true,
         'uroto.flag.escena_2_3_vista': true,
         'uroto.flag.escena_2_5_vista': true,
+        'uroto.flag.escena_2_8_vista': true,
+        'uroto.flag.escena_2_9_vista': true,
         'uroto.flag.escena_2_16_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
