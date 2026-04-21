@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dominio/habilidad.dart';
+import '../dominio/rango_narrativo.dart';
 
 /// Persistencia mínima del progreso del jugador: en qué noche va y
 /// cuándo abrió la app por última vez. Todo local, sin sincronización,
@@ -13,6 +14,7 @@ class RepositorioProgreso {
   static const _claveYaVioApertura = 'uroto.ya_vio_apertura';
   static const _claveEsquirlasTotal = 'uroto.esquirlas_total';
   static const _claveNombreJugador = 'uroto.nombre_jugador';
+  static const _claveRangoActual = 'uroto.rango_actual';
 
   Future<int> cargarSiguienteNoche() async {
     final prefs = await SharedPreferences.getInstance();
@@ -44,6 +46,18 @@ class RepositorioProgreso {
   Future<void> guardarNombreJugador(String nombre) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_claveNombreJugador, nombre.trim());
+  }
+
+  Future<RangoNarrativo> cargarRango() async {
+    final prefs = await SharedPreferences.getInstance();
+    final guardado = prefs.getInt(_claveRangoActual) ?? 0;
+    final indice = guardado.clamp(0, RangoNarrativo.values.length - 1);
+    return RangoNarrativo.values[indice];
+  }
+
+  Future<void> guardarRango(RangoNarrativo rango) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_claveRangoActual, rango.valor);
   }
 
   Future<DateTime?> cargarUltimaApertura() async {

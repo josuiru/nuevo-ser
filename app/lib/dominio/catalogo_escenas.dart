@@ -666,6 +666,266 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 1.11 — La cena que no se ve. Plaza pequeña, mesa fuera de un bar
+  /// cerrado pero iluminado. Sora y el jugador comen en silencio. Doc 07
+  /// §1.11. Cierre amable: termina en silencio, deja respiración.
+  static const EscenaCinematica laCena = EscenaCinematica(
+    id: '1.11',
+    titulo: 'La cena que no se ve',
+    flagDeSalida: 'escena_1_11_vista',
+    flagsRequeridos: {'escena_1_7_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Plaza pequeña. Mesa fuera de un bar cerrado pero iluminado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Come.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Mastican en silencio. Una pareja pasa riéndose. Sora los mira un instante.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No todo es entrenar.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Aunque lo parezca.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura: 'Sora termina antes. Mira al cielo. Dos lunas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Las dos esta noche.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.sora,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '¿Y cuando no están las dos?',
+            textoRespuesta: 'Eso es otro tema. Come.',
+            flagsAEstablecer: {'cena_pregunta_lunas'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta:
+                'Vamos. Duermes mucho mejor si entrenas antes.',
+            flagsAEstablecer: {'cena_silencio'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Deja unas monedas en la mesa al levantarse.',
+      ),
+    ],
+  );
+
+  /// 1.13 — Las palabras de Irune. Ceremonia de Aprendiz II. Doc 07
+  /// §1.13. Latente hasta que el jugador derrote a Kurz por segunda vez
+  /// (`escena_1_12_vista`) y haya alcanzado el rango Aprendiz II.
+  static const EscenaCinematica palabrasDeIrune = EscenaCinematica(
+    id: '1.13',
+    titulo: 'Las palabras de Irune',
+    flagDeSalida: 'escena_1_13_vista',
+    flagsRequeridos: {
+      'escena_1_12_vista',
+      'rango_aprendiz_ii_alcanzado',
+    },
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'La sala de Irune. La luz más cálida que la primera vez.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Siéntate.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'No te voy a felicitar. Sora tampoco. No es nuestro estilo.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Pero lo que has hecho es real.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'La gente habla de rangos como si fueran diplomas. No lo son. Son responsabilidades.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Ahora eres Aprendiz II. Eso quiere decir que puedes salir del Edificio de los Tejados sin que Sora vaya detrás.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Vas a hacerte amigos, enemigos, dudas. Sobre todo dudas.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Mañana puedes bajar a los Canales. Si quieres. O no. Tú decides.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Y una cosa más.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Hace mucho que no ponía una marca de Aprendiz II.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Silencio. Irune deja respirar la frase un momento largo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Me alegro de que vuelva a haber alguien que la merezca.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Te pone una marca plateada al cuello. Una cuerda fina. Frío al principio, luego templada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bienvenido, Aprendiz II.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Ya puedes irte. Duerme.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoCierreAmable(),
+    ],
+  );
+
+  /// 1.14 — Los Canales desde arriba. Cierre del Arco I. Doc 07 §1.14.
+  /// Sora regala su brújula vieja al jugador (objeto narrativo que
+  /// reaparecerá en el Arco IV).
+  static const EscenaCinematica canalesDesdeArriba = EscenaCinematica(
+    id: '1.14',
+    titulo: 'Los Canales desde arriba',
+    flagDeSalida: 'escena_1_14_vista',
+    flagsRequeridos: {'escena_1_13_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Borde de la azotea. Sora sentada con las piernas colgando, sin miedo. Mira al norte.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Abajo, los Canales: puentes pequeños iluminados, reflejos amarillos en el agua. Una ciudad dentro de la ciudad.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Siéntate.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Allí vas a ir mañana.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Los Canales.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Maestro Rexán.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Va a caerte bien. Es el tipo más simpático de la orden. No te fíes del todo — lo usa.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Tiene una cojera. No preguntes por ella.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Algún día te lo contará. O no. Ya verás.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Tienes que ir solo. Yo te esperaré aquí.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Sí. Solo.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No te asustes. Rexán es buena gente. Y tú ya no eres tan nuevo.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Sora saca una pequeña brújula de bolsillo. No mágica. Solo una brújula.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Toma. Era mía cuando empecé aquí.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Devuélvemela cuando vuelvas.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Mira otra vez hacia los Canales. Viento. Fundido lento.',
+      ),
+      PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -675,6 +935,9 @@ class CatalogoEscenas {
     primeraDerrota,
     kaiVistoDeLejos,
     losPlenos,
+    laCena,
+    palabrasDeIrune,
+    canalesDesdeArriba,
   ];
 
   static EscenaCinematica? porId(String id) {

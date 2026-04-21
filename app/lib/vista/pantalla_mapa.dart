@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/catalogo_distritos.dart';
 import '../dominio/distrito.dart';
+import '../dominio/rango_narrativo.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'pantalla_caza.dart';
@@ -26,6 +27,7 @@ class _PantallaMapaState extends State<PantallaMapa>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controladorCielo;
   int _esquirlas = 0;
+  RangoNarrativo _rango = RangoNarrativo.aprendiz1;
   bool _cargado = false;
 
   @override
@@ -46,9 +48,11 @@ class _PantallaMapaState extends State<PantallaMapa>
 
   Future<void> _cargar() async {
     final total = await widget.repositorio.cargarEsquirlas();
+    final rango = await widget.repositorio.cargarRango();
     if (!mounted) return;
     setState(() {
       _esquirlas = total;
+      _rango = rango;
       _cargado = true;
     });
   }
@@ -98,7 +102,10 @@ class _PantallaMapaState extends State<PantallaMapa>
                         );
                       },
                       behavior: HitTestBehavior.opaque,
-                      child: _Encabezado(esquirlas: _esquirlas),
+                      child: _Encabezado(
+                        esquirlas: _esquirlas,
+                        rango: _rango,
+                      ),
                     ),
                     Expanded(
                       child: _cargado
@@ -124,8 +131,9 @@ class _PantallaMapaState extends State<PantallaMapa>
 
 class _Encabezado extends StatelessWidget {
   final int esquirlas;
+  final RangoNarrativo rango;
 
-  const _Encabezado({required this.esquirlas});
+  const _Encabezado({required this.esquirlas, required this.rango});
 
   @override
   Widget build(BuildContext contexto) {
@@ -133,14 +141,29 @@ class _Encabezado extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 4),
       child: Row(
         children: [
-          const Text(
-            'UNO ROTO',
-            style: TextStyle(
-              fontSize: 14,
-              letterSpacing: 5,
-              color: PaletaNeon.textoTenue,
-              fontWeight: FontWeight.w300,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'UNO ROTO',
+                style: TextStyle(
+                  fontSize: 14,
+                  letterSpacing: 5,
+                  color: PaletaNeon.textoTenue,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                rango.nombreVisible,
+                style: TextStyle(
+                  fontSize: 11,
+                  letterSpacing: 2.5,
+                  color: PaletaNeon.violetaNeon.withOpacity(0.85),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           ),
           const Spacer(),
           Container(

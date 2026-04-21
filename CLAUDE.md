@@ -77,6 +77,12 @@ uno-roto/
   Cadena: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 (cierre) → 1.7 (cierre) → [latente: 1.9 cuando FR.05 competente].
 - **Escenas pendientes** (requieren combate jugable o sistema de rangos): 1.8 (variantes entrenamiento), 1.10 (2ª derrota Kurz), 1.11 (cena silenciosa), 1.12 (Kurz vencido), 1.13 (ceremonia Aprendiz II), 1.14 (Canales desde arriba).
 - **Conexión motor → flags narrativos**: `MotorMaestria.alSubirNivel` callback se invoca cuando una habilidad sube de nivel estricto. `MotorMaestria.flagDeMaestria(id, nivel)` produce flags estables tipo `fr_05_competente`. `pantalla_caza.dart` engancha el callback al repositorio. La escena 1.9 se desbloquea automáticamente cuando el niño domina FR.05.
+- **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Disparador provisional `rangoSegunEsquirlas(int)` con umbrales 0/30/100/250 — proxy hasta que tengamos hitos pedagógicos/narrativos reales. `pantalla_caza` verifica subida tras cada esquirla ganada y activa el flag.
+- **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO".
+- Escenas adicionales del Arco 1:
+  - **1.11 La cena que no se ve** (cierre amable, requiere 1.7).
+  - **1.13 Las palabras de Irune** (latente, requiere `escena_1_12_vista` + `rango_aprendiz_ii_alcanzado`). Termina con `PlanoCierreAmable`.
+  - **1.14 Los Canales desde arriba** (latente, requiere 1.13). Cierre del Arco I con HASTA MAÑANA explícito.
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.

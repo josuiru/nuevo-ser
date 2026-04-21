@@ -11,6 +11,7 @@ import '../dominio/fragmento_en_tejado.dart';
 import '../dominio/generador_caza.dart';
 import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
+import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
@@ -220,6 +221,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         _esquirlasTotal += esquirlasGanadas;
       });
       await widget.repositorio.guardarEsquirlas(_esquirlasTotal);
+      await _verificarSubidaDeRango();
       _comentarTrasCaptura();
     } else {
       _mostrarLineaAmbienteSora('Ya volverá otro.');
@@ -323,6 +325,19 @@ class _PantallaCazaState extends State<PantallaCaza>
       if (p.etiqueta == etiqueta) return p;
     }
     return null;
+  }
+
+  /// Comprueba si el total acumulado de esquirlas implica subir de
+  /// rango y, si es así, lo persiste y activa el flag narrativo
+  /// correspondiente para que las escenas reaccionen.
+  Future<void> _verificarSubidaDeRango() async {
+    final actual = await widget.repositorio.cargarRango();
+    final segunEsquirlas = rangoSegunEsquirlas(_esquirlasTotal);
+    if (segunEsquirlas.valor > actual.valor) {
+      await widget.repositorio.guardarRango(segunEsquirlas);
+      await widget.repositorio
+          .activarFlagNarrativo(segunEsquirlas.flagAlcanzado);
+    }
   }
 
   /// Registra el intento contra el motor de maestría. Silencioso: si

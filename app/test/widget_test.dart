@@ -6,6 +6,7 @@ import 'package:uno_roto/dominio/catalogo_escenas.dart';
 import 'package:uno_roto/dominio/habilidad.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
+import 'package:uno_roto/dominio/rango_narrativo.dart';
 import 'package:uno_roto/main.dart';
 import 'package:uno_roto/vista/pantalla_cinematica.dart';
 
@@ -117,6 +118,43 @@ void main() {
     expect(subidas.length >= tamanoAntes, isTrue);
   });
 
+  test('rangoSegunEsquirlas devuelve el rango por umbrales', () {
+    expect(rangoSegunEsquirlas(0), RangoNarrativo.aprendiz1);
+    expect(rangoSegunEsquirlas(29), RangoNarrativo.aprendiz1);
+    expect(rangoSegunEsquirlas(30), RangoNarrativo.aprendiz2);
+    expect(rangoSegunEsquirlas(99), RangoNarrativo.aprendiz2);
+    expect(rangoSegunEsquirlas(100), RangoNarrativo.aprendiz3);
+    expect(rangoSegunEsquirlas(249), RangoNarrativo.aprendiz3);
+    expect(rangoSegunEsquirlas(250), RangoNarrativo.iniciado);
+    expect(rangoSegunEsquirlas(99999), RangoNarrativo.iniciado);
+  });
+
+  test('Cada rango tiene su flagAlcanzado estable', () {
+    expect(
+      RangoNarrativo.aprendiz2.flagAlcanzado,
+      'rango_aprendiz_ii_alcanzado',
+    );
+    expect(
+      RangoNarrativo.iniciado.flagAlcanzado,
+      'rango_iniciado_alcanzado',
+    );
+  });
+
+  test('Las escenas 1.13 y 1.14 quedan latentes hasta sus prereqs', () {
+    final irune = CatalogoEscenas.porId('1.13');
+    expect(irune!.flagsRequeridos, contains('escena_1_12_vista'));
+    expect(
+      irune.flagsRequeridos,
+      contains('rango_aprendiz_ii_alcanzado'),
+    );
+    expect(irune.esCierreAmable, isTrue);
+
+    final canales = CatalogoEscenas.porId('1.14');
+    expect(canales!.flagsRequeridos, contains('escena_1_13_vista'));
+    expect(canales.esCierreAmable, isTrue);
+    expect(canales.planos.last, isA<PlanoCierreAmable>());
+  });
+
   test('La 1.9 Los Plenos queda latente hasta fr_05_competente', () {
     final plenos = CatalogoEscenas.porId('1.9');
     expect(plenos, isNotNull);
@@ -177,6 +215,7 @@ void main() {
         'uroto.flag.escena_1_5_vista': true,
         'uroto.flag.escena_1_6_vista': true,
         'uroto.flag.escena_1_7_vista': true,
+        'uroto.flag.escena_1_11_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();
