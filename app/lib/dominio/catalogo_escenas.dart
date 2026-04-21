@@ -4433,6 +4433,720 @@ class CatalogoEscenas {
     ],
   );
 
+  /// 4.9a — Prueba de Fuego. Post-combate vs Vorax. Sin palabras
+  /// durante. Doc 10 §4.9a. El combate jugable se lanza desde el
+  /// orquestador tras la 4.8f; esta escena se dispara al terminar.
+  static const EscenaCinematica pruebaFuego = EscenaCinematica(
+    id: '4.9f',
+    titulo: 'Prueba de Fuego',
+    flagDeSalida: 'prueba_completada',
+    flagsRequeridos: {'combate_vorax_completado'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Azotea. Seis maestros. Sora. Kai. Ari. Ninguno habla durante el combate. Vorax se retira hacia arriba como Zafrán.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
+  /// 4.9b — Prueba de Sendero. Recorrido por la ciudad solo.
+  /// Narrado; cuatro tramos simbólicos. Doc 10 §4.9b.
+  static const EscenaCinematica pruebaSendero = EscenaCinematica(
+    id: '4.9s',
+    titulo: 'Prueba de Sendero',
+    flagDeSalida: 'prueba_completada',
+    flagsRequeridos: {'escena_4_8_sendero_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Prueba de Sendero.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Esta noche vas a recorrer la ciudad. Cuatro distritos. Una prueba en cada uno.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'En cada distrito te espera un Fragmento distinto, diseñado por el maestro correspondiente.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Nadie te va a acompañar. Nadie te va a ayudar.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Empiezas en los Canales.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura:
+            'Canales. Niebla baja. Un Fragmento Espejo 5/10 esperando. Lo emparejas con 1/2. Silencio.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura:
+            'Industria. Luz gris. Un Fragmento con unidades que no cuadran: 1,2 kg más 800 g. Un punto dos kilos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura:
+            'Mercado. Puestos cerrando. Un Fragmento con 40 manzanas y una pregunta: el 25% son rojas. Diez rojas.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura:
+            'Afueras. Observatorio. Un Fragmento con una tendencia: tres meses subiendo 5. Lo que viene ya lo sabes.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Subes al Edificio de los Tejados antes del amanecer. Irune en la puerta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
+  /// 4.9c — Prueba de Espejo. Niko (IA) sentado enfrente. Dos
+  /// ejercicios pedagógicos. Doc 10 §4.9c. El tipo de respuesta del
+  /// jugador diferencia `espejo_pasada_fuerte` vs
+  /// `espejo_pasada_debil` (el guion distingue entre "enseñar" y
+  /// "resolver"). Ambas pasan la Prueba.
+  static const EscenaCinematica pruebaEspejo = EscenaCinematica(
+    id: '4.9e',
+    titulo: 'Prueba de Espejo',
+    flagDeSalida: 'prueba_completada',
+    flagsRequeridos: {'escena_4_8_espejo_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Sala de Irune. Cerrada. Luz tenue. Dos sillas frente a frente. Irune sale. Niko sentado enfrente.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Pelo que te recuerda a alguien. Un gesto que no sabes por qué reconoces.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: 'Hola.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: 'Tengo que aprender contigo.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: 'Irune me ha dicho que me vas a ayudar.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Ejercicio 1: 2/3 + 1/5 = ? Niko ha puesto 3/8 (sumando numeradores y denominadores).',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: 'No entiendo por qué está mal.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.aprendizNiko,
+        opciones: [
+          OpcionEleccion(
+            textoJugador:
+                'La respuesta es 13/15. Te la apuntas y vamos a otra.',
+            textoRespuesta: 'Vale, gracias.',
+            flagsAEstablecer: {'espejo_pasada_debil'},
+          ),
+          OpcionEleccion(
+            textoJugador:
+                '¿Es más o menos que medio, un tercio más un quinto?',
+            textoRespuesta:
+                'Más. Porque un tercio ya es casi medio. ¡Ah!',
+            flagsAEstablecer: {'espejo_pasada_fuerte'},
+          ),
+          OpcionEleccion(
+            textoJugador:
+                'Los números de abajo no son iguales. ¿Los trozos son iguales?',
+            textoRespuesta: 'No. ¡Ah!',
+            flagsAEstablecer: {'espejo_pasada_fuerte'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Niko calcula por su cuenta. Se pasa la mano por el pelo hacia atrás dos veces.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: '13/15. ¿Así está bien?',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura: 'Ejercicio 2: 35% de 80 = ?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto:
+            'Sé que es algo así como 30. Pero no sé cómo pensarlo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.aprendizNiko,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Son 28. Ya está.',
+            textoRespuesta: 'Vale. 28.',
+            flagsAEstablecer: {'espejo_ej2_debil'},
+          ),
+          OpcionEleccion(
+            textoJugador:
+                'Si 10% de 80 son 8, ¿cuánto sería 30%?',
+            textoRespuesta: '24. Y 5% son 4. ¡28!',
+            flagsAEstablecer: {'espejo_ej2_fuerte'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Se pasa la mano por el pelo otra vez. Dos veces. Como Sora cuando se concentra.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: 'Gracias.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto:
+            'Irune me dijo que si alguien te explicaba esto bien, lo ibas a recordar siempre.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aprendizNiko,
+        texto: 'Tú me lo explicaste bien.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Irune entra.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Se acabó.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Niko se va por una puerta que no habías visto. "Hasta mañana."',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Sora te espera fuera.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+    ],
+  );
+
+  /// 4.10 — La ceremonia. Azotea, amanecer. Todos los maestros. Cinco
+  /// "Bien". Sora dice "Gracias." dos veces. Doc 10 §4.10.
+  static const EscenaCinematica ceremonia = EscenaCinematica(
+    id: '4.10',
+    titulo: 'La ceremonia',
+    flagDeSalida: 'escena_4_10_vista',
+    flagsRequeridos: {'prueba_completada'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2800),
+        textoLectura:
+            'Azotea, amanecer empezando. Todos los maestros en semicírculo. Sora entre ellos pero un paso atrás. Kai y Ari junto a la escalera.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Repite conmigo.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Prometo buscar el Uno que fue.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Repites.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Prometo proteger el mundo que queda.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Repites.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Prometo no pretender nunca que sé más de lo que sé.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Repites.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Saca una marca nueva — más grande, plata clara, símbolo de la orden en relieve. Te cambia la del cuello.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bienvenido, Fraccionista.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Hace mucho que no ponía una de estas.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Cada maestro da un paso adelante y dice su palabra antigua:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vadic,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.brina,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Cinco "bien" con cinco voces distintas. Hermoso sin necesitar más.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Sora.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Sora da un paso adelante. Frente a ti. Silencio de tres segundos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Gracias.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'En serio. Gracias.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'La palabra dicha dos veces. Enorme para Sora. Se aparta al borde del semicírculo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Por hoy está.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
+  /// 4.11 — Rexán y el té. Esquina apartada. Marca vieja y desteñida.
+  /// Doc 10 §4.11.
+  static const EscenaCinematica rexanYElTe = EscenaCinematica(
+    id: '4.11',
+    titulo: 'Rexán y el té',
+    flagDeSalida: 'escena_4_11_vista',
+    flagsRequeridos: {'escena_4_10_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Esquina apartada de la azotea. Dos vasos pequeños humeantes.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Bébelo caliente.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'A ver, a ver.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Te ha tocado llevarme en este año.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Has sido muy buen aprendiz.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Ya no eres mi aprendiz. Ahora eres mi colega.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Si alguna vez quieres bajar a los Canales solo para hablar, me avisas.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Yo estaré.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Saca una pequeña marca vieja, muy desteñida.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto:
+            'Era la primera marca de Fraccionista que me pusieron.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Ya tengo otras con más filetes azules.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Pero esta es la primera.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.rexan,
+        texto: 'Cuida la tuya, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+    ],
+  );
+
+  /// 4.12 — Kai, lejos. Kai apoyado en un respiradero solo. Primera
+  /// vez que dice "enhorabuena". Doc 10 §4.12.
+  static const EscenaCinematica kaiLejos = EscenaCinematica(
+    id: '4.12',
+    titulo: 'Kai, lejos',
+    flagDeSalida: 'escena_4_12_vista',
+    flagsRequeridos: {'escena_4_11_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Otra parte de la azotea. Kai apoyado en un respiradero, solo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Hombre.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Fraccionista.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Va delante, mira.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura:
+            'Se señala a sí mismo. Sigue siendo Iniciado III. Tú ahora un rango por encima.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Yo lo soy en unos meses. Si no me distraigo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Oye.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto:
+            'Lo de mi padre sigue en pie. Cuando me recuperes como colega, hablamos.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Enhorabuena, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura:
+            'Asiente una sola vez. Forma máxima de reconocimiento. Primera vez que dice "enhorabuena".',
+      ),
+    ],
+  );
+
+  /// 4.13 — Sora en el borde. Reveal completo de su origen: Kir.
+  /// Doc 10 §4.13. Momento más importante del MVP.
+  static const EscenaCinematica soraEnElBorde = EscenaCinematica(
+    id: '4.13',
+    titulo: 'Sora en el borde',
+    flagDeSalida: 'escena_4_13_vista',
+    flagsRequeridos: {'escena_4_12_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2800),
+        textoLectura:
+            'Todos se han ido. Sora sentada en el borde norte, piernas colgando. Alba avanzada. La ciudad con luz limpia por primera vez. Distritos distinguibles. Montaña al fondo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Bueno.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Lo has hecho.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Te voy a decir una cosa y luego no la digo más.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Yo llegué a Azula hace dos años. Sola.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Mi ciudad se llamaba Kir. Estaba al norte, al borde del mar.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'La palabra KIR queda un instante en el aire. Recuérdala.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'La perdimos.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Yo tenía once años cuando pasó.',
+        pausaPrevia: Duration(milliseconds: 1700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura: 'Silencio muy largo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No entré aquí porque quisiera salvar el mundo.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Entré porque no quería que pasara otra vez.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Eso es todo. Pregúntame otro día si quieres más.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No creo que lo hagas.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1600),
+        textoLectura: 'Media sonrisa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Tú no preguntas. Me gustó desde el principio.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura: 'Gesto hacia la Montaña.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Brina te habló de ella.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ahí sube el que sea Fraccionista Mayor.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Yo tardaré. Tú tardarás más aún, porque empezaste más tarde.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Pero cuando llegue el momento, subimos juntos.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Te lo prometo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'No te prometo que la pelea valga la pena.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Te prometo que te acompaño.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Saca la brújula vieja. Te cierra los dedos sobre ella.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Quédatela.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Ya no la necesito yo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
+  /// 4.14 — La Montaña. Último plano del MVP. Doc 10 §4.14.
+  /// Fundido a blanco, créditos mínimos, HASTA ENTONCES.
+  static const EscenaCinematica laMontanaCierre = EscenaCinematica(
+    id: '4.14',
+    titulo: 'La Montaña',
+    flagDeSalida: 'escena_4_14_vista',
+    flagsRequeridos: {'escena_4_13_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura:
+            'Amanecer completo. La Montaña iluminada con nitidez por primera vez. Rocas. Laderas. Cumbre nevada. Un sendero tenue en un flanco.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura:
+            'Tú y Sora como siluetas pequeñas de espaldas. Viento. Amanecer.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3200),
+        textoLectura: 'Silencio. Fundido a blanco.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura: 'FIN DEL ARCO IV. EL ASCENSO.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura: 'URO UNO ROTO',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura: 'FIN DEL MVP.',
+      ),
+      PlanoCierreAmable(textoBoton: 'HASTA ENTONCES'),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -4495,6 +5209,14 @@ class CatalogoEscenas {
     soraAntesFuego,
     soraAntesSendero,
     soraAntesEspejo,
+    pruebaFuego,
+    pruebaSendero,
+    pruebaEspejo,
+    ceremonia,
+    rexanYElTe,
+    kaiLejos,
+    soraEnElBorde,
+    laMontanaCierre,
   ];
 
   static EscenaCinematica? porId(String id) {

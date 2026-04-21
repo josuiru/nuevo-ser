@@ -142,12 +142,7 @@ class ProgresoArco {
         'escena_4_8_sendero_vista',
         'escena_4_8_espejo_vista',
       ],
-      [
-        'escena_4_9_fuego_vista',
-        'escena_4_9_sendero_vista',
-        'escena_4_9_espejo_vista',
-        'combate_vorax_completado',
-      ],
+      ['prueba_completada'],
       ['escena_4_10_vista'],
       ['escena_4_11_vista'],
       ['escena_4_12_vista'],

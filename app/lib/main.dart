@@ -130,6 +130,11 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     final completoDuel =
         await _repositorio.flagNarrativoActivo('combate_duel_kai_completado');
     if (vio33 && !completoDuel) return DesafioKurz.duelKai;
+    final vio48fuego = await _repositorio
+        .flagNarrativoActivo('escena_4_8_fuego_vista');
+    final completoVorax =
+        await _repositorio.flagNarrativoActivo('combate_vorax_completado');
+    if (vio48fuego && !completoVorax) return DesafioKurz.vorax;
     return null;
   }
 

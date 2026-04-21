@@ -259,6 +259,9 @@ Color _colorHaloDe(DesafioKurz desafio) {
   if (desafio.identificador.startsWith('duel_kai')) {
     return PaletaNeon.rosaAcento;
   }
+  if (desafio.identificador.startsWith('vorax')) {
+    return PaletaNeon.exitoSuave;
+  }
   return PaletaNeon.violetaNeon;
 }
 

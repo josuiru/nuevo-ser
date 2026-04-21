@@ -268,6 +268,59 @@ class DesafioKurz {
     fraseDerrota: 'Buen intento. Otro día te doy la revancha.',
     fraseVictoria: 'Vale. Ya está.',
   );
+
+  /// Combate contra Vorax. Doc 10 §4.9a (Prueba de Fuego).
+  /// Fragmento Impropio 11/4. Silencio absoluto, maestros como
+  /// testigos. Sin vocero humano — narrador describe lo que ves.
+  /// Calibrado a victoria; requiere entender conversión mixto +
+  /// descomposición en cuartos.
+  static const DesafioKurz vorax = DesafioKurz(
+    identificador: 'vorax',
+    nombreFragmento: 'VORAX',
+    vozQueHabla: VozPersonaje.narrador,
+    mostrarOjos: false,
+    secuenciaValores: ['11/4', '2 y 3/4', '3/4', '2/4', '1/4', '—'],
+    kiInicial: 5,
+    segundosPorPregunta: 10,
+    preguntas: [
+      PreguntaKurz(
+        enunciado:
+            '11/4 es Impropio. Conviértelo a número mixto.',
+        opciones: ['1 y 7/4', '2 y 3/4', '3 y 2/4', '4 y 1/4'],
+        indiceCorrecto: 1,
+        fraseFalloKurz: 'Vorax recupera la forma impropia. Respira.',
+      ),
+      PreguntaKurz(
+        enunciado:
+            'Eliminas el 2 entero. ¿Qué parte queda como Fragmento?',
+        opciones: ['1/4', '2/4', '3/4', '4/4'],
+        indiceCorrecto: 2,
+        fraseFalloKurz: 'Vorax tiembla. Descomponer es también parar.',
+      ),
+      PreguntaKurz(
+        enunciado: '3/4 en cuartos: ¿cuántos cuartos son?',
+        opciones: ['2', '3', '4', '6'],
+        indiceCorrecto: 1,
+        fraseFalloKurz:
+            'Vorax se agita. No vayas rápido.',
+      ),
+      PreguntaKurz(
+        enunciado: 'Tras eliminar un cuarto, ¿cuánto queda?',
+        opciones: ['1/4', '2/4', '3/4', '4/4'],
+        indiceCorrecto: 1,
+        fraseFalloKurz: 'Silencio. Otra vez.',
+      ),
+      PreguntaKurz(
+        enunciado: 'Tras eliminar otro cuarto, ¿cuánto queda?',
+        opciones: ['0', '1/4', '2/4', '3/4'],
+        indiceCorrecto: 1,
+        fraseFalloKurz: 'Vorax intenta recuperar la forma impropia.',
+      ),
+    ],
+    fraseAcierto: 'Vorax se encoge un grado más.',
+    fraseDerrota: 'Vorax se retira. Tendrás que volver.',
+    fraseVictoria: 'Vorax se retira hacia arriba. Silencio.',
+  );
 }
 
 class PreguntaKurz {

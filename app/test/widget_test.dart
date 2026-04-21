@@ -321,6 +321,45 @@ void main() {
     expect(espejo!.flagsRequeridos, contains('prueba_elegida_espejo'));
   });
 
+  test('Arco 4: las 3 variantes de 4.9 comparten flagDeSalida', () {
+    final fuego = CatalogoEscenas.porId('4.9f');
+    final sendero = CatalogoEscenas.porId('4.9s');
+    final espejo = CatalogoEscenas.porId('4.9e');
+    expect(fuego!.flagDeSalida, 'prueba_completada');
+    expect(sendero!.flagDeSalida, 'prueba_completada');
+    expect(espejo!.flagDeSalida, 'prueba_completada');
+  });
+
+  test('Arco 4: 4.10→4.11→4.12→4.13→4.14 cierran el MVP', () {
+    final ceremonia = CatalogoEscenas.porId('4.10');
+    expect(ceremonia!.flagsRequeridos, contains('prueba_completada'));
+
+    final rexanTe = CatalogoEscenas.porId('4.11');
+    expect(rexanTe!.flagsRequeridos, contains('escena_4_10_vista'));
+
+    final kaiLejos = CatalogoEscenas.porId('4.12');
+    expect(kaiLejos!.flagsRequeridos, contains('escena_4_11_vista'));
+
+    final soraBorde = CatalogoEscenas.porId('4.13');
+    expect(soraBorde!.flagsRequeridos, contains('escena_4_12_vista'));
+
+    final montana = CatalogoEscenas.porId('4.14');
+    expect(montana!.flagsRequeridos, contains('escena_4_13_vista'));
+    expect(montana.esCierreAmable, isTrue);
+    expect(montana.planos.last, isA<PlanoCierreAmable>());
+    final cierre = montana.planos.last as PlanoCierreAmable;
+    expect(cierre.textoBoton, 'HASTA ENTONCES');
+  });
+
+  test('DesafioKurz.vorax usa al narrador, sin ojos, halo exito', () {
+    const desafio = DesafioKurz.vorax;
+    expect(desafio.identificador, 'vorax');
+    expect(desafio.nombreFragmento, 'VORAX');
+    expect(desafio.vozQueHabla, VozPersonaje.narrador);
+    expect(desafio.mostrarOjos, isFalse);
+    expect(desafio.preguntas.length, 5);
+  });
+
   test('ProgresoArco.arco4 declara 14 escenas', () {
     expect(ProgresoArco.arco4.totalEscenas, 14);
     expect(ProgresoArco.arco4.nombreRomano, 'IV');
@@ -685,6 +724,14 @@ void main() {
         'uroto.flag.escena_4_7_vista': true,
         'uroto.flag.prueba_elegida_fuego': true,
         'uroto.flag.escena_4_8_fuego_vista': true,
+        'uroto.flag.combate_vorax_completado': true,
+        'uroto.flag.victoria_vorax': true,
+        'uroto.flag.prueba_completada': true,
+        'uroto.flag.escena_4_10_vista': true,
+        'uroto.flag.escena_4_11_vista': true,
+        'uroto.flag.escena_4_12_vista': true,
+        'uroto.flag.escena_4_13_vista': true,
+        'uroto.flag.escena_4_14_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();
