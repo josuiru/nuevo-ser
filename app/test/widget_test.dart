@@ -299,6 +299,34 @@ void main() {
     );
   });
 
+  test('Arco 4: apertura 4.1→4.2→4.3→4.4→4.5→4.6→4.7 encadenan', () {
+    final puerto = CatalogoEscenas.porId('4.1');
+    expect(puerto!.flagsRequeridos, contains('escena_3_18_vista'));
+
+    final invitacion = CatalogoEscenas.porId('4.6');
+    expect(invitacion!.flagsRequeridos, contains('escena_4_5_vista'));
+
+    final pruebas = CatalogoEscenas.porId('4.7');
+    expect(pruebas!.flagsRequeridos, contains('escena_4_6_vista'));
+  });
+
+  test('Arco 4: las tres variantes de 4.8 cada una con su flag elegida', () {
+    final fuego = CatalogoEscenas.porId('4.8f');
+    expect(fuego!.flagsRequeridos, contains('prueba_elegida_fuego'));
+
+    final sendero = CatalogoEscenas.porId('4.8s');
+    expect(sendero!.flagsRequeridos, contains('prueba_elegida_sendero'));
+
+    final espejo = CatalogoEscenas.porId('4.8e');
+    expect(espejo!.flagsRequeridos, contains('prueba_elegida_espejo'));
+  });
+
+  test('ProgresoArco.arco4 declara 14 escenas', () {
+    expect(ProgresoArco.arco4.totalEscenas, 14);
+    expect(ProgresoArco.arco4.nombreRomano, 'IV');
+    expect(ProgresoArco.arco4.titulo, 'El ascenso');
+  });
+
   test('Arco 3: cierre 3.14→3.15→3.16→3.17→3.18 (Montaña + Irune)', () {
     final kaiVuelve = CatalogoEscenas.porId('3.14');
     expect(kaiVuelve!.flagsRequeridos, contains('escena_3_13_vista'));
@@ -647,6 +675,16 @@ void main() {
         'uroto.flag.escena_3_16_vista': true,
         'uroto.flag.escena_3_17_vista': true,
         'uroto.flag.escena_3_18_vista': true,
+        // Arco 4 marcado como cerrado.
+        'uroto.flag.escena_4_1_vista': true,
+        'uroto.flag.escena_4_2_vista': true,
+        'uroto.flag.escena_4_3_vista': true,
+        'uroto.flag.escena_4_4_vista': true,
+        'uroto.flag.escena_4_5_vista': true,
+        'uroto.flag.escena_4_6_vista': true,
+        'uroto.flag.escena_4_7_vista': true,
+        'uroto.flag.prueba_elegida_fuego': true,
+        'uroto.flag.escena_4_8_fuego_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

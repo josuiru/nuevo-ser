@@ -3815,6 +3815,624 @@ class CatalogoEscenas {
     ],
   );
 
+  // ============================================================
+  // Arco 4 — El ascenso. Doc 10. Cierre del MVP.
+  // ============================================================
+
+  /// 4.1 — El Puerto otra vez. Oryn introduce multiplicación de
+  /// fracciones. "Una parte de una parte." Doc 10 §4.1.
+  static const EscenaCinematica puertoOtraVez = EscenaCinematica(
+    id: '4.1',
+    titulo: 'El Puerto otra vez',
+    flagDeSalida: 'escena_4_1_vista',
+    flagsRequeridos: {'escena_3_18_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Muelle largo del Puerto. Más niebla que la última vez. Sin Ari.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Hoy empezamos.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Iniciado III. Sí.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto:
+            'Aquí vas a aprender una cosa que parece magia. Multiplicar dos fracciones entre sí.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Dos tercios por tres cuartos.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'El resultado es más pequeño que los dos.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Parece mentira. No lo es.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Cobertizo al final del muelle. Un tablón viejo con cuerdas con nudos. Un dispositivo de entrenamiento casero.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Esto lo hice yo. Hace años.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto:
+            'Cuando multiplicas una fracción por otra, tomas una parte de una parte.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.oryn,
+        textoPrompt:
+            'Si te quedas con la mitad de tres cuartos, ¿cuánto tienes?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '3/4.',
+            textoRespuesta: 'No. La mitad de algo es menos.',
+            flagsAEstablecer: {'oryn_mult_fallo'},
+          ),
+          OpcionEleccion(
+            textoJugador: '3/8.',
+            textoRespuesta:
+                'Tres octavos. Menos que un medio. Menos que tres cuartos. Pero es la mitad de ese tres cuartos.',
+            flagsAEstablecer: {'oryn_mult_acierto'},
+          ),
+          OpcionEleccion(
+            textoJugador: '1/2.',
+            textoRespuesta: 'No. Estás cogiendo la mitad, pero de tres cuartos, no de un entero.',
+            flagsAEstablecer: {'oryn_mult_fallo'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto:
+            'Esto hay que verlo muchas veces para que no parezca raro.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
+  /// 4.2 — El agua recuerda. Silencio de Oryn. Frase única: "vuelve
+  /// aquí si estás perdido". Doc 10 §4.2.
+  static const EscenaCinematica elAguaRecuerda = EscenaCinematica(
+    id: '4.2',
+    titulo: 'El agua recuerda',
+    flagDeSalida: 'escena_4_2_vista',
+    flagsRequeridos: {'escena_4_1_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2800),
+        textoLectura:
+            'Madrugada. El cielo aclara muy despacio. Oryn mira el mar durante tres minutos reales. Tú estás ahí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Hm.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: '{nombre}. Una cosa.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'El agua recuerda.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Silencio de cuatro segundos. La frase respira.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Esa es una de las dos veces en que te lo voy a decir.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto:
+            'Si alguna vez estás perdido, vuelve aquí. No te digo por qué.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Solo vuelve.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.oryn,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Vale.',
+            textoRespuesta: 'Mañana más. Descansa.',
+            flagsAEstablecer: {'oryn_agua_si'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— asentir en silencio —',
+            textoRespuesta: 'Mañana más. Descansa.',
+            flagsAEstablecer: {'oryn_agua_silencio'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 4.3 — La bolsa. Oryn abre por fin su bolsa impermeable. Te da
+  /// una concha. Doc 10 §4.3. Objeto inventariable que Sora
+  /// reconocerá.
+  static const EscenaCinematica laBolsa = EscenaCinematica(
+    id: '4.3',
+    titulo: 'La bolsa',
+    flagDeSalida: 'escena_4_3_vista',
+    flagsRequeridos: {'escena_4_2_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Oye.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Abre la bolsa impermeable que nunca abre delante de nadie. Saca una concha plana pulida con un agujero natural y un hilo fino.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Toma.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'No vale nada. Pero la llevo mucho tiempo.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.oryn,
+        texto: 'Ahora la llevas tú.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Cierra la bolsa. Entra al cobertizo. Cierra la puerta.',
+      ),
+    ],
+  );
+
+  /// 4.4 — Tercera pintada. Muro de Afueras. Frase nueva + tachada.
+  /// Completa el manifiesto Opaco (tres pintadas). Doc 10 §4.4.
+  static const EscenaCinematica terceraPintada = EscenaCinematica(
+    id: '4.4',
+    titulo: 'Una tercera pintada',
+    flagDeSalida: 'escena_4_4_vista',
+    flagsRequeridos: {'escena_4_3_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Muro exterior al borde de Afueras. La misma mano que las dos anteriores.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura: 'Frase nueva: "En la parte está la libertad."',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Debajo, otra pintura más reciente, distinta, tachando la primera: "La parte sola no libra a nadie."',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Las dos frases coexisten. Alguien ha respondido.',
+      ),
+    ],
+  );
+
+  /// 4.5 — Eco otra vez, casi. Silencio. No aparece. Doc 10 §4.5.
+  static const EscenaCinematica ecoCasi = EscenaCinematica(
+    id: '4.5',
+    titulo: 'Eco otra vez, casi',
+    flagDeSalida: 'escena_4_5_vista',
+    flagsRequeridos: {'escena_4_4_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2600),
+        textoLectura:
+            'Un callejón parecido al de la primera vez. El mundo baja de volumen otra vez.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 3000),
+        textoLectura: 'Pero nada aparece.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 4000),
+        textoLectura: 'Silencio. Quince segundos. Te quedas quieto.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'El sonido vuelve. Sin explicación. Sientes que Eco estuvo a punto.',
+      ),
+    ],
+  );
+
+  /// 4.6 — Irune: la invitación. Plato de pastas. "Estás listo para
+  /// la Prueba." Doc 10 §4.6.
+  static const EscenaCinematica iruneInvitacion = EscenaCinematica(
+    id: '4.6',
+    titulo: 'Irune: la invitación',
+    flagDeSalida: 'escena_4_6_vista',
+    flagsRequeridos: {'escena_4_5_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Sala de Irune. Un plato de pastas pequeñas — nunca las había sacado antes. Dos tazas de té.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Toma.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Te he llamado porque ha llegado el momento.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Estás listo para la Prueba.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'No significa que sepas todo lo que tienes que saber. Significa que ya puedes demostrar lo que sabes.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'La diferencia es fina. Es real.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Puedes decir que no. Puedes esperar unos meses. No te voy a presionar.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Pero si dices que sí, te explico las tres formas.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.irune,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Sí.',
+            textoRespuesta: 'Bien. Escucha.',
+            flagsAEstablecer: {'ascension_acepta'},
+          ),
+          OpcionEleccion(
+            textoJugador: '¿Qué tres formas?',
+            textoRespuesta: 'Siéntate y te las explico.',
+            flagsAEstablecer: {'ascension_pregunta'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 4.7 — Las tres pruebas. Irune explica Fuego / Sendero / Espejo.
+  /// El jugador elige. Doc 10 §4.7.
+  static const EscenaCinematica tresPruebas = EscenaCinematica(
+    id: '4.7',
+    titulo: 'Las tres pruebas',
+    flagDeSalida: 'escena_4_7_vista',
+    flagsRequeridos: {'escena_4_6_vista'},
+    planos: [
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Tres Pruebas. Tú eliges una.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Primera. Prueba de Fuego. Combate contra un Fragmento representativo de tu rango. Sin ayudas, sin Sora. Tú solo.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Es la más rápida. Tres minutos, cuatro. Intensa.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Para los que tienen confianza en su cuerpo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Segunda. Prueba de Sendero. Serie larga de Fragmentos, todos los tipos, con margen de error limitado. Mide tu fluidez.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Es la más lenta. Veinte minutos. Meditativa.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Para los que tienen paciencia.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Tercera. Prueba de Espejo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Tienes que enseñar a alguien más joven que tú. Un Fraccionista que está donde tú estabas hace un año.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Te enfrentas a sus fallos. Le ayudas a resolverlos. Le haces preguntas, no le das respuestas.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Mide si entiendes lo que has aprendido. Si puedes explicarlo a otro.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto: 'Es la más difícil. Y la más importante, para muchos.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.irune,
+        texto:
+            'Las tres valen lo mismo. Ninguna es superior a las otras. Elige.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.irune,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Fuego.',
+            textoRespuesta: 'Bien. Mañana. Aquí. Después de cenar.',
+            flagsAEstablecer: {'prueba_elegida_fuego'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Sendero.',
+            textoRespuesta: 'Bien. Mañana. Aquí. Después de cenar.',
+            flagsAEstablecer: {'prueba_elegida_sendero'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Espejo.',
+            textoRespuesta: 'Bien. Mañana. Aquí. Después de cenar.',
+            flagsAEstablecer: {'prueba_elegida_espejo'},
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// 4.8 Fuego — Sora antes del duelo de Fuego. Doc 10 §4.8.
+  static const EscenaCinematica soraAntesFuego = EscenaCinematica(
+    id: '4.8f',
+    titulo: 'Sora antes — Fuego',
+    flagDeSalida: 'escena_4_8_fuego_vista',
+    flagsRequeridos: {'escena_4_7_vista', 'prueba_elegida_fuego'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Azotea. Sora de pie con los brazos cruzados. Te estaba esperando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: '¿Cuál?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1200),
+        textoLectura: 'Dices: Fuego.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Clásica. Bien.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Solo una cosa. No vayas rápido. No es una carrera. La velocidad se entiende mal.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Respira en los cambios. Descomponer es también parar.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Suerte, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Cenamos. Luego entras.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 4.8 Sendero — variante. Doc 10 §4.8.
+  static const EscenaCinematica soraAntesSendero = EscenaCinematica(
+    id: '4.8s',
+    titulo: 'Sora antes — Sendero',
+    flagDeSalida: 'escena_4_8_sendero_vista',
+    flagsRequeridos: {'escena_4_7_vista', 'prueba_elegida_sendero'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Azotea. Sora de pie con los brazos cruzados. Te estaba esperando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: '¿Cuál?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1200),
+        textoLectura: 'Dices: Sendero.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Paciente. Bien.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Es la que hice yo.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Si te cansas a mitad, no te pares del todo. Cambia de ritmo. Descansa mientras sigues.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Suerte, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Cenamos. Luego entras.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 4.8 Espejo — Sora se abre un punto más. No cena con el niño esta
+  /// noche (encargo de Irune). Doc 10 §4.8.
+  static const EscenaCinematica soraAntesEspejo = EscenaCinematica(
+    id: '4.8e',
+    titulo: 'Sora antes — Espejo',
+    flagDeSalida: 'escena_4_8_espejo_vista',
+    flagsRequeridos: {'escena_4_7_vista', 'prueba_elegida_espejo'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Azotea. Sora de pie con los brazos cruzados. Te estaba esperando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: '¿Cuál?',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura:
+            'Dices: Espejo. Sora se queda callada dos segundos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Esa es la más personal.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Ten cuidado con lo que le dices al otro. A veces se te escapan cosas que no sabías que pensabas.',
+        pausaPrevia: Duration(milliseconds: 1600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto:
+            'Y a veces... el otro se parece a alguien que no esperas.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Silencio. Sora nunca había sido tan explícita. No te mira directo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Suerte, {nombre}.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Tengo que hacer un encargo. Te alcanzo al final.',
+        pausaPrevia: Duration(milliseconds: 1400),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -3866,6 +4484,17 @@ class CatalogoEscenas {
     conocerABrina,
     laMontanaSeNombra,
     iruneAlFondo,
+    // Arco 4.
+    puertoOtraVez,
+    elAguaRecuerda,
+    laBolsa,
+    terceraPintada,
+    ecoCasi,
+    iruneInvitacion,
+    tresPruebas,
+    soraAntesFuego,
+    soraAntesSendero,
+    soraAntesEspejo,
   ];
 
   static EscenaCinematica? porId(String id) {

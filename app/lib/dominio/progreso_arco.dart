@@ -123,16 +123,51 @@ class ProgresoArco {
     ],
   );
 
+  /// Arco 4 — El ascenso (doc 10). 16 escenas. Cierre del MVP.
+  /// La 4.8 y la 4.9 tienen tres ramas por elección del jugador
+  /// (Fuego / Sendero / Espejo); cualquier rama cuenta.
+  static const ProgresoArco arco4 = ProgresoArco(
+    nombreRomano: 'IV',
+    titulo: 'El ascenso',
+    flagsPorEscena: [
+      ['escena_4_1_vista'],
+      ['escena_4_2_vista'],
+      ['escena_4_3_vista'],
+      ['escena_4_4_vista'],
+      ['escena_4_5_vista'],
+      ['escena_4_6_vista'],
+      ['escena_4_7_vista'],
+      [
+        'escena_4_8_fuego_vista',
+        'escena_4_8_sendero_vista',
+        'escena_4_8_espejo_vista',
+      ],
+      [
+        'escena_4_9_fuego_vista',
+        'escena_4_9_sendero_vista',
+        'escena_4_9_espejo_vista',
+        'combate_vorax_completado',
+      ],
+      ['escena_4_10_vista'],
+      ['escena_4_11_vista'],
+      ['escena_4_12_vista'],
+      ['escena_4_13_vista'],
+      ['escena_4_14_vista'],
+    ],
+  );
+
   /// Arcos disponibles, en orden canónico. El HUD elige el arco
   /// actual como el primero con al menos una escena completa cuyo
   /// predecesor esté cerrado — o el arco1 si no se ha empezado nada.
-  static const List<ProgresoArco> todos = [arco1, arco2, arco3];
+  static const List<ProgresoArco> todos = [arco1, arco2, arco3, arco4];
 
   /// Decide qué arco mostrar en el HUD: el más avanzado con al menos
   /// una escena vista. Sin flags → Arco 1.
   static Future<ProgresoArco> arcoActual(
     Future<bool> Function(String flag) flagActivo,
   ) async {
+    final vistasArco4 = await arco4.contarVistas(flagActivo);
+    if (vistasArco4 > 0) return arco4;
     final vistasArco3 = await arco3.contarVistas(flagActivo);
     if (vistasArco3 > 0) return arco3;
     final vistasArco2 = await arco2.contarVistas(flagActivo);
