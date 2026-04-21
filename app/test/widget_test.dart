@@ -282,6 +282,43 @@ void main() {
     expect(dual.flagsRequeridos, contains('escena_2_6_vista'));
   });
 
+  test('Arco 3: 3.1/3.2/3.3/3.5 encadenan; duelo Kai entre 3.3 y 3.5', () {
+    final naini = CatalogoEscenas.porId('3.1');
+    expect(naini!.flagsRequeridos, contains('escena_2_16_vista'));
+
+    final mercado = CatalogoEscenas.porId('3.2');
+    expect(mercado!.flagsRequeridos, contains('escena_3_1_vista'));
+
+    final kai = CatalogoEscenas.porId('3.3');
+    expect(kai!.flagsRequeridos, contains('escena_3_2_vista'));
+
+    final desaparece = CatalogoEscenas.porId('3.5');
+    expect(
+      desaparece!.flagsRequeridos,
+      contains('combate_duel_kai_completado'),
+    );
+  });
+
+  test('DesafioKurz.duelKai usa a Kai como voz, sin ojos, halo rosa', () {
+    const desafio = DesafioKurz.duelKai;
+    expect(desafio.identificador, 'duel_kai');
+    expect(desafio.nombreFragmento, 'KAI');
+    expect(desafio.vozQueHabla, VozPersonaje.kai);
+    expect(desafio.mostrarOjos, isFalse);
+    expect(desafio.preguntas.length, 3);
+  });
+
+  test('ProgresoArco.arco3 declara 18 escenas', () {
+    expect(ProgresoArco.arco3.totalEscenas, 18);
+    expect(ProgresoArco.arco3.nombreRomano, 'III');
+  });
+
+  test('arcoActual prioriza Arco 3 sobre 2 cuando hay progreso', () async {
+    final activos = {'escena_3_1_vista', 'escena_2_1_vista'};
+    Future<bool> enSet(String f) async => activos.contains(f);
+    expect(await ProgresoArco.arcoActual(enSet), ProgresoArco.arco3);
+  });
+
   test('Arco 2: escenas 2.1/2.2/2.3 se encadenan tras 1.14', () {
     final bajar = CatalogoEscenas.porId('2.1');
     expect(bajar, isNotNull);
@@ -541,6 +578,13 @@ void main() {
         'uroto.flag.escena_2_14_vista': true,
         'uroto.flag.escena_2_15_vista': true,
         'uroto.flag.escena_2_16_vista': true,
+        // Arco 3 marcado como cerrado para que el orquestador vaya al mapa.
+        'uroto.flag.escena_3_1_vista': true,
+        'uroto.flag.escena_3_2_vista': true,
+        'uroto.flag.escena_3_3_vista': true,
+        'uroto.flag.combate_duel_kai_completado': true,
+        'uroto.flag.victoria_duel_kai': true,
+        'uroto.flag.escena_3_5_vista': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
       await tester.pump();

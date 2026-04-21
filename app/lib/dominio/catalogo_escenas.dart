@@ -2384,6 +2384,306 @@ class CatalogoEscenas {
     ],
   );
 
+  // ============================================================
+  // Arco 3 — La ciudad entera. Doc 09.
+  // ============================================================
+
+  /// 3.1 — Naini. Entrada al Mercado de la Luz. Primera maestra que
+  /// saluda con alegría explosiva. Introduce proporciones y porcentajes
+  /// como "valor en circulación". Doc 09 §3.1.
+  static const EscenaCinematica conocerANaini = EscenaCinematica(
+    id: '3.1',
+    titulo: 'Naini',
+    flagDeSalida: 'escena_3_1_vista',
+    flagsRequeridos: {'escena_2_16_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2400),
+        textoLectura:
+            'Portón alto iluminado. Una explosión de luz, sonido y olor al cruzarlo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: '¡Qué bueno verte!',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Soy Naini. Maestra del Mercado. Aunque aquí casi todos me llaman Naini a secas.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Iniciado, ¿eh? Pues venga. Pasa, pasa. Te cuento.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Fragmentos silvestres flotan entre la gente sin alarma.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'El Mercado es distinto. Aquí los Fragmentos no son enemigos todo el rato. Son valor en circulación.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.naini,
+        textoPrompt: '¿Tú has hecho alguna vez un trueque?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Sí.',
+            textoRespuesta: 'Vale. Entonces ya medio entiendes.',
+            flagsAEstablecer: {'naini_trueque_si'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'No.',
+            textoRespuesta: 'Pues lo vas a hacer hoy.',
+            flagsAEstablecer: {'naini_trueque_no'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Aquí se cambia una cosa por otra. Un Fragmento por tres. Tres por uno. Porcentajes. Proporciones. Eso es lo que vas a aprender aquí.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto:
+            'Y también vas a aprender a distinguir un trueque honesto de uno que no lo es.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Pero eso ya es más adelante. Ven.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.2 — El Mercado de la Luz. Tutorial narrativo de proporciones
+  /// y porcentajes con manzanas. Doc 09 §3.2.
+  static const EscenaCinematica mercadoDeLaLuz = EscenaCinematica(
+    id: '3.2',
+    titulo: 'El Mercado de la Luz',
+    flagDeSalida: 'escena_3_2_vista',
+    flagsRequeridos: {'escena_3_1_vista'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Puesto grande de frutas. 15 manzanas rojas y 10 amarillas.',
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.naini,
+        textoPrompt:
+            'Si te llevas un tercio de las rojas y la mitad de las amarillas, ¿cuántas en total?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '8.',
+            textoRespuesta: 'No. Un tercio de 15 son 5. La mitad de 10 son 5.',
+            flagsAEstablecer: {'mercado_fallo_1'},
+          ),
+          OpcionEleccion(
+            textoJugador: '10.',
+            textoRespuesta: 'Justo. 5 y 5.',
+            flagsAEstablecer: {'mercado_acierto_1'},
+          ),
+          OpcionEleccion(
+            textoJugador: '12.',
+            textoRespuesta:
+                'Demasiadas. Un tercio de 15 son 5. La mitad de 10 son 5.',
+            flagsAEstablecer: {'mercado_fallo_1'},
+          ),
+        ],
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.naini,
+        textoPrompt:
+            '¿Y qué porcentaje del total son tus 10 manzanas? El total era 25.',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: '25%.',
+            textoRespuesta: 'No. 10 de 25. Diez de veinticinco.',
+            flagsAEstablecer: {'mercado_fallo_2'},
+          ),
+          OpcionEleccion(
+            textoJugador: '40%.',
+            textoRespuesta: '40%. Justo.',
+            flagsAEstablecer: {'mercado_acierto_2'},
+          ),
+          OpcionEleccion(
+            textoJugador: '50%.',
+            textoRespuesta: 'Casi. 10 de 25 no es la mitad.',
+            flagsAEstablecer: {'mercado_fallo_2'},
+          ),
+        ],
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Te pone dos manzanas en la mano. Le guiña un ojo a la vendedora.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Aquí nadie te enseña nada gratis. Pero todo se aprende.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naini,
+        texto: 'Esa es la regla del Mercado. Nada gratis. Pero todo posible.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+    ],
+  );
+
+  /// 3.3 — Kai otra vez. Plaza lateral del Mercado. Kai propone
+  /// duelo amistoso. Doc 09 §3.3. Al terminar esta cinemática, el
+  /// orquestador lanza el duelo jugable.
+  static const EscenaCinematica kaiOtraVez = EscenaCinematica(
+    id: '3.3',
+    titulo: 'Kai otra vez',
+    flagDeSalida: 'escena_3_3_vista',
+    flagsRequeridos: {'escena_3_2_vista'},
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2000),
+        textoLectura:
+            'Plaza lateral del Mercado. Kai. Más filetes azules en su marca de Aprendiz.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Hombre.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Me dijeron que habías bajado a ver a Naini.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Interesante.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.kai,
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Vivo. Como ves. Tú también, ¿no?',
+            textoRespuesta: 'Mm.',
+            flagsAEstablecer: {'kai_cordial'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'No te me pongas raro, Kai.',
+            textoRespuesta: 'Oye, oye, tranquilo. Solo te saludaba.',
+            flagsAEstablecer: {'kai_directo'},
+          ),
+          OpcionEleccion(
+            textoJugador: '— quedarte callado —',
+            textoRespuesta: 'Vale. Tú mandas.',
+            flagsAEstablecer: {'kai_silencio'},
+          ),
+        ],
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Oye. He oído lo de Zafrán.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto:
+            'No todo el mundo sobrevive a su primer Fragmento nombrado.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Yo conmigo el mío... todavía no lo vi.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Bueno. Es lo que hay.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto:
+            'Si un día te aburres de entrenar con señores mayores, podemos combatir.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.kai,
+        texto: 'Tú contra mí. Nada oficial. Solo para ver.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 3.5 — Kai desaparece. Ari se acerca tras el duelo, explica a
+  /// Kai. Primer elogio directo en el juego. Doc 09 §3.5.
+  static const EscenaCinematica kaiDesaparece = EscenaCinematica(
+    id: '3.5',
+    titulo: 'Kai desaparece',
+    flagDeSalida: 'escena_3_5_vista',
+    flagsRequeridos: {'combate_duel_kai_completado'},
+    esCierreAmable: true,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 2200),
+        textoLectura:
+            'Ari se acerca. Kai ya no está. Te ofrece un refresco.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Toma.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'No te va a hablar en un tiempo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Es así.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto:
+            'Cuando yo le gané a Elen hace tres meses, estuvo desaparecida dos semanas. Ahora somos colegas.',
+        pausaPrevia: Duration(milliseconds: 1300),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Déjale espacio.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto:
+            'Tengo que volver con Vadic. Industria. Si bajas alguna vez, me avisas.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1400),
+        textoLectura: 'Se gira al irse.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.ari,
+        texto: 'Por cierto, has estado bien.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
   static const List<EscenaCinematica> todas = [
     llegada,
     primeraVentana,
@@ -2418,6 +2718,11 @@ class CatalogoEscenas {
     despuesDeZafran,
     rexanEspera,
     canalesEnSilencio,
+    // Arco 3.
+    conocerANaini,
+    mercadoDeLaLuz,
+    kaiOtraVez,
+    kaiDesaparece,
   ];
 
   static EscenaCinematica? porId(String id) {

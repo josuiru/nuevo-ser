@@ -256,6 +256,9 @@ Color _colorHaloDe(DesafioKurz desafio) {
   if (desafio.identificador.startsWith('zafran')) {
     return PaletaNeon.rojoOxidado;
   }
+  if (desafio.identificador.startsWith('duel_kai')) {
+    return PaletaNeon.rosaAcento;
+  }
   return PaletaNeon.violetaNeon;
 }
 

@@ -13,6 +13,7 @@ class PaletaNeon {
   static const Color exitoSuave = Color(0xFF7EE8B0);
   static const Color ambarCanales = Color(0xFFE8B85C);
   static const Color rojoOxidado = Color(0xFF8C3B2E);
+  static const Color grisMetal = Color(0xFFA8B0B8);
 
   static const LinearGradient fondoCiudad = LinearGradient(
     begin: Alignment.topLeft,

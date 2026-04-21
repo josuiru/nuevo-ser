@@ -229,6 +229,45 @@ class DesafioKurz {
     fraseDerrota: 'Déjame a mí. Cuando puedas, seguimos.',
     fraseVictoria: 'Muy bien, {nombre}.',
   );
+
+  /// Duelo amistoso contra Kai. Doc 09 §3.4. Tres rondas (reacción,
+  /// precisión, Duales) representadas como 3 preguntas. Kai es el
+  /// vocero — no es un Fragmento pero usamos el mismo widget. Sin
+  /// ojos, halo rosa. Calibrado a victoria si el niño ha entrenado.
+  static const DesafioKurz duelKai = DesafioKurz(
+    identificador: 'duel_kai',
+    nombreFragmento: 'KAI',
+    vozQueHabla: VozPersonaje.kai,
+    mostrarOjos: false,
+    secuenciaValores: ['III', 'II', 'I', '—'],
+    kiInicial: 3,
+    segundosPorPregunta: 7,
+    preguntas: [
+      PreguntaKurz(
+        enunciado:
+            'Ronda de reacción. ¿Cuánto es 3/5 de 20?',
+        opciones: ['10', '12', '15', '18'],
+        indiceCorrecto: 1,
+        fraseFalloKurz: 'Más rápido.',
+      ),
+      PreguntaKurz(
+        enunciado:
+            'Ronda de precisión. ¿A qué porcentaje equivale 3/4?',
+        opciones: ['60%', '70%', '75%', '80%'],
+        indiceCorrecto: 2,
+        fraseFalloKurz: 'No está mal. Pero sigue mal.',
+      ),
+      PreguntaKurz(
+        enunciado: 'Ronda Dual. 1/2 + 1/3 = ?',
+        opciones: ['2/5', '3/6', '5/6', '2/3'],
+        indiceCorrecto: 2,
+        fraseFalloKurz: '¿Eso es todo?',
+      ),
+    ],
+    fraseAcierto: 'Mm.',
+    fraseDerrota: 'Buen intento. Otro día te doy la revancha.',
+    fraseVictoria: 'Vale. Ya está.',
+  );
 }
 
 class PreguntaKurz {

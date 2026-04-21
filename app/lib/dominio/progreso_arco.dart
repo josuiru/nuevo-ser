@@ -96,16 +96,45 @@ class ProgresoArco {
     ],
   );
 
+  /// Arco 3 — La ciudad entera (doc 09). 18 escenas en el guion —
+  /// parcialmente implementadas.
+  static const ProgresoArco arco3 = ProgresoArco(
+    nombreRomano: 'III',
+    titulo: 'La ciudad entera',
+    flagsPorEscena: [
+      ['escena_3_1_vista'],
+      ['escena_3_2_vista'],
+      ['escena_3_3_vista'],
+      ['escena_3_4_vista', 'combate_duel_kai_completado'],
+      ['escena_3_5_vista'],
+      ['escena_3_6_vista'],
+      ['escena_3_7_vista'],
+      ['escena_3_8_vista'],
+      ['escena_3_9_vista'],
+      ['escena_3_10_vista'],
+      ['escena_3_11_vista'],
+      ['escena_3_12_vista'],
+      ['escena_3_13_vista'],
+      ['escena_3_14_vista'],
+      ['escena_3_15_vista'],
+      ['escena_3_16_vista'],
+      ['escena_3_17_vista'],
+      ['escena_3_18_vista'],
+    ],
+  );
+
   /// Arcos disponibles, en orden canónico. El HUD elige el arco
   /// actual como el primero con al menos una escena completa cuyo
   /// predecesor esté cerrado — o el arco1 si no se ha empezado nada.
-  static const List<ProgresoArco> todos = [arco1, arco2];
+  static const List<ProgresoArco> todos = [arco1, arco2, arco3];
 
-  /// Decide qué arco mostrar en el HUD según los flags. Si el Arco 2
-  /// tiene algo visto, muestra Arco 2. Si no, Arco 1.
+  /// Decide qué arco mostrar en el HUD: el más avanzado con al menos
+  /// una escena vista. Sin flags → Arco 1.
   static Future<ProgresoArco> arcoActual(
     Future<bool> Function(String flag) flagActivo,
   ) async {
+    final vistasArco3 = await arco3.contarVistas(flagActivo);
+    if (vistasArco3 > 0) return arco3;
     final vistasArco2 = await arco2.contarVistas(flagActivo);
     if (vistasArco2 > 0) return arco2;
     return arco1;
