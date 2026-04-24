@@ -16,6 +16,9 @@ import 'package:flutter/foundation.dart';
 /// - [comparacion]: puzzle de comparación (Familia B/C, FR.05/FR.06).
 ///   Se muestran dos fracciones — con el mismo denominador o con el
 ///   mismo numerador — y el niño toca la mayor.
+/// - [simplificar]: puzzle FR.10. Se muestra una fracción reducible
+///   (p. ej. 6/8) y el niño elige su forma mínima entre cuatro
+///   candidatos. A diferencia de [espejo], el ganador es único.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -26,6 +29,7 @@ enum TipoFragmentoEnTejado {
   dual,
   operacionDecimal,
   comparacion,
+  simplificar,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

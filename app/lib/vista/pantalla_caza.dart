@@ -30,6 +30,7 @@ import 'pantalla_impropio.dart';
 import 'pantalla_operacion_decimal.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
+import 'pantalla_simplificar.dart';
 import 'pintor_fragmento_tejado.dart';
 import 'sora_presencia.dart';
 
@@ -233,6 +234,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.decimal => 2,
         TipoFragmentoEnTejado.porcentaje => 2,
         TipoFragmentoEnTejado.comparacion => 2,
+        TipoFragmentoEnTejado.simplificar => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -342,6 +344,15 @@ class _PantallaCazaState extends State<PantallaCaza>
               ),
               modo: fragmento.modoComparacion ??
                   ModoComparacion.mismoDenominador,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.simplificar:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaSimplificar(
+              numerador: fragmento.numerador,
+              denominador: fragmento.denominador,
             ),
           ),
         );

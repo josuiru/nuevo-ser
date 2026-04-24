@@ -56,10 +56,10 @@ uno-roto/
 
 **Ya implementado (pre-canon)**:
 - 6 distritos con posiciones, colores, saludos.
-- 66 habilidades cargadas, 20 con puzzle implementado.
+- 66 habilidades cargadas, 21 con puzzle implementado.
 - Motor de maestría (5 niveles, precisión ponderada, tiempo mediano, decaimiento 21d/14d).
 - Selector adaptativo con pesos por nivel + decay + distrito + anti-repetición.
-- Familias de puzzle: unitario, espejo, decimal, porcentaje, impropio, proporcional, dual, operación decimal, **comparación** (FR.05 mismo denominador / FR.06 mismo numerador — dos fracciones, tocar la mayor; el modo lo fija la skill y el generador produce fracciones propias con el ganador claro).
+- Familias de puzzle: unitario, espejo, decimal, porcentaje, impropio, proporcional, dual, operación decimal, **comparación** (FR.05 mismo denominador / FR.06 mismo numerador — dos fracciones, tocar la mayor; el modo lo fija la skill y el generador produce fracciones propias con el ganador claro), **simplificar** (FR.10 — fracción reducible con cuatro candidatos; el ganador es único, la forma mínima. Distractores: el propio objetivo sin simplificar, otra amplificación, y una fracción cercana no equivalente).
 - Pantalla caza con spawn timer, combate enfoque sin dictado, pantalla habilidades debug.
 - Persistencia shared_preferences con keys `uroto.*`.
 - Ciudad con restauración progresiva según esquirlas.

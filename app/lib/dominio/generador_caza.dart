@@ -7,6 +7,7 @@ import 'mapeo_habilidades_puzzle.dart'
 import 'problema_comparacion.dart' show GeneradorComparacion;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
+import 'problema_simplificar.dart' show GeneradorSimplificar;
 
 /// Genera Fragmentos que aparecen en el tejado a lo largo de una
 /// sesión de caza. La dificultad sube **continuamente** con el número
@@ -72,6 +73,22 @@ class GeneradorCaza {
     OperadorAritmetico? operadorPreferido,
     ModoComparacion? modoComparacionPreferido,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.simplificar) {
+      final problema = GeneradorSimplificar(semilla: _azar.nextInt(1 << 30))
+          .generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.objetivo.numerador,
+        denominador: problema.objetivo.denominador,
+        tipo: tipo,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.comparacion) {
       final modo = modoComparacionPreferido ??
@@ -421,6 +438,10 @@ class GeneradorCaza {
         // FR.05/FR.06 se introducen pronto (Aprendiz II); disponible
         // desde el primer tier adaptativo.
         return dificultad >= 1;
+      case TipoFragmentoEnTejado.simplificar:
+        // FR.10 entra al principio del Iniciado I — un pelín más tarde
+        // que la equivalencia libre de FR.09.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

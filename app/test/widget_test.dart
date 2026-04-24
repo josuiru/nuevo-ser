@@ -11,6 +11,8 @@ import 'package:uno_roto/dominio/habilidad.dart';
 import 'package:uno_roto/dominio/mapeo_habilidades_puzzle.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/problema_comparacion.dart';
+import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
+import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/dominio/progreso_arco.dart';
@@ -855,6 +857,80 @@ void main() {
     expect(fragFr06.tipo, TipoFragmentoEnTejado.comparacion);
     expect(fragFr06.modoComparacion, ModoComparacion.mismoNumerador);
     expect(fragFr06.numerador, fragFr06.numeradorB);
+  });
+
+  // ═══ Puzzle de simplificación (FR.10) ═══
+
+  test(
+    'GeneradorSimplificar produce un objetivo reducible cuyo correcto es la reducida',
+    () {
+      final gen = GeneradorSimplificar(semilla: 11);
+      for (var intento = 0; intento < 40; intento++) {
+        final problema = gen.generar(dificultad: 2);
+        // El objetivo es equivalente al correcto.
+        expect(
+          problema.correcto.esEquivalenteA(problema.objetivo),
+          isTrue,
+        );
+        // El objetivo NO está ya reducido (si lo estuviera, no
+        // tendría sentido pedir simplificar).
+        final reducidaObjetivo = problema.objetivo.reducida();
+        expect(
+          reducidaObjetivo.numerador,
+          isNot(problema.objetivo.numerador),
+          reason:
+              'Objetivo ${problema.objetivo.etiqueta} ya está reducido; '
+              'generador debe producir uno reducible.',
+        );
+        // El correcto SÍ coincide con la forma reducida.
+        expect(problema.correcto.numerador, reducidaObjetivo.numerador);
+        expect(
+          problema.correcto.denominador,
+          reducidaObjetivo.denominador,
+        );
+        // Cuatro candidatos, todos distintos.
+        expect(problema.candidatos, hasLength(4));
+        final firmas = problema.candidatos
+            .map((f) => '${f.numerador}/${f.denominador}')
+            .toSet();
+        expect(firmas, hasLength(4));
+      }
+    },
+  );
+
+  test('FR.10 está mapeada al tipo simplificar', () {
+    expect(skillsConPuzzleImplementado, contains('FR.10'));
+    expect(tipoParaSkillId('FR.10'), TipoFragmentoEnTejado.simplificar);
+    // Un Fragmento de tipo simplificar declara FR.10 como habilidad.
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 6,
+      denominador: 8,
+      tipo: TipoFragmentoEnTejado.simplificar,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 25),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.10');
+  });
+
+  test('GeneradorCaza dirigido a FR.10 produce Fragmento reducible', () {
+    final gen = GeneradorCaza(semilla: 777);
+    final ahora = DateTime(2026, 4, 25);
+    final frag = gen.siguienteParaSkill(
+      idHabilidad: 'FR.10',
+      esquirlasAcumuladas: 15,
+      ahora: ahora,
+    );
+    expect(frag.tipo, TipoFragmentoEnTejado.simplificar);
+    final fraccion = Fraccion(frag.numerador, frag.denominador);
+    final reducida = fraccion.reducida();
+    expect(
+      reducida.numerador,
+      isNot(fraccion.numerador),
+      reason: 'El Fragmento debe ser reducible',
+    );
   });
 
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
