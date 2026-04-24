@@ -106,6 +106,7 @@ uno-roto/
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.
 - **Sistema de perfiles** (`datos/repositorio_progreso.dart` + `vista/pantalla_perfiles.dart`): cada perfil guarda su progreso bajo `uroto.perfil.<id>.<sufijo>`. Al arrancar con claves heredadas `uroto.*`, se migran una vez al perfil `principal`. `listarPerfiles`, `crearPerfil(nombre)` (slug con sufijo numérico si colisiona), `cambiarAPerfil`, `borrarPerfil`. Con >1 perfil, la app arranca en el selector; con uno solo sigue el flujo normal. Desde `pantalla_habilidades` hay botón de cambio de perfil que al volver reinicia el orquestador (callback `alReiniciarConPerfilActivo`). `reiniciar()` borra solo el perfil activo preservando su nombre.
+- **Capa sonora v0.1** (doc 12): `sonido/servicio_sonoro.dart` es un singleton con 4 capas (ambient / música / efectos / narrativos — enum `CapaAudio`) y un AudioPlayer por capa (plugin `audioplayers`). Fades crossing, ducking cuando entra un narrativo. `CatalogoSonidos` mapea identificadores lógicos (`ambient_canales`, `musica_combate_zafran`, `motivo_sora`, `narrativo_silbido_zafran`…) a rutas WAV bajo `assets/sonido/{ambient,musica,efectos,narrativos}/`. **Tolera assets ausentes y plugin no registrado** (tests, headless): cualquier llamada falla en silencio, la app nunca deja de funcionar por no poder sonar. Preferencias de volumen por capa + modo silencio persisten **por perfil** (`audio.modo_silencio`, `audio.volumen.<capa>`). Pantalla `PantallaAjustesSonido` (accesible desde habilidades) con 4 sliders + switch. Cableado: `EscenaCinematica.sonidoDeEntrada/loopDeFondo` con motivos anotados en escenas clave (Sora/Kai/Montaña/ceremonia/silbido), música dedicada por Fragmento en `pantalla_combate_kurz`, ambient+música de distrito en `pantalla_caza` con fades largos. **Assets WAV aún no existen** — la arquitectura está lista para recibirlos.
 
 **Gap frente a doc 03 / prompt maestro**:
 - Backend WordPress `wp-plugin/uno-roto-core/` v0.1 escrito pero sin probar en WP real (plugin standalone, no integrado con el cliente todavía).
@@ -126,7 +127,7 @@ uno-roto/
 2. ~~Fragmentos nombrados~~ ✅ (Kurz×3 + Zafrán + Vorax + Eco + Duel Kai)
 3. ~~Rangos~~ ✅
 4. ~~Cormorant Garamond~~ ✅
-5. **Capa sonora** doc 12 (pendiente)
+5. ~~Capa sonora doc 12~~ ✅ **v0.1 arquitectura completa**. Pendiente: grabar/componer los WAV reales y sustituir los placeholders.
 6. ~~Pruebas de Ascenso~~ ✅ (las tres implementadas)
 7. ~~Backend WordPress~~ ✅ **v0.1 escrito**. Pendiente: probarlo en WP real + wire del cliente Flutter a HTTP.
 8. **Migración a Flame + Isar** según se necesite, no antes.
