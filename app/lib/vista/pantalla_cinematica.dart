@@ -8,6 +8,8 @@ import '../dominio/plano_escena.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
+import '../sonido/capa_audio.dart';
+import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
 import 'widget_fragmento_tutorial.dart';
 
@@ -117,7 +119,22 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeInCubic,
     ));
+    _dispararSonidosDeEscena();
     _iniciarPlanoActual();
+  }
+
+  void _dispararSonidosDeEscena() {
+    // Motivos puntuales (doc 12 §Momentos sonoros únicos). Se reproducen
+    // como efecto: el catálogo los marca en capa narrativa para que
+    // atenúen el resto si procede.
+    final sonidoEntrada = widget.escena.sonidoDeEntrada;
+    if (sonidoEntrada != null) {
+      ServicioSonoro.instancia.reproducirEfecto(sonidoEntrada);
+    }
+    final loop = widget.escena.loopDeFondo;
+    if (loop != null) {
+      ServicioSonoro.instancia.reproducirLoop(loop, msFade: 1800);
+    }
   }
 
   @override
@@ -125,6 +142,12 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     _controladorCielo.dispose();
     _controladorFade.dispose();
     _temporizador?.cancel();
+    // Si la escena trajo loop propio, lo apagamos al salir con fade
+    // amable. Si no había loop, esto es no-op.
+    if (widget.escena.loopDeFondo != null) {
+      ServicioSonoro.instancia
+          .detenerCapa(CapaAudio.musica, msFade: 1200);
+    }
     super.dispose();
   }
 

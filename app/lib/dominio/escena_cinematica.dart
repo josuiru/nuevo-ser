@@ -30,6 +30,18 @@ class EscenaCinematica {
   /// "no cargar arco 2 en la misma sesión que cierra arco 1".
   final bool esCierreAmable;
 
+  /// Identificador opcional de un sonido catalogado que el player debe
+  /// disparar al entrar en la escena (doc 12 §Momentos sonoros únicos).
+  /// Ejemplos: "motivo_sora" en 1.1/2.14/4.13, "motivo_montana" en
+  /// 1.1/1.14/4.14, "musica_ceremonia" en 1.13/4.10, "narrativo_silbido_zafran"
+  /// en 2.10/2.12. Si es `null`, la escena no añade sonido propio.
+  final String? sonidoDeEntrada;
+
+  /// Identificador opcional de un loop musical que acompañará la
+  /// escena entera hasta que se cierre (o hasta que otra la cambie).
+  /// Diferente de [sonidoDeEntrada], que es un sample puntual.
+  final String? loopDeFondo;
+
   const EscenaCinematica({
     required this.id,
     required this.titulo,
@@ -37,5 +49,7 @@ class EscenaCinematica {
     required this.flagDeSalida,
     this.flagsRequeridos = const {},
     this.esCierreAmable = false,
+    this.sonidoDeEntrada,
+    this.loopDeFondo,
   });
 }

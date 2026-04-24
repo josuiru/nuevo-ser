@@ -7,6 +7,9 @@ import '../dominio/desafio_kurz.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
+import '../sonido/capa_audio.dart';
+import '../sonido/catalogo_sonidos.dart';
+import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
 import 'pantalla_cinematica.dart' show aplicarTokens;
 
@@ -72,6 +75,12 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
       duration: const Duration(milliseconds: 1200),
     )..forward();
     _arrancarTemporizadorPregunta();
+    // Música específica del Fragmento nombrado — doc 12 §Música de
+    // combate. Entra con fade corto tras la aparición visual.
+    ServicioSonoro.instancia.reproducirLoop(
+      CatalogoSonidos.musicaDeCombate(widget.desafio.identificador),
+      msFade: 1400,
+    );
   }
 
   @override
@@ -81,6 +90,9 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
     _controladorEntrada.dispose();
     _temporizadorPregunta?.cancel();
     _temporizadorFrase?.cancel();
+    // Desvanecimiento 1-2 s, nunca corte abrupto (doc 12).
+    ServicioSonoro.instancia
+        .detenerCapa(CapaAudio.musica, msFade: 1400);
     super.dispose();
   }
 
@@ -122,6 +134,7 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
   void _registrarAcierto() {
     _temporizadorPregunta?.cancel();
     HapticFeedback.mediumImpact();
+    ServicioSonoro.instancia.reproducirEfecto('efecto_acierto');
     setState(() {
       _bloqueado = true;
       _aciertos++;
@@ -138,6 +151,8 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
 
   void _registrarFallo({bool porTiempo = false}) {
     _temporizadorPregunta?.cancel();
+    // Error más corto y más bajo que el acierto (doc 12 §Feedback).
+    ServicioSonoro.instancia.reproducirEfecto('efecto_error');
     final pregunta = widget.desafio.preguntas[_indicePregunta];
     setState(() {
       _bloqueado = true;

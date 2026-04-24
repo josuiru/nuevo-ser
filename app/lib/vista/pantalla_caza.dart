@@ -16,6 +16,9 @@ import '../dominio/problema_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
 import '../nucleo/paleta.dart';
+import '../sonido/capa_audio.dart';
+import '../sonido/catalogo_sonidos.dart';
+import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_decimal.dart';
@@ -115,6 +118,19 @@ class _PantallaCazaState extends State<PantallaCaza>
       await widget.repositorio
           .marcarDistritoComoVisitado(widget.distrito.identificador);
     }
+    _arrancarAmbientYMusicaDeDistrito();
+  }
+
+  void _arrancarAmbientYMusicaDeDistrito() {
+    final idDistrito = widget.distrito.identificador;
+    final ambient = CatalogoSonidos.ambientDeDistrito(idDistrito);
+    final musica = CatalogoSonidos.musicaDeDistrito(idDistrito);
+    if (ambient != null) {
+      ServicioSonoro.instancia.reproducirLoop(ambient, msFade: 1500);
+    }
+    if (musica != null) {
+      ServicioSonoro.instancia.reproducirLoop(musica, msFade: 1800);
+    }
   }
 
   @override
@@ -123,6 +139,10 @@ class _PantallaCazaState extends State<PantallaCaza>
     _temporizadorSpawn?.cancel();
     _temporizadorTick?.cancel();
     _temporizadorLineaSora?.cancel();
+    // Dejamos el ambient sonando pero paramos la música del distrito
+    // al volver al mapa — hace que la transición se sienta.
+    ServicioSonoro.instancia.detenerCapa(CapaAudio.musica, msFade: 700);
+    ServicioSonoro.instancia.detenerCapa(CapaAudio.ambient, msFade: 900);
     super.dispose();
   }
 

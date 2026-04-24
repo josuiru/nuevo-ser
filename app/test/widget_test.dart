@@ -763,6 +763,20 @@ void main() {
     },
   );
 
+  test('Catálogo: escenas clave traen motivos sonoros esperados', () {
+    expect(CatalogoEscenas.porId('1.1')!.sonidoDeEntrada, 'motivo_sora');
+    expect(CatalogoEscenas.porId('1.7')!.sonidoDeEntrada, 'motivo_kai');
+    expect(CatalogoEscenas.porId('1.14')!.sonidoDeEntrada, 'motivo_montana');
+    expect(
+      CatalogoEscenas.porId('2.10')!.sonidoDeEntrada,
+      'narrativo_silbido_zafran',
+    );
+    expect(
+      CatalogoEscenas.porId('1.13')!.loopDeFondo,
+      'musica_ceremonia',
+    );
+  });
+
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
     SharedPreferences.setMockInitialValues({});
     final repo = RepositorioProgreso();

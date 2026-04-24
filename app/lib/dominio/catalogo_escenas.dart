@@ -12,6 +12,7 @@ class CatalogoEscenas {
     id: '1.1',
     titulo: 'El tejado',
     flagDeSalida: 'escena_1_1_vista',
+    sonidoDeEntrada: 'motivo_sora',
     planos: [
       PlanoAmbiente(duracion: Duration(milliseconds: 2200)),
       PlanoAmbiente(
@@ -526,6 +527,7 @@ class CatalogoEscenas {
     flagDeSalida: 'escena_1_7_vista',
     flagsRequeridos: {'escena_1_6_vista'},
     esCierreAmable: true,
+    sonidoDeEntrada: 'motivo_kai',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2000),
@@ -966,6 +968,7 @@ class CatalogoEscenas {
     id: '1.13',
     titulo: 'Las palabras de Irune',
     flagDeSalida: 'escena_1_13_vista',
+    loopDeFondo: 'musica_ceremonia',
     flagsRequeridos: {
       'escena_1_12_vista',
       'rango_aprendiz_ii_alcanzado',
@@ -1066,6 +1069,7 @@ class CatalogoEscenas {
     flagDeSalida: 'escena_1_14_vista',
     flagsRequeridos: {'escena_1_13_vista'},
     esCierreAmable: true,
+    sonidoDeEntrada: 'motivo_montana',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2600),
@@ -1832,6 +1836,7 @@ class CatalogoEscenas {
     id: '2.10',
     titulo: 'El silbido lejano',
     flagDeSalida: 'escena_2_10_vista',
+    sonidoDeEntrada: 'narrativo_silbido_zafran',
     flagsRequeridos: {'escena_2_9_vista', 'fr_16_competente'},
     esCierreAmable: true,
     planos: [
@@ -2008,6 +2013,7 @@ class CatalogoEscenas {
     titulo: 'La noche de Zafrán',
     flagDeSalida: 'escena_2_12_vista',
     flagsRequeridos: {'escena_2_11_vista'},
+    sonidoDeEntrada: 'narrativo_silbido_zafran',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2400),
@@ -2155,6 +2161,7 @@ class CatalogoEscenas {
     titulo: 'Después',
     flagDeSalida: 'escena_2_14_vista',
     flagsRequeridos: {'escena_2_13_vista'},
+    sonidoDeEntrada: 'motivo_sora',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2200),
@@ -2634,6 +2641,7 @@ class CatalogoEscenas {
     flagDeSalida: 'escena_3_5_vista',
     flagsRequeridos: {'combate_duel_kai_completado'},
     esCierreAmable: true,
+    sonidoDeEntrada: 'motivo_kai',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2200),
@@ -3324,6 +3332,7 @@ class CatalogoEscenas {
     titulo: 'Kai vuelve',
     flagDeSalida: 'escena_3_14_vista',
     flagsRequeridos: {'escena_3_13_vista'},
+    sonidoDeEntrada: 'motivo_kai',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2200),
@@ -3520,6 +3529,7 @@ class CatalogoEscenas {
     titulo: 'Brina',
     flagDeSalida: 'escena_3_16_vista',
     flagsRequeridos: {'escena_3_15_vista'},
+    sonidoDeEntrada: 'motivo_montana',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2400),
@@ -3637,6 +3647,7 @@ class CatalogoEscenas {
     flagDeSalida: 'escena_3_17_vista',
     flagsRequeridos: {'escena_3_16_vista'},
     esCierreAmable: true,
+    sonidoDeEntrada: 'motivo_montana',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2600),
@@ -4687,6 +4698,7 @@ class CatalogoEscenas {
     titulo: 'La ceremonia',
     flagDeSalida: 'escena_4_10_vista',
     flagsRequeridos: {'prueba_completada'},
+    loopDeFondo: 'musica_ceremonia',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2800),
@@ -4968,6 +4980,8 @@ class CatalogoEscenas {
     titulo: 'Sora en el borde',
     flagDeSalida: 'escena_4_13_vista',
     flagsRequeridos: {'escena_4_12_vista'},
+    loopDeFondo: 'musica_amanecer_final',
+    sonidoDeEntrada: 'motivo_sora',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2800),
@@ -5116,6 +5130,7 @@ class CatalogoEscenas {
     flagDeSalida: 'escena_4_14_vista',
     flagsRequeridos: {'escena_4_13_vista'},
     esCierreAmable: true,
+    sonidoDeEntrada: 'motivo_montana',
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 3000),
