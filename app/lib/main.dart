@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +12,7 @@ import 'dominio/ritmo_juego.dart';
 import 'dominio/variantes_entrenamiento.dart';
 import 'dominio/variantes_puentes.dart';
 import 'nucleo/paleta.dart';
+import 'sonido/servicio_sonoro.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_combate_kurz.dart';
@@ -94,6 +97,12 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   }
 
   Future<void> _iniciarFlujoDelPerfilActivo() async {
+    // Arranca o recarga el motor sonoro con las preferencias del perfil
+    // activo en segundo plano. No lo esperamos: el motor tolera que lo
+    // llamen antes de estar listo (cada método sale sin hacer nada si
+    // `_inicializado == false`) y si en tests el plugin de audio no
+    // está registrado, la app no debe quedarse colgada en `.cargando`.
+    unawaited(ServicioSonoro.instancia.inicializar(_repositorio));
     final yaVioApertura = await _repositorio.yaVioLaApertura();
     await _repositorio.guardarAhoraComoUltimaApertura();
     _nombreJugador = await _repositorio.cargarNombreJugador();

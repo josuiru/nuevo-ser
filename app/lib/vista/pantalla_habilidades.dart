@@ -7,6 +7,7 @@ import '../datos/repositorio_progreso.dart';
 import '../dominio/habilidad.dart';
 import '../dominio/ritmo_juego.dart';
 import '../nucleo/paleta.dart';
+import 'pantalla_ajustes_sonido.dart';
 import 'pantalla_perfiles.dart';
 
 /// Panel que lista las 66 habilidades del mapa pedagógico y muestra
@@ -85,6 +86,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             ),
           ),
           IconButton(
+            tooltip: 'Ajustes de sonido',
+            onPressed: _abrirAjustesSonido,
+            icon: Icon(
+              Icons.volume_up_outlined,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+          IconButton(
             tooltip: 'Cambiar ritmo del juego',
             onPressed: _abrirDialogoRitmo,
             icon: Icon(
@@ -129,6 +138,16 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           alPerfilSeleccionado: () {
             widget.alReiniciarConPerfilActivo?.call();
           },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _abrirAjustesSonido() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaAjustesSonido(
+          repositorio: widget.repositorio,
         ),
       ),
     );

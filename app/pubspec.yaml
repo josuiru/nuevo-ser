@@ -45,6 +45,13 @@ dependencies:
   # del plugin. No añadimos `dio` — menos deps.
   http: ^1.2.0
 
+  # Motor de audio multi-capa para la guía sonora (doc 12). Un player
+  # por capa (ambient / música / efectos / narrativos) con fades,
+  # volumen independiente y modo sin sonido. audioplayers es la opción
+  # estándar bien mantenida en Android; si falta el asset, el motor
+  # ignora la llamada y la app sigue silenciosa.
+  audioplayers: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -69,6 +76,12 @@ flutter:
 
   assets:
     - assets/data/skills.json
+    # Carpetas de sonido (doc 12). Pueden estar vacías: el motor
+    # sonoro tolera assets ausentes y la app no falla.
+    - assets/sonido/ambient/
+    - assets/sonido/musica/
+    - assets/sonido/efectos/
+    - assets/sonido/narrativos/
 
   fonts:
     # Cormorant Garamond — voz de los Fragmentos nombrados (Kurz, Eco,

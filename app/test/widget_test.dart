@@ -14,6 +14,8 @@ import 'package:uno_roto/dominio/rango_narrativo.dart';
 import 'package:uno_roto/dominio/variantes_entrenamiento.dart';
 import 'package:uno_roto/dominio/variantes_puentes.dart';
 import 'package:uno_roto/main.dart';
+import 'package:uno_roto/sonido/capa_audio.dart';
+import 'package:uno_roto/sonido/catalogo_sonidos.dart';
 import 'package:uno_roto/vista/pantalla_cinematica.dart';
 
 void main() {
@@ -660,6 +662,104 @@ void main() {
       expect(find.text('¿QUIÉN ERES?'), findsOneWidget);
       expect(find.text('Leo'), findsOneWidget);
       expect(find.text('Irune'), findsOneWidget);
+    },
+  );
+
+  // ═══ Capa sonora (doc 12) ═══
+
+  test('CatalogoSonidos mapea ambient y música de cada distrito', () {
+    for (final id in const [
+      'tejados',
+      'canales',
+      'mercado',
+      'industria',
+      'puerto',
+      'afueras',
+    ]) {
+      final ambient = CatalogoSonidos.ambientDeDistrito(id);
+      expect(ambient, isNotNull, reason: 'sin ambient para $id');
+      final detalleAmbient = CatalogoSonidos.obtener(ambient!);
+      expect(detalleAmbient, isNotNull);
+      expect(detalleAmbient!.capa, CapaAudio.ambient);
+      expect(detalleAmbient.enBucle, isTrue);
+
+      final musica = CatalogoSonidos.musicaDeDistrito(id);
+      expect(musica, isNotNull, reason: 'sin música para $id');
+      final detalleMusica = CatalogoSonidos.obtener(musica!);
+      expect(detalleMusica, isNotNull);
+      expect(detalleMusica!.capa, CapaAudio.musica);
+      expect(detalleMusica.enBucle, isTrue);
+    }
+    expect(CatalogoSonidos.ambientDeDistrito('inexistente'), isNull);
+  });
+
+  test('CatalogoSonidos.musicaDeCombate distingue los Fragmentos nombrados',
+      () {
+    expect(CatalogoSonidos.musicaDeCombate('kurz_1'), 'musica_combate_kurz');
+    expect(CatalogoSonidos.musicaDeCombate('kurz_3'), 'musica_combate_kurz');
+    expect(CatalogoSonidos.musicaDeCombate('zafran'), 'musica_combate_zafran');
+    expect(CatalogoSonidos.musicaDeCombate('vorax'), 'musica_combate_vorax');
+    expect(
+      CatalogoSonidos.musicaDeCombate(null),
+      'musica_combate_cotidiano',
+    );
+    expect(
+      CatalogoSonidos.musicaDeCombate('desconocido'),
+      'musica_combate_cotidiano',
+    );
+  });
+
+  test('CapaAudio tiene las 4 capas con volúmenes predeterminados válidos',
+      () {
+    expect(CapaAudio.values, hasLength(4));
+    for (final capa in CapaAudio.values) {
+      expect(capa.clave, isNotEmpty);
+      expect(capa.nombreVisible, isNotEmpty);
+      expect(capa.volumenPredeterminado, inInclusiveRange(0, 100));
+    }
+  });
+
+  test(
+    'Preferencias de audio: persisten, acotan a 0..100 y son por perfil',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final repo = RepositorioProgreso();
+
+      // Predeterminados hasta que se guarde algo.
+      expect(await repo.cargarAudioModoSilencio(), isFalse);
+      expect(
+        await repo.cargarAudioVolumenCapa('musica', predeterminado: 70),
+        70,
+      );
+
+      await repo.guardarAudioModoSilencio(true);
+      await repo.guardarAudioVolumenCapa('musica', 42);
+      // Fuera de rango: se debe acotar.
+      await repo.guardarAudioVolumenCapa('ambient', 150);
+      await repo.guardarAudioVolumenCapa('efectos', -10);
+
+      expect(await repo.cargarAudioModoSilencio(), isTrue);
+      expect(
+        await repo.cargarAudioVolumenCapa('musica', predeterminado: 70),
+        42,
+      );
+      expect(
+        await repo.cargarAudioVolumenCapa('ambient', predeterminado: 45),
+        100,
+      );
+      expect(
+        await repo.cargarAudioVolumenCapa('efectos', predeterminado: 80),
+        0,
+      );
+
+      // Otro perfil arranca con sus propios predeterminados.
+      final idIrune = await repo.crearPerfil('Irune');
+      await repo.cambiarAPerfil(idIrune);
+      expect(await repo.cargarAudioModoSilencio(), isFalse);
+      expect(
+        await repo.cargarAudioVolumenCapa('musica', predeterminado: 70),
+        70,
+      );
     },
   );
 

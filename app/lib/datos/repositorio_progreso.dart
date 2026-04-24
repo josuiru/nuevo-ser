@@ -34,6 +34,8 @@ class RepositorioProgreso {
   static const _prefijoDistritoVisitado = 'distrito_visitado.';
   static const _prefijoFlagNarrativo = 'flag.';
   static const _prefijoHabilidad = 'habilidad.';
+  static const _sufAudioModoSilencio = 'audio.modo_silencio';
+  static const _prefijoAudioVolumenCapa = 'audio.volumen.';
 
   static String _prefijoDePerfil(String idPerfil) =>
       'uroto.perfil.$idPerfil.';
@@ -332,6 +334,38 @@ class RepositorioProgreso {
   Future<void> guardarRitmo(RitmoJuego ritmo) async {
     final prefs = await _prefs();
     await prefs.setInt(await _clave(_sufRitmoJuego), ritmo.valor);
+  }
+
+  /// Preferencias de audio del perfil activo. El volumen de cada capa
+  /// se guarda en 0..100; el motor lo traduce a 0.0..1.0.
+  Future<bool> cargarAudioModoSilencio() async {
+    final prefs = await _prefs();
+    return prefs.getBool(await _clave(_sufAudioModoSilencio)) ?? false;
+  }
+
+  Future<void> guardarAudioModoSilencio(bool silencio) async {
+    final prefs = await _prefs();
+    await prefs.setBool(await _clave(_sufAudioModoSilencio), silencio);
+  }
+
+  Future<int> cargarAudioVolumenCapa(
+    String claveCapa, {
+    required int predeterminado,
+  }) async {
+    final prefs = await _prefs();
+    final guardado = prefs.getInt(
+      await _clave('$_prefijoAudioVolumenCapa$claveCapa'),
+    );
+    if (guardado == null) return predeterminado;
+    return guardado.clamp(0, 100);
+  }
+
+  Future<void> guardarAudioVolumenCapa(String claveCapa, int valor) async {
+    final prefs = await _prefs();
+    await prefs.setInt(
+      await _clave('$_prefijoAudioVolumenCapa$claveCapa'),
+      valor.clamp(0, 100),
+    );
   }
 
   Future<bool> entradaCuadernoLeida(String idEntrada) async {
