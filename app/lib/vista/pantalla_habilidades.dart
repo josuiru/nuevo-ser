@@ -7,6 +7,7 @@ import '../datos/repositorio_progreso.dart';
 import '../dominio/habilidad.dart';
 import '../dominio/ritmo_juego.dart';
 import '../nucleo/paleta.dart';
+import 'pantalla_perfiles.dart';
 
 /// Panel que lista las 66 habilidades del mapa pedagógico y muestra
 /// para cada una el nivel actual del niño y su precisión. Accesible
@@ -15,7 +16,16 @@ import '../nucleo/paleta.dart';
 class PantallaHabilidades extends StatefulWidget {
   final RepositorioProgreso repositorio;
 
-  const PantallaHabilidades({super.key, required this.repositorio});
+  /// Callback que el orquestador proporciona para reiniciar la app
+  /// completa con el perfil activo. Se invoca tras elegir perfil en el
+  /// selector abierto desde esta pantalla.
+  final VoidCallback? alReiniciarConPerfilActivo;
+
+  const PantallaHabilidades({
+    super.key,
+    required this.repositorio,
+    this.alReiniciarConPerfilActivo,
+  });
 
   @override
   State<PantallaHabilidades> createState() => _PantallaHabilidadesState();
@@ -67,6 +77,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         iconTheme: const IconThemeData(color: PaletaNeon.textoTenue),
         actions: [
           IconButton(
+            tooltip: 'Cambiar de perfil',
+            onPressed: _abrirPantallaPerfiles,
+            icon: Icon(
+              Icons.switch_account,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+          IconButton(
             tooltip: 'Cambiar ritmo del juego',
             onPressed: _abrirDialogoRitmo,
             icon: Icon(
@@ -97,6 +115,22 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
               child: CircularProgressIndicator(color: PaletaNeon.azulNeon),
             )
           : _listaPorDominio(),
+    );
+  }
+
+  Future<void> _abrirPantallaPerfiles() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaPerfiles(
+          repositorio: widget.repositorio,
+          // Al elegir perfil delegamos al orquestador el reinicio
+          // completo del flujo, para que la siguiente pantalla
+          // corresponda al progreso del perfil recién activado.
+          alPerfilSeleccionado: () {
+            widget.alReiniciarConPerfilActivo?.call();
+          },
+        ),
+      ),
     );
   }
 

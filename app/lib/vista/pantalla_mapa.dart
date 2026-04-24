@@ -20,7 +20,16 @@ import 'pantalla_habilidades.dart';
 class PantallaMapa extends StatefulWidget {
   final RepositorioProgreso repositorio;
 
-  const PantallaMapa({super.key, required this.repositorio});
+  /// Callback opcional proporcionado por el orquestador para reiniciar
+  /// el flujo al perfil activo tras un cambio. Se propaga a la pantalla
+  /// de habilidades (y de ahí al selector de perfiles).
+  final VoidCallback? alReiniciarConPerfilActivo;
+
+  const PantallaMapa({
+    super.key,
+    required this.repositorio,
+    this.alReiniciarConPerfilActivo,
+  });
 
   @override
   State<PantallaMapa> createState() => _PantallaMapaState();
@@ -125,6 +134,8 @@ class _PantallaMapaState extends State<PantallaMapa>
                           MaterialPageRoute(
                             builder: (_) => PantallaHabilidades(
                               repositorio: widget.repositorio,
+                              alReiniciarConPerfilActivo:
+                                  widget.alReiniciarConPerfilActivo,
                             ),
                           ),
                         );

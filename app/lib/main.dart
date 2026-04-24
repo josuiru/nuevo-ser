@@ -15,6 +15,7 @@ import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_combate_kurz.dart';
 import 'vista/pantalla_mapa.dart';
 import 'vista/pantalla_nombre.dart';
+import 'vista/pantalla_perfiles.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,15 @@ class AppUnoRoto extends StatelessWidget {
   }
 }
 
-enum _FaseApp { cargando, apertura, nombre, cinematica, combateKurz, mapa }
+enum _FaseApp {
+  cargando,
+  perfiles,
+  apertura,
+  nombre,
+  cinematica,
+  combateKurz,
+  mapa,
+}
 
 class OrquestadorFases extends StatefulWidget {
   const OrquestadorFases({super.key});
@@ -72,6 +81,19 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   }
 
   Future<void> _inicializar() async {
+    final perfiles = await _repositorio.listarPerfilesConInfo();
+    // Si hay más de un perfil, pedimos al usuario que elija al arrancar.
+    // Con un único perfil seguimos el flujo normal (el activo).
+    final conVariosPerfiles = perfiles.length > 1;
+    if (conVariosPerfiles) {
+      if (!mounted) return;
+      setState(() => _fase = _FaseApp.perfiles);
+      return;
+    }
+    await _iniciarFlujoDelPerfilActivo();
+  }
+
+  Future<void> _iniciarFlujoDelPerfilActivo() async {
     final yaVioApertura = await _repositorio.yaVioLaApertura();
     await _repositorio.guardarAhoraComoUltimaApertura();
     _nombreJugador = await _repositorio.cargarNombreJugador();
@@ -86,6 +108,29 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
       return;
     }
     await _resolverCinematicaPendienteOMapa();
+  }
+
+  Future<void> _alElegirPerfil() async {
+    // El usuario seleccionó un perfil: reiniciamos estado de sesión y
+    // arrancamos el flujo como si fuera un inicio nuevo para ese perfil.
+    _escenaPendiente = null;
+    _desafioKurzActivo = null;
+    _nombreJugador = null;
+    _varianteYaDisparadaEnEstaTransicion = false;
+    await _iniciarFlujoDelPerfilActivo();
+  }
+
+  /// Invocado cuando el usuario cambia de perfil desde el selector
+  /// abierto dentro de la app (p.ej. pantalla de habilidades). Cierra
+  /// pilas de navegación y devuelve al flujo base con el perfil activo.
+  void _reiniciarConPerfilActivo() {
+    Navigator.of(context).popUntil((ruta) => ruta.isFirst);
+    _escenaPendiente = null;
+    _desafioKurzActivo = null;
+    _nombreJugador = null;
+    _varianteYaDisparadaEnEstaTransicion = false;
+    setState(() => _fase = _FaseApp.cargando);
+    _iniciarFlujoDelPerfilActivo();
   }
 
   Future<void> _alTerminarApertura() async {
@@ -290,6 +335,11 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     switch (_fase) {
       case _FaseApp.cargando:
         return const ColoredBox(color: PaletaNeon.fondoProfundo);
+      case _FaseApp.perfiles:
+        return PantallaPerfiles(
+          repositorio: _repositorio,
+          alPerfilSeleccionado: _alElegirPerfil,
+        );
       case _FaseApp.apertura:
         return PantallaApertura(alTerminarApertura: _alTerminarApertura);
       case _FaseApp.nombre:
@@ -318,7 +368,10 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
           ritmo: _ritmo,
         );
       case _FaseApp.mapa:
-        return PantallaMapa(repositorio: _repositorio);
+        return PantallaMapa(
+          repositorio: _repositorio,
+          alReiniciarConPerfilActivo: _reiniciarConPerfilActivo,
+        );
     }
   }
 }

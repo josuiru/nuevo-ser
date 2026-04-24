@@ -555,6 +555,114 @@ void main() {
     },
   );
 
+  // ═══ Perfiles ═══
+
+  test(
+    'Migración: progreso heredado uroto.* se mueve al perfil "principal"',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        'uroto.ya_vio_apertura': true,
+        'uroto.nombre_jugador': 'Leo',
+        'uroto.esquirlas_total': 42,
+        'uroto.flag.escena_1_1_vista': true,
+      });
+      final repo = RepositorioProgreso();
+
+      // Leer cualquier cosa dispara la migración.
+      expect(await repo.yaVioLaApertura(), isTrue);
+      expect(await repo.cargarNombreJugador(), 'Leo');
+      expect(await repo.cargarEsquirlas(), 42);
+      expect(
+        await repo.flagNarrativoActivo('escena_1_1_vista'),
+        isTrue,
+      );
+      expect(await repo.idPerfilActivo(), 'principal');
+      expect(await repo.listarPerfiles(), ['principal']);
+
+      // Las claves sin prefijo ya no están en el almacén.
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.containsKey('uroto.ya_vio_apertura'), isFalse);
+      expect(prefs.containsKey('uroto.nombre_jugador'), isFalse);
+      expect(
+        prefs.containsKey('uroto.perfil.principal.ya_vio_apertura'),
+        isTrue,
+      );
+    },
+  );
+
+  test('crearPerfil aísla progreso entre perfiles', () async {
+    SharedPreferences.setMockInitialValues({});
+    final repo = RepositorioProgreso();
+
+    await repo.guardarNombreJugador('Leo');
+    await repo.guardarEsquirlas(10);
+    await repo.activarFlagNarrativo('escena_1_1_vista');
+
+    final idIrune = await repo.crearPerfil('Irune');
+    await repo.cambiarAPerfil(idIrune);
+
+    // Perfil recién creado: nombre ya guardado al crear, pero sin progreso.
+    expect(await repo.cargarNombreJugador(), 'Irune');
+    expect(await repo.cargarEsquirlas(), 0);
+    expect(
+      await repo.flagNarrativoActivo('escena_1_1_vista'),
+      isFalse,
+    );
+
+    // Volver al original mantiene su progreso.
+    await repo.cambiarAPerfil('principal');
+    expect(await repo.cargarNombreJugador(), 'Leo');
+    expect(await repo.cargarEsquirlas(), 10);
+    expect(
+      await repo.flagNarrativoActivo('escena_1_1_vista'),
+      isTrue,
+    );
+  });
+
+  test('borrarPerfil elimina progreso y reajusta activo si hace falta',
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final repo = RepositorioProgreso();
+
+    final idIrune = await repo.crearPerfil('Irune');
+    await repo.cambiarAPerfil(idIrune);
+    await repo.guardarEsquirlas(5);
+
+    expect(await repo.listarPerfiles(), contains(idIrune));
+    await repo.borrarPerfil(idIrune);
+
+    final restantes = await repo.listarPerfiles();
+    expect(restantes, isNot(contains(idIrune)));
+    expect(await repo.idPerfilActivo(), 'principal');
+
+    // Crear otro con el mismo nombre base genera un id distinto.
+    final idIrune1 = await repo.crearPerfil('Irune');
+    final idIrune2 = await repo.crearPerfil('Irune');
+    expect(idIrune2, isNot(equals(idIrune1)));
+  });
+
+  testWidgets(
+    'Con más de un perfil, la app arranca en el selector de perfiles',
+    (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({
+        'uroto.perfil_activo_id': 'principal',
+        'uroto.perfiles_lista': ['principal', 'irune'],
+        'uroto.perfil.principal.nombre_jugador': 'Leo',
+        'uroto.perfil.principal.ya_vio_apertura': true,
+        'uroto.perfil.irune.nombre_jugador': 'Irune',
+        'uroto.perfil.irune.ya_vio_apertura': true,
+      });
+      await tester.pumpWidget(const AppUnoRoto());
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('¿QUIÉN ERES?'), findsOneWidget);
+      expect(find.text('Leo'), findsOneWidget);
+      expect(find.text('Irune'), findsOneWidget);
+    },
+  );
+
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
     SharedPreferences.setMockInitialValues({});
     final repo = RepositorioProgreso();
