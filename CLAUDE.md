@@ -105,6 +105,7 @@ uno-roto/
 - Flags narrativos persistidos como `uroto.flag.<nombre>`.
 - Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.
+- **Sistema de perfiles** (`datos/repositorio_progreso.dart` + `vista/pantalla_perfiles.dart`): cada perfil guarda su progreso bajo `uroto.perfil.<id>.<sufijo>`. Al arrancar con claves heredadas `uroto.*`, se migran una vez al perfil `principal`. `listarPerfiles`, `crearPerfil(nombre)` (slug con sufijo numérico si colisiona), `cambiarAPerfil`, `borrarPerfil`. Con >1 perfil, la app arranca en el selector; con uno solo sigue el flujo normal. Desde `pantalla_habilidades` hay botón de cambio de perfil que al volver reinicia el orquestador (callback `alReiniciarConPerfilActivo`). `reiniciar()` borra solo el perfil activo preservando su nombre.
 
 **Gap frente a doc 03 / prompt maestro**:
 - Backend WordPress `wp-plugin/uno-roto-core/` v0.1 escrito pero sin probar en WP real (plugin standalone, no integrado con el cliente todavía).
