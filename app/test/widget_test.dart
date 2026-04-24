@@ -5,8 +5,12 @@ import 'package:uno_roto/datos/catalogo_habilidades.dart';
 import 'package:uno_roto/datos/repositorio_progreso.dart';
 import 'package:uno_roto/dominio/catalogo_escenas.dart';
 import 'package:uno_roto/dominio/desafio_kurz.dart';
+import 'package:uno_roto/dominio/fragmento_en_tejado.dart';
+import 'package:uno_roto/dominio/generador_caza.dart';
 import 'package:uno_roto/dominio/habilidad.dart';
+import 'package:uno_roto/dominio/mapeo_habilidades_puzzle.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
+import 'package:uno_roto/dominio/problema_comparacion.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/dominio/progreso_arco.dart';
@@ -775,6 +779,82 @@ void main() {
       CatalogoEscenas.porId('1.13')!.loopDeFondo,
       'musica_ceremonia',
     );
+  });
+
+  // ═══ Puzzle de comparación (FR.05 / FR.06) ═══
+
+  test(
+    'GeneradorComparacion mismoDenominador produce fracciones propias y un mayor claro',
+    () {
+      final gen = GeneradorComparacion(semilla: 42);
+      for (var intento = 0; intento < 40; intento++) {
+        final problema = gen.generar(
+          modo: ModoComparacion.mismoDenominador,
+        );
+        expect(problema.a.denominador, problema.b.denominador);
+        expect(problema.a.numerador, isNot(problema.b.numerador));
+        expect(problema.a.numerador, lessThan(problema.a.denominador));
+        expect(problema.b.numerador, lessThan(problema.b.denominador));
+        expect(problema.indiceMayor, isNotNull);
+      }
+    },
+  );
+
+  test(
+    'GeneradorComparacion mismoNumerador produce fracciones propias y un mayor claro',
+    () {
+      final gen = GeneradorComparacion(semilla: 7);
+      for (var intento = 0; intento < 40; intento++) {
+        final problema = gen.generar(modo: ModoComparacion.mismoNumerador);
+        expect(problema.a.numerador, problema.b.numerador);
+        expect(problema.a.denominador, isNot(problema.b.denominador));
+        expect(problema.a.numerador, lessThan(problema.a.denominador));
+        expect(problema.b.numerador, lessThan(problema.b.denominador));
+        expect(problema.indiceMayor, isNotNull);
+        // En mismoNumerador, el denominador menor debe ser el mayor.
+        final mayor = problema.indiceMayor == 0 ? problema.a : problema.b;
+        final menor = problema.indiceMayor == 0 ? problema.b : problema.a;
+        expect(mayor.denominador, lessThan(menor.denominador));
+      }
+    },
+  );
+
+  test('FR.05 y FR.06 están mapeadas al tipo comparacion', () {
+    expect(skillsConPuzzleImplementado, contains('FR.05'));
+    expect(skillsConPuzzleImplementado, contains('FR.06'));
+    expect(tipoParaSkillId('FR.05'), TipoFragmentoEnTejado.comparacion);
+    expect(tipoParaSkillId('FR.06'), TipoFragmentoEnTejado.comparacion);
+    expect(
+      modoComparacionParaSkillId('FR.05'),
+      ModoComparacion.mismoDenominador,
+    );
+    expect(
+      modoComparacionParaSkillId('FR.06'),
+      ModoComparacion.mismoNumerador,
+    );
+    expect(modoComparacionParaSkillId('FR.09'), isNull);
+  });
+
+  test('GeneradorCaza respeta el modo pedido por skill', () {
+    final gen = GeneradorCaza(semilla: 123);
+    final ahora = DateTime(2026, 4, 24);
+    final fragFr05 = gen.siguienteParaSkill(
+      idHabilidad: 'FR.05',
+      esquirlasAcumuladas: 5,
+      ahora: ahora,
+    );
+    expect(fragFr05.tipo, TipoFragmentoEnTejado.comparacion);
+    expect(fragFr05.modoComparacion, ModoComparacion.mismoDenominador);
+    expect(fragFr05.denominador, fragFr05.denominadorB);
+
+    final fragFr06 = gen.siguienteParaSkill(
+      idHabilidad: 'FR.06',
+      esquirlasAcumuladas: 5,
+      ahora: ahora.add(const Duration(seconds: 1)),
+    );
+    expect(fragFr06.tipo, TipoFragmentoEnTejado.comparacion);
+    expect(fragFr06.modoComparacion, ModoComparacion.mismoNumerador);
+    expect(fragFr06.numerador, fragFr06.numeradorB);
   });
 
   test('forzarRangoMinimo sube y activa flag, no baja', () async {

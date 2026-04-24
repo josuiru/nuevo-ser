@@ -13,6 +13,7 @@ import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_decimal.dart';
+import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
 import '../nucleo/paleta.dart';
@@ -21,6 +22,7 @@ import '../sonido/catalogo_sonidos.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
+import 'pantalla_comparacion.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_dual.dart';
 import 'pantalla_espejo.dart';
@@ -230,6 +232,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.espejo => 2,
         TipoFragmentoEnTejado.decimal => 2,
         TipoFragmentoEnTejado.porcentaje => 2,
+        TipoFragmentoEnTejado.comparacion => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -325,6 +328,20 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaCombateEnfoque(
               numerador: fragmento.numerador,
               denominador: fragmento.denominador,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.comparacion:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaComparacion(
+              a: Fraccion(fragmento.numerador, fragmento.denominador),
+              b: Fraccion(
+                fragmento.numeradorB ?? fragmento.numerador,
+                fragmento.denominadorB ?? fragmento.denominador,
+              ),
+              modo: fragmento.modoComparacion ??
+                  ModoComparacion.mismoDenominador,
             ),
           ),
         );

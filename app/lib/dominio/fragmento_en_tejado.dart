@@ -13,6 +13,9 @@ import 'package:flutter/foundation.dart';
 /// - [porcentaje]: puzzle de conversión (Familia H). El Fragmento se
 ///   etiqueta con un porcentaje (25%) y el niño elige la fracción
 ///   equivalente.
+/// - [comparacion]: puzzle de comparación (Familia B/C, FR.05/FR.06).
+///   Se muestran dos fracciones — con el mismo denominador o con el
+///   mismo numerador — y el niño toca la mayor.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -22,11 +25,23 @@ enum TipoFragmentoEnTejado {
   proporcional,
   dual,
   operacionDecimal,
+  comparacion,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
 /// operación con decimales.
 enum OperadorAritmetico { suma, resta, producto, division }
+
+/// Modo de un puzzle de comparación. Determina qué se fija entre las
+/// dos fracciones y qué tiene que mirar el niño.
+enum ModoComparacion {
+  /// FR.05 — misma base (3/8 vs 5/8): gana el numerador mayor.
+  mismoDenominador,
+
+  /// FR.06 — mismo numerador (3/5 vs 3/8): gana el denominador menor.
+  /// Contraintuitivo: más importante.
+  mismoNumerador,
+}
 
 extension SimboloOperador on OperadorAritmetico {
   String get simbolo {
@@ -71,6 +86,10 @@ class FragmentoEnTejado {
   final String? decimalA;
   final String? decimalB;
 
+  /// Modo de comparación en Fragmentos de tipo
+  /// [TipoFragmentoEnTejado.comparacion]. Null para el resto.
+  final ModoComparacion? modoComparacion;
+
   /// Etiqueta alternativa para Fragmentos decimales. Si está presente
   /// se muestra en el tejado en lugar de numerador/denominador.
   final String? etiquetaDecimal;
@@ -103,6 +122,7 @@ class FragmentoEnTejado {
     this.operador,
     this.decimalA,
     this.decimalB,
+    this.modoComparacion,
   });
 
   bool get esCompuesto => numerador > 1;

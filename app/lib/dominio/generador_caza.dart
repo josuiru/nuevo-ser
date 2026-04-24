@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'distrito.dart';
 import 'fragmento_en_tejado.dart';
 import 'mapeo_habilidades_puzzle.dart'
-    show operadorParaSkillId, tipoParaSkillId;
+    show modoComparacionParaSkillId, operadorParaSkillId, tipoParaSkillId;
+import 'problema_comparacion.dart' show GeneradorComparacion;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 
@@ -45,6 +46,7 @@ class GeneradorCaza {
       dificultad: dificultad,
       ahora: ahora,
       operadorPreferido: operadorParaSkillId(idHabilidad),
+      modoComparacionPreferido: modoComparacionParaSkillId(idHabilidad),
     );
   }
 
@@ -68,7 +70,33 @@ class GeneradorCaza {
     required int dificultad,
     required DateTime ahora,
     OperadorAritmetico? operadorPreferido,
+    ModoComparacion? modoComparacionPreferido,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.comparacion) {
+      final modo = modoComparacionPreferido ??
+          (_azar.nextBool()
+              ? ModoComparacion.mismoDenominador
+              : ModoComparacion.mismoNumerador);
+      final problema = GeneradorComparacion(semilla: _azar.nextInt(1 << 30))
+          .generar(modo: modo, dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.a.numerador,
+        denominador: problema.a.denominador,
+        numeradorB: problema.b.numerador,
+        denominadorB: problema.b.denominador,
+        tipo: tipo,
+        modoComparacion: modo,
+        etiquetaDecimal:
+            '${problema.a.etiqueta} · ${problema.b.etiqueta}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.decimal) {
       final decimalElegido =
@@ -389,6 +417,10 @@ class GeneradorCaza {
     switch (tipo) {
       case TipoFragmentoEnTejado.unitario:
         return true;
+      case TipoFragmentoEnTejado.comparacion:
+        // FR.05/FR.06 se introducen pronto (Aprendiz II); disponible
+        // desde el primer tier adaptativo.
+        return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

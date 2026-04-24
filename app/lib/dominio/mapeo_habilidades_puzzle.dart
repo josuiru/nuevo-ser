@@ -6,6 +6,8 @@ import 'fragmento_en_tejado.dart';
 /// diseño de puzzle.
 const Set<String> skillsConPuzzleImplementado = {
   'FR.01',
+  'FR.05',
+  'FR.06',
   'FR.09',
   'FR.12',
   'FR.14',
@@ -29,6 +31,9 @@ const Set<String> skillsConPuzzleImplementado = {
 /// Si no hay mapeo, devuelve null (no debería ocurrir si el selector
 /// filtra por [skillsConPuzzleImplementado]).
 TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
+  if (skillId == 'FR.05' || skillId == 'FR.06') {
+    return TipoFragmentoEnTejado.comparacion;
+  }
   if (skillId == 'FR.09') return TipoFragmentoEnTejado.espejo;
   if (skillId == 'FR.12' || skillId == 'FR.13') {
     return TipoFragmentoEnTejado.impropio;
@@ -54,6 +59,19 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   }
   if (skillId.startsWith('FR.')) return TipoFragmentoEnTejado.unitario;
   return null;
+}
+
+/// Para Fragmentos de comparación, el modo concreto según skill.
+/// Null si la skill no es una de comparación.
+ModoComparacion? modoComparacionParaSkillId(String skillId) {
+  switch (skillId) {
+    case 'FR.05':
+      return ModoComparacion.mismoDenominador;
+    case 'FR.06':
+      return ModoComparacion.mismoNumerador;
+    default:
+      return null;
+  }
 }
 
 /// Para Duales y OpDecimal, el operador concreto a forzar según
@@ -107,6 +125,14 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.12';
     case TipoFragmentoEnTejado.proporcional:
       return 'PROP.02';
+    case TipoFragmentoEnTejado.comparacion:
+      switch (fragmento.modoComparacion) {
+        case ModoComparacion.mismoNumerador:
+          return 'FR.06';
+        case ModoComparacion.mismoDenominador:
+        case null:
+          return 'FR.05';
+      }
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -145,6 +171,12 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       final base = (d / 3).clamp(0.5, 1.6);
       final porCompuesto = n > 1 ? 0.2 : 0.0;
       return (base + porCompuesto).clamp(0.5, 2.0);
+    case TipoFragmentoEnTejado.comparacion:
+      // Comparar mismo numerador es más contraintuitivo que mismo
+      // denominador: pesa un poco más.
+      return fragmento.modoComparacion == ModoComparacion.mismoNumerador
+          ? 1.0
+          : 0.8;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:
