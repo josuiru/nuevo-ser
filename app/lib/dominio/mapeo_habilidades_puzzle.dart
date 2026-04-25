@@ -10,6 +10,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'FR.06',
   'FR.09',
   'FR.10',
+  'FR.11',
   'FR.12',
   'FR.14',
   'FR.15',
@@ -37,6 +38,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   }
   if (skillId == 'FR.09') return TipoFragmentoEnTejado.espejo;
   if (skillId == 'FR.10') return TipoFragmentoEnTejado.simplificar;
+  if (skillId == 'FR.11') return TipoFragmentoEnTejado.amplificar;
   if (skillId == 'FR.12' || skillId == 'FR.13') {
     return TipoFragmentoEnTejado.impropio;
   }
@@ -137,6 +139,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       }
     case TipoFragmentoEnTejado.simplificar:
       return 'FR.10';
+    case TipoFragmentoEnTejado.amplificar:
+      return 'FR.11';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -184,6 +188,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.simplificar:
       // Simplificar pide reconocer una forma mínima entre varias
       // equivalencias — un escalón más que espejo.
+      return 1.1;
+    case TipoFragmentoEnTejado.amplificar:
+      // Amplificar a denominador dado: igual de exigente que
+      // simplificar, pero con la mecánica de rellenar.
       return 1.1;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:

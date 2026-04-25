@@ -12,6 +12,7 @@ import 'package:uno_roto/dominio/mapeo_habilidades_puzzle.dart';
 import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/problema_comparacion.dart';
 import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
+import 'package:uno_roto/dominio/problema_amplificar.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -932,6 +933,71 @@ void main() {
       reason: 'El Fragmento debe ser reducible',
     );
   });
+
+  // ═══ Puzzle de amplificación (FR.11) ═══
+
+  test(
+    'GeneradorAmplificar produce ecuaciones equivalentes con cuatro candidatos',
+    () {
+      final gen = GeneradorAmplificar(semilla: 99);
+      for (var intento = 0; intento < 40; intento++) {
+        final problema = gen.generar(dificultad: 2);
+        // El denominador objetivo es múltiplo entero del denominador base.
+        expect(
+          problema.denominadorObjetivo % problema.base.denominador,
+          0,
+          reason:
+              'Objetivo ${problema.denominadorObjetivo} no divisible por '
+              'base ${problema.base.denominador}',
+        );
+        expect(problema.factor, greaterThanOrEqualTo(2));
+        // El numerador correcto cumple base = correcto/objetivo.
+        final correcto = Fraccion(
+          problema.numeradorCorrecto,
+          problema.denominadorObjetivo,
+        );
+        expect(correcto.esEquivalenteA(problema.base), isTrue);
+        // Cuatro candidatos, todos distintos.
+        expect(problema.candidatos, hasLength(4));
+        expect(problema.candidatos.toSet(), hasLength(4));
+      }
+    },
+  );
+
+  test('FR.11 está mapeada al tipo amplificar', () {
+    expect(skillsConPuzzleImplementado, contains('FR.11'));
+    expect(tipoParaSkillId('FR.11'), TipoFragmentoEnTejado.amplificar);
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 3,
+      denominador: 4,
+      denominadorB: 12,
+      tipo: TipoFragmentoEnTejado.amplificar,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 25),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.11');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.11 produce Fragmento con denominador objetivo coherente',
+    () {
+      final gen = GeneradorCaza(semilla: 314);
+      final ahora = DateTime(2026, 4, 25);
+      final frag = gen.siguienteParaSkill(
+        idHabilidad: 'FR.11',
+        esquirlasAcumuladas: 15,
+        ahora: ahora,
+      );
+      expect(frag.tipo, TipoFragmentoEnTejado.amplificar);
+      expect(frag.denominadorB, isNotNull);
+      // El objetivo es múltiplo del denominador base.
+      expect(frag.denominadorB! % frag.denominador, 0);
+      expect(frag.denominadorB! ~/ frag.denominador, greaterThanOrEqualTo(2));
+    },
+  );
 
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
     SharedPreferences.setMockInitialValues({});

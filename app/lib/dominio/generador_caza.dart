@@ -4,6 +4,7 @@ import 'distrito.dart';
 import 'fragmento_en_tejado.dart';
 import 'mapeo_habilidades_puzzle.dart'
     show modoComparacionParaSkillId, operadorParaSkillId, tipoParaSkillId;
+import 'problema_amplificar.dart' show GeneradorAmplificar;
 import 'problema_comparacion.dart' show GeneradorComparacion;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
@@ -73,6 +74,27 @@ class GeneradorCaza {
     OperadorAritmetico? operadorPreferido,
     ModoComparacion? modoComparacionPreferido,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.amplificar) {
+      final problema = GeneradorAmplificar(semilla: _azar.nextInt(1 << 30))
+          .generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.base.numerador,
+        denominador: problema.base.denominador,
+        // Reutilizamos denominadorB para llevar el denominador objetivo
+        // hasta la pantalla — no hay segunda fracción aquí.
+        denominadorB: problema.denominadorObjetivo,
+        tipo: tipo,
+        etiquetaDecimal:
+            '${problema.base.etiqueta}=?/${problema.denominadorObjetivo}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.simplificar) {
       final problema = GeneradorSimplificar(semilla: _azar.nextInt(1 << 30))
@@ -441,6 +463,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.simplificar:
         // FR.10 entra al principio del Iniciado I — un pelín más tarde
         // que la equivalencia libre de FR.09.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.amplificar:
+        // FR.11 acompaña a FR.09 (equivalencia) — disponible cuando ya
+        // se conoce la mecánica de equivalencia básica.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

@@ -28,6 +28,7 @@ import 'pantalla_dual.dart';
 import 'pantalla_espejo.dart';
 import 'pantalla_impropio.dart';
 import 'pantalla_operacion_decimal.dart';
+import 'pantalla_amplificar.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pantalla_simplificar.dart';
@@ -235,6 +236,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.porcentaje => 2,
         TipoFragmentoEnTejado.comparacion => 2,
         TipoFragmentoEnTejado.simplificar => 3,
+        TipoFragmentoEnTejado.amplificar => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -353,6 +355,20 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaSimplificar(
               numerador: fragmento.numerador,
               denominador: fragmento.denominador,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.amplificar:
+        // Usamos `denominadorB` como denominador objetivo si vino
+        // calculado por el generador; si no, fabricamos uno multiplicando
+        // la base por 3 — tolerante a Fragmentos manuales.
+        final objetivo = fragmento.denominadorB ?? fragmento.denominador * 3;
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaAmplificar(
+              numeradorBase: fragmento.numerador,
+              denominadorBase: fragmento.denominador,
+              denominadorObjetivo: objetivo,
             ),
           ),
         );

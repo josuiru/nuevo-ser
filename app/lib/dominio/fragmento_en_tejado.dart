@@ -19,6 +19,9 @@ import 'package:flutter/foundation.dart';
 /// - [simplificar]: puzzle FR.10. Se muestra una fracción reducible
 ///   (p. ej. 6/8) y el niño elige su forma mínima entre cuatro
 ///   candidatos. A diferencia de [espejo], el ganador es único.
+/// - [amplificar]: puzzle FR.11. Se presenta la ecuación
+///   "3/4 = ?/12" y el niño elige el numerador que la completa.
+///   Mecánica de "rellenar el hueco".
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -30,6 +33,7 @@ enum TipoFragmentoEnTejado {
   operacionDecimal,
   comparacion,
   simplificar,
+  amplificar,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
