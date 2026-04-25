@@ -14,6 +14,7 @@ import 'problema_comparacion_decimal.dart'
     show GeneradorComparacionDecimal;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
+import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 import 'problema_simplificar.dart' show GeneradorSimplificar;
 
@@ -83,6 +84,26 @@ class GeneradorCaza {
     ModoComparacion? modoComparacionPreferido,
     List<int>? divisoresPermitidos,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.lecturaDecimal) {
+      final problema = GeneradorLecturaDecimal(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // numerador/denominador no aplican: el contenido pedagógico
+        // viaja en `etiquetaDecimal` (texto en palabras).
+        numerador: 0,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: problema.texto,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.comparacionDecimal) {
       final problema = GeneradorComparacionDecimal(
@@ -528,6 +549,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.comparacionDecimal:
         // DEC.02 entra a partir del Iniciado I.
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.lecturaDecimal:
+        // DEC.01 es la primera habilidad de decimales — entra antes,
+        // a tier 1 (Aprendiz III).
+        return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

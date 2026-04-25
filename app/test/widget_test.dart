@@ -15,6 +15,7 @@ import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
 import 'package:uno_roto/dominio/problema_amplificar.dart';
 import 'package:uno_roto/dominio/problema_comparacion_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
+import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -1186,6 +1187,84 @@ void main() {
       expect(frag.decimalB, isNotNull);
       expect(frag.decimalA, contains(','));
       expect(frag.decimalB, contains(','));
+    },
+  );
+
+  // ═══ Puzzle de lectura decimal (DEC.01) ═══
+
+  test(
+    'GeneradorLecturaDecimal produce un texto válido y un correcto entre 4 candidatos',
+    () {
+      final gen = GeneradorLecturaDecimal(semilla: 1);
+      for (var intento = 0; intento < 30; intento++) {
+        final problema = gen.generar(dificultad: 3);
+        expect(problema.texto, isNotEmpty);
+        expect(problema.candidatos, hasLength(4));
+        expect(problema.candidatos.toSet(), hasLength(4));
+        expect(
+          problema.indiceCorrecto,
+          inInclusiveRange(0, 3),
+        );
+      }
+    },
+  );
+
+  test('generarDesdeTexto reproduce exactamente la forma esperada', () {
+    final gen = GeneradorLecturaDecimal(semilla: 5);
+    final problema = gen.generarDesdeTexto('veinticinco centésimas');
+    expect(problema.texto, 'veinticinco centésimas');
+    expect(problema.etiquetaCorrecta, '0,25');
+    expect(problema.candidatos, contains('0,25'));
+  });
+
+  test('Dificultad 1 evita milésimas y mixtos "unidad y …"', () {
+    final gen = GeneradorLecturaDecimal(semilla: 33);
+    for (var intento = 0; intento < 20; intento++) {
+      final problema = gen.generar(dificultad: 1);
+      expect(problema.texto, isNot(contains('milésimas')));
+      expect(problema.texto, isNot(contains('unidad')));
+    }
+  });
+
+  test('DEC.01 está mapeada al tipo lecturaDecimal', () {
+    expect(skillsConPuzzleImplementado, contains('DEC.01'));
+    expect(tipoParaSkillId('DEC.01'), TipoFragmentoEnTejado.lecturaDecimal);
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.lecturaDecimal,
+      etiquetaDecimal: 'tres décimas',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 25),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DEC.01');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DEC.01 produce Fragmento con texto en palabras',
+    () {
+      final gen = GeneradorCaza(semilla: 444);
+      final ahora = DateTime(2026, 4, 25);
+      final frag = gen.siguienteParaSkill(
+        idHabilidad: 'DEC.01',
+        esquirlasAcumuladas: 8,
+        ahora: ahora,
+      );
+      expect(frag.tipo, TipoFragmentoEnTejado.lecturaDecimal);
+      expect(frag.etiquetaDecimal, isNotNull);
+      // El texto canónico contiene unidad de lugar de valor (décimas /
+      // centésimas / milésimas / unidades).
+      final texto = frag.etiquetaDecimal!;
+      final tieneUnidadDeLugar =
+          texto.contains('décimas') ||
+              texto.contains('centésimas') ||
+              texto.contains('milésimas') ||
+              texto.contains('unidad');
+      expect(tieneUnidadDeLugar, isTrue,
+          reason: 'Texto inesperado: $texto');
     },
   );
 

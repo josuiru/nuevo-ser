@@ -26,6 +26,9 @@ import 'package:flutter/foundation.dart';
 ///   divisor; el niño decide sí/no. Primera mecánica binaria.
 /// - [comparacionDecimal]: puzzle DEC.02. Dos decimales lado a lado,
 ///   tocar el mayor. Sesgado a casos donde el más largo no es el mayor.
+/// - [lecturaDecimal]: puzzle DEC.01. Se muestra un decimal en
+///   palabras ("veinticinco centésimas") y el niño elige su etiqueta
+///   numérica entre cuatro candidatos.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -40,6 +43,7 @@ enum TipoFragmentoEnTejado {
   amplificar,
   divisibilidad,
   comparacionDecimal,
+  lecturaDecimal,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

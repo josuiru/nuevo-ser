@@ -16,6 +16,7 @@ import '../dominio/problema_comparacion_decimal.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
+import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
 import '../nucleo/paleta.dart';
@@ -33,6 +34,7 @@ import 'pantalla_operacion_decimal.dart';
 import 'pantalla_amplificar.dart';
 import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
+import 'pantalla_lectura_decimal.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pantalla_simplificar.dart';
@@ -243,6 +245,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.amplificar => 3,
         TipoFragmentoEnTejado.divisibilidad => 1,
         TipoFragmentoEnTejado.comparacionDecimal => 2,
+        TipoFragmentoEnTejado.lecturaDecimal => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -387,6 +390,18 @@ class _PantallaCazaState extends State<PantallaCaza>
                 numero: fragmento.numerador,
                 divisor: fragmento.denominador,
               ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.lecturaDecimal:
+        // El texto del decimal viaja en etiquetaDecimal — la pantalla
+        // reconstruye el problema con sus distractores curados.
+        final textoEnPalabras = fragmento.etiquetaDecimal ?? 'tres décimas';
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaLecturaDecimal(
+              problemaPredeterminado:
+                  GeneradorLecturaDecimal().generarDesdeTexto(textoEnPalabras),
             ),
           ),
         );
