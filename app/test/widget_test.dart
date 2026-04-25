@@ -13,6 +13,7 @@ import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/problema_comparacion.dart';
 import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
 import 'package:uno_roto/dominio/problema_amplificar.dart';
+import 'package:uno_roto/dominio/problema_comparacion_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
@@ -1114,6 +1115,77 @@ void main() {
         tiempoDeVida: const Duration(seconds: 10),
       );
       expect(idHabilidadPrincipal(fragAvanzado), 'DIV.04');
+    },
+  );
+
+  // ═══ Puzzle de comparación de decimales (DEC.02) ═══
+
+  test('ProblemaComparacionDecimal evalúa el mayor por valor numérico', () {
+    const trampaCorta = ProblemaComparacionDecimal(
+      etiquetaA: '0,35',
+      etiquetaB: '0,4',
+      valorA: 0.35,
+      valorB: 0.4,
+    );
+    expect(trampaCorta.indiceMayor, 1);
+    expect(trampaCorta.esCorrecto(1), isTrue);
+    expect(trampaCorta.esCorrecto(0), isFalse);
+  });
+
+  test(
+    'GeneradorComparacionDecimal produce pares con un mayor claro',
+    () {
+      final gen = GeneradorComparacionDecimal(semilla: 51);
+      for (var intento = 0; intento < 60; intento++) {
+        final problema = gen.generar(dificultad: 2);
+        expect(problema.indiceMayor, isNotNull,
+            reason:
+                '${problema.etiquetaA} vs ${problema.etiquetaB} no debería '
+                'producir empate');
+        expect(problema.valorA, isNot(problema.valorB));
+        // Las etiquetas son legibles como decimales con coma.
+        expect(problema.etiquetaA, contains(','));
+        expect(problema.etiquetaB, contains(','));
+      }
+    },
+  );
+
+  test('DEC.02 está mapeada al tipo comparacionDecimal', () {
+    expect(skillsConPuzzleImplementado, contains('DEC.02'));
+    expect(
+      tipoParaSkillId('DEC.02'),
+      TipoFragmentoEnTejado.comparacionDecimal,
+    );
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.comparacionDecimal,
+      decimalA: '0,35',
+      decimalB: '0,4',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 25),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DEC.02');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DEC.02 produce Fragmento con dos etiquetas decimales',
+    () {
+      final gen = GeneradorCaza(semilla: 9999);
+      final ahora = DateTime(2026, 4, 25);
+      final frag = gen.siguienteParaSkill(
+        idHabilidad: 'DEC.02',
+        esquirlasAcumuladas: 12,
+        ahora: ahora,
+      );
+      expect(frag.tipo, TipoFragmentoEnTejado.comparacionDecimal);
+      expect(frag.decimalA, isNotNull);
+      expect(frag.decimalB, isNotNull);
+      expect(frag.decimalA, contains(','));
+      expect(frag.decimalB, contains(','));
     },
   );
 

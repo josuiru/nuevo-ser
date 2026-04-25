@@ -12,6 +12,7 @@ import '../dominio/generador_caza.dart';
 import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
+import '../dominio/problema_comparacion_decimal.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
@@ -30,6 +31,7 @@ import 'pantalla_espejo.dart';
 import 'pantalla_impropio.dart';
 import 'pantalla_operacion_decimal.dart';
 import 'pantalla_amplificar.dart';
+import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
@@ -240,6 +242,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.simplificar => 3,
         TipoFragmentoEnTejado.amplificar => 3,
         TipoFragmentoEnTejado.divisibilidad => 1,
+        TipoFragmentoEnTejado.comparacionDecimal => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -383,6 +386,26 @@ class _PantallaCazaState extends State<PantallaCaza>
               problemaPredeterminado: ProblemaDivisibilidad(
                 numero: fragmento.numerador,
                 divisor: fragmento.denominador,
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.comparacionDecimal:
+        // decimalA/decimalB llevan las dos etiquetas tal cual; si el
+        // Fragmento se construyó manualmente sin ellas, fabricamos un
+        // par fácil para no dejar al niño en blanco.
+        final etiquetaA = fragmento.decimalA ?? '0,3';
+        final etiquetaB = fragmento.decimalB ?? '0,7';
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaComparacionDecimal(
+              problemaPredeterminado: ProblemaComparacionDecimal(
+                etiquetaA: etiquetaA,
+                etiquetaB: etiquetaB,
+                valorA:
+                    double.parse(etiquetaA.replaceAll(',', '.')),
+                valorB:
+                    double.parse(etiquetaB.replaceAll(',', '.')),
               ),
             ),
           ),

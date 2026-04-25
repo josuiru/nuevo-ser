@@ -10,6 +10,8 @@ import 'mapeo_habilidades_puzzle.dart'
         tipoParaSkillId;
 import 'problema_amplificar.dart' show GeneradorAmplificar;
 import 'problema_comparacion.dart' show GeneradorComparacion;
+import 'problema_comparacion_decimal.dart'
+    show GeneradorComparacionDecimal;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
@@ -81,6 +83,28 @@ class GeneradorCaza {
     ModoComparacion? modoComparacionPreferido,
     List<int>? divisoresPermitidos,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.comparacionDecimal) {
+      final problema = GeneradorComparacionDecimal(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // numerador/denominador no aplican para decimales puros, pero
+        // mantenemos el contrato del struct con valores neutros.
+        numerador: 0,
+        denominador: 1,
+        tipo: tipo,
+        decimalA: problema.etiquetaA,
+        decimalB: problema.etiquetaB,
+        etiquetaDecimal: '${problema.etiquetaA} · ${problema.etiquetaB}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.divisibilidad) {
       final problema = GeneradorDivisibilidad(
@@ -501,6 +525,9 @@ class GeneradorCaza {
         // DIV.03 entra antes (Aprendiz III): mecánica binaria muy
         // accesible aunque sea la primera vez.
         return dificultad >= 1;
+      case TipoFragmentoEnTejado.comparacionDecimal:
+        // DEC.02 entra a partir del Iniciado I.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:
