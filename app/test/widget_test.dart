@@ -1070,6 +1070,53 @@ void main() {
     },
   );
 
+  test(
+    'GeneradorCaza dirigido a DIV.04 usa los criterios avanzados (4, 6, 9)',
+    () {
+      final gen = GeneradorCaza(semilla: 12);
+      final ahora = DateTime(2026, 4, 25);
+      // Probamos varias generaciones para cubrir la elección aleatoria.
+      for (var intento = 0; intento < 20; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DIV.04',
+          esquirlasAcumuladas: 12,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.divisibilidad);
+        expect(const [4, 6, 9], contains(frag.denominador));
+      }
+    },
+  );
+
+  test(
+    'idHabilidadPrincipal distingue DIV.03 vs DIV.04 según el divisor',
+    () {
+      final fragBasico = FragmentoEnTejado(
+        identificador: 't',
+        numerador: 145,
+        denominador: 5,
+        tipo: TipoFragmentoEnTejado.divisibilidad,
+        xNormalizado: 0,
+        yNormalizado: 0,
+        instanteAparicion: DateTime(2026, 4, 25),
+        tiempoDeVida: const Duration(seconds: 10),
+      );
+      expect(idHabilidadPrincipal(fragBasico), 'DIV.03');
+
+      final fragAvanzado = FragmentoEnTejado(
+        identificador: 't2',
+        numerador: 144,
+        denominador: 9,
+        tipo: TipoFragmentoEnTejado.divisibilidad,
+        xNormalizado: 0,
+        yNormalizado: 0,
+        instanteAparicion: DateTime(2026, 4, 25),
+        tiempoDeVida: const Duration(seconds: 10),
+      );
+      expect(idHabilidadPrincipal(fragAvanzado), 'DIV.04');
+    },
+  );
+
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
     SharedPreferences.setMockInitialValues({});
     final repo = RepositorioProgreso();

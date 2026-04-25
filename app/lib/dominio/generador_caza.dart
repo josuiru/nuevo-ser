@@ -3,7 +3,11 @@ import 'dart:math' as math;
 import 'distrito.dart';
 import 'fragmento_en_tejado.dart';
 import 'mapeo_habilidades_puzzle.dart'
-    show modoComparacionParaSkillId, operadorParaSkillId, tipoParaSkillId;
+    show
+        divisoresParaSkillId,
+        modoComparacionParaSkillId,
+        operadorParaSkillId,
+        tipoParaSkillId;
 import 'problema_amplificar.dart' show GeneradorAmplificar;
 import 'problema_comparacion.dart' show GeneradorComparacion;
 import 'problema_decimal.dart' show decimalesConocidos;
@@ -50,6 +54,7 @@ class GeneradorCaza {
       ahora: ahora,
       operadorPreferido: operadorParaSkillId(idHabilidad),
       modoComparacionPreferido: modoComparacionParaSkillId(idHabilidad),
+      divisoresPermitidos: divisoresParaSkillId(idHabilidad),
     );
   }
 
@@ -74,11 +79,15 @@ class GeneradorCaza {
     required DateTime ahora,
     OperadorAritmetico? operadorPreferido,
     ModoComparacion? modoComparacionPreferido,
+    List<int>? divisoresPermitidos,
   }) {
 
     if (tipo == TipoFragmentoEnTejado.divisibilidad) {
-      final problema = GeneradorDivisibilidad(semilla: _azar.nextInt(1 << 30))
-          .generar(dificultad: dificultad);
+      final problema = GeneradorDivisibilidad(
+        semilla: _azar.nextInt(1 << 30),
+        divisoresPermitidos:
+            divisoresPermitidos ?? const [2, 3, 5, 10],
+      ).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',

@@ -28,6 +28,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'PROP.02',
   'PROP.04',
   'DIV.03',
+  'DIV.04',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -40,7 +41,9 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.09') return TipoFragmentoEnTejado.espejo;
   if (skillId == 'FR.10') return TipoFragmentoEnTejado.simplificar;
   if (skillId == 'FR.11') return TipoFragmentoEnTejado.amplificar;
-  if (skillId == 'DIV.03') return TipoFragmentoEnTejado.divisibilidad;
+  if (skillId == 'DIV.03' || skillId == 'DIV.04') {
+    return TipoFragmentoEnTejado.divisibilidad;
+  }
   if (skillId == 'FR.12' || skillId == 'FR.13') {
     return TipoFragmentoEnTejado.impropio;
   }
@@ -65,6 +68,23 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   }
   if (skillId.startsWith('FR.')) return TipoFragmentoEnTejado.unitario;
   return null;
+}
+
+/// Para Fragmentos de divisibilidad, el conjunto de divisores que se
+/// pueden plantear según la skill objetivo.
+/// - DIV.03: criterios básicos {2, 3, 5, 10}.
+/// - DIV.04: criterios avanzados {4, 6, 9}.
+/// Null si la skill no es de divisibilidad — el generador caerá en el
+/// set predeterminado.
+List<int>? divisoresParaSkillId(String skillId) {
+  switch (skillId) {
+    case 'DIV.03':
+      return const [2, 3, 5, 10];
+    case 'DIV.04':
+      return const [4, 6, 9];
+    default:
+      return null;
+  }
 }
 
 /// Para Fragmentos de comparación, el modo concreto según skill.
@@ -144,7 +164,13 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.amplificar:
       return 'FR.11';
     case TipoFragmentoEnTejado.divisibilidad:
-      return 'DIV.03';
+      // El divisor concreto distingue qué skill ejercita el Fragmento:
+      // los criterios avanzados (4, 6, 9) son DIV.04; los básicos
+      // (2, 3, 5, 10), DIV.03.
+      const avanzados = {4, 6, 9};
+      return avanzados.contains(fragmento.denominador)
+          ? 'DIV.04'
+          : 'DIV.03';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -198,9 +224,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // simplificar, pero con la mecánica de rellenar.
       return 1.1;
     case TipoFragmentoEnTejado.divisibilidad:
-      // Decisión binaria con criterios memorizables: muy ligero,
-      // pero la métrica del motor lo registra igual.
-      return 0.7;
+      // Criterios avanzados (4, 6, 9) son menos automáticos que los
+      // básicos (2, 3, 5, 10) y pesan un escalón más.
+      const avanzados = {4, 6, 9};
+      return avanzados.contains(fragmento.denominador) ? 0.95 : 0.7;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:
