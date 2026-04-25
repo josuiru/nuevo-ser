@@ -13,6 +13,7 @@ import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_decimal.dart';
+import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
@@ -29,6 +30,7 @@ import 'pantalla_espejo.dart';
 import 'pantalla_impropio.dart';
 import 'pantalla_operacion_decimal.dart';
 import 'pantalla_amplificar.dart';
+import 'pantalla_divisibilidad.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pantalla_simplificar.dart';
@@ -237,6 +239,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacion => 2,
         TipoFragmentoEnTejado.simplificar => 3,
         TipoFragmentoEnTejado.amplificar => 3,
+        TipoFragmentoEnTejado.divisibilidad => 1,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -369,6 +372,18 @@ class _PantallaCazaState extends State<PantallaCaza>
               numeradorBase: fragmento.numerador,
               denominadorBase: fragmento.denominador,
               denominadorObjetivo: objetivo,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.divisibilidad:
+        // numerador → número candidato; denominador → divisor.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaDivisibilidad(
+              problemaPredeterminado: ProblemaDivisibilidad(
+                numero: fragmento.numerador,
+                divisor: fragmento.denominador,
+              ),
             ),
           ),
         );

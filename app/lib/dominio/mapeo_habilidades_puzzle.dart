@@ -27,6 +27,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DEC.08',
   'PROP.02',
   'PROP.04',
+  'DIV.03',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -39,6 +40,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.09') return TipoFragmentoEnTejado.espejo;
   if (skillId == 'FR.10') return TipoFragmentoEnTejado.simplificar;
   if (skillId == 'FR.11') return TipoFragmentoEnTejado.amplificar;
+  if (skillId == 'DIV.03') return TipoFragmentoEnTejado.divisibilidad;
   if (skillId == 'FR.12' || skillId == 'FR.13') {
     return TipoFragmentoEnTejado.impropio;
   }
@@ -141,6 +143,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.10';
     case TipoFragmentoEnTejado.amplificar:
       return 'FR.11';
+    case TipoFragmentoEnTejado.divisibilidad:
+      return 'DIV.03';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -193,6 +197,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Amplificar a denominador dado: igual de exigente que
       // simplificar, pero con la mecánica de rellenar.
       return 1.1;
+    case TipoFragmentoEnTejado.divisibilidad:
+      // Decisión binaria con criterios memorizables: muy ligero,
+      // pero la métrica del motor lo registra igual.
+      return 0.7;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:

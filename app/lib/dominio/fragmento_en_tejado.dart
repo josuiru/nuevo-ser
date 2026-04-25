@@ -22,6 +22,8 @@ import 'package:flutter/foundation.dart';
 /// - [amplificar]: puzzle FR.11. Se presenta la ecuación
 ///   "3/4 = ?/12" y el niño elige el numerador que la completa.
 ///   Mecánica de "rellenar el hueco".
+/// - [divisibilidad]: puzzle DIV.03. Se muestra un número y un divisor;
+///   el niño decide sí/no. Primera mecánica binaria de Uno Roto.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -34,6 +36,7 @@ enum TipoFragmentoEnTejado {
   comparacion,
   simplificar,
   amplificar,
+  divisibilidad,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

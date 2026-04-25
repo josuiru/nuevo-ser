@@ -7,6 +7,7 @@ import 'mapeo_habilidades_puzzle.dart'
 import 'problema_amplificar.dart' show GeneradorAmplificar;
 import 'problema_comparacion.dart' show GeneradorComparacion;
 import 'problema_decimal.dart' show decimalesConocidos;
+import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 import 'problema_simplificar.dart' show GeneradorSimplificar;
 
@@ -74,6 +75,25 @@ class GeneradorCaza {
     OperadorAritmetico? operadorPreferido,
     ModoComparacion? modoComparacionPreferido,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.divisibilidad) {
+      final problema = GeneradorDivisibilidad(semilla: _azar.nextInt(1 << 30))
+          .generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // Reusamos numerador/denominador como contenedores: numerador
+        // = número candidato, denominador = divisor.
+        numerador: problema.numero,
+        denominador: problema.divisor,
+        tipo: tipo,
+        etiquetaDecimal: '${problema.numero}÷${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.amplificar) {
       final problema = GeneradorAmplificar(semilla: _azar.nextInt(1 << 30))
@@ -468,6 +488,10 @@ class GeneradorCaza {
         // FR.11 acompaña a FR.09 (equivalencia) — disponible cuando ya
         // se conoce la mecánica de equivalencia básica.
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.divisibilidad:
+        // DIV.03 entra antes (Aprendiz III): mecánica binaria muy
+        // accesible aunque sea la primera vez.
+        return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

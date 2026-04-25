@@ -13,6 +13,7 @@ import 'package:uno_roto/dominio/motor_maestria.dart';
 import 'package:uno_roto/dominio/problema_comparacion.dart';
 import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
 import 'package:uno_roto/dominio/problema_amplificar.dart';
+import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -996,6 +997,76 @@ void main() {
       // El objetivo es múltiplo del denominador base.
       expect(frag.denominadorB! % frag.denominador, 0);
       expect(frag.denominadorB! ~/ frag.denominador, greaterThanOrEqualTo(2));
+    },
+  );
+
+  // ═══ Puzzle de divisibilidad (DIV.03) ═══
+
+  test('ProblemaDivisibilidad evalúa correctamente sí/no', () {
+    const divisibleEntre5 = ProblemaDivisibilidad(numero: 145, divisor: 5);
+    expect(divisibleEntre5.esDivisible, isTrue);
+    expect(divisibleEntre5.esCorrecta(true), isTrue);
+    expect(divisibleEntre5.esCorrecta(false), isFalse);
+
+    const noDivisibleEntre3 = ProblemaDivisibilidad(numero: 100, divisor: 3);
+    expect(noDivisibleEntre3.esDivisible, isFalse);
+    expect(noDivisibleEntre3.esCorrecta(false), isTrue);
+    expect(noDivisibleEntre3.esCorrecta(true), isFalse);
+  });
+
+  test(
+    'GeneradorDivisibilidad respeta los divisores permitidos y mezcla sí/no',
+    () {
+      final gen = GeneradorDivisibilidad(semilla: 17);
+      var siCount = 0;
+      var noCount = 0;
+      const total = 100;
+      for (var intento = 0; intento < total; intento++) {
+        final problema = gen.generar();
+        expect(const [2, 3, 5, 10], contains(problema.divisor));
+        expect(problema.numero, greaterThanOrEqualTo(10));
+        if (problema.esDivisible) {
+          siCount++;
+        } else {
+          noCount++;
+        }
+      }
+      // El generador apunta ~50/50 — comprobamos que ambas se ven
+      // razonablemente con margen amplio.
+      expect(siCount, greaterThan(20));
+      expect(noCount, greaterThan(20));
+    },
+  );
+
+  test('DIV.03 está mapeada al tipo divisibilidad', () {
+    expect(skillsConPuzzleImplementado, contains('DIV.03'));
+    expect(tipoParaSkillId('DIV.03'), TipoFragmentoEnTejado.divisibilidad);
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 145,
+      denominador: 5,
+      tipo: TipoFragmentoEnTejado.divisibilidad,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 25),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DIV.03');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DIV.03 produce Fragmento con divisor de los criterios básicos',
+    () {
+      final gen = GeneradorCaza(semilla: 555);
+      final ahora = DateTime(2026, 4, 25);
+      final frag = gen.siguienteParaSkill(
+        idHabilidad: 'DIV.03',
+        esquirlasAcumuladas: 8,
+        ahora: ahora,
+      );
+      expect(frag.tipo, TipoFragmentoEnTejado.divisibilidad);
+      expect(const [2, 3, 5, 10], contains(frag.denominador));
+      expect(frag.numerador, greaterThanOrEqualTo(10));
     },
   );
 
