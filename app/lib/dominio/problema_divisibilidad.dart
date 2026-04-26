@@ -1,5 +1,11 @@
 import 'dart:math' as math;
 
+/// Cómo se le pide al niño la decisión: el cálculo es el mismo (resto
+/// cero) pero la pregunta cambia según la habilidad.
+/// - [divisible] → DIV.03/DIV.04: "¿es divisible entre N?"
+/// - [multiplo] → DIV.01: "¿N es múltiplo de M?"
+enum ModoFraseoDivisibilidad { divisible, multiplo }
+
 /// Problema de divisibilidad: se muestra un número y un divisor, el
 /// niño decide si es o no divisible. Decisión binaria — primer puzzle
 /// de Uno Roto que se responde con sí/no, no con elección entre

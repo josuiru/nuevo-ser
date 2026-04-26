@@ -5,16 +5,23 @@ import '../dominio/problema_divisibilidad.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 
-/// Puzzle DIV.03: el niño ve un número y un divisor; decide si es
-/// divisible con un toque "sí" o "no". Primera mecánica binaria del
-/// juego. Si falla, se le permite reintentar — el puzzle no se cierra
-/// hasta que acierta o huye.
+/// Puzzle DIV.03/DIV.01: el niño ve un número y un divisor; decide si
+/// es divisible (DIV.03/04) o si es múltiplo (DIV.01) con un toque "sí"
+/// o "no". Primera mecánica binaria del juego. El cálculo es el mismo;
+/// el [modo] cambia la pregunta y la cabecera.
 class PantallaDivisibilidad extends StatefulWidget {
   /// Si llega un problema preconstruido (porque lo generó el cazador)
   /// se usa tal cual. Si es null, la pantalla genera uno propio.
   final ProblemaDivisibilidad? problemaPredeterminado;
 
-  const PantallaDivisibilidad({super.key, this.problemaPredeterminado});
+  /// Cómo se le formula la pregunta al niño.
+  final ModoFraseoDivisibilidad modo;
+
+  const PantallaDivisibilidad({
+    super.key,
+    this.problemaPredeterminado,
+    this.modo = ModoFraseoDivisibilidad.divisible,
+  });
 
   @override
   State<PantallaDivisibilidad> createState() =>
@@ -116,9 +123,12 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'DIVISIBLE',
-                            style: TextStyle(
+                          Text(
+                            widget.modo ==
+                                    ModoFraseoDivisibilidad.multiplo
+                                ? 'MÚLTIPLO'
+                                : 'DIVISIBLE',
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -140,7 +150,9 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
                       ),
                       const SizedBox(height: 18),
                       Text(
-                        '¿es divisible entre ${_problema.divisor}?',
+                        widget.modo == ModoFraseoDivisibilidad.multiplo
+                            ? '¿es múltiplo de ${_problema.divisor}?'
+                            : '¿es divisible entre ${_problema.divisor}?',
                         style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 22,

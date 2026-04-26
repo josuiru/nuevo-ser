@@ -29,6 +29,8 @@ import 'package:flutter/foundation.dart';
 /// - [lecturaDecimal]: puzzle DEC.01. Se muestra un decimal en
 ///   palabras ("veinticinco centésimas") y el niño elige su etiqueta
 ///   numérica entre cuatro candidatos.
+/// - [multiplos]: puzzle DIV.01. Variante de divisibilidad con
+///   fraseado inverso: "¿N es múltiplo de M?".
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -44,6 +46,7 @@ enum TipoFragmentoEnTejado {
   divisibilidad,
   comparacionDecimal,
   lecturaDecimal,
+  multiplos,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

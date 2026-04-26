@@ -127,6 +127,28 @@ class GeneradorCaza {
       );
     }
 
+    if (tipo == TipoFragmentoEnTejado.multiplos) {
+      final problema = GeneradorDivisibilidad(
+        semilla: _azar.nextInt(1 << 30),
+        divisoresPermitidos:
+            divisoresPermitidos ?? const [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.numero,
+        denominador: problema.divisor,
+        tipo: tipo,
+        // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
+        // divisibilidad pero indicando el fraseado.
+        etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
     if (tipo == TipoFragmentoEnTejado.divisibilidad) {
       final problema = GeneradorDivisibilidad(
         semilla: _azar.nextInt(1 << 30),
@@ -545,6 +567,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.divisibilidad:
         // DIV.03 entra antes (Aprendiz III): mecánica binaria muy
         // accesible aunque sea la primera vez.
+        return dificultad >= 1;
+      case TipoFragmentoEnTejado.multiplos:
+        // DIV.01 (concepto de múltiplo) entra a la vez que DIV.03 —
+        // misma mecánica, sin necesidad de criterios memorizados.
         return dificultad >= 1;
       case TipoFragmentoEnTejado.comparacionDecimal:
         // DEC.02 entra a partir del Iniciado I.

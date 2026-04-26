@@ -244,6 +244,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.simplificar => 3,
         TipoFragmentoEnTejado.amplificar => 3,
         TipoFragmentoEnTejado.divisibilidad => 1,
+        TipoFragmentoEnTejado.multiplos => 1,
         TipoFragmentoEnTejado.comparacionDecimal => 2,
         TipoFragmentoEnTejado.lecturaDecimal => 2,
         TipoFragmentoEnTejado.impropio => 3,
@@ -390,6 +391,20 @@ class _PantallaCazaState extends State<PantallaCaza>
                 numero: fragmento.numerador,
                 divisor: fragmento.denominador,
               ),
+              modo: ModoFraseoDivisibilidad.divisible,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.multiplos:
+        // Misma estructura, fraseado distinto: "¿es múltiplo de M?".
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaDivisibilidad(
+              problemaPredeterminado: ProblemaDivisibilidad(
+                numero: fragmento.numerador,
+                divisor: fragmento.denominador,
+              ),
+              modo: ModoFraseoDivisibilidad.multiplo,
             ),
           ),
         );

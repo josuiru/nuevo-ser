@@ -1268,6 +1268,54 @@ void main() {
     },
   );
 
+  // ═══ Puzzle de múltiplos (DIV.01) ═══
+
+  test('DIV.01 está mapeada al tipo multiplos con set amplio de divisores',
+      () {
+    expect(skillsConPuzzleImplementado, contains('DIV.01'));
+    expect(tipoParaSkillId('DIV.01'), TipoFragmentoEnTejado.multiplos);
+    expect(divisoresParaSkillId('DIV.01'), hasLength(9));
+    expect(divisoresParaSkillId('DIV.01'), contains(7));
+    expect(divisoresParaSkillId('DIV.01'), contains(8));
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 24,
+      denominador: 6,
+      tipo: TipoFragmentoEnTejado.multiplos,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 26),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DIV.01');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DIV.01 produce Fragmento con divisor de [2..10]',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 26);
+      // Algunas tiradas para validar que entran 7 y 8 (que en
+      // divisibilidad estándar no aparecen).
+      var visto7u8 = false;
+      for (var intento = 0; intento < 30; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DIV.01',
+          esquirlasAcumuladas: 8,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.multiplos);
+        expect(frag.denominador, inInclusiveRange(2, 10));
+        if (frag.denominador == 7 || frag.denominador == 8) {
+          visto7u8 = true;
+        }
+      }
+      expect(visto7u8, isTrue,
+          reason: 'En 30 tiradas debería aparecer al menos 7 u 8.');
+    },
+  );
+
   test('forzarRangoMinimo sube y activa flag, no baja', () async {
     SharedPreferences.setMockInitialValues({});
     final repo = RepositorioProgreso();

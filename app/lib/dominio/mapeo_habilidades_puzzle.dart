@@ -27,6 +27,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DEC.08',
   'PROP.02',
   'PROP.04',
+  'DIV.01',
   'DIV.03',
   'DIV.04',
   'DEC.01',
@@ -43,6 +44,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.09') return TipoFragmentoEnTejado.espejo;
   if (skillId == 'FR.10') return TipoFragmentoEnTejado.simplificar;
   if (skillId == 'FR.11') return TipoFragmentoEnTejado.amplificar;
+  if (skillId == 'DIV.01') return TipoFragmentoEnTejado.multiplos;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -74,14 +76,19 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   return null;
 }
 
-/// Para Fragmentos de divisibilidad, el conjunto de divisores que se
-/// pueden plantear según la skill objetivo.
+/// Para Fragmentos de divisibilidad/múltiplos, el conjunto de divisores
+/// que se pueden plantear según la skill objetivo.
+/// - DIV.01: cualquier divisor pequeño {2, 3, 4, 5, 6, 7, 8, 9, 10},
+///   porque la habilidad es entender el concepto de múltiplo, no
+///   memorizar criterios.
 /// - DIV.03: criterios básicos {2, 3, 5, 10}.
 /// - DIV.04: criterios avanzados {4, 6, 9}.
 /// Null si la skill no es de divisibilidad — el generador caerá en el
 /// set predeterminado.
 List<int>? divisoresParaSkillId(String skillId) {
   switch (skillId) {
+    case 'DIV.01':
+      return const [2, 3, 4, 5, 6, 7, 8, 9, 10];
     case 'DIV.03':
       return const [2, 3, 5, 10];
     case 'DIV.04':
@@ -179,6 +186,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'DEC.02';
     case TipoFragmentoEnTejado.lecturaDecimal:
       return 'DEC.01';
+    case TipoFragmentoEnTejado.multiplos:
+      return 'DIV.01';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -244,6 +253,9 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Lectura "texto → número": traducción ligera, parecida a
       // espejo o decimal.
       return 0.9;
+    case TipoFragmentoEnTejado.multiplos:
+      // Concepto de múltiplo, decisión binaria: ligero como DIV.03.
+      return 0.7;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:
