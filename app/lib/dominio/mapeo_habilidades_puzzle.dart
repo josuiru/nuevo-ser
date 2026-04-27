@@ -68,6 +68,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'GEO.04',
   'GEO.05',
   'GEO.06',
+  'GEO.07',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -107,6 +108,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'GEO.04') return TipoFragmentoEnTejado.areaTriangulo;
   if (skillId == 'GEO.05') return TipoFragmentoEnTejado.circulo;
   if (skillId == 'GEO.06') return TipoFragmentoEnTejado.volumen;
+  if (skillId == 'GEO.07') return TipoFragmentoEnTejado.simetria;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -338,6 +340,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'GEO.05';
     case TipoFragmentoEnTejado.volumen:
       return 'GEO.06';
+    case TipoFragmentoEnTejado.simetria:
+      return 'GEO.07';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -587,6 +591,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Producto de tres factores — un escalón sobre área de
       // rectángulo. Pesa parecido a área de triángulo.
       return 1.3;
+    case TipoFragmentoEnTejado.simetria:
+      // Decisión binaria visual — la habilidad es la imaginería
+      // espacial. Pesa ligero, parecido a divisibilidad básica.
+      return 0.8;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

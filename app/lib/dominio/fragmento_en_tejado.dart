@@ -144,6 +144,9 @@ import 'package:flutter/foundation.dart';
 ///   isométrica con sus tres dimensiones etiquetadas; el niño
 ///   calcula el volumen l × a × h. Distractores: área superficial,
 ///   suma l+a+h, área de una cara.
+/// - [simetria]: puzzle GEO.07. Figura simple con un eje (vertical u
+///   horizontal) sobreimpreso; el niño decide si es simétrica
+///   respecto al eje (sí/no). Decisión binaria.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -196,6 +199,7 @@ enum TipoFragmentoEnTejado {
   areaTriangulo,
   circulo,
   volumen,
+  simetria,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

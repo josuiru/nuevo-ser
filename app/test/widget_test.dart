@@ -45,6 +45,7 @@ import 'package:uno_roto/dominio/problema_area_rectangulo.dart';
 import 'package:uno_roto/dominio/problema_area_triangulo.dart';
 import 'package:uno_roto/dominio/problema_circulo.dart';
 import 'package:uno_roto/dominio/problema_volumen.dart';
+import 'package:uno_roto/dominio/problema_simetria.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2591,6 +2592,52 @@ void main() {
       expect(problema.candidatosPorcentaje, contains(25));
     },
   );
+
+  // ═══ Puzzle de simetría (GEO.07) ═══
+
+  test('GEO.07 está mapeada al tipo simetria', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.07'));
+    expect(tipoParaSkillId('GEO.07'), TipoFragmentoEnTejado.simetria);
+  });
+
+  test('Cuadrado es simétrico respecto a ambos ejes', () {
+    expect(
+      tieneEjeDeSimetria(FormaSimetrica.cuadrado, EjeSimetria.vertical),
+      isTrue,
+    );
+    expect(
+      tieneEjeDeSimetria(FormaSimetrica.cuadrado, EjeSimetria.horizontal),
+      isTrue,
+    );
+  });
+
+  test('Letra F no es simétrica respecto a ningún eje', () {
+    expect(
+      tieneEjeDeSimetria(FormaSimetrica.letraF, EjeSimetria.vertical),
+      isFalse,
+    );
+    expect(
+      tieneEjeDeSimetria(FormaSimetrica.letraF, EjeSimetria.horizontal),
+      isFalse,
+    );
+  });
+
+  test('Triángulo equilátero es simétrico solo respecto al eje vertical', () {
+    expect(
+      tieneEjeDeSimetria(
+        FormaSimetrica.trianguloEquilatero,
+        EjeSimetria.vertical,
+      ),
+      isTrue,
+    );
+    expect(
+      tieneEjeDeSimetria(
+        FormaSimetrica.trianguloEquilatero,
+        EjeSimetria.horizontal,
+      ),
+      isFalse,
+    );
+  });
 
   // ═══ Puzzle de volumen de ortoedro (GEO.06) ═══
 

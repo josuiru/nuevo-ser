@@ -47,6 +47,7 @@ import 'problema_area_rectangulo.dart' show GeneradorAreaRectangulo;
 import 'problema_area_triangulo.dart' show GeneradorAreaTriangulo;
 import 'problema_circulo.dart' show GeneradorCirculo;
 import 'problema_volumen.dart' show GeneradorVolumen;
+import 'problema_simetria.dart' show GeneradorSimetria;
 // problema_poligono.dart no necesita import: el generador crea el
 // Fragmento con `numerador = numeroDeLados` y el dispatcher reconstruye
 // con `GeneradorPoligono.generarDesdeLados`.
@@ -197,6 +198,24 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.simetria) {
+      // numerador → índice de la forma; denominador → 1 vertical, 2 horizontal.
+      final indiceForma = _azar.nextInt(GeneradorSimetria.cantidadDeFormas);
+      final esHorizontal = _azar.nextBool();
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indiceForma,
+        denominador: esHorizontal ? 2 : 1,
+        tipo: tipo,
+        etiquetaDecimal: 'SIM',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1521,6 +1540,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.volumen:
         // GEO.06 depende de GEO.03 — Iniciado III.
         return dificultad >= 4;
+      case TipoFragmentoEnTejado.simetria:
+        // GEO.07 entra desde Aprendiz III — visual e intuitivo.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:
