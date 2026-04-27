@@ -109,17 +109,13 @@ uno-roto/
 - **Capa sonora v0.1** (doc 12): `sonido/servicio_sonoro.dart` es un singleton con 4 capas (ambient / música / efectos / narrativos — enum `CapaAudio`) y un AudioPlayer por capa (plugin `audioplayers`). Fades crossing, ducking cuando entra un narrativo. `CatalogoSonidos` mapea identificadores lógicos (`ambient_canales`, `musica_combate_zafran`, `motivo_sora`, `narrativo_silbido_zafran`…) a rutas WAV bajo `assets/sonido/{ambient,musica,efectos,narrativos}/`. **Tolera assets ausentes y plugin no registrado** (tests, headless): cualquier llamada falla en silencio, la app nunca deja de funcionar por no poder sonar. Preferencias de volumen por capa + modo silencio persisten **por perfil** (`audio.modo_silencio`, `audio.volumen.<capa>`). Pantalla `PantallaAjustesSonido` (accesible desde habilidades) con 4 sliders + switch. Cableado: `EscenaCinematica.sonidoDeEntrada/loopDeFondo` con motivos anotados en escenas clave (Sora/Kai/Montaña/ceremonia/silbido), música dedicada por Fragmento en `pantalla_combate_kurz`, ambient+música de distrito en `pantalla_caza` con fades largos. **Assets WAV aún no existen** — la arquitectura está lista para recibirlos.
 
 **Gap frente a doc 03 / prompt maestro**:
-- Backend WordPress `wp-plugin/uno-roto-core/` v0.1 escrito pero sin probar en WP real (plugin standalone, no integrado con el cliente todavía).
-- Sin integración cliente-backend aún: falta wire de HTTP en Flutter.
 - Sin Isar (usamos shared_preferences).
 - Sin Flame (CustomPainter puro).
 - Sin Riverpod.
-- Sin sistema de cinemáticas (bloqueante para guiones 07-10 y storyboards 13).
-- 18/66 habilidades con puzzle concreto.
 - Sin tutor IA.
 - Sin arte/música final (todo programático/placeholder).
 
-**Fase actual**: ~4-6 del roadmap del doc 03/14 — primer Fragmento jugable + motor + primer distrito funcionales pero sin narrativa scriptada ni sync.
+**Fase actual**: ~7-8 del roadmap del doc 03/14 — catálogo de 66 puzzles cerrado, motor adaptativo, narrativa de los 4 arcos, combates jugables, capa sonora arquitectada, backend WP probado y wire cliente. Pendiente: assets reales, tutor IA, migración a Flame/Isar/Riverpod cuando haya razón.
 
 ## Backlog priorizado
 
@@ -129,10 +125,11 @@ uno-roto/
 4. ~~Cormorant Garamond~~ ✅
 5. ~~Capa sonora doc 12~~ ✅ **v0.1 arquitectura completa**. Pendiente: grabar/componer los WAV reales y sustituir los placeholders.
 6. ~~Pruebas de Ascenso~~ ✅ (las tres implementadas)
-7. ~~Backend WordPress~~ ✅ **v0.1 escrito**. Pendiente: probarlo en WP real + wire del cliente Flutter a HTTP.
-8. **Migración a Flame + Isar** según se necesite, no antes.
-9. **Tutor IA Claude API** (doc 03 §9, fase 9).
-10. **Assets reales** (arte + música), sustituyendo placeholders programáticos.
+7. ~~Backend WordPress~~ ✅ **v0.1 probado end-to-end en Local WP + wire sync cliente**.
+8. ~~Catálogo completo de 66 puzzles~~ ✅ **— FR/DEC/DIV/PROP/OP/MED/GEO/EST cubiertas**.
+9. **Migración a Flame + Isar** según se necesite, no antes.
+10. **Tutor IA Claude API** (doc 03 §9, fase 9).
+11. **Assets reales** (arte + música), sustituyendo placeholders programáticos.
 
 ## Comandos habituales
 
