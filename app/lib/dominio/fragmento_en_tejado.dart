@@ -102,6 +102,9 @@ import 'package:flutter/foundation.dart';
 ///   20 m. Mecánica: aplicar la escala y luego convertir cm → m.
 ///   Distractor estrella: olvidar la conversión y dar el resultado en
 ///   cm.
+/// - [angulo]: puzzle MED.04. Se muestra un ángulo dibujado y su
+///   valor en grados, y el niño elige el tipo (agudo/recto/obtuso/
+///   llano) entre cuatro candidatos. Mecánica de reconocimiento.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -142,6 +145,7 @@ enum TipoFragmentoEnTejado {
   superficie,
   jerarquiaFracciones,
   escala,
+  angulo,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

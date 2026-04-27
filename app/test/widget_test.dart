@@ -31,6 +31,7 @@ import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
 import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
+import 'package:uno_roto/dominio/problema_angulo.dart';
 import 'package:uno_roto/dominio/problema_escala.dart';
 import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
@@ -2549,6 +2550,68 @@ void main() {
           () => unidadDesdeSimbolo(frag.decimalB!),
           returnsNormally,
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de ángulo (MED.04) ═══
+
+  test('clasificarAngulo respeta las cuatro fronteras', () {
+    expect(clasificarAngulo(45), TipoAngulo.agudo);
+    expect(clasificarAngulo(89), TipoAngulo.agudo);
+    expect(clasificarAngulo(90), TipoAngulo.recto);
+    expect(clasificarAngulo(91), TipoAngulo.obtuso);
+    expect(clasificarAngulo(135), TipoAngulo.obtuso);
+    expect(clasificarAngulo(179), TipoAngulo.obtuso);
+    expect(clasificarAngulo(180), TipoAngulo.llano);
+    expect(clasificarAngulo(360), TipoAngulo.completo);
+  });
+
+  test(
+    'GeneradorAngulo dificultad 1 evita los casos frontera 89/91/179',
+    () {
+      final gen = GeneradorAngulo(semilla: 0);
+      for (var intento = 0; intento < 30; intento++) {
+        final problema = gen.generar(dificultad: 1);
+        expect(problema.grados, isNot(89));
+        expect(problema.grados, isNot(91));
+        expect(problema.grados, isNot(179));
+        expect(problema.grados, isNot(360));
+      }
+    },
+  );
+
+  test('MED.04 está mapeada al tipo angulo', () {
+    expect(skillsConPuzzleImplementado, contains('MED.04'));
+    expect(tipoParaSkillId('MED.04'), TipoFragmentoEnTejado.angulo);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 65,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.angulo,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'MED.04');
+  });
+
+  test(
+    'GeneradorCaza dirigido a MED.04 produce Fragmentos con grados válidos',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'MED.04',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.angulo);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.numerador, lessThanOrEqualTo(360));
       }
     },
   );

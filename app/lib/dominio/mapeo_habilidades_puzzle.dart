@@ -56,6 +56,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'MED.05',
   'OP.02',
   'PROP.07',
+  'MED.04',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -81,6 +82,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'MED.05') return TipoFragmentoEnTejado.superficie;
   if (skillId == 'OP.02') return TipoFragmentoEnTejado.jerarquiaFracciones;
   if (skillId == 'PROP.07') return TipoFragmentoEnTejado.escala;
+  if (skillId == 'MED.04') return TipoFragmentoEnTejado.angulo;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -288,6 +290,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'OP.02';
     case TipoFragmentoEnTejado.escala:
       return 'PROP.07';
+    case TipoFragmentoEnTejado.angulo:
+      return 'MED.04';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -490,6 +494,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Aplicar escala + conversión cm→m. Pesa parecido a la regla
       // de tres con conversión añadida.
       return 1.4;
+    case TipoFragmentoEnTejado.angulo:
+      // Reconocimiento puro — la habilidad es memoria de las cuatro
+      // fronteras. Pesa ligero, parecido a divisibilidad básica.
+      return 0.7;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;
