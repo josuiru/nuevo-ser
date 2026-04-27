@@ -70,6 +70,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'GEO.06',
   'GEO.07',
   'EST.01',
+  'EST.02',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -111,6 +112,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'GEO.06') return TipoFragmentoEnTejado.volumen;
   if (skillId == 'GEO.07') return TipoFragmentoEnTejado.simetria;
   if (skillId == 'EST.01') return TipoFragmentoEnTejado.graficoBarras;
+  if (skillId == 'EST.02') return TipoFragmentoEnTejado.graficoCircular;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -346,6 +348,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'GEO.07';
     case TipoFragmentoEnTejado.graficoBarras:
       return 'EST.01';
+    case TipoFragmentoEnTejado.graficoCircular:
+      return 'EST.02';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -602,6 +606,11 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.graficoBarras:
       // Lectura de gráfico — pesa ligero (modo valorDeBarra) o
       // medio (modo total) por la suma. Promedio similar a media.
+      return 1.0;
+    case TipoFragmentoEnTejado.graficoCircular:
+      // Lectura visual de pie chart — pesa similar a graficoBarras.
+      // La porción está etiquetada y el resto del puzzle es percibir
+      // el área proporcional.
       return 1.0;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:

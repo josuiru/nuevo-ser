@@ -150,6 +150,9 @@ import 'package:flutter/foundation.dart';
 /// - [graficoBarras]: puzzle EST.01. Gráfico de barras con etiquetas
 ///   y eje numerado; el niño elige el valor de una barra resaltada
 ///   o el total entre cuatro candidatos.
+/// - [graficoCircular]: puzzle EST.02. Gráfico circular (pie chart)
+///   con porciones coloreadas; el niño elige el porcentaje correcto
+///   de la porción resaltada en rosa.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -204,6 +207,7 @@ enum TipoFragmentoEnTejado {
   volumen,
   simetria,
   graficoBarras,
+  graficoCircular,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

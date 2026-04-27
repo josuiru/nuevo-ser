@@ -47,6 +47,7 @@ import 'package:uno_roto/dominio/problema_circulo.dart';
 import 'package:uno_roto/dominio/problema_volumen.dart';
 import 'package:uno_roto/dominio/problema_simetria.dart';
 import 'package:uno_roto/dominio/problema_grafico_barras.dart';
+import 'package:uno_roto/dominio/problema_grafico_circular.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2591,6 +2592,35 @@ void main() {
       final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
       final problema = gen.generarPorIndice(2);
       expect(problema.candidatosPorcentaje, contains(25));
+    },
+  );
+
+  // ═══ Puzzle de gráfico circular (EST.02) ═══
+
+  test('EST.02 está mapeada al tipo graficoCircular', () {
+    expect(skillsConPuzzleImplementado, contains('EST.02'));
+    expect(
+      tipoParaSkillId('EST.02'),
+      TipoFragmentoEnTejado.graficoCircular,
+    );
+  });
+
+  test('GeneradorGraficoCircular lee el porcentaje correcto', () {
+    final gen = GeneradorGraficoCircular(semilla: 0);
+    // Caso 0: (rojo=50, azul=25, verde=25). seed%3 = 0 → "rojo" 50%.
+    final problema = gen.generarPorIndice(0);
+    expect(problema.respuesta, 50);
+  });
+
+  test(
+    'GeneradorGraficoCircular incluye complementario como distractor',
+    () {
+      // Caso 0: 50%. Complementario 100−50 = 50, ya es el correcto, así
+      // que probamos el caso 2 donde correcto≠50.
+      // Caso 2: (sí=75, no=25). seed%2 = 0 → "sí" 75%. Complementario 25.
+      final problema = GeneradorGraficoCircular(semilla: 0)
+          .generarPorIndice(2);
+      expect(problema.candidatos, contains(25));
     },
   );
 
