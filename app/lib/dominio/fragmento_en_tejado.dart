@@ -82,6 +82,10 @@ import 'package:flutter/foundation.dart';
 ///   candidatos. Inversa de porcentajeCantidad: aquí calcula
 ///   parte/total × 100. Distractores reales: complemento (76),
 ///   parte literal como % (12), total como % (50).
+/// - [tiempo]: puzzle MED.03. Conversión sexagesimal h/min/s. Soporta
+///   conversión simple ("3 h = ? min" → 180) y compuesta
+///   ("2 h y 30 min = ? min" → 150). La trampa estrella: leer
+///   "2 h 30" como "230" en lugar de 150.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -117,6 +121,7 @@ enum TipoFragmentoEnTejado {
   longitud,
   masaCapacidad,
   porcentajeDe,
+  tiempo,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

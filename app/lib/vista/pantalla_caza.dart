@@ -29,6 +29,7 @@ import '../dominio/problema_jerarquia.dart';
 import '../dominio/problema_longitud.dart';
 import '../dominio/problema_masa_capacidad.dart';
 import '../dominio/problema_porcentaje_de.dart';
+import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_regla_de_tres.dart';
 import '../dominio/problema_primo.dart';
@@ -67,6 +68,7 @@ import 'pantalla_jerarquia.dart';
 import 'pantalla_longitud.dart';
 import 'pantalla_masa_capacidad.dart';
 import 'pantalla_porcentaje_de.dart';
+import 'pantalla_tiempo.dart';
 import 'pantalla_mcm_mcd.dart';
 import 'pantalla_regla_de_tres.dart';
 import 'pantalla_primo.dart';
@@ -305,6 +307,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.longitud => 2,
         TipoFragmentoEnTejado.masaCapacidad => 2,
         TipoFragmentoEnTejado.porcentajeDe => 3,
+        TipoFragmentoEnTejado.tiempo => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -720,6 +723,27 @@ class _PantallaCazaState extends State<PantallaCaza>
                 unidadDestino:
                     unidadDesdeSimbolo(fragmento.decimalB ?? 'cm'),
               ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.tiempo:
+        // numeradorB > 0 → compuesto (h y min → min). null → simple.
+        final problemaTiempo = fragmento.numeradorB != null
+            ? GeneradorTiempo().generarCompuestoDesdeTerminos(
+                horas: fragmento.numerador,
+                minutos: fragmento.numeradorB!,
+              )
+            : GeneradorTiempo().generarSimpleDesdeTerminos(
+                valor: fragmento.numerador,
+                origen: unidadTiempoDesdeSimbolo(
+                    fragmento.decimalA ?? 'h'),
+                destino: unidadTiempoDesdeSimbolo(
+                    fragmento.decimalB ?? 'min'),
+              );
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaTiempo(
+              problemaPredeterminado: problemaTiempo,
             ),
           ),
         );

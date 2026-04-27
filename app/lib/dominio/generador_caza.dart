@@ -34,6 +34,8 @@ import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
 import 'problema_masa_capacidad.dart' show GeneradorMasaCapacidad;
 import 'problema_porcentaje_de.dart' show GeneradorPorcentajeDe;
+import 'problema_tiempo.dart'
+    show GeneradorTiempo, ModoTiempo, SimboloTiempo;
 import 'problema_comparacion_media.dart' show GeneradorComparacionMedia;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
@@ -172,6 +174,34 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.tiempo) {
+      final problema = GeneradorTiempo(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Empaquetamos: numerador = valorMayor, numeradorB = valorMenor
+      // (>0 → compuesto, null → simple). decimalA/B llevan los símbolos.
+      final esCompuesto = problema.modo == ModoTiempo.compuesto;
+      final etiqueta = esCompuesto
+          ? '${problema.valorMayor} h ${problema.valorMenor}→min'
+          : '${problema.valorMayor} ${problema.unidadOrigen.simbolo}'
+              '→${problema.unidadDestino.simbolo}';
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.valorMayor,
+        denominador: 1,
+        numeradorB: esCompuesto ? problema.valorMenor : null,
+        tipo: tipo,
+        decimalA: problema.unidadOrigen.simbolo,
+        decimalB: problema.unidadDestino.simbolo,
+        etiquetaDecimal: etiqueta,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1107,6 +1137,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.porcentajeDe:
         // PROP.05 entra cuando ya domina PROP.04 — Iniciado III.
         return dificultad >= 4;
+      case TipoFragmentoEnTejado.tiempo:
+        // MED.03 entra en Iniciado I — sexagesimal de uso cotidiano.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

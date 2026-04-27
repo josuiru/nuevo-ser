@@ -31,6 +31,7 @@ import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
+import 'package:uno_roto/dominio/problema_tiempo.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
 import 'package:uno_roto/dominio/problema_razon.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
@@ -2544,6 +2545,79 @@ void main() {
           () => unidadDesdeSimbolo(frag.decimalB!),
           returnsNormally,
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de tiempo sexagesimal (MED.03) ═══
+
+  test(
+    'GeneradorTiempo convierte 3 h a 180 min (simple)',
+    () {
+      final gen = GeneradorTiempo(semilla: 0);
+      final problema = gen.generarSimpleDesdeTerminos(
+        valor: 3,
+        origen: UnidadTiempo.hora,
+        destino: UnidadTiempo.minuto,
+      );
+      expect(problema.resultado, 180);
+      expect(problema.modo, ModoTiempo.simple);
+    },
+  );
+
+  test(
+    'GeneradorTiempo compuesto: 2 h y 30 min = 150 min, no 230',
+    () {
+      final gen = GeneradorTiempo(semilla: 0);
+      final problema = gen.generarCompuestoDesdeTerminos(
+        horas: 2, minutos: 30,
+      );
+      expect(problema.resultado, 150);
+      expect(problema.modo, ModoTiempo.compuesto);
+      // La trampa estrella debe estar entre los candidatos.
+      expect(problema.candidatos, contains(230));
+    },
+  );
+
+  test('MED.03 está mapeada al tipo tiempo', () {
+    expect(skillsConPuzzleImplementado, contains('MED.03'));
+    expect(tipoParaSkillId('MED.03'), TipoFragmentoEnTejado.tiempo);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 2,
+      denominador: 1,
+      numeradorB: 30,
+      tipo: TipoFragmentoEnTejado.tiempo,
+      decimalA: 'h',
+      decimalB: 'min',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'MED.03');
+  });
+
+  test(
+    'GeneradorCaza dirigido a MED.03 produce Fragmentos válidos',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'MED.03',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.tiempo);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.decimalA, isNotNull);
+        expect(frag.decimalB, isNotNull);
+        // Si es compuesto, numeradorB debe ser un entero positivo.
+        if (frag.numeradorB != null) {
+          expect(frag.numeradorB, greaterThan(0));
+        }
       }
     },
   );
