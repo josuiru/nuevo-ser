@@ -40,6 +40,7 @@ import '../dominio/problema_jerarquia_fracciones.dart';
 import '../dominio/problema_operacion_mixta.dart';
 import '../dominio/problema_poligono.dart';
 import '../dominio/problema_perimetro.dart';
+import '../dominio/problema_area_rectangulo.dart';
 import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
@@ -89,6 +90,7 @@ import 'pantalla_probabilidad_porcentaje.dart';
 import 'pantalla_operacion_mixta.dart';
 import 'pantalla_poligono.dart';
 import 'pantalla_perimetro.dart';
+import 'pantalla_area_rectangulo.dart';
 import 'pantalla_escala.dart';
 import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
@@ -344,6 +346,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.operacionMixta => 4,
         TipoFragmentoEnTejado.poligono => 1,
         TipoFragmentoEnTejado.perimetro => 2,
+        TipoFragmentoEnTejado.areaRectangulo => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -800,6 +803,15 @@ class _PantallaCazaState extends State<PantallaCaza>
           MaterialPageRoute(
             builder: (_) => PantallaPerimetro(
               problemaPredeterminado: GeneradorPerimetro()
+                  .generarPorIndice(fragmento.numerador),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.areaRectangulo:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaAreaRectangulo(
+              problemaPredeterminado: GeneradorAreaRectangulo()
                   .generarPorIndice(fragmento.numerador),
             ),
           ),

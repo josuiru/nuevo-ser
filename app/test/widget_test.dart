@@ -41,6 +41,7 @@ import 'package:uno_roto/dominio/problema_probabilidad_porcentaje.dart';
 import 'package:uno_roto/dominio/problema_operacion_mixta.dart';
 import 'package:uno_roto/dominio/problema_poligono.dart';
 import 'package:uno_roto/dominio/problema_perimetro.dart';
+import 'package:uno_roto/dominio/problema_area_rectangulo.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2585,6 +2586,33 @@ void main() {
       final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
       final problema = gen.generarPorIndice(2);
       expect(problema.candidatosPorcentaje, contains(25));
+    },
+  );
+
+  // ═══ Puzzle de área de rectángulo (GEO.03) ═══
+
+  test('GEO.03 está mapeada al tipo areaRectangulo', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.03'));
+    expect(
+      tipoParaSkillId('GEO.03'),
+      TipoFragmentoEnTejado.areaRectangulo,
+    );
+  });
+
+  test('GeneradorAreaRectangulo calcula b×h', () {
+    final gen = GeneradorAreaRectangulo(semilla: 0);
+    // Caso 4: rectángulo 4×3 → 12.
+    final problema = gen.generarPorIndice(4);
+    expect(problema.respuesta, 12);
+  });
+
+  test(
+    'GeneradorAreaRectangulo incluye perímetro como distractor',
+    () {
+      // Caso 4: rectángulo 4×3. Perímetro = 2(4+3) = 14.
+      final gen = GeneradorAreaRectangulo(semilla: 0);
+      final problema = gen.generarPorIndice(4);
+      expect(problema.candidatos, contains(14));
     },
   );
 

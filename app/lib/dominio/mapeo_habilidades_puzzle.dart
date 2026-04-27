@@ -64,6 +64,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'OP.03',
   'GEO.01',
   'GEO.02',
+  'GEO.03',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -99,6 +100,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'OP.03') return TipoFragmentoEnTejado.operacionMixta;
   if (skillId == 'GEO.01') return TipoFragmentoEnTejado.poligono;
   if (skillId == 'GEO.02') return TipoFragmentoEnTejado.perimetro;
+  if (skillId == 'GEO.03') return TipoFragmentoEnTejado.areaRectangulo;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -322,6 +324,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'GEO.01';
     case TipoFragmentoEnTejado.perimetro:
       return 'GEO.02';
+    case TipoFragmentoEnTejado.areaRectangulo:
+      return 'GEO.03';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -554,6 +558,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Suma de lados — pesa parecido a la media: cálculo aritmético
       // con varios sumandos. Un escalón sobre poligono.
       return 1.0;
+    case TipoFragmentoEnTejado.areaRectangulo:
+      // Multiplicación b×h — pesa similar a perimetro. La trampa
+      // estrella (perímetro confundido con área) la hace exigente.
+      return 1.1;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

@@ -129,6 +129,9 @@ import 'package:flutter/foundation.dart';
 ///   etiquetados; el niño suma los lados y elige el perímetro entre
 ///   cuatro candidatos. Distractores: olvidar un lado, tomar la
 ///   mitad, multiplicar por número de lados.
+/// - [areaRectangulo]: puzzle GEO.03. Rectángulo (o cuadrado) con base
+///   y altura etiquetadas; el niño elige el área (b×h). Distractor
+///   estrella: el perímetro 2(b+h) en lugar del área.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -177,6 +180,7 @@ enum TipoFragmentoEnTejado {
   operacionMixta,
   poligono,
   perimetro,
+  areaRectangulo,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
