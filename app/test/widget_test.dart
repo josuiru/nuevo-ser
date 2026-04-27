@@ -29,6 +29,7 @@ import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
+import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
 import 'package:uno_roto/dominio/problema_razon.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
@@ -2543,6 +2544,91 @@ void main() {
           returnsNormally,
         );
       }
+    },
+  );
+
+  // ═══ Puzzle de masa y capacidad (MED.02) ═══
+
+  test(
+    'GeneradorMasaCapacidad convierte 3 kg a 3000 g (familia masa)',
+    () {
+      final gen = GeneradorMasaCapacidad(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        familia: FamiliaMetrica.masa,
+        valorOrigen: 3,
+        posicionOrigen: 0,
+        posicionDestino: 3,
+      );
+      expect(problema.resultado, 3000);
+      expect(problema.simboloOrigen, 'kg');
+      expect(problema.simboloDestino, 'g');
+      expect(problema.candidatos, hasLength(4));
+    },
+  );
+
+  test(
+    'GeneradorMasaCapacidad convierte 5 L a 5000 mL (familia capacidad)',
+    () {
+      final gen = GeneradorMasaCapacidad(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        familia: FamiliaMetrica.capacidad,
+        valorOrigen: 5,
+        posicionOrigen: 3,
+        posicionDestino: 6,
+      );
+      expect(problema.resultado, 5000);
+      expect(problema.simboloOrigen, 'L');
+      expect(problema.simboloDestino, 'mL');
+    },
+  );
+
+  test('MED.02 está mapeada al tipo masaCapacidad', () {
+    expect(skillsConPuzzleImplementado, contains('MED.02'));
+    expect(
+      tipoParaSkillId('MED.02'),
+      TipoFragmentoEnTejado.masaCapacidad,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 3,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.masaCapacidad,
+      decimalA: 'kg',
+      decimalB: 'g',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'MED.02');
+  });
+
+  test(
+    'GeneradorCaza dirigido a MED.02 produce Fragmentos con familia válida',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      final familiasVistas = <FamiliaMetrica>{};
+      for (var intento = 0; intento < 30; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'MED.02',
+          esquirlasAcumuladas: 60,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.masaCapacidad);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.decimalA, isNotNull);
+        expect(frag.decimalB, isNotNull);
+        // Los símbolos deben pertenecer a alguna familia métrica.
+        final origen = unidadDesdeSimboloMetrica(frag.decimalA!);
+        final destino = unidadDesdeSimboloMetrica(frag.decimalB!);
+        expect(origen.familia, destino.familia,
+            reason: 'origen y destino deben ser de la misma familia');
+        familiasVistas.add(origen.familia);
+      }
+      // En 30 intentos deberíamos ver las dos familias.
+      expect(familiasVistas, hasLength(2));
     },
   );
 

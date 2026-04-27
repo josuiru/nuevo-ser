@@ -49,6 +49,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'FR.08',
   'PROP.01',
   'MED.01',
+  'MED.02',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -67,6 +68,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.08') return TipoFragmentoEnTejado.ordenarFracciones;
   if (skillId == 'PROP.01') return TipoFragmentoEnTejado.razon;
   if (skillId == 'MED.01') return TipoFragmentoEnTejado.longitud;
+  if (skillId == 'MED.02') return TipoFragmentoEnTejado.masaCapacidad;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -260,6 +262,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'PROP.01';
     case TipoFragmentoEnTejado.longitud:
       return 'MED.01';
+    case TipoFragmentoEnTejado.masaCapacidad:
+      return 'MED.02';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -433,6 +437,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Conversión en la escalera métrica — un escalón sobre comparación
       // decimal: el niño tiene que recordar cuántos peldaños separan
       // las unidades y aplicar bien la potencia de 10.
+      return 1.1;
+    case TipoFragmentoEnTejado.masaCapacidad:
+      // Mismo motor que longitud — pesa igual; la familia (masa o
+      // capacidad) no cambia la dificultad pedagógica.
       return 1.1;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:

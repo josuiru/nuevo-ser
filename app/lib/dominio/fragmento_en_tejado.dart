@@ -75,6 +75,9 @@ import 'package:flutter/foundation.dart';
 /// - [longitud]: puzzle MED.01. "5 m = ? cm" + cuatro candidatos. Primera
 ///   habilidad del dominio MED — escalera del sistema métrico, conversión
 ///   por potencias de 10. Distractores: factor menor, dirección invertida.
+/// - [masaCapacidad]: puzzle MED.02. "3 kg = ? g" o "5 L = ? mL".
+///   Comparte mecánica de escalera ×10 con [longitud] pero rota entre
+///   las familias de masa (kg/g/mg) y capacidad (L/dL/mL).
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -108,6 +111,7 @@ enum TipoFragmentoEnTejado {
   ordenarFracciones,
   razon,
   longitud,
+  masaCapacidad,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -27,6 +27,7 @@ import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
 import '../dominio/problema_jerarquia.dart';
 import '../dominio/problema_longitud.dart';
+import '../dominio/problema_masa_capacidad.dart';
 import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_regla_de_tres.dart';
 import '../dominio/problema_primo.dart';
@@ -63,6 +64,7 @@ import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
 import 'pantalla_jerarquia.dart';
 import 'pantalla_longitud.dart';
+import 'pantalla_masa_capacidad.dart';
 import 'pantalla_mcm_mcd.dart';
 import 'pantalla_regla_de_tres.dart';
 import 'pantalla_primo.dart';
@@ -299,6 +301,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.ordenarFracciones => 3,
         TipoFragmentoEnTejado.razon => 2,
         TipoFragmentoEnTejado.longitud => 2,
+        TipoFragmentoEnTejado.masaCapacidad => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -713,6 +716,24 @@ class _PantallaCazaState extends State<PantallaCaza>
                     unidadDesdeSimbolo(fragmento.decimalA ?? 'm'),
                 unidadDestino:
                     unidadDesdeSimbolo(fragmento.decimalB ?? 'cm'),
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.masaCapacidad:
+        // numerador → valorOrigen, decimalA/decimalB → símbolos. La
+        // familia se infiere parseando el símbolo de origen.
+        final origen = unidadDesdeSimboloMetrica(fragmento.decimalA ?? 'g');
+        final destino = unidadDesdeSimboloMetrica(fragmento.decimalB ?? 'mg');
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaMasaCapacidad(
+              problemaPredeterminado:
+                  GeneradorMasaCapacidad().generarDesdeTerminos(
+                familia: origen.familia,
+                valorOrigen: fragmento.numerador,
+                posicionOrigen: origen.posicion,
+                posicionDestino: destino.posicion,
               ),
             ),
           ),
