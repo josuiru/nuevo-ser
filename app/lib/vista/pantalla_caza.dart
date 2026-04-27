@@ -21,6 +21,7 @@ import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_divisores.dart';
 import '../dominio/problema_fraccion_de_cantidad.dart';
 import '../dominio/problema_ordenar_fracciones.dart';
+import '../dominio/problema_razon.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
@@ -56,6 +57,7 @@ import 'pantalla_divisibilidad.dart';
 import 'pantalla_divisores.dart';
 import 'pantalla_fraccion_de_cantidad.dart';
 import 'pantalla_ordenar_fracciones.dart';
+import 'pantalla_razon.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
 import 'pantalla_jerarquia.dart';
@@ -293,6 +295,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.divisores => 2,
         TipoFragmentoEnTejado.fraccionDeCantidad => 3,
         TipoFragmentoEnTejado.ordenarFracciones => 3,
+        TipoFragmentoEnTejado.razon => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -676,6 +679,21 @@ class _PantallaCazaState extends State<PantallaCaza>
                 numerador: fragmento.numerador,
                 denominador: fragmento.denominador,
                 cantidad: fragmento.numeradorB ?? 1,
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.razon:
+        // numerador/denominador → primero/segundo, decimalA/decimalB →
+        // etiquetas del contexto.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaRazon(
+              problemaPredeterminado: GeneradorRazon().generarDesdePar(
+                primero: fragmento.numerador,
+                segundo: fragmento.denominador,
+                etiquetaPrimero: fragmento.decimalA ?? 'rojas',
+                etiquetaSegundo: fragmento.decimalB ?? 'azules',
               ),
             ),
           ),

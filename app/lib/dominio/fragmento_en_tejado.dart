@@ -59,6 +59,8 @@ import 'package:flutter/foundation.dart';
 ///   de × y ÷. Distractor estrella: el cálculo izquierda-a-derecha.
 /// - [fraccionDeCantidad]: puzzle FR.22. "Los 3/5 de 20 = ?" + cuatro
 ///   candidatos. Paralelo a porcentajeCantidad pero con fracción.
+/// - [razon]: puzzle PROP.01. Dos cantidades con contexto + cuatro
+///   razones candidatas; el niño elige la reducida que las relaciona.
 /// - [ordenarFracciones]: puzzle FR.08. Tres fracciones sin ordenar y
 ///   cuatro permutaciones candidatas; el niño elige la que va de
 ///   menor a mayor. Paralelo a ordenarDecimales pero con fracciones.
@@ -101,6 +103,7 @@ enum TipoFragmentoEnTejado {
   divisores,
   fraccionDeCantidad,
   ordenarFracciones,
+  razon,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

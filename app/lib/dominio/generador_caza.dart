@@ -23,6 +23,7 @@ import 'problema_fraccion_de_cantidad.dart'
     show GeneradorFraccionDeCantidad;
 import 'problema_ordenar_fracciones.dart'
     show GeneradorOrdenarFracciones;
+import 'problema_razon.dart' show GeneradorRazon;
 import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
 import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
@@ -168,6 +169,29 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.razon) {
+      final problema = GeneradorRazon(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Empaquetamos primero/segundo en numerador/denominador y las
+      // etiquetas en decimalA/decimalB para reproducir el contexto.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.primero,
+        denominador: problema.segundo,
+        tipo: tipo,
+        decimalA: problema.etiquetaPrimero,
+        decimalB: problema.etiquetaSegundo,
+        etiquetaDecimal:
+            '${problema.primero}:${problema.segundo}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -996,6 +1020,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.ordenarFracciones:
         // FR.08 entra después de dominar FR.07 (comparar dos
         // fracciones cualesquiera) — Iniciado I.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.razon:
+        // PROP.01 es base de proporcionalidad — entra en Iniciado I,
+        // tras tener fracciones simplificables claras.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

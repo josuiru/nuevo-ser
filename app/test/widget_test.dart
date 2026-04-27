@@ -29,6 +29,7 @@ import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
+import 'package:uno_roto/dominio/problema_razon.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
@@ -2358,6 +2359,96 @@ void main() {
         );
         expect(frag.tipo, TipoFragmentoEnTejado.divisores);
         expect(frag.numerador, greaterThanOrEqualTo(12));
+      }
+    },
+  );
+
+  // ═══ Puzzle de razón entre dos cantidades (PROP.01) ═══
+
+  test(
+    'Razon.reducida divide ambos términos por el MCD',
+    () {
+      expect(const Razon(12, 8).reducida().etiqueta, '3 : 2');
+      expect(const Razon(15, 9).reducida().etiqueta, '5 : 3');
+      expect(const Razon(7, 5).reducida().etiqueta, '7 : 5');
+    },
+  );
+
+  test(
+    'GeneradorRazon produce la razón reducida como respuesta correcta',
+    () {
+      final gen = GeneradorRazon(semilla: 0);
+      // 12 manzanas y 8 naranjas → razón 3:2.
+      final problema = gen.generarDesdePar(
+        primero: 12,
+        segundo: 8,
+        etiquetaPrimero: 'manzanas',
+        etiquetaSegundo: 'naranjas',
+      );
+      expect(problema.razonReducida.a, 3);
+      expect(problema.razonReducida.b, 2);
+      expect(problema.candidatos, hasLength(4));
+    },
+  );
+
+  test(
+    'GeneradorRazon incluye la razón sin reducir y la invertida como distractores',
+    () {
+      final gen = GeneradorRazon(semilla: 0);
+      final problema = gen.generarDesdePar(
+        primero: 12,
+        segundo: 8,
+      );
+      // Sin reducir: 12:8 debería estar.
+      expect(
+        problema.candidatos.any((r) => r.a == 12 && r.b == 8),
+        isTrue,
+        reason: 'La razón sin simplificar es distractor clave.',
+      );
+      // Invertida: 2:3 debería estar.
+      expect(
+        problema.candidatos.any((r) => r.a == 2 && r.b == 3),
+        isTrue,
+        reason: 'La razón invertida es distractor clave.',
+      );
+    },
+  );
+
+  test('PROP.01 está mapeada al tipo razon', () {
+    expect(skillsConPuzzleImplementado, contains('PROP.01'));
+    expect(tipoParaSkillId('PROP.01'), TipoFragmentoEnTejado.razon);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 12,
+      denominador: 8,
+      tipo: TipoFragmentoEnTejado.razon,
+      decimalA: 'manzanas',
+      decimalB: 'naranjas',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'PROP.01');
+  });
+
+  test(
+    'GeneradorCaza dirigido a PROP.01 produce Fragmentos con par válido',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'PROP.01',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.razon);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        expect(frag.decimalA, isNotNull);
+        expect(frag.decimalB, isNotNull);
       }
     },
   );

@@ -47,6 +47,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DIV.02',
   'FR.22',
   'FR.08',
+  'PROP.01',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -63,6 +64,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DIV.02') return TipoFragmentoEnTejado.divisores;
   if (skillId == 'FR.22') return TipoFragmentoEnTejado.fraccionDeCantidad;
   if (skillId == 'FR.08') return TipoFragmentoEnTejado.ordenarFracciones;
+  if (skillId == 'PROP.01') return TipoFragmentoEnTejado.razon;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -98,7 +100,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
     return TipoFragmentoEnTejado.operacionDecimal;
   }
   if (skillId == 'PROP.04') return TipoFragmentoEnTejado.porcentajeCantidad;
-  if (skillId == 'PROP.01' || skillId == 'PROP.02') {
+  if (skillId == 'PROP.02') {
     return TipoFragmentoEnTejado.proporcional;
   }
   if (skillId.startsWith('FR.')) return TipoFragmentoEnTejado.unitario;
@@ -252,6 +254,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.22';
     case TipoFragmentoEnTejado.ordenarFracciones:
       return 'FR.08';
+    case TipoFragmentoEnTejado.razon:
+      return 'PROP.01';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -417,6 +421,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Tres comparaciones cruzadas — un escalón sobre FR.07
       // (comparar dos fracciones distintas).
       return 1.3;
+    case TipoFragmentoEnTejado.razon:
+      // Reducir una razón pide ver el divisor común — pesa parecido a
+      // simplificar pero con contexto.
+      return 1.0;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;
