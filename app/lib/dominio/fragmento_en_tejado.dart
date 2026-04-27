@@ -140,6 +140,10 @@ import 'package:flutter/foundation.dart';
 ///   fórmula del modo (área π·r² o perímetro 2·π·r) explícita; el
 ///   niño elige entre cuatro candidatos decimales. π ≈ 3,14.
 ///   Distractor estrella: confundir las fórmulas.
+/// - [volumen]: puzzle GEO.06. Caja 3D (ortoedro) en proyección
+///   isométrica con sus tres dimensiones etiquetadas; el niño
+///   calcula el volumen l × a × h. Distractores: área superficial,
+///   suma l+a+h, área de una cara.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -191,6 +195,7 @@ enum TipoFragmentoEnTejado {
   areaRectangulo,
   areaTriangulo,
   circulo,
+  volumen,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -43,6 +43,7 @@ import '../dominio/problema_perimetro.dart';
 import '../dominio/problema_area_rectangulo.dart';
 import '../dominio/problema_area_triangulo.dart';
 import '../dominio/problema_circulo.dart';
+import '../dominio/problema_volumen.dart';
 import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
@@ -95,6 +96,7 @@ import 'pantalla_perimetro.dart';
 import 'pantalla_area_rectangulo.dart';
 import 'pantalla_area_triangulo.dart';
 import 'pantalla_circulo.dart';
+import 'pantalla_volumen.dart';
 import 'pantalla_escala.dart';
 import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
@@ -353,6 +355,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.areaRectangulo => 2,
         TipoFragmentoEnTejado.areaTriangulo => 2,
         TipoFragmentoEnTejado.circulo => 3,
+        TipoFragmentoEnTejado.volumen => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -827,6 +830,15 @@ class _PantallaCazaState extends State<PantallaCaza>
           MaterialPageRoute(
             builder: (_) => PantallaAreaTriangulo(
               problemaPredeterminado: GeneradorAreaTriangulo()
+                  .generarPorIndice(fragmento.numerador),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.volumen:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaVolumen(
+              problemaPredeterminado: GeneradorVolumen()
                   .generarPorIndice(fragmento.numerador),
             ),
           ),

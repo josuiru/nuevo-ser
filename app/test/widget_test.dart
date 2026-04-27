@@ -44,6 +44,7 @@ import 'package:uno_roto/dominio/problema_perimetro.dart';
 import 'package:uno_roto/dominio/problema_area_rectangulo.dart';
 import 'package:uno_roto/dominio/problema_area_triangulo.dart';
 import 'package:uno_roto/dominio/problema_circulo.dart';
+import 'package:uno_roto/dominio/problema_volumen.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2588,6 +2589,30 @@ void main() {
       final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
       final problema = gen.generarPorIndice(2);
       expect(problema.candidatosPorcentaje, contains(25));
+    },
+  );
+
+  // ═══ Puzzle de volumen de ortoedro (GEO.06) ═══
+
+  test('GEO.06 está mapeada al tipo volumen', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.06'));
+    expect(tipoParaSkillId('GEO.06'), TipoFragmentoEnTejado.volumen);
+  });
+
+  test('GeneradorVolumen calcula l × a × h', () {
+    final gen = GeneradorVolumen(semilla: 0);
+    // Caso 4: ortoedro 4×3×2 → 24.
+    final problema = gen.generarPorIndice(4);
+    expect(problema.respuesta, 24);
+  });
+
+  test(
+    'GeneradorVolumen incluye área superficial como distractor',
+    () {
+      // Caso 4: 4×3×2. Área superficial = 2(12+8+6) = 52.
+      final gen = GeneradorVolumen(semilla: 0);
+      final problema = gen.generarPorIndice(4);
+      expect(problema.candidatos, contains(52));
     },
   );
 
