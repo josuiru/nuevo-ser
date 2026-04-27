@@ -27,6 +27,7 @@ import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_comparacion_media.dart';
 import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisores.dart';
+import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
@@ -2356,6 +2357,89 @@ void main() {
         );
         expect(frag.tipo, TipoFragmentoEnTejado.divisores);
         expect(frag.numerador, greaterThanOrEqualTo(12));
+      }
+    },
+  );
+
+  // ═══ Puzzle de fracción de una cantidad (FR.22) ═══
+
+  test(
+    'GeneradorFraccionDeCantidad calcula correctamente con resultado entero',
+    () {
+      final gen = GeneradorFraccionDeCantidad(semilla: 0);
+      // 3/5 de 25 = 15.
+      final problema = gen.generarDesdeTerminos(
+        numerador: 3,
+        denominador: 5,
+        cantidad: 25,
+      );
+      expect(problema.resultado, 15);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test(
+    'GeneradorFraccionDeCantidad incluye distractores reales (n × c sin dividir, c ÷ d)',
+    () {
+      final gen = GeneradorFraccionDeCantidad(semilla: 0);
+      // 3/5 de 25 → correcto 15. Distractores:
+      //   - n × c sin dividir = 75.
+      //   - c ÷ d (ignora n) = 5.
+      //   - n literal = 3.
+      final problema = gen.generarDesdeTerminos(
+        numerador: 3,
+        denominador: 5,
+        cantidad: 25,
+      );
+      expect(problema.candidatos, contains(75));
+      expect(problema.candidatos, contains(5));
+      expect(problema.candidatos, contains(3));
+    },
+  );
+
+  test('FR.22 está mapeada al tipo fraccionDeCantidad', () {
+    expect(skillsConPuzzleImplementado, contains('FR.22'));
+    expect(
+      tipoParaSkillId('FR.22'),
+      TipoFragmentoEnTejado.fraccionDeCantidad,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 3,
+      denominador: 5,
+      numeradorB: 25,
+      tipo: TipoFragmentoEnTejado.fraccionDeCantidad,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.22');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.22 produce Fragmentos con tripla válida',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.22',
+          esquirlasAcumuladas: 60,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.fraccionDeCantidad);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        expect(frag.numeradorB, isNotNull);
+        // Resultado entero: numerador × cantidad debe ser múltiplo del
+        // denominador.
+        expect(
+          (frag.numerador * (frag.numeradorB ?? 0)) % frag.denominador,
+          0,
+        );
       }
     },
   );

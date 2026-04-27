@@ -19,6 +19,8 @@ import 'problema_comparacion_unidad.dart'
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
 import 'problema_divisores.dart' show GeneradorDivisores;
+import 'problema_fraccion_de_cantidad.dart'
+    show GeneradorFraccionDeCantidad;
 import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
 import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
@@ -164,6 +166,28 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.fraccionDeCantidad) {
+      final problema = GeneradorFraccionDeCantidad(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Empaquetamos numerador, denominador y cantidad en
+      // numerador/denominador/numeradorB para reproducirlo.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.numerador,
+        denominador: problema.denominador,
+        numeradorB: problema.cantidad,
+        tipo: tipo,
+        etiquetaDecimal:
+            '${problema.numerador}/${problema.denominador}·${problema.cantidad}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -938,6 +962,10 @@ class GeneradorCaza {
         // DIV.02 va a la par que DIV.03 — mecánica accesible apenas
         // domine la idea de divisor.
         return dificultad >= 1;
+      case TipoFragmentoEnTejado.fraccionDeCantidad:
+        // FR.22 entra cuando ya domina FR.18 y FR.20 (multiplicar y
+        // dividir fracción por natural) — Iniciado II.
+        return dificultad >= 3;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

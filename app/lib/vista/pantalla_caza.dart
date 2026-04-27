@@ -19,6 +19,7 @@ import '../dominio/problema_comparacion_unidad.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_divisores.dart';
+import '../dominio/problema_fraccion_de_cantidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
@@ -52,6 +53,7 @@ import 'pantalla_amplificar.dart';
 import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_divisores.dart';
+import 'pantalla_fraccion_de_cantidad.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
 import 'pantalla_jerarquia.dart';
@@ -287,6 +289,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacionMedia => 2,
         TipoFragmentoEnTejado.porcentajeCantidad => 3,
         TipoFragmentoEnTejado.divisores => 2,
+        TipoFragmentoEnTejado.fraccionDeCantidad => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -657,6 +660,20 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaDivisores(
               problemaPredeterminado: GeneradorDivisores()
                   .generarDesdeNumero(fragmento.numerador),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.fraccionDeCantidad:
+        // numerador → numerador, denominador → denominador, numeradorB → cantidad.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaFraccionDeCantidad(
+              problemaPredeterminado: GeneradorFraccionDeCantidad()
+                  .generarDesdeTerminos(
+                numerador: fragmento.numerador,
+                denominador: fragmento.denominador,
+                cantidad: fragmento.numeradorB ?? 1,
+              ),
             ),
           ),
         );
