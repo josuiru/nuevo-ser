@@ -31,6 +31,7 @@ import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
+import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
 import 'problema_comparacion_media.dart' show GeneradorComparacionMedia;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
@@ -169,6 +170,31 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.longitud) {
+      final problema = GeneradorLongitud(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Empaquetamos el valor en numerador, los símbolos de origen y
+      // destino en decimalA y decimalB; etiquetaDecimal es lo que se
+      // pinta en el tejado ("5 m→cm").
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.valorOrigen,
+        denominador: 1,
+        tipo: tipo,
+        decimalA: problema.unidadOrigen.simbolo,
+        decimalB: problema.unidadDestino.simbolo,
+        etiquetaDecimal:
+            '${problema.valorOrigen} ${problema.unidadOrigen.simbolo}'
+            '→${problema.unidadDestino.simbolo}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1024,6 +1050,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.razon:
         // PROP.01 es base de proporcionalidad — entra en Iniciado I,
         // tras tener fracciones simplificables claras.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.longitud:
+        // MED.01 abre el dominio MED — entra en Iniciado I, tras tener
+        // base de decimales (DEC.01) para entender la escalera ×10.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

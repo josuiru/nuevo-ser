@@ -72,6 +72,9 @@ import 'package:flutter/foundation.dart';
 /// - [comparacionMedia]: puzzle FR.03. Una fracción y tres botones
 ///   (<1/2, =1/2, >1/2) con un rectángulo de referencia mostrando la
 ///   mitad. Generador con sesgo a casos contraintuitivos (5/9, 7/13).
+/// - [longitud]: puzzle MED.01. "5 m = ? cm" + cuatro candidatos. Primera
+///   habilidad del dominio MED — escalera del sistema métrico, conversión
+///   por potencias de 10. Distractores: factor menor, dirección invertida.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -104,6 +107,7 @@ enum TipoFragmentoEnTejado {
   fraccionDeCantidad,
   ordenarFracciones,
   razon,
+  longitud,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -28,6 +28,7 @@ import 'package:uno_roto/dominio/problema_comparacion_media.dart';
 import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
+import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
 import 'package:uno_roto/dominio/problema_razon.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
@@ -2449,6 +2450,98 @@ void main() {
         expect(frag.denominador, greaterThan(0));
         expect(frag.decimalA, isNotNull);
         expect(frag.decimalB, isNotNull);
+      }
+    },
+  );
+
+  // ═══ Puzzle de unidades de longitud (MED.01) ═══
+
+  test(
+    'GeneradorLongitud convierte 5 m a 500 cm con factor 100',
+    () {
+      final gen = GeneradorLongitud(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        valorOrigen: 5,
+        unidadOrigen: UnidadLongitud.m,
+        unidadDestino: UnidadLongitud.cm,
+      );
+      expect(problema.resultado, 500);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test(
+    'GeneradorLongitud incluye distractor "factor menor" cuando aplica',
+    () {
+      // 5 m → cm exige ×100; el error típico es aplicar ×10 → 50.
+      final gen = GeneradorLongitud(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        valorOrigen: 5,
+        unidadOrigen: UnidadLongitud.m,
+        unidadDestino: UnidadLongitud.cm,
+      );
+      expect(problema.candidatos, contains(50));
+    },
+  );
+
+  test(
+    'GeneradorLongitud divide correctamente cuando sube en la escalera',
+    () {
+      // 4000 m → 4 km (÷1000).
+      final gen = GeneradorLongitud(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        valorOrigen: 4000,
+        unidadOrigen: UnidadLongitud.m,
+        unidadDestino: UnidadLongitud.km,
+      );
+      expect(problema.resultado, 4);
+    },
+  );
+
+  test('MED.01 está mapeada al tipo longitud', () {
+    expect(skillsConPuzzleImplementado, contains('MED.01'));
+    expect(tipoParaSkillId('MED.01'), TipoFragmentoEnTejado.longitud);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 5,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.longitud,
+      decimalA: 'm',
+      decimalB: 'cm',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'MED.01');
+  });
+
+  test(
+    'GeneradorCaza dirigido a MED.01 produce Fragmentos con símbolos válidos',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'MED.01',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.longitud);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.decimalA, isNotNull);
+        expect(frag.decimalB, isNotNull);
+        // Los símbolos deben ser reconocibles.
+        expect(
+          () => unidadDesdeSimbolo(frag.decimalA!),
+          returnsNormally,
+        );
+        expect(
+          () => unidadDesdeSimbolo(frag.decimalB!),
+          returnsNormally,
+        );
       }
     },
   );
