@@ -37,6 +37,7 @@ import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
 import 'package:uno_roto/dominio/problema_media.dart';
 import 'package:uno_roto/dominio/problema_moda_mediana.dart';
 import 'package:uno_roto/dominio/problema_probabilidad.dart';
+import 'package:uno_roto/dominio/problema_probabilidad_porcentaje.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2554,6 +2555,33 @@ void main() {
           returnsNormally,
         );
       }
+    },
+  );
+
+  // ═══ Puzzle de probabilidad como porcentaje (EST.06) ═══
+
+  test('EST.06 está mapeada al tipo probabilidadPorcentaje', () {
+    expect(skillsConPuzzleImplementado, contains('EST.06'));
+    expect(
+      tipoParaSkillId('EST.06'),
+      TipoFragmentoEnTejado.probabilidadPorcentaje,
+    );
+  });
+
+  test('GeneradorProbabilidadPorcentaje convierte 3/4 a 75%', () {
+    final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
+    // Caso 2: 3/4 → 75%.
+    final problema = gen.generarPorIndice(2);
+    expect(problema.respuesta, 75);
+  });
+
+  test(
+    'GeneradorProbabilidadPorcentaje incluye complementario como distractor',
+    () {
+      // 3/4 → 75%. Complementario: 25%.
+      final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
+      final problema = gen.generarPorIndice(2);
+      expect(problema.candidatosPorcentaje, contains(25));
     },
   );
 

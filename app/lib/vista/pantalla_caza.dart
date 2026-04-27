@@ -34,6 +34,7 @@ import '../dominio/problema_angulo.dart';
 import '../dominio/problema_media.dart';
 import '../dominio/problema_moda_mediana.dart';
 import '../dominio/problema_probabilidad.dart';
+import '../dominio/problema_probabilidad_porcentaje.dart';
 import '../dominio/problema_escala.dart';
 import '../dominio/problema_jerarquia_fracciones.dart';
 import '../dominio/problema_superficie.dart';
@@ -81,6 +82,7 @@ import 'pantalla_angulo.dart';
 import 'pantalla_media.dart';
 import 'pantalla_moda_mediana.dart';
 import 'pantalla_probabilidad.dart';
+import 'pantalla_probabilidad_porcentaje.dart';
 import 'pantalla_escala.dart';
 import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
@@ -332,6 +334,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.media => 2,
         TipoFragmentoEnTejado.modaMediana => 2,
         TipoFragmentoEnTejado.probabilidad => 3,
+        TipoFragmentoEnTejado.probabilidadPorcentaje => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -746,6 +749,17 @@ class _PantallaCazaState extends State<PantallaCaza>
                     unidadDesdeSimbolo(fragmento.decimalA ?? 'm'),
                 unidadDestino:
                     unidadDesdeSimbolo(fragmento.decimalB ?? 'cm'),
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.probabilidadPorcentaje:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaProbabilidadPorcentaje(
+              problemaPredeterminado:
+                  GeneradorProbabilidadPorcentaje().generarPorIndice(
+                fragmento.numerador,
               ),
             ),
           ),

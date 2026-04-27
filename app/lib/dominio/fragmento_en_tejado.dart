@@ -114,6 +114,9 @@ import 'package:flutter/foundation.dart';
 /// - [probabilidad]: puzzle EST.05. "saco con 3 rojas y 5 azules →
 ///   P(roja) = ?" + cuatro fracciones candidatas (reducidas).
 ///   Distractor estrella: la probabilidad complementaria (P(azul)).
+/// - [probabilidadPorcentaje]: puzzle EST.06. "P = 3/4 → como % = ?"
+///   + cuatro candidatos %. Reformula EST.05 → DEC.08 → PROP.04 con
+///   sentido probabilístico.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -158,6 +161,7 @@ enum TipoFragmentoEnTejado {
   media,
   modaMediana,
   probabilidad,
+  probabilidadPorcentaje,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
