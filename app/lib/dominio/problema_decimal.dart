@@ -29,16 +29,22 @@ const List<DecimalConocido> decimalesConocidos = [
   DecimalConocido('0,625', Fraccion(5, 8)),
 ];
 
+/// Problema DEC.08: el niño ve una fracción y elige el decimal
+/// equivalente entre cuatro candidatos. Mecánica de conversión
+/// fracción → decimal (la habilidad real, no la inversa que tenía
+/// el puzzle anterior).
 class ProblemaDecimal {
-  final String etiquetaDecimal;
-  final List<Fraccion> candidatos;
+  final Fraccion fraccionMostrada;
+  final List<String> candidatos;
   final int indiceCorrecto;
 
   const ProblemaDecimal({
-    required this.etiquetaDecimal,
+    required this.fraccionMostrada,
     required this.candidatos,
     required this.indiceCorrecto,
   });
+
+  String get etiquetaCorrecta => candidatos[indiceCorrecto];
 }
 
 class GeneradorDecimal {
@@ -57,35 +63,31 @@ class GeneradorDecimal {
   }
 
   /// Cuando el Fragmento en el tejado ya definió qué decimal muestra
-  /// (su etiqueta visible), generamos el problema anclado a ese decimal
-  /// para que el niño vea la misma etiqueta que va a resolver.
+  /// (su etiqueta visible), generamos el problema anclado a la
+  /// fracción equivalente para que el niño vea siempre la misma
+  /// fracción que va a resolver.
   ProblemaDecimal generarDesde(DecimalConocido decimalObjetivo) {
     return _problemaDesde(decimalObjetivo);
   }
 
   ProblemaDecimal _problemaDesde(DecimalConocido correcto) {
-    final distractores = <Fraccion>[];
-    final vistos = <String>{correcto.fraccionEquivalente.etiqueta};
+    final distractores = <String>[];
+    final vistos = <String>{correcto.etiqueta};
 
     while (distractores.length < 3) {
       final candidato =
           decimalesConocidos[_azar.nextInt(decimalesConocidos.length)]
-              .fraccionEquivalente;
-      if (vistos.contains(candidato.etiqueta)) continue;
-      if (candidato.esEquivalenteA(correcto.fraccionEquivalente)) continue;
-      vistos.add(candidato.etiqueta);
+              .etiqueta;
+      if (vistos.contains(candidato)) continue;
+      vistos.add(candidato);
       distractores.add(candidato);
     }
 
-    final candidatos = [correcto.fraccionEquivalente, ...distractores];
-    candidatos.shuffle(_azar);
-    final indiceCorrecto = candidatos.indexWhere(
-      (c) => c.numerador == correcto.fraccionEquivalente.numerador &&
-          c.denominador == correcto.fraccionEquivalente.denominador,
-    );
+    final candidatos = [correcto.etiqueta, ...distractores]..shuffle(_azar);
+    final indiceCorrecto = candidatos.indexOf(correcto.etiqueta);
 
     return ProblemaDecimal(
-      etiquetaDecimal: correcto.etiqueta,
+      fraccionMostrada: correcto.fraccionEquivalente,
       candidatos: candidatos,
       indiceCorrecto: indiceCorrecto,
     );

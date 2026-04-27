@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_decimal.dart';
+import '../dominio/problema_espejo.dart' show Fraccion;
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 
-/// Puzzle de Familia G (Decimales). Se muestra un decimal y el niño
-/// elige entre cuatro fracciones cuál es la equivalente.
+/// Puzzle DEC.08 — Convertir fracción a decimal casos simples. Se
+/// muestra una fracción y el niño elige entre cuatro decimales cuál
+/// es el equivalente.
 class PantallaDecimal extends StatefulWidget {
   /// Opcional: decimal concreto mostrado en el Fragmento. Si se pasa,
   /// el puzzle se ancla a ese decimal para coherencia visual.
@@ -129,7 +131,7 @@ class _PantallaDecimalState extends State<PantallaDecimal>
                       ),
                       const SizedBox(height: 32),
                       const Text(
-                        '¿qué fracción vale igual?',
+                        '¿qué decimal vale igual?',
                         style: TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
@@ -137,7 +139,9 @@ class _PantallaDecimalState extends State<PantallaDecimal>
                         ),
                       ),
                       const SizedBox(height: 24),
-                      _TarjetaDecimal(etiqueta: _problema.etiquetaDecimal),
+                      _TarjetaFraccion(
+                        fraccion: _problema.fraccionMostrada,
+                      ),
                       const SizedBox(height: 36),
                       Expanded(
                         child: GridView.count(
@@ -150,8 +154,7 @@ class _PantallaDecimalState extends State<PantallaDecimal>
                                 indice < _problema.candidatos.length;
                                 indice++)
                               _TarjetaCandidato(
-                                etiqueta:
-                                    _problema.candidatos[indice].etiqueta,
+                                etiqueta: _problema.candidatos[indice],
                                 seleccionado: _indiceSeleccionado == indice,
                                 marcarCorrecto: _revelado &&
                                     _indiceSeleccionado == indice &&
@@ -176,10 +179,13 @@ class _PantallaDecimalState extends State<PantallaDecimal>
   }
 }
 
-class _TarjetaDecimal extends StatelessWidget {
-  final String etiqueta;
+/// Caja con la fracción a convertir, presentada con barra horizontal
+/// (numerador encima, denominador debajo) para que el niño identifique
+/// la operación que tiene que hacer mentalmente.
+class _TarjetaFraccion extends StatelessWidget {
+  final Fraccion fraccion;
 
-  const _TarjetaDecimal({required this.etiqueta});
+  const _TarjetaFraccion({required this.fraccion});
 
   @override
   Widget build(BuildContext contexto) {
@@ -199,14 +205,34 @@ class _TarjetaDecimal extends StatelessWidget {
         ],
       ),
       child: Center(
-        child: Text(
-          etiqueta,
-          style: const TextStyle(
-            color: PaletaNeon.textoPrincipal,
-            fontSize: 40,
-            fontWeight: FontWeight.w300,
-            letterSpacing: 1.5,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${fraccion.numerador}',
+              style: const TextStyle(
+                color: PaletaNeon.textoPrincipal,
+                fontSize: 40,
+                fontWeight: FontWeight.w300,
+                letterSpacing: 1.5,
+              ),
+            ),
+            Container(
+              width: 50,
+              height: 1.8,
+              color: PaletaNeon.textoPrincipal,
+              margin: const EdgeInsets.symmetric(vertical: 4),
+            ),
+            Text(
+              '${fraccion.denominador}',
+              style: const TextStyle(
+                color: PaletaNeon.textoPrincipal,
+                fontSize: 40,
+                fontWeight: FontWeight.w300,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ],
         ),
       ),
     );

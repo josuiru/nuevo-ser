@@ -25,6 +25,7 @@ import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
 import 'package:uno_roto/dominio/problema_regla_de_tres.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_comparacion_media.dart';
+import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
@@ -2293,6 +2294,33 @@ void main() {
       }
     },
   );
+
+  // ═══ Puzzle de convertir fracción a decimal (DEC.08) ═══
+
+  test(
+    'GeneradorDecimal muestra fracción y los candidatos son etiquetas decimales',
+    () {
+      final gen = GeneradorDecimal(semilla: 0);
+      final problema = gen.generarDesde(
+        const DecimalConocido('0,25', Fraccion(1, 4)),
+      );
+      // La pregunta es la fracción 1/4.
+      expect(problema.fraccionMostrada.numerador, 1);
+      expect(problema.fraccionMostrada.denominador, 4);
+      // Los candidatos son strings decimales y el correcto es '0,25'.
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.etiquetaCorrecta, '0,25');
+      // Todos los candidatos contienen coma (forma decimal).
+      for (final c in problema.candidatos) {
+        expect(c, contains(','));
+      }
+    },
+  );
+
+  test('DEC.08 está mapeada al tipo decimal y entrena fracción → decimal', () {
+    expect(skillsConPuzzleImplementado, contains('DEC.08'));
+    expect(tipoParaSkillId('DEC.08'), TipoFragmentoEnTejado.decimal);
+  });
 
   // ═══ Puzzle de porcentaje de cantidad (PROP.04) ═══
 
