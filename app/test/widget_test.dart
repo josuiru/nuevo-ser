@@ -2295,6 +2295,89 @@ void main() {
     },
   );
 
+  // ═══ FR.18 / FR.20 / DEC.05 — segundo operando natural ═══
+
+  test(
+    'segundoOperandoNaturalParaSkill marca FR.18, FR.20 y DEC.05',
+    () {
+      expect(segundoOperandoNaturalParaSkill('FR.18'), isTrue);
+      expect(segundoOperandoNaturalParaSkill('FR.20'), isTrue);
+      expect(segundoOperandoNaturalParaSkill('DEC.05'), isTrue);
+      // Las que SÍ son fracción × fracción / decimal × decimal NO.
+      expect(segundoOperandoNaturalParaSkill('FR.19'), isFalse);
+      expect(segundoOperandoNaturalParaSkill('FR.21'), isFalse);
+      expect(segundoOperandoNaturalParaSkill('DEC.06'), isFalse);
+    },
+  );
+
+  test(
+    'GeneradorCaza dirigido a FR.18 produce duales con segundo operando natural',
+    () {
+      final gen = GeneradorCaza(semilla: 99);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 20; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.18',
+          esquirlasAcumuladas: 70,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.dual);
+        expect(frag.operador, OperadorAritmetico.producto);
+        // El segundo operando es un natural: denominadorB == 1.
+        expect(frag.denominadorB, 1,
+            reason: 'FR.18 exige fracción × natural, no fracción × fracción.');
+        // El natural está en rango razonable para primaria.
+        expect(frag.numeradorB, greaterThanOrEqualTo(2));
+      }
+    },
+  );
+
+  test(
+    'GeneradorCaza dirigido a FR.20 produce duales con segundo operando natural',
+    () {
+      final gen = GeneradorCaza(semilla: 17);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 20; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.20',
+          esquirlasAcumuladas: 70,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.dual);
+        expect(frag.operador, OperadorAritmetico.division);
+        expect(frag.denominadorB, 1);
+      }
+    },
+  );
+
+  test(
+    'GeneradorCaza dirigido a DEC.05 produce productos con segundo factor sin coma',
+    () {
+      final gen = GeneradorCaza(semilla: 41);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 20; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DEC.05',
+          esquirlasAcumuladas: 70,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.operacionDecimal);
+        expect(frag.operador, OperadorAritmetico.producto);
+        expect(frag.decimalB, isNotNull);
+        // El segundo operando es entero: no contiene coma.
+        expect(frag.decimalB, isNot(contains(',')));
+      }
+    },
+  );
+
+  test(
+    "Fraccion.etiqueta omite '/1' cuando el denominador es 1",
+    () {
+      expect(const Fraccion(5, 1).etiqueta, '5');
+      expect(const Fraccion(3, 4).etiqueta, '3/4');
+    },
+  );
+
   // ═══ Puzzle de convertir fracción a decimal (DEC.08) ═══
 
   test(

@@ -78,7 +78,9 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
+      skillId == 'FR.18' ||
       skillId == 'FR.19' ||
+      skillId == 'FR.20' ||
       skillId == 'FR.21') {
     return TipoFragmentoEnTejado.dual;
   }
@@ -145,6 +147,15 @@ ModoComparacion? modoComparacionParaSkillId(String skillId) {
     default:
       return null;
   }
+}
+
+/// Para skills que exigen "fracción × natural" o "decimal × natural"
+/// — FR.18, FR.20, DEC.05 — el segundo operando debe ser entero, no
+/// fracción ni decimal. Devuelve true cuando hay que forzarlo.
+bool segundoOperandoNaturalParaSkill(String skillId) {
+  return skillId == 'FR.18' ||
+      skillId == 'FR.20' ||
+      skillId == 'DEC.05';
 }
 
 /// Para Duales y OpDecimal, el operador concreto a forzar según
@@ -253,25 +264,34 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.comparacionMedia:
       return 'FR.03';
     case TipoFragmentoEnTejado.dual:
+      // Si el segundo operando es natural (denB == 1), el dual ejercita
+      // FR.18 (× natural) o FR.20 (÷ natural). Si es fracción, FR.19
+      // o FR.21.
+      final esSegundoNatural = fragmento.denominadorB == 1;
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
           return 'FR.16';
         case OperadorAritmetico.resta:
           return 'FR.17';
         case OperadorAritmetico.producto:
-          return 'FR.19';
+          return esSegundoNatural ? 'FR.18' : 'FR.19';
         case OperadorAritmetico.division:
-          return 'FR.21';
+          return esSegundoNatural ? 'FR.20' : 'FR.21';
         case null:
           return 'FR.16';
       }
     case TipoFragmentoEnTejado.operacionDecimal:
+      // Si el segundo operando es entero (sin coma), el producto
+      // ejercita DEC.05 (decimal × natural). En otro caso, DEC.06
+      // (decimal × decimal).
+      final segundoEsEntero =
+          fragmento.decimalB != null && !fragmento.decimalB!.contains(',');
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
         case OperadorAritmetico.resta:
           return 'DEC.04';
         case OperadorAritmetico.producto:
-          return 'DEC.06';
+          return segundoEsEntero ? 'DEC.05' : 'DEC.06';
         case OperadorAritmetico.division:
           return 'DEC.07';
         case null:

@@ -10,7 +10,8 @@ class Fraccion {
   const Fraccion(this.numerador, this.denominador)
       : assert(denominador > 0);
 
-  String get etiqueta => '$numerador/$denominador';
+  String get etiqueta =>
+      denominador == 1 ? '$numerador' : '$numerador/$denominador';
 
   double get valor => numerador / denominador;
 

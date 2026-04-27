@@ -8,6 +8,7 @@ import 'mapeo_habilidades_puzzle.dart'
         modoComparacionParaSkillId,
         modoMcmMcdParaSkillId,
         operadorParaSkillId,
+        segundoOperandoNaturalParaSkill,
         tipoParaSkillId;
 import 'problema_amplificar.dart' show GeneradorAmplificar;
 import 'problema_comparacion.dart' show GeneradorComparacion;
@@ -74,6 +75,8 @@ class GeneradorCaza {
       modoComparacionPreferido: modoComparacionParaSkillId(idHabilidad),
       divisoresPermitidos: divisoresParaSkillId(idHabilidad),
       modoMcmMcdPreferido: modoMcmMcdParaSkillId(idHabilidad),
+      segundoOperandoNatural:
+          segundoOperandoNaturalParaSkill(idHabilidad),
     );
   }
 
@@ -100,6 +103,7 @@ class GeneradorCaza {
     ModoComparacion? modoComparacionPreferido,
     List<int>? divisoresPermitidos,
     String? modoMcmMcdPreferido,
+    bool segundoOperandoNatural = false,
   }) {
 
     if (tipo == TipoFragmentoEnTejado.lecturaDecimal) {
@@ -577,6 +581,7 @@ class GeneradorCaza {
       final (textoA, textoB, operador) = _elegirOperacionDecimal(
         dificultad,
         operadorPreferido: operadorPreferido,
+        segundoNatural: segundoOperandoNatural,
       );
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
@@ -597,8 +602,11 @@ class GeneradorCaza {
 
     if (tipo == TipoFragmentoEnTejado.dual) {
       final operador = operadorPreferido ?? _elegirOperadorDual(dificultad);
-      final (numA, denA, numB, denB) =
-          _elegirSumandosDual(dificultad, operador);
+      final (numA, denA, numB, denB) = _elegirSumandosDual(
+        dificultad,
+        operador,
+        segundoNatural: segundoOperandoNatural,
+      );
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -725,6 +733,7 @@ class GeneradorCaza {
   (String, String, OperadorAritmetico) _elegirOperacionDecimal(
     int dificultad, {
     OperadorAritmetico? operadorPreferido,
+    bool segundoNatural = false,
   }) {
     final operadoresPorDificultad = <OperadorAritmetico>[
       OperadorAritmetico.suma,
@@ -762,15 +771,26 @@ class GeneradorCaza {
         final par = pares[_azar.nextInt(pares.length)];
         return (par.$1, par.$2, operador);
       case OperadorAritmetico.producto:
-        const pares = [
+        // Pares decimal × decimal (caso general DEC.06).
+        const paresDecimal = [
           ('0,5', '0,4'),
           ('0,3', '0,6'),
           ('0,2', '0,5'),
           ('1,5', '0,2'),
           ('2,5', '0,4'),
-          ('0,25', '4'),
         ];
-        final par = pares[_azar.nextInt(pares.length)];
+        // Pares decimal × natural (DEC.05) — el segundo factor es
+        // un entero sin coma, como pide el catálogo.
+        const paresConNatural = [
+          ('0,25', '4'),
+          ('0,5', '6'),
+          ('1,5', '3'),
+          ('0,2', '7'),
+          ('2,3', '5'),
+          ('0,75', '2'),
+        ];
+        final pool = segundoNatural ? paresConNatural : paresDecimal;
+        final par = pool[_azar.nextInt(pool.length)];
         return (par.$1, par.$2, operador);
       case OperadorAritmetico.division:
         const pares = [
@@ -928,8 +948,9 @@ class GeneradorCaza {
   /// problema en rango de primaria.
   (int, int, int, int) _elegirSumandosDual(
     int dificultad,
-    OperadorAritmetico operador,
-  ) {
+    OperadorAritmetico operador, {
+    bool segundoNatural = false,
+  }) {
     final denominadoresPosibles = dificultad < 6
         ? const [2, 3, 3, 4, 4, 5, 6]
         : const [3, 4, 5, 6, 6, 8, 10, 12];
@@ -939,7 +960,12 @@ class GeneradorCaza {
     final debeSerDistinto =
         operador == OperadorAritmetico.suma ||
             operador == OperadorAritmetico.resta;
-    if (debeSerDistinto) {
+    if (segundoNatural) {
+      // FR.18 / FR.20: el segundo operando es un natural pequeño
+      // (numB en [2,5]), denB = 1 — la pantalla detecta denB==1 y
+      // muestra el natural sin barra de fracción.
+      denB = 1;
+    } else if (debeSerDistinto) {
       do {
         denB = denominadoresPosibles[
             _azar.nextInt(denominadoresPosibles.length)];
@@ -949,7 +975,9 @@ class GeneradorCaza {
           _azar.nextInt(denominadoresPosibles.length)];
     }
     final numA = 1 + _azar.nextInt(math.max(1, denA - 1));
-    var numB = 1 + _azar.nextInt(math.max(1, denB - 1));
+    var numB = segundoNatural
+        ? 2 + _azar.nextInt(4)
+        : 1 + _azar.nextInt(math.max(1, denB - 1));
     // Si es resta, nos aseguramos que el minuendo sea mayor que el
     // sustraendo para no entrar en negativos.
     if (operador == OperadorAritmetico.resta) {
