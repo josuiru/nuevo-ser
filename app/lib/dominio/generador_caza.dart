@@ -6,6 +6,7 @@ import 'mapeo_habilidades_puzzle.dart'
     show
         divisoresParaSkillId,
         modoComparacionParaSkillId,
+        modoMcmMcdParaSkillId,
         operadorParaSkillId,
         tipoParaSkillId;
 import 'problema_amplificar.dart' show GeneradorAmplificar;
@@ -22,6 +23,7 @@ import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
 import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_comparacion_mixta.dart' show GeneradorComparacionMixta;
+import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_primo.dart' show GeneradorPrimo;
 import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
@@ -68,6 +70,7 @@ class GeneradorCaza {
       operadorPreferido: operadorParaSkillId(idHabilidad),
       modoComparacionPreferido: modoComparacionParaSkillId(idHabilidad),
       divisoresPermitidos: divisoresParaSkillId(idHabilidad),
+      modoMcmMcdPreferido: modoMcmMcdParaSkillId(idHabilidad),
     );
   }
 
@@ -93,6 +96,7 @@ class GeneradorCaza {
     OperadorAritmetico? operadorPreferido,
     ModoComparacion? modoComparacionPreferido,
     List<int>? divisoresPermitidos,
+    String? modoMcmMcdPreferido,
   }) {
 
     if (tipo == TipoFragmentoEnTejado.lecturaDecimal) {
@@ -152,6 +156,30 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.mcmMcd) {
+      final modo = modoMcmMcdPreferido == 'mcd'
+          ? ModoMcmMcd.mcd
+          : ModoMcmMcd.mcm;
+      final problema = GeneradorMcmMcd(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(modo: modo, dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // numerador y denominador llevan los dos números a comparar.
+        // etiquetaDecimal lleva el modo ('mcm' | 'mcd') para que
+        // idHabilidadPrincipal y la pantalla puedan reconstruir.
+        numerador: problema.a,
+        denominador: problema.b,
+        tipo: tipo,
+        etiquetaDecimal: modo == ModoMcmMcd.mcd ? 'mcd' : 'mcm',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -791,6 +819,10 @@ class GeneradorCaza {
         // DEC.03 pide convertir mentalmente — entra cuando ya hay
         // base de decimales y fracciones (tier 2).
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.mcmMcd:
+        // DIV.06/DIV.07 son Iniciado II — entran tras dominar
+        // divisibilidad y primos.
+        return dificultad >= 3;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

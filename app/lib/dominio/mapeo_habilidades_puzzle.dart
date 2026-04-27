@@ -40,6 +40,8 @@ const Set<String> skillsConPuzzleImplementado = {
   'DIV.05',
   'PROP.03',
   'DEC.03',
+  'DIV.06',
+  'DIV.07',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -66,6 +68,9 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DIV.05') return TipoFragmentoEnTejado.primo;
   if (skillId == 'PROP.03') return TipoFragmentoEnTejado.porcentajeCantidad;
   if (skillId == 'DEC.03') return TipoFragmentoEnTejado.comparacionMixta;
+  if (skillId == 'DIV.06' || skillId == 'DIV.07') {
+    return TipoFragmentoEnTejado.mcmMcd;
+  }
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
@@ -105,6 +110,21 @@ List<int>? divisoresParaSkillId(String skillId) {
       return const [2, 3, 5, 10];
     case 'DIV.04':
       return const [4, 6, 9];
+    default:
+      return null;
+  }
+}
+
+/// Para Fragmentos de MCM/MCD, qué calcular según skill.
+/// - DIV.07 → MCM (`'mcm'`).
+/// - DIV.06 → MCD (`'mcd'`).
+/// Null si la skill no es de esta familia.
+String? modoMcmMcdParaSkillId(String skillId) {
+  switch (skillId) {
+    case 'DIV.07':
+      return 'mcm';
+    case 'DIV.06':
+      return 'mcd';
     default:
       return null;
   }
@@ -216,6 +236,9 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'PROP.03';
     case TipoFragmentoEnTejado.comparacionMixta:
       return 'DEC.03';
+    case TipoFragmentoEnTejado.mcmMcd:
+      // El modo lo lleva etiquetaDecimal: 'mcm' → DIV.07, 'mcd' → DIV.06.
+      return fragmento.etiquetaDecimal == 'mcd' ? 'DIV.06' : 'DIV.07';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -315,6 +338,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Comparar formatos cruzados — exige convertir mentalmente uno
       // de los dos. Pesa como una comparación distinta (FR.07).
       return 1.1;
+    case TipoFragmentoEnTejado.mcmMcd:
+      // Cálculo con dos descomposiciones — más exigente que la
+      // mecánica binaria de divisibilidad.
+      return 1.3;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:

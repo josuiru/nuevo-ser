@@ -21,6 +21,7 @@ import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
+import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_porcentaje_cantidad.dart';
 import '../dominio/problema_primo.dart';
 import '../dominio/problema_mixto_a_impropio.dart'
@@ -48,6 +49,7 @@ import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
+import 'pantalla_mcm_mcd.dart';
 import 'pantalla_porcentaje_cantidad.dart';
 import 'pantalla_primo.dart';
 import 'pantalla_mixto_a_impropio.dart';
@@ -272,6 +274,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.primo => 1,
         TipoFragmentoEnTejado.porcentajeCantidad => 3,
         TipoFragmentoEnTejado.comparacionMixta => 2,
+        TipoFragmentoEnTejado.mcmMcd => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -567,6 +570,23 @@ class _PantallaCazaState extends State<PantallaCaza>
                 fraccion: fraccion,
                 etiquetaDecimal: etiquetaDecimal,
                 fraccionALaIzquierda: fraccionALaIzquierda,
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.mcmMcd:
+        // numerador/denominador → los dos números a calcular.
+        // etiquetaDecimal → 'mcm' o 'mcd'.
+        final modo = fragmento.etiquetaDecimal == 'mcd'
+            ? ModoMcmMcd.mcd
+            : ModoMcmMcd.mcm;
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaMcmMcd(
+              problemaPredeterminado: GeneradorMcmMcd().generarDesdeTerminos(
+                a: fragmento.numerador,
+                b: fragmento.denominador,
+                modo: modo,
               ),
             ),
           ),

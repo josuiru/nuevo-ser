@@ -20,6 +20,7 @@ import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
+import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
@@ -2012,6 +2013,118 @@ void main() {
         expect(frag.decimalA, isNotNull);
         expect(frag.decimalA, contains(','));
         expect(frag.decimalB, isIn(<String>['izq', 'der']));
+      }
+    },
+  );
+
+  // ═══ Puzzle de MCM y MCD (DIV.06 / DIV.07) ═══
+
+  test('GeneradorMcmMcd calcula MCM correctamente', () {
+    final gen = GeneradorMcmMcd(semilla: 0);
+    final problema = gen.generarDesdeTerminos(
+      a: 8,
+      b: 12,
+      modo: ModoMcmMcd.mcm,
+    );
+    expect(problema.resultado, 24);
+    expect(problema.candidatos, hasLength(4));
+  });
+
+  test('GeneradorMcmMcd calcula MCD correctamente', () {
+    final gen = GeneradorMcmMcd(semilla: 0);
+    final problema = gen.generarDesdeTerminos(
+      a: 8,
+      b: 12,
+      modo: ModoMcmMcd.mcd,
+    );
+    expect(problema.resultado, 4);
+    expect(problema.candidatos, hasLength(4));
+  });
+
+  test(
+    'GeneradorMcmMcd incluye trampa del contrario (MCM cuando se pide MCD)',
+    () {
+      final gen = GeneradorMcmMcd(semilla: 0);
+      // Para MCD(8,12) = 4, esperamos que aparezca el MCM (24) como
+      // distractor — el error pedagógico clásico.
+      final problema = gen.generarDesdeTerminos(
+        a: 8,
+        b: 12,
+        modo: ModoMcmMcd.mcd,
+      );
+      expect(problema.candidatos, contains(4));
+      expect(problema.candidatos, contains(24));
+    },
+  );
+
+  test('DIV.07 está mapeada a mcmMcd con modo MCM', () {
+    expect(skillsConPuzzleImplementado, contains('DIV.07'));
+    expect(tipoParaSkillId('DIV.07'), TipoFragmentoEnTejado.mcmMcd);
+    expect(modoMcmMcdParaSkillId('DIV.07'), 'mcm');
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 8,
+      denominador: 12,
+      tipo: TipoFragmentoEnTejado.mcmMcd,
+      etiquetaDecimal: 'mcm',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DIV.07');
+  });
+
+  test('DIV.06 está mapeada a mcmMcd con modo MCD', () {
+    expect(skillsConPuzzleImplementado, contains('DIV.06'));
+    expect(tipoParaSkillId('DIV.06'), TipoFragmentoEnTejado.mcmMcd);
+    expect(modoMcmMcdParaSkillId('DIV.06'), 'mcd');
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 8,
+      denominador: 12,
+      tipo: TipoFragmentoEnTejado.mcmMcd,
+      etiquetaDecimal: 'mcd',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DIV.06');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DIV.07 produce Fragmento con modo MCM',
+    () {
+      final gen = GeneradorCaza(semilla: 9876);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 8; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DIV.07',
+          esquirlasAcumuladas: 60, // tier 4+
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.mcmMcd);
+        expect(frag.etiquetaDecimal, 'mcm');
+      }
+    },
+  );
+
+  test(
+    'GeneradorCaza dirigido a DIV.06 produce Fragmento con modo MCD',
+    () {
+      final gen = GeneradorCaza(semilla: 5432);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 8; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DIV.06',
+          esquirlasAcumuladas: 60,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.mcmMcd);
+        expect(frag.etiquetaDecimal, 'mcd');
       }
     },
   );

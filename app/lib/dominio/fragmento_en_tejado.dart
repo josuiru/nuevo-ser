@@ -50,6 +50,9 @@ import 'package:flutter/foundation.dart';
 ///   resultados candidatos. Mecánica de cálculo directo con trampas.
 /// - [comparacionMixta]: puzzle DEC.03. Una fracción y un decimal lado
 ///   a lado, tocar el de mayor valor. Comparación cruzada entre formatos.
+/// - [mcmMcd]: puzzle DIV.06/DIV.07. Dos números y la pregunta sobre
+///   MCM (DIV.07) o MCD (DIV.06). Comparten pantalla y motor; el modo
+///   lo fija la skill.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -74,6 +77,7 @@ enum TipoFragmentoEnTejado {
   primo,
   porcentajeCantidad,
   comparacionMixta,
+  mcmMcd,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
