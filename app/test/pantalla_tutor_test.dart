@@ -43,7 +43,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Cuéntame qué te ha trabado.\nCon tus palabras.'),
           findsOneWidget);
-      expect(find.text('tutor — comparar fracciones'), findsOneWidget);
+      expect(find.text('pista — comparar fracciones'), findsOneWidget);
     },
   );
 

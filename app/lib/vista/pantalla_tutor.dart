@@ -102,7 +102,7 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
         title: Text(
-          'tutor — ${widget.nombreHabilidad.toLowerCase()}',
+          'pista — ${widget.nombreHabilidad.toLowerCase()}',
           style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,

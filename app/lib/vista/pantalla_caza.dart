@@ -1230,6 +1230,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     final idHabilidad = idHabilidadPrincipal(fragmento);
     if (!await servicio.deberiaOfrecer(idHabilidad)) return;
     if (!mounted) return;
+    final nombreHabilidad = _nombreVisibleDeHabilidad(idHabilidad);
 
     final acepta = await showDialog<bool>(
       context: context,
@@ -1237,7 +1238,7 @@ class _PantallaCazaState extends State<PantallaCaza>
       builder: (contexto) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
         title: const Text(
-          '¿Hablo con Eco?',
+          '¿Quieres una pista?',
           style: TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 18,
@@ -1245,12 +1246,26 @@ class _PantallaCazaState extends State<PantallaCaza>
             letterSpacing: 2,
           ),
         ),
-        content: const Text(
-          'Va dos rangos por delante. Te puede dar una pista, no la solución.',
-          style: TextStyle(
-            color: PaletaNeon.textoTenue,
-            fontSize: 14,
-            height: 1.5,
+        content: RichText(
+          text: TextSpan(
+            style: const TextStyle(
+              color: PaletaNeon.textoTenue,
+              fontSize: 14,
+              height: 1.5,
+            ),
+            children: [
+              const TextSpan(text: 'Sobre '),
+              TextSpan(
+                text: nombreHabilidad.toLowerCase(),
+                style: const TextStyle(
+                  color: PaletaNeon.textoPrincipal,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const TextSpan(
+                text: '. Una pista, no la solución.',
+              ),
+            ],
           ),
         ),
         actions: [
@@ -1277,7 +1292,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         builder: (_) => PantallaTutor(
           servicio: servicio,
           idHabilidad: idHabilidad,
-          nombreHabilidad: _nombreVisibleDeHabilidad(idHabilidad),
+          nombreHabilidad: nombreHabilidad,
           contextoFragmento: _contextoFragmento(fragmento),
         ),
       ),
