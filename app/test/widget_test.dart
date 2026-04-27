@@ -14,6 +14,7 @@ import 'package:uno_roto/dominio/problema_comparacion.dart';
 import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
 import 'package:uno_roto/dominio/problema_amplificar.dart';
 import 'package:uno_roto/dominio/problema_comparacion_decimal.dart';
+import 'package:uno_roto/dominio/problema_comparacion_distinta.dart';
 import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
@@ -1654,6 +1655,112 @@ void main() {
         expect(frag.tipo, TipoFragmentoEnTejado.redondeoDecimal);
         expect(frag.etiquetaDecimal, isNotNull);
         expect(frag.etiquetaDecimal!, contains(','));
+      }
+    },
+  );
+
+  // ═══ Puzzle de comparación de fracciones distintas (FR.07) ═══
+
+  test(
+    'ProblemaComparacionDistinta detecta correctamente la mayor por valor',
+    () {
+      // 3/4 (=0.75) vs 5/7 (≈0.714) — 3/4 mayor pero ambos términos
+      // menores que los de 5/7. Caso contraintuitivo clásico.
+      const a = Fraccion(3, 4);
+      const b = Fraccion(5, 7);
+      const problema = ProblemaComparacionDistinta(a: a, b: b);
+      expect(problema.indiceMayor, 0);
+      expect(problema.esCorrecta(0), isTrue);
+      expect(problema.esCorrecta(1), isFalse);
+    },
+  );
+
+  test('GeneradorComparacionDistinta nunca repite numerador o denominador', () {
+    final gen = GeneradorComparacionDistinta(semilla: 19);
+    for (var intento = 0; intento < 40; intento++) {
+      final problema = gen.generar(dificultad: 2);
+      expect(
+        problema.a.numerador == problema.b.numerador,
+        isFalse,
+        reason: 'FR.07 no comparte numerador (eso es FR.06).',
+      );
+      expect(
+        problema.a.denominador == problema.b.denominador,
+        isFalse,
+        reason: 'FR.07 no comparte denominador (eso es FR.05).',
+      );
+      expect(
+        problema.a.numerador * problema.b.denominador ==
+            problema.b.numerador * problema.a.denominador,
+        isFalse,
+        reason: 'FR.07 no admite fracciones equivalentes.',
+      );
+    }
+  });
+
+  test(
+    'GeneradorComparacionDistinta produce casos contraintuitivos en buen porcentaje',
+    () {
+      final gen = GeneradorComparacionDistinta(semilla: 77);
+      var contraintuitivos = 0;
+      const total = 100;
+      for (var intento = 0; intento < total; intento++) {
+        final p = gen.generar(dificultad: 2);
+        final ladoA = p.a.numerador * p.b.denominador;
+        final ladoB = p.b.numerador * p.a.denominador;
+        final mayor = ladoA > ladoB ? p.a : p.b;
+        final menor = ladoA > ladoB ? p.b : p.a;
+        // Contraintuitivo: la mayor por valor tiene num y den menores
+        // que la menor por valor.
+        if (mayor.numerador < menor.numerador &&
+            mayor.denominador < menor.denominador) {
+          contraintuitivos++;
+        }
+      }
+      // Esperamos cerca del 60%; basta con > 40% para validar el sesgo.
+      expect(contraintuitivos, greaterThan(total * 0.4),
+          reason: 'El generador debe sesgar a casos contraintuitivos.');
+    },
+  );
+
+  test('FR.07 está mapeada al tipo comparacionDistinta', () {
+    expect(skillsConPuzzleImplementado, contains('FR.07'));
+    expect(
+      tipoParaSkillId('FR.07'),
+      TipoFragmentoEnTejado.comparacionDistinta,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 3,
+      denominador: 4,
+      numeradorB: 5,
+      denominadorB: 7,
+      tipo: TipoFragmentoEnTejado.comparacionDistinta,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.07');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.07 produce Fragmento con dos fracciones distintas',
+    () {
+      final gen = GeneradorCaza(semilla: 1234567);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.07',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.comparacionDistinta);
+        expect(frag.numeradorB, isNotNull);
+        expect(frag.denominadorB, isNotNull);
+        expect(frag.numerador, isNot(equals(frag.numeradorB)));
+        expect(frag.denominador, isNot(equals(frag.denominadorB)));
       }
     },
   );

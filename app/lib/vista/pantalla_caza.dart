@@ -13,6 +13,7 @@ import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_comparacion_decimal.dart';
+import '../dominio/problema_comparacion_distinta.dart';
 import '../dominio/problema_comparacion_unidad.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
@@ -31,6 +32,7 @@ import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_comparacion.dart';
+import 'pantalla_comparacion_distinta.dart';
 import 'pantalla_comparacion_unidad.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_dual.dart';
@@ -260,6 +262,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.lecturaFraccion => 2,
         TipoFragmentoEnTejado.mixtoAImpropio => 3,
         TipoFragmentoEnTejado.redondeoDecimal => 2,
+        TipoFragmentoEnTejado.comparacionDistinta => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -504,6 +507,20 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaRedondeoDecimal(
               problemaPredeterminado: GeneradorRedondeoDecimal()
                   .generarDesdeEtiqueta(etiquetaOriginal),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.comparacionDistinta:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaComparacionDistinta(
+              problemaPredeterminado: ProblemaComparacionDistinta(
+                a: Fraccion(fragmento.numerador, fragmento.denominador),
+                b: Fraccion(
+                  fragmento.numeradorB ?? fragmento.numerador,
+                  fragmento.denominadorB ?? fragmento.denominador,
+                ),
+              ),
             ),
           ),
         );

@@ -19,6 +19,8 @@ import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
 import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
 import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
+import 'problema_comparacion_distinta.dart'
+    show GeneradorComparacionDistinta;
 import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 import 'problema_simplificar.dart' show GeneradorSimplificar;
@@ -147,6 +149,27 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.comparacionDistinta) {
+      final problema = GeneradorComparacionDistinta(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.a.numerador,
+        denominador: problema.a.denominador,
+        numeradorB: problema.b.numerador,
+        denominadorB: problema.b.denominador,
+        tipo: tipo,
+        etiquetaDecimal:
+            '${problema.a.etiqueta} · ${problema.b.etiqueta}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -678,6 +701,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.redondeoDecimal:
         // DEC.09 entra cuando el niño ya domina lectura y comparación
         // de decimales — antes le pides redondear sin saber leer.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.comparacionDistinta:
+        // FR.07 va después de FR.05/FR.06 — pide cálculo, no atajos.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

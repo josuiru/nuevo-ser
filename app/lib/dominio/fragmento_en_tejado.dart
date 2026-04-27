@@ -40,6 +40,9 @@ import 'package:flutter/foundation.dart';
 ///   cuatro fracciones impropias candidatas. Inverso de [impropio].
 /// - [redondeoDecimal]: puzzle DEC.09. Decimal con dos cifras (2,37)
 ///   y cuatro candidatos a su redondeo a la décima.
+/// - [comparacionDistinta]: puzzle FR.07. Dos fracciones sin nada en
+///   común (denominadores y numeradores distintos). Siguiente escalón
+///   sobre [comparacion]: la intuición simple ya no basta.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -60,6 +63,7 @@ enum TipoFragmentoEnTejado {
   lecturaFraccion,
   mixtoAImpropio,
   redondeoDecimal,
+  comparacionDistinta,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -36,6 +36,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'FR.02',
   'FR.13',
   'DEC.09',
+  'FR.07',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -58,6 +59,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.02') return TipoFragmentoEnTejado.lecturaFraccion;
   if (skillId == 'FR.13') return TipoFragmentoEnTejado.mixtoAImpropio;
   if (skillId == 'DEC.09') return TipoFragmentoEnTejado.redondeoDecimal;
+  if (skillId == 'FR.07') return TipoFragmentoEnTejado.comparacionDistinta;
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
@@ -202,6 +204,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.13';
     case TipoFragmentoEnTejado.redondeoDecimal:
       return 'DEC.09';
+    case TipoFragmentoEnTejado.comparacionDistinta:
+      return 'FR.07';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -285,6 +289,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Decisión sobre la centésima + escribir bien la décima — más
       // exigente que comparación decimal por la propagación.
       return 1.0;
+    case TipoFragmentoEnTejado.comparacionDistinta:
+      // FR.07 pide multiplicación cruzada o cálculo de valor — un
+      // escalón claramente sobre FR.05/FR.06.
+      return 1.2;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:
