@@ -41,6 +41,7 @@ import 'problema_probabilidad_porcentaje.dart'
 import 'problema_escala.dart' show GeneradorEscala;
 import 'problema_jerarquia_fracciones.dart'
     show GeneradorJerarquiaFracciones;
+import 'problema_operacion_mixta.dart' show GeneradorOperacionMixta;
 import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
 import 'problema_masa_capacidad.dart' show GeneradorMasaCapacidad;
 import 'problema_aumento_descuento.dart'
@@ -188,6 +189,23 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.operacionMixta) {
+      final indice = _azar
+          .nextInt(GeneradorOperacionMixta.cantidadDeCasosCurados);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indice,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: 'OP·MIX',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1361,6 +1379,10 @@ class GeneradorCaza {
         return dificultad >= 3;
       case TipoFragmentoEnTejado.probabilidadPorcentaje:
         // EST.06 depende de EST.05 + DEC.08 + PROP.04 — Iniciado III.
+        return dificultad >= 4;
+      case TipoFragmentoEnTejado.operacionMixta:
+        // OP.03 depende de OP.02 + DEC.08 — Iniciado III/IV. Es la
+        // habilidad más exigente del bloque de operaciones combinadas.
         return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

@@ -1,0 +1,373 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../dominio/fragmento_en_tejado.dart' show SimboloOperador;
+import '../dominio/problema_operacion_mixta.dart';
+import '../dominio/problema_espejo.dart' show Fraccion;
+import '../nucleo/paleta.dart';
+import 'escenario.dart';
+
+/// Puzzle OP.03: el niño ve "0,5 + 1/4" o "1/2 × 0,4" y elige el
+/// resultado decimal correcto entre cuatro candidatos. La trampa
+/// estrella: leer el numerador como décimas (1/4 → 0,4 en vez de
+/// 0,25).
+class PantallaOperacionMixta extends StatefulWidget {
+  final ProblemaOperacionMixta? problemaPredeterminado;
+
+  const PantallaOperacionMixta({
+    super.key,
+    this.problemaPredeterminado,
+  });
+
+  @override
+  State<PantallaOperacionMixta> createState() => _PantallaOperacionMixtaState();
+}
+
+class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controladorCielo;
+  late ProblemaOperacionMixta _problema;
+  int? _indiceSeleccionado;
+  bool _revelado = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controladorCielo = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 16),
+    )..repeat();
+    _problema = widget.problemaPredeterminado ??
+        GeneradorOperacionMixta().generar(dificultad: 1);
+  }
+
+  @override
+  void dispose() {
+    _controladorCielo.dispose();
+    super.dispose();
+  }
+
+  void _elegir(int indice) {
+    if (_revelado && _indiceSeleccionado == _problema.indiceCorrecto) return;
+    setState(() {
+      _indiceSeleccionado = indice;
+      _revelado = true;
+    });
+    if (_problema.esCorrecta(indice)) {
+      HapticFeedback.heavyImpact();
+      Future.delayed(const Duration(milliseconds: 1100), () {
+        if (!mounted) return;
+        Navigator.of(context).pop(true);
+      });
+    } else {
+      HapticFeedback.vibrate();
+      Future.delayed(const Duration(milliseconds: 900), () {
+        if (!mounted) return;
+        setState(() => _revelado = false);
+      });
+    }
+  }
+
+  void _huir() {
+    Navigator.of(context).pop(false);
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Scaffold(
+      body: AnimatedBuilder(
+        animation: _controladorCielo,
+        builder: (_, __) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              CustomPaint(
+                painter: PintorEscenario(
+                  fasePulso: _controladorCielo.value,
+                  nivelRestauracion: 0.3,
+                ),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: _huir,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: PaletaNeon.violetaBase,
+                                  width: 1.2,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Text(
+                                'huir',
+                                style: TextStyle(
+                                  color: PaletaNeon.textoTenue,
+                                  fontSize: 13,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          const Text(
+                            'DECIMAL Y FRACCIÓN',
+                            style: TextStyle(
+                              color: PaletaNeon.textoTenue,
+                              fontSize: 12,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                          const Spacer(),
+                          const SizedBox(width: 58),
+                        ],
+                      ),
+                      const SizedBox(height: 22),
+                      const Text(
+                        'la fracción y el decimal son lo mismo',
+                        style: TextStyle(
+                          color: PaletaNeon.textoPrincipal,
+                          fontSize: 17,
+                          letterSpacing: 1.1,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      const SizedBox(height: 22),
+                      _TarjetaExpresionMixta(problema: _problema),
+                      const SizedBox(height: 32),
+                      Expanded(
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 1.6,
+                          children: [
+                            for (var indice = 0;
+                                indice < _problema.candidatosDecimales.length;
+                                indice++)
+                              _TarjetaCandidatoDecimal(
+                                valor: _problema.candidatosDecimales[indice],
+                                seleccionado: _indiceSeleccionado == indice,
+                                marcarCorrecto: _revelado &&
+                                    _indiceSeleccionado == indice &&
+                                    indice == _problema.indiceCorrecto,
+                                marcarIncorrecto: _revelado &&
+                                    _indiceSeleccionado == indice &&
+                                    indice != _problema.indiceCorrecto,
+                                alTocar: () => _elegir(indice),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _TarjetaExpresionMixta extends StatelessWidget {
+  final ProblemaOperacionMixta problema;
+  const _TarjetaExpresionMixta({required this.problema});
+
+  @override
+  Widget build(BuildContext contexto) {
+    final hijos = problema.decimalPrimero
+        ? <Widget>[
+            _OperandoDecimal(valor: problema.valorDecimal),
+            const SizedBox(width: 12),
+            _OperadorMixto(simbolo: problema.operador.simbolo),
+            const SizedBox(width: 12),
+            _OperandoFraccion(fraccion: problema.fraccion),
+          ]
+        : <Widget>[
+            _OperandoFraccion(fraccion: problema.fraccion),
+            const SizedBox(width: 12),
+            _OperadorMixto(simbolo: problema.operador.simbolo),
+            const SizedBox(width: 12),
+            _OperandoDecimal(valor: problema.valorDecimal),
+          ];
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+      decoration: BoxDecoration(
+        color: PaletaNeon.violetaBase.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: PaletaNeon.azulNeon, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: PaletaNeon.azulNeon.withOpacity(0.4),
+            blurRadius: 22,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ...hijos,
+          const SizedBox(width: 14),
+          const Text(
+            '=',
+            style: TextStyle(
+              color: PaletaNeon.azulNeon,
+              fontSize: 28,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Text(
+            '?',
+            style: TextStyle(
+              color: PaletaNeon.textoPrincipal,
+              fontSize: 30,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OperandoDecimal extends StatelessWidget {
+  final double valor;
+  const _OperandoDecimal({required this.valor});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Text(
+      formatearDecimalEsAOrtografia(valor),
+      style: const TextStyle(
+        color: PaletaNeon.textoPrincipal,
+        fontSize: 30,
+        fontWeight: FontWeight.w300,
+      ),
+    );
+  }
+}
+
+class _OperandoFraccion extends StatelessWidget {
+  final Fraccion fraccion;
+  const _OperandoFraccion({required this.fraccion});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '${fraccion.numerador}',
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 22,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+        Container(
+          width: 28,
+          height: 1.4,
+          color: PaletaNeon.textoPrincipal.withOpacity(0.7),
+        ),
+        Text(
+          '${fraccion.denominador}',
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 22,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _OperadorMixto extends StatelessWidget {
+  final String simbolo;
+  const _OperadorMixto({required this.simbolo});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Text(
+      simbolo,
+      style: const TextStyle(
+        color: PaletaNeon.azulNeon,
+        fontSize: 28,
+        fontWeight: FontWeight.w300,
+      ),
+    );
+  }
+}
+
+class _TarjetaCandidatoDecimal extends StatelessWidget {
+  final double valor;
+  final bool seleccionado;
+  final bool marcarCorrecto;
+  final bool marcarIncorrecto;
+  final VoidCallback alTocar;
+
+  const _TarjetaCandidatoDecimal({
+    required this.valor,
+    required this.seleccionado,
+    required this.marcarCorrecto,
+    required this.marcarIncorrecto,
+    required this.alTocar,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final colorBorde = marcarCorrecto
+        ? PaletaNeon.exitoSuave
+        : marcarIncorrecto
+            ? PaletaNeon.rosaAcento
+            : seleccionado
+                ? PaletaNeon.azulNeon
+                : PaletaNeon.violetaBase;
+    final brilloIntenso = marcarCorrecto || marcarIncorrecto || seleccionado;
+    final colorTexto = marcarCorrecto
+        ? PaletaNeon.exitoSuave
+        : marcarIncorrecto
+            ? PaletaNeon.rosaAcento
+            : PaletaNeon.textoPrincipal;
+    return GestureDetector(
+      onTap: alTocar,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        decoration: BoxDecoration(
+          color: PaletaNeon.fondoMedio.withOpacity(0.55),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: colorBorde, width: 1.6),
+          boxShadow: brilloIntenso
+              ? [
+                  BoxShadow(
+                    color: colorBorde.withOpacity(0.4),
+                    blurRadius: 18,
+                  ),
+                ]
+              : const [],
+        ),
+        child: Center(
+          child: Text(
+            formatearDecimalEsAOrtografia(valor),
+            style: TextStyle(
+              color: colorTexto,
+              fontSize: 30,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

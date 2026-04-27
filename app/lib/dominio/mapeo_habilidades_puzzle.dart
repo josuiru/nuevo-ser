@@ -61,6 +61,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'EST.04',
   'EST.05',
   'EST.06',
+  'OP.03',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -93,6 +94,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'EST.06') {
     return TipoFragmentoEnTejado.probabilidadPorcentaje;
   }
+  if (skillId == 'OP.03') return TipoFragmentoEnTejado.operacionMixta;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -310,6 +312,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'EST.05';
     case TipoFragmentoEnTejado.probabilidadPorcentaje:
       return 'EST.06';
+    case TipoFragmentoEnTejado.operacionMixta:
+      return 'OP.03';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -529,6 +533,11 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.probabilidadPorcentaje:
       // Conversión fracción → % directa. Pesa como porcentajeCantidad.
       return 1.2;
+    case TipoFragmentoEnTejado.operacionMixta:
+      // Operación binaria mezclando decimal y fracción — exige
+      // convertir mentalmente entre representaciones. Pesa más que un
+      // dual o una operación con decimales por la doble representación.
+      return 1.6;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

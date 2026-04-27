@@ -117,6 +117,11 @@ import 'package:flutter/foundation.dart';
 /// - [probabilidadPorcentaje]: puzzle EST.06. "P = 3/4 → como % = ?"
 ///   + cuatro candidatos %. Reformula EST.05 → DEC.08 → PROP.04 con
 ///   sentido probabilístico.
+/// - [operacionMixta]: puzzle OP.03. Operación binaria mezclando un
+///   decimal y una fracción ("0,5 + 1/4" o "1/2 × 0,4"). Trampa
+///   estrella: leer el numerador como décimas (1/4 → 0,4 en vez de
+///   0,25). Refuerza la equivalencia decimal ↔ fracción dentro de una
+///   operación.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -162,6 +167,7 @@ enum TipoFragmentoEnTejado {
   modaMediana,
   probabilidad,
   probabilidadPorcentaje,
+  operacionMixta,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

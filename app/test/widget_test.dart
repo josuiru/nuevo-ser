@@ -38,6 +38,7 @@ import 'package:uno_roto/dominio/problema_media.dart';
 import 'package:uno_roto/dominio/problema_moda_mediana.dart';
 import 'package:uno_roto/dominio/problema_probabilidad.dart';
 import 'package:uno_roto/dominio/problema_probabilidad_porcentaje.dart';
+import 'package:uno_roto/dominio/problema_operacion_mixta.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2584,6 +2585,42 @@ void main() {
       expect(problema.candidatosPorcentaje, contains(25));
     },
   );
+
+  // ═══ Puzzle de operación mixta decimal+fracción (OP.03) ═══
+
+  test('OP.03 está mapeada al tipo operacionMixta', () {
+    expect(skillsConPuzzleImplementado, contains('OP.03'));
+    expect(
+      tipoParaSkillId('OP.03'),
+      TipoFragmentoEnTejado.operacionMixta,
+    );
+  });
+
+  test('GeneradorOperacionMixta resuelve 0,5 + 1/4 = 0,75', () {
+    final gen = GeneradorOperacionMixta(semilla: 0);
+    // Caso 0: 0,5 + 1/4 → 0,75.
+    final problema = gen.generarPorIndice(0);
+    expect(problema.resultado, closeTo(0.75, 1e-9));
+  });
+
+  test(
+    'GeneradorOperacionMixta incluye numerador-como-décima como distractor',
+    () {
+      // Caso 0: 0,5 + 1/4 → 0,75. Numerador como décima: 0,5+0,1 = 0,6.
+      final gen = GeneradorOperacionMixta(semilla: 0);
+      final problema = gen.generarPorIndice(0);
+      final tieneTrampa = problema.candidatosDecimales.any(
+        (valor) => (valor - 0.6).abs() < 1e-9,
+      );
+      expect(tieneTrampa, isTrue);
+    },
+  );
+
+  test('formatearDecimalEsAOrtografia usa coma decimal española', () {
+    expect(formatearDecimalEsAOrtografia(0.75), '0,75');
+    expect(formatearDecimalEsAOrtografia(0.5), '0,5');
+    expect(formatearDecimalEsAOrtografia(1.0), '1');
+  });
 
   // ═══ Puzzle de probabilidad simple (EST.05) ═══
 

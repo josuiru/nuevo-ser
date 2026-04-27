@@ -103,6 +103,8 @@ class PintorFragmentoTejado extends CustomPainter {
         fragmento.tipo == TipoFragmentoEnTejado.probabilidad;
     final esProbabilidadPorcentaje =
         fragmento.tipo == TipoFragmentoEnTejado.probabilidadPorcentaje;
+    final esOperacionMixta =
+        fragmento.tipo == TipoFragmentoEnTejado.operacionMixta;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -191,7 +193,9 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                                                                                                                 ? const Color(0xFFEF5350)
                                                                                                                                                                                 : esProbabilidadPorcentaje
                                                                                                                                                                                     ? const Color(0xFFFFA726)
-                                                                                                                                                                                    : PaletaNeon.azulNeon;
+                                                                                                                                                                                    : esOperacionMixta
+                                                                                                                                                                                        ? const Color(0xFF7E57C2)
+                                                                                                                                                                                        : PaletaNeon.azulNeon;
 
     if (esEspejo && !escapando) {
       // Aro fantasma que insinúa el "espejo" del Fragmento.
