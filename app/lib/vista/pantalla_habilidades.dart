@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../datos/cache_tutor.dart';
 import '../datos/catalogo_habilidades.dart';
 import '../datos/cliente_api.dart';
+import '../datos/cliente_tutor.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/habilidad.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
+import '../dominio/tutor/servicio_tutor.dart';
 import '../nucleo/paleta.dart';
 import 'pantalla_ajustes_sonido.dart';
 import 'pantalla_perfiles.dart';
+import 'pantalla_tutor.dart';
 
 /// Panel que lista las 66 habilidades del mapa pedagógico y muestra
 /// para cada una el nivel actual del niño y su precisión. Accesible
@@ -113,6 +117,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             onPressed: _probarSync,
             icon: Icon(
               Icons.cloud_upload,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Probar tutor IA (debug)',
+            onPressed: _probarTutor,
+            icon: Icon(
+              Icons.chat_bubble_outline,
               color: PaletaNeon.textoTenue.withOpacity(0.7),
             ),
           ),
@@ -297,6 +309,47 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     } finally {
       api.cerrar();
     }
+  }
+
+  /// Atajo debug: abre PantallaTutor con FR.05 sin pasar por la
+  /// oferta automática (que requiere 3 fallos consecutivos). Útil
+  /// para probar el cableado app↔backend mientras no hay assets ni
+  /// flujo de auth. Si no hay token guardado, llama primero a
+  /// _probarSync para conseguir uno.
+  Future<void> _probarTutor() async {
+    final mensajero = ScaffoldMessenger.of(context);
+    final token = await widget.repositorio.cargarTokenBackend();
+    if (token == null || token.isEmpty) {
+      mensajero.showSnackBar(
+        const SnackBar(
+          backgroundColor: PaletaNeon.fondoMedio,
+          content: Text(
+            'Pulsa antes "Probar sync" para obtener un token.',
+            style: TextStyle(color: PaletaNeon.rosaAcento),
+          ),
+        ),
+      );
+      return;
+    }
+    if (!mounted) return;
+    final servicio = ServicioTutor(
+      cache: CacheTutor(),
+      cliente: ClienteTutor(
+        urlBase: ConfigApi.urlBaseLocal,
+        hostOverride: ConfigApi.hostLocal,
+      ),
+      repositorio: widget.repositorio,
+      proveedorToken: () => token,
+    );
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaTutor(
+          servicio: servicio,
+          idHabilidad: 'FR.05',
+          nombreHabilidad: 'Comparar fracciones · debug',
+        ),
+      ),
+    );
   }
 
   Future<void> _confirmarYReiniciar() async {
