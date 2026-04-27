@@ -123,6 +123,25 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     _iniciarPlanoActual();
   }
 
+  @override
+  void didUpdateWidget(covariant PantallaCinematica viejo) {
+    super.didUpdateWidget(viejo);
+    // El orquestador puede cambiar la escena por prop sin recrear el
+    // widget. Si no reseteamos, el _indicePlano se queda apuntando a
+    // un plano que la nueva escena no tiene → RangeError. Detectamos
+    // por identidad: la lista `planos` de cada escena es inmutable,
+    // así que comparar referencias es suficiente y barato.
+    if (!identical(viejo.escena.planos, widget.escena.planos)) {
+      _temporizador?.cancel();
+      _indicePlano = 0;
+      _caracteresRevelados = 0;
+      _indiceOpcionElegida = null;
+      _fase = _FaseReproduccion.pausaPrevia;
+      _dispararSonidosDeEscena();
+      _iniciarPlanoActual();
+    }
+  }
+
   void _dispararSonidosDeEscena() {
     // Motivos puntuales (doc 12 §Momentos sonoros únicos). Se reproducen
     // como efecto: el catálogo los marca en capa narrativa para que
@@ -151,7 +170,11 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     super.dispose();
   }
 
-  PlanoEscena get _planoActual => widget.escena.planos[_indicePlano];
+  PlanoEscena get _planoActual {
+    final planos = widget.escena.planos;
+    final indice = _indicePlano.clamp(0, planos.length - 1);
+    return planos[indice];
+  }
 
   Future<void> _iniciarPlanoActual() async {
     _temporizador?.cancel();
