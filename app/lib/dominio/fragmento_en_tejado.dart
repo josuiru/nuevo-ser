@@ -48,6 +48,8 @@ import 'package:flutter/foundation.dart';
 ///   no primos como 9, 15, 21.
 /// - [porcentajeCantidad]: puzzle PROP.03. "El X % de Y = ?" + cuatro
 ///   resultados candidatos. Mecánica de cálculo directo con trampas.
+/// - [comparacionMixta]: puzzle DEC.03. Una fracción y un decimal lado
+///   a lado, tocar el de mayor valor. Comparación cruzada entre formatos.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -71,6 +73,7 @@ enum TipoFragmentoEnTejado {
   comparacionDistinta,
   primo,
   porcentajeCantidad,
+  comparacionMixta,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

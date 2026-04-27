@@ -21,6 +21,7 @@ import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
 import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
+import 'problema_comparacion_mixta.dart' show GeneradorComparacionMixta;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_primo.dart' show GeneradorPrimo;
 import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
@@ -151,6 +152,38 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.comparacionMixta) {
+      final problema = GeneradorComparacionMixta(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Reconstrucción posterior: guardamos la fracción en numerador/
+      // denominador, el decimal en decimalA, y el flag de orden en
+      // decimalB ('izq' | 'der').
+      final opcionFraccion =
+          problema.a.esFraccion ? problema.a : problema.b;
+      final opcionDecimal =
+          problema.a.esFraccion ? problema.b : problema.a;
+      final fraccionALaIzquierda = problema.a.esFraccion;
+      final partes = opcionFraccion.etiqueta.split('/');
+      final num = int.parse(partes[0]);
+      final den = partes.length > 1 ? int.parse(partes[1]) : 1;
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: num,
+        denominador: den,
+        tipo: tipo,
+        decimalA: opcionDecimal.etiqueta,
+        decimalB: fraccionALaIzquierda ? 'izq' : 'der',
+        etiquetaDecimal:
+            '${opcionFraccion.etiqueta} · ${opcionDecimal.etiqueta}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -754,6 +787,10 @@ class GeneradorCaza {
         // PROP.03 entra cuando el niño ya domina porcentaje→fracción
         // (PROP.04, tier 3). Cálculo, no reconocimiento.
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.comparacionMixta:
+        // DEC.03 pide convertir mentalmente — entra cuando ya hay
+        // base de decimales y fracciones (tier 2).
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

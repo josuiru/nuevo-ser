@@ -39,6 +39,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'FR.07',
   'DIV.05',
   'PROP.03',
+  'DEC.03',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -64,6 +65,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.07') return TipoFragmentoEnTejado.comparacionDistinta;
   if (skillId == 'DIV.05') return TipoFragmentoEnTejado.primo;
   if (skillId == 'PROP.03') return TipoFragmentoEnTejado.porcentajeCantidad;
+  if (skillId == 'DEC.03') return TipoFragmentoEnTejado.comparacionMixta;
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
@@ -212,6 +214,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'DIV.05';
     case TipoFragmentoEnTejado.porcentajeCantidad:
       return 'PROP.03';
+    case TipoFragmentoEnTejado.comparacionMixta:
+      return 'DEC.03';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -307,6 +311,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Cálculo directo con dos pasos (multiplicar y dividir entre
       // 100). Más exigente que conversión simple, menos que duales.
       return 1.2;
+    case TipoFragmentoEnTejado.comparacionMixta:
+      // Comparar formatos cruzados — exige convertir mentalmente uno
+      // de los dos. Pesa como una comparación distinta (FR.07).
+      return 1.1;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:

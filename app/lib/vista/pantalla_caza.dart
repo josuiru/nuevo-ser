@@ -14,6 +14,7 @@ import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_comparacion_decimal.dart';
 import '../dominio/problema_comparacion_distinta.dart';
+import '../dominio/problema_comparacion_mixta.dart';
 import '../dominio/problema_comparacion_unidad.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
@@ -35,6 +36,7 @@ import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_comparacion.dart';
 import 'pantalla_comparacion_distinta.dart';
+import 'pantalla_comparacion_mixta.dart';
 import 'pantalla_comparacion_unidad.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_dual.dart';
@@ -269,6 +271,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacionDistinta => 3,
         TipoFragmentoEnTejado.primo => 1,
         TipoFragmentoEnTejado.porcentajeCantidad => 3,
+        TipoFragmentoEnTejado.comparacionMixta => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -546,6 +549,25 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaPorcentajeCantidad(
               problemaPredeterminado: GeneradorPorcentajeCantidad()
                   .generarDesdePar(fragmento.numerador, fragmento.denominador),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.comparacionMixta:
+        // numerador/denominador → fracción; decimalA → etiqueta del
+        // decimal; decimalB → 'izq'/'der' para reproducir el orden.
+        final fraccion =
+            Fraccion(fragmento.numerador, fragmento.denominador);
+        final etiquetaDecimal = fragmento.decimalA ?? '0,5';
+        final fraccionALaIzquierda = fragmento.decimalB == 'izq';
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaComparacionMixta(
+              problemaPredeterminado: GeneradorComparacionMixta()
+                  .generarDesdeTerminos(
+                fraccion: fraccion,
+                etiquetaDecimal: etiquetaDecimal,
+                fraccionALaIzquierda: fraccionALaIzquierda,
+              ),
             ),
           ),
         );
