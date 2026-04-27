@@ -39,6 +39,7 @@ import 'package:uno_roto/dominio/problema_moda_mediana.dart';
 import 'package:uno_roto/dominio/problema_probabilidad.dart';
 import 'package:uno_roto/dominio/problema_probabilidad_porcentaje.dart';
 import 'package:uno_roto/dominio/problema_operacion_mixta.dart';
+import 'package:uno_roto/dominio/problema_poligono.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2585,6 +2586,30 @@ void main() {
       expect(problema.candidatosPorcentaje, contains(25));
     },
   );
+
+  // ═══ Puzzle de polígono regular (GEO.01) ═══
+
+  test('GEO.01 está mapeada al tipo poligono', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.01'));
+    expect(tipoParaSkillId('GEO.01'), TipoFragmentoEnTejado.poligono);
+  });
+
+  test('GeneradorPoligono produce el polígono correcto desde lados', () {
+    final gen = GeneradorPoligono(semilla: 0);
+    expect(
+      gen.generarDesdeLados(5).respuesta,
+      TipoPoligono.pentagono,
+    );
+    expect(
+      gen.generarDesdeLados(8).respuesta,
+      TipoPoligono.octagono,
+    );
+  });
+
+  test('poligonoConLados rechaza valores fuera de rango', () {
+    expect(() => poligonoConLados(2), throwsArgumentError);
+    expect(() => poligonoConLados(9), throwsArgumentError);
+  });
 
   // ═══ Puzzle de operación mixta decimal+fracción (OP.03) ═══
 

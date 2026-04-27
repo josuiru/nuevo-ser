@@ -42,6 +42,9 @@ import 'problema_escala.dart' show GeneradorEscala;
 import 'problema_jerarquia_fracciones.dart'
     show GeneradorJerarquiaFracciones;
 import 'problema_operacion_mixta.dart' show GeneradorOperacionMixta;
+// problema_poligono.dart no necesita import: el generador crea el
+// Fragmento con `numerador = numeroDeLados` y el dispatcher reconstruye
+// con `GeneradorPoligono.generarDesdeLados`.
 import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
 import 'problema_masa_capacidad.dart' show GeneradorMasaCapacidad;
 import 'problema_aumento_descuento.dart'
@@ -189,6 +192,28 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.poligono) {
+      // Lados posibles: 3..8 — el numerador del Fragmento guarda el
+      // número de lados, que el dispatcher reconstruye al mostrar la
+      // pantalla. Dificultad 1 evita 7 y 8 (menos familiares).
+      final lados = dificultad >= 2
+          ? <int>[3, 4, 5, 6, 7, 8]
+          : <int>[3, 4, 5, 6];
+      final numeroDeLados = lados[_azar.nextInt(lados.length)];
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: numeroDeLados,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: 'POL',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1384,6 +1409,11 @@ class GeneradorCaza {
         // OP.03 depende de OP.02 + DEC.08 — Iniciado III/IV. Es la
         // habilidad más exigente del bloque de operaciones combinadas.
         return dificultad >= 4;
+      case TipoFragmentoEnTejado.poligono:
+        // GEO.01 abre el dominio GEO desde Aprendiz III — el niño ya
+        // ha visto cuadrados y triángulos en la vida real, solo
+        // necesita aprender los nombres griegos.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

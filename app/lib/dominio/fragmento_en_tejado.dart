@@ -122,6 +122,9 @@ import 'package:flutter/foundation.dart';
 ///   estrella: leer el numerador como décimas (1/4 → 0,4 en vez de
 ///   0,25). Refuerza la equivalencia decimal ↔ fracción dentro de una
 ///   operación.
+/// - [poligono]: puzzle GEO.01. Primera mecánica visual del dominio
+///   GEO. Se dibuja un polígono regular y el niño elige su nombre
+///   entre cuatro candidatos (triángulo, cuadrado, pentágono…).
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -168,6 +171,7 @@ enum TipoFragmentoEnTejado {
   probabilidad,
   probabilidadPorcentaje,
   operacionMixta,
+  poligono,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
