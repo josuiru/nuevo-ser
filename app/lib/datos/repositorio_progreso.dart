@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../dominio/habilidad.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
+import '../dominio/tutor/disparador_tutor.dart';
 
 /// Persistencia del progreso del jugador, ahora con soporte multi-perfil:
 /// cada perfil guarda su propio estado bajo el prefijo
@@ -34,6 +35,7 @@ class RepositorioProgreso {
   static const _prefijoDistritoVisitado = 'distrito_visitado.';
   static const _prefijoFlagNarrativo = 'flag.';
   static const _prefijoHabilidad = 'habilidad.';
+  static const _prefijoEstadoTutor = 'tutor.estado.';
   static const _sufAudioModoSilencio = 'audio.modo_silencio';
   static const _prefijoAudioVolumenCapa = 'audio.volumen.';
 
@@ -465,6 +467,35 @@ class RepositorioProgreso {
     final prefs = await _prefs();
     await prefs.setString(
       await _clave('$_prefijoHabilidad${estado.identificadorHabilidad}'),
+      jsonEncode(estado.aJson()),
+    );
+  }
+
+  /// Estado del tutor para una habilidad concreta (fallos consecutivos,
+  /// última oferta, veces usado). Por-perfil — no queremos que un niño
+  /// vea el contador de otro.
+  Future<EstadoTutorHabilidad> cargarEstadoTutor(String idHabilidad) async {
+    final prefs = await _prefs();
+    final clave = await _clave('$_prefijoEstadoTutor$idHabilidad');
+    final texto = prefs.getString(clave);
+    if (texto == null) return const EstadoTutorHabilidad();
+    try {
+      return EstadoTutorHabilidad.desdeJson(
+        jsonDecode(texto) as Map<String, dynamic>,
+      );
+    } catch (_) {
+      await prefs.remove(clave);
+      return const EstadoTutorHabilidad();
+    }
+  }
+
+  Future<void> guardarEstadoTutor(
+    String idHabilidad,
+    EstadoTutorHabilidad estado,
+  ) async {
+    final prefs = await _prefs();
+    await prefs.setString(
+      await _clave('$_prefijoEstadoTutor$idHabilidad'),
       jsonEncode(estado.aJson()),
     );
   }
