@@ -12,6 +12,7 @@ import '../dominio/ritmo_juego.dart';
 import '../dominio/tutor/servicio_tutor.dart';
 import '../nucleo/paleta.dart';
 import 'pantalla_ajustes_sonido.dart';
+import 'pantalla_cuenta.dart';
 import 'pantalla_perfiles.dart';
 import 'pantalla_tutor.dart';
 
@@ -113,10 +114,18 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             ),
           ),
           IconButton(
-            tooltip: 'Probar sync con backend (debug)',
-            onPressed: _probarSync,
+            tooltip: 'Cuenta (vincular / sesión)',
+            onPressed: _abrirCuenta,
             icon: Icon(
-              Icons.cloud_upload,
+              Icons.account_circle_outlined,
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Sincronizar progreso',
+            onPressed: _sincronizar,
+            icon: Icon(
+              Icons.cloud_sync_outlined,
               color: PaletaNeon.textoTenue.withOpacity(0.7),
             ),
           ),
@@ -226,41 +235,53 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     );
   }
 
-  Future<void> _probarSync() async {
+  Future<void> _abrirCuenta() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => PantallaCuenta(repositorio: widget.repositorio),
+    ));
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  /// Sincroniza el progreso usando el token guardado. Si no hay
+  /// cuenta vinculada o el token caducó, redirige al usuario a la
+  /// pantalla de cuenta para que vincule o reinicie sesión —
+  /// preferimos no bloquearlo con un mensaje técnico.
+  Future<void> _sincronizar() async {
+    final mensajero = ScaffoldMessenger.of(context);
+    final token = await widget.repositorio.cargarTokenBackend();
+    if (token == null || token.isEmpty) {
+      mensajero.showSnackBar(
+        const SnackBar(
+          backgroundColor: PaletaNeon.fondoMedio,
+          content: Text(
+            'Vincula primero una cuenta desde el icono de perfil.',
+            style: TextStyle(color: PaletaNeon.textoTenue),
+          ),
+        ),
+      );
+      return;
+    }
     final api = ClienteApi(
       urlBase: ConfigApi.urlBaseLocal,
       hostOverride: ConfigApi.hostLocal,
     );
-    final mensajero = ScaffoldMessenger.of(context);
     try {
       mensajero.showSnackBar(
         const SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
           content: Text(
-            'Registrando usuario de prueba…',
+            'Sincronizando…',
             style: TextStyle(color: PaletaNeon.textoTenue),
           ),
         ),
       );
-      final sufijo = DateTime.now().millisecondsSinceEpoch;
-      final nombreJugador =
-          await widget.repositorio.cargarNombreJugador() ?? 'Test';
-      final auth = await api.registrar(
-        email: 'sync-$sufijo@test.local',
-        password: 'clave-prueba-${sufijo % 10000}',
-        nombreTutor: 'Tutor Prueba',
-        nombreNino: nombreJugador,
-      );
-      // Persistimos el token para que el resto de la app (tutor IA)
-      // pueda usarlo sin pasar por este flujo otra vez.
-      await widget.repositorio.guardarTokenBackend(auth.token);
-
       final progreso =
           await widget.repositorio.exportarProgresoParaSync();
       final habilidades =
           await widget.repositorio.exportarHabilidadesParaSync();
       final resp = await api.sincronizar(
-        token: auth.token,
+        token: token,
         progreso: progreso,
         habilidades: habilidades,
       );
@@ -275,12 +296,11 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
       mensajero.showSnackBar(
         SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
-          duration: const Duration(seconds: 8),
+          duration: const Duration(seconds: 6),
           content: Text(
-            'Sync OK. Niño #${auth.ninoId}. '
-            'Esquirlas ${esquirlas ?? 0}. '
+            'Sync OK. Esquirlas ${esquirlas ?? 0} · '
             '${flagsServidor.length} flags · '
-            '$habilidadesServidor habilidades en servidor.',
+            '$habilidadesServidor habilidades.',
             style: const TextStyle(color: PaletaNeon.exitoSuave),
           ),
         ),
@@ -288,23 +308,41 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     } on ExcepcionApi catch (e) {
       if (!mounted) return;
       mensajero.hideCurrentSnackBar();
-      mensajero.showSnackBar(
-        SnackBar(
-          backgroundColor: PaletaNeon.fondoMedio,
-          duration: const Duration(seconds: 8),
-          content: Text(
-            'API ${e.codigo}: ${e.mensaje}',
-            style: const TextStyle(color: PaletaNeon.rosaAcento),
+      if (e.codigo == 401) {
+        // Token caducado o inválido: borramos solo el token (mantenemos
+        // el email para autocompletar) y mandamos al niño a iniciar
+        // sesión otra vez.
+        await widget.repositorio.borrarTokenBackend();
+        if (!mounted) return;
+        mensajero.showSnackBar(
+          const SnackBar(
+            backgroundColor: PaletaNeon.fondoMedio,
+            duration: Duration(seconds: 5),
+            content: Text(
+              'La sesión caducó. Ábrela desde "Cuenta" e inicia sesión otra vez.',
+              style: TextStyle(color: PaletaNeon.rosaAcento),
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        mensajero.showSnackBar(
+          SnackBar(
+            backgroundColor: PaletaNeon.fondoMedio,
+            duration: const Duration(seconds: 6),
+            content: Text(
+              'API ${e.codigo}: ${e.mensaje}',
+              style: const TextStyle(color: PaletaNeon.rosaAcento),
+            ),
+          ),
+        );
+      }
     } catch (e) {
       if (!mounted) return;
       mensajero.hideCurrentSnackBar();
       mensajero.showSnackBar(
         SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
-          duration: const Duration(seconds: 8),
+          duration: const Duration(seconds: 6),
           content: Text(
             'Red: $e',
             style: const TextStyle(color: PaletaNeon.rosaAcento),
@@ -329,7 +367,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         const SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
           content: Text(
-            'Pulsa antes "Probar sync" para obtener un token.',
+            'Vincula primero una cuenta desde el icono de perfil.',
             style: TextStyle(color: PaletaNeon.rosaAcento),
           ),
         ),

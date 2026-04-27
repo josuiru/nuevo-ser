@@ -20,6 +20,7 @@ class RepositorioProgreso {
   static const _claveIdPerfilActivo = 'uroto.perfil_activo_id';
   static const _claveListaPerfiles = 'uroto.perfiles_lista';
   static const _claveTokenBackend = 'uroto.token_backend';
+  static const _claveEmailBackend = 'uroto.email_backend';
   static const idPerfilPorDefecto = 'principal';
 
   // Sufijos (sin prefijo de perfil).
@@ -123,6 +124,30 @@ class RepositorioProgreso {
   Future<void> borrarTokenBackend() async {
     final prefs = await _prefs();
     await prefs.remove(_claveTokenBackend);
+  }
+
+  /// Email asociado al token actual. Solo informativo (mostrar en UI).
+  /// Se guarda al registrar o al iniciar sesión, se borra junto al
+  /// token al cerrar sesión. NO se persiste la contraseña.
+  Future<String?> cargarEmailBackend() async {
+    final prefs = await _prefs();
+    return prefs.getString(_claveEmailBackend);
+  }
+
+  Future<void> guardarEmailBackend(String email) async {
+    final prefs = await _prefs();
+    await prefs.setString(_claveEmailBackend, email);
+  }
+
+  Future<void> borrarEmailBackend() async {
+    final prefs = await _prefs();
+    await prefs.remove(_claveEmailBackend);
+  }
+
+  /// Atajo: borra token y email a la vez, equivalente a "cerrar sesión".
+  Future<void> cerrarSesionBackend() async {
+    await borrarTokenBackend();
+    await borrarEmailBackend();
   }
 
   // ═══ Gestión de perfiles ═══

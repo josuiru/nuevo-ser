@@ -4146,6 +4146,24 @@ void main() {
       expect(await repo.cargarEsquirlas(), 0);
       expect(await repo.cargarTokenBackend(), 'jwt.x');
     });
+
+    test('email backend: guardar/cargar/borrar', () async {
+      final repo = RepositorioProgreso();
+      expect(await repo.cargarEmailBackend(), isNull);
+      await repo.guardarEmailBackend('papa@ejemplo.org');
+      expect(await repo.cargarEmailBackend(), 'papa@ejemplo.org');
+      await repo.borrarEmailBackend();
+      expect(await repo.cargarEmailBackend(), isNull);
+    });
+
+    test('cerrarSesionBackend borra token y email a la vez', () async {
+      final repo = RepositorioProgreso();
+      await repo.guardarTokenBackend('jwt.abc');
+      await repo.guardarEmailBackend('papa@ejemplo.org');
+      await repo.cerrarSesionBackend();
+      expect(await repo.cargarTokenBackend(), isNull);
+      expect(await repo.cargarEmailBackend(), isNull);
+    });
   });
 
   // ═══ Exportar habilidades para sync con backend ═══
