@@ -25,7 +25,7 @@ import '../dominio/problema_jerarquia.dart';
 import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_regla_de_tres.dart';
 import '../dominio/problema_primo.dart';
-import '../dominio/problema_representacion_fraccion.dart';
+import '../dominio/problema_comparacion_media.dart';
 import '../dominio/problema_mixto_a_impropio.dart'
     show ProblemaMixtoAImpropio;
 import '../dominio/problema_redondeo_decimal.dart';
@@ -55,7 +55,7 @@ import 'pantalla_jerarquia.dart';
 import 'pantalla_mcm_mcd.dart';
 import 'pantalla_regla_de_tres.dart';
 import 'pantalla_primo.dart';
-import 'pantalla_representacion_fraccion.dart';
+import 'pantalla_comparacion_media.dart';
 import 'pantalla_mixto_a_impropio.dart';
 import 'pantalla_redondeo_decimal.dart';
 import 'pantalla_porcentaje.dart';
@@ -280,7 +280,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacionMixta => 2,
         TipoFragmentoEnTejado.mcmMcd => 3,
         TipoFragmentoEnTejado.jerarquia => 3,
-        TipoFragmentoEnTejado.representacionFraccion => 2,
+        TipoFragmentoEnTejado.comparacionMedia => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -622,11 +622,11 @@ class _PantallaCazaState extends State<PantallaCaza>
             ),
           ),
         );
-      case TipoFragmentoEnTejado.representacionFraccion:
+      case TipoFragmentoEnTejado.comparacionMedia:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => PantallaRepresentacionFraccion(
-              problemaPredeterminado: GeneradorRepresentacionFraccion()
+            builder: (_) => PantallaComparacionMedia(
+              problemaPredeterminado: GeneradorComparacionMedia()
                   .generarDesdeFraccion(
                 Fraccion(fragmento.numerador, fragmento.denominador),
               ),

@@ -71,8 +71,8 @@ class PintorFragmentoTejado extends CustomPainter {
         fragmento.tipo == TipoFragmentoEnTejado.comparacionMixta;
     final esMcmMcd = fragmento.tipo == TipoFragmentoEnTejado.mcmMcd;
     final esJerarquia = fragmento.tipo == TipoFragmentoEnTejado.jerarquia;
-    final esRepresentacionFraccion =
-        fragmento.tipo == TipoFragmentoEnTejado.representacionFraccion;
+    final esComparacionMedia =
+        fragmento.tipo == TipoFragmentoEnTejado.comparacionMedia;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -123,7 +123,7 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                                     ? const Color(0xFF4FC3F7)
                                                                                                     : esJerarquia
                                                                                                         ? const Color(0xFFFFD54F)
-                                                                                                        : esRepresentacionFraccion
+                                                                                                        : esComparacionMedia
                                                                                                             ? const Color(0xFFA5D6A7)
                                                                                                             : PaletaNeon.azulNeon;
 

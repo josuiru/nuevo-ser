@@ -24,7 +24,7 @@ import 'package:uno_roto/dominio/problema_jerarquia.dart';
 import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
 import 'package:uno_roto/dominio/problema_regla_de_tres.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
-import 'package:uno_roto/dominio/problema_representacion_fraccion.dart';
+import 'package:uno_roto/dominio/problema_comparacion_media.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
@@ -2219,53 +2219,72 @@ void main() {
     },
   );
 
-  // ═══ Puzzle de representación de fracción (FR.03) ═══
+  // ═══ Puzzle de comparación con 1/2 (FR.03) ═══
+
+  test('ProblemaComparacionMedia clasifica correctamente la heurística 2·n vs d',
+      () {
+    // 2/5: 2·2 = 4 < 5 → menor.
+    expect(
+      const ProblemaComparacionMedia(fraccion: Fraccion(2, 5)).relacionCorrecta,
+      RelacionConMedia.menor,
+    );
+    // 5/9: 2·5 = 10 > 9 → mayor.
+    expect(
+      const ProblemaComparacionMedia(fraccion: Fraccion(5, 9)).relacionCorrecta,
+      RelacionConMedia.mayor,
+    );
+    // 3/6: 2·3 = 6 = 6 → igual.
+    expect(
+      const ProblemaComparacionMedia(fraccion: Fraccion(3, 6)).relacionCorrecta,
+      RelacionConMedia.igual,
+    );
+    // 4/8: igual también — el caso "equivalente a 1/2" suele
+    // pasarse por alto.
+    expect(
+      const ProblemaComparacionMedia(fraccion: Fraccion(4, 8)).relacionCorrecta,
+      RelacionConMedia.igual,
+    );
+  });
 
   test(
-    'GeneradorRepresentacionFraccion produce 4 candidatos con el correcto entre ellos',
+    'GeneradorComparacionMedia produce las tres categorías a lo largo del muestreo',
     () {
-      final gen = GeneradorRepresentacionFraccion(semilla: 17);
-      final problema = gen.generar(dificultad: 1);
-      expect(problema.candidatos, hasLength(4));
-      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
-      final correcta = problema.candidatos[problema.indiceCorrecto];
-      expect(correcta.numerador, problema.numerador);
-      expect(correcta.denominador, problema.denominador);
+      final gen = GeneradorComparacionMedia(semilla: 11);
+      var menor = 0;
+      var igual = 0;
+      var mayor = 0;
+      for (var intento = 0; intento < 200; intento++) {
+        final problema = gen.generar(dificultad: 2);
+        switch (problema.relacionCorrecta) {
+          case RelacionConMedia.menor:
+            menor++;
+            break;
+          case RelacionConMedia.igual:
+            igual++;
+            break;
+          case RelacionConMedia.mayor:
+            mayor++;
+            break;
+        }
+      }
+      expect(menor, greaterThan(0));
+      expect(igual, greaterThan(0));
+      expect(mayor, greaterThan(0));
     },
   );
 
-  test(
-    'GeneradorRepresentacionFraccion incluye distractores invertido y complemento',
-    () {
-      final gen = GeneradorRepresentacionFraccion(semilla: 0);
-      final problema = gen.generarDesdeFraccion(const Fraccion(3, 4));
-      // Invertido: 4/3.
-      expect(
-        problema.candidatos.any(
-            (f) => f.numerador == 4 && f.denominador == 3),
-        isTrue,
-      );
-      // Complemento: 1/4 (denominador − numerador).
-      expect(
-        problema.candidatos.any(
-            (f) => f.numerador == 1 && f.denominador == 4),
-        isTrue,
-      );
-    },
-  );
-
-  test('FR.03 está mapeada al tipo representacionFraccion', () {
+  test('FR.03 está mapeada al tipo comparacionMedia', () {
     expect(skillsConPuzzleImplementado, contains('FR.03'));
     expect(
       tipoParaSkillId('FR.03'),
-      TipoFragmentoEnTejado.representacionFraccion,
+      TipoFragmentoEnTejado.comparacionMedia,
     );
 
     final frag = FragmentoEnTejado(
       identificador: 'test',
-      numerador: 3,
-      denominador: 4,
-      tipo: TipoFragmentoEnTejado.representacionFraccion,
+      numerador: 5,
+      denominador: 9,
+      tipo: TipoFragmentoEnTejado.comparacionMedia,
       xNormalizado: 0,
       yNormalizado: 0,
       instanteAparicion: DateTime(2026, 4, 27),
@@ -2275,7 +2294,7 @@ void main() {
   });
 
   test(
-    'GeneradorCaza dirigido a FR.03 produce Fragmentos con fracción válida',
+    'GeneradorCaza dirigido a FR.03 produce Fragmentos de comparacionMedia',
     () {
       final gen = GeneradorCaza(semilla: 12345);
       final ahora = DateTime(2026, 4, 27);
@@ -2285,10 +2304,9 @@ void main() {
           esquirlasAcumuladas: 8,
           ahora: ahora.add(Duration(seconds: intento)),
         );
-        expect(frag.tipo, TipoFragmentoEnTejado.representacionFraccion);
+        expect(frag.tipo, TipoFragmentoEnTejado.comparacionMedia);
         expect(frag.numerador, greaterThanOrEqualTo(1));
         expect(frag.denominador, greaterThanOrEqualTo(2));
-        expect(frag.numerador, lessThan(frag.denominador));
       }
     },
   );

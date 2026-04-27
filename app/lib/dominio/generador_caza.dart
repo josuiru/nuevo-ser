@@ -24,8 +24,7 @@ import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_comparacion_mixta.dart' show GeneradorComparacionMixta;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
-import 'problema_representacion_fraccion.dart'
-    show GeneradorRepresentacionFraccion;
+import 'problema_comparacion_media.dart' show GeneradorComparacionMedia;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
 import 'problema_regla_de_tres.dart' show GeneradorReglaDeTres;
 import 'problema_primo.dart' show GeneradorPrimo;
@@ -166,15 +165,15 @@ class GeneradorCaza {
       );
     }
 
-    if (tipo == TipoFragmentoEnTejado.representacionFraccion) {
-      final problema = GeneradorRepresentacionFraccion(
+    if (tipo == TipoFragmentoEnTejado.comparacionMedia) {
+      final problema = GeneradorComparacionMedia(
         semilla: _azar.nextInt(1 << 30),
       ).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
-        numerador: problema.numerador,
-        denominador: problema.denominador,
+        numerador: problema.fraccion.numerador,
+        denominador: problema.fraccion.denominador,
         tipo: tipo,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
@@ -874,7 +873,7 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.jerarquia:
         // OP.01 introduce la prioridad de operaciones en Aprendiz III.
         return dificultad >= 2;
-      case TipoFragmentoEnTejado.representacionFraccion:
+      case TipoFragmentoEnTejado.comparacionMedia:
         // FR.03 es de las primeras habilidades de fracciones — entra
         // desde el primer tier para que aparezca pronto.
         return dificultad >= 1;

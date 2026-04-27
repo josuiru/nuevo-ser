@@ -74,9 +74,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
     return TipoFragmentoEnTejado.mcmMcd;
   }
   if (skillId == 'OP.01') return TipoFragmentoEnTejado.jerarquia;
-  if (skillId == 'FR.03') {
-    return TipoFragmentoEnTejado.representacionFraccion;
-  }
+  if (skillId == 'FR.03') return TipoFragmentoEnTejado.comparacionMedia;
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
@@ -247,7 +245,7 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return fragmento.etiquetaDecimal == 'mcd' ? 'DIV.06' : 'DIV.07';
     case TipoFragmentoEnTejado.jerarquia:
       return 'OP.01';
-    case TipoFragmentoEnTejado.representacionFraccion:
+    case TipoFragmentoEnTejado.comparacionMedia:
       return 'FR.03';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
@@ -356,10 +354,11 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Dos operaciones encadenadas — pesa como una operación con
       // decimales o un dual sencillo.
       return 1.3;
-    case TipoFragmentoEnTejado.representacionFraccion:
-      // Lectura visual — fácil pero no automática hasta dominar el
-      // concepto de fracción. Pesa parecido a la lectura de fracción.
-      return 0.8;
+    case TipoFragmentoEnTejado.comparacionMedia:
+      // Tres opciones; la heurística "doble del numerador frente al
+      // denominador" es contraintuitiva la primera vez. Algo más
+      // exigente que comparar con la unidad (FR.04).
+      return 0.95;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:
