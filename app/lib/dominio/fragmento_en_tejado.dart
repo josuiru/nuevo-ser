@@ -53,6 +53,8 @@ import 'package:flutter/foundation.dart';
 /// - [mcmMcd]: puzzle DIV.06/DIV.07. Dos números y la pregunta sobre
 ///   MCM (DIV.07) o MCD (DIV.06). Comparten pantalla y motor; el modo
 ///   lo fija la skill.
+/// - [jerarquia]: puzzle OP.01. Expresión "a op b op c" con prioridad
+///   de × y ÷. Distractor estrella: el cálculo izquierda-a-derecha.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -78,6 +80,7 @@ enum TipoFragmentoEnTejado {
   porcentajeCantidad,
   comparacionMixta,
   mcmMcd,
+  jerarquia,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

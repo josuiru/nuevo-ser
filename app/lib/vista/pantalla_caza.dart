@@ -21,6 +21,7 @@ import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
+import '../dominio/problema_jerarquia.dart';
 import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_porcentaje_cantidad.dart';
 import '../dominio/problema_primo.dart';
@@ -49,6 +50,7 @@ import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
+import 'pantalla_jerarquia.dart';
 import 'pantalla_mcm_mcd.dart';
 import 'pantalla_porcentaje_cantidad.dart';
 import 'pantalla_primo.dart';
@@ -275,6 +277,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.porcentajeCantidad => 3,
         TipoFragmentoEnTejado.comparacionMixta => 2,
         TipoFragmentoEnTejado.mcmMcd => 3,
+        TipoFragmentoEnTejado.jerarquia => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -587,6 +590,27 @@ class _PantallaCazaState extends State<PantallaCaza>
                 a: fragmento.numerador,
                 b: fragmento.denominador,
                 modo: modo,
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.jerarquia:
+        // numerador → a, denominador → b, numeradorB → c.
+        // operador → op2, decimalA → name del op1.
+        final op1 = OperadorAritmetico.values.firstWhere(
+          (o) => o.name == fragmento.decimalA,
+          orElse: () => OperadorAritmetico.suma,
+        );
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaJerarquia(
+              problemaPredeterminado:
+                  GeneradorJerarquia().generarDesdeTerminos(
+                a: fragmento.numerador,
+                b: fragmento.denominador,
+                c: fragmento.numeradorB ?? 1,
+                op1: op1,
+                op2: fragmento.operador ?? OperadorAritmetico.suma,
               ),
             ),
           ),

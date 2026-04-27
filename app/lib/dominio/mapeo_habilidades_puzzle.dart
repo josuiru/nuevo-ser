@@ -42,6 +42,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DEC.03',
   'DIV.06',
   'DIV.07',
+  'OP.01',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -71,6 +72,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DIV.06' || skillId == 'DIV.07') {
     return TipoFragmentoEnTejado.mcmMcd;
   }
+  if (skillId == 'OP.01') return TipoFragmentoEnTejado.jerarquia;
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
@@ -239,6 +241,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.mcmMcd:
       // El modo lo lleva etiquetaDecimal: 'mcm' → DIV.07, 'mcd' → DIV.06.
       return fragmento.etiquetaDecimal == 'mcd' ? 'DIV.06' : 'DIV.07';
+    case TipoFragmentoEnTejado.jerarquia:
+      return 'OP.01';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -341,6 +345,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.mcmMcd:
       // Cálculo con dos descomposiciones — más exigente que la
       // mecánica binaria de divisibilidad.
+      return 1.3;
+    case TipoFragmentoEnTejado.jerarquia:
+      // Dos operaciones encadenadas — pesa como una operación con
+      // decimales o un dual sencillo.
       return 1.3;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:

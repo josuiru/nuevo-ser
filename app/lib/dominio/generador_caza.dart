@@ -23,6 +23,7 @@ import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
 import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_comparacion_mixta.dart' show GeneradorComparacionMixta;
+import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_primo.dart' show GeneradorPrimo;
@@ -156,6 +157,32 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.jerarquia) {
+      final problema = GeneradorJerarquia(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Empaquetamos los tres operandos en numerador (a), denominador
+      // (b), numeradorB (c), y los dos operadores en el campo
+      // operador (op2) y decimalA con el símbolo de op1.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.a,
+        denominador: problema.b,
+        numeradorB: problema.c,
+        tipo: tipo,
+        operador: problema.op2,
+        decimalA: problema.op1.name,
+        etiquetaDecimal:
+            '${problema.a}${problema.op1.simbolo}${problema.b}'
+            '${problema.op2.simbolo}${problema.c}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -823,6 +850,9 @@ class GeneradorCaza {
         // DIV.06/DIV.07 son Iniciado II — entran tras dominar
         // divisibilidad y primos.
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.jerarquia:
+        // OP.01 introduce la prioridad de operaciones en Aprendiz III.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

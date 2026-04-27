@@ -20,6 +20,7 @@ import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
+import 'package:uno_roto/dominio/problema_jerarquia.dart';
 import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
@@ -2125,6 +2126,82 @@ void main() {
         );
         expect(frag.tipo, TipoFragmentoEnTejado.mcmMcd);
         expect(frag.etiquetaDecimal, 'mcd');
+      }
+    },
+  );
+
+  // ═══ Puzzle de jerarquía de operaciones (OP.01) ═══
+
+  test(
+    'GeneradorJerarquia respeta la prioridad: 2 + 3 × 4 = 14, no 20',
+    () {
+      final gen = GeneradorJerarquia(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        a: 2,
+        b: 3,
+        c: 4,
+        op1: OperadorAritmetico.suma,
+        op2: OperadorAritmetico.producto,
+      );
+      expect(problema.resultado, 14);
+      // El 20 (cálculo izquierda-a-derecha) debe aparecer como
+      // distractor: es el error pedagógico clásico.
+      expect(problema.candidatos, contains(20));
+    },
+  );
+
+  test(
+    'GeneradorJerarquia respeta la prioridad: 10 − 6 ÷ 2 = 7, no 2',
+    () {
+      final gen = GeneradorJerarquia(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        a: 10,
+        b: 6,
+        c: 2,
+        op1: OperadorAritmetico.resta,
+        op2: OperadorAritmetico.division,
+      );
+      expect(problema.resultado, 7);
+      expect(problema.candidatos, contains(2));
+    },
+  );
+
+  test('OP.01 está mapeada al tipo jerarquia', () {
+    expect(skillsConPuzzleImplementado, contains('OP.01'));
+    expect(tipoParaSkillId('OP.01'), TipoFragmentoEnTejado.jerarquia);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 2,
+      denominador: 3,
+      numeradorB: 4,
+      tipo: TipoFragmentoEnTejado.jerarquia,
+      operador: OperadorAritmetico.producto,
+      decimalA: 'suma',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'OP.01');
+  });
+
+  test(
+    'GeneradorCaza dirigido a OP.01 produce Fragmento con tres operandos y dos operadores',
+    () {
+      final gen = GeneradorCaza(semilla: 31415);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'OP.01',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.jerarquia);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.numeradorB, isNotNull);
+        expect(frag.operador, isNotNull);
+        expect(frag.decimalA, isNotNull);
       }
     },
   );
