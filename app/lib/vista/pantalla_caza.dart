@@ -20,6 +20,7 @@ import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_divisores.dart';
 import '../dominio/problema_fraccion_de_cantidad.dart';
+import '../dominio/problema_ordenar_fracciones.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
@@ -54,6 +55,7 @@ import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_divisores.dart';
 import 'pantalla_fraccion_de_cantidad.dart';
+import 'pantalla_ordenar_fracciones.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
 import 'pantalla_jerarquia.dart';
@@ -290,6 +292,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.porcentajeCantidad => 3,
         TipoFragmentoEnTejado.divisores => 2,
         TipoFragmentoEnTejado.fraccionDeCantidad => 3,
+        TipoFragmentoEnTejado.ordenarFracciones => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -674,6 +677,29 @@ class _PantallaCazaState extends State<PantallaCaza>
                 denominador: fragmento.denominador,
                 cantidad: fragmento.numeradorB ?? 1,
               ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.ordenarFracciones:
+        // etiquetaDecimal lleva las tres fracciones separadas por '|'
+        // ('3/5|2/3|1/2'). Reconstruimos el trío.
+        final partes = (fragmento.etiquetaDecimal ?? '').split('|');
+        final fallback = [
+          const Fraccion(1, 2),
+          const Fraccion(1, 3),
+          const Fraccion(1, 4),
+        ];
+        final trio = partes.length == 3
+            ? partes.map((p) {
+                final ab = p.split('/');
+                return Fraccion(int.parse(ab[0]), int.parse(ab[1]));
+              }).toList()
+            : fallback;
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaOrdenarFracciones(
+              problemaPredeterminado: GeneradorOrdenarFracciones()
+                  .generarDesdeTrio(trio),
             ),
           ),
         );

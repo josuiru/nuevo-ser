@@ -28,6 +28,7 @@ import 'package:uno_roto/dominio/problema_comparacion_media.dart';
 import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
+import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
@@ -2357,6 +2358,96 @@ void main() {
         );
         expect(frag.tipo, TipoFragmentoEnTejado.divisores);
         expect(frag.numerador, greaterThanOrEqualTo(12));
+      }
+    },
+  );
+
+  // ═══ Puzzle de ordenar fracciones (FR.08) ═══
+
+  test(
+    'GeneradorOrdenarFracciones identifica el orden correcto de menor a mayor',
+    () {
+      final gen = GeneradorOrdenarFracciones(semilla: 0);
+      final problema = gen.generarDesdeTrio(const [
+        Fraccion(2, 3),
+        Fraccion(1, 2),
+        Fraccion(3, 4),
+      ]);
+      // 1/2 < 2/3 < 3/4.
+      expect(problema.correcto.map((f) => f.etiqueta).toList(),
+          ['1/2', '2/3', '3/4']);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test(
+    'GeneradorOrdenarFracciones incluye distractor "ordenar por numerador"',
+    () {
+      final gen = GeneradorOrdenarFracciones(semilla: 0);
+      // Probamos un trío donde el orden por numerador NO coincide con
+      // el correcto, para asegurar que el invertido aparece como
+      // distractor independiente del orden correcto.
+      final otro = gen.generarDesdeTrio(const [
+        Fraccion(1, 5),
+        Fraccion(2, 3),
+        Fraccion(1, 2),
+      ]);
+      // Por numerador: 1/5 (n=1), 1/2 (n=1, igual), 2/3 (n=2). El
+      // orden no es estable pero el sort dejará uno antes que otro.
+      // Real: 1/5 (0,2) < 1/2 (0,5) < 2/3 (0,67).
+      expect(otro.correcto.map((f) => f.etiqueta).toList(),
+          ['1/5', '1/2', '2/3']);
+      // El orden invertido siempre está como distractor.
+      expect(
+        otro.candidatos.any((c) =>
+            c[0].etiqueta == '2/3' &&
+            c[1].etiqueta == '1/2' &&
+            c[2].etiqueta == '1/5'),
+        isTrue,
+      );
+    },
+  );
+
+  test('FR.08 está mapeada al tipo ordenarFracciones', () {
+    expect(skillsConPuzzleImplementado, contains('FR.08'));
+    expect(
+      tipoParaSkillId('FR.08'),
+      TipoFragmentoEnTejado.ordenarFracciones,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 1,
+      denominador: 2,
+      tipo: TipoFragmentoEnTejado.ordenarFracciones,
+      etiquetaDecimal: '1/2|2/3|3/4',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.08');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.08 produce Fragmentos con tres fracciones',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.08',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.ordenarFracciones);
+        // etiquetaDecimal lleva tres fracciones separadas por '|'.
+        final partes = (frag.etiquetaDecimal ?? '').split('|');
+        expect(partes, hasLength(3));
+        for (final p in partes) {
+          expect(p, contains('/'));
+        }
       }
     },
   );
