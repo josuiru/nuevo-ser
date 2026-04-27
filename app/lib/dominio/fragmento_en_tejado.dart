@@ -108,6 +108,9 @@ import 'package:flutter/foundation.dart';
 /// - [media]: puzzle EST.03. Conjunto de números + cuatro candidatos
 ///   para la media aritmética. Distractor estrella: la suma sin
 ///   dividir entre la cantidad.
+/// - [modaMediana]: puzzle EST.04. Conjunto de números + cuatro
+///   candidatos. El modo (moda o mediana) viaja con el Fragmento.
+///   Distractor estrella: confundir las dos estadísticas.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -150,6 +153,7 @@ enum TipoFragmentoEnTejado {
   escala,
   angulo,
   media,
+  modaMediana,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

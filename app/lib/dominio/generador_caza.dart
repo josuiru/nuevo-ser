@@ -33,6 +33,8 @@ import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_angulo.dart' show GeneradorAngulo;
 import 'problema_media.dart' show GeneradorMedia;
+import 'problema_moda_mediana.dart'
+    show EtiquetaModo, GeneradorModaMediana, ModoEstadistico;
 import 'problema_escala.dart' show GeneradorEscala;
 import 'problema_jerarquia_fracciones.dart'
     show GeneradorJerarquiaFracciones;
@@ -183,6 +185,29 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.modaMediana) {
+      final esModa = _azar.nextBool();
+      final modo =
+          esModa ? ModoEstadistico.moda : ModoEstadistico.mediana;
+      final tope = esModa
+          ? GeneradorModaMediana.cantidadModaCurada
+          : GeneradorModaMediana.cantidadMedianaCurada;
+      final indice = _azar.nextInt(tope);
+      // numerador → índice, denominador 1=moda 2=mediana.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indice,
+        denominador: esModa ? 1 : 2,
+        tipo: tipo,
+        etiquetaDecimal: modo.etiqueta,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1291,6 +1316,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.media:
         // EST.03 entra desde Iniciado I — suma + división.
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.modaMediana:
+        // EST.04 entra después de EST.01 — Iniciado II.
+        return dificultad >= 3;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

@@ -35,6 +35,7 @@ import 'package:uno_roto/dominio/problema_angulo.dart';
 import 'package:uno_roto/dominio/problema_escala.dart';
 import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
 import 'package:uno_roto/dominio/problema_media.dart';
+import 'package:uno_roto/dominio/problema_moda_mediana.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2554,6 +2555,29 @@ void main() {
       }
     },
   );
+
+  // ═══ Puzzle de moda y mediana (EST.04) ═══
+
+  test('EST.04 está mapeada al tipo modaMediana', () {
+    expect(skillsConPuzzleImplementado, contains('EST.04'));
+    expect(tipoParaSkillId('EST.04'), TipoFragmentoEnTejado.modaMediana);
+  });
+
+  test('GeneradorModaMediana.moda detecta el valor más frecuente', () {
+    final gen = GeneradorModaMediana(semilla: 0);
+    final problema = gen.generarPorIndice(ModoEstadistico.moda, 0);
+    // Caso 0: [3,5,5,7,8] → moda 5.
+    expect(problema.respuesta, 5);
+    expect(problema.modo, ModoEstadistico.moda);
+  });
+
+  test('GeneradorModaMediana.mediana devuelve el central ordenado', () {
+    final gen = GeneradorModaMediana(semilla: 0);
+    final problema = gen.generarPorIndice(ModoEstadistico.mediana, 0);
+    // Caso 0: [3,5,7,9,11] → mediana 7.
+    expect(problema.respuesta, 7);
+    expect(problema.modo, ModoEstadistico.mediana);
+  });
 
   // ═══ Puzzle de media aritmética (EST.03) ═══
 
