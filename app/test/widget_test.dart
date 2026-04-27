@@ -14,6 +14,7 @@ import 'package:uno_roto/dominio/problema_comparacion.dart';
 import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
 import 'package:uno_roto/dominio/problema_amplificar.dart';
 import 'package:uno_roto/dominio/problema_comparacion_decimal.dart';
+import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
@@ -1313,6 +1314,91 @@ void main() {
       }
       expect(visto7u8, isTrue,
           reason: 'En 30 tiradas debería aparecer al menos 7 u 8.');
+    },
+  );
+
+  // ═══ Puzzle de comparación con la unidad (FR.04) ═══
+
+  test(
+    'ProblemaComparacionUnidad clasifica correctamente menor/igual/mayor',
+    () {
+      const menor =
+          ProblemaComparacionUnidad(fraccion: Fraccion(3, 5));
+      const igual =
+          ProblemaComparacionUnidad(fraccion: Fraccion(7, 7));
+      const mayor =
+          ProblemaComparacionUnidad(fraccion: Fraccion(9, 4));
+
+      expect(menor.relacionCorrecta, RelacionConUnidad.menor);
+      expect(igual.relacionCorrecta, RelacionConUnidad.igual);
+      expect(mayor.relacionCorrecta, RelacionConUnidad.mayor);
+
+      expect(menor.esCorrecta(RelacionConUnidad.menor), isTrue);
+      expect(menor.esCorrecta(RelacionConUnidad.igual), isFalse);
+      expect(igual.esCorrecta(RelacionConUnidad.igual), isTrue);
+      expect(mayor.esCorrecta(RelacionConUnidad.mayor), isTrue);
+    },
+  );
+
+  test(
+    'GeneradorComparacionUnidad produce las tres categorías a lo largo del muestreo',
+    () {
+      final gen = GeneradorComparacionUnidad(semilla: 9001);
+      final categoriasVistas = <RelacionConUnidad>{};
+      for (var intento = 0; intento < 80; intento++) {
+        final problema = gen.generar(dificultad: 2);
+        // El generador respeta la categoría que dice producir.
+        if (problema.fraccion.numerador < problema.fraccion.denominador) {
+          expect(problema.relacionCorrecta, RelacionConUnidad.menor);
+        } else if (problema.fraccion.numerador ==
+            problema.fraccion.denominador) {
+          expect(problema.relacionCorrecta, RelacionConUnidad.igual);
+        } else {
+          expect(problema.relacionCorrecta, RelacionConUnidad.mayor);
+        }
+        categoriasVistas.add(problema.relacionCorrecta);
+      }
+      expect(categoriasVistas, contains(RelacionConUnidad.menor));
+      expect(categoriasVistas, contains(RelacionConUnidad.igual));
+      expect(categoriasVistas, contains(RelacionConUnidad.mayor));
+    },
+  );
+
+  test('FR.04 está mapeada al tipo comparacionUnidad', () {
+    expect(skillsConPuzzleImplementado, contains('FR.04'));
+    expect(
+      tipoParaSkillId('FR.04'),
+      TipoFragmentoEnTejado.comparacionUnidad,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 5,
+      denominador: 4,
+      tipo: TipoFragmentoEnTejado.comparacionUnidad,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 26),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.04');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.04 produce Fragmento de comparacionUnidad',
+    () {
+      final gen = GeneradorCaza(semilla: 31415);
+      final ahora = DateTime(2026, 4, 26);
+      for (var intento = 0; intento < 20; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.04',
+          esquirlasAcumuladas: 8,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.comparacionUnidad);
+        expect(frag.numerador, greaterThanOrEqualTo(1));
+        expect(frag.denominador, greaterThanOrEqualTo(2));
+      }
     },
   );
 

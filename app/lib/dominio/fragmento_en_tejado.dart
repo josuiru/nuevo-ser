@@ -31,6 +31,8 @@ import 'package:flutter/foundation.dart';
 ///   numérica entre cuatro candidatos.
 /// - [multiplos]: puzzle DIV.01. Variante de divisibilidad con
 ///   fraseado inverso: "¿N es múltiplo de M?".
+/// - [comparacionUnidad]: puzzle FR.04. Una fracción y tres botones
+///   (<1, =1, >1). Primera mecánica de tres opciones en Uno Roto.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -47,6 +49,7 @@ enum TipoFragmentoEnTejado {
   comparacionDecimal,
   lecturaDecimal,
   multiplos,
+  comparacionUnidad,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

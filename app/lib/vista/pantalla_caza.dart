@@ -13,6 +13,7 @@ import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_comparacion_decimal.dart';
+import '../dominio/problema_comparacion_unidad.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
@@ -26,6 +27,7 @@ import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_comparacion.dart';
+import 'pantalla_comparacion_unidad.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_dual.dart';
 import 'pantalla_espejo.dart';
@@ -247,6 +249,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.multiplos => 1,
         TipoFragmentoEnTejado.comparacionDecimal => 2,
         TipoFragmentoEnTejado.lecturaDecimal => 2,
+        TipoFragmentoEnTejado.comparacionUnidad => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -436,6 +439,19 @@ class _PantallaCazaState extends State<PantallaCaza>
                     double.parse(etiquetaA.replaceAll(',', '.')),
                 valorB:
                     double.parse(etiquetaB.replaceAll(',', '.')),
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.comparacionUnidad:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaComparacionUnidad(
+              problemaPredeterminado: ProblemaComparacionUnidad(
+                fraccion: Fraccion(
+                  fragmento.numerador,
+                  fragmento.denominador,
+                ),
               ),
             ),
           ),
