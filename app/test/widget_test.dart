@@ -32,6 +32,7 @@ import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
 import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
+import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
 import 'package:uno_roto/dominio/problema_razon.dart';
@@ -2546,6 +2547,74 @@ void main() {
           () => unidadDesdeSimbolo(frag.decimalB!),
           returnsNormally,
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de superficies y áreas (MED.05) ═══
+
+  test(
+    'GeneradorSuperficie convierte 5 m² a 50000 cm² con factor 100²',
+    () {
+      final gen = GeneradorSuperficie(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        valorOrigen: 5,
+        unidadOrigen: UnidadSuperficie.m2,
+        unidadDestino: UnidadSuperficie.cm2,
+      );
+      expect(problema.resultado, 50000);
+      expect(problema.candidatos, hasLength(4));
+    },
+  );
+
+  test(
+    'GeneradorSuperficie incluye distractor "factor lineal" (×10 en lugar de ×100)',
+    () {
+      // 5 m² → cm² exige ×10000 (×100 por peldaño, dos peldaños).
+      // El error típico es aplicar el factor lineal: ×100 → 500.
+      final gen = GeneradorSuperficie(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        valorOrigen: 5,
+        unidadOrigen: UnidadSuperficie.m2,
+        unidadDestino: UnidadSuperficie.cm2,
+      );
+      expect(problema.candidatos, contains(500));
+    },
+  );
+
+  test('MED.05 está mapeada al tipo superficie', () {
+    expect(skillsConPuzzleImplementado, contains('MED.05'));
+    expect(tipoParaSkillId('MED.05'), TipoFragmentoEnTejado.superficie);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 5,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.superficie,
+      decimalA: 'm²',
+      decimalB: 'cm²',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'MED.05');
+  });
+
+  test(
+    'GeneradorCaza dirigido a MED.05 produce Fragmentos con símbolos al cuadrado',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'MED.05',
+          esquirlasAcumuladas: 60,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.superficie);
+        expect(frag.decimalA, contains('²'));
+        expect(frag.decimalB, contains('²'));
       }
     },
   );

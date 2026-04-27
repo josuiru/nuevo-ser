@@ -30,6 +30,7 @@ import '../dominio/problema_longitud.dart';
 import '../dominio/problema_masa_capacidad.dart';
 import '../dominio/problema_porcentaje_de.dart';
 import '../dominio/problema_aumento_descuento.dart';
+import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_regla_de_tres.dart';
@@ -70,6 +71,7 @@ import 'pantalla_longitud.dart';
 import 'pantalla_masa_capacidad.dart';
 import 'pantalla_porcentaje_de.dart';
 import 'pantalla_aumento_descuento.dart';
+import 'pantalla_superficie.dart';
 import 'pantalla_tiempo.dart';
 import 'pantalla_mcm_mcd.dart';
 import 'pantalla_regla_de_tres.dart';
@@ -311,6 +313,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.porcentajeDe => 3,
         TipoFragmentoEnTejado.tiempo => 2,
         TipoFragmentoEnTejado.aumentoDescuento => 3,
+        TipoFragmentoEnTejado.superficie => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -725,6 +728,22 @@ class _PantallaCazaState extends State<PantallaCaza>
                     unidadDesdeSimbolo(fragmento.decimalA ?? 'm'),
                 unidadDestino:
                     unidadDesdeSimbolo(fragmento.decimalB ?? 'cm'),
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.superficie:
+        // numerador → valorOrigen, decimalA/decimalB → símbolos.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaSuperficie(
+              problemaPredeterminado:
+                  GeneradorSuperficie().generarDesdeTerminos(
+                valorOrigen: fragmento.numerador,
+                unidadOrigen: unidadSuperficieDesdeSimbolo(
+                    fragmento.decimalA ?? 'm²'),
+                unidadDestino: unidadSuperficieDesdeSimbolo(
+                    fragmento.decimalB ?? 'cm²'),
               ),
             ),
           ),

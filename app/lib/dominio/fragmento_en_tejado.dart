@@ -91,6 +91,9 @@ import 'package:flutter/foundation.dart';
 ///   cantidad / 100). Distractores reales: operación inversa
 ///   (descuento confundido con aumento), solo la variación, base sin
 ///   cambio, restar el % literal sin calcular.
+/// - [superficie]: puzzle MED.05. "5 m² = ? cm²" → 50000 (NO 500). El
+///   sistema de áreas multiplica por 100 (no 10) por peldaño — la
+///   trampa estrella es aplicar el factor lineal por inercia.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -128,6 +131,7 @@ enum TipoFragmentoEnTejado {
   porcentajeDe,
   tiempo,
   aumentoDescuento,
+  superficie,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
