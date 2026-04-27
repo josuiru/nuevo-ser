@@ -36,6 +36,7 @@ import 'package:uno_roto/dominio/problema_escala.dart';
 import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
 import 'package:uno_roto/dominio/problema_media.dart';
 import 'package:uno_roto/dominio/problema_moda_mediana.dart';
+import 'package:uno_roto/dominio/problema_probabilidad.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2553,6 +2554,33 @@ void main() {
           returnsNormally,
         );
       }
+    },
+  );
+
+  // ═══ Puzzle de probabilidad simple (EST.05) ═══
+
+  test('EST.05 está mapeada al tipo probabilidad', () {
+    expect(skillsConPuzzleImplementado, contains('EST.05'));
+    expect(tipoParaSkillId('EST.05'), TipoFragmentoEnTejado.probabilidad);
+  });
+
+  test('GeneradorProbabilidad reduce 4/10 a 2/5', () {
+    final gen = GeneradorProbabilidad(semilla: 0);
+    // Caso 1: (4, 6) → 4/10 → 2/5.
+    final problema = gen.generarPorIndice(1);
+    expect(problema.probabilidad.numerador, 2);
+    expect(problema.probabilidad.denominador, 5);
+  });
+
+  test(
+    'GeneradorProbabilidad incluye complementario como distractor',
+    () {
+      // (3, 5) → 3/8 (no reducible). Complementario: 5/8.
+      final gen = GeneradorProbabilidad(semilla: 0);
+      final problema = gen.generarPorIndice(0);
+      final tieneComplementario = problema.candidatos.any(
+          (f) => f.numerador == 5 && f.denominador == 8);
+      expect(tieneComplementario, isTrue);
     },
   );
 

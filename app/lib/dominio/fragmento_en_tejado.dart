@@ -111,6 +111,9 @@ import 'package:flutter/foundation.dart';
 /// - [modaMediana]: puzzle EST.04. Conjunto de números + cuatro
 ///   candidatos. El modo (moda o mediana) viaja con el Fragmento.
 ///   Distractor estrella: confundir las dos estadísticas.
+/// - [probabilidad]: puzzle EST.05. "saco con 3 rojas y 5 azules →
+///   P(roja) = ?" + cuatro fracciones candidatas (reducidas).
+///   Distractor estrella: la probabilidad complementaria (P(azul)).
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -154,6 +157,7 @@ enum TipoFragmentoEnTejado {
   angulo,
   media,
   modaMediana,
+  probabilidad,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
