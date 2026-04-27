@@ -17,6 +17,7 @@ import 'problema_comparacion_unidad.dart'
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
 import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
+import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 import 'problema_simplificar.dart' show GeneradorSimplificar;
 
@@ -144,6 +145,27 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.lecturaFraccion) {
+      final problema = GeneradorLecturaFraccion(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // numerador/denominador no aplican: el contenido pedagógico
+        // viaja en `etiquetaDecimal` (texto en palabras). Mantenemos la
+        // simetría con [TipoFragmentoEnTejado.lecturaDecimal].
+        numerador: 0,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: problema.texto,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -601,6 +623,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.comparacionUnidad:
         // FR.04 entra cuando ya entiende fracciones simples — más fácil
         // que comparar dos fracciones, le abre los ojos a las impropias.
+        return dificultad >= 1;
+      case TipoFragmentoEnTejado.lecturaFraccion:
+        // FR.02 es la primera habilidad de fracciones después de FR.01;
+        // entra desde el primer tier para que aparezca pronto.
         return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

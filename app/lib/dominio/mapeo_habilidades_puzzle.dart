@@ -33,6 +33,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DEC.01',
   'DEC.02',
   'FR.04',
+  'FR.02',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -52,6 +53,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DEC.01') return TipoFragmentoEnTejado.lecturaDecimal;
   if (skillId == 'DEC.02') return TipoFragmentoEnTejado.comparacionDecimal;
   if (skillId == 'FR.04') return TipoFragmentoEnTejado.comparacionUnidad;
+  if (skillId == 'FR.02') return TipoFragmentoEnTejado.lecturaFraccion;
   if (skillId == 'FR.12' || skillId == 'FR.13') {
     return TipoFragmentoEnTejado.impropio;
   }
@@ -192,6 +194,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'DIV.01';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
+    case TipoFragmentoEnTejado.lecturaFraccion:
+      return 'FR.02';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -264,6 +268,9 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Tres opciones, pero la decisión sale casi a la vista. Más
       // exigente que una binaria, menos que comparar dos fracciones.
       return 0.85;
+    case TipoFragmentoEnTejado.lecturaFraccion:
+      // Mecánica texto→fracción, similar a DEC.01 lectura decimal.
+      return 0.9;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:

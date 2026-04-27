@@ -17,6 +17,7 @@ import 'package:uno_roto/dominio/problema_comparacion_decimal.dart';
 import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
+import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -1398,6 +1399,91 @@ void main() {
         expect(frag.tipo, TipoFragmentoEnTejado.comparacionUnidad);
         expect(frag.numerador, greaterThanOrEqualTo(1));
         expect(frag.denominador, greaterThanOrEqualTo(2));
+      }
+    },
+  );
+
+  // ═══ Puzzle de lectura de fracción (FR.02) ═══
+
+  test(
+    'GeneradorLecturaFraccion produce texto válido y un correcto entre 4 candidatos',
+    () {
+      final gen = GeneradorLecturaFraccion(semilla: 7);
+      final problema = gen.generar(dificultad: 1);
+      expect(problema.texto, isNotEmpty);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+      expect(problema.esCorrecta(problema.indiceCorrecto), isTrue);
+    },
+  );
+
+  test(
+    'GeneradorLecturaFraccion en dificultad 1 evita denominadores grandes',
+    () {
+      final gen = GeneradorLecturaFraccion(semilla: 23);
+      for (var intento = 0; intento < 30; intento++) {
+        final problema = gen.generar(dificultad: 1);
+        expect(
+          problema.fraccionCorrecta.denominador,
+          lessThanOrEqualTo(5),
+          reason:
+              'En dificultad 1 no deben aparecer sextos/séptimos/octavos.',
+        );
+      }
+    },
+  );
+
+  test(
+    'GeneradorLecturaFraccion.generarDesdeTexto recupera la forma exacta',
+    () {
+      final gen = GeneradorLecturaFraccion(semilla: 99);
+      final problema = gen.generarDesdeTexto('tres quintos');
+      expect(problema.texto, 'tres quintos');
+      expect(problema.fraccionCorrecta.numerador, 3);
+      expect(problema.fraccionCorrecta.denominador, 5);
+      // Entre los distractores debe estar la inversión clásica.
+      final tieneInversion = problema.candidatos.any(
+        (f) => f.numerador == 5 && f.denominador == 3,
+      );
+      expect(tieneInversion, isTrue);
+    },
+  );
+
+  test('FR.02 está mapeada al tipo lecturaFraccion', () {
+    expect(skillsConPuzzleImplementado, contains('FR.02'));
+    expect(
+      tipoParaSkillId('FR.02'),
+      TipoFragmentoEnTejado.lecturaFraccion,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.lecturaFraccion,
+      etiquetaDecimal: 'tres quintos',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 26),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.02');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.02 produce Fragmento de lecturaFraccion con texto',
+    () {
+      final gen = GeneradorCaza(semilla: 8081);
+      final ahora = DateTime(2026, 4, 26);
+      for (var intento = 0; intento < 15; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.02',
+          esquirlasAcumuladas: 8,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.lecturaFraccion);
+        expect(frag.etiquetaDecimal, isNotNull);
+        expect(frag.etiquetaDecimal, isNotEmpty);
       }
     },
   );
