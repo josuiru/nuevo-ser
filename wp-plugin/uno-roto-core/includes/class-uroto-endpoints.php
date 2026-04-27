@@ -85,6 +85,32 @@ class UROTO_Endpoints {
 				'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
 			)
 		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/tutor/stats',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'tutor_stats' ),
+				'permission_callback' => array( __CLASS__, 'permiso_admin_wp' ),
+			)
+		);
+	}
+
+	/**
+	 * Permission callback: solo admins de WordPress. Para endpoints
+	 * de auditoría o métricas que NO deben estar abiertos a los
+	 * tokens JWT del cliente.
+	 */
+	public static function permiso_admin_wp() {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error(
+				'uroto_solo_admin',
+				'Solo el administrador de WordPress puede ver esto.',
+				array( 'status' => 403 )
+			);
+		}
+		return true;
 	}
 
 	// -------------------------------------------------------------
@@ -263,5 +289,13 @@ class UROTO_Endpoints {
 		}
 
 		return UROTO_Tutor::explicar( $id_habilidad, $pregunta, $contexto_fragmento );
+	}
+
+	// -------------------------------------------------------------
+	// GET /tutor/stats  (solo admin WP)
+	// -------------------------------------------------------------
+
+	public static function tutor_stats( WP_REST_Request $request ) {
+		return new WP_REST_Response( UROTO_Tutor::metricas(), 200 );
 	}
 }

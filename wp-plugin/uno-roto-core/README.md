@@ -67,6 +67,10 @@ Todos bajo `/wp-json/uno-roto/v1/`.
 Borra todos los datos (niño, progreso, habilidades, usuario) asociados al JWT.
 → 200 `{ "ok": true }`
 
+**GET `/tutor/stats`** (solo admin WordPress, no JWT — `manage_options`)
+→ 200 `{ "total_entradas": N, "total_usos": N, "habilidades_distintas": N, "mas_preguntadas": [...] }`
+→ 403 sin sesión WP de admin.
+
 **POST `/tutor/explicar`**
 ```json
 { "id_habilidad": "FR.05",

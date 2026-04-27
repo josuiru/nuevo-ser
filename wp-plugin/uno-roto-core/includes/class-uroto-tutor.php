@@ -152,6 +152,53 @@ class UROTO_Tutor {
 	}
 
 	/**
+	 * Métricas básicas de la caché. Pensado para un endpoint admin —
+	 * útil para auditar uso (cuántas preguntas únicas, cuántas
+	 * habilidades preguntadas, qué proporción de hits viene de cache
+	 * vs llm). NO incluye datos personales: solo agregados.
+	 *
+	 * @return array{
+	 *     total_entradas:int,
+	 *     total_usos:int,
+	 *     habilidades_distintas:int,
+	 *     mas_preguntadas:list<array{id_habilidad:string,entradas:int,usos:int}>
+	 * }
+	 */
+	public static function metricas(): array {
+		global $wpdb;
+		$tabla = self::nombre_tabla();
+		$total = $wpdb->get_row(
+			"SELECT COUNT(*) AS n_entradas, COALESCE(SUM(usos),0) AS n_usos,
+			        COUNT(DISTINCT id_habilidad) AS n_habilidades
+			 FROM {$tabla}",
+			ARRAY_A
+		);
+		$top = $wpdb->get_results(
+			"SELECT id_habilidad, COUNT(*) AS entradas, COALESCE(SUM(usos),0) AS usos
+			 FROM {$tabla}
+			 GROUP BY id_habilidad
+			 ORDER BY usos DESC, entradas DESC
+			 LIMIT 5",
+			ARRAY_A
+		);
+		return array(
+			'total_entradas'        => (int) ( $total['n_entradas'] ?? 0 ),
+			'total_usos'            => (int) ( $total['n_usos'] ?? 0 ),
+			'habilidades_distintas' => (int) ( $total['n_habilidades'] ?? 0 ),
+			'mas_preguntadas'       => array_map(
+				static function ( array $fila ): array {
+					return array(
+						'id_habilidad' => (string) $fila['id_habilidad'],
+						'entradas'     => (int) $fila['entradas'],
+						'usos'         => (int) $fila['usos'],
+					);
+				},
+				$top ?: array()
+			),
+		);
+	}
+
+	/**
 	 * Borra entradas de caché caducadas (> TTL_CACHE). Llamado por
 	 * un cron diario. La purga al leer (en `leer_cache`) solo limpia
 	 * lo que se vuelve a consultar — sin esto, las entradas viejas
