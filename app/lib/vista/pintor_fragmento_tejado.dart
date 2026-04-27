@@ -96,6 +96,7 @@ class PintorFragmentoTejado extends CustomPainter {
         fragmento.tipo == TipoFragmentoEnTejado.jerarquiaFracciones;
     final esEscala = fragmento.tipo == TipoFragmentoEnTejado.escala;
     final esAngulo = fragmento.tipo == TipoFragmentoEnTejado.angulo;
+    final esMedia = fragmento.tipo == TipoFragmentoEnTejado.media;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -176,7 +177,9 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                                                                                                 ? const Color(0xFF9FA8DA)
                                                                                                                                                                 : esAngulo
                                                                                                                                                                     ? const Color(0xFF80DEEA)
-                                                                                                                                                                    : PaletaNeon.azulNeon;
+                                                                                                                                                                    : esMedia
+                                                                                                                                                                        ? const Color(0xFFB39DDB)
+                                                                                                                                                                        : PaletaNeon.azulNeon;
 
     if (esEspejo && !escapando) {
       // Aro fantasma que insinúa el "espejo" del Fragmento.

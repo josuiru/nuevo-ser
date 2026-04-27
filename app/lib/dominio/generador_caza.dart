@@ -32,6 +32,7 @@ import 'problema_comparacion_distinta.dart'
 import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_angulo.dart' show GeneradorAngulo;
+import 'problema_media.dart' show GeneradorMedia;
 import 'problema_escala.dart' show GeneradorEscala;
 import 'problema_jerarquia_fracciones.dart'
     show GeneradorJerarquiaFracciones;
@@ -182,6 +183,24 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.media) {
+      final indice =
+          _azar.nextInt(GeneradorMedia.poolCompleto.length);
+      // numerador → índice del conjunto curado.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indice,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: 'media·${GeneradorMedia.poolCompleto[indice].length}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1268,6 +1287,9 @@ class GeneradorCaza {
         return dificultad >= 4;
       case TipoFragmentoEnTejado.angulo:
         // MED.04 entra desde Iniciado I — base de geometría.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.media:
+        // EST.03 entra desde Iniciado I — suma + división.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

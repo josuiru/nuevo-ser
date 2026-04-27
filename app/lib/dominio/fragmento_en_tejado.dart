@@ -105,6 +105,9 @@ import 'package:flutter/foundation.dart';
 /// - [angulo]: puzzle MED.04. Se muestra un ángulo dibujado y su
 ///   valor en grados, y el niño elige el tipo (agudo/recto/obtuso/
 ///   llano) entre cuatro candidatos. Mecánica de reconocimiento.
+/// - [media]: puzzle EST.03. Conjunto de números + cuatro candidatos
+///   para la media aritmética. Distractor estrella: la suma sin
+///   dividir entre la cantidad.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -146,6 +149,7 @@ enum TipoFragmentoEnTejado {
   jerarquiaFracciones,
   escala,
   angulo,
+  media,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

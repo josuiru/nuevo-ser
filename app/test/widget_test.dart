@@ -34,6 +34,7 @@ import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
 import 'package:uno_roto/dominio/problema_angulo.dart';
 import 'package:uno_roto/dominio/problema_escala.dart';
 import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
+import 'package:uno_roto/dominio/problema_media.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2553,6 +2554,41 @@ void main() {
       }
     },
   );
+
+  // ═══ Puzzle de media aritmética (EST.03) ═══
+
+  test('GeneradorMedia calcula correctamente: media de [4,6,8,10] = 7', () {
+    final gen = GeneradorMedia(semilla: 0);
+    final problema = gen.generarDesdeDatos(const [4, 6, 8, 10]);
+    expect(problema.media, 7);
+    expect(problema.candidatos, hasLength(4));
+  });
+
+  test(
+    'GeneradorMedia incluye distractor "suma sin dividir"',
+    () {
+      final gen = GeneradorMedia(semilla: 0);
+      final problema = gen.generarDesdeDatos(const [4, 6, 8, 10]);
+      expect(problema.candidatos, contains(28));
+    },
+  );
+
+  test('EST.03 está mapeada al tipo media', () {
+    expect(skillsConPuzzleImplementado, contains('EST.03'));
+    expect(tipoParaSkillId('EST.03'), TipoFragmentoEnTejado.media);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.media,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'EST.03');
+  });
 
   // ═══ Puzzle de ángulo (MED.04) ═══
 
