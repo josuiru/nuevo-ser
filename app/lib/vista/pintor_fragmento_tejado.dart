@@ -114,6 +114,8 @@ class PintorFragmentoTejado extends CustomPainter {
     final esCirculo = fragmento.tipo == TipoFragmentoEnTejado.circulo;
     final esVolumen = fragmento.tipo == TipoFragmentoEnTejado.volumen;
     final esSimetria = fragmento.tipo == TipoFragmentoEnTejado.simetria;
+    final esGraficoBarras =
+        fragmento.tipo == TipoFragmentoEnTejado.graficoBarras;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -218,7 +220,9 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                                                                                                                                                 ? const Color(0xFF5C6BC0)
                                                                                                                                                                                                                 : esSimetria
                                                                                                                                                                                                                     ? const Color(0xFFEC407A)
-                                                                                                                                                                                                                    : PaletaNeon.azulNeon;
+                                                                                                                                                                                                                    : esGraficoBarras
+                                                                                                                                                                                                                        ? const Color(0xFF7CB342)
+                                                                                                                                                                                                                        : PaletaNeon.azulNeon;
 
     if (esEspejo && !escapando) {
       // Aro fantasma que insinúa el "espejo" del Fragmento.

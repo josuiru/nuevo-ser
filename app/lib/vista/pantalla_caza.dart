@@ -45,6 +45,7 @@ import '../dominio/problema_area_triangulo.dart';
 import '../dominio/problema_circulo.dart';
 import '../dominio/problema_volumen.dart';
 import '../dominio/problema_simetria.dart';
+import '../dominio/problema_grafico_barras.dart';
 import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
@@ -99,6 +100,7 @@ import 'pantalla_area_triangulo.dart';
 import 'pantalla_circulo.dart';
 import 'pantalla_volumen.dart';
 import 'pantalla_simetria.dart';
+import 'pantalla_grafico_barras.dart';
 import 'pantalla_escala.dart';
 import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
@@ -359,6 +361,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.circulo => 3,
         TipoFragmentoEnTejado.volumen => 3,
         TipoFragmentoEnTejado.simetria => 1,
+        TipoFragmentoEnTejado.graficoBarras => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -834,6 +837,18 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaAreaTriangulo(
               problemaPredeterminado: GeneradorAreaTriangulo()
                   .generarPorIndice(fragmento.numerador),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.graficoBarras:
+        final modoGrafico = fragmento.denominador == 2
+            ? ModoGraficoBarras.total
+            : ModoGraficoBarras.valorDeBarra;
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaGraficoBarras(
+              problemaPredeterminado: GeneradorGraficoBarras()
+                  .generarPorIndiceYModo(fragmento.numerador, modoGrafico),
             ),
           ),
         );

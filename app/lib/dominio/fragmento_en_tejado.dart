@@ -147,6 +147,9 @@ import 'package:flutter/foundation.dart';
 /// - [simetria]: puzzle GEO.07. Figura simple con un eje (vertical u
 ///   horizontal) sobreimpreso; el niño decide si es simétrica
 ///   respecto al eje (sí/no). Decisión binaria.
+/// - [graficoBarras]: puzzle EST.01. Gráfico de barras con etiquetas
+///   y eje numerado; el niño elige el valor de una barra resaltada
+///   o el total entre cuatro candidatos.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -200,6 +203,7 @@ enum TipoFragmentoEnTejado {
   circulo,
   volumen,
   simetria,
+  graficoBarras,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

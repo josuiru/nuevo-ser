@@ -48,6 +48,7 @@ import 'problema_area_triangulo.dart' show GeneradorAreaTriangulo;
 import 'problema_circulo.dart' show GeneradorCirculo;
 import 'problema_volumen.dart' show GeneradorVolumen;
 import 'problema_simetria.dart' show GeneradorSimetria;
+import 'problema_grafico_barras.dart' show GeneradorGraficoBarras;
 // problema_poligono.dart no necesita import: el generador crea el
 // Fragmento con `numerador = numeroDeLados` y el dispatcher reconstruye
 // con `GeneradorPoligono.generarDesdeLados`.
@@ -198,6 +199,26 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.graficoBarras) {
+      // numerador → índice del caso curado;
+      // denominador → 1 valorDeBarra, 2 total.
+      final indiceCaso = _azar.nextInt(GeneradorGraficoBarras.cantidadDeCasosCurados);
+      // Modo total solo en dificultades altas — exige sumar.
+      final esTotal = dificultad >= 3 && _azar.nextBool();
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indiceCaso,
+        denominador: esTotal ? 2 : 1,
+        tipo: tipo,
+        etiquetaDecimal: esTotal ? 'EST·Σ' : 'EST·V',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1542,6 +1563,9 @@ class GeneradorCaza {
         return dificultad >= 4;
       case TipoFragmentoEnTejado.simetria:
         // GEO.07 entra desde Aprendiz III — visual e intuitivo.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.graficoBarras:
+        // EST.01 abre el dominio EST de lectura de gráficos — Iniciado I.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

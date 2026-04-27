@@ -46,6 +46,7 @@ import 'package:uno_roto/dominio/problema_area_triangulo.dart';
 import 'package:uno_roto/dominio/problema_circulo.dart';
 import 'package:uno_roto/dominio/problema_volumen.dart';
 import 'package:uno_roto/dominio/problema_simetria.dart';
+import 'package:uno_roto/dominio/problema_grafico_barras.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2592,6 +2593,37 @@ void main() {
       expect(problema.candidatosPorcentaje, contains(25));
     },
   );
+
+  // ═══ Puzzle de gráfico de barras (EST.01) ═══
+
+  test('EST.01 está mapeada al tipo graficoBarras', () {
+    expect(skillsConPuzzleImplementado, contains('EST.01'));
+    expect(
+      tipoParaSkillId('EST.01'),
+      TipoFragmentoEnTejado.graficoBarras,
+    );
+  });
+
+  test(
+    'GeneradorGraficoBarras lee el valor correcto de una barra',
+    () {
+      final gen = GeneradorGraficoBarras(semilla: 0);
+      // Caso 0: (lun=5, mar=3, mié=7, jue=4). El indice de la barra
+      // preguntada es seedSeleccion % 4 = 0 → barra "lun" con valor 5.
+      final problema = gen.generarPorIndiceYModo(
+        0,
+        ModoGraficoBarras.valorDeBarra,
+      );
+      expect(problema.respuesta, 5);
+    },
+  );
+
+  test('GeneradorGraficoBarras suma todas las barras en modo total', () {
+    // Caso 0: 5+3+7+4 = 19.
+    final problema = GeneradorGraficoBarras(semilla: 0)
+        .generarPorIndiceYModo(0, ModoGraficoBarras.total);
+    expect(problema.respuesta, 19);
+  });
 
   // ═══ Puzzle de simetría (GEO.07) ═══
 
