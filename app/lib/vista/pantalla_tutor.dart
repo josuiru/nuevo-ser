@@ -116,27 +116,21 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
         child: Column(
           children: [
             Expanded(
-              child: _mensajes.isEmpty
+              child: _mensajes.isEmpty && !_esperandoRespuesta
                   ? const _EstadoVacio()
                   : ListView.builder(
                       controller: _scroll,
                       padding: const EdgeInsets.all(16),
-                      itemCount: _mensajes.length,
-                      itemBuilder: (_, i) => _Burbuja(mensaje: _mensajes[i]),
+                      itemCount:
+                          _mensajes.length + (_esperandoRespuesta ? 1 : 0),
+                      itemBuilder: (_, i) {
+                        if (i == _mensajes.length && _esperandoRespuesta) {
+                          return const _BurbujaEsperando();
+                        }
+                        return _Burbuja(mensaje: _mensajes[i]);
+                      },
                     ),
             ),
-            if (_esperandoRespuesta)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: PaletaNeon.azulNeon,
-                  ),
-                ),
-              ),
             _Compositor(
               controlador: _controlador,
               habilitado: !_esperandoRespuesta,
@@ -187,6 +181,75 @@ class _Burbuja extends StatelessWidget {
         child: Text(
           mensaje.texto,
           style: TextStyle(color: colorTexto, fontSize: 15, height: 1.4),
+        ),
+      ),
+    );
+  }
+}
+
+/// Burbuja del tutor mientras la respuesta está en vuelo. Tres puntos
+/// que pulsan para que el niño sepa que algo está pasando — el LLM
+/// puede tardar varios segundos y un spinner pequeño se queda corto.
+class _BurbujaEsperando extends StatefulWidget {
+  const _BurbujaEsperando();
+
+  @override
+  State<_BurbujaEsperando> createState() => _BurbujaEsperandoState();
+}
+
+class _BurbujaEsperandoState extends State<_BurbujaEsperando>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ciclo;
+
+  @override
+  void initState() {
+    super.initState();
+    _ciclo = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _ciclo.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: PaletaNeon.fondoMedio,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: AnimatedBuilder(
+          animation: _ciclo,
+          builder: (_, __) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(3, (i) {
+                final fase = (_ciclo.value - i * 0.18) % 1.0;
+                final opacidad = (fase < 0.5 ? fase * 2 : (1 - fase) * 2)
+                    .clamp(0.25, 1.0);
+                return Padding(
+                  padding: EdgeInsets.only(right: i < 2 ? 6 : 0),
+                  child: Container(
+                    width: 7,
+                    height: 7,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: PaletaNeon.textoPrincipal.withOpacity(opacidad),
+                    ),
+                  ),
+                );
+              }),
+            );
+          },
         ),
       ),
     );
