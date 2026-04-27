@@ -75,6 +75,16 @@ class UROTO_Endpoints {
 				'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
 			)
 		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/tutor/explicar',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'tutor_explicar' ),
+				'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+			)
+		);
 	}
 
 	// -------------------------------------------------------------
@@ -229,5 +239,29 @@ class UROTO_Endpoints {
 		}
 		UROTO_Repositorio::borrar_cuenta( (int) $nino['usuario_id'] );
 		return new WP_REST_Response( array( 'ok' => true ), 200 );
+	}
+
+	// -------------------------------------------------------------
+	// POST /tutor/explicar
+	// -------------------------------------------------------------
+
+	public static function tutor_explicar( WP_REST_Request $request ) {
+		$id_habilidad       = sanitize_text_field(
+			(string) $request->get_param( 'id_habilidad' )
+		);
+		$pregunta           = (string) $request->get_param( 'pregunta' );
+		$contexto_fragmento = $request->get_param( 'contexto_fragmento' );
+		if ( null !== $contexto_fragmento ) {
+			$contexto_fragmento = sanitize_text_field( (string) $contexto_fragmento );
+		}
+
+		if ( '' === $id_habilidad ) {
+			return new WP_REST_Response(
+				array( 'error' => 'id_habilidad requerido.' ),
+				400
+			);
+		}
+
+		return UROTO_Tutor::explicar( $id_habilidad, $pregunta, $contexto_fragmento );
 	}
 }

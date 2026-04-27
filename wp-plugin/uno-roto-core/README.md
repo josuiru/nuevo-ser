@@ -1,6 +1,6 @@
 # Uno Roto Core (plugin WordPress)
 
-Backend de sync, autenticación y (próximamente) tutor IA para la app Uno Roto.
+Backend de sync, autenticación y tutor IA para la app Uno Roto.
 
 ## Estado
 
@@ -9,12 +9,13 @@ v0.1 — esqueleto funcional sin probar en WordPress real. Requiere verificació
 ## Instalación
 
 1. Copia el directorio `uno-roto-core/` a `wp-content/plugins/` de tu WordPress.
-2. En `wp-config.php`, define el secreto de JWT antes de activar:
+2. En `wp-config.php`, define los secretos antes de activar:
    ```php
    define( 'UROTO_JWT_SECRET', 'cadena-aleatoria-64-chars-o-más' );
+   define( 'UROTO_ANTHROPIC_KEY', 'sk-ant-...' );  // opcional, solo para tutor IA
    ```
-   Generar: `openssl rand -hex 32`.
-3. Activa desde el panel. Las 4 tablas se crean en la activación (idempotente vía `dbDelta`).
+   Generar JWT secret: `openssl rand -hex 32`.
+3. Activa desde el panel. Las 5 tablas se crean en la activación (idempotente vía `dbDelta`).
 4. Verifica endpoints: `curl https://tu-wp.example.org/wp-json/uno-roto/v1/login -I`.
 
 ## Tablas creadas
@@ -25,6 +26,7 @@ Todas con prefijo `{$wpdb->prefix}uroto_`:
 - `uroto_ninos` — perfiles de niño vinculados a un tutor.
 - `uroto_progreso` — estado global del niño (esquirlas, rango, nombre_jugador, flags JSON, arco_actual).
 - `uroto_estado_habilidades` — fila por (niño, habilidad) con nivel, precisión, tiempo_mediano, etc.
+- `uroto_cache_tutor` — caché de respuestas del tutor IA (clave_hash, id_habilidad, pregunta, respuesta, creado_en, usos). Compartida entre niños — no hay PII.
 
 ## Endpoints REST
 
@@ -64,6 +66,19 @@ Todos bajo `/wp-json/uno-roto/v1/`.
 **DELETE `/account`**
 Borra todos los datos (niño, progreso, habilidades, usuario) asociados al JWT.
 → 200 `{ "ok": true }`
+
+**POST `/tutor/explicar`**
+```json
+{ "id_habilidad": "FR.05",
+  "pregunta": "no entiendo",
+  "contexto_fragmento": "3/5 vs 4/5"  // opcional
+}
+```
+→ 200 `{ "explicacion": "...", "fuente": "cache" | "llm" }`
+→ 422 `{ "error": "..." }` si el filtro PHP rechaza (PII, fuera de alcance, inyección).
+→ 502 si Anthropic falla o `UROTO_ANTHROPIC_KEY` no está definida.
+
+Doble capa de seguridad: el cliente Flutter filtra antes de enviar y el plugin filtra de nuevo. Las reglas son idénticas (`includes/class-uroto-filtro-tutor.php` ↔ `app/lib/dominio/tutor/filtro_seguridad.dart`).
 
 ## Privacidad
 

@@ -107,15 +107,16 @@ uno-roto/
 - Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.
 - **Sistema de perfiles** (`datos/repositorio_progreso.dart` + `vista/pantalla_perfiles.dart`): cada perfil guarda su progreso bajo `uroto.perfil.<id>.<sufijo>`. Al arrancar con claves heredadas `uroto.*`, se migran una vez al perfil `principal`. `listarPerfiles`, `crearPerfil(nombre)` (slug con sufijo numérico si colisiona), `cambiarAPerfil`, `borrarPerfil`. Con >1 perfil, la app arranca en el selector; con uno solo sigue el flujo normal. Desde `pantalla_habilidades` hay botón de cambio de perfil que al volver reinicia el orquestador (callback `alReiniciarConPerfilActivo`). `reiniciar()` borra solo el perfil activo preservando su nombre.
 - **Capa sonora v0.1** (doc 12): `sonido/servicio_sonoro.dart` es un singleton con 4 capas (ambient / música / efectos / narrativos — enum `CapaAudio`) y un AudioPlayer por capa (plugin `audioplayers`). Fades crossing, ducking cuando entra un narrativo. `CatalogoSonidos` mapea identificadores lógicos (`ambient_canales`, `musica_combate_zafran`, `motivo_sora`, `narrativo_silbido_zafran`…) a rutas WAV bajo `assets/sonido/{ambient,musica,efectos,narrativos}/`. **Tolera assets ausentes y plugin no registrado** (tests, headless): cualquier llamada falla en silencio, la app nunca deja de funcionar por no poder sonar. Preferencias de volumen por capa + modo silencio persisten **por perfil** (`audio.modo_silencio`, `audio.volumen.<capa>`). Pantalla `PantallaAjustesSonido` (accesible desde habilidades) con 4 sliders + switch. Cableado: `EscenaCinematica.sonidoDeEntrada/loopDeFondo` con motivos anotados en escenas clave (Sora/Kai/Montaña/ceremonia/silbido), música dedicada por Fragmento en `pantalla_combate_kurz`, ambient+música de distrito en `pantalla_caza` con fades largos. **Assets WAV aún no existen** — la arquitectura está lista para recibirlos.
+- **Tutor IA v0.1** (doc 03 §9, §11): doble capa de seguridad cliente/servidor. Cliente Dart en `dominio/tutor/` (FiltroSeguridad sealed `RevisionAceptada`/`RevisionRechazada` + 7 motivos, DisparadorTutor con umbral 3 fallos consecutivos + cooldown 10 min, EstadoTutorHabilidad serializable, ServicioTutor orquestador con 3 estados de respuesta `ok`/`rechazada`/`errorRed`). Datos en `datos/`: `ClienteTutor` HTTP a `/wp-json/uno-roto/v1/tutor/explicar`, `CacheTutor` con LRU 200 + TTL 30d, clave normalizada (lower + collapse spaces), persistencia global JSON tolerante a corrupción. Vista `pantalla_tutor.dart`: conversación con burbujas, max 280 chars en input, mensajes no-OK en color tenue, `initState` arranca cooldown. **Backend WP**: nuevas clases `UROTO_Filtro_Tutor` (réplica PHP literal del filtro Dart — contrato canónico es Dart), `UROTO_Anthropic` (cliente HTTP a Messages API, modelo `claude-haiku-4-5`, system prompt con voz cariñosa + alcance MVP + "no des solución directa", se inyecta para tests), `UROTO_Tutor` orquestador (filtro entrada → cache BD → Anthropic → filtro salida → cache → respuesta), tabla `uroto_cache_tutor` (sha256 + id_habilidad + pregunta + respuesta + creado_en + usos, compartida entre niños porque no hay PII). Endpoint REST `POST /tutor/explicar` con JWT. Constante `UROTO_ANTHROPIC_KEY` requerida en wp-config. Smoke test PHP en `wp-plugin/uno-roto-core/tests/test_filtro_tutor.php` (sin PHPUnit aún — `php tests/test_filtro_tutor.php` sale 0 si todo verde). **Pendiente**: cablear ofrecer botón en pantallas de puzzle (registrarResultado al cierre de cada puzzle + mostrar botón si deberíaOfrecer); probar en WP real con clave Anthropic.
 
 **Gap frente a doc 03 / prompt maestro**:
 - Sin Isar (usamos shared_preferences).
 - Sin Flame (CustomPainter puro).
 - Sin Riverpod.
-- Sin tutor IA.
+- Tutor IA arquitectado v0.1 sin probar end-to-end con Anthropic real ni cableado a las pantallas de puzzle.
 - Sin arte/música final (todo programático/placeholder).
 
-**Fase actual**: ~7-8 del roadmap del doc 03/14 — catálogo de 66 puzzles cerrado, motor adaptativo, narrativa de los 4 arcos, combates jugables, capa sonora arquitectada, backend WP probado y wire cliente. Pendiente: assets reales, tutor IA, migración a Flame/Isar/Riverpod cuando haya razón.
+**Fase actual**: ~8-9 del roadmap del doc 03/14 — catálogo de 66 puzzles cerrado, motor adaptativo, narrativa de los 4 arcos, combates jugables, capa sonora arquitectada, backend WP probado y wire cliente, tutor IA arquitectado en sus 4 capas. Pendiente: cableado del tutor a puzzles, prueba end-to-end con Anthropic, assets reales, migración a Flame/Isar/Riverpod cuando haya razón.
 
 ## Backlog priorizado
 
@@ -128,7 +129,7 @@ uno-roto/
 7. ~~Backend WordPress~~ ✅ **v0.1 probado end-to-end en Local WP + wire sync cliente**.
 8. ~~Catálogo completo de 66 puzzles~~ ✅ **— FR/DEC/DIV/PROP/OP/MED/GEO/EST cubiertas**.
 9. **Migración a Flame + Isar** según se necesite, no antes.
-10. **Tutor IA Claude API** (doc 03 §9, fase 9).
+10. ~~Tutor IA Claude API~~ ✅ **v0.1 arquitectado en 4 capas** (doc 03 §9, §11). Pendiente: cablear el botón en las pantallas de puzzle (registrar fallos en el orquestador del Fragmento), probar end-to-end con clave Anthropic real.
 11. **Assets reales** (arte + música), sustituyendo placeholders programáticos.
 
 ## Comandos habituales

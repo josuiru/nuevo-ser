@@ -30,6 +30,9 @@ require_once UROTO_CORE_DIR . 'includes/class-uroto-activacion.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-jwt.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-repositorio.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-sincronizador.php';
+require_once UROTO_CORE_DIR . 'includes/class-uroto-filtro-tutor.php';
+require_once UROTO_CORE_DIR . 'includes/class-uroto-anthropic.php';
+require_once UROTO_CORE_DIR . 'includes/class-uroto-tutor.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-endpoints.php';
 
 register_activation_hook( __FILE__, array( 'UROTO_Activacion', 'activar' ) );
@@ -49,6 +52,23 @@ if ( ! defined( 'UROTO_JWT_SECRET' ) ) {
 			echo '<div class="notice notice-error"><p><strong>Uno Roto Core:</strong> ';
 			echo 'define <code>UROTO_JWT_SECRET</code> en <code>wp-config.php</code> ';
 			echo 'antes de usar el plugin en producción.</p></div>';
+		}
+	);
+}
+
+/**
+ * API key de Anthropic para el tutor IA. Se espera en wp-config.php:
+ *   define( 'UROTO_ANTHROPIC_KEY', 'sk-ant-...' );
+ * Si no está, /tutor/explicar devolverá 502 con mensaje genérico.
+ */
+if ( ! defined( 'UROTO_ANTHROPIC_KEY' ) ) {
+	add_action(
+		'admin_notices',
+		static function () {
+			echo '<div class="notice notice-warning"><p><strong>Uno Roto Core:</strong> ';
+			echo 'define <code>UROTO_ANTHROPIC_KEY</code> en <code>wp-config.php</code> ';
+			echo 'para que el tutor IA pueda responder. Sin esto, /tutor/explicar ';
+			echo 'devolverá error.</p></div>';
 		}
 	);
 }

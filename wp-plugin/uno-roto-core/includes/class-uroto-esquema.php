@@ -44,6 +44,7 @@ class UROTO_Esquema {
 		$ninos           = self::nombre_tabla( 'ninos' );
 		$progreso        = self::nombre_tabla( 'progreso' );
 		$habilidades     = self::nombre_tabla( 'estado_habilidades' );
+		$cache_tutor     = self::nombre_tabla( 'cache_tutor' );
 
 		return array(
 			"CREATE TABLE {$usuarios} (
@@ -92,6 +93,18 @@ class UROTO_Esquema {
 				intentos_recientes_json LONGTEXT NOT NULL,
 				actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				PRIMARY KEY  (nino_id, id_habilidad)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$cache_tutor} (
+				clave_hash CHAR(64) NOT NULL,
+				id_habilidad VARCHAR(24) NOT NULL,
+				pregunta TEXT NOT NULL,
+				respuesta LONGTEXT NOT NULL,
+				creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				usos INT UNSIGNED NOT NULL DEFAULT 0,
+				PRIMARY KEY  (clave_hash),
+				KEY id_habilidad (id_habilidad),
+				KEY creado_en (creado_en)
 			) {$charset_collate};",
 		);
 	}
