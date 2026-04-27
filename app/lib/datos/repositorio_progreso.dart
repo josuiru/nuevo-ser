@@ -539,6 +539,44 @@ class RepositorioProgreso {
     }
   }
 
+  /// Exporta los estados de habilidades del perfil activo en el shape
+  /// que espera el backend WP (`/sync/progress`). Convierte las claves
+  /// cortas internas ('nv', 'pr', 'tm'…) a las largas del esquema BD
+  /// ('nivel', 'precision_ponderada', 'tiempo_mediano_seg'…). Si una
+  /// habilidad no tiene estado guardado, no se incluye — solo enviamos
+  /// lo que el niño ha tocado.
+  Future<List<Map<String, dynamic>>> exportarHabilidadesParaSync() async {
+    final prefs = await _prefs();
+    final prefijo = '${await _prefijoActivo()}$_prefijoHabilidad';
+    final lista = <Map<String, dynamic>>[];
+    for (final clave in prefs.getKeys()) {
+      if (!clave.startsWith(prefijo)) continue;
+      final crudo = prefs.getString(clave);
+      if (crudo == null) continue;
+      try {
+        final estado = EstadoHabilidad.desdeJson(
+          jsonDecode(crudo) as Map<String, dynamic>,
+        );
+        lista.add({
+          'id_habilidad': estado.identificadorHabilidad,
+          'nivel': estado.nivel.valor,
+          'precision_ponderada': estado.precision,
+          'tiempo_mediano_seg': estado.tiempoMedianoSeg,
+          'total_exposiciones': estado.totalExposiciones,
+          'sesiones_consecutivas_buenas': estado.sesionesConsecutivasBuenas,
+          'ultima_practica': _aFechaMysql(estado.ultimaPractica),
+          'intentos_recientes': estado.intentosRecientes
+              .map((i) => i.aJson())
+              .toList(),
+          'actualizado_en': _aFechaMysql(DateTime.now()),
+        });
+      } catch (_) {
+        // Estado corrupto: lo saltamos sin romper el sync.
+      }
+    }
+    return lista;
+  }
+
   /// Exporta el estado del perfil activo para `POST /sync/progress`.
   Future<Map<String, dynamic>> exportarProgresoParaSync() async {
     final prefs = await _prefs();

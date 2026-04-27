@@ -4148,6 +4148,65 @@ void main() {
     });
   });
 
+  // ═══ Exportar habilidades para sync con backend ═══
+  group('RepositorioProgreso — exportar habilidades para sync', () {
+    test('lista vacía si no hay habilidades guardadas', () async {
+      final repo = RepositorioProgreso();
+      expect(await repo.exportarHabilidadesParaSync(), isEmpty);
+    });
+
+    test('convierte EstadoHabilidad guardado al shape del backend',
+        () async {
+      final repo = RepositorioProgreso();
+      final estado = EstadoHabilidad(
+        identificadorHabilidad: 'FR.05',
+        nivel: NivelMaestria.competente,
+        precision: 0.85,
+        tiempoMedianoSeg: 4.5,
+        ultimaPractica: DateTime.utc(2026, 4, 27, 12, 0),
+        sesionesConsecutivasBuenas: 2,
+        totalExposiciones: 12,
+        intentosRecientes: const [],
+      );
+      await repo.guardarEstadoHabilidad(estado);
+      final lista = await repo.exportarHabilidadesParaSync();
+      expect(lista, hasLength(1));
+      final fila = lista.first;
+      expect(fila['id_habilidad'], 'FR.05');
+      expect(fila['nivel'], NivelMaestria.competente.valor);
+      expect(fila['precision_ponderada'], 0.85);
+      expect(fila['tiempo_mediano_seg'], 4.5);
+      expect(fila['total_exposiciones'], 12);
+      expect(fila['sesiones_consecutivas_buenas'], 2);
+      expect(fila['ultima_practica'], '2026-04-27 12:00:00');
+      expect(fila['intentos_recientes'], isA<List>());
+      expect(fila['actualizado_en'], isA<String>());
+    });
+
+    test('omite habilidades con JSON corrupto sin romper la lista',
+        () async {
+      SharedPreferences.setMockInitialValues({
+        'uroto.perfil_activo_id': 'principal',
+        'uroto.perfil.principal.habilidad.FR.05': 'no soy json',
+      });
+      final repo = RepositorioProgreso();
+      final estadoBueno = EstadoHabilidad(
+        identificadorHabilidad: 'FR.06',
+        nivel: NivelMaestria.introducida,
+        precision: 0.5,
+        tiempoMedianoSeg: 6,
+        ultimaPractica: DateTime.utc(2026, 4, 27),
+        sesionesConsecutivasBuenas: 0,
+        totalExposiciones: 3,
+        intentosRecientes: const [],
+      );
+      await repo.guardarEstadoHabilidad(estadoBueno);
+      final lista = await repo.exportarHabilidadesParaSync();
+      expect(lista, hasLength(1));
+      expect(lista.first['id_habilidad'], 'FR.06');
+    });
+  });
+
   // ═══ Tutor IA — Filtro de seguridad ═══
   group('FiltroSeguridad — pregunta', () {
     const filtro = FiltroSeguridad();

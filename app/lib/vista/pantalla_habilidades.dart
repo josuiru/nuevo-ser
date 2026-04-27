@@ -257,14 +257,18 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
 
       final progreso =
           await widget.repositorio.exportarProgresoParaSync();
+      final habilidades =
+          await widget.repositorio.exportarHabilidadesParaSync();
       final resp = await api.sincronizar(
         token: auth.token,
         progreso: progreso,
-        habilidades: const [],
+        habilidades: habilidades,
       );
       final devuelto = resp['progreso'] as Map<String, dynamic>?;
       final esquirlas = (devuelto?['esquirlas_total'] as num?)?.toInt();
       final flagsServidor = devuelto?['flags'] as Map? ?? const {};
+      final habilidadesServidor =
+          (resp['habilidades'] as List?)?.length ?? 0;
 
       if (!mounted) return;
       mensajero.hideCurrentSnackBar();
@@ -275,7 +279,8 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           content: Text(
             'Sync OK. Niño #${auth.ninoId}. '
             'Esquirlas ${esquirlas ?? 0}. '
-            '${flagsServidor.length} flags en el servidor.',
+            '${flagsServidor.length} flags · '
+            '$habilidadesServidor habilidades en servidor.',
             style: const TextStyle(color: PaletaNeon.exitoSuave),
           ),
         ),
