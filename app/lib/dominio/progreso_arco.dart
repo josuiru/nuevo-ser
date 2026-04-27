@@ -6,11 +6,13 @@
 /// El contador se muestra en el HUD del mapa para que el niño sepa en
 /// qué punto del arco está sin tener que acordarse.
 class ProgresoArco {
+  final int numero;
   final String nombreRomano;
   final String titulo;
   final List<List<String>> flagsPorEscena;
 
   const ProgresoArco({
+    required this.numero,
     required this.nombreRomano,
     required this.titulo,
     required this.flagsPorEscena,
@@ -38,6 +40,7 @@ class ProgresoArco {
 
   /// Arco 1 — El Reclutamiento (doc 07).
   static const ProgresoArco arco1 = ProgresoArco(
+    numero: 1,
     nombreRomano: 'I',
     titulo: 'El Reclutamiento',
     flagsPorEscena: [
@@ -68,6 +71,7 @@ class ProgresoArco {
   /// Arco 2 — Canales y Zafrán (doc 08). 16 escenas en el guion —
   /// algunas aún no implementadas en el catálogo.
   static const ProgresoArco arco2 = ProgresoArco(
+    numero: 2,
     nombreRomano: 'II',
     titulo: 'Canales y Zafrán',
     flagsPorEscena: [
@@ -99,6 +103,7 @@ class ProgresoArco {
   /// Arco 3 — La ciudad entera (doc 09). 18 escenas en el guion —
   /// parcialmente implementadas.
   static const ProgresoArco arco3 = ProgresoArco(
+    numero: 3,
     nombreRomano: 'III',
     titulo: 'La ciudad entera',
     flagsPorEscena: [
@@ -127,6 +132,7 @@ class ProgresoArco {
   /// La 4.8 y la 4.9 tienen tres ramas por elección del jugador
   /// (Fuego / Sendero / Espejo); cualquier rama cuenta.
   static const ProgresoArco arco4 = ProgresoArco(
+    numero: 4,
     nombreRomano: 'IV',
     titulo: 'El ascenso',
     flagsPorEscena: [

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dominio/habilidad.dart';
+import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/tutor/disparador_tutor.dart';
@@ -593,12 +594,13 @@ class RepositorioProgreso {
 
     final ultima = await cargarUltimaApertura();
     final ahoraMysql = _aFechaMysql(ultima ?? DateTime.now());
+    final arco = await ProgresoArco.arcoActual(flagNarrativoActivo);
 
     return {
       'nombre_jugador': await cargarNombreJugador() ?? '',
       'esquirlas_total': await cargarEsquirlas(),
       'rango': (await cargarRango()).valor,
-      'arco_actual': 1,
+      'arco_actual': arco.numero,
       'flags': flags,
       'actualizado_en': ahoraMysql,
     };
