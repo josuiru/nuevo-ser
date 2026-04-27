@@ -15,7 +15,7 @@ import 'package:uno_roto/dominio/problema_espejo.dart' show Fraccion;
 import 'package:uno_roto/dominio/problema_amplificar.dart';
 import 'package:uno_roto/dominio/problema_comparacion_decimal.dart';
 import 'package:uno_roto/dominio/problema_comparacion_distinta.dart';
-import 'package:uno_roto/dominio/problema_comparacion_mixta.dart';
+import 'package:uno_roto/dominio/problema_ordenar_decimales.dart';
 import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
@@ -1940,69 +1940,50 @@ void main() {
     },
   );
 
-  // ═══ Puzzle de comparación mixta decimal/fracción (DEC.03) ═══
+  // ═══ Puzzle de ordenar decimales (DEC.03) ═══
 
-  test(
-    'ProblemaComparacionMixta detecta correctamente la mayor con formatos cruzados',
-    () {
-      // 3/4 (=0,75) vs 0,5 → fracción gana.
-      final problema = ProblemaComparacionMixta(
-        a: OpcionComparacionMixta.deFraccion(const Fraccion(3, 4)),
-        b: OpcionComparacionMixta.deDecimal('0,5'),
-      );
-      expect(problema.indiceMayor, 0);
-      expect(problema.esCorrecta(0), isTrue);
-      expect(problema.esCorrecta(1), isFalse);
-    },
-  );
-
-  test(
-    'ProblemaComparacionMixta detecta caso donde el decimal gana (1/4 vs 0,5)',
-    () {
-      final problema = ProblemaComparacionMixta(
-        a: OpcionComparacionMixta.deFraccion(const Fraccion(1, 4)),
-        b: OpcionComparacionMixta.deDecimal('0,5'),
-      );
-      expect(problema.indiceMayor, 1);
-      expect(problema.esCorrecta(1), isTrue);
-    },
-  );
-
-  test('GeneradorComparacionMixta alterna qué formato gana', () {
-    final gen = GeneradorComparacionMixta(semilla: 13);
-    var ganaFraccion = 0;
-    var ganaDecimal = 0;
-    for (var intento = 0; intento < 60; intento++) {
-      final problema = gen.generar(dificultad: 2);
-      final mayor = problema.indiceMayor == 0 ? problema.a : problema.b;
-      if (mayor.esFraccion) {
-        ganaFraccion++;
-      } else {
-        ganaDecimal++;
-      }
-    }
-    // Esperamos al menos 20% en cada lado: que el niño no aprenda
-    // un atajo "siempre gana X formato".
-    expect(ganaFraccion, greaterThan(12),
-        reason: 'La fracción debe ganar en una proporción razonable.');
-    expect(ganaDecimal, greaterThan(12),
-        reason: 'El decimal debe ganar en una proporción razonable.');
+  test('GeneradorOrdenarDecimales identifica el orden correcto de menor a mayor',
+      () {
+    final gen = GeneradorOrdenarDecimales(semilla: 0);
+    final problema = gen.generarDesdeTrio(['0,5', '0,35', '0,8']);
+    // El orden ascendente real es: 0,35 < 0,5 < 0,8.
+    expect(problema.correcto, ['0,35', '0,5', '0,8']);
+    expect(problema.candidatos, hasLength(4));
+    expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
   });
 
-  test('DEC.03 está mapeada al tipo comparacionMixta', () {
+  test(
+    'GeneradorOrdenarDecimales incluye el distractor "más cifras = mayor"',
+    () {
+      final gen = GeneradorOrdenarDecimales(semilla: 0);
+      final problema = gen.generarDesdeTrio(['0,5', '0,35', '0,8']);
+      // El error sistemático: ordenar por número de cifras (0,8 < 0,5 < 0,35).
+      expect(
+        problema.candidatos.any(
+          (c) =>
+              c[0] == '0,8' && c[1] == '0,5' && c[2] == '0,35',
+        ),
+        isTrue,
+        reason: 'Debe incluir el orden por número de cifras como distractor.',
+      );
+    },
+  );
+
+  test('DEC.03 está mapeada al tipo ordenarDecimales', () {
     expect(skillsConPuzzleImplementado, contains('DEC.03'));
     expect(
       tipoParaSkillId('DEC.03'),
-      TipoFragmentoEnTejado.comparacionMixta,
+      TipoFragmentoEnTejado.ordenarDecimales,
     );
 
     final frag = FragmentoEnTejado(
       identificador: 'test',
-      numerador: 3,
-      denominador: 4,
-      tipo: TipoFragmentoEnTejado.comparacionMixta,
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.ordenarDecimales,
       decimalA: '0,5',
-      decimalB: 'izq',
+      decimalB: '0,35',
+      etiquetaDecimal: '0,5|0,35|0,8',
       xNormalizado: 0,
       yNormalizado: 0,
       instanteAparicion: DateTime(2026, 4, 27),
@@ -2012,7 +1993,7 @@ void main() {
   });
 
   test(
-    'GeneradorCaza dirigido a DEC.03 produce Fragmento con fracción y decimal',
+    'GeneradorCaza dirigido a DEC.03 produce Fragmento con tres decimales',
     () {
       final gen = GeneradorCaza(semilla: 51234);
       final ahora = DateTime(2026, 4, 27);
@@ -2022,12 +2003,13 @@ void main() {
           esquirlasAcumuladas: 25,
           ahora: ahora.add(Duration(seconds: intento)),
         );
-        expect(frag.tipo, TipoFragmentoEnTejado.comparacionMixta);
-        expect(frag.numerador, greaterThan(0));
-        expect(frag.denominador, greaterThan(0));
-        expect(frag.decimalA, isNotNull);
-        expect(frag.decimalA, contains(','));
-        expect(frag.decimalB, isIn(<String>['izq', 'der']));
+        expect(frag.tipo, TipoFragmentoEnTejado.ordenarDecimales);
+        // etiquetaDecimal lleva los 3 decimales separados por '|'.
+        final partes = (frag.etiquetaDecimal ?? '').split('|');
+        expect(partes, hasLength(3));
+        for (final p in partes) {
+          expect(p, contains(','));
+        }
       }
     },
   );

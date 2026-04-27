@@ -69,7 +69,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'FR.07') return TipoFragmentoEnTejado.comparacionDistinta;
   if (skillId == 'DIV.05') return TipoFragmentoEnTejado.primo;
   if (skillId == 'PROP.03') return TipoFragmentoEnTejado.reglaDeTres;
-  if (skillId == 'DEC.03') return TipoFragmentoEnTejado.comparacionMixta;
+  if (skillId == 'DEC.03') return TipoFragmentoEnTejado.ordenarDecimales;
   if (skillId == 'DIV.06' || skillId == 'DIV.07') {
     return TipoFragmentoEnTejado.mcmMcd;
   }
@@ -243,7 +243,7 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'DIV.05';
     case TipoFragmentoEnTejado.reglaDeTres:
       return 'PROP.03';
-    case TipoFragmentoEnTejado.comparacionMixta:
+    case TipoFragmentoEnTejado.ordenarDecimales:
       return 'DEC.03';
     case TipoFragmentoEnTejado.mcmMcd:
       // El modo lo lleva etiquetaDecimal: 'mcm' → DIV.07, 'mcd' → DIV.06.
@@ -347,9 +347,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Regla de tres directa: dos pasos mentales (producto cruzado y
       // división). Más exigente que un reconocimiento simple.
       return 1.2;
-    case TipoFragmentoEnTejado.comparacionMixta:
-      // Comparar formatos cruzados — exige convertir mentalmente uno
-      // de los dos. Pesa como una comparación distinta (FR.07).
+    case TipoFragmentoEnTejado.ordenarDecimales:
+      // Tres decimales con presentaciones engañosas — exige leer cada
+      // valor con cuidado. Pesa como redondeo decimal o un escalón
+      // sobre la comparación de dos.
       return 1.1;
     case TipoFragmentoEnTejado.mcmMcd:
       // Cálculo con dos descomposiciones — más exigente que la

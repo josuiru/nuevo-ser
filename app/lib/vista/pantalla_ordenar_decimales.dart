@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../dominio/problema_comparacion_mixta.dart';
+import '../dominio/problema_ordenar_decimales.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 
-/// Puzzle DEC.03: el niño ve una fracción y un decimal lado a lado y
-/// toca el de mayor valor. Mecánica de comparación cruzada — el niño
-/// no puede atajar mirando solo cifras o solo términos.
-class PantallaComparacionMixta extends StatefulWidget {
-  final ProblemaComparacionMixta? problemaPredeterminado;
+/// Puzzle DEC.03: el niño ve tres decimales presentados sin orden y
+/// elige el ordenamiento correcto de menor a mayor entre cuatro
+/// candidatos. Los distractores recuerdan al error de "más cifras =
+/// mayor", al invertido y a la lectura parcial.
+class PantallaOrdenarDecimales extends StatefulWidget {
+  final ProblemaOrdenarDecimales? problemaPredeterminado;
 
-  const PantallaComparacionMixta({
+  const PantallaOrdenarDecimales({
     super.key,
     this.problemaPredeterminado,
   });
 
   @override
-  State<PantallaComparacionMixta> createState() =>
-      _PantallaComparacionMixtaState();
+  State<PantallaOrdenarDecimales> createState() =>
+      _PantallaOrdenarDecimalesState();
 }
 
-class _PantallaComparacionMixtaState extends State<PantallaComparacionMixta>
+class _PantallaOrdenarDecimalesState extends State<PantallaOrdenarDecimales>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controladorCielo;
-  late ProblemaComparacionMixta _problema;
+  late ProblemaOrdenarDecimales _problema;
   int? _indiceSeleccionado;
   bool _revelado = false;
 
@@ -36,7 +37,7 @@ class _PantallaComparacionMixtaState extends State<PantallaComparacionMixta>
       duration: const Duration(seconds: 16),
     )..repeat();
     _problema = widget.problemaPredeterminado ??
-        GeneradorComparacionMixta().generar(dificultad: 1);
+        GeneradorOrdenarDecimales().generar(dificultad: 1);
   }
 
   @override
@@ -46,11 +47,7 @@ class _PantallaComparacionMixtaState extends State<PantallaComparacionMixta>
   }
 
   void _elegir(int indice) {
-    if (_revelado &&
-        _indiceSeleccionado != null &&
-        _problema.esCorrecta(_indiceSeleccionado!)) {
-      return;
-    }
+    if (_revelado && _indiceSeleccionado == _problema.indiceCorrecto) return;
     setState(() {
       _indiceSeleccionado = indice;
       _revelado = true;
@@ -121,7 +118,7 @@ class _PantallaComparacionMixtaState extends State<PantallaComparacionMixta>
                           ),
                           const Spacer(),
                           const Text(
-                            'COMPARAR',
+                            'ORDENAR',
                             style: TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
@@ -132,59 +129,37 @@ class _PantallaComparacionMixtaState extends State<PantallaComparacionMixta>
                           const SizedBox(width: 58),
                         ],
                       ),
-                      const SizedBox(height: 36),
+                      const SizedBox(height: 22),
                       const Text(
-                        '¿cuál es mayor?',
+                        'de menor a mayor',
                         style: TextStyle(
                           color: PaletaNeon.textoPrincipal,
-                          fontSize: 20,
-                          letterSpacing: 1.4,
+                          fontSize: 18,
+                          letterSpacing: 1.2,
                           fontWeight: FontWeight.w300,
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'piensa el valor, no la forma',
-                        style: TextStyle(
-                          color: PaletaNeon.textoTenue.withOpacity(0.8),
-                          fontSize: 12,
-                          letterSpacing: 1.4,
-                          fontStyle: FontStyle.italic,
-                        ),
+                      const SizedBox(height: 18),
+                      _FilaDecimalesPresentados(
+                        decimales: _problema.presentados,
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 30),
                       Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: _TarjetaOpcion(
-                                opcion: _problema.a,
-                                seleccionado: _indiceSeleccionado == 0,
-                                marcarCorrecto: _revelado &&
-                                    _indiceSeleccionado == 0 &&
-                                    _problema.indiceMayor == 0,
-                                marcarIncorrecto: _revelado &&
-                                    _indiceSeleccionado == 0 &&
-                                    _problema.indiceMayor != 0,
-                                alTocar: () => _elegir(0),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _TarjetaOpcion(
-                                opcion: _problema.b,
-                                seleccionado: _indiceSeleccionado == 1,
-                                marcarCorrecto: _revelado &&
-                                    _indiceSeleccionado == 1 &&
-                                    _problema.indiceMayor == 1,
-                                marcarIncorrecto: _revelado &&
-                                    _indiceSeleccionado == 1 &&
-                                    _problema.indiceMayor != 1,
-                                alTocar: () => _elegir(1),
-                              ),
-                            ),
-                          ],
+                        child: ListView.separated(
+                          itemCount: _problema.candidatos.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 12),
+                          itemBuilder: (_, indice) => _TarjetaCandidato(
+                            ordenamiento: _problema.candidatos[indice],
+                            seleccionado: _indiceSeleccionado == indice,
+                            marcarCorrecto: _revelado &&
+                                _indiceSeleccionado == indice &&
+                                indice == _problema.indiceCorrecto,
+                            marcarIncorrecto: _revelado &&
+                                _indiceSeleccionado == indice &&
+                                indice != _problema.indiceCorrecto,
+                            alTocar: () => _elegir(indice),
+                          ),
                         ),
                       ),
                     ],
@@ -199,15 +174,56 @@ class _PantallaComparacionMixtaState extends State<PantallaComparacionMixta>
   }
 }
 
-class _TarjetaOpcion extends StatelessWidget {
-  final OpcionComparacionMixta opcion;
+/// Los tres decimales presentados sin ningún indicio del orden — el
+/// niño los lee y compara mentalmente.
+class _FilaDecimalesPresentados extends StatelessWidget {
+  final List<String> decimales;
+
+  const _FilaDecimalesPresentados({required this.decimales});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: PaletaNeon.violetaBase.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: PaletaNeon.azulNeon, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: PaletaNeon.azulNeon.withOpacity(0.4),
+            blurRadius: 20,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          for (final decimal in decimales)
+            Text(
+              decimal,
+              style: const TextStyle(
+                color: PaletaNeon.textoPrincipal,
+                fontSize: 28,
+                fontWeight: FontWeight.w300,
+                letterSpacing: 1.4,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TarjetaCandidato extends StatelessWidget {
+  final List<String> ordenamiento;
   final bool seleccionado;
   final bool marcarCorrecto;
   final bool marcarIncorrecto;
   final VoidCallback alTocar;
 
-  const _TarjetaOpcion({
-    required this.opcion,
+  const _TarjetaCandidato({
+    required this.ordenamiento,
     required this.seleccionado,
     required this.marcarCorrecto,
     required this.marcarIncorrecto,
@@ -233,76 +249,49 @@ class _TarjetaOpcion extends StatelessWidget {
       onTap: alTocar,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
-        constraints: const BoxConstraints(minHeight: 220),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
           color: PaletaNeon.fondoMedio.withOpacity(0.55),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: colorBorde, width: 1.8),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colorBorde, width: 1.6),
           boxShadow: brilloIntenso
               ? [
                   BoxShadow(
                     color: colorBorde.withOpacity(0.4),
-                    blurRadius: 22,
+                    blurRadius: 16,
                   ),
                 ]
               : const [],
         ),
-        child: Center(
-          child: opcion.esFraccion
-              ? _ContenidoFraccion(etiqueta: opcion.etiqueta, color: colorTexto)
-              : Text(
-                  opcion.etiqueta,
-                  style: TextStyle(
-                    color: colorTexto,
-                    fontSize: 56,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: 1.4,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (var i = 0; i < ordenamiento.length; i++) ...[
+              Text(
+                ordenamiento[i],
+                style: TextStyle(
+                  color: colorTexto,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              if (i < ordenamiento.length - 1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    '<',
+                    style: TextStyle(
+                      color: colorTexto.withOpacity(0.55),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w300,
+                    ),
                   ),
                 ),
+            ],
+          ],
         ),
       ),
-    );
-  }
-}
-
-class _ContenidoFraccion extends StatelessWidget {
-  /// La etiqueta llega como "3/4"; partimos por la barra para apilar.
-  final String etiqueta;
-  final Color color;
-
-  const _ContenidoFraccion({required this.etiqueta, required this.color});
-
-  @override
-  Widget build(BuildContext contexto) {
-    final partes = etiqueta.split('/');
-    final numerador = partes[0];
-    final denominador = partes.length > 1 ? partes[1] : '1';
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          numerador,
-          style: TextStyle(
-            color: color,
-            fontSize: 48,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-        Container(
-          width: 56,
-          height: 2,
-          color: color,
-          margin: const EdgeInsets.symmetric(vertical: 6),
-        ),
-        Text(
-          denominador,
-          style: TextStyle(
-            color: color,
-            fontSize: 48,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-      ],
     );
   }
 }

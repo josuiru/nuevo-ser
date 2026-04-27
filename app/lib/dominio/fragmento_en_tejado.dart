@@ -49,8 +49,9 @@ import 'package:flutter/foundation.dart';
 /// - [reglaDeTres]: puzzle PROP.03. "a → b · c → ?" + cuatro
 ///   resultados candidatos. Mecánica de regla de tres directa con
 ///   trampas pedagógicas (relación invertida, suma de los tres).
-/// - [comparacionMixta]: puzzle DEC.03. Una fracción y un decimal lado
-///   a lado, tocar el de mayor valor. Comparación cruzada entre formatos.
+/// - [ordenarDecimales]: puzzle DEC.03. Tres decimales sin ordenar y
+///   cuatro candidatos con permutaciones; el niño elige la que va de
+///   menor a mayor. Distractores curados al error "más cifras = mayor".
 /// - [mcmMcd]: puzzle DIV.06/DIV.07. Dos números y la pregunta sobre
 ///   MCM (DIV.07) o MCD (DIV.06). Comparten pantalla y motor; el modo
 ///   lo fija la skill.
@@ -84,7 +85,7 @@ enum TipoFragmentoEnTejado {
   comparacionDistinta,
   primo,
   reglaDeTres,
-  comparacionMixta,
+  ordenarDecimales,
   mcmMcd,
   jerarquia,
   comparacionMedia,

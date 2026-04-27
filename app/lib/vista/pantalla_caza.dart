@@ -14,7 +14,7 @@ import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/problema_comparacion_decimal.dart';
 import '../dominio/problema_comparacion_distinta.dart';
-import '../dominio/problema_comparacion_mixta.dart';
+import '../dominio/problema_ordenar_decimales.dart';
 import '../dominio/problema_comparacion_unidad.dart';
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_divisibilidad.dart';
@@ -40,7 +40,7 @@ import 'escenario.dart';
 import 'pantalla_combate_enfoque.dart';
 import 'pantalla_comparacion.dart';
 import 'pantalla_comparacion_distinta.dart';
-import 'pantalla_comparacion_mixta.dart';
+import 'pantalla_ordenar_decimales.dart';
 import 'pantalla_comparacion_unidad.dart';
 import 'pantalla_decimal.dart';
 import 'pantalla_dual.dart';
@@ -279,7 +279,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacionDistinta => 3,
         TipoFragmentoEnTejado.primo => 1,
         TipoFragmentoEnTejado.reglaDeTres => 3,
-        TipoFragmentoEnTejado.comparacionMixta => 2,
+        TipoFragmentoEnTejado.ordenarDecimales => 2,
         TipoFragmentoEnTejado.mcmMcd => 3,
         TipoFragmentoEnTejado.jerarquia => 3,
         TipoFragmentoEnTejado.comparacionMedia => 2,
@@ -568,22 +568,23 @@ class _PantallaCazaState extends State<PantallaCaza>
             ),
           ),
         );
-      case TipoFragmentoEnTejado.comparacionMixta:
-        // numerador/denominador → fracción; decimalA → etiqueta del
-        // decimal; decimalB → 'izq'/'der' para reproducir el orden.
-        final fraccion =
-            Fraccion(fragmento.numerador, fragmento.denominador);
-        final etiquetaDecimal = fragmento.decimalA ?? '0,5';
-        final fraccionALaIzquierda = fragmento.decimalB == 'izq';
+      case TipoFragmentoEnTejado.ordenarDecimales:
+        // decimalA, decimalB y etiquetaDecimal recomponen los tres
+        // decimales presentados (la etiqueta carga los tres
+        // separados por '|').
+        final partes = (fragmento.etiquetaDecimal ?? '').split('|');
+        final trio = partes.length == 3
+            ? partes
+            : <String>[
+                fragmento.decimalA ?? '0,5',
+                fragmento.decimalB ?? '0,3',
+                '0,8',
+              ];
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => PantallaComparacionMixta(
-              problemaPredeterminado: GeneradorComparacionMixta()
-                  .generarDesdeTerminos(
-                fraccion: fraccion,
-                etiquetaDecimal: etiquetaDecimal,
-                fraccionALaIzquierda: fraccionALaIzquierda,
-              ),
+            builder: (_) => PantallaOrdenarDecimales(
+              problemaPredeterminado: GeneradorOrdenarDecimales()
+                  .generarDesdeTrio(trio),
             ),
           ),
         );
