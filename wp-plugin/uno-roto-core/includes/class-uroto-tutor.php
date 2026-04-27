@@ -150,4 +150,25 @@ class UROTO_Tutor {
 			array( '%s', '%s', '%s', '%s', '%s', '%d' )
 		);
 	}
+
+	/**
+	 * Borra entradas de caché caducadas (> TTL_CACHE). Llamado por
+	 * un cron diario. La purga al leer (en `leer_cache`) solo limpia
+	 * lo que se vuelve a consultar — sin esto, las entradas viejas
+	 * que nadie pregunta crecerían sin techo en BD.
+	 *
+	 * @return int Número de filas borradas.
+	 */
+	public static function purgar_caduca(): int {
+		global $wpdb;
+		$tabla  = self::nombre_tabla();
+		$umbral = gmdate( 'Y-m-d H:i:s', time() - self::TTL_CACHE );
+		$borradas = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$tabla} WHERE creado_en < %s",
+				$umbral
+			)
+		);
+		return (int) $borradas;
+	}
 }
