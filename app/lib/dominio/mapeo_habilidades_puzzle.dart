@@ -89,7 +89,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
       skillId == 'DEC.07') {
     return TipoFragmentoEnTejado.operacionDecimal;
   }
-  if (skillId == 'PROP.04') return TipoFragmentoEnTejado.porcentaje;
+  if (skillId == 'PROP.04') return TipoFragmentoEnTejado.porcentajeCantidad;
   if (skillId == 'PROP.01' || skillId == 'PROP.02') {
     return TipoFragmentoEnTejado.proporcional;
   }
@@ -193,6 +193,11 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.decimal:
       return 'DEC.08';
     case TipoFragmentoEnTejado.porcentaje:
+      // El puzzle "% → fracción" no es PROP.04 estricto (eso lo hace
+      // porcentajeCantidad), pero ejercita el concepto de porcentaje
+      // como fracción de denominador 100 — sub-paso real de PROP.04.
+      return 'PROP.04';
+    case TipoFragmentoEnTejado.porcentajeCantidad:
       return 'PROP.04';
     case TipoFragmentoEnTejado.impropio:
       return 'FR.12';
@@ -363,6 +368,9 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:
       return 1.0;
+    case TipoFragmentoEnTejado.porcentajeCantidad:
+      // Cálculo con dos pasos (multiplicar y dividir entre 100).
+      return 1.2;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

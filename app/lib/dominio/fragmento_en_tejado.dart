@@ -56,6 +56,8 @@ import 'package:flutter/foundation.dart';
 ///   lo fija la skill.
 /// - [jerarquia]: puzzle OP.01. Expresión "a op b op c" con prioridad
 ///   de × y ÷. Distractor estrella: el cálculo izquierda-a-derecha.
+/// - [porcentajeCantidad]: puzzle PROP.04. "El X % de Y = ?" + cuatro
+///   resultados candidatos. Mecánica de cálculo directo con trampas.
 /// - [comparacionMedia]: puzzle FR.03. Una fracción y tres botones
 ///   (<1/2, =1/2, >1/2) con un rectángulo de referencia mostrando la
 ///   mitad. Generador con sesgo a casos contraintuitivos (5/9, 7/13).
@@ -86,6 +88,7 @@ enum TipoFragmentoEnTejado {
   mcmMcd,
   jerarquia,
   comparacionMedia,
+  porcentajeCantidad,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

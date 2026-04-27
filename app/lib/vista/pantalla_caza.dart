@@ -26,6 +26,7 @@ import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_regla_de_tres.dart';
 import '../dominio/problema_primo.dart';
 import '../dominio/problema_comparacion_media.dart';
+import '../dominio/problema_porcentaje_cantidad.dart';
 import '../dominio/problema_mixto_a_impropio.dart'
     show ProblemaMixtoAImpropio;
 import '../dominio/problema_redondeo_decimal.dart';
@@ -56,6 +57,7 @@ import 'pantalla_mcm_mcd.dart';
 import 'pantalla_regla_de_tres.dart';
 import 'pantalla_primo.dart';
 import 'pantalla_comparacion_media.dart';
+import 'pantalla_porcentaje_cantidad.dart';
 import 'pantalla_mixto_a_impropio.dart';
 import 'pantalla_redondeo_decimal.dart';
 import 'pantalla_porcentaje.dart';
@@ -281,6 +283,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.mcmMcd => 3,
         TipoFragmentoEnTejado.jerarquia => 3,
         TipoFragmentoEnTejado.comparacionMedia => 2,
+        TipoFragmentoEnTejado.porcentajeCantidad => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -630,6 +633,16 @@ class _PantallaCazaState extends State<PantallaCaza>
                   .generarDesdeFraccion(
                 Fraccion(fragmento.numerador, fragmento.denominador),
               ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.porcentajeCantidad:
+        // numerador → porcentaje, denominador → cantidad.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaPorcentajeCantidad(
+              problemaPredeterminado: GeneradorPorcentajeCantidad()
+                  .generarDesdePar(fragmento.numerador, fragmento.denominador),
             ),
           ),
         );

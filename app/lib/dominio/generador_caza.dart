@@ -25,6 +25,7 @@ import 'problema_comparacion_distinta.dart'
 import 'problema_comparacion_mixta.dart' show GeneradorComparacionMixta;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_comparacion_media.dart' show GeneradorComparacionMedia;
+import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
 import 'problema_regla_de_tres.dart' show GeneradorReglaDeTres;
 import 'problema_primo.dart' show GeneradorPrimo;
@@ -158,6 +159,25 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.porcentajeCantidad) {
+      final problema = GeneradorPorcentajeCantidad(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // Empaquetamos % en numerador y cantidad en denominador.
+        numerador: problema.porcentaje,
+        denominador: problema.cantidad,
+        tipo: tipo,
+        etiquetaDecimal: '${problema.porcentaje}%·${problema.cantidad}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -877,6 +897,10 @@ class GeneradorCaza {
         // FR.03 es de las primeras habilidades de fracciones — entra
         // desde el primer tier para que aparezca pronto.
         return dificultad >= 1;
+      case TipoFragmentoEnTejado.porcentajeCantidad:
+        // PROP.04 entra cuando el niño ya tiene base de fracciones y
+        // decimales — cálculo, no reconocimiento.
+        return dificultad >= 3;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

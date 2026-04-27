@@ -25,6 +25,7 @@ import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
 import 'package:uno_roto/dominio/problema_regla_de_tres.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_comparacion_media.dart';
+import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
@@ -2307,6 +2308,71 @@ void main() {
         expect(frag.tipo, TipoFragmentoEnTejado.comparacionMedia);
         expect(frag.numerador, greaterThanOrEqualTo(1));
         expect(frag.denominador, greaterThanOrEqualTo(2));
+      }
+    },
+  );
+
+  // ═══ Puzzle de porcentaje de cantidad (PROP.04) ═══
+
+  test(
+    'GeneradorPorcentajeCantidad calcula correctamente con resultado entero',
+    () {
+      final gen = GeneradorPorcentajeCantidad(semilla: 0);
+      final problema = gen.generarDesdePar(25, 80);
+      expect(problema.resultado, 20);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test(
+    'GeneradorPorcentajeCantidad incluye trampas pedagógicas (% literal y producto sin dividir)',
+    () {
+      final gen = GeneradorPorcentajeCantidad(semilla: 0);
+      final problema = gen.generarDesdePar(25, 80);
+      expect(problema.candidatos, contains(25));
+      expect(problema.candidatos, contains(2000));
+      expect(problema.candidatos, contains(60));
+    },
+  );
+
+  test('PROP.04 está mapeada al tipo porcentajeCantidad', () {
+    expect(skillsConPuzzleImplementado, contains('PROP.04'));
+    expect(
+      tipoParaSkillId('PROP.04'),
+      TipoFragmentoEnTejado.porcentajeCantidad,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 25,
+      denominador: 80,
+      tipo: TipoFragmentoEnTejado.porcentajeCantidad,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'PROP.04');
+  });
+
+  test(
+    'GeneradorCaza dirigido a PROP.04 produce Fragmentos con par válido',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'PROP.04',
+          esquirlasAcumuladas: 60,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.porcentajeCantidad);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        // Si el resultado tiene que ser entero, % × cantidad debe ser
+        // múltiplo de 100.
+        expect((frag.numerador * frag.denominador) % 100, 0);
       }
     },
   );
