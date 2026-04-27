@@ -4,7 +4,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../datos/cache_tutor.dart';
 import '../datos/catalogo_habilidades.dart';
+import '../datos/cliente_tutor.dart';
+import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/distrito.dart';
 import '../dominio/fragmento_en_tejado.dart';
@@ -59,6 +62,7 @@ import '../dominio/problema_mixto_a_impropio.dart'
 import '../dominio/problema_redondeo_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
+import '../dominio/tutor/servicio_tutor.dart';
 import '../nucleo/paleta.dart';
 import '../sonido/capa_audio.dart';
 import '../sonido/catalogo_sonidos.dart';
@@ -117,6 +121,7 @@ import 'pantalla_redondeo_decimal.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pantalla_simplificar.dart';
+import 'pantalla_tutor.dart';
 import 'pintor_fragmento_tejado.dart';
 import 'sora_presencia.dart';
 
@@ -147,6 +152,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   late final GeneradorCaza _generador;
   MotorMaestria? _motorMaestria;
   SelectorHabilidades? _selectorHabilidades;
+  ServicioTutor? _servicioTutor;
   final List<FragmentoEnTejado> _activos = [];
   final Map<String, DateTime> _instanteAperturaPuzzle = {};
 
@@ -170,6 +176,26 @@ class _PantallaCazaState extends State<PantallaCaza>
     )..repeat();
     _cargarEstadoInicial();
     _inicializarMotorMaestria();
+    _inicializarTutor();
+  }
+
+  /// Construye el `ServicioTutor` solo si hay token de backend
+  /// guardado. Sin token no podemos llamar al servidor; en ese caso
+  /// dejamos el servicio en null y la pantalla nunca ofrece al niño
+  /// llamar a Eco.
+  Future<void> _inicializarTutor() async {
+    final token = await widget.repositorio.cargarTokenBackend();
+    if (token == null || token.isEmpty) return;
+    if (!mounted) return;
+    _servicioTutor = ServicioTutor(
+      cache: CacheTutor(),
+      cliente: ClienteTutor(
+        urlBase: ConfigApi.urlBaseLocal,
+        hostOverride: ConfigApi.hostLocal,
+      ),
+      repositorio: widget.repositorio,
+      proveedorToken: () => token,
+    );
   }
 
   Future<void> _inicializarMotorMaestria() async {
@@ -311,7 +337,14 @@ class _PantallaCazaState extends State<PantallaCaza>
     final capturado = await _abrirPuzzleSegunTipo(fragmento);
     if (!mounted) return;
     _registrarResultadoMaestria(fragmento, capturado == true);
+    _registrarEnTutor(fragmento, capturado == true);
     setState(() => _activos.remove(fragmento));
+    if (capturado != true) {
+      // El Fragmento se le escapó. Antes de continuar, si el niño
+      // está atascado en esta habilidad, le ofrecemos hablar con Eco.
+      await _quizasOfrecerTutor(fragmento);
+      if (!mounted) return;
+    }
     if (capturado == true) {
       final esquirlasGanadas = switch (fragmento.tipo) {
         TipoFragmentoEnTejado.espejo => 2,
@@ -1169,6 +1202,100 @@ class _PantallaCazaState extends State<PantallaCaza>
       dificultad: dificultadEstimadaDelPuzzle(fragmento),
       duracionSegundos: duracionSeg,
     );
+  }
+
+  /// Registra el resultado en el contador del tutor (fallos
+  /// consecutivos por habilidad). Silencioso si no hay servicio:
+  /// modo offline, sin token, etc.
+  Future<void> _registrarEnTutor(
+    FragmentoEnTejado fragmento,
+    bool acertado,
+  ) async {
+    final servicio = _servicioTutor;
+    if (servicio == null) return;
+    await servicio.registrarResultado(
+      idHabilidad: idHabilidadPrincipal(fragmento),
+      acierto: acertado,
+    );
+  }
+
+  /// Si el niño se ha atascado en esta habilidad y la política dice
+  /// que toca, le mostramos un dialog cariñoso con la voz de Sora
+  /// para que pueda hablar con Eco. Si rechaza, no insistimos —
+  /// `registrarOferta` desde la propia `PantallaTutor` arranca el
+  /// cooldown solo cuando entra de verdad.
+  Future<void> _quizasOfrecerTutor(FragmentoEnTejado fragmento) async {
+    final servicio = _servicioTutor;
+    if (servicio == null) return;
+    final idHabilidad = idHabilidadPrincipal(fragmento);
+    if (!await servicio.deberiaOfrecer(idHabilidad)) return;
+    if (!mounted) return;
+
+    final acepta = await showDialog<bool>(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (contexto) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: const Text(
+          '¿Hablo con Eco?',
+          style: TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 18,
+            fontWeight: FontWeight.w300,
+            letterSpacing: 2,
+          ),
+        ),
+        content: const Text(
+          'Va dos rangos por delante. Te puede dar una pista, no la solución.',
+          style: TextStyle(
+            color: PaletaNeon.textoTenue,
+            fontSize: 14,
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(false),
+            child: const Text(
+              'sigo solo',
+              style: TextStyle(color: PaletaNeon.textoTenue),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(true),
+            child: const Text(
+              'sí',
+              style: TextStyle(color: PaletaNeon.violetaNeon),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (acepta != true || !mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaTutor(
+          servicio: servicio,
+          idHabilidad: idHabilidad,
+          nombreHabilidad: _nombreVisibleDeHabilidad(idHabilidad),
+          contextoFragmento: _contextoFragmento(fragmento),
+        ),
+      ),
+    );
+  }
+
+  String _nombreVisibleDeHabilidad(String id) {
+    final catalogo = _selectorHabilidades?.catalogo;
+    if (catalogo == null) return id;
+    return catalogo.porId(id)?.nombre ?? id;
+  }
+
+  /// Texto descriptivo del Fragmento que el backend recibe como
+  /// contexto. No se muestra al niño — sirve a Anthropic para saber
+  /// qué tiene delante.
+  String _contextoFragmento(FragmentoEnTejado fragmento) {
+    final tipo = fragmento.tipo.name;
+    return '$tipo n=${fragmento.numerador} d=${fragmento.denominador}';
   }
 
   void _comentarTrasCaptura() {

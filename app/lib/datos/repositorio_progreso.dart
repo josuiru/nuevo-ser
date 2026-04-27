@@ -18,6 +18,7 @@ import '../dominio/tutor/disparador_tutor.dart';
 class RepositorioProgreso {
   static const _claveIdPerfilActivo = 'uroto.perfil_activo_id';
   static const _claveListaPerfiles = 'uroto.perfiles_lista';
+  static const _claveTokenBackend = 'uroto.token_backend';
   static const idPerfilPorDefecto = 'principal';
 
   // Sufijos (sin prefijo de perfil).
@@ -101,6 +102,27 @@ class RepositorioProgreso {
 
   Future<String> _clave(String sufijo) async =>
       '${await _prefijoActivo()}$sufijo';
+
+  // ═══ Token del backend (global, no por-perfil) ═══
+
+  /// Token JWT del backend para llamadas al tutor / sync. Es global
+  /// (todos los perfiles del dispositivo comparten autenticación) —
+  /// la separación lógica entre niños la lleva el backend con el
+  /// `nino_id` codificado en el propio token.
+  Future<String?> cargarTokenBackend() async {
+    final prefs = await _prefs();
+    return prefs.getString(_claveTokenBackend);
+  }
+
+  Future<void> guardarTokenBackend(String token) async {
+    final prefs = await _prefs();
+    await prefs.setString(_claveTokenBackend, token);
+  }
+
+  Future<void> borrarTokenBackend() async {
+    final prefs = await _prefs();
+    await prefs.remove(_claveTokenBackend);
+  }
 
   // ═══ Gestión de perfiles ═══
 

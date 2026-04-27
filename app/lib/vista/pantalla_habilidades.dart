@@ -239,6 +239,9 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         nombreTutor: 'Tutor Prueba',
         nombreNino: nombreJugador,
       );
+      // Persistimos el token para que el resto de la app (tutor IA)
+      // pueda usarlo sin pasar por este flujo otra vez.
+      await widget.repositorio.guardarTokenBackend(auth.token);
 
       final progreso =
           await widget.repositorio.exportarProgresoParaSync();

@@ -4114,6 +4114,40 @@ void main() {
     },
   );
 
+  // ═══ Token global del backend (compartido entre perfiles) ═══
+  group('RepositorioProgreso — token backend', () {
+    test('guardar y cargar token', () async {
+      final repo = RepositorioProgreso();
+      expect(await repo.cargarTokenBackend(), isNull);
+      await repo.guardarTokenBackend('jwt.abc.def');
+      expect(await repo.cargarTokenBackend(), 'jwt.abc.def');
+    });
+
+    test('borrar token deja null', () async {
+      final repo = RepositorioProgreso();
+      await repo.guardarTokenBackend('jwt.abc.def');
+      await repo.borrarTokenBackend();
+      expect(await repo.cargarTokenBackend(), isNull);
+    });
+
+    test('token sobrevive al cambio de perfil', () async {
+      final repo = RepositorioProgreso();
+      await repo.guardarTokenBackend('jwt.compartido');
+      await repo.crearPerfil('otro');
+      await repo.cambiarAPerfil('otro');
+      expect(await repo.cargarTokenBackend(), 'jwt.compartido');
+    });
+
+    test('reiniciar() del perfil activo no toca el token global', () async {
+      final repo = RepositorioProgreso();
+      await repo.guardarTokenBackend('jwt.x');
+      await repo.guardarEsquirlas(50);
+      await repo.reiniciar();
+      expect(await repo.cargarEsquirlas(), 0);
+      expect(await repo.cargarTokenBackend(), 'jwt.x');
+    });
+  });
+
   // ═══ Tutor IA — Filtro de seguridad ═══
   group('FiltroSeguridad — pregunta', () {
     const filtro = FiltroSeguridad();
