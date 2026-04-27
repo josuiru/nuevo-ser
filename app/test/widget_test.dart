@@ -31,6 +31,7 @@ import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
 import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
+import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2547,6 +2548,72 @@ void main() {
           () => unidadDesdeSimbolo(frag.decimalB!),
           returnsNormally,
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de jerarquía con fracciones (OP.02) ═══
+
+  test(
+    'GeneradorJerarquiaFracciones produce caso con resultado correcto',
+    () {
+      final gen = GeneradorJerarquiaFracciones(semilla: 0);
+      final problema = gen.generarPorIndice(0);
+      // Caso 0: 1/2 + 1/4 × 2 = 1/2 + 1/2 = 1.
+      expect(problema.resultado.numerador, 1);
+      expect(problema.resultado.denominador, 1);
+      expect(problema.candidatos, hasLength(4));
+    },
+  );
+
+  test(
+    'GeneradorJerarquiaFracciones incluye distractor "izquierda-a-derecha"',
+    () {
+      // Caso 0: con prio = 1; izquierda-a-derecha = (3/4) × 2 = 3/2.
+      final gen = GeneradorJerarquiaFracciones(semilla: 0);
+      final problema = gen.generarPorIndice(0);
+      final tiene32 = problema.candidatos.any(
+          (f) => f.numerador == 3 && f.denominador == 2);
+      expect(tiene32, isTrue,
+          reason: 'el cálculo izquierda-a-derecha debe estar entre los candidatos');
+    },
+  );
+
+  test('OP.02 está mapeada al tipo jerarquiaFracciones', () {
+    expect(skillsConPuzzleImplementado, contains('OP.02'));
+    expect(
+      tipoParaSkillId('OP.02'),
+      TipoFragmentoEnTejado.jerarquiaFracciones,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.jerarquiaFracciones,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'OP.02');
+  });
+
+  test(
+    'GeneradorCaza dirigido a OP.02 produce Fragmentos con índice válido',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'OP.02',
+          esquirlasAcumuladas: 110,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.jerarquiaFracciones);
+        expect(frag.numerador, lessThan(
+            GeneradorJerarquiaFracciones.cantidadDeCasosCurados));
+        expect(frag.numerador, greaterThanOrEqualTo(0));
       }
     },
   );

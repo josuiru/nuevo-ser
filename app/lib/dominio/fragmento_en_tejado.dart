@@ -94,6 +94,10 @@ import 'package:flutter/foundation.dart';
 /// - [superficie]: puzzle MED.05. "5 m² = ? cm²" → 50000 (NO 500). El
 ///   sistema de áreas multiplica por 100 (no 10) por peldaño — la
 ///   trampa estrella es aplicar el factor lineal por inercia.
+/// - [jerarquiaFracciones]: puzzle OP.02. "1/2 + 1/4 × 2/3" + cuatro
+///   candidatos. Extiende la prioridad de × y ÷ a fracciones; trampa
+///   estrella: izquierda-a-derecha. Casos curados con resultado en
+///   forma fraccionaria simplificada.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -132,6 +136,7 @@ enum TipoFragmentoEnTejado {
   tiempo,
   aumentoDescuento,
   superficie,
+  jerarquiaFracciones,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -30,6 +30,7 @@ import '../dominio/problema_longitud.dart';
 import '../dominio/problema_masa_capacidad.dart';
 import '../dominio/problema_porcentaje_de.dart';
 import '../dominio/problema_aumento_descuento.dart';
+import '../dominio/problema_jerarquia_fracciones.dart';
 import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
@@ -71,6 +72,7 @@ import 'pantalla_longitud.dart';
 import 'pantalla_masa_capacidad.dart';
 import 'pantalla_porcentaje_de.dart';
 import 'pantalla_aumento_descuento.dart';
+import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
 import 'pantalla_tiempo.dart';
 import 'pantalla_mcm_mcd.dart';
@@ -314,6 +316,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.tiempo => 2,
         TipoFragmentoEnTejado.aumentoDescuento => 3,
         TipoFragmentoEnTejado.superficie => 3,
+        TipoFragmentoEnTejado.jerarquiaFracciones => 4,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -729,6 +732,16 @@ class _PantallaCazaState extends State<PantallaCaza>
                 unidadDestino:
                     unidadDesdeSimbolo(fragmento.decimalB ?? 'cm'),
               ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.jerarquiaFracciones:
+        // numerador → índice del caso curado.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaJerarquiaFracciones(
+              problemaPredeterminado: GeneradorJerarquiaFracciones()
+                  .generarPorIndice(fragmento.numerador),
             ),
           ),
         );
