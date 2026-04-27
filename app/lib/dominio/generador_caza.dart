@@ -24,6 +24,8 @@ import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_comparacion_mixta.dart' show GeneradorComparacionMixta;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
+import 'problema_representacion_fraccion.dart'
+    show GeneradorRepresentacionFraccion;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_primo.dart' show GeneradorPrimo;
@@ -157,6 +159,23 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.representacionFraccion) {
+      final problema = GeneradorRepresentacionFraccion(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.numerador,
+        denominador: problema.denominador,
+        tipo: tipo,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -853,6 +872,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.jerarquia:
         // OP.01 introduce la prioridad de operaciones en Aprendiz III.
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.representacionFraccion:
+        // FR.03 es de las primeras habilidades de fracciones — entra
+        // desde el primer tier para que aparezca pronto.
+        return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

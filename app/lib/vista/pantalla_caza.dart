@@ -25,6 +25,7 @@ import '../dominio/problema_jerarquia.dart';
 import '../dominio/problema_mcm_mcd.dart';
 import '../dominio/problema_porcentaje_cantidad.dart';
 import '../dominio/problema_primo.dart';
+import '../dominio/problema_representacion_fraccion.dart';
 import '../dominio/problema_mixto_a_impropio.dart'
     show ProblemaMixtoAImpropio;
 import '../dominio/problema_redondeo_decimal.dart';
@@ -54,6 +55,7 @@ import 'pantalla_jerarquia.dart';
 import 'pantalla_mcm_mcd.dart';
 import 'pantalla_porcentaje_cantidad.dart';
 import 'pantalla_primo.dart';
+import 'pantalla_representacion_fraccion.dart';
 import 'pantalla_mixto_a_impropio.dart';
 import 'pantalla_redondeo_decimal.dart';
 import 'pantalla_porcentaje.dart';
@@ -278,6 +280,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacionMixta => 2,
         TipoFragmentoEnTejado.mcmMcd => 3,
         TipoFragmentoEnTejado.jerarquia => 3,
+        TipoFragmentoEnTejado.representacionFraccion => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -611,6 +614,17 @@ class _PantallaCazaState extends State<PantallaCaza>
                 c: fragmento.numeradorB ?? 1,
                 op1: op1,
                 op2: fragmento.operador ?? OperadorAritmetico.suma,
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.representacionFraccion:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaRepresentacionFraccion(
+              problemaPredeterminado: GeneradorRepresentacionFraccion()
+                  .generarDesdeFraccion(
+                Fraccion(fragmento.numerador, fragmento.denominador),
               ),
             ),
           ),

@@ -55,6 +55,9 @@ import 'package:flutter/foundation.dart';
 ///   lo fija la skill.
 /// - [jerarquia]: puzzle OP.01. Expresión "a op b op c" con prioridad
 ///   de × y ÷. Distractor estrella: el cálculo izquierda-a-derecha.
+/// - [representacionFraccion]: puzzle FR.03. Rectángulo dividido con
+///   partes coloreadas; el niño elige la fracción equivalente.
+///   Primera mecánica visual del juego.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -81,6 +84,7 @@ enum TipoFragmentoEnTejado {
   comparacionMixta,
   mcmMcd,
   jerarquia,
+  representacionFraccion,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

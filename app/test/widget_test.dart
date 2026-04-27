@@ -24,6 +24,7 @@ import 'package:uno_roto/dominio/problema_jerarquia.dart';
 import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
+import 'package:uno_roto/dominio/problema_representacion_fraccion.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
@@ -2202,6 +2203,80 @@ void main() {
         expect(frag.numeradorB, isNotNull);
         expect(frag.operador, isNotNull);
         expect(frag.decimalA, isNotNull);
+      }
+    },
+  );
+
+  // ═══ Puzzle de representación de fracción (FR.03) ═══
+
+  test(
+    'GeneradorRepresentacionFraccion produce 4 candidatos con el correcto entre ellos',
+    () {
+      final gen = GeneradorRepresentacionFraccion(semilla: 17);
+      final problema = gen.generar(dificultad: 1);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+      final correcta = problema.candidatos[problema.indiceCorrecto];
+      expect(correcta.numerador, problema.numerador);
+      expect(correcta.denominador, problema.denominador);
+    },
+  );
+
+  test(
+    'GeneradorRepresentacionFraccion incluye distractores invertido y complemento',
+    () {
+      final gen = GeneradorRepresentacionFraccion(semilla: 0);
+      final problema = gen.generarDesdeFraccion(const Fraccion(3, 4));
+      // Invertido: 4/3.
+      expect(
+        problema.candidatos.any(
+            (f) => f.numerador == 4 && f.denominador == 3),
+        isTrue,
+      );
+      // Complemento: 1/4 (denominador − numerador).
+      expect(
+        problema.candidatos.any(
+            (f) => f.numerador == 1 && f.denominador == 4),
+        isTrue,
+      );
+    },
+  );
+
+  test('FR.03 está mapeada al tipo representacionFraccion', () {
+    expect(skillsConPuzzleImplementado, contains('FR.03'));
+    expect(
+      tipoParaSkillId('FR.03'),
+      TipoFragmentoEnTejado.representacionFraccion,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 3,
+      denominador: 4,
+      tipo: TipoFragmentoEnTejado.representacionFraccion,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.03');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.03 produce Fragmentos con fracción válida',
+    () {
+      final gen = GeneradorCaza(semilla: 12345);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.03',
+          esquirlasAcumuladas: 8,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.representacionFraccion);
+        expect(frag.numerador, greaterThanOrEqualTo(1));
+        expect(frag.denominador, greaterThanOrEqualTo(2));
+        expect(frag.numerador, lessThan(frag.denominador));
       }
     },
   );
