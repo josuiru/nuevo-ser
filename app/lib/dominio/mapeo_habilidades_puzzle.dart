@@ -52,6 +52,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'MED.02',
   'PROP.05',
   'MED.03',
+  'PROP.06',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -73,6 +74,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'MED.02') return TipoFragmentoEnTejado.masaCapacidad;
   if (skillId == 'PROP.05') return TipoFragmentoEnTejado.porcentajeDe;
   if (skillId == 'MED.03') return TipoFragmentoEnTejado.tiempo;
+  if (skillId == 'PROP.06') return TipoFragmentoEnTejado.aumentoDescuento;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -272,6 +274,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'PROP.05';
     case TipoFragmentoEnTejado.tiempo:
       return 'MED.03';
+    case TipoFragmentoEnTejado.aumentoDescuento:
+      return 'PROP.06';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -457,6 +461,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.tiempo:
       // Sexagesimal exige cambiar de mentalidad respecto al sistema
       // métrico — pesa más que un MED.01 puro.
+      return 1.3;
+    case TipoFragmentoEnTejado.aumentoDescuento:
+      // Cálculo de dos pasos (calcular %, sumar/restar) + mantener el
+      // signo correcto. Pesa parecido a porcentajeCantidad.
       return 1.3;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:

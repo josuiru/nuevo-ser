@@ -30,6 +30,7 @@ import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
+import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
@@ -2546,6 +2547,92 @@ void main() {
           returnsNormally,
         );
       }
+    },
+  );
+
+  // ═══ Puzzle de aumentos y descuentos porcentuales (PROP.06) ═══
+
+  test(
+    'GeneradorAumentoDescuento aplica descuento del 20% sobre 80 → 64',
+    () {
+      final gen = GeneradorAumentoDescuento(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        tipo: TipoVariacionPorcentual.descuento,
+        porcentaje: 20,
+        cantidad: 80,
+      );
+      expect(problema.resultado, 64);
+    },
+  );
+
+  test(
+    'GeneradorAumentoDescuento aplica aumento del 15% sobre 200 → 230',
+    () {
+      final gen = GeneradorAumentoDescuento(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        tipo: TipoVariacionPorcentual.aumento,
+        porcentaje: 15,
+        cantidad: 200,
+      );
+      expect(problema.resultado, 230);
+    },
+  );
+
+  test(
+    'GeneradorAumentoDescuento incluye distractor "operación inversa"',
+    () {
+      // Descuento 20% sobre 80 → 64. La operación inversa (aumento) → 96.
+      final gen = GeneradorAumentoDescuento(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        tipo: TipoVariacionPorcentual.descuento,
+        porcentaje: 20,
+        cantidad: 80,
+      );
+      expect(problema.candidatos, contains(96));
+    },
+  );
+
+  test('PROP.06 está mapeada al tipo aumentoDescuento', () {
+    expect(skillsConPuzzleImplementado, contains('PROP.06'));
+    expect(
+      tipoParaSkillId('PROP.06'),
+      TipoFragmentoEnTejado.aumentoDescuento,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 20,
+      denominador: 80,
+      tipo: TipoFragmentoEnTejado.aumentoDescuento,
+      decimalA: 'D',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'PROP.06');
+  });
+
+  test(
+    'GeneradorCaza dirigido a PROP.06 produce Fragmentos válidos',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      final marcasVistas = <String>{};
+      for (var intento = 0; intento < 30; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'PROP.06',
+          esquirlasAcumuladas: 110,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.aumentoDescuento);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        expect(['A', 'D'], contains(frag.decimalA));
+        marcasVistas.add(frag.decimalA!);
+      }
+      // En 30 intentos deberíamos ver tanto A como D.
+      expect(marcasVistas, hasLength(2));
     },
   );
 

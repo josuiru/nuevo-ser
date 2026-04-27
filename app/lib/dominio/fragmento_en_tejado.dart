@@ -86,6 +86,11 @@ import 'package:flutter/foundation.dart';
 ///   conversión simple ("3 h = ? min" → 180) y compuesta
 ///   ("2 h y 30 min = ? min" → 150). La trampa estrella: leer
 ///   "2 h 30" como "230" en lugar de 150.
+/// - [aumentoDescuento]: puzzle PROP.06. "Aumenta un 15% sobre 200 →
+///   ?" o "Descuenta un 20% sobre 80 → ?". Mecánica: cantidad ± (% ×
+///   cantidad / 100). Distractores reales: operación inversa
+///   (descuento confundido con aumento), solo la variación, base sin
+///   cambio, restar el % literal sin calcular.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -122,6 +127,7 @@ enum TipoFragmentoEnTejado {
   masaCapacidad,
   porcentajeDe,
   tiempo,
+  aumentoDescuento,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

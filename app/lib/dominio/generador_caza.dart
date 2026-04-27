@@ -33,6 +33,8 @@ import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
 import 'problema_masa_capacidad.dart' show GeneradorMasaCapacidad;
+import 'problema_aumento_descuento.dart'
+    show GeneradorAumentoDescuento, TipoVariacionPorcentual;
 import 'problema_porcentaje_de.dart' show GeneradorPorcentajeDe;
 import 'problema_tiempo.dart'
     show GeneradorTiempo, ModoTiempo, SimboloTiempo;
@@ -174,6 +176,31 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.aumentoDescuento) {
+      final problema = GeneradorAumentoDescuento(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // numerador = porcentaje, denominador = cantidad. El tipo
+      // (aumento/descuento) viaja en decimalA: 'A' o 'D'.
+      final marca = problema.tipo == TipoVariacionPorcentual.aumento
+          ? 'A'
+          : 'D';
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.porcentaje,
+        denominador: problema.cantidad,
+        tipo: tipo,
+        decimalA: marca,
+        etiquetaDecimal:
+            '$marca ${problema.porcentaje}%/${problema.cantidad}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1140,6 +1167,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.tiempo:
         // MED.03 entra en Iniciado I — sexagesimal de uso cotidiano.
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.aumentoDescuento:
+        // PROP.06 entra cuando ya domina PROP.04 — Iniciado III.
+        return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:
