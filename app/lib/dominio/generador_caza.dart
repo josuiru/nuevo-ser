@@ -19,6 +19,7 @@ import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
 import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
 import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
+import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 import 'problema_simplificar.dart' show GeneradorSimplificar;
 
@@ -146,6 +147,26 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.redondeoDecimal) {
+      final problema = GeneradorRedondeoDecimal(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // numerador/denominador no aplican; el contenido viaja en
+        // etiquetaDecimal con el decimal original "e,cc".
+        numerador: 0,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: problema.etiquetaOriginal,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -654,6 +675,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.mixtoAImpropio:
         // FR.13 va a la par que FR.12 (impropio → mixto, ya en tier 3).
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.redondeoDecimal:
+        // DEC.09 entra cuando el niño ya domina lectura y comparación
+        // de decimales — antes le pides redondear sin saber leer.
+        return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

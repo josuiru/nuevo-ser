@@ -21,6 +21,7 @@ import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
 import '../dominio/problema_mixto_a_impropio.dart'
     show ProblemaMixtoAImpropio;
+import '../dominio/problema_redondeo_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
 import '../nucleo/paleta.dart';
@@ -42,6 +43,7 @@ import 'pantalla_divisibilidad.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
 import 'pantalla_mixto_a_impropio.dart';
+import 'pantalla_redondeo_decimal.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pantalla_simplificar.dart';
@@ -257,6 +259,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.comparacionUnidad => 2,
         TipoFragmentoEnTejado.lecturaFraccion => 2,
         TipoFragmentoEnTejado.mixtoAImpropio => 3,
+        TipoFragmentoEnTejado.redondeoDecimal => 2,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -491,6 +494,16 @@ class _PantallaCazaState extends State<PantallaCaza>
                 numerador: numeradorMixto,
                 denominador: denominador,
               ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.redondeoDecimal:
+        final etiquetaOriginal = fragmento.etiquetaDecimal ?? '2,37';
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaRedondeoDecimal(
+              problemaPredeterminado: GeneradorRedondeoDecimal()
+                  .generarDesdeEtiqueta(etiquetaOriginal),
             ),
           ),
         );

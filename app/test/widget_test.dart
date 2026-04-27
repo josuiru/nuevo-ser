@@ -19,6 +19,7 @@ import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
+import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -1574,6 +1575,85 @@ void main() {
           frag.numerador,
           greaterThan(frag.numeradorB! * frag.denominador),
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de redondeo a la décima (DEC.09) ═══
+
+  test(
+    'GeneradorRedondeoDecimal redondea correctamente con centésima ≥ 5',
+    () {
+      final gen = GeneradorRedondeoDecimal(semilla: 0);
+      final problema = gen.generarDesdeEtiqueta('2,37');
+      expect(problema.etiquetaCorrecta, '2,4');
+    },
+  );
+
+  test(
+    'GeneradorRedondeoDecimal redondea correctamente con centésima < 5',
+    () {
+      final gen = GeneradorRedondeoDecimal(semilla: 0);
+      final problema = gen.generarDesdeEtiqueta('2,32');
+      expect(problema.etiquetaCorrecta, '2,3');
+    },
+  );
+
+  test(
+    'GeneradorRedondeoDecimal propaga cuando la décima es 9 y la centésima ≥ 5',
+    () {
+      final gen = GeneradorRedondeoDecimal(semilla: 0);
+      final problema = gen.generarDesdeEtiqueta('3,98');
+      expect(problema.etiquetaCorrecta, '4,0');
+    },
+  );
+
+  test(
+    'GeneradorRedondeoDecimal incluye al menos una trampa de truncar',
+    () {
+      final gen = GeneradorRedondeoDecimal(semilla: 0);
+      final problema = gen.generarDesdeEtiqueta('2,37');
+      expect(problema.candidatos, contains('2,3'));
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test('DEC.09 está mapeada al tipo redondeoDecimal', () {
+    expect(skillsConPuzzleImplementado, contains('DEC.09'));
+    expect(
+      tipoParaSkillId('DEC.09'),
+      TipoFragmentoEnTejado.redondeoDecimal,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 0,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.redondeoDecimal,
+      etiquetaDecimal: '2,37',
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DEC.09');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DEC.09 produce Fragmento con etiqueta decimal',
+    () {
+      final gen = GeneradorCaza(semilla: 333);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DEC.09',
+          esquirlasAcumuladas: 25,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.redondeoDecimal);
+        expect(frag.etiquetaDecimal, isNotNull);
+        expect(frag.etiquetaDecimal!, contains(','));
       }
     },
   );
