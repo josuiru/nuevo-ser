@@ -44,6 +44,7 @@ import 'problema_jerarquia_fracciones.dart'
 import 'problema_operacion_mixta.dart' show GeneradorOperacionMixta;
 import 'problema_perimetro.dart' show GeneradorPerimetro;
 import 'problema_area_rectangulo.dart' show GeneradorAreaRectangulo;
+import 'problema_area_triangulo.dart' show GeneradorAreaTriangulo;
 // problema_poligono.dart no necesita import: el generador crea el
 // Fragmento con `numerador = numeroDeLados` y el dispatcher reconstruye
 // con `GeneradorPoligono.generarDesdeLados`.
@@ -194,6 +195,23 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.areaTriangulo) {
+      final indice =
+          _azar.nextInt(GeneradorAreaTriangulo.cantidadDeCasosCurados);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indice,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: 'A·b×h÷2',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1455,6 +1473,9 @@ class GeneradorCaza {
         return dificultad >= 2;
       case TipoFragmentoEnTejado.areaRectangulo:
         // GEO.03 depende de GEO.01 + MED.05 — Iniciado II.
+        return dificultad >= 3;
+      case TipoFragmentoEnTejado.areaTriangulo:
+        // GEO.04 depende de GEO.03 — Iniciado II.
         return dificultad >= 3;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

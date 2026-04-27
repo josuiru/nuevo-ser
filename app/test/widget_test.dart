@@ -42,6 +42,7 @@ import 'package:uno_roto/dominio/problema_operacion_mixta.dart';
 import 'package:uno_roto/dominio/problema_poligono.dart';
 import 'package:uno_roto/dominio/problema_perimetro.dart';
 import 'package:uno_roto/dominio/problema_area_rectangulo.dart';
+import 'package:uno_roto/dominio/problema_area_triangulo.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2586,6 +2587,33 @@ void main() {
       final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
       final problema = gen.generarPorIndice(2);
       expect(problema.candidatosPorcentaje, contains(25));
+    },
+  );
+
+  // ═══ Puzzle de área de triángulo (GEO.04) ═══
+
+  test('GEO.04 está mapeada al tipo areaTriangulo', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.04'));
+    expect(
+      tipoParaSkillId('GEO.04'),
+      TipoFragmentoEnTejado.areaTriangulo,
+    );
+  });
+
+  test('GeneradorAreaTriangulo aplica la fórmula b×h÷2', () {
+    final gen = GeneradorAreaTriangulo(semilla: 0);
+    // Caso 0: triángulo 4×3 → 6.
+    final problema = gen.generarPorIndice(0);
+    expect(problema.respuesta, 6);
+  });
+
+  test(
+    'GeneradorAreaTriangulo incluye olvidar-el-/2 como distractor',
+    () {
+      // Caso 0: 4×3 → 6 con /2; sin /2 es 12.
+      final gen = GeneradorAreaTriangulo(semilla: 0);
+      final problema = gen.generarPorIndice(0);
+      expect(problema.candidatos, contains(12));
     },
   );
 

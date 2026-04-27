@@ -132,6 +132,10 @@ import 'package:flutter/foundation.dart';
 /// - [areaRectangulo]: puzzle GEO.03. Rectángulo (o cuadrado) con base
 ///   y altura etiquetadas; el niño elige el área (b×h). Distractor
 ///   estrella: el perímetro 2(b+h) en lugar del área.
+/// - [areaTriangulo]: puzzle GEO.04. Triángulo con base y altura
+///   marcada con línea discontinua + ángulo recto, y cuatro
+///   candidatos. Mecánica: (b × h) / 2. Distractor estrella: olvidar
+///   el /2.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -181,6 +185,7 @@ enum TipoFragmentoEnTejado {
   poligono,
   perimetro,
   areaRectangulo,
+  areaTriangulo,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

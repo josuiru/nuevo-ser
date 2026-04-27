@@ -65,6 +65,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'GEO.01',
   'GEO.02',
   'GEO.03',
+  'GEO.04',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -101,6 +102,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'GEO.01') return TipoFragmentoEnTejado.poligono;
   if (skillId == 'GEO.02') return TipoFragmentoEnTejado.perimetro;
   if (skillId == 'GEO.03') return TipoFragmentoEnTejado.areaRectangulo;
+  if (skillId == 'GEO.04') return TipoFragmentoEnTejado.areaTriangulo;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -326,6 +328,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'GEO.02';
     case TipoFragmentoEnTejado.areaRectangulo:
       return 'GEO.03';
+    case TipoFragmentoEnTejado.areaTriangulo:
+      return 'GEO.04';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -562,6 +566,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Multiplicación b×h — pesa similar a perimetro. La trampa
       // estrella (perímetro confundido con área) la hace exigente.
       return 1.1;
+    case TipoFragmentoEnTejado.areaTriangulo:
+      // (b×h)/2 — escalón pedagógico claro sobre rectángulo. La
+      // trampa "olvidar el /2" es persistente.
+      return 1.3;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;
