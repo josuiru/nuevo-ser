@@ -21,6 +21,7 @@ import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
 import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
+import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_primo.dart' show GeneradorPrimo;
 import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
@@ -150,6 +151,26 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.porcentajeCantidad) {
+      final problema = GeneradorPorcentajeCantidad(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // Empaquetamos el porcentaje en numerador y la cantidad en
+        // denominador para reproducir el problema al abrir el Fragmento.
+        numerador: problema.porcentaje,
+        denominador: problema.cantidad,
+        tipo: tipo,
+        etiquetaDecimal: '${problema.porcentaje}%·${problema.cantidad}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -729,6 +750,10 @@ class GeneradorCaza {
         // DIV.05 entra pronto — mecánica binaria muy accesible aunque
         // los casos confusos exigen memoria.
         return dificultad >= 1;
+      case TipoFragmentoEnTejado.porcentajeCantidad:
+        // PROP.03 entra cuando el niño ya domina porcentaje→fracción
+        // (PROP.04, tier 3). Cálculo, no reconocimiento.
+        return dificultad >= 3;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

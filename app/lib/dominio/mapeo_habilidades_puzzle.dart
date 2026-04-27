@@ -38,6 +38,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DEC.09',
   'FR.07',
   'DIV.05',
+  'PROP.03',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -62,6 +63,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DEC.09') return TipoFragmentoEnTejado.redondeoDecimal;
   if (skillId == 'FR.07') return TipoFragmentoEnTejado.comparacionDistinta;
   if (skillId == 'DIV.05') return TipoFragmentoEnTejado.primo;
+  if (skillId == 'PROP.03') return TipoFragmentoEnTejado.porcentajeCantidad;
   if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
@@ -77,9 +79,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
     return TipoFragmentoEnTejado.operacionDecimal;
   }
   if (skillId == 'PROP.04') return TipoFragmentoEnTejado.porcentaje;
-  if (skillId == 'PROP.01' ||
-      skillId == 'PROP.02' ||
-      skillId == 'PROP.03') {
+  if (skillId == 'PROP.01' || skillId == 'PROP.02') {
     return TipoFragmentoEnTejado.proporcional;
   }
   if (skillId.startsWith('FR.')) return TipoFragmentoEnTejado.unitario;
@@ -210,6 +210,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.07';
     case TipoFragmentoEnTejado.primo:
       return 'DIV.05';
+    case TipoFragmentoEnTejado.porcentajeCantidad:
+      return 'PROP.03';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -301,6 +303,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Decisión binaria pura, pero memoria + casos confusos pesan
       // como una divisibilidad media.
       return 0.85;
+    case TipoFragmentoEnTejado.porcentajeCantidad:
+      // Cálculo directo con dos pasos (multiplicar y dividir entre
+      // 100). Más exigente que conversión simple, menos que duales.
+      return 1.2;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:

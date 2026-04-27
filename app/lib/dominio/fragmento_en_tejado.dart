@@ -46,6 +46,8 @@ import 'package:flutter/foundation.dart';
 /// - [primo]: puzzle DIV.05. Mecánica binaria sí/no — ¿el número es
 ///   primo? Generador con sesgo a casos confusos: el 1, el 2, impares
 ///   no primos como 9, 15, 21.
+/// - [porcentajeCantidad]: puzzle PROP.03. "El X % de Y = ?" + cuatro
+///   resultados candidatos. Mecánica de cálculo directo con trampas.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -68,6 +70,7 @@ enum TipoFragmentoEnTejado {
   redondeoDecimal,
   comparacionDistinta,
   primo,
+  porcentajeCantidad,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

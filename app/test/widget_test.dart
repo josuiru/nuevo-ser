@@ -19,6 +19,7 @@ import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
+import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
@@ -1840,6 +1841,84 @@ void main() {
         );
         expect(frag.tipo, TipoFragmentoEnTejado.primo);
         expect(frag.numerador, greaterThanOrEqualTo(1));
+      }
+    },
+  );
+
+  // ═══ Puzzle de porcentaje de cantidad (PROP.03) ═══
+
+  test(
+    'GeneradorPorcentajeCantidad calcula correctamente con resultado entero',
+    () {
+      final gen = GeneradorPorcentajeCantidad(semilla: 0);
+      final problema = gen.generarDesdePar(25, 80);
+      expect(problema.resultado, 20);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test(
+    'GeneradorPorcentajeCantidad incluye trampas pedagógicas (% literal y producto sin dividir)',
+    () {
+      final gen = GeneradorPorcentajeCantidad(semilla: 0);
+      final problema = gen.generarDesdePar(25, 80);
+      // El % literal (25) debe aparecer como distractor.
+      expect(problema.candidatos, contains(25));
+      // Multiplicar sin dividir (25·80 = 2000) también.
+      expect(problema.candidatos, contains(2000));
+      // Cantidad − resultado (80 − 20 = 60).
+      expect(problema.candidatos, contains(60));
+    },
+  );
+
+  test('GeneradorPorcentajeCantidad nunca repite candidatos', () {
+    final gen = GeneradorPorcentajeCantidad(semilla: 7);
+    for (var intento = 0; intento < 30; intento++) {
+      final problema = gen.generar(dificultad: 2);
+      final unicos = problema.candidatos.toSet();
+      expect(unicos.length, problema.candidatos.length,
+          reason: 'Los cuatro candidatos deben ser distintos.');
+    }
+  });
+
+  test('PROP.03 está mapeada al tipo porcentajeCantidad', () {
+    expect(skillsConPuzzleImplementado, contains('PROP.03'));
+    expect(
+      tipoParaSkillId('PROP.03'),
+      TipoFragmentoEnTejado.porcentajeCantidad,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 25,
+      denominador: 80,
+      tipo: TipoFragmentoEnTejado.porcentajeCantidad,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'PROP.03');
+  });
+
+  test(
+    'GeneradorCaza dirigido a PROP.03 produce Fragmentos con par válido',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'PROP.03',
+          esquirlasAcumuladas: 60, // tier 4 para que entre
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.porcentajeCantidad);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        // Si el resultado tiene que ser entero, % × cantidad debe ser
+        // múltiplo de 100.
+        expect((frag.numerador * frag.denominador) % 100, 0);
       }
     },
   );
