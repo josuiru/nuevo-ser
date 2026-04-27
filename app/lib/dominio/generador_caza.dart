@@ -18,6 +18,7 @@ import 'problema_comparacion_unidad.dart'
     show GeneradorComparacionUnidad;
 import 'problema_decimal.dart' show decimalesConocidos;
 import 'problema_divisibilidad.dart' show GeneradorDivisibilidad;
+import 'problema_divisores.dart' show GeneradorDivisores;
 import 'problema_lectura_decimal.dart' show GeneradorLecturaDecimal;
 import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
@@ -163,6 +164,25 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.divisores) {
+      final problema = GeneradorDivisores(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // Empaquetamos el número objetivo en numerador.
+        numerador: problema.numero,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: 'div${problema.numero}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -914,6 +934,10 @@ class GeneradorCaza {
         // PROP.04 entra cuando el niño ya tiene base de fracciones y
         // decimales — cálculo, no reconocimiento.
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.divisores:
+        // DIV.02 va a la par que DIV.03 — mecánica accesible apenas
+        // domine la idea de divisor.
+        return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

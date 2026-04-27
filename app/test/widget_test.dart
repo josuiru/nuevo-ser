@@ -26,6 +26,7 @@ import 'package:uno_roto/dominio/problema_regla_de_tres.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_comparacion_media.dart';
 import 'package:uno_roto/dominio/problema_decimal.dart';
+import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
@@ -2291,6 +2292,70 @@ void main() {
         expect(frag.tipo, TipoFragmentoEnTejado.comparacionMedia);
         expect(frag.numerador, greaterThanOrEqualTo(1));
         expect(frag.denominador, greaterThanOrEqualTo(2));
+      }
+    },
+  );
+
+  // ═══ Puzzle de divisores (DIV.02) ═══
+
+  test(
+    'GeneradorDivisores produce 4 candidatos: 3 divisores reales y 1 intruso',
+    () {
+      final gen = GeneradorDivisores(semilla: 7);
+      final problema = gen.generarDesdeNumero(12);
+      expect(problema.numero, 12);
+      expect(problema.candidatos, hasLength(4));
+      // Tres candidatos dividen a 12 exacto, uno no.
+      var dividen = 0;
+      for (final c in problema.candidatos) {
+        if (12 % c == 0) dividen++;
+      }
+      expect(dividen, 3);
+      // El intruso reportado es justamente el que no divide.
+      expect(12 % problema.intruso, isNot(0));
+    },
+  );
+
+  test('GeneradorDivisores nunca repite candidatos', () {
+    final gen = GeneradorDivisores(semilla: 13);
+    for (var intento = 0; intento < 30; intento++) {
+      final problema = gen.generar(dificultad: 2);
+      final unicos = problema.candidatos.toSet();
+      expect(unicos.length, problema.candidatos.length,
+          reason: 'Los cuatro candidatos deben ser distintos.');
+    }
+  });
+
+  test('DIV.02 está mapeada al tipo divisores', () {
+    expect(skillsConPuzzleImplementado, contains('DIV.02'));
+    expect(tipoParaSkillId('DIV.02'), TipoFragmentoEnTejado.divisores);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 12,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.divisores,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DIV.02');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DIV.02 produce Fragmentos con número objetivo',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DIV.02',
+          esquirlasAcumuladas: 8,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.divisores);
+        expect(frag.numerador, greaterThanOrEqualTo(12));
       }
     },
   );
