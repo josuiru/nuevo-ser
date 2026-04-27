@@ -246,13 +246,11 @@ class _PantallaCazaState extends State<PantallaCaza>
     if (_activos.length < _maxFragmentosEnTejado) {
       final esquirlas = _esquirlasTotal + _esquirlasEstaSesion;
       final ahora = DateTime.now();
-      // Cada varios spawns dejamos que el selector pida una habilidad;
-      // el resto del tiempo usamos el reparto del distrito para que
-      // aparezcan también los tipos sin skill implementada todavía
-      // (unitarios simples, proporcionales).
-      final usarSelector = _selectorHabilidades != null &&
-          math.Random().nextDouble() < 0.6;
-      final nuevo = usarSelector
+      // Con las 66 habilidades del catálogo cubiertas, el selector
+      // adaptativo es la fuente principal de Fragmentos. Si el
+      // selector no devuelve candidata (caso de borde) caemos al
+      // reparto del distrito.
+      final nuevo = _selectorHabilidades != null
           ? await _generarDesdeSelector(esquirlas: esquirlas, ahora: ahora)
           : _generador.siguiente(
               esquirlasAcumuladas: esquirlas,
