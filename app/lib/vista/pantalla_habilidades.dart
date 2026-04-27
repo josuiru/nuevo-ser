@@ -5,6 +5,7 @@ import '../datos/cliente_api.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/habilidad.dart';
+import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
 import '../nucleo/paleta.dart';
 import 'pantalla_ajustes_sonido.dart';
@@ -35,6 +36,8 @@ class PantallaHabilidades extends StatefulWidget {
 class _PantallaHabilidadesState extends State<PantallaHabilidades> {
   CatalogoHabilidades? _catalogo;
   Map<String, EstadoHabilidad> _estados = {};
+  RangoNarrativo _rangoActual = RangoNarrativo.aprendiz1;
+  int _esquirlasActuales = 0;
   bool _cargando = true;
 
   @override
@@ -52,10 +55,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
       );
       if (estado != null) estados[h.identificador] = estado;
     }
+    final rango = await widget.repositorio.cargarRango();
+    final esquirlas = await widget.repositorio.cargarEsquirlas();
     if (!mounted) return;
     setState(() {
       _catalogo = catalogo;
       _estados = estados;
+      _rangoActual = rango;
+      _esquirlasActuales = esquirlas;
       _cargando = false;
     });
   }
@@ -342,11 +349,20 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
   Widget _listaPorDominio() {
     final catalogo = _catalogo!;
     final dominiosOrdenados = catalogo.dominios.entries.toList();
+    // El encabezado va antes que los bloques por dominio.
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: dominiosOrdenados.length,
+      itemCount: dominiosOrdenados.length + 1,
       itemBuilder: (_, indice) {
-        final entrada = dominiosOrdenados[indice];
+        if (indice == 0) {
+          return _CabeceraResumen(
+            rango: _rangoActual,
+            esquirlas: _esquirlasActuales,
+            estados: _estados,
+            totalHabilidades: catalogo.habilidades.length,
+          );
+        }
+        final entrada = dominiosOrdenados[indice - 1];
         final habilidadesDelDominio = catalogo
             .habilidades.values
             .where((h) => h.dominio == entrada.key)
@@ -358,6 +374,157 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           estados: _estados,
         );
       },
+    );
+  }
+}
+
+/// Resumen de progreso global: rango narrativo, esquirlas y reparto
+/// de habilidades por nivel de maestría. Se pinta en la cabecera de
+/// la lista de habilidades.
+class _CabeceraResumen extends StatelessWidget {
+  final RangoNarrativo rango;
+  final int esquirlas;
+  final Map<String, EstadoHabilidad> estados;
+  final int totalHabilidades;
+
+  const _CabeceraResumen({
+    required this.rango,
+    required this.esquirlas,
+    required this.estados,
+    required this.totalHabilidades,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final conteoPorNivel = <NivelMaestria, int>{
+      for (final n in NivelMaestria.values) n: 0,
+    };
+    for (final estado in estados.values) {
+      conteoPorNivel[estado.nivel] = (conteoPorNivel[estado.nivel] ?? 0) + 1;
+    }
+    // Las inexploradas no figuran en estados — se calculan por diferencia.
+    final tocadas = estados.length;
+    conteoPorNivel[NivelMaestria.inexplorada] = totalHabilidades - tocadas;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 22),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: PaletaNeon.fondoMedio.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: PaletaNeon.violetaBase.withOpacity(0.6),
+          width: 1.2,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                rango.nombreVisible.toUpperCase(),
+                style: const TextStyle(
+                  color: PaletaNeon.azulNeon,
+                  fontSize: 14,
+                  letterSpacing: 3,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '$esquirlas esquirlas',
+                style: const TextStyle(
+                  color: PaletaNeon.textoTenue,
+                  fontSize: 12,
+                  letterSpacing: 1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 14,
+            runSpacing: 6,
+            children: [
+              for (final nivel in [
+                NivelMaestria.maestria,
+                NivelMaestria.competente,
+                NivelMaestria.enDesarrollo,
+                NivelMaestria.introducida,
+                NivelMaestria.inexplorada,
+              ])
+                _ChipNivel(
+                  nivel: nivel,
+                  cantidad: conteoPorNivel[nivel] ?? 0,
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChipNivel extends StatelessWidget {
+  final NivelMaestria nivel;
+  final int cantidad;
+  const _ChipNivel({required this.nivel, required this.cantidad});
+
+  Color _colorPorNivel() {
+    switch (nivel) {
+      case NivelMaestria.inexplorada:
+        return PaletaNeon.textoTenue.withOpacity(0.5);
+      case NivelMaestria.introducida:
+        return PaletaNeon.rosaAcento.withOpacity(0.7);
+      case NivelMaestria.enDesarrollo:
+        return const Color(0xFFFFA552);
+      case NivelMaestria.competente:
+        return PaletaNeon.azulNeon;
+      case NivelMaestria.maestria:
+        return PaletaNeon.exitoSuave;
+    }
+  }
+
+  String _etiqueta() {
+    switch (nivel) {
+      case NivelMaestria.inexplorada:
+        return 'sin tocar';
+      case NivelMaestria.introducida:
+        return 'introducida';
+      case NivelMaestria.enDesarrollo:
+        return 'en desarrollo';
+      case NivelMaestria.competente:
+        return 'competente';
+      case NivelMaestria.maestria:
+        return 'maestría';
+    }
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    final color = _colorPorNivel();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '$cantidad ${_etiqueta()}',
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 12,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ],
     );
   }
 }
