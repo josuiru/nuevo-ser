@@ -78,6 +78,10 @@ import 'package:flutter/foundation.dart';
 /// - [masaCapacidad]: puzzle MED.02. "3 kg = ? g" o "5 L = ? mL".
 ///   Comparte mecánica de escalera ×10 con [longitud] pero rota entre
 ///   las familias de masa (kg/g/mg) y capacidad (L/dL/mL).
+/// - [porcentajeDe]: puzzle PROP.05. "12 de 50 → ¿qué %?" + cuatro
+///   candidatos. Inversa de porcentajeCantidad: aquí calcula
+///   parte/total × 100. Distractores reales: complemento (76),
+///   parte literal como % (12), total como % (50).
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -112,6 +116,7 @@ enum TipoFragmentoEnTejado {
   razon,
   longitud,
   masaCapacidad,
+  porcentajeDe,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

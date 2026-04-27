@@ -33,6 +33,7 @@ import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
 import 'problema_masa_capacidad.dart' show GeneradorMasaCapacidad;
+import 'problema_porcentaje_de.dart' show GeneradorPorcentajeDe;
 import 'problema_comparacion_media.dart' show GeneradorComparacionMedia;
 import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
@@ -171,6 +172,25 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.porcentajeDe) {
+      final problema = GeneradorPorcentajeDe(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // Empaquetamos parte y total en numerador y denominador.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.parte,
+        denominador: problema.total,
+        tipo: tipo,
+        etiquetaDecimal: '${problema.parte}/${problema.total} %',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1084,6 +1104,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.masaCapacidad:
         // MED.02 entra justo después de MED.01 — Iniciado II.
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.porcentajeDe:
+        // PROP.05 entra cuando ya domina PROP.04 — Iniciado III.
+        return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

@@ -50,6 +50,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'PROP.01',
   'MED.01',
   'MED.02',
+  'PROP.05',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -69,6 +70,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'PROP.01') return TipoFragmentoEnTejado.razon;
   if (skillId == 'MED.01') return TipoFragmentoEnTejado.longitud;
   if (skillId == 'MED.02') return TipoFragmentoEnTejado.masaCapacidad;
+  if (skillId == 'PROP.05') return TipoFragmentoEnTejado.porcentajeDe;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -264,6 +266,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'MED.01';
     case TipoFragmentoEnTejado.masaCapacidad:
       return 'MED.02';
+    case TipoFragmentoEnTejado.porcentajeDe:
+      return 'PROP.05';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -442,6 +446,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Mismo motor que longitud — pesa igual; la familia (masa o
       // capacidad) no cambia la dificultad pedagógica.
       return 1.1;
+    case TipoFragmentoEnTejado.porcentajeDe:
+      // Cálculo inverso de porcentajeCantidad — pide ver la fracción
+      // como porcentaje. Pesa parecido a porcentajeCantidad.
+      return 1.2;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

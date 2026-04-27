@@ -30,6 +30,7 @@ import 'package:uno_roto/dominio/problema_divisores.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
+import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_ordenar_fracciones.dart';
 import 'package:uno_roto/dominio/problema_razon.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
@@ -2543,6 +2544,78 @@ void main() {
           () => unidadDesdeSimbolo(frag.decimalB!),
           returnsNormally,
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de qué porcentaje representa A de B (PROP.05) ═══
+
+  test(
+    'GeneradorPorcentajeDe calcula correctamente con resultado entero',
+    () {
+      final gen = GeneradorPorcentajeDe(semilla: 0);
+      // 12 de 50 = 24 %.
+      final problema = gen.generarDesdeTerminos(parte: 12, total: 50);
+      expect(problema.resultado, 24);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+    },
+  );
+
+  test(
+    'GeneradorPorcentajeDe incluye distractores reales (complemento, parte y total)',
+    () {
+      final gen = GeneradorPorcentajeDe(semilla: 0);
+      // 12 de 50 → 24%. Distractores curados:
+      //   - 76 (100 - 24, complemento).
+      //   - 12 (parte literal como %).
+      //   - 50 (total literal como %).
+      final problema = gen.generarDesdeTerminos(parte: 12, total: 50);
+      expect(problema.candidatos, contains(76));
+      // Al menos uno de los dos distractores literales debe estar.
+      final tieneLiteral = problema.candidatos.contains(12) ||
+          problema.candidatos.contains(50);
+      expect(tieneLiteral, isTrue,
+          reason: 'parte o total como % debe ser distractor');
+    },
+  );
+
+  test('PROP.05 está mapeada al tipo porcentajeDe', () {
+    expect(skillsConPuzzleImplementado, contains('PROP.05'));
+    expect(
+      tipoParaSkillId('PROP.05'),
+      TipoFragmentoEnTejado.porcentajeDe,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 12,
+      denominador: 50,
+      tipo: TipoFragmentoEnTejado.porcentajeDe,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'PROP.05');
+  });
+
+  test(
+    'GeneradorCaza dirigido a PROP.05 produce Fragmentos con par válido',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'PROP.05',
+          esquirlasAcumuladas: 110,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.porcentajeDe);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        // Resultado entero garantizado.
+        expect((frag.numerador * 100) % frag.denominador, 0);
       }
     },
   );
