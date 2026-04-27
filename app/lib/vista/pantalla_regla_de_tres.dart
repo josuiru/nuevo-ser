@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../dominio/problema_porcentaje_cantidad.dart';
+import '../dominio/problema_regla_de_tres.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 
-/// Puzzle PROP.03: el niño ve "el 25 % de 80" y elige el resultado
-/// entre cuatro candidatos. Mecánica de cálculo directo con trampas
-/// pedagógicas: dejar el % literal, multiplicar sin dividir entre
-/// 100, confundir con resta o división.
-class PantallaPorcentajeCantidad extends StatefulWidget {
-  final ProblemaPorcentajeCantidad? problemaPredeterminado;
+/// Puzzle PROP.03: el niño ve una proporción "a → b, c → ?" y elige
+/// el resultado entre cuatro candidatos. Mecánica de regla de tres
+/// directa con trampas pedagógicas: invertir la relación, sumar todo,
+/// confundir con el segundo término.
+class PantallaReglaDeTres extends StatefulWidget {
+  final ProblemaReglaDeTres? problemaPredeterminado;
 
-  const PantallaPorcentajeCantidad({
+  const PantallaReglaDeTres({
     super.key,
     this.problemaPredeterminado,
   });
 
   @override
-  State<PantallaPorcentajeCantidad> createState() =>
-      _PantallaPorcentajeCantidadState();
+  State<PantallaReglaDeTres> createState() => _PantallaReglaDeTresState();
 }
 
-class _PantallaPorcentajeCantidadState
-    extends State<PantallaPorcentajeCantidad>
+class _PantallaReglaDeTresState extends State<PantallaReglaDeTres>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controladorCielo;
-  late ProblemaPorcentajeCantidad _problema;
+  late ProblemaReglaDeTres _problema;
   int? _indiceSeleccionado;
   bool _revelado = false;
 
@@ -38,7 +36,7 @@ class _PantallaPorcentajeCantidadState
       duration: const Duration(seconds: 16),
     )..repeat();
     _problema = widget.problemaPredeterminado ??
-        GeneradorPorcentajeCantidad().generar(dificultad: 1);
+        GeneradorReglaDeTres().generar(dificultad: 1);
   }
 
   @override
@@ -119,7 +117,7 @@ class _PantallaPorcentajeCantidadState
                           ),
                           const Spacer(),
                           const Text(
-                            'PORCENTAJE',
+                            'PROPORCIÓN',
                             style: TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
@@ -132,7 +130,7 @@ class _PantallaPorcentajeCantidadState
                       ),
                       const SizedBox(height: 32),
                       const Text(
-                        'calcula',
+                        'si esto, entonces…',
                         style: TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
@@ -141,9 +139,10 @@ class _PantallaPorcentajeCantidadState
                         ),
                       ),
                       const SizedBox(height: 22),
-                      _TarjetaEnunciado(
-                        porcentaje: _problema.porcentaje,
-                        cantidad: _problema.cantidad,
+                      _TarjetaProporcion(
+                        a: _problema.a,
+                        b: _problema.b,
+                        c: _problema.c,
                       ),
                       const SizedBox(height: 36),
                       Expanded(
@@ -182,19 +181,24 @@ class _PantallaPorcentajeCantidadState
   }
 }
 
-class _TarjetaEnunciado extends StatelessWidget {
-  final int porcentaje;
-  final int cantidad;
+/// Muestra la proporción "a → b · c → ?" en dos filas claras, con
+/// flechas y un signo de interrogación grande para el término que el
+/// niño tiene que rellenar.
+class _TarjetaProporcion extends StatelessWidget {
+  final int a;
+  final int b;
+  final int c;
 
-  const _TarjetaEnunciado({
-    required this.porcentaje,
-    required this.cantidad,
+  const _TarjetaProporcion({
+    required this.a,
+    required this.b,
+    required this.c,
   });
 
   @override
   Widget build(BuildContext contexto) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
       decoration: BoxDecoration(
         color: PaletaNeon.violetaBase.withOpacity(0.4),
         borderRadius: BorderRadius.circular(22),
@@ -206,16 +210,75 @@ class _TarjetaEnunciado extends StatelessWidget {
           ),
         ],
       ),
-      child: Text(
-        'el $porcentaje % de $cantidad',
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: PaletaNeon.textoPrincipal,
-          fontSize: 36,
-          fontWeight: FontWeight.w300,
-          letterSpacing: 1.4,
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _FilaProporcion(izquierda: '$a', derecha: '$b'),
+          const SizedBox(height: 12),
+          _FilaProporcion(izquierda: '$c', derecha: '?', destacarDerecha: true),
+        ],
       ),
+    );
+  }
+}
+
+class _FilaProporcion extends StatelessWidget {
+  final String izquierda;
+  final String derecha;
+  final bool destacarDerecha;
+
+  const _FilaProporcion({
+    required this.izquierda,
+    required this.derecha,
+    this.destacarDerecha = false,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final colorDerecha = destacarDerecha
+        ? PaletaNeon.azulNeon
+        : PaletaNeon.textoPrincipal;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 60,
+          child: Text(
+            izquierda,
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: PaletaNeon.textoPrincipal,
+              fontSize: 32,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 1.2,
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '→',
+            style: TextStyle(
+              color: PaletaNeon.textoTenue,
+              fontSize: 28,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 60,
+          child: Text(
+            derecha,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: colorDerecha,
+              fontSize: 32,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 1.2,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

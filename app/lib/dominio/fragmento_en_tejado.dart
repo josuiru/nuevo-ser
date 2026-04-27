@@ -46,8 +46,9 @@ import 'package:flutter/foundation.dart';
 /// - [primo]: puzzle DIV.05. Mecánica binaria sí/no — ¿el número es
 ///   primo? Generador con sesgo a casos confusos: el 1, el 2, impares
 ///   no primos como 9, 15, 21.
-/// - [porcentajeCantidad]: puzzle PROP.03. "El X % de Y = ?" + cuatro
-///   resultados candidatos. Mecánica de cálculo directo con trampas.
+/// - [reglaDeTres]: puzzle PROP.03. "a → b · c → ?" + cuatro
+///   resultados candidatos. Mecánica de regla de tres directa con
+///   trampas pedagógicas (relación invertida, suma de los tres).
 /// - [comparacionMixta]: puzzle DEC.03. Una fracción y un decimal lado
 ///   a lado, tocar el de mayor valor. Comparación cruzada entre formatos.
 /// - [mcmMcd]: puzzle DIV.06/DIV.07. Dos números y la pregunta sobre
@@ -80,7 +81,7 @@ enum TipoFragmentoEnTejado {
   redondeoDecimal,
   comparacionDistinta,
   primo,
-  porcentajeCantidad,
+  reglaDeTres,
   comparacionMixta,
   mcmMcd,
   jerarquia,

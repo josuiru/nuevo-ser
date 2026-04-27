@@ -22,7 +22,7 @@ import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
 import 'package:uno_roto/dominio/problema_jerarquia.dart';
 import 'package:uno_roto/dominio/problema_mcm_mcd.dart';
-import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
+import 'package:uno_roto/dominio/problema_regla_de_tres.dart';
 import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_representacion_fraccion.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
@@ -1849,35 +1849,43 @@ void main() {
     },
   );
 
-  // ═══ Puzzle de porcentaje de cantidad (PROP.03) ═══
+  // ═══ Puzzle de regla de tres directa (PROP.03) ═══
 
   test(
-    'GeneradorPorcentajeCantidad calcula correctamente con resultado entero',
+    'GeneradorReglaDeTres calcula correctamente con resultado entero',
     () {
-      final gen = GeneradorPorcentajeCantidad(semilla: 0);
-      final problema = gen.generarDesdePar(25, 80);
-      expect(problema.resultado, 20);
+      final gen = GeneradorReglaDeTres(semilla: 0);
+      // a:b = c:?  →  ? = b·c/a. (2,6,4) → 12.
+      final problema = gen.generarDesdeTerminos(a: 2, b: 6, c: 4);
+      expect(problema.resultado, 12);
       expect(problema.candidatos, hasLength(4));
       expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
     },
   );
 
   test(
-    'GeneradorPorcentajeCantidad incluye trampas pedagógicas (% literal y producto sin dividir)',
+    'GeneradorReglaDeTres incluye trampas pedagógicas (relación invertida y suma)',
     () {
-      final gen = GeneradorPorcentajeCantidad(semilla: 0);
-      final problema = gen.generarDesdePar(25, 80);
-      // El % literal (25) debe aparecer como distractor.
-      expect(problema.candidatos, contains(25));
-      // Multiplicar sin dividir (25·80 = 2000) también.
-      expect(problema.candidatos, contains(2000));
-      // Cantidad − resultado (80 − 20 = 60).
-      expect(problema.candidatos, contains(60));
+      final gen = GeneradorReglaDeTres(semilla: 0);
+      // (2,6,4) → correcto = 12. Trampas:
+      //   - relación invertida: b·a/c = 6·2/4 = 3.
+      //   - suma de los tres: 2+6+4 = 12 → coincide con correcto, así
+      //     que se descarta como distractor; usamos otra tripla para
+      //     verificarlo.
+      final problemaInvertido = gen.generarDesdeTerminos(a: 2, b: 6, c: 4);
+      expect(problemaInvertido.candidatos, contains(3));
+
+      // (3,9,6) → correcto = 18, suma = 18 → no sirve. Probamos otra:
+      // (5,10,7) → correcto = 14, suma = 22, b+c = 17.
+      final otroProblema = gen.generarDesdeTerminos(a: 5, b: 10, c: 7);
+      expect(otroProblema.resultado, 14);
+      // Suma de los tres como distractor.
+      expect(otroProblema.candidatos, contains(22));
     },
   );
 
-  test('GeneradorPorcentajeCantidad nunca repite candidatos', () {
-    final gen = GeneradorPorcentajeCantidad(semilla: 7);
+  test('GeneradorReglaDeTres nunca repite candidatos', () {
+    final gen = GeneradorReglaDeTres(semilla: 7);
     for (var intento = 0; intento < 30; intento++) {
       final problema = gen.generar(dificultad: 2);
       final unicos = problema.candidatos.toSet();
@@ -1886,18 +1894,19 @@ void main() {
     }
   });
 
-  test('PROP.03 está mapeada al tipo porcentajeCantidad', () {
+  test('PROP.03 está mapeada al tipo reglaDeTres', () {
     expect(skillsConPuzzleImplementado, contains('PROP.03'));
     expect(
       tipoParaSkillId('PROP.03'),
-      TipoFragmentoEnTejado.porcentajeCantidad,
+      TipoFragmentoEnTejado.reglaDeTres,
     );
 
     final frag = FragmentoEnTejado(
       identificador: 'test',
-      numerador: 25,
-      denominador: 80,
-      tipo: TipoFragmentoEnTejado.porcentajeCantidad,
+      numerador: 2,
+      denominador: 6,
+      numeradorB: 4,
+      tipo: TipoFragmentoEnTejado.reglaDeTres,
       xNormalizado: 0,
       yNormalizado: 0,
       instanteAparicion: DateTime(2026, 4, 27),
@@ -1907,7 +1916,7 @@ void main() {
   });
 
   test(
-    'GeneradorCaza dirigido a PROP.03 produce Fragmentos con par válido',
+    'GeneradorCaza dirigido a PROP.03 produce Fragmentos con tripla válida',
     () {
       final gen = GeneradorCaza(semilla: 4242);
       final ahora = DateTime(2026, 4, 27);
@@ -1917,12 +1926,15 @@ void main() {
           esquirlasAcumuladas: 60, // tier 4 para que entre
           ahora: ahora.add(Duration(seconds: intento)),
         );
-        expect(frag.tipo, TipoFragmentoEnTejado.porcentajeCantidad);
-        expect(frag.numerador, greaterThan(0));
-        expect(frag.denominador, greaterThan(0));
-        // Si el resultado tiene que ser entero, % × cantidad debe ser
-        // múltiplo de 100.
-        expect((frag.numerador * frag.denominador) % 100, 0);
+        expect(frag.tipo, TipoFragmentoEnTejado.reglaDeTres);
+        expect(frag.numerador, greaterThan(0)); // a
+        expect(frag.denominador, greaterThan(0)); // b
+        expect(frag.numeradorB, isNotNull); // c
+        // El resultado tiene que salir entero: b·c divisible entre a.
+        expect(
+          (frag.denominador * (frag.numeradorB ?? 0)) % frag.numerador,
+          0,
+        );
       }
     },
   );

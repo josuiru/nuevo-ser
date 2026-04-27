@@ -68,7 +68,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DEC.09') return TipoFragmentoEnTejado.redondeoDecimal;
   if (skillId == 'FR.07') return TipoFragmentoEnTejado.comparacionDistinta;
   if (skillId == 'DIV.05') return TipoFragmentoEnTejado.primo;
-  if (skillId == 'PROP.03') return TipoFragmentoEnTejado.porcentajeCantidad;
+  if (skillId == 'PROP.03') return TipoFragmentoEnTejado.reglaDeTres;
   if (skillId == 'DEC.03') return TipoFragmentoEnTejado.comparacionMixta;
   if (skillId == 'DIV.06' || skillId == 'DIV.07') {
     return TipoFragmentoEnTejado.mcmMcd;
@@ -238,7 +238,7 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.07';
     case TipoFragmentoEnTejado.primo:
       return 'DIV.05';
-    case TipoFragmentoEnTejado.porcentajeCantidad:
+    case TipoFragmentoEnTejado.reglaDeTres:
       return 'PROP.03';
     case TipoFragmentoEnTejado.comparacionMixta:
       return 'DEC.03';
@@ -340,9 +340,9 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Decisión binaria pura, pero memoria + casos confusos pesan
       // como una divisibilidad media.
       return 0.85;
-    case TipoFragmentoEnTejado.porcentajeCantidad:
-      // Cálculo directo con dos pasos (multiplicar y dividir entre
-      // 100). Más exigente que conversión simple, menos que duales.
+    case TipoFragmentoEnTejado.reglaDeTres:
+      // Regla de tres directa: dos pasos mentales (producto cruzado y
+      // división). Más exigente que un reconocimiento simple.
       return 1.2;
     case TipoFragmentoEnTejado.comparacionMixta:
       // Comparar formatos cruzados — exige convertir mentalmente uno

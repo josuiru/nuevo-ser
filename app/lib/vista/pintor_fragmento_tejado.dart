@@ -65,8 +65,8 @@ class PintorFragmentoTejado extends CustomPainter {
     final esComparacionDistinta =
         fragmento.tipo == TipoFragmentoEnTejado.comparacionDistinta;
     final esPrimo = fragmento.tipo == TipoFragmentoEnTejado.primo;
-    final esPorcentajeCantidad =
-        fragmento.tipo == TipoFragmentoEnTejado.porcentajeCantidad;
+    final esReglaDeTres =
+        fragmento.tipo == TipoFragmentoEnTejado.reglaDeTres;
     final esComparacionMixta =
         fragmento.tipo == TipoFragmentoEnTejado.comparacionMixta;
     final esMcmMcd = fragmento.tipo == TipoFragmentoEnTejado.mcmMcd;
@@ -115,7 +115,7 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                     ? const Color(0xFFCE93D8)
                                                                                     : esPrimo
                                                                                         ? const Color(0xFFAED581)
-                                                                                        : esPorcentajeCantidad
+                                                                                        : esReglaDeTres
                                                                                             ? const Color(0xFFFFAB40)
                                                                                             : esComparacionMixta
                                                                                                 ? const Color(0xFFB39DDB)

@@ -23,7 +23,7 @@ import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
 import '../dominio/problema_jerarquia.dart';
 import '../dominio/problema_mcm_mcd.dart';
-import '../dominio/problema_porcentaje_cantidad.dart';
+import '../dominio/problema_regla_de_tres.dart';
 import '../dominio/problema_primo.dart';
 import '../dominio/problema_representacion_fraccion.dart';
 import '../dominio/problema_mixto_a_impropio.dart'
@@ -53,7 +53,7 @@ import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
 import 'pantalla_jerarquia.dart';
 import 'pantalla_mcm_mcd.dart';
-import 'pantalla_porcentaje_cantidad.dart';
+import 'pantalla_regla_de_tres.dart';
 import 'pantalla_primo.dart';
 import 'pantalla_representacion_fraccion.dart';
 import 'pantalla_mixto_a_impropio.dart';
@@ -276,7 +276,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.redondeoDecimal => 2,
         TipoFragmentoEnTejado.comparacionDistinta => 3,
         TipoFragmentoEnTejado.primo => 1,
-        TipoFragmentoEnTejado.porcentajeCantidad => 3,
+        TipoFragmentoEnTejado.reglaDeTres => 3,
         TipoFragmentoEnTejado.comparacionMixta => 2,
         TipoFragmentoEnTejado.mcmMcd => 3,
         TipoFragmentoEnTejado.jerarquia => 3,
@@ -551,13 +551,17 @@ class _PantallaCazaState extends State<PantallaCaza>
             ),
           ),
         );
-      case TipoFragmentoEnTejado.porcentajeCantidad:
-        // numerador → porcentaje, denominador → cantidad.
+      case TipoFragmentoEnTejado.reglaDeTres:
+        // numerador → a, denominador → b, numeradorB → c.
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => PantallaPorcentajeCantidad(
-              problemaPredeterminado: GeneradorPorcentajeCantidad()
-                  .generarDesdePar(fragmento.numerador, fragmento.denominador),
+            builder: (_) => PantallaReglaDeTres(
+              problemaPredeterminado: GeneradorReglaDeTres()
+                  .generarDesdeTerminos(
+                a: fragmento.numerador,
+                b: fragmento.denominador,
+                c: fragmento.numeradorB ?? 1,
+              ),
             ),
           ),
         );

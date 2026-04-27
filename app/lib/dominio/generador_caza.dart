@@ -27,7 +27,7 @@ import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_representacion_fraccion.dart'
     show GeneradorRepresentacionFraccion;
 import 'problema_mcm_mcd.dart' show GeneradorMcmMcd, ModoMcmMcd;
-import 'problema_porcentaje_cantidad.dart' show GeneradorPorcentajeCantidad;
+import 'problema_regla_de_tres.dart' show GeneradorReglaDeTres;
 import 'problema_primo.dart' show GeneradorPrimo;
 import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
@@ -265,19 +265,21 @@ class GeneradorCaza {
       );
     }
 
-    if (tipo == TipoFragmentoEnTejado.porcentajeCantidad) {
-      final problema = GeneradorPorcentajeCantidad(
+    if (tipo == TipoFragmentoEnTejado.reglaDeTres) {
+      final problema = GeneradorReglaDeTres(
         semilla: _azar.nextInt(1 << 30),
       ).generar(dificultad: dificultad);
+      // Empaquetamos los tres términos: a en numerador, b en
+      // denominador y c en numeradorB para reconstruir el problema al
+      // abrir el Fragmento.
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
-        // Empaquetamos el porcentaje en numerador y la cantidad en
-        // denominador para reproducir el problema al abrir el Fragmento.
-        numerador: problema.porcentaje,
-        denominador: problema.cantidad,
+        numerador: problema.a,
+        denominador: problema.b,
+        numeradorB: problema.c,
         tipo: tipo,
-        etiquetaDecimal: '${problema.porcentaje}%·${problema.cantidad}',
+        etiquetaDecimal: '${problema.a}:${problema.b}·${problema.c}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -857,9 +859,9 @@ class GeneradorCaza {
         // DIV.05 entra pronto — mecánica binaria muy accesible aunque
         // los casos confusos exigen memoria.
         return dificultad >= 1;
-      case TipoFragmentoEnTejado.porcentajeCantidad:
-        // PROP.03 entra cuando el niño ya domina porcentaje→fracción
-        // (PROP.04, tier 3). Cálculo, no reconocimiento.
+      case TipoFragmentoEnTejado.reglaDeTres:
+        // PROP.03 entra cuando el niño ya domina razón básica
+        // (PROP.02). Es el segundo escalón de proporcionalidad.
         return dificultad >= 3;
       case TipoFragmentoEnTejado.comparacionMixta:
         // DEC.03 pide convertir mentalmente — entra cuando ya hay
