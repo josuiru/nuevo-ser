@@ -19,6 +19,7 @@ import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
+import 'package:uno_roto/dominio/problema_primo.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
@@ -1761,6 +1762,84 @@ void main() {
         expect(frag.denominadorB, isNotNull);
         expect(frag.numerador, isNot(equals(frag.numeradorB)));
         expect(frag.denominador, isNot(equals(frag.denominadorB)));
+      }
+    },
+  );
+
+  // ═══ Puzzle de números primos (DIV.05) ═══
+
+  test('ProblemaPrimo clasifica correctamente casos canónicos', () {
+    expect(const ProblemaPrimo(numero: 1).esPrimo, isFalse,
+        reason: '1 nunca es primo (definición).');
+    expect(const ProblemaPrimo(numero: 2).esPrimo, isTrue,
+        reason: '2 es el único par primo.');
+    expect(const ProblemaPrimo(numero: 9).esPrimo, isFalse,
+        reason: '9 = 3² no es primo aunque sea impar.');
+    expect(const ProblemaPrimo(numero: 13).esPrimo, isTrue);
+    expect(const ProblemaPrimo(numero: 15).esPrimo, isFalse);
+    expect(const ProblemaPrimo(numero: 17).esPrimo, isTrue);
+    expect(const ProblemaPrimo(numero: 49).esPrimo, isFalse);
+    expect(const ProblemaPrimo(numero: 91).esPrimo, isFalse,
+        reason: '91 = 7·13 — caso confuso.');
+  });
+
+  test('ProblemaPrimo.esCorrecta valida la respuesta del niño', () {
+    expect(const ProblemaPrimo(numero: 7).esCorrecta(true), isTrue);
+    expect(const ProblemaPrimo(numero: 7).esCorrecta(false), isFalse);
+    expect(const ProblemaPrimo(numero: 9).esCorrecta(false), isTrue);
+    expect(const ProblemaPrimo(numero: 9).esCorrecta(true), isFalse);
+  });
+
+  test(
+    'GeneradorPrimo incluye casos confusos (1, 9, 15…) en buen porcentaje',
+    () {
+      final gen = GeneradorPrimo(semilla: 5);
+      var vio1o2 = false;
+      var vioConfuso = false;
+      const confusos = {1, 9, 15, 21, 25, 27, 33, 35};
+      for (var intento = 0; intento < 80; intento++) {
+        final problema = gen.generar(dificultad: 1);
+        if (problema.numero == 1 || problema.numero == 2) vio1o2 = true;
+        if (confusos.contains(problema.numero)) vioConfuso = true;
+      }
+      expect(vio1o2, isTrue,
+          reason: 'En 80 tiradas debería aparecer al menos una vez 1 o 2.');
+      expect(vioConfuso, isTrue,
+          reason:
+              'En 80 tiradas debería aparecer al menos un confuso impar no primo.');
+    },
+  );
+
+  test('DIV.05 está mapeada al tipo primo', () {
+    expect(skillsConPuzzleImplementado, contains('DIV.05'));
+    expect(tipoParaSkillId('DIV.05'), TipoFragmentoEnTejado.primo);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 17,
+      denominador: 1,
+      tipo: TipoFragmentoEnTejado.primo,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'DIV.05');
+  });
+
+  test(
+    'GeneradorCaza dirigido a DIV.05 produce Fragmentos con números enteros',
+    () {
+      final gen = GeneradorCaza(semilla: 9999);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'DIV.05',
+          esquirlasAcumuladas: 8,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.primo);
+        expect(frag.numerador, greaterThanOrEqualTo(1));
       }
     },
   );

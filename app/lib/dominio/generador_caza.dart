@@ -21,6 +21,7 @@ import 'problema_lectura_fraccion.dart' show GeneradorLecturaFraccion;
 import 'problema_mixto_a_impropio.dart' show GeneradorMixtoAImpropio;
 import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
+import 'problema_primo.dart' show GeneradorPrimo;
 import 'problema_redondeo_decimal.dart' show GeneradorRedondeoDecimal;
 import 'problema_porcentaje.dart' show porcentajesConocidos;
 import 'problema_simplificar.dart' show GeneradorSimplificar;
@@ -149,6 +150,25 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.primo) {
+      final problema = GeneradorPrimo(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // numerador = el número candidato; denominador placeholder.
+        numerador: problema.numero,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: '${problema.numero}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -705,6 +725,10 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.comparacionDistinta:
         // FR.07 va después de FR.05/FR.06 — pide cálculo, no atajos.
         return dificultad >= 2;
+      case TipoFragmentoEnTejado.primo:
+        // DIV.05 entra pronto — mecánica binaria muy accesible aunque
+        // los casos confusos exigen memoria.
+        return dificultad >= 1;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

@@ -43,6 +43,9 @@ import 'package:flutter/foundation.dart';
 /// - [comparacionDistinta]: puzzle FR.07. Dos fracciones sin nada en
 ///   común (denominadores y numeradores distintos). Siguiente escalón
 ///   sobre [comparacion]: la intuición simple ya no basta.
+/// - [primo]: puzzle DIV.05. Mecánica binaria sí/no — ¿el número es
+///   primo? Generador con sesgo a casos confusos: el 1, el 2, impares
+///   no primos como 9, 15, 21.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -64,6 +67,7 @@ enum TipoFragmentoEnTejado {
   mixtoAImpropio,
   redondeoDecimal,
   comparacionDistinta,
+  primo,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
