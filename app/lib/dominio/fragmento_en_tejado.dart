@@ -98,6 +98,10 @@ import 'package:flutter/foundation.dart';
 ///   candidatos. Extiende la prioridad de × y ÷ a fracciones; trampa
 ///   estrella: izquierda-a-derecha. Casos curados con resultado en
 ///   forma fraccionaria simplificada.
+/// - [escala]: puzzle PROP.07. "Mapa 1:500 — 4 cm en plano = ? m" →
+///   20 m. Mecánica: aplicar la escala y luego convertir cm → m.
+///   Distractor estrella: olvidar la conversión y dar el resultado en
+///   cm.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -137,6 +141,7 @@ enum TipoFragmentoEnTejado {
   aumentoDescuento,
   superficie,
   jerarquiaFracciones,
+  escala,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

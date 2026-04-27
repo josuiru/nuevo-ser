@@ -55,6 +55,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'PROP.06',
   'MED.05',
   'OP.02',
+  'PROP.07',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -79,6 +80,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'PROP.06') return TipoFragmentoEnTejado.aumentoDescuento;
   if (skillId == 'MED.05') return TipoFragmentoEnTejado.superficie;
   if (skillId == 'OP.02') return TipoFragmentoEnTejado.jerarquiaFracciones;
+  if (skillId == 'PROP.07') return TipoFragmentoEnTejado.escala;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -284,6 +286,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'MED.05';
     case TipoFragmentoEnTejado.jerarquiaFracciones:
       return 'OP.02';
+    case TipoFragmentoEnTejado.escala:
+      return 'PROP.07';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -482,6 +486,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // Combina jerarquía + aritmética con fracciones (MCM, simplificar).
       // Pesa más que jerarquia con naturales y que un dual.
       return 1.7;
+    case TipoFragmentoEnTejado.escala:
+      // Aplicar escala + conversión cm→m. Pesa parecido a la regla
+      // de tres con conversión añadida.
+      return 1.4;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

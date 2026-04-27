@@ -31,6 +31,7 @@ import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
+import 'problema_escala.dart' show GeneradorEscala;
 import 'problema_jerarquia_fracciones.dart'
     show GeneradorJerarquiaFracciones;
 import 'problema_longitud.dart' show GeneradorLongitud, SimboloUnidad;
@@ -180,6 +181,27 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.escala) {
+      final problema = GeneradorEscala(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      // numerador = denominador de la escala, denominador = valor en
+      // plano (cm). El dispatcher reconstruye con esos dos.
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.denominadorEscala,
+        denominador: problema.valorPlanoCm,
+        tipo: tipo,
+        etiquetaDecimal: '1:${problema.denominadorEscala}'
+            ' ${problema.valorPlanoCm}cm',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1220,6 +1242,9 @@ class GeneradorCaza {
         return dificultad >= 3;
       case TipoFragmentoEnTejado.jerarquiaFracciones:
         // OP.02 combina jerarquía con fracciones — Iniciado II/III.
+        return dificultad >= 4;
+      case TipoFragmentoEnTejado.escala:
+        // PROP.07 depende de PROP.03 + MED.05 — Iniciado III.
         return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

@@ -31,6 +31,7 @@ import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_longitud.dart';
 import 'package:uno_roto/dominio/problema_masa_capacidad.dart';
 import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
+import 'package:uno_roto/dominio/problema_escala.dart';
 import 'package:uno_roto/dominio/problema_jerarquia_fracciones.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
@@ -2548,6 +2549,71 @@ void main() {
           () => unidadDesdeSimbolo(frag.decimalB!),
           returnsNormally,
         );
+      }
+    },
+  );
+
+  // ═══ Puzzle de escala (PROP.07) ═══
+
+  test(
+    'GeneradorEscala calcula correctamente: 1:500 con 4 cm → 20 m',
+    () {
+      final gen = GeneradorEscala(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        denominadorEscala: 500,
+        valorPlanoCm: 4,
+      );
+      expect(problema.resultadoMetros, 20);
+      expect(problema.candidatos, hasLength(4));
+    },
+  );
+
+  test(
+    'GeneradorEscala incluye distractor "olvidar conversión cm→m"',
+    () {
+      // 1:500, 4 cm → 20 m. Sin convertir a m: 4 × 500 = 2000 cm.
+      final gen = GeneradorEscala(semilla: 0);
+      final problema = gen.generarDesdeTerminos(
+        denominadorEscala: 500,
+        valorPlanoCm: 4,
+      );
+      expect(problema.candidatos, contains(2000));
+    },
+  );
+
+  test('PROP.07 está mapeada al tipo escala', () {
+    expect(skillsConPuzzleImplementado, contains('PROP.07'));
+    expect(tipoParaSkillId('PROP.07'), TipoFragmentoEnTejado.escala);
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      numerador: 500,
+      denominador: 4,
+      tipo: TipoFragmentoEnTejado.escala,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'PROP.07');
+  });
+
+  test(
+    'GeneradorCaza dirigido a PROP.07 produce Fragmentos con escala válida',
+    () {
+      final gen = GeneradorCaza(semilla: 4242);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 12; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'PROP.07',
+          esquirlasAcumuladas: 110,
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.escala);
+        expect(frag.numerador, greaterThan(0));
+        expect(frag.denominador, greaterThan(0));
+        // Resultado entero garantizado en metros: cm × escala / 100.
+        expect((frag.numerador * frag.denominador) % 100, 0);
       }
     },
   );

@@ -30,6 +30,7 @@ import '../dominio/problema_longitud.dart';
 import '../dominio/problema_masa_capacidad.dart';
 import '../dominio/problema_porcentaje_de.dart';
 import '../dominio/problema_aumento_descuento.dart';
+import '../dominio/problema_escala.dart';
 import '../dominio/problema_jerarquia_fracciones.dart';
 import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
@@ -72,6 +73,7 @@ import 'pantalla_longitud.dart';
 import 'pantalla_masa_capacidad.dart';
 import 'pantalla_porcentaje_de.dart';
 import 'pantalla_aumento_descuento.dart';
+import 'pantalla_escala.dart';
 import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
 import 'pantalla_tiempo.dart';
@@ -317,6 +319,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.aumentoDescuento => 3,
         TipoFragmentoEnTejado.superficie => 3,
         TipoFragmentoEnTejado.jerarquiaFracciones => 4,
+        TipoFragmentoEnTejado.escala => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -731,6 +734,18 @@ class _PantallaCazaState extends State<PantallaCaza>
                     unidadDesdeSimbolo(fragmento.decimalA ?? 'm'),
                 unidadDestino:
                     unidadDesdeSimbolo(fragmento.decimalB ?? 'cm'),
+              ),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.escala:
+        // numerador → denominadorEscala, denominador → valorPlanoCm.
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaEscala(
+              problemaPredeterminado: GeneradorEscala().generarDesdeTerminos(
+                denominadorEscala: fragmento.numerador,
+                valorPlanoCm: fragmento.denominador,
               ),
             ),
           ),
