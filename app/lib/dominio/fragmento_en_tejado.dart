@@ -136,6 +136,10 @@ import 'package:flutter/foundation.dart';
 ///   marcada con línea discontinua + ángulo recto, y cuatro
 ///   candidatos. Mecánica: (b × h) / 2. Distractor estrella: olvidar
 ///   el /2.
+/// - [circulo]: puzzle GEO.05. Círculo con su radio marcado y la
+///   fórmula del modo (área π·r² o perímetro 2·π·r) explícita; el
+///   niño elige entre cuatro candidatos decimales. π ≈ 3,14.
+///   Distractor estrella: confundir las fórmulas.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -186,6 +190,7 @@ enum TipoFragmentoEnTejado {
   perimetro,
   areaRectangulo,
   areaTriangulo,
+  circulo,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -45,6 +45,7 @@ import 'problema_operacion_mixta.dart' show GeneradorOperacionMixta;
 import 'problema_perimetro.dart' show GeneradorPerimetro;
 import 'problema_area_rectangulo.dart' show GeneradorAreaRectangulo;
 import 'problema_area_triangulo.dart' show GeneradorAreaTriangulo;
+import 'problema_circulo.dart' show GeneradorCirculo;
 // problema_poligono.dart no necesita import: el generador crea el
 // Fragmento con `numerador = numeroDeLados` y el dispatcher reconstruye
 // con `GeneradorPoligono.generarDesdeLados`.
@@ -195,6 +196,25 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.circulo) {
+      // numerador → índice del radio (en GeneradorCirculo.radiosCurados);
+      // denominador → 1 perímetro, 2 área.
+      final indiceRadio = _azar.nextInt(GeneradorCirculo.cantidadDeRadiosCurados);
+      final esArea = _azar.nextBool();
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indiceRadio,
+        denominador: esArea ? 2 : 1,
+        tipo: tipo,
+        etiquetaDecimal: esArea ? 'A·π·r²' : 'P·2πr',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1477,6 +1497,9 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.areaTriangulo:
         // GEO.04 depende de GEO.03 — Iniciado II.
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.circulo:
+        // GEO.05 depende de DEC.06 + GEO.03 — Iniciado III.
+        return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:

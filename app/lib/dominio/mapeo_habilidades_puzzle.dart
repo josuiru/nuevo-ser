@@ -66,6 +66,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'GEO.02',
   'GEO.03',
   'GEO.04',
+  'GEO.05',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -103,6 +104,7 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'GEO.02') return TipoFragmentoEnTejado.perimetro;
   if (skillId == 'GEO.03') return TipoFragmentoEnTejado.areaRectangulo;
   if (skillId == 'GEO.04') return TipoFragmentoEnTejado.areaTriangulo;
+  if (skillId == 'GEO.05') return TipoFragmentoEnTejado.circulo;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -330,6 +332,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'GEO.03';
     case TipoFragmentoEnTejado.areaTriangulo:
       return 'GEO.04';
+    case TipoFragmentoEnTejado.circulo:
+      return 'GEO.05';
     case TipoFragmentoEnTejado.comparacionUnidad:
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
@@ -570,6 +574,11 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
       // (b×h)/2 — escalón pedagógico claro sobre rectángulo. La
       // trampa "olvidar el /2" es persistente.
       return 1.3;
+    case TipoFragmentoEnTejado.circulo:
+      // Cálculo con π — multiplicación con decimales. Pesa más que el
+      // triángulo: la trampa de confundir fórmulas y el formato decimal
+      // suben la dificultad.
+      return 1.5;
     case TipoFragmentoEnTejado.impropio:
     case TipoFragmentoEnTejado.proporcional:
       return 1.3;

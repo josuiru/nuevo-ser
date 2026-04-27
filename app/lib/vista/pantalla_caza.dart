@@ -42,6 +42,7 @@ import '../dominio/problema_poligono.dart';
 import '../dominio/problema_perimetro.dart';
 import '../dominio/problema_area_rectangulo.dart';
 import '../dominio/problema_area_triangulo.dart';
+import '../dominio/problema_circulo.dart';
 import '../dominio/problema_superficie.dart';
 import '../dominio/problema_tiempo.dart';
 import '../dominio/problema_mcm_mcd.dart';
@@ -93,6 +94,7 @@ import 'pantalla_poligono.dart';
 import 'pantalla_perimetro.dart';
 import 'pantalla_area_rectangulo.dart';
 import 'pantalla_area_triangulo.dart';
+import 'pantalla_circulo.dart';
 import 'pantalla_escala.dart';
 import 'pantalla_jerarquia_fracciones.dart';
 import 'pantalla_superficie.dart';
@@ -350,6 +352,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.perimetro => 2,
         TipoFragmentoEnTejado.areaRectangulo => 2,
         TipoFragmentoEnTejado.areaTriangulo => 2,
+        TipoFragmentoEnTejado.circulo => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -825,6 +828,20 @@ class _PantallaCazaState extends State<PantallaCaza>
             builder: (_) => PantallaAreaTriangulo(
               problemaPredeterminado: GeneradorAreaTriangulo()
                   .generarPorIndice(fragmento.numerador),
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.circulo:
+        final radio = GeneradorCirculo.radiosCurados[
+            fragmento.numerador.clamp(0, GeneradorCirculo.cantidadDeRadiosCurados - 1)];
+        final modoCirculo = fragmento.denominador == 2
+            ? ModoCirculo.area
+            : ModoCirculo.perimetro;
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaCirculo(
+              problemaPredeterminado:
+                  GeneradorCirculo().generarDesde(radio, modoCirculo),
             ),
           ),
         );

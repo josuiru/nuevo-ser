@@ -111,6 +111,7 @@ class PintorFragmentoTejado extends CustomPainter {
         fragmento.tipo == TipoFragmentoEnTejado.areaRectangulo;
     final esAreaTriangulo =
         fragmento.tipo == TipoFragmentoEnTejado.areaTriangulo;
+    final esCirculo = fragmento.tipo == TipoFragmentoEnTejado.circulo;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -209,7 +210,9 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                                                                                                                                     ? const Color(0xFF8D6E63)
                                                                                                                                                                                                     : esAreaTriangulo
                                                                                                                                                                                                         ? const Color(0xFFA1887F)
-                                                                                                                                                                                                        : PaletaNeon.azulNeon;
+                                                                                                                                                                                                        : esCirculo
+                                                                                                                                                                                                            ? const Color(0xFFAB47BC)
+                                                                                                                                                                                                            : PaletaNeon.azulNeon;
 
     if (esEspejo && !escapando) {
       // Aro fantasma que insinúa el "espejo" del Fragmento.

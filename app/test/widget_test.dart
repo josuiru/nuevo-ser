@@ -43,6 +43,7 @@ import 'package:uno_roto/dominio/problema_poligono.dart';
 import 'package:uno_roto/dominio/problema_perimetro.dart';
 import 'package:uno_roto/dominio/problema_area_rectangulo.dart';
 import 'package:uno_roto/dominio/problema_area_triangulo.dart';
+import 'package:uno_roto/dominio/problema_circulo.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2587,6 +2588,39 @@ void main() {
       final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
       final problema = gen.generarPorIndice(2);
       expect(problema.candidatosPorcentaje, contains(25));
+    },
+  );
+
+  // ═══ Puzzle de círculo (GEO.05) ═══
+
+  test('GEO.05 está mapeada al tipo circulo', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.05'));
+    expect(tipoParaSkillId('GEO.05'), TipoFragmentoEnTejado.circulo);
+  });
+
+  test('GeneradorCirculo aplica π·r² para el área', () {
+    // r=5 → π·25 ≈ 78,5 con π=3,14.
+    final problema = GeneradorCirculo(semilla: 0)
+        .generarDesde(5, ModoCirculo.area);
+    expect(problema.respuesta, closeTo(78.5, 0.01));
+  });
+
+  test('GeneradorCirculo aplica 2·π·r para el perímetro', () {
+    // r=5 → 2·π·5 = 31,4 con π=3,14.
+    final problema = GeneradorCirculo(semilla: 0)
+        .generarDesde(5, ModoCirculo.perimetro);
+    expect(problema.respuesta, closeTo(31.4, 0.01));
+  });
+
+  test(
+    'GeneradorCirculo incluye la fórmula contraria como distractor',
+    () {
+      // r=5 área = 78,5; perímetro 31,4 debe estar entre los distractores.
+      final problema = GeneradorCirculo(semilla: 0)
+          .generarDesde(5, ModoCirculo.area);
+      final tieneTrampa =
+          problema.candidatos.any((c) => (c - 31.4).abs() < 0.01);
+      expect(tieneTrampa, isTrue);
     },
   );
 
