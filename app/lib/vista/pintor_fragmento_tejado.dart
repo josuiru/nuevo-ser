@@ -106,6 +106,7 @@ class PintorFragmentoTejado extends CustomPainter {
     final esOperacionMixta =
         fragmento.tipo == TipoFragmentoEnTejado.operacionMixta;
     final esPoligono = fragmento.tipo == TipoFragmentoEnTejado.poligono;
+    final esPerimetro = fragmento.tipo == TipoFragmentoEnTejado.perimetro;
     final colorAura = escapando
         ? PaletaNeon.rosaAcento
         : esEspejo
@@ -198,7 +199,9 @@ class PintorFragmentoTejado extends CustomPainter {
                                                                                                                                                                                         ? const Color(0xFF7E57C2)
                                                                                                                                                                                         : esPoligono
                                                                                                                                                                                             ? const Color(0xFF66BB6A)
-                                                                                                                                                                                            : PaletaNeon.azulNeon;
+                                                                                                                                                                                            : esPerimetro
+                                                                                                                                                                                                ? const Color(0xFF26A69A)
+                                                                                                                                                                                                : PaletaNeon.azulNeon;
 
     if (esEspejo && !escapando) {
       // Aro fantasma que insinúa el "espejo" del Fragmento.

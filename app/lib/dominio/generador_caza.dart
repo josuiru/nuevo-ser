@@ -42,6 +42,7 @@ import 'problema_escala.dart' show GeneradorEscala;
 import 'problema_jerarquia_fracciones.dart'
     show GeneradorJerarquiaFracciones;
 import 'problema_operacion_mixta.dart' show GeneradorOperacionMixta;
+import 'problema_perimetro.dart' show GeneradorPerimetro;
 // problema_poligono.dart no necesita import: el generador crea el
 // Fragmento con `numerador = numeroDeLados` y el dispatcher reconstruye
 // con `GeneradorPoligono.generarDesdeLados`.
@@ -192,6 +193,23 @@ class GeneradorCaza {
         // Etiqueta visual: "24·múlt 6" — al estilo del fragmento
         // divisibilidad pero indicando el fraseado.
         etiquetaDecimal: '${problema.numero}·m${problema.divisor}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.perimetro) {
+      final indice =
+          _azar.nextInt(GeneradorPerimetro.cantidadDeCasosCurados);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: indice,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: 'PER',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1413,6 +1431,9 @@ class GeneradorCaza {
         // GEO.01 abre el dominio GEO desde Aprendiz III — el niño ya
         // ha visto cuadrados y triángulos en la vida real, solo
         // necesita aprender los nombres griegos.
+        return dificultad >= 2;
+      case TipoFragmentoEnTejado.perimetro:
+        // GEO.02 entra justo después de GEO.01 — Iniciado I.
         return dificultad >= 2;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

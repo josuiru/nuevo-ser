@@ -40,6 +40,7 @@ import 'package:uno_roto/dominio/problema_probabilidad.dart';
 import 'package:uno_roto/dominio/problema_probabilidad_porcentaje.dart';
 import 'package:uno_roto/dominio/problema_operacion_mixta.dart';
 import 'package:uno_roto/dominio/problema_poligono.dart';
+import 'package:uno_roto/dominio/problema_perimetro.dart';
 import 'package:uno_roto/dominio/problema_porcentaje_de.dart';
 import 'package:uno_roto/dominio/problema_superficie.dart';
 import 'package:uno_roto/dominio/problema_tiempo.dart';
@@ -2584,6 +2585,30 @@ void main() {
       final gen = GeneradorProbabilidadPorcentaje(semilla: 0);
       final problema = gen.generarPorIndice(2);
       expect(problema.candidatosPorcentaje, contains(25));
+    },
+  );
+
+  // ═══ Puzzle de perímetro (GEO.02) ═══
+
+  test('GEO.02 está mapeada al tipo perimetro', () {
+    expect(skillsConPuzzleImplementado, contains('GEO.02'));
+    expect(tipoParaSkillId('GEO.02'), TipoFragmentoEnTejado.perimetro);
+  });
+
+  test('GeneradorPerimetro suma todos los lados', () {
+    final gen = GeneradorPerimetro(semilla: 0);
+    // Caso 0: triángulo 3-4-5 → 12.
+    final problema = gen.generarPorIndice(0);
+    expect(problema.respuesta, 12);
+  });
+
+  test(
+    'GeneradorPerimetro incluye olvidar-un-lado como distractor',
+    () {
+      // Caso 0: triángulo 3-4-5 → 12. Olvidar primer lado: 12-3 = 9.
+      final gen = GeneradorPerimetro(semilla: 0);
+      final problema = gen.generarPorIndice(0);
+      expect(problema.candidatos, contains(9));
     },
   );
 

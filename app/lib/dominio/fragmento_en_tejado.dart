@@ -125,6 +125,10 @@ import 'package:flutter/foundation.dart';
 /// - [poligono]: puzzle GEO.01. Primera mecánica visual del dominio
 ///   GEO. Se dibuja un polígono regular y el niño elige su nombre
 ///   entre cuatro candidatos (triángulo, cuadrado, pentágono…).
+/// - [perimetro]: puzzle GEO.02. Polígono dibujado con sus lados
+///   etiquetados; el niño suma los lados y elige el perímetro entre
+///   cuatro candidatos. Distractores: olvidar un lado, tomar la
+///   mitad, multiplicar por número de lados.
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -172,6 +176,7 @@ enum TipoFragmentoEnTejado {
   probabilidadPorcentaje,
   operacionMixta,
   poligono,
+  perimetro,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de
