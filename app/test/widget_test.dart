@@ -18,6 +18,7 @@ import 'package:uno_roto/dominio/problema_comparacion_unidad.dart';
 import 'package:uno_roto/dominio/problema_divisibilidad.dart';
 import 'package:uno_roto/dominio/problema_lectura_decimal.dart';
 import 'package:uno_roto/dominio/problema_lectura_fraccion.dart';
+import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -1484,6 +1485,95 @@ void main() {
         expect(frag.tipo, TipoFragmentoEnTejado.lecturaFraccion);
         expect(frag.etiquetaDecimal, isNotNull);
         expect(frag.etiquetaDecimal, isNotEmpty);
+      }
+    },
+  );
+
+  // ═══ Puzzle de mixto a impropio (FR.13) ═══
+
+  test(
+    'GeneradorMixtoAImpropio produce 4 candidatos con el correcto entre ellos',
+    () {
+      final gen = GeneradorMixtoAImpropio(semilla: 11);
+      final problema = gen.generar(dificultad: 1);
+      expect(problema.candidatos, hasLength(4));
+      expect(problema.indiceCorrecto, inInclusiveRange(0, 3));
+      final correcta = problema.fraccionCorrecta;
+      expect(
+        correcta.numerador,
+        problema.entero * problema.denominador + problema.numerador,
+      );
+      expect(correcta.denominador, problema.denominador);
+    },
+  );
+
+  test(
+    'GeneradorMixtoAImpropio incluye trampas pedagógicas: suma errónea y solo fracción',
+    () {
+      final gen = GeneradorMixtoAImpropio(semilla: 42);
+      var vioSumaErronea = false;
+      var vioSoloFraccion = false;
+      for (var intento = 0; intento < 30; intento++) {
+        final problema = gen.generar(dificultad: 2);
+        for (final c in problema.candidatos) {
+          if (c.numerador == problema.entero + problema.numerador &&
+              c.denominador == problema.denominador) {
+            vioSumaErronea = true;
+          }
+          if (c.numerador == problema.numerador &&
+              c.denominador == problema.denominador) {
+            vioSoloFraccion = true;
+          }
+        }
+      }
+      expect(vioSumaErronea, isTrue,
+          reason: 'En 30 tiradas debería aparecer la suma errónea como distractor.');
+      expect(vioSoloFraccion, isTrue,
+          reason: 'En 30 tiradas debería aparecer la fracción sola.');
+    },
+  );
+
+  test('FR.13 está mapeada al tipo mixtoAImpropio', () {
+    expect(skillsConPuzzleImplementado, contains('FR.13'));
+    expect(
+      tipoParaSkillId('FR.13'),
+      TipoFragmentoEnTejado.mixtoAImpropio,
+    );
+
+    final frag = FragmentoEnTejado(
+      identificador: 'test',
+      // 2 y 3/4 → 11/4. numeradorB lleva el entero.
+      numerador: 11,
+      denominador: 4,
+      numeradorB: 2,
+      tipo: TipoFragmentoEnTejado.mixtoAImpropio,
+      xNormalizado: 0,
+      yNormalizado: 0,
+      instanteAparicion: DateTime(2026, 4, 27),
+      tiempoDeVida: const Duration(seconds: 10),
+    );
+    expect(idHabilidadPrincipal(frag), 'FR.13');
+  });
+
+  test(
+    'GeneradorCaza dirigido a FR.13 produce Fragmento con entero y denominador coherentes',
+    () {
+      final gen = GeneradorCaza(semilla: 271828);
+      final ahora = DateTime(2026, 4, 27);
+      for (var intento = 0; intento < 15; intento++) {
+        final frag = gen.siguienteParaSkill(
+          idHabilidad: 'FR.13',
+          esquirlasAcumuladas: 60, // tier 4+ para que entre
+          ahora: ahora.add(Duration(seconds: intento)),
+        );
+        expect(frag.tipo, TipoFragmentoEnTejado.mixtoAImpropio);
+        expect(frag.numeradorB, isNotNull);
+        expect(frag.numeradorB!, greaterThanOrEqualTo(1));
+        // numerador = entero * denominador + parteFraccionaria → siempre > entero*denominador
+        expect(
+          frag.numerador,
+          greaterThan(frag.numeradorB! * frag.denominador),
+        );
       }
     },
   );

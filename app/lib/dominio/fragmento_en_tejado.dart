@@ -36,6 +36,8 @@ import 'package:flutter/foundation.dart';
 /// - [lecturaFraccion]: puzzle FR.02. Texto en castellano
 ///   ("tres quintos") + cuatro fracciones candidatas. Simétrico a
 ///   [lecturaDecimal] pero con trampas propias del idioma de fracciones.
+/// - [mixtoAImpropio]: puzzle FR.13. Número mixto ("2 y 3/4") y
+///   cuatro fracciones impropias candidatas. Inverso de [impropio].
 enum TipoFragmentoEnTejado {
   unitario,
   espejo,
@@ -54,6 +56,7 @@ enum TipoFragmentoEnTejado {
   multiplos,
   comparacionUnidad,
   lecturaFraccion,
+  mixtoAImpropio,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

@@ -34,6 +34,7 @@ const Set<String> skillsConPuzzleImplementado = {
   'DEC.02',
   'FR.04',
   'FR.02',
+  'FR.13',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -54,9 +55,8 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'DEC.02') return TipoFragmentoEnTejado.comparacionDecimal;
   if (skillId == 'FR.04') return TipoFragmentoEnTejado.comparacionUnidad;
   if (skillId == 'FR.02') return TipoFragmentoEnTejado.lecturaFraccion;
-  if (skillId == 'FR.12' || skillId == 'FR.13') {
-    return TipoFragmentoEnTejado.impropio;
-  }
+  if (skillId == 'FR.13') return TipoFragmentoEnTejado.mixtoAImpropio;
+  if (skillId == 'FR.12') return TipoFragmentoEnTejado.impropio;
   if (skillId == 'FR.16' ||
       skillId == 'FR.17' ||
       skillId == 'FR.19' ||
@@ -196,6 +196,8 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'FR.04';
     case TipoFragmentoEnTejado.lecturaFraccion:
       return 'FR.02';
+    case TipoFragmentoEnTejado.mixtoAImpropio:
+      return 'FR.13';
     case TipoFragmentoEnTejado.dual:
       switch (fragmento.operador) {
         case OperadorAritmetico.suma:
@@ -271,6 +273,10 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.lecturaFraccion:
       // Mecánica texto→fracción, similar a DEC.01 lectura decimal.
       return 0.9;
+    case TipoFragmentoEnTejado.mixtoAImpropio:
+      // Conversión con cálculo aritmético — un escalón sobre simple
+      // identificación, similar a impropio inverso.
+      return 1.2;
     case TipoFragmentoEnTejado.espejo:
     case TipoFragmentoEnTejado.decimal:
     case TipoFragmentoEnTejado.porcentaje:

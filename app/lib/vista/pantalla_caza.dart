@@ -19,6 +19,8 @@ import '../dominio/problema_divisibilidad.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_decimal.dart';
 import '../dominio/problema_lectura_fraccion.dart';
+import '../dominio/problema_mixto_a_impropio.dart'
+    show ProblemaMixtoAImpropio;
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
 import '../nucleo/paleta.dart';
@@ -39,6 +41,7 @@ import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_lectura_decimal.dart';
 import 'pantalla_lectura_fraccion.dart';
+import 'pantalla_mixto_a_impropio.dart';
 import 'pantalla_porcentaje.dart';
 import 'pantalla_proporcional.dart';
 import 'pantalla_simplificar.dart';
@@ -253,6 +256,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.lecturaDecimal => 2,
         TipoFragmentoEnTejado.comparacionUnidad => 2,
         TipoFragmentoEnTejado.lecturaFraccion => 2,
+        TipoFragmentoEnTejado.mixtoAImpropio => 3,
         TipoFragmentoEnTejado.impropio => 3,
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
@@ -472,7 +476,70 @@ class _PantallaCazaState extends State<PantallaCaza>
             ),
           ),
         );
+      case TipoFragmentoEnTejado.mixtoAImpropio:
+        // numeradorB lleva el entero; numerador/denominador llevan la
+        // impropia ya calculada — al reconstruir el mixto, tomamos
+        // num original = numerador − entero × denominador.
+        final entero = fragmento.numeradorB ?? 1;
+        final denominador = fragmento.denominador;
+        final numeradorMixto = fragmento.numerador - entero * denominador;
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaMixtoAImpropio(
+              problemaPredeterminado: _construirMixtoAImpropio(
+                entero: entero,
+                numerador: numeradorMixto,
+                denominador: denominador,
+              ),
+            ),
+          ),
+        );
     }
+  }
+
+  ProblemaMixtoAImpropio _construirMixtoAImpropio({
+    required int entero,
+    required int numerador,
+    required int denominador,
+  }) {
+    // Reconstruye el problema FR.13 con los distractores pedagógicos
+    // canónicos a partir de un mixto concreto. Los cuatro candidatos
+    // siempre incluyen el correcto, la suma errónea, la fracción sola
+    // y el producto sin sumar.
+    final correcto = Fraccion(entero * denominador + numerador, denominador);
+    final propuestos = <Fraccion>[correcto];
+    bool yaEsta(Fraccion f) =>
+        propuestos.any((p) =>
+            p.numerador == f.numerador && p.denominador == f.denominador);
+    void anyadirSiNuevo(Fraccion f) {
+      if (f.numerador > 0 && !yaEsta(f)) propuestos.add(f);
+    }
+
+    anyadirSiNuevo(Fraccion(entero + numerador, denominador));
+    anyadirSiNuevo(Fraccion(numerador, denominador));
+    anyadirSiNuevo(Fraccion(entero * numerador, denominador));
+
+    var paso = 1;
+    while (propuestos.length < 4) {
+      anyadirSiNuevo(Fraccion(correcto.numerador + paso, denominador));
+      if (propuestos.length < 4) {
+        anyadirSiNuevo(Fraccion(correcto.numerador - paso, denominador));
+      }
+      paso++;
+    }
+
+    final indice = propuestos.indexWhere(
+      (f) =>
+          f.numerador == correcto.numerador &&
+          f.denominador == correcto.denominador,
+    );
+    return ProblemaMixtoAImpropio(
+      entero: entero,
+      numerador: numerador,
+      denominador: denominador,
+      candidatos: propuestos,
+      indiceCorrecto: indice,
+    );
   }
 
   DecimalConocido? _buscarDecimalConocido(String? etiqueta) {
