@@ -1,0 +1,63 @@
+{
+  "@@locale": "eu",
+
+  "_TODO_GLOBAL": "Todas las cadenas siguientes son TODO_EU. Las debe revisar un hablante nativo con criterio terminológico naturalista (Elhuyar, Aranzadi). En S1 dejamos los strings con el prefijo 'TODO_EU · ' + el castellano para que el desarrollador pueda detectarlos visualmente y para que el equipo de localización los traduzca.",
+
+  "tituloApp": "TODO_EU · El Cuaderno",
+  "subtituloBienvenida": "TODO_EU · Una herramienta para anotar lo que ves vivo cerca de ti.",
+  "saludoSinNombre": "TODO_EU · Hola.",
+  "saludoConNombre": "TODO_EU · Hola, {nombre}.",
+  "@saludoConNombre": {
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "navCuaderno": "TODO_EU · cuaderno",
+  "navMapa": "TODO_EU · mapa",
+  "navMisterios": "TODO_EU · misterios",
+  "navTutor": "TODO_EU · tutor",
+  "seccionSitSpot": "TODO_EU · Tu sit spot",
+  "seccionMisteriosAbiertos": "TODO_EU · Misterios abiertos",
+  "seccionUltimaPagina": "TODO_EU · Última página",
+  "sitSpotInvitacion": "TODO_EU · Cuando estés en algún sitio al aire libre que te guste — un parque, un árbol, una esquina — puedes hacerlo tu sit spot. Toca aquí cuando estés.",
+  "sitSpotUltimaVisita": "TODO_EU · Última visita: {cuando}",
+  "@sitSpotUltimaVisita": {
+    "placeholders": {
+      "cuando": {
+        "type": "String"
+      }
+    }
+  },
+  "ultimaPaginaVacia": "TODO_EU · Aún no has anotado nada. Cuando lo hagas, aparecerá aquí.",
+  "misteriosVacio": "TODO_EU · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.",
+  "navProximamente": "TODO_EU · Próximamente.",
+  "observacionTitulo": "TODO_EU · nueva observación",
+  "observacionCabecera": "TODO_EU · Hoy · {hora}",
+  "@observacionCabecera": {
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "observacionCajaFoto": "TODO_EU · foto",
+  "observacionCajaDibujo": "TODO_EU · dibujo",
+  "observacionCajaPlaceholder": "TODO_EU · Cuando llegue Sprint 5, aquí podrás añadir foto o dibujo.",
+  "observacionEtiquetaQueViste": "TODO_EU · qué viste",
+  "observacionPlaceholderQueViste": "TODO_EU · describe lo que has visto, sin nombrarlo si no estás segura",
+  "observacionEtiquetaCreesQueEs": "TODO_EU · crees que es",
+  "observacionPlaceholderCreesQueEs": "TODO_EU · si quieres, propón un nombre",
+  "confianzaConsenso": "TODO_EU · consenso",
+  "confianzaHipotesisActiva": "TODO_EU · hipótesis activa",
+  "confianzaNoSegura": "TODO_EU · no estoy segura",
+  "confianzaConsensoTooltip": "TODO_EU · lo has confirmado con una clave o con el Tutor",
+  "confianzaNoSeguraTooltip": "TODO_EU · no pasa nada, anótalo así",
+  "observacionAvisoFalta": "TODO_EU · haz una nota antes de guardar",
+  "observacionBotonGuardar": "TODO_EU · Guardar en el cuaderno",
+  "tutorSaludoCanonico": "TODO_EU · Soy el Tutor del Cuaderno. Pregúntame lo que necesites.",
+  "tutorPlaceholderInput": "TODO_EU · escribe tu pregunta",
+  "tutorBotonEnviar": "TODO_EU · Enviar",
+  "tutorRespuestaCanned": "TODO_EU · El Tutor todavía no está conectado. Vuelve en unas semanas."
+}

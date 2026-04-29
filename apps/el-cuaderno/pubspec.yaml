@@ -1,0 +1,52 @@
+name: el_cuaderno
+description: "El Cuaderno — herramienta de campo digital con alma pedagógica para 9-13 años. Tercer juego de Colección Nuevo Ser Kids. Sprint 1: scaffolding mínimo con datos sembrados, sin red, sin LLM, sin geolocalización."
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Localización del juego (biblia §10: castellano/euskera/catalán desde
+  # día cero). intl alimenta a la generación gen_l10n nativa.
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  # Persistencia local cifrada (doc 03 §2.1, §10.2). Primer paquete del
+  # monorepo que adopta Isar — decisión específica de El Cuaderno por
+  # los volúmenes de medios (fotos, dibujos), las queries por
+  # sit_spot/región/estación/misterio, y el cifrado en reposo que el
+  # principio 1 de la biblia requiere. Adopción acotada al juego en S1;
+  # el ascenso a `nuevo_ser_core` se evaluará si tiene sentido para más
+  # juegos.
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
+  # Generación de UUID v4 para Observacion/SitSpot/Misterio/PaginaCuaderno.
+  uuid: ^4.4.0
+
+  # Resolución del directorio de documentos para colocar la base Isar.
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+  # Generador de modelos Isar (anotaciones → código). Se invoca con
+  # `dart run build_runner build --delete-conflicting-outputs`.
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
+
+  # Localización gen_l10n nativa de Flutter (no intl_utils). Los ARB
+  # viven en lib/nucleo/i18n/arb/, la generación cae en
+  # .dart_tool/flutter_gen/gen_l10n/.
+  generate: true

@@ -1,0 +1,7 @@
+arb-dir: lib/nucleo/i18n/arb
+template-arb-file: app_es.arb
+output-localization-file: textos_app.dart
+output-class: TextosApp
+nullable-getter: false
+synthetic-package: false
+output-dir: lib/nucleo/i18n/generado

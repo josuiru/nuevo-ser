@@ -1,0 +1,15 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Modelos Isar generados por isar_generator — el código generado no
+    # es estilísticamente nuestro y a veces dispara lints que no
+    # queremos arreglar a mano.
+    - "lib/infraestructura/isar/**.g.dart"
+
+linter:
+  rules:
+    # El proyecto usa nombres de parámetros en castellano (regla del
+    # CLAUDE.md raíz). Los métodos override del framework siguen siendo
+    # reconocibles por el tipo y la anotación @override.
+    avoid_renaming_method_parameters: false

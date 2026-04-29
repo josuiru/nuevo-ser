@@ -1,0 +1,153 @@
+{
+  "@@locale": "es",
+
+  "tituloApp": "El Cuaderno",
+  "@tituloApp": {
+    "description": "Nombre del juego (provisional, biblia §10.1)."
+  },
+
+  "subtituloBienvenida": "Una herramienta para anotar lo que ves vivo cerca de ti.",
+  "@subtituloBienvenida": {
+    "description": "Bajada de la pantalla de bienvenida (doc 13 §1.1). En S1 no se muestra todavía — se introducirá en el flujo de onboarding del Sprint 2."
+  },
+
+  "saludoSinNombre": "Hola.",
+  "@saludoSinNombre": {
+    "description": "Saludo del cuaderno cuando el niño aún no ha puesto nombre."
+  },
+
+  "saludoConNombre": "Hola, {nombre}.",
+  "@saludoConNombre": {
+    "description": "Saludo del cuaderno con el nombre del niño.",
+    "placeholders": {
+      "nombre": {
+        "type": "String",
+        "example": "Lucía"
+      }
+    }
+  },
+
+  "navCuaderno": "cuaderno",
+  "@navCuaderno": {
+    "description": "Pestaña 1 del bottom nav (sentence case sin mayúscula inicial — el botón es del oficio, no un título)."
+  },
+  "navMapa": "mapa",
+  "navMisterios": "misterios",
+  "navTutor": "tutor",
+
+  "seccionSitSpot": "Tu sit spot",
+  "@seccionSitSpot": {
+    "description": "Cabecera de la sección que aloja la tarjeta del sit spot."
+  },
+
+  "seccionMisteriosAbiertos": "Misterios abiertos",
+  "@seccionMisteriosAbiertos": {
+    "description": "Cabecera de la sección de Misterios abiertos del niño."
+  },
+
+  "seccionUltimaPagina": "Última página",
+  "@seccionUltimaPagina": {
+    "description": "Cabecera de la sección que muestra la observación más reciente."
+  },
+
+  "sitSpotInvitacion": "Cuando estés en algún sitio al aire libre que te guste — un parque, un árbol, una esquina — puedes hacerlo tu sit spot. Toca aquí cuando estés.",
+  "@sitSpotInvitacion": {
+    "description": "Invitación discreta a configurar sit spot, sin urgencia (doc 13 §2.1)."
+  },
+
+  "sitSpotUltimaVisita": "Última visita: {cuando}",
+  "@sitSpotUltimaVisita": {
+    "description": "Línea que muestra cuándo fue la última vez que el niño visitó el sit spot.",
+    "placeholders": {
+      "cuando": {
+        "type": "String",
+        "example": "hace 4 días"
+      }
+    }
+  },
+
+  "ultimaPaginaVacia": "Aún no has anotado nada. Cuando lo hagas, aparecerá aquí.",
+  "@ultimaPaginaVacia": {
+    "description": "Estado vacío de la sección 'última página' (doc 13 §11.10)."
+  },
+
+  "misteriosVacio": "Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.",
+  "@misteriosVacio": {
+    "description": "Estado vacío de la sección de Misterios."
+  },
+
+  "navProximamente": "Próximamente.",
+  "@navProximamente": {
+    "description": "Placeholder de las pestañas Mapa y Misterios en S1 — el bottom nav está, pero solo Cuaderno y Tutor llevan a algo."
+  },
+
+  "observacionTitulo": "nueva observación",
+  "@observacionTitulo": {
+    "description": "Título de la pantalla de Nueva Observación."
+  },
+
+  "observacionCabecera": "Hoy · {hora}",
+  "@observacionCabecera": {
+    "description": "Cabecera fija con metadatos automáticos (doc 13 §3.2). En S1 solo hora — clima y lugar entrarán en sprints posteriores con la geolocalización.",
+    "placeholders": {
+      "hora": {
+        "type": "String",
+        "example": "17:48"
+      }
+    }
+  },
+
+  "observacionCajaFoto": "foto",
+  "observacionCajaDibujo": "dibujo",
+  "observacionCajaPlaceholder": "Cuando llegue Sprint 5, aquí podrás añadir foto o dibujo.",
+  "@observacionCajaPlaceholder": {
+    "description": "Microcopia honesta para el placeholder gris de foto/dibujo en S1 — la cámara y el canvas táctil no están operativos todavía."
+  },
+
+  "observacionEtiquetaQueViste": "qué viste",
+  "@observacionEtiquetaQueViste": {
+    "description": "Etiqueta del campo obligatorio (doc 13 §3.2)."
+  },
+  "observacionPlaceholderQueViste": "describe lo que has visto, sin nombrarlo si no estás segura",
+  "@observacionPlaceholderQueViste": {
+    "description": "Placeholder del campo de descripción libre. Itálica (estilo se aplica en el widget)."
+  },
+
+  "observacionEtiquetaCreesQueEs": "crees que es",
+  "@observacionEtiquetaCreesQueEs": {
+    "description": "Etiqueta del campo opcional de identificación propuesta."
+  },
+  "observacionPlaceholderCreesQueEs": "si quieres, propón un nombre",
+  "@observacionPlaceholderCreesQueEs": {
+    "description": "Placeholder del campo opcional."
+  },
+
+  "confianzaConsenso": "consenso",
+  "confianzaHipotesisActiva": "hipótesis activa",
+  "confianzaNoSegura": "no estoy segura",
+  "confianzaConsensoTooltip": "lo has confirmado con una clave o con el Tutor",
+  "confianzaNoSeguraTooltip": "no pasa nada, anótalo así",
+
+  "observacionAvisoFalta": "haz una nota antes de guardar",
+  "@observacionAvisoFalta": {
+    "description": "Mensaje de validación amable bajo el botón Guardar (doc 13 §3.2). Sin rojo, sin icono de error, sin 'campo obligatorio'."
+  },
+
+  "observacionBotonGuardar": "Guardar en el cuaderno",
+  "@observacionBotonGuardar": {
+    "description": "Botón principal de la pantalla de observación. Sentence case con mayúscula inicial porque es una acción explícita (criterio de UI: botones llevan inicial; cabeceras de sección no)."
+  },
+
+  "tutorSaludoCanonico": "Soy el Tutor del Cuaderno. Pregúntame lo que necesites.",
+  "@tutorSaludoCanonico": {
+    "description": "Frase canónica de presentación del Tutor (doc 04 §3.1, doc 13 §6.2). Idéntica siempre."
+  },
+
+  "tutorPlaceholderInput": "escribe tu pregunta",
+  "tutorBotonEnviar": "Enviar",
+
+  "tutorRespuestaCanned": "El Tutor todavía no está conectado. Vuelve en unas semanas.",
+  "@tutorRespuestaCanned": {
+    "description": "Respuesta única del Tutor en S1. La conexión real con Claude API entra en Sprint 4 — esta microcopia es deliberada, no un placeholder técnico (README documenta el motivo)."
+  }
+}
