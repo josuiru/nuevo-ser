@@ -21,6 +21,7 @@ if ( ! function_exists( 'wp_json_encode' ) ) {
 	}
 }
 
+require_once __DIR__ . '/../includes/class-ns-filtro-tutor.php';
 require_once __DIR__ . '/../includes/class-ns-companion-agregados.php';
 
 $fallos = 0;
@@ -213,6 +214,103 @@ if ( $h7 === $h8 ) {
 	$fallos++;
 	fprintf( STDERR, "FALLO: hash colisiona entre {a:1} y {a:2}\n" );
 }
+
+// ─── parsear_respuesta_llm ──────────────────────────────────────
+
+// JSON estricto.
+$r = NS_Companion_Agregados::parsear_respuesta_llm(
+	'{"summary_text":"Has practicado fracciones.","conversation_prompt":"¿Qué te ha gustado?"}'
+);
+afirmar( 'Has practicado fracciones.', $r['summary_text'], 'parse: JSON estricto summary' );
+afirmar( '¿Qué te ha gustado?', $r['conversation_prompt'], 'parse: JSON estricto prompt' );
+
+// JSON con espacios y saltos.
+$r = NS_Companion_Agregados::parsear_respuesta_llm(
+	"  \n{\n  \"summary_text\": \"Buen trabajo.\",\n  \"conversation_prompt\": null\n}\n"
+);
+afirmar( 'Buen trabajo.', $r['summary_text'], 'parse: JSON con whitespace summary' );
+afirmar( null, $r['conversation_prompt'], 'parse: JSON con prompt explícito null' );
+
+// JSON envuelto en bloque de código markdown.
+$r = NS_Companion_Agregados::parsear_respuesta_llm(
+	"```json\n{\"summary_text\": \"Sigue así.\", \"conversation_prompt\": \"¿Qué pregunta tienes?\"}\n```"
+);
+afirmar( 'Sigue así.', $r['summary_text'], 'parse: JSON en bloque markdown summary' );
+afirmar( '¿Qué pregunta tienes?', $r['conversation_prompt'], 'parse: JSON en bloque markdown prompt' );
+
+// Texto crudo sin JSON → todo va al summary, prompt null.
+$r = NS_Companion_Agregados::parsear_respuesta_llm(
+	'Esta semana has avanzado en fracciones equivalentes. Sigue así.'
+);
+afirmar(
+	'Esta semana has avanzado en fracciones equivalentes. Sigue así.',
+	$r['summary_text'],
+	'parse: texto crudo → summary entero'
+);
+afirmar( null, $r['conversation_prompt'], 'parse: texto crudo → prompt null' );
+
+// JSON sin summary_text → fallback a texto entero.
+$r = NS_Companion_Agregados::parsear_respuesta_llm( '{"otro_campo": "x"}' );
+afirmar( '{"otro_campo": "x"}', $r['summary_text'], 'parse: JSON sin summary → texto entero' );
+afirmar( null, $r['conversation_prompt'], 'parse: JSON sin summary → prompt null' );
+
+// JSON con prompt vacío → null (no string vacío).
+$r = NS_Companion_Agregados::parsear_respuesta_llm(
+	'{"summary_text":"x","conversation_prompt":""}'
+);
+afirmar( 'x', $r['summary_text'], 'parse: prompt vacío summary' );
+afirmar( null, $r['conversation_prompt'], 'parse: prompt vacío → null' );
+
+// JSON anidado en texto adicional → extracción del primer bloque.
+$r = NS_Companion_Agregados::parsear_respuesta_llm(
+	"Aquí tienes:\n\n{\"summary_text\":\"Buen ritmo.\",\"conversation_prompt\":\"¿Qué fue lo más fácil?\"}\n\nEspero que ayude."
+);
+afirmar( 'Buen ritmo.', $r['summary_text'], 'parse: JSON anidado en texto summary' );
+afirmar( '¿Qué fue lo más fácil?', $r['conversation_prompt'], 'parse: JSON anidado en texto prompt' );
+
+// ─── generar_resumen integrado con stub callable ────────────────
+
+$cliente_stub = function ( array $aggregates ): string {
+	return '{"summary_text":"Has trabajado fracciones esta semana.","conversation_prompt":"¿Qué te ha sorprendido?"}';
+};
+$resumen = NS_Companion_Agregados::generar_resumen(
+	array( 'minutos_jugados' => 42 ),
+	$cliente_stub
+);
+afirmar( 'Has trabajado fracciones esta semana.', $resumen['summary_text'], 'generar: stub OK summary' );
+afirmar( '¿Qué te ha sorprendido?', $resumen['conversation_prompt'], 'generar: stub OK prompt' );
+
+// Filtro PII: si el LLM devuelve un email en el summary, generar_resumen lanza.
+$cliente_pii = function ( array $aggregates ): string {
+	return '{"summary_text":"Escríbeme a foo@bar.com","conversation_prompt":null}';
+};
+$lanzo = false;
+try {
+	NS_Companion_Agregados::generar_resumen( array(), $cliente_pii );
+} catch ( Throwable $e ) {
+	$lanzo = true;
+}
+afirmar( true, $lanzo, 'generar: filtro rechaza summary con email' );
+
+// Filtro PII en prompt no rompe el summary; el prompt queda null.
+$cliente_pii_prompt = function ( array $aggregates ): string {
+	return '{"summary_text":"Buen trabajo.","conversation_prompt":"Llama al 600123456"}';
+};
+$resumen = NS_Companion_Agregados::generar_resumen( array(), $cliente_pii_prompt );
+afirmar( 'Buen trabajo.', $resumen['summary_text'], 'generar: PII en prompt → summary se mantiene' );
+afirmar( null, $resumen['conversation_prompt'], 'generar: PII en prompt → prompt null' );
+
+// Si el cliente lanza, generar_resumen propaga.
+$cliente_falla = function ( array $aggregates ): string {
+	throw new RuntimeException( 'simulado' );
+};
+$lanzo = false;
+try {
+	NS_Companion_Agregados::generar_resumen( array(), $cliente_falla );
+} catch ( Throwable $e ) {
+	$lanzo = true;
+}
+afirmar( true, $lanzo, 'generar: cliente que lanza propaga' );
 
 if ( 0 === $fallos ) {
 	echo "OK\n";

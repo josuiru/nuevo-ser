@@ -34,9 +34,14 @@ class NS_Companion_Agregados {
 	 * POST /companion/aggregates/weekly
 	 *
 	 * @param WP_REST_Request $request
+	 * @param callable|null   $cliente_anthropic Callable que recibe el
+	 *      array de agregados y devuelve el texto crudo del LLM. Se
+	 *      inyecta en tests; en producción usa
+	 *      `NS_Anthropic::pedir_resumen_semanal`. Misma estrategia que
+	 *      `NS_Tutor::explicar`.
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public static function archivar( WP_REST_Request $request ) {
+	public static function archivar( WP_REST_Request $request, ?callable $cliente_anthropic = null ) {
 		global $wpdb;
 
 		$nino_id = (int) $request->get_param( '_nino_id' );
@@ -91,10 +96,15 @@ class NS_Companion_Agregados {
 
 		$ahora = gmdate( 'Y-m-d H:i:s' );
 
-		if ( $existente && (string) $existente['aggregates_hash'] === $hash_actual ) {
-			// Idempotente: mismos agregados en la misma semana, no
-			// regeneramos. Preservamos `summary_text` y `generated_at`
-			// para que el cliente vea el cache real.
+		// Idempotente con cache lleno: mismos agregados, mismo summary
+		// guardado. Devolvemos cache sin invocar al LLM. NO se toca
+		// `generated_at` para que el cliente vea la fecha original del
+		// summary (es la respuesta más útil para "Esta semana").
+		if (
+			$existente
+			&& (string) $existente['aggregates_hash'] === $hash_actual
+			&& '' !== (string) $existente['summary_text']
+		) {
 			return new WP_REST_Response(
 				array(
 					'game_id'             => $game_id,
@@ -110,15 +120,26 @@ class NS_Companion_Agregados {
 			);
 		}
 
+		// Generamos summary AHORA (antes de tocar la fila), así si falla
+		// el cliente recibe summary vacío pero la fila queda escrita con
+		// los agregados nuevos: la próxima llamada con el mismo hash
+		// reintenta. Si sale bien, persistimos summary y prompt; si no,
+		// dejamos el campo vacío y el cliente reintenta más tarde.
+		try {
+			$resumen = self::generar_resumen( $aggregates, $cliente_anthropic );
+			$summary_text        = $resumen['summary_text'];
+			$conversation_prompt = $resumen['conversation_prompt'];
+		} catch ( Throwable $e ) {
+			$summary_text        = '';
+			$conversation_prompt = null;
+		}
+
 		if ( $existente ) {
-			// Hash distinto: los agregados han cambiado a mitad de
-			// semana. Sobrescribimos y borramos el summary cached para
-			// que el tutor IA (cuando se conecte) lo regenere.
 			$resultado = $wpdb->update(
 				$tabla,
 				array(
-					'summary_text'        => '',
-					'conversation_prompt' => null,
+					'summary_text'        => $summary_text,
+					'conversation_prompt' => $conversation_prompt,
 					'aggregates_hash'     => $hash_actual,
 					'generated_at'        => $ahora,
 				),
@@ -145,8 +166,8 @@ class NS_Companion_Agregados {
 					'user_id'             => $nino_id,
 					'game_id'             => $game_id,
 					'iso_week'            => $iso_week,
-					'summary_text'        => '',
-					'conversation_prompt' => null,
+					'summary_text'        => $summary_text,
+					'conversation_prompt' => $conversation_prompt,
 					'aggregates_hash'     => $hash_actual,
 					'generated_at'        => $ahora,
 				),
@@ -167,11 +188,107 @@ class NS_Companion_Agregados {
 				'game_id'             => $game_id,
 				'iso_week'            => $iso_week,
 				'aggregates_hash'     => $hash_actual,
-				'summary_text'        => '',
-				'conversation_prompt' => null,
+				'summary_text'        => $summary_text,
+				'conversation_prompt' => $conversation_prompt,
 				'generated_at'        => $ahora,
 			),
 			$status
+		);
+	}
+
+	/**
+	 * Llama al cliente Anthropic, parsea el JSON crudo y aplica el
+	 * filtro de salida. Lanza Throwable si la llamada falla, si el
+	 * cuerpo no se puede parsear o si el filtro rechaza la respuesta —
+	 * el caller decide qué hacer (en `archivar` se captura para que el
+	 * archivado siga adelante con summary vacío).
+	 *
+	 * @param array<string,mixed> $aggregates
+	 * @param callable|null       $cliente_anthropic
+	 * @return array{summary_text:string, conversation_prompt:?string}
+	 * @throws RuntimeException
+	 */
+	public static function generar_resumen(
+		array $aggregates,
+		?callable $cliente_anthropic = null
+	): array {
+		$cliente = $cliente_anthropic ?? array( 'NS_Anthropic', 'pedir_resumen_semanal' );
+		$crudo   = (string) call_user_func( $cliente, $aggregates );
+
+		$parseado = self::parsear_respuesta_llm( $crudo );
+
+		// El filtro de salida es el mismo que el del tutor de matemáticas.
+		// Aceptable: nos protege de PII y de respuestas vacías. Si más
+		// adelante el filtro semántico cambia, refactorizar a una capa
+		// específica de companion.
+		$revision = NS_Filtro_Tutor::revisar_respuesta( $parseado['summary_text'] );
+		if ( ! $revision['ok'] ) {
+			throw new RuntimeException(
+				'Filtro de salida rechaza summary_text: ' . (string) $revision['motivo']
+			);
+		}
+		$summary = (string) $revision['limpio'];
+
+		$prompt = null;
+		if ( null !== $parseado['conversation_prompt'] ) {
+			$revision_prompt = NS_Filtro_Tutor::revisar_respuesta( $parseado['conversation_prompt'] );
+			if ( $revision_prompt['ok'] ) {
+				$prompt = (string) $revision_prompt['limpio'];
+			}
+			// Si el filtro lo rechaza, dejamos prompt en null pero NO
+			// tiramos toda la respuesta: el summary suele ser lo
+			// importante.
+		}
+
+		return array(
+			'summary_text'        => $summary,
+			'conversation_prompt' => $prompt,
+		);
+	}
+
+	/**
+	 * Parsea el texto crudo del LLM y extrae `summary_text` y
+	 * `conversation_prompt`. Tolerante:
+	 * - Acepta JSON estricto.
+	 * - Acepta JSON envuelto en ``` o markdown.
+	 * - Si nada parsea, usa el texto entero como summary_text y deja
+	 *   conversation_prompt en null.
+	 *
+	 * Pura — testeable sin WP.
+	 *
+	 * @return array{summary_text:string, conversation_prompt:?string}
+	 */
+	public static function parsear_respuesta_llm( string $crudo ): array {
+		$texto = trim( $crudo );
+
+		// Intento 1: parseo directo.
+		$json = json_decode( $texto, true );
+		if ( ! is_array( $json ) ) {
+			// Intento 2: extraer el primer bloque {...} balanceado.
+			if ( preg_match( '/\{(?:[^{}]|(?R))*\}/s', $texto, $coincidencias ) ) {
+				$json = json_decode( $coincidencias[0], true );
+			}
+		}
+
+		if ( is_array( $json ) ) {
+			$summary = isset( $json['summary_text'] ) ? trim( (string) $json['summary_text'] ) : '';
+			$prompt  = isset( $json['conversation_prompt'] ) && '' !== trim( (string) $json['conversation_prompt'] )
+				? trim( (string) $json['conversation_prompt'] )
+				: null;
+			if ( '' !== $summary ) {
+				return array(
+					'summary_text'        => $summary,
+					'conversation_prompt' => $prompt,
+				);
+			}
+		}
+
+		// Fallback: el texto entero es el summary. El cliente verá un
+		// summary y null en prompt; no es ideal pero no se pierde la
+		// info útil.
+		return array(
+			'summary_text'        => $texto,
+			'conversation_prompt' => null,
 		);
 	}
 

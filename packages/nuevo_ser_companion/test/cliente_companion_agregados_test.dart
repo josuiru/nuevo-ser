@@ -154,6 +154,40 @@ void main() {
     );
   });
 
+  test(
+      'POST /companion/aggregates/weekly: 201 con summary y prompt llenos del LLM',
+      () async {
+    final mock = MockClient((_) async => http.Response(
+          jsonEncode({
+            'game_id': 'uno-roto',
+            'iso_week': '2026-W18',
+            'aggregates_hash': 'a' * 64,
+            'summary_text':
+                'Esta semana has avanzado en fracciones equivalentes. Sigue así.',
+            'conversation_prompt': '¿Qué te ha resultado más fácil?',
+            'generated_at': '2026-04-29 22:30:00',
+          }),
+          201,
+        ));
+    final cliente = ClienteCompanion(
+      urlBase: 'https://backend.example',
+      cliente: mock,
+    );
+
+    final resultado = await cliente.archivarAgregadosSemanales(
+      token: 'tok',
+      gameId: 'uno-roto',
+      isoWeek: '2026-W18',
+      aggregates: agregadosEjemplo(),
+    );
+
+    expect(
+      resultado.summaryText,
+      'Esta semana has avanzado en fracciones equivalentes. Sigue así.',
+    );
+    expect(resultado.conversationPrompt, '¿Qué te ha resultado más fácil?');
+  });
+
   test('archivarAgregadosSemanales: aggregates anidados se serializan tal cual',
       () async {
     Map<String, dynamic>? cuerpoEnviado;

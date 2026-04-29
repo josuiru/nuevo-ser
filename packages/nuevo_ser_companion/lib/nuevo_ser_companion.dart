@@ -13,8 +13,10 @@
 /// - Mosaicos: `listarMosaicos` cubre `GET /companion/mosaicos`.
 /// - Aulas: `unirseAula` cubre `POST /classrooms/{code}/join`.
 /// - Agregados: `archivarAgregadosSemanales` cubre
-///   `POST /companion/aggregates/weekly` (sin LLM tutor todavía;
-///   `summaryText` viene vacío hasta el slice de cableado del tutor).
+///   `POST /companion/aggregates/weekly`. El servidor llama al tutor IA
+///   (Claude Haiku) cuando los agregados cambian, aplica el filtro de
+///   PII y cachea por hash. Si el LLM falla, archivamos sin resumen y
+///   el cliente reintenta más tarde.
 ///
 /// Pendiente (siguen 501 en el servidor):
 /// - `POST /companion/aggregates/weekly`

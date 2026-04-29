@@ -3,14 +3,14 @@
 /// Devuelve la fila tras hacer upsert. La identidad es
 /// `(user_id, game_id, iso_week)` (el `user_id` se infiere del JWT). Si
 /// el cliente vuelve a subir los mismos agregados (mismo
-/// [aggregatesHash]), `summaryText` y `generatedAt` preservan el cache;
-/// si los agregados cambiaron, `summaryText` queda en blanco a la espera
-/// de que el tutor IA regenere.
+/// [aggregatesHash]) y ya hay summary cached, `summaryText` y
+/// `generatedAt` preservan el cache. Si los agregados cambiaron, el
+/// servidor llama al tutor IA y devuelve un nuevo resumen.
 ///
-/// **Nota**: en el slice actual el servidor no llama todavía al tutor
-/// IA, así que `summaryText` será cadena vacía y `conversationPrompt`
-/// `null` hasta que se conecte. El cliente puede tratar la cadena vacía
-/// como "summary no disponible aún".
+/// Si el tutor IA falla (red caída, filtro de seguridad rechaza,
+/// timeout), `summaryText` viene vacío — el archivado de los agregados
+/// sigue adelante y el cliente puede reintentar la llamada más tarde
+/// para volver a pedir el summary.
 class AgregadoSemanal {
   final String gameId;
   final String isoWeek;

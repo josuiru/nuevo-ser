@@ -186,12 +186,12 @@ class ClienteCompanion {
   /// ISO-8601, p. ej. `'2026-W18'`) para [gameId]. El servidor calcula un
   /// hash determinista del [aggregates] y hace upsert por
   /// `(nino, juego, semana)`:
-  /// - Misma combinación + mismo hash → 200 idempotente, [summaryText]
-  ///   preserva el cache si lo hubiera.
-  /// - Misma combinación + hash distinto → 200 con [summaryText] vacío
-  ///   (el tutor IA regenerará el resumen cuando se conecte a este
-  ///   endpoint).
-  /// - Combinación nueva → 201 con [summaryText] vacío.
+  /// - Misma combinación + mismo hash + summary cached → 200, devuelve
+  ///   el summary cached sin llamar al LLM.
+  /// - Misma combinación + hash distinto → 200, llama al tutor IA y
+  ///   devuelve summary nuevo. Si el LLM falla, summary vacío.
+  /// - Combinación nueva → 201, llama al tutor IA. Si el LLM falla,
+  ///   summary vacío y el cliente reintenta más tarde.
   ///
   /// Lanza [ExcepcionApi] con código 400 si el shape es inválido; 401 si
   /// el token no es válido; 5xx en otros fallos.

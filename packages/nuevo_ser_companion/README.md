@@ -13,7 +13,7 @@ Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*` del plugin `nu
 | `POST /companion/mosaicos` | `ClienteCompanion.crearMosaico` | `NS_Companion_Mosaicos::crear_mosaico` |
 | `GET /companion/mosaicos` | `ClienteCompanion.listarMosaicos` | `NS_Companion_Mosaicos::listar_mosaicos` |
 | `POST /classrooms/{code}/join` | `ClienteCompanion.unirseAula` | `NS_Companion_Aulas::unirse` |
-| `POST /companion/aggregates/weekly` | `ClienteCompanion.archivarAgregadosSemanales` | `NS_Companion_Agregados::archivar` (sin LLM tutor todavía) |
+| `POST /companion/aggregates/weekly` | `ClienteCompanion.archivarAgregadosSemanales` | `NS_Companion_Agregados::archivar` (con tutor IA) |
 
 ## Pendiente (siguen 501 en el servidor)
 
