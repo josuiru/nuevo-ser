@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
@@ -46,8 +44,6 @@ class RepositorioProgreso {
   static const _prefijoCuadernoLeida = 'cuaderno.leida.';
   static const _prefijoDistritoVisitado = 'distrito_visitado.';
   static const _prefijoFlagNarrativo = 'flag.';
-  static const _prefijoHabilidad = 'habilidad.';
-  static const _prefijoEstadoTutor = 'tutor.estado.';
   static const _sufAudioModoSilencio = 'audio.modo_silencio';
   static const _prefijoAudioVolumenCapa = 'audio.volumen.';
 
@@ -67,6 +63,16 @@ class RepositorioProgreso {
       _claveIdiomaApp,
     },
   );
+
+  /// Persistencia de [EstadoHabilidad] sobre el gestor activo. Los
+  /// métodos públicos del repositorio que tocan habilidades delegan
+  /// aquí.
+  late final RepositorioHabilidades _repoHabilidades =
+      RepositorioHabilidades(gestor: _gestor);
+
+  /// Persistencia de [EstadoTutorHabilidad] sobre el gestor activo.
+  late final RepositorioEstadoTutor _repoEstadoTutor =
+      RepositorioEstadoTutor(gestor: _gestor);
 
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
@@ -453,58 +459,23 @@ class RepositorioProgreso {
     await prefs.setBool(await _clave('$_prefijoFlagNarrativo$flag'), true);
   }
 
-  Future<EstadoHabilidad?> cargarEstadoHabilidad(String idHabilidad) async {
-    final prefs = await _prefs();
-    final clave = await _clave('$_prefijoHabilidad$idHabilidad');
-    final texto = prefs.getString(clave);
-    if (texto == null) return null;
-    try {
-      return EstadoHabilidad.desdeJson(
-        jsonDecode(texto) as Map<String, dynamic>,
-      );
-    } catch (_) {
-      // Formato corrupto: borramos para no bloquear al niño.
-      await prefs.remove(clave);
-      return null;
-    }
-  }
+  Future<EstadoHabilidad?> cargarEstadoHabilidad(String idHabilidad) =>
+      _repoHabilidades.cargar(idHabilidad);
 
-  Future<void> guardarEstadoHabilidad(EstadoHabilidad estado) async {
-    final prefs = await _prefs();
-    await prefs.setString(
-      await _clave('$_prefijoHabilidad${estado.identificadorHabilidad}'),
-      jsonEncode(estado.aJson()),
-    );
-  }
+  Future<void> guardarEstadoHabilidad(EstadoHabilidad estado) =>
+      _repoHabilidades.guardar(estado);
 
   /// Estado del tutor para una habilidad concreta (fallos consecutivos,
   /// última oferta, veces usado). Por-perfil — no queremos que un niño
   /// vea el contador de otro.
-  Future<EstadoTutorHabilidad> cargarEstadoTutor(String idHabilidad) async {
-    final prefs = await _prefs();
-    final clave = await _clave('$_prefijoEstadoTutor$idHabilidad');
-    final texto = prefs.getString(clave);
-    if (texto == null) return const EstadoTutorHabilidad();
-    try {
-      return EstadoTutorHabilidad.desdeJson(
-        jsonDecode(texto) as Map<String, dynamic>,
-      );
-    } catch (_) {
-      await prefs.remove(clave);
-      return const EstadoTutorHabilidad();
-    }
-  }
+  Future<EstadoTutorHabilidad> cargarEstadoTutor(String idHabilidad) =>
+      _repoEstadoTutor.cargar(idHabilidad);
 
   Future<void> guardarEstadoTutor(
     String idHabilidad,
     EstadoTutorHabilidad estado,
-  ) async {
-    final prefs = await _prefs();
-    await prefs.setString(
-      await _clave('$_prefijoEstadoTutor$idHabilidad'),
-      jsonEncode(estado.aJson()),
-    );
-  }
+  ) =>
+      _repoEstadoTutor.guardar(idHabilidad, estado);
 
   /// Borra el progreso del perfil activo (sin eliminar el perfil ni
   /// afectar a otros perfiles).
@@ -524,42 +495,10 @@ class RepositorioProgreso {
   }
 
   /// Exporta los estados de habilidades del perfil activo en el shape
-  /// que espera el backend WP (`/sync/progress`). Convierte las claves
-  /// cortas internas ('nv', 'pr', 'tm'…) a las largas del esquema BD
-  /// ('nivel', 'precision_ponderada', 'tiempo_mediano_seg'…). Si una
-  /// habilidad no tiene estado guardado, no se incluye — solo enviamos
-  /// lo que el niño ha tocado.
-  Future<List<Map<String, dynamic>>> exportarHabilidadesParaSync() async {
-    final prefs = await _prefs();
-    final prefijo = '${await _prefijoActivo()}$_prefijoHabilidad';
-    final lista = <Map<String, dynamic>>[];
-    for (final clave in prefs.getKeys()) {
-      if (!clave.startsWith(prefijo)) continue;
-      final crudo = prefs.getString(clave);
-      if (crudo == null) continue;
-      try {
-        final estado = EstadoHabilidad.desdeJson(
-          jsonDecode(crudo) as Map<String, dynamic>,
-        );
-        lista.add({
-          'id_habilidad': estado.identificadorHabilidad,
-          'nivel': estado.nivel.valor,
-          'precision_ponderada': estado.precision,
-          'tiempo_mediano_seg': estado.tiempoMedianoSeg,
-          'total_exposiciones': estado.totalExposiciones,
-          'sesiones_consecutivas_buenas': estado.sesionesConsecutivasBuenas,
-          'ultima_practica': _aFechaMysql(estado.ultimaPractica),
-          'intentos_recientes': estado.intentosRecientes
-              .map((i) => i.aJson())
-              .toList(),
-          'actualizado_en': _aFechaMysql(DateTime.now()),
-        });
-      } catch (_) {
-        // Estado corrupto: lo saltamos sin romper el sync.
-      }
-    }
-    return lista;
-  }
+  /// que espera el backend WP (`/sync/progress`). Si una habilidad no
+  /// tiene estado guardado, no se incluye.
+  Future<List<Map<String, dynamic>>> exportarHabilidadesParaSync() =>
+      _repoHabilidades.exportarParaSync();
 
   /// Exporta el estado del perfil activo para `POST /sync/progress`.
   Future<Map<String, dynamic>> exportarProgresoParaSync() async {
@@ -576,7 +515,7 @@ class RepositorioProgreso {
     }
 
     final ultima = await cargarUltimaApertura();
-    final ahoraMysql = _aFechaMysql(ultima ?? DateTime.now());
+    final ahoraMysql = aFechaMysql(ultima ?? DateTime.now());
     final arco = await ProgresoArco.arcoActual(flagNarrativoActivo);
 
     return {
@@ -610,10 +549,4 @@ class RepositorioProgreso {
     }
   }
 
-  String _aFechaMysql(DateTime fecha) {
-    final utc = fecha.toUtc();
-    String pad(int v, [int n = 2]) => v.toString().padLeft(n, '0');
-    return '${utc.year}-${pad(utc.month)}-${pad(utc.day)} '
-        '${pad(utc.hour)}:${pad(utc.minute)}:${pad(utc.second)}';
-  }
 }

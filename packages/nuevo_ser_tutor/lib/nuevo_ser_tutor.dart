@@ -11,3 +11,4 @@ export 'src/cache_tutor.dart';
 export 'src/cliente_tutor.dart';
 export 'src/disparador_tutor.dart';
 export 'src/filtro_seguridad.dart';
+export 'src/repositorio_estado_tutor.dart';
