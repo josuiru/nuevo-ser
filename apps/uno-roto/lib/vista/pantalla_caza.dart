@@ -66,7 +66,7 @@ import '../dominio/selector_habilidades.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
-import '../sonido/capa_audio.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart' hide SelectorHabilidades;
 import '../sonido/catalogo_sonidos.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';

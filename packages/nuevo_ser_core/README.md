@@ -8,6 +8,8 @@ Avance acumulado desde el Chunk 5 — el paquete re-exporta vía `package:nuevo_
 
 ```
 lib/src/
+├── audio/
+│   └── capa_audio.dart                 ← enum 4 capas (ambient/musica/efectos/narrativos) + defaultsPorClave
 ├── mastery/
 │   ├── habilidad.dart                  ← Habilidad, NivelMaestria, IntentoHabilidad, EstadoHabilidad
 │   ├── mastery_engine.dart             ← motor adaptativo Strategy (C6)
@@ -26,7 +28,7 @@ lib/src/
     └── fecha_mysql.dart                ← formato YYYY-MM-DD HH:MM:SS UTC
 ```
 
-Los demás submódulos previstos (`account/`, `i18n/`, `audio/`, `narrative/`) siguen vacíos a la espera de la próxima ronda de extracción.
+Los demás submódulos previstos (`account/`, `i18n/`, `narrative/`) siguen vacíos a la espera de la próxima ronda de extracción.
 
 ## Deuda de extracción pendiente
 

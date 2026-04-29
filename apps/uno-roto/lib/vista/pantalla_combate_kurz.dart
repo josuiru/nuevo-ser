@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../dominio/desafio_kurz.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/voz_personaje.dart';
 import '../nucleo/paleta.dart';
-import '../sonido/capa_audio.dart';
 import '../sonido/catalogo_sonidos.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';

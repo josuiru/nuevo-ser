@@ -67,7 +67,6 @@ import 'package:uno_roto/dominio/variantes_entrenamiento.dart';
 import 'package:uno_roto/dominio/variantes_maquinas.dart';
 import 'package:uno_roto/dominio/variantes_puentes.dart';
 import 'package:uno_roto/main.dart';
-import 'package:uno_roto/sonido/capa_audio.dart';
 import 'package:uno_roto/sonido/catalogo_sonidos.dart';
 import 'package:uno_roto/vista/pantalla_cinematica.dart';
 

@@ -3,7 +3,6 @@ import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../dominio/problema_moda_mediana.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
-import '../sonido/capa_audio.dart';
 import 'app_localizations.dart';
 
 /// Mapeo de enums del dominio a strings localizados. Se mantiene fuera

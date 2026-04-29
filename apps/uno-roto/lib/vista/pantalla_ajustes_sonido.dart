@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../datos/config_api.dart';
 import '../datos/descargador_audio.dart';
@@ -8,7 +9,6 @@ import '../datos/repositorio_progreso.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/textos_enums.dart';
 import '../nucleo/paleta.dart';
-import '../sonido/capa_audio.dart';
 import '../sonido/servicio_sonoro.dart';
 
 /// Ajustes sonoros por perfil (doc 12 §Accesibilidad). Control

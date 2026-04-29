@@ -1,4 +1,4 @@
-import 'capa_audio.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Mapeo de identificadores lógicos a rutas de asset. Si un archivo no
 /// existe todavía (placeholder), el motor sonoro tolera la ausencia y
