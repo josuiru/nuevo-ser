@@ -31,16 +31,18 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 
 ## Estado del refactor `nuevo-ser-core`
 
-Estamos en la rama `refactor/nuevo-ser-core`. Plan de 9 chunks (ver `~/.claude/plans/vast-soaring-glacier.md`):
+**Cerrado** en `main` con tag `v0.2.0-platform` (commit `9e6b887`). Plan de 8 chunks ejecutado (ver `~/.claude/plans/vast-soaring-glacier.md`):
 
-- **C1** — esqueleto monorepo Melos + `git mv` de `app/` a `apps/uno-roto/`. Cero cambios de lógica. ← actual.
-- **C2** — rename plugin WP `uno-roto-core` → `nuevo-ser-core` + namespace PHP.
-- **C3** — endpoints duales `/uno-roto/v1/*` ↔ `/nuevo-ser/v1/*`.
-- **C4** — migración M001: prefijo `wp_uroto_*` → `wp_ns_*` + columna `game_id`.
-- **C5** — extracción real a `packages/nuevo_ser_core/`.
-- **C6** — motor adaptativo con `MasteryProfile` + stubs P2-P4.
-- **C7** — tablas acompañamiento + endpoints 501.
-- **C8** — tests regresión + paridad Dart/PHP + tag `v0.2.0-platform`.
+- **C1** ✓ esqueleto monorepo Melos + `git mv` de `app/` → `apps/uno-roto/`.
+- **C2** ✓ rename plugin WP `uno-roto-core` → `nuevo-ser-core`, prefijo `NS_*`.
+- **C3** ✓ endpoints duales `/uno-roto/v1/*` (alias deprecado) ↔ `/nuevo-ser/v1/*` (canónico).
+- **C4** ✓ migración M001: prefijo `wp_uroto_*` → `wp_ns_*`, columna `game_id`, tabla `ns_games`.
+- **C5** ✓ extracción inicial a `packages/nuevo_ser_core` (habilidad, ClienteApi) y `packages/nuevo_ser_tutor` (cache_tutor, cliente_tutor, filtro, disparador). Resto pendiente — README de cada package documenta la deuda.
+- **C6** ✓ motor adaptativo Strategy: `MasteryEngine` + `P1Precision` + stubs `P2`/`P3`/`P4`. `MotorMaestria` de uno-roto reducido a facade.
+- **C7** ✓ 6 tablas de acompañamiento (`ns_classrooms`, `ns_classroom_members`, `ns_caregiver_links`, `ns_cuaderno_entries`, `ns_mosaicos`, `ns_weekly_summaries`) + 9 endpoints `501 Problem Details` (RFC 7807) reservando la superficie de companion. Solo en namespace canónico.
+- **C8** ✓ paridad Dart/PHP del motor: espejo `NS_Mastery_Engine` + fixture compartida (`packages/nuevo_ser_core/test/fixtures/motor_p1.json`) consumida por test Dart y test PHP.
+
+Plugin WP en v0.6.0. Tests al cierre: 339 (uno-roto) + 10 (nuevo_ser_core) Dart + 3 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor). `flutter analyze` limpio en los 5 paquetes.
 
 ## Decisiones cerradas
 
