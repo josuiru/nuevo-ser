@@ -119,6 +119,13 @@ class RepositorioProgreso {
     clave: _claveAudioSugerenciaVista,
   );
 
+  /// Avatar del niño asociado al perfil activo. Por-perfil (cada
+  /// hermano tiene su personaje); el sufijo conserva el shape histórico.
+  late final RepositorioAvatarPerfil _repoAvatar = RepositorioAvatarPerfil(
+    gestor: _gestor,
+    sufijoRuta: _sufRutaAvatar,
+  );
+
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
   Future<String> idPerfilActivo() => _gestor.idPerfilActivo();
@@ -243,22 +250,11 @@ class RepositorioProgreso {
   ///
   /// `null` significa "todavía no ha subido nada" — la vista cae al
   /// avatar genérico (Icons.person en círculo violeta).
-  Future<String?> cargarRutaAvatar() async {
-    final prefs = await _prefs();
-    final ruta = prefs.getString(await _clave(_sufRutaAvatar));
-    if (ruta == null || ruta.trim().isEmpty) return null;
-    return ruta;
-  }
+  Future<String?> cargarRutaAvatar() => _repoAvatar.cargarRuta();
 
-  Future<void> guardarRutaAvatar(String ruta) async {
-    final prefs = await _prefs();
-    await prefs.setString(await _clave(_sufRutaAvatar), ruta);
-  }
+  Future<void> guardarRutaAvatar(String ruta) => _repoAvatar.guardarRuta(ruta);
 
-  Future<void> borrarRutaAvatar() async {
-    final prefs = await _prefs();
-    await prefs.remove(await _clave(_sufRutaAvatar));
-  }
+  Future<void> borrarRutaAvatar() => _repoAvatar.borrarRuta();
 
   Future<RangoNarrativo> cargarRango() async {
     final prefs = await _prefs();

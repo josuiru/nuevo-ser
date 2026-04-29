@@ -24,6 +24,7 @@ lib/src/
 │   └── selector_habilidades.dart       ← selector adaptativo genérico
 ├── storage/
 │   ├── gestor_perfiles.dart                ← multi-perfil sobre SharedPreferences + PerfilInfo
+│   ├── repositorio_avatar_perfil.dart      ← ruta a la imagen-avatar del niño (por perfil)
 │   ├── repositorio_cuenta_backend.dart     ← token JWT + email del backend (global, no por-perfil)
 │   ├── repositorio_habilidades.dart        ← persistencia JSON de EstadoHabilidad por perfil + exportarParaSync
 │   ├── repositorio_idioma_app.dart         ← código de idioma elegido en el primer arranque (global)
