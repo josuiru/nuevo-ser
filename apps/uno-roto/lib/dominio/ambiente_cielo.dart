@@ -1,11 +1,15 @@
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+
 /// Ambiente atmosférico que pinta [PintorEscenario]. Se usa sobre todo en
 /// las cinemáticas de entrenamiento (doc 07 §1.8) — cada variante tiene
 /// un cielo distinto que el niño reconoce de memoria.
 ///
-/// El enum lleva todos los parámetros pictóricos directamente para que
+/// La clase lleva todos los parámetros pictóricos directamente para que
 /// el pintor sea declarativo y los tests puedan instanciar valores
-/// arbitrarios sin pasar por la enumeración.
-class AmbienteCielo {
+/// arbitrarios. Implementa el contrato genérico [AmbienteEscenaContrato]
+/// del core para que el sistema de cinemáticas compartido sepa
+/// transportarla sin conocer su pintura concreta.
+class AmbienteCielo implements AmbienteEscenaContrato {
   /// Densidad relativa de estrellas (0..1.5). Multiplica la cantidad
   /// base. La niebla la reduce a casi cero.
   final double densidadEstrellas;

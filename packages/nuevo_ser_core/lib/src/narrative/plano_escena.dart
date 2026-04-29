@@ -36,7 +36,7 @@ class PlanoAmbiente extends PlanoEscena {
 /// letra-a-letra. El jugador toca para acelerar/saltar. Tras revelar
 /// completo, el siguiente toque avanza al plano siguiente.
 class PlanoDialogo extends PlanoEscena {
-  final VozPersonaje voz;
+  final VozPersonajeContrato voz;
   final String texto;
 
   /// Pausa antes de empezar el reveal — útil para respirar entre
@@ -56,7 +56,7 @@ class PlanoDialogo extends PlanoEscena {
 class PlanoEleccion extends PlanoEscena {
   /// Quién pregunta — el nombre puede mostrarse encima del prompt si
   /// el juego lo decide así.
-  final VozPersonaje voz;
+  final VozPersonajeContrato voz;
 
   /// Pregunta opcional mostrada antes de las opciones.
   final String? textoPrompt;

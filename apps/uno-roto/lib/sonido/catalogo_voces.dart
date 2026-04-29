@@ -1,3 +1,5 @@
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+
 import '../dominio/voz_personaje.dart';
 
 /// Catálogo de voces TTS para frases canónicas del castellano. La
@@ -40,8 +42,15 @@ class CatalogoVoces {
   };
 
   /// Devuelve la ruta de asset de la voz para `(personaje, texto)`,
-  /// o null si esa frase aún no tiene voz generada.
-  static String? rutaVozPara(VozPersonaje voz, String textoCanonicoEs) {
+  /// o null si esa frase aún no tiene voz generada. Acepta el contrato
+  /// genérico [VozPersonajeContrato] porque las cinemáticas viajan con
+  /// ese tipo desde la migración de narrative/ al core; en runtime los
+  /// valores son siempre instancias de [VozPersonaje], y el lookup
+  /// funciona por igualdad de identidad de las constantes estáticas.
+  static String? rutaVozPara(
+    VozPersonajeContrato voz,
+    String textoCanonicoEs,
+  ) {
     return _porPersonaje[voz]?[textoCanonicoEs];
   }
 }

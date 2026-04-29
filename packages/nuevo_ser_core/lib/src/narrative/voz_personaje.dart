@@ -14,8 +14,14 @@ import 'package:flutter/material.dart';
 /// contrato (ejemplo: `VozPersonaje.sora` en Uno Roto). El patrón
 /// preserva la API estilo enum (`VozPersonaje.sora`, `voz.nombreVisible`)
 /// permitiendo a la vez polimorfismo con la plataforma.
-abstract class VozPersonaje {
-  const VozPersonaje();
+///
+/// El contrato se llama `VozPersonajeContrato` (no `VozPersonaje`) para
+/// dejar libre el nombre `VozPersonaje` a la implementación concreta de
+/// cada juego — Uno Roto ya define `VozPersonaje.sora`, `VozPersonaje.kai`,
+/// etc., y tener el contrato en el barrel con el mismo nombre rompería
+/// los imports.
+abstract class VozPersonajeContrato {
+  const VozPersonajeContrato();
 
   /// Nombre legible para mostrar encima del bocadillo de diálogo. Vacío
   /// para narradores sin voz atribuida.

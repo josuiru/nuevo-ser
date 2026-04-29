@@ -10,12 +10,21 @@
 ///   - `src/audio/`     — capa sonora, descargador de paquetes
 ///   - `src/narrative/` — sistema de cinemáticas genérico
 ///
-/// Estado de la extracción tras Chunk 6:
-///   - mastery: modelos (`Habilidad`, `EstadoHabilidad`, `IntentoHabilidad`),
-///              motor adaptativo (`MasteryEngine` + 4 `MasteryProfile`:
-///              P1Precision funcional, P2/P3/P4 stubs).
-///   - sync:    `ClienteApi`, `ExcepcionApi`.
-///   - resto:   pendiente (ver README del paquete para deuda asumida).
+/// Estado de la extracción tras F1.3:
+///   - mastery:   modelos (`Habilidad`, `EstadoHabilidad`, `IntentoHabilidad`),
+///                motor adaptativo (`MasteryEngine` + 4 `MasteryProfile`:
+///                P1Precision funcional, P2/P3/P4 stubs).
+///   - sync:      `ClienteApi`, `ExcepcionApi`.
+///   - storage:   gestor de perfiles, repositorios de avatar, idioma,
+///                habilidades, cuenta backend, preferencias de audio.
+///   - audio:     enum `CapaAudio`, descargador, repositorios de versión
+///                y sugerencia del paquete sonoro.
+///   - narrative: contratos genéricos de cinemáticas — `VozPersonajeContrato`,
+///                `AmbienteEscenaContrato` (+ `AmbienteEscenaNeutro`),
+///                `OpcionEleccion`, `PlanoEscena` (+ `PlanoAmbiente`,
+///                `PlanoDialogo`, `PlanoEleccion`, `PlanoCierreAmable`)
+///                y `EscenaCinematica`. Cada juego añade sus voces y
+///                planos específicos extendiendo los contratos.
 library nuevo_ser_core;
 
 export 'src/audio/capa_audio.dart';
@@ -30,11 +39,11 @@ export 'src/mastery/perfiles/p2_detection.dart';
 export 'src/mastery/perfiles/p3_construction.dart';
 export 'src/mastery/perfiles/p4_calibration.dart';
 export 'src/mastery/selector_habilidades.dart';
-// narrative/ se re-exportará en F1.3 cuando uno-roto migre sus
-// modelos locales (`escena_cinematica.dart`, `plano_escena.dart`,
-// `voz_personaje.dart`) a la plataforma. Mientras tanto el contrato
-// es accesible por path explícito desde tests, y la deuda queda
-// declarada aquí mismo.
+export 'src/narrative/ambiente_escena.dart';
+export 'src/narrative/escena_cinematica.dart';
+export 'src/narrative/opcion_eleccion.dart';
+export 'src/narrative/plano_escena.dart';
+export 'src/narrative/voz_personaje.dart';
 export 'src/storage/gestor_perfiles.dart';
 export 'src/storage/repositorio_avatar_perfil.dart';
 export 'src/storage/repositorio_cuenta_backend.dart';

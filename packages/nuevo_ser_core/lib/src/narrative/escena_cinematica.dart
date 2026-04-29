@@ -49,7 +49,7 @@ class EscenaCinematica {
 
   /// Ambiente atmosférico — el `CustomPainter` o sistema de
   /// renderizado del juego sabe pintarlo. Por defecto neutro.
-  final AmbienteEscena ambiente;
+  final AmbienteEscenaContrato ambiente;
 
   const EscenaCinematica({
     required this.id,

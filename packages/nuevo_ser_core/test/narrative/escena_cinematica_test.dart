@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-// Imports por path explícito hasta que F1.3 cierre la migración de
-// uno-roto y el barrel pueda re-exportar narrative/ sin colisión.
-import 'package:nuevo_ser_core/src/narrative/ambiente_escena.dart';
-import 'package:nuevo_ser_core/src/narrative/escena_cinematica.dart';
-import 'package:nuevo_ser_core/src/narrative/opcion_eleccion.dart';
-import 'package:nuevo_ser_core/src/narrative/plano_escena.dart';
-import 'package:nuevo_ser_core/src/narrative/voz_personaje.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
-/// Voz de prueba — implementa el contrato VozPersonaje sin atarse a
-/// ninguna paleta concreta. El test NO debe instalar Flutter ni
-/// renderizar nada; es caracterización de la API.
-class _VozMock extends VozPersonaje {
+/// Voz de prueba — implementa el contrato VozPersonajeContrato sin
+/// atarse a ninguna paleta concreta. El test NO debe instalar Flutter
+/// ni renderizar nada; es caracterización de la API.
+class _VozMock extends VozPersonajeContrato {
   @override
   final String nombreVisible;
   @override
@@ -29,15 +23,15 @@ class _VozMock extends VozPersonaje {
   TextStyle estiloTextoCuerpo() => const TextStyle(fontSize: 16);
 }
 
-/// Ambiente de prueba — implementa AmbienteEscena sin transportar
-/// estado. Un juego real lleva campos pictóricos aquí.
-class _AmbienteMock extends AmbienteEscena {
+/// Ambiente de prueba — implementa AmbienteEscenaContrato sin
+/// transportar estado. Un juego real lleva campos pictóricos aquí.
+class _AmbienteMock extends AmbienteEscenaContrato {
   final String etiqueta;
   const _AmbienteMock(this.etiqueta);
 }
 
 void main() {
-  group('VozPersonaje (contrato)', () {
+  group('VozPersonajeContrato (contrato)', () {
     test('expone nombreVisible, colorNombre, esEnfasis y estiloTextoCuerpo',
         () {
       const voz = _VozMock(
@@ -58,16 +52,16 @@ void main() {
     });
   });
 
-  group('AmbienteEscena', () {
+  group('AmbienteEscenaContrato', () {
     test('AmbienteEscenaNeutro instanciable como const', () {
       const ambiente = AmbienteEscenaNeutro();
-      expect(ambiente, isA<AmbienteEscena>());
+      expect(ambiente, isA<AmbienteEscenaContrato>());
     });
 
     test('los juegos pueden definir sus propios ambientes implementando '
         'la abstract class', () {
       const ambiente = _AmbienteMock('niebla');
-      expect(ambiente, isA<AmbienteEscena>());
+      expect(ambiente, isA<AmbienteEscenaContrato>());
       expect(ambiente.etiqueta, 'niebla');
     });
   });

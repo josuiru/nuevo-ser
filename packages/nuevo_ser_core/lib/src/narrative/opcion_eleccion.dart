@@ -16,7 +16,7 @@ class OpcionEleccion {
 
   /// Voz que dice [textoRespuesta]. Si es null, se usa la voz que
   /// estaba haciendo la pregunta en el plano contenedor.
-  final VozPersonaje? vozRespuesta;
+  final VozPersonajeContrato? vozRespuesta;
 
   /// Flags narrativos que se activan al elegir esta opción. Cada juego
   /// los persiste donde considere — típicamente bajo el namespace de

@@ -12,13 +12,18 @@
 ///
 /// Para escenas que no quieren caracterizar el ambiente (la mayoría)
 /// se ofrece [AmbienteEscenaNeutro] como valor por defecto.
-abstract class AmbienteEscena {
-  const AmbienteEscena();
+///
+/// El contrato se llama `AmbienteEscenaContrato` (no `AmbienteEscena`)
+/// para dejar el nombre genérico `AmbienteEscena` libre a los juegos
+/// que quieran usarlo en su propia capa, sin colisionar con el barrel
+/// del core. Mismo patrón que `VozPersonajeContrato`.
+abstract class AmbienteEscenaContrato {
+  const AmbienteEscenaContrato();
 }
 
 /// Ambiente sin caracterización — el que asume cualquier escena que
 /// no necesita atmósfera específica. Permite a `EscenaCinematica`
 /// tener un default seguro sin obligar a cada juego a definir el suyo.
-class AmbienteEscenaNeutro extends AmbienteEscena {
+class AmbienteEscenaNeutro extends AmbienteEscenaContrato {
   const AmbienteEscenaNeutro();
 }

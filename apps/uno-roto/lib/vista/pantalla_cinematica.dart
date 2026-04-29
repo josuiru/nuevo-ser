@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../dominio/escena_cinematica.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+
+import '../dominio/ambiente_cielo.dart';
 import '../dominio/plano_escena.dart';
 import '../dominio/ritmo_juego.dart';
-import '../dominio/voz_personaje.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
-import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../sonido/catalogo_voces.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
@@ -404,7 +404,13 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
                   fasePulso: _controladorCielo.value,
                   fasePulsoLluvia: _controladorLluvia.value,
                   nivelRestauracion: 0.15,
-                  ambiente: widget.escena.ambiente,
+                  // El default genérico del core es AmbienteEscenaNeutro;
+                  // el PintorEscenario de uno-roto solo sabe pintar
+                  // AmbienteCielo, así que cualquier otro tipo cae al
+                  // neutro propio del juego.
+                  ambiente: widget.escena.ambiente is AmbienteCielo
+                      ? widget.escena.ambiente as AmbienteCielo
+                      : AmbienteCielo.neutro,
                 ),
               ),
             ),
@@ -427,44 +433,53 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
 
   Widget _construirContenidoDePlano() {
     final plano = _planoActual;
-    switch (plano) {
-      case PlanoAmbiente():
-        final lectura = plano.textoLectura;
-        return _VistaAmbiente(
-          textoLectura: lectura == null ? null : _conTokens(lectura),
-        );
-      case PlanoDialogo():
-        final completo = _conTokens(plano.texto);
-        return _VistaDialogo(
-          voz: plano.voz,
-          textoRevelado: completo.substring(
-            0,
-            _caracteresRevelados.clamp(0, completo.length),
-          ),
-          mostrandoIndicador: _fase == _FaseReproduccion.esperandoTap,
-        );
-      case PlanoEleccion():
-        return _VistaEleccion(
-          plano: plano,
-          nombreJugador: widget.nombreJugador,
-          fase: _fase,
-          caracteresRevelados: _caracteresRevelados,
-          indiceElegida: _indiceOpcionElegida,
-          alElegir: _elegirOpcion,
-        );
-      case PlanoInteractivo():
-        return _VistaInteractiva(
-          plano: plano,
-          instruccion: _conTokens(plano.instruccion),
-          alCompletar: _avanzar,
-        );
-      case PlanoCierreAmable():
-        return _VistaCierreAmable(
-          textoBoton: plano.textoBoton,
-          visible: _fase == _FaseReproduccion.mostrandoCierreAmable,
-          alPulsar: _avanzar,
-        );
+    // PlanoEscena dejó de ser sealed cuando se subió al core (cada
+    // juego añade sus subclases sin tocar la plataforma), así que
+    // este switch ya no es exhaustivo a ojos del analyzer y necesita
+    // un default — devolvemos un widget vacío para planos
+    // desconocidos en lugar de explotar.
+    if (plano is PlanoAmbiente) {
+      final lectura = plano.textoLectura;
+      return _VistaAmbiente(
+        textoLectura: lectura == null ? null : _conTokens(lectura),
+      );
     }
+    if (plano is PlanoDialogo) {
+      final completo = _conTokens(plano.texto);
+      return _VistaDialogo(
+        voz: plano.voz,
+        textoRevelado: completo.substring(
+          0,
+          _caracteresRevelados.clamp(0, completo.length),
+        ),
+        mostrandoIndicador: _fase == _FaseReproduccion.esperandoTap,
+      );
+    }
+    if (plano is PlanoEleccion) {
+      return _VistaEleccion(
+        plano: plano,
+        nombreJugador: widget.nombreJugador,
+        fase: _fase,
+        caracteresRevelados: _caracteresRevelados,
+        indiceElegida: _indiceOpcionElegida,
+        alElegir: _elegirOpcion,
+      );
+    }
+    if (plano is PlanoInteractivo) {
+      return _VistaInteractiva(
+        plano: plano,
+        instruccion: _conTokens(plano.instruccion),
+        alCompletar: _avanzar,
+      );
+    }
+    if (plano is PlanoCierreAmable) {
+      return _VistaCierreAmable(
+        textoBoton: plano.textoBoton,
+        visible: _fase == _FaseReproduccion.mostrandoCierreAmable,
+        alPulsar: _avanzar,
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
 
@@ -497,7 +512,7 @@ class _VistaAmbiente extends StatelessWidget {
 }
 
 class _VistaDialogo extends StatelessWidget {
-  final VozPersonaje voz;
+  final VozPersonajeContrato voz;
   final String textoRevelado;
   final bool mostrandoIndicador;
 
