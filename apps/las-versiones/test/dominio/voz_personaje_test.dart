@@ -50,6 +50,12 @@ void main() {
         VozPersonaje.tasio,
         VozPersonaje.begona,
         VozPersonaje.karim,
+        VozPersonaje.andres,
+        VozPersonaje.marina,
+        VozPersonaje.aitor,
+        VozPersonaje.iratxe,
+        VozPersonaje.antonio,
+        VozPersonaje.naia,
       ];
       for (final voz in elenco) {
         expect(voz.esEnfasis, isFalse, reason: voz.nombreVisible);
@@ -60,6 +66,29 @@ void main() {
         'medieval, colofón sin atribución personal)', () {
       expect(VozPersonaje.vozDeFuente.esEnfasis, isTrue);
       expect(VozPersonaje.vozDeFuente.nombreVisible, '');
+    });
+
+    test('elenco ampliado de 1.0.2-1.0.3 — Andrés, Marina, Aitor + '
+        'familia (Iratxe, Antonio, Naia)', () {
+      expect(VozPersonaje.andres.nombreVisible, 'Andrés');
+      expect(VozPersonaje.marina.nombreVisible, 'Marina');
+      expect(VozPersonaje.aitor.nombreVisible, 'Aitor');
+      expect(VozPersonaje.iratxe.nombreVisible, 'Iratxe');
+      expect(VozPersonaje.antonio.nombreVisible, 'Antonio');
+      expect(VozPersonaje.naia.nombreVisible, 'Naia');
+    });
+
+    test('Aitor (Constructor mayor) lleva ámbar como autoridad del '
+        'Archivo, igual que Isaura y Begoña', () {
+      expect(VozPersonaje.aitor.colorNombre, PaletaArchivo.ambarLacre);
+    });
+
+    test('la familia (Iratxe, Antonio, Naia) y Andrés llevan tinta '
+        'tenue — voces íntimas/cercanas, no institucionales', () {
+      expect(VozPersonaje.iratxe.colorNombre, PaletaArchivo.tintaTenue);
+      expect(VozPersonaje.antonio.colorNombre, PaletaArchivo.tintaTenue);
+      expect(VozPersonaje.naia.colorNombre, PaletaArchivo.tintaTenue);
+      expect(VozPersonaje.andres.colorNombre, PaletaArchivo.tintaTenue);
     });
 
     test('estiloTextoCuerpo con énfasis usa itálica — distingue la voz '

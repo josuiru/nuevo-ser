@@ -48,4 +48,55 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// hueco de luz lejano.
   static const AmbienteArchivo cuevaInterior =
       AmbienteArchivo._('cueva_interior');
+
+  /// Patio interior del Archivo — capiteles antiguos, brocal de un
+  /// pozo, cielo abierto sobre el claustro. Espacio de transición
+  /// entre estancias durante el recorrido del primer día (1.0.2).
+  static const AmbienteArchivo patioArchivo =
+      AmbienteArchivo._('patio_archivo');
+
+  /// Ático del Archivo — vitrinas con piezas, mesa de trabajo de
+  /// Andrés Vidaurre. Donde se guardan los objetos físicos.
+  static const AmbienteArchivo aticoArchivo =
+      AmbienteArchivo._('atico_archivo');
+
+  /// Salón del Concilio — mesa larga, tres sillones de orejas en
+  /// cabecera. Lugar de presentación del trabajo final de cada
+  /// arco. Maren se queda en la puerta sin entrar la primera vez.
+  static const AmbienteArchivo salonConcilio =
+      AmbienteArchivo._('salon_concilio');
+
+  /// Cocina del Archivo — té, café, sillas de madera. Espacio
+  /// informal donde Isaura prepara dos tés a Maren al final del
+  /// recorrido. Más cálido que las salas formales.
+  static const AmbienteArchivo cocinaArchivo =
+      AmbienteArchivo._('cocina_archivo');
+
+  /// Cocina-comedor de la casa familiar de Maren, Casco Viejo de
+  /// Iruña. Donde Iratxe prepara la comida y Naia hace las
+  /// preguntas que abren el oficio para Maren (1.0.3).
+  static const AmbienteArchivo cocinaCasaMaren =
+      AmbienteArchivo._('cocina_casa_maren');
+
+  /// Habitación de Maren — escritorio, libros, ventana al patio
+  /// interior con un castaño. Donde escribe la primera entrada del
+  /// Cuaderno la tarde antes de su primera Brecha.
+  static const AmbienteArchivo cuartoCasaMaren =
+      AmbienteArchivo._('cuarto_casa_maren');
+
+  /// Ambiente-paraguas para escenas que recorren varios espacios del
+  /// Archivo en una sola pieza narrativa (típico de 1.0.2 "El
+  /// recorrido"). El `CustomPainter` lo usará como base sobre la que
+  /// el texto de lectura de cada plano matiza ("bajan al sótano",
+  /// "suben al ático") sin necesidad de un ambiente por subespacio.
+  static const AmbienteArchivo recorridoArchivo =
+      AmbienteArchivo._('recorrido_archivo');
+
+  /// Ambiente-paraguas para escenas que ocurren en la casa familiar
+  /// de Maren cubriendo varios espacios (cocina, salón, cuarto) sin
+  /// transición clara entre ellos. El texto de lectura matiza cada
+  /// subespacio cuando hace falta. Caso típico: 1.0.3 "La primera
+  /// tarde en casa".
+  static const AmbienteArchivo casaMaren =
+      AmbienteArchivo._('casa_maren');
 }

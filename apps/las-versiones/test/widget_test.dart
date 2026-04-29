@@ -49,11 +49,13 @@ void main() {
   });
 
   testWidgets(
-      'arranque con idioma persistido y escena 1.0.1 ya vista → '
-      'salta directo al esqueleto', (tester) async {
+      'arranque con idioma persistido y todas las escenas del Arco 1 '
+      'vistas → salta directo al esqueleto', (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.lasversiones.idioma_app': 'eu',
       'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
     });
 
     await tester.pumpWidget(crearApp());

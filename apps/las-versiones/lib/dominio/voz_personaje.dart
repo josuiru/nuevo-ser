@@ -82,6 +82,53 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.textoPrincipal,
   );
 
+  /// **Andrés Vidaurre**, archivero técnico — el del ático con
+  /// vitrinas de piezas. Humor seco, cercano. Tinta tenue para
+  /// diferenciarlo del ámbar institucional de Isaura/Begoña.
+  static const VozPersonaje andres = VozPersonaje._(
+    nombreVisible: 'Andrés',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
+  /// **Marina Ríos**, 17 años, Aprendiz III, Reformista. La compañera
+  /// avanzada que Maren cruza en el pasillo el primer día.
+  static const VozPersonaje marina = VozPersonaje._(
+    nombreVisible: 'Marina',
+    colorNombre: PaletaArchivo.textoPrincipal,
+  );
+
+  /// **Aitor Etxeberri**, Constructor mayor — especialista en el
+  /// Camino. Aparece de refilón en 1.0.2 sentado sobre un manuscrito.
+  static const VozPersonaje aitor = VozPersonaje._(
+    nombreVisible: 'Aitor',
+    colorNombre: PaletaArchivo.ambarLacre,
+  );
+
+  /// **Iratxe**, madre de Maren. Voz familiar — la que la presentó al
+  /// Archivo desde dentro: ya conocía a Begoña antes de que Maren
+  /// llegara. Tinta tenue para marcarla como voz íntima, no oficial.
+  static const VozPersonaje iratxe = VozPersonaje._(
+    nombreVisible: 'Iratxe',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
+  /// **Antonio**, padre de Maren. Profesor de instituto. Aparece
+  /// poco pero su gesto al volver a casa el primer día —besarla en
+  /// la cabeza, dejarle un libro— marca el tono de la familia.
+  static const VozPersonaje antonio = VozPersonaje._(
+    nombreVisible: 'Antonio',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
+  /// **Naia**, 8 años, hermana pequeña. Ojos abiertos, preguntas
+  /// directas. Es ella quien hace la pregunta que abre el oficio
+  /// para Maren ("¿y cómo sabes cómo pasaron?"). Tinta tenue como
+  /// el resto de la familia.
+  static const VozPersonaje naia = VozPersonaje._(
+    nombreVisible: 'Naia',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
   /// Voz sin atribución personal, reservada a **fragmentos de fuente
   /// histórica** que el player levanta del manuscrito sin ponerlos en
   /// boca de un personaje del elenco: una cita en latín, una línea
