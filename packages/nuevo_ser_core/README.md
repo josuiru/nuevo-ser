@@ -18,8 +18,9 @@ lib/src/
 │   ├── perfiles/p4_calibration.dart    ← stub (C6)
 │   └── selector_habilidades.dart       ← selector adaptativo genérico
 ├── storage/
-│   ├── gestor_perfiles.dart            ← multi-perfil sobre SharedPreferences + PerfilInfo
-│   └── repositorio_habilidades.dart    ← persistencia JSON de EstadoHabilidad por perfil + exportarParaSync
+│   ├── gestor_perfiles.dart                ← multi-perfil sobre SharedPreferences + PerfilInfo
+│   ├── repositorio_habilidades.dart        ← persistencia JSON de EstadoHabilidad por perfil + exportarParaSync
+│   └── repositorio_preferencias_audio.dart ← modo silencio + volumen por capa, por perfil
 └── sync/
     ├── cliente_api.dart                ← ClienteApi, ExcepcionApi (REST con plugin WP)
     └── fecha_mysql.dart                ← formato YYYY-MM-DD HH:MM:SS UTC

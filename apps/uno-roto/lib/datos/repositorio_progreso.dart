@@ -76,6 +76,15 @@ class RepositorioProgreso {
   late final RepositorioEstadoTutor estadoTutor =
       RepositorioEstadoTutor(gestor: _gestor);
 
+  /// Preferencias de audio del perfil activo (modo silencio + volumen
+  /// por capa). Sufijo y prefijo conservan el shape histórico.
+  late final RepositorioPreferenciasAudio _preferenciasAudio =
+      RepositorioPreferenciasAudio(
+    gestor: _gestor,
+    sufijoModoSilencio: _sufAudioModoSilencio,
+    prefijoVolumenCapa: _prefijoAudioVolumenCapa,
+  );
+
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
   Future<String> idPerfilActivo() => _gestor.idPerfilActivo();
@@ -354,35 +363,23 @@ class RepositorioProgreso {
 
   /// Preferencias de audio del perfil activo. El volumen de cada capa
   /// se guarda en 0..100; el motor lo traduce a 0.0..1.0.
-  Future<bool> cargarAudioModoSilencio() async {
-    final prefs = await _prefs();
-    return prefs.getBool(await _clave(_sufAudioModoSilencio)) ?? false;
-  }
+  Future<bool> cargarAudioModoSilencio() =>
+      _preferenciasAudio.cargarModoSilencio();
 
-  Future<void> guardarAudioModoSilencio(bool silencio) async {
-    final prefs = await _prefs();
-    await prefs.setBool(await _clave(_sufAudioModoSilencio), silencio);
-  }
+  Future<void> guardarAudioModoSilencio(bool silencio) =>
+      _preferenciasAudio.guardarModoSilencio(silencio);
 
   Future<int> cargarAudioVolumenCapa(
     String claveCapa, {
     required int predeterminado,
-  }) async {
-    final prefs = await _prefs();
-    final guardado = prefs.getInt(
-      await _clave('$_prefijoAudioVolumenCapa$claveCapa'),
-    );
-    if (guardado == null) return predeterminado;
-    return guardado.clamp(0, 100);
-  }
+  }) =>
+      _preferenciasAudio.cargarVolumenCapa(
+        claveCapa,
+        predeterminado: predeterminado,
+      );
 
-  Future<void> guardarAudioVolumenCapa(String claveCapa, int valor) async {
-    final prefs = await _prefs();
-    await prefs.setInt(
-      await _clave('$_prefijoAudioVolumenCapa$claveCapa'),
-      valor.clamp(0, 100),
-    );
-  }
+  Future<void> guardarAudioVolumenCapa(String claveCapa, int valor) =>
+      _preferenciasAudio.guardarVolumenCapa(claveCapa, valor);
 
   Future<bool> entradaCuadernoLeida(String idEntrada) async {
     final prefs = await _prefs();
