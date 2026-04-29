@@ -1,10 +1,31 @@
 # nuevo_ser_companion
 
-Acompañamiento (Cuaderno del niño, Mosaicos, dashboard de aula, dashboard de cuidador) de la **Colección Nuevo Ser Kids**.
+Acompañamiento (Cuaderno del niño, Mosaicos, dashboards de aula y cuidador) de la **Colección Nuevo Ser Kids**.
 
-## Estado
+Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*` del plugin `nuevo-ser-core`. Implementación incremental: cada ruta sale del estado 501 reservado (C7) cuando esta librería tiene un cliente capaz de invocarla y el plugin tiene un handler real registrado.
 
-**Vacío.** Implementación diferida a v1.5 (paralela al desarrollo de Las Versiones), según `coleccion-nuevo-ser/plataforma/nuevo-ser-core-arquitectura.md` §8.3.
+## Estado v0.1
+
+| Ruta | Cliente Dart | Handler PHP |
+|---|---|---|
+| `POST /companion/cuaderno/entries` | `ClienteCompanion.crearEntradaCuaderno` | `NS_Companion_Cuaderno::crear_entrada` |
+
+## Pendiente (siguen 501 en el servidor)
+
+| Ruta | Método | Notas |
+|---|---|---|
+| `/companion/mosaicos` | POST | Mismo shape que cuaderno entries pero por arco. |
+| `/companion/aggregates/weekly` | POST | Anonimizado, alimenta "Esta semana". |
+| `/classrooms` | POST | Profesor crea aula. |
+| `/classrooms/{code}/join` | POST | Niño se une con código. |
+| `/classrooms/{id}/aggregates` | GET | Profesor ve agregados. |
+| `/caregivers/link/request` | POST | Solicitud de vínculo cuidador-niño. |
+| `/caregivers/link/verify` | POST | Verificación con consentimiento parental. |
+| `/caregivers/{caregiverId}/children/{childId}/summary` | GET | Resumen para cuidador. |
+
+## Diseño
+
+Mismo patrón que `ClienteApi` (core) y `ClienteTutor` (tutor): sin lógica de negocio, cliente HTTP inyectable para tests, errores tipados con `ExcepcionApi`. El backend valida formato y existencia de `game_id` contra `ns_games` — el mismo backend sirve a Uno Roto y a Las Versiones sin que un cliente pueda inventar un juego.
 
 ## Licencia
 

@@ -39,11 +39,32 @@ class NS_Endpoints {
 	public static function registrar(): void {
 		self::registrar_grupo( self::NAMESPACE_CANONICO );
 		self::registrar_grupo( self::NAMESPACE_ALIAS );
-		// Endpoints de acompañamiento (C7) — reservan superficie con 501.
-		// Solo en el canónico: los clientes desplegados de Uno Roto nunca
-		// los llamarán, no hay razón para cargar el alias con deuda nueva.
+		// Endpoints de acompañamiento. Solo en el canónico: los clientes
+		// desplegados de Uno Roto nunca los llamarán, no hay razón para
+		// cargar el alias con deuda nueva.
+		// Las rutas reales (las que tienen handler) se registran primero
+		// para que ganen sobre el handler genérico 501 si hubiera
+		// solapamiento accidental.
+		self::registrar_companion_real( self::NAMESPACE_CANONICO );
 		self::registrar_companion( self::NAMESPACE_CANONICO );
 		add_filter( 'rest_post_dispatch', array( __CLASS__, 'marcar_alias_deprecado' ), 10, 3 );
+	}
+
+	/**
+	 * Endpoints de companion ya implementados de verdad. La lista crece
+	 * a medida que cada ruta sale del estado 501; cuando todas estén
+	 * aquí, [self::endpoints_companion] queda vacío y se borra.
+	 */
+	private static function registrar_companion_real( string $namespace ): void {
+		register_rest_route(
+			$namespace,
+			'/companion/cuaderno/entries',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( 'NS_Companion_Cuaderno', 'crear_entrada' ),
+				'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+			)
+		);
 	}
 
 	/**
@@ -742,7 +763,8 @@ class NS_Endpoints {
 	private static function endpoints_companion(): array {
 		return array(
 			// Cuaderno y mosaicos (entries que el niño produce).
-			'/companion/cuaderno/entries'                                 => 'POST',
+			//   /companion/cuaderno/entries → ya implementado en
+			//   `registrar_companion_real` (NS_Companion_Cuaderno).
 			'/companion/mosaicos'                                         => 'POST',
 			// Agregados anonimizados que alimentan "Esta semana".
 			'/companion/aggregates/weekly'                                => 'POST',

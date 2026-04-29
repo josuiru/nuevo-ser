@@ -52,7 +52,15 @@ Continuando la extracción anunciada en los READMEs de los paquetes, en slices p
 - **ServicioTutor** ✓ subido a `nuevo_ser_tutor/src/servicio_tutor.dart`. La dependencia `RepositorioProgreso` (juego-específica) se invierte: ahora se le inyecta directamente un `RepositorioEstadoTutor`, lo que hace al servicio agnóstico al juego. `RepositorioProgreso` expone un getter público `estadoTutor` para que las pantallas (`pantalla_caza`, `pantalla_habilidades`, `pantalla_tutor_test`) lo pasen al constructor. Se eliminan los métodos `cargarEstadoTutor`/`guardarEstadoTutor` del repositorio (sin uso restante), el archivo `apps/uno-roto/lib/dominio/tutor/servicio_tutor.dart` y la carpeta `dominio/tutor/`. La suite de comportamiento del servicio (14 tests) migra a `packages/nuevo_ser_tutor/test/servicio_tutor_test.dart`.
 - **Preferencias de audio por perfil** ✓ extraídas a `nuevo_ser_core/storage/repositorio_preferencias_audio.dart` (modo silencio + volumen por capa, con clamp 0..100, defaults configurables). `RepositorioProgreso` mantiene los 4 métodos públicos (`cargarAudioModoSilencio`, `guardarAudioModoSilencio`, `cargarAudioVolumenCapa`, `guardarAudioVolumenCapa`) como delegaciones. 7 tests caracterización en core. El catálogo de capas concretas (ambient/musica/efectos/narrativos) sigue siendo del juego.
 
-Plugin WP en v0.6.0. Tests: 325 (uno-roto) + 55 (nuevo_ser_core) + 22 (nuevo_ser_tutor) Dart + 3 PHP smoke. `flutter analyze` limpio en los 5 paquetes.
+### Companion v0.1: primer endpoint real
+
+Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se cablea end-to-end:
+
+- **`POST /companion/cuaderno/entries`** — `NS_Companion_Cuaderno::crear_entrada` reemplaza el handler 501 reservado en C7 sólo para esta ruta; las otras 8 siguen como 501. Validación de formato pura (`validar_formato`) + comprobación de existencia de `game_id` contra `ns_games`. Devuelve 201 con `{id, game_id, type, title, content_ref, created_at}` y header `Location`. Plugin WP bumpa a v0.7.0.
+- **Cliente Dart** `ClienteCompanion.crearEntradaCuaderno` y modelo `EntradaCuaderno` (con campos opcionales `contentMeta`, `anchoredTo` que se preservan del cliente al respond). 6 tests con `MockClient`. Patrón gemelo de `ClienteApi` (core) y `ClienteTutor` (tutor): sin lógica de negocio, errores tipados con `ExcepcionApi`.
+- **Smoke PHP** `tests/test_companion_cuaderno.php` cubre 13 casos de validación de formato (campos requeridos, longitudes, regex de `type`, `content_meta`/`anchored_to` deben ser objeto, múltiples errores juntos).
+
+Plugin WP en v0.7.0. Tests: 325 (uno-roto) + 55 (nuevo_ser_core) + 22 (nuevo_ser_tutor) + 6 (nuevo_ser_companion) Dart + 4 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, companion_cuaderno). `flutter analyze` limpio en los 5 paquetes.
 
 ## Decisiones cerradas
 

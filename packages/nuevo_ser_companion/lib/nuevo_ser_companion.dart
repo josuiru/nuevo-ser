@@ -1,6 +1,22 @@
-/// Acompañamiento (Cuaderno, Mosaicos, dashboards de aula y cuidador).
+/// Acompañamiento (Cuaderno, Mosaicos, dashboards de aula y cuidador)
+/// de la Colección Nuevo Ser Kids.
 ///
-/// Vacío en C1. Toda la funcionalidad de acompañamiento está fuera del alcance
-/// de este refactor (ver `coleccion-nuevo-ser/plataforma/nuevo-ser-core-arquitectura.md`
-/// §8.3). Implementación entra en v1.5 paralela al desarrollo de Las Versiones.
+/// Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*`
+/// del plugin `nuevo-ser-core`. Implementación incremental: cada ruta
+/// sale del estado 501 reservado en C7 cuando esta librería tiene un
+/// cliente capaz de invocarla.
+///
+/// Estado v0.1:
+/// - Cuaderno: `crearEntradaCuaderno` cubre `POST /companion/cuaderno/entries`.
+///
+/// Pendiente (siguen 501 en el servidor):
+/// - `POST /companion/mosaicos`
+/// - `POST /companion/aggregates/weekly`
+/// - `POST /classrooms`, `POST /classrooms/{code}/join`,
+///   `GET /classrooms/{id}/aggregates`
+/// - `POST /caregivers/link/{request,verify}`,
+///   `GET /caregivers/{caregiverId}/children/{childId}/summary`
 library nuevo_ser_companion;
+
+export 'src/cliente_companion.dart';
+export 'src/cuaderno/entrada_cuaderno.dart';
