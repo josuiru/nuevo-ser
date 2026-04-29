@@ -22,6 +22,7 @@ lib/src/
 │   └── selector_habilidades.dart       ← selector adaptativo genérico
 ├── storage/
 │   ├── gestor_perfiles.dart                ← multi-perfil sobre SharedPreferences + PerfilInfo
+│   ├── repositorio_cuenta_backend.dart     ← token JWT + email del backend (global, no por-perfil)
 │   ├── repositorio_habilidades.dart        ← persistencia JSON de EstadoHabilidad por perfil + exportarParaSync
 │   └── repositorio_preferencias_audio.dart ← modo silencio + volumen por capa, por perfil
 └── sync/

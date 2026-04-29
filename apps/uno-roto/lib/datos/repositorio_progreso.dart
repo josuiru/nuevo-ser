@@ -85,6 +85,14 @@ class RepositorioProgreso {
     prefijoVolumenCapa: _prefijoAudioVolumenCapa,
   );
 
+  /// Cuenta del backend (token JWT + email) — global, no por-perfil.
+  /// Las claves conservan el shape histórico de Uno Roto.
+  late final RepositorioCuentaBackend _cuentaBackend = RepositorioCuentaBackend(
+    prefs: SharedPreferences.getInstance,
+    claveToken: _claveTokenBackend,
+    claveEmail: _claveEmailBackend,
+  );
+
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
   Future<String> idPerfilActivo() => _gestor.idPerfilActivo();
@@ -94,44 +102,24 @@ class RepositorioProgreso {
   Future<String> _clave(String sufijo) async =>
       '${await _prefijoActivo()}$sufijo';
 
-  // ═══ Token del backend (global, no por-perfil) ═══
+  // ═══ Cuenta del backend (global, no por-perfil) ═══
+  // Delegada a RepositorioCuentaBackend del core. La API se mantiene
+  // idéntica para no tocar los call-sites (pantalla_caza,
+  // pantalla_login, main…).
 
-  /// Token JWT del backend para llamadas al tutor / sync. Es global
-  /// (todos los perfiles del dispositivo comparten autenticación) —
-  /// la separación lógica entre niños la lleva el backend con el
-  /// `nino_id` codificado en el propio token.
-  Future<String?> cargarTokenBackend() async {
-    final prefs = await _prefs();
-    return prefs.getString(_claveTokenBackend);
-  }
+  Future<String?> cargarTokenBackend() => _cuentaBackend.cargarToken();
 
-  Future<void> guardarTokenBackend(String token) async {
-    final prefs = await _prefs();
-    await prefs.setString(_claveTokenBackend, token);
-  }
+  Future<void> guardarTokenBackend(String token) =>
+      _cuentaBackend.guardarToken(token);
 
-  Future<void> borrarTokenBackend() async {
-    final prefs = await _prefs();
-    await prefs.remove(_claveTokenBackend);
-  }
+  Future<void> borrarTokenBackend() => _cuentaBackend.borrarToken();
 
-  /// Email asociado al token actual. Solo informativo (mostrar en UI).
-  /// Se guarda al registrar o al iniciar sesión, se borra junto al
-  /// token al cerrar sesión. NO se persiste la contraseña.
-  Future<String?> cargarEmailBackend() async {
-    final prefs = await _prefs();
-    return prefs.getString(_claveEmailBackend);
-  }
+  Future<String?> cargarEmailBackend() => _cuentaBackend.cargarEmail();
 
-  Future<void> guardarEmailBackend(String email) async {
-    final prefs = await _prefs();
-    await prefs.setString(_claveEmailBackend, email);
-  }
+  Future<void> guardarEmailBackend(String email) =>
+      _cuentaBackend.guardarEmail(email);
 
-  Future<void> borrarEmailBackend() async {
-    final prefs = await _prefs();
-    await prefs.remove(_claveEmailBackend);
-  }
+  Future<void> borrarEmailBackend() => _cuentaBackend.borrarEmail();
 
   /// Versión del paquete sonoro descargable instalado localmente.
   /// Es global (compartido entre perfiles — los OGG no dependen de qué
@@ -183,10 +171,7 @@ class RepositorioProgreso {
   }
 
   /// Atajo: borra token y email a la vez, equivalente a "cerrar sesión".
-  Future<void> cerrarSesionBackend() async {
-    await borrarTokenBackend();
-    await borrarEmailBackend();
-  }
+  Future<void> cerrarSesionBackend() => _cuentaBackend.cerrarSesion();
 
   // ═══ Gestión de perfiles ═══
   // Delegada al GestorPerfiles del core. La API se mantiene idéntica

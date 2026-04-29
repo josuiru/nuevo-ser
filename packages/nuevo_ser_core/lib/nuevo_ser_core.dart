@@ -29,6 +29,7 @@ export 'src/mastery/perfiles/p3_construction.dart';
 export 'src/mastery/perfiles/p4_calibration.dart';
 export 'src/mastery/selector_habilidades.dart';
 export 'src/storage/gestor_perfiles.dart';
+export 'src/storage/repositorio_cuenta_backend.dart';
 export 'src/storage/repositorio_habilidades.dart';
 export 'src/storage/repositorio_preferencias_audio.dart';
 export 'src/sync/cliente_api.dart';
