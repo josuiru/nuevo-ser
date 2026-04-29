@@ -101,6 +101,18 @@ class NS_Endpoints {
 				),
 			)
 		);
+
+		register_rest_route(
+			$namespace,
+			'/companion/aggregates/weekly',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Companion_Agregados', 'archivar' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -798,11 +810,9 @@ class NS_Endpoints {
 	 */
 	private static function endpoints_companion(): array {
 		return array(
-			// Cuaderno y mosaicos: ya implementados en
+			// Cuaderno, mosaicos y agregados: ya implementados en
 			//   `registrar_companion_real` (NS_Companion_Cuaderno,
-			//   NS_Companion_Mosaicos).
-			// Agregados anonimizados que alimentan "Esta semana".
-			'/companion/aggregates/weekly'                                => 'POST',
+			//   NS_Companion_Mosaicos, NS_Companion_Agregados).
 			// Aulas: el `join` ya está cableado en `registrar_companion_real`
 			// (NS_Companion_Aulas); la creación y los agregados esperan al
 			// mecanismo de auth del profesor.

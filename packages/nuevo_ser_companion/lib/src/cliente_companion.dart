@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import 'agregados/agregado_semanal.dart';
 import 'aulas/membresia_aula.dart';
 import 'cuaderno/entrada_cuaderno.dart';
 import 'cuaderno/listado_entradas_cuaderno.dart';
@@ -177,6 +178,42 @@ class ClienteCompanion {
         .timeout(tiempoEspera);
     final cuerpo = _decodificar(r);
     return ListadoMosaicos.desdeJson(cuerpo);
+  }
+
+  /// POST /companion/aggregates/weekly
+  ///
+  /// Sube los agregados anonimizados de la semana [isoWeek] (formato
+  /// ISO-8601, p. ej. `'2026-W18'`) para [gameId]. El servidor calcula un
+  /// hash determinista del [aggregates] y hace upsert por
+  /// `(nino, juego, semana)`:
+  /// - Misma combinación + mismo hash → 200 idempotente, [summaryText]
+  ///   preserva el cache si lo hubiera.
+  /// - Misma combinación + hash distinto → 200 con [summaryText] vacío
+  ///   (el tutor IA regenerará el resumen cuando se conecte a este
+  ///   endpoint).
+  /// - Combinación nueva → 201 con [summaryText] vacío.
+  ///
+  /// Lanza [ExcepcionApi] con código 400 si el shape es inválido; 401 si
+  /// el token no es válido; 5xx en otros fallos.
+  Future<AgregadoSemanal> archivarAgregadosSemanales({
+    required String token,
+    required String gameId,
+    required String isoWeek,
+    required Map<String, dynamic> aggregates,
+  }) async {
+    final r = await _cliente
+        .post(
+          _uri('/companion/aggregates/weekly'),
+          headers: _cabeceras(token: token),
+          body: jsonEncode({
+            'game_id': gameId,
+            'iso_week': isoWeek,
+            'aggregates': aggregates,
+          }),
+        )
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return AgregadoSemanal.desdeJson(cuerpo);
   }
 
   /// POST /classrooms/{code}/join

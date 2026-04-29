@@ -57,6 +57,7 @@ require_once NS_CORE_DIR . 'includes/class-ns-reset-password.php';
 require_once NS_CORE_DIR . 'includes/class-ns-companion-cuaderno.php';
 require_once NS_CORE_DIR . 'includes/class-ns-companion-mosaicos.php';
 require_once NS_CORE_DIR . 'includes/class-ns-companion-aulas.php';
+require_once NS_CORE_DIR . 'includes/class-ns-companion-agregados.php';
 require_once NS_CORE_DIR . 'includes/class-ns-endpoints.php';
 
 register_activation_hook( __FILE__, array( 'NS_Activacion', 'activar' ) );

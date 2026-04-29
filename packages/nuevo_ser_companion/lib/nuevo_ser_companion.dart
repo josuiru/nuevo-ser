@@ -12,6 +12,9 @@
 /// - Mosaicos: `crearMosaico` cubre `POST /companion/mosaicos`.
 /// - Mosaicos: `listarMosaicos` cubre `GET /companion/mosaicos`.
 /// - Aulas: `unirseAula` cubre `POST /classrooms/{code}/join`.
+/// - Agregados: `archivarAgregadosSemanales` cubre
+///   `POST /companion/aggregates/weekly` (sin LLM tutor todavía;
+///   `summaryText` viene vacío hasta el slice de cableado del tutor).
 ///
 /// Pendiente (siguen 501 en el servidor):
 /// - `POST /companion/aggregates/weekly`
@@ -21,6 +24,7 @@
 ///   `GET /caregivers/{caregiverId}/children/{childId}/summary`
 library nuevo_ser_companion;
 
+export 'src/agregados/agregado_semanal.dart';
 export 'src/aulas/membresia_aula.dart';
 export 'src/cliente_companion.dart';
 export 'src/cuaderno/entrada_cuaderno.dart';
