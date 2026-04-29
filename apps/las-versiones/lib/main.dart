@@ -4,7 +4,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'datos/repositorio_flags_narrativos.dart';
+import 'dominio/escenas_arco_1.dart';
 import 'nucleo/paleta_archivo.dart';
+import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_esqueleto.dart';
 
@@ -45,13 +48,21 @@ void main() async {
     localeAppLasVersiones.value = Locale(codigoIdiomaPersistido);
   }
 
-  runApp(AppLasVersiones(repoIdioma: repoIdioma));
+  runApp(AppLasVersiones(
+    repoIdioma: repoIdioma,
+    repoFlags: const RepositorioFlagsNarrativos(),
+  ));
 }
 
 class AppLasVersiones extends StatelessWidget {
   final RepositorioIdiomaApp repoIdioma;
+  final RepositorioFlagsNarrativos repoFlags;
 
-  const AppLasVersiones({super.key, required this.repoIdioma});
+  const AppLasVersiones({
+    super.key,
+    required this.repoIdioma,
+    required this.repoFlags,
+  });
 
   @override
   Widget build(BuildContext contexto) {
@@ -88,7 +99,10 @@ class AppLasVersiones extends StatelessWidget {
             }
             return const Locale('es');
           },
-          home: Orquestador(repoIdioma: repoIdioma),
+          home: Orquestador(
+            repoIdioma: repoIdioma,
+            repoFlags: repoFlags,
+          ),
         );
       },
     );
@@ -106,15 +120,28 @@ ThemeData _temaArchivo() {
   );
 }
 
-/// Orquestador mínimo del esqueleto. Cuando haya Brechas, Cuaderno,
-/// perfiles, etc. esta clase crecerá hasta ser hermana de
-/// `OrquestadorFases` de Uno Roto. Hoy sólo decide entre dos
-/// pantallas: configuración inicial (si nunca se eligió idioma) o
-/// esqueleto (resto del tiempo).
+/// Orquestador del esqueleto. Tres estados posibles, en orden:
+///
+/// 1. **Configuración inicial** si la Cronista nunca eligió idioma.
+/// 2. **Cinemática** si hay una escena pendiente cuyos
+///    `flagsRequeridos` están todos activos y cuyo `flagDeSalida`
+///    aún no lo está.
+/// 3. **Esqueleto** si todas las escenas implementadas están vistas
+///    (mientras no haya Brechas jugables).
+///
+/// Cuando llegue el sistema de Brechas, esta clase crecerá hasta ser
+/// hermana de `OrquestadorFases` de Uno Roto. Por ahora encarna sólo
+/// el ritmo "elige idioma → vive la primera cinemática → espera lo
+/// que viene".
 class Orquestador extends StatefulWidget {
   final RepositorioIdiomaApp repoIdioma;
+  final RepositorioFlagsNarrativos repoFlags;
 
-  const Orquestador({super.key, required this.repoIdioma});
+  const Orquestador({
+    super.key,
+    required this.repoIdioma,
+    required this.repoFlags,
+  });
 
   @override
   State<Orquestador> createState() => _OrquestadorState();
@@ -123,27 +150,78 @@ class Orquestador extends StatefulWidget {
 class _OrquestadorState extends State<Orquestador> {
   bool _cargando = true;
   bool _idiomaElegido = false;
+  Set<String> _flagsActivos = const {};
+  EscenaCinematica? _escenaEnReproduccion;
 
   @override
   void initState() {
     super.initState();
-    _comprobarIdioma();
+    _cargarEstadoInicial();
   }
 
-  Future<void> _comprobarIdioma() async {
+  Future<void> _cargarEstadoInicial() async {
     final codigo = await widget.repoIdioma.cargar();
+    final flags = await widget.repoFlags.activos();
     if (!mounted) return;
     setState(() {
       _idiomaElegido = codigo != null;
+      _flagsActivos = flags;
       _cargando = false;
+      _escenaEnReproduccion = _proximaEscenaPendiente();
     });
+  }
+
+  /// Devuelve la primera escena del Arco 1 cuyos `flagsRequeridos`
+  /// están todos activos y cuyo `flagDeSalida` aún no lo está. `null`
+  /// si no hay nada que reproducir ahora.
+  EscenaCinematica? _proximaEscenaPendiente() {
+    if (!_idiomaElegido) return null;
+    for (final escena in EscenasArco1.todas) {
+      final yaVista = _flagsActivos.contains(escena.flagDeSalida);
+      if (yaVista) continue;
+      final precondicionesOk = escena.flagsRequeridos.every(
+        _flagsActivos.contains,
+      );
+      if (precondicionesOk) return escena;
+    }
+    return null;
   }
 
   Future<void> _alElegirIdioma(String codigo) async {
     await widget.repoIdioma.guardar(codigo);
     localeAppLasVersiones.value = Locale(codigo);
     if (!mounted) return;
-    setState(() => _idiomaElegido = true);
+    setState(() {
+      _idiomaElegido = true;
+      _escenaEnReproduccion = _proximaEscenaPendiente();
+    });
+  }
+
+  Future<void> _alEstablecerFlag(String flag) async {
+    await widget.repoFlags.activar(flag);
+    if (!mounted) return;
+    // No reconstruimos la pantalla con cada flag — la cinemática
+    // sigue su curso. Sólo guardamos que ya está activo para que el
+    // próximo arranque lo recuerde.
+    _flagsActivos = {..._flagsActivos, flag};
+  }
+
+  Future<void> _alTerminarEscena(EscenaCinematica escena) async {
+    // Cierre de escena: el flag de salida más los flags
+    // institucionales declarados por el catálogo del juego.
+    final flagsACerrar = <String>{
+      escena.flagDeSalida,
+      ...?EscenasArco1.flagsDeCierrePorEscena[escena.flagDeSalida],
+    };
+    for (final flag in flagsACerrar) {
+      await widget.repoFlags.activar(flag);
+    }
+    if (!mounted) return;
+    final nuevosFlags = {..._flagsActivos, ...flagsACerrar};
+    setState(() {
+      _flagsActivos = nuevosFlags;
+      _escenaEnReproduccion = _proximaEscenaPendiente();
+    });
   }
 
   @override
@@ -156,6 +234,19 @@ class _OrquestadorState extends State<Orquestador> {
     }
     if (!_idiomaElegido) {
       return PantallaConfiguracionInicial(alElegirIdioma: _alElegirIdioma);
+    }
+    final escena = _escenaEnReproduccion;
+    if (escena != null) {
+      // Key por id de escena para que el StatefulWidget se reinicie
+      // limpio si cambiamos a otra (no aplica todavía con sólo una,
+      // pero lo dejamos cableado para cuando lleguen 1.0.2 y
+      // siguientes).
+      return PantallaCinematica(
+        key: ValueKey(escena.id),
+        escena: escena,
+        alEstablecerFlag: _alEstablecerFlag,
+        alTerminar: () => _alTerminarEscena(escena),
+      );
     }
     return const PantallaEsqueleto();
   }
