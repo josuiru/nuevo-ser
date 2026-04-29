@@ -10,12 +10,12 @@ Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*` del plugin `nu
 |---|---|---|
 | `POST /companion/cuaderno/entries` | `ClienteCompanion.crearEntradaCuaderno` | `NS_Companion_Cuaderno::crear_entrada` |
 | `GET /companion/cuaderno/entries` | `ClienteCompanion.listarEntradasCuaderno` | `NS_Companion_Cuaderno::listar_entradas` |
+| `POST /companion/mosaicos` | `ClienteCompanion.crearMosaico` | `NS_Companion_Mosaicos::crear_mosaico` |
 
 ## Pendiente (siguen 501 en el servidor)
 
 | Ruta | Método | Notas |
 |---|---|---|
-| `/companion/mosaicos` | POST | Mismo shape que cuaderno entries pero por arco. |
 | `/companion/aggregates/weekly` | POST | Anonimizado, alimenta "Esta semana". |
 | `/classrooms` | POST | Profesor crea aula. |
 | `/classrooms/{code}/join` | POST | Niño se une con código. |

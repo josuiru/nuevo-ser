@@ -5,6 +5,7 @@ import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import 'cuaderno/entrada_cuaderno.dart';
 import 'cuaderno/listado_entradas_cuaderno.dart';
+import 'mosaicos/mosaico.dart';
 
 /// Cliente HTTP de los endpoints de acompañamiento del plugin
 /// `nuevo-ser-core` (`/wp-json/nuevo-ser/v1/companion/*`).
@@ -109,6 +110,37 @@ class ClienteCompanion {
         .timeout(tiempoEspera);
     final cuerpo = _decodificar(r);
     return ListadoEntradasCuaderno.desdeJson(cuerpo);
+  }
+
+  /// POST /companion/mosaicos
+  ///
+  /// Crea un mosaico recién terminado para el niño dueño del [token].
+  /// Devuelve el mosaico con `id` y `completedAt` ya asignados; los
+  /// campos opcionales (`contentMeta`, `requiredAnchors`,
+  /// `fulfilledAnchors`, `qualitativeFeedback`) se preservan del
+  /// original.
+  ///
+  /// Lanza [ExcepcionApi] con código 400 si la validación falla; 401 si
+  /// el token no es válido; 5xx en otros fallos.
+  Future<Mosaico> crearMosaico({
+    required String token,
+    required Mosaico mosaico,
+  }) async {
+    final r = await _cliente
+        .post(
+          _uri('/companion/mosaicos'),
+          headers: _cabeceras(token: token),
+          body: jsonEncode(mosaico.aJsonParaCrear()),
+        )
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return Mosaico.desdeRespuestaCreacion(
+      cuerpo,
+      contentMetaOriginal: mosaico.contentMeta,
+      requiredAnchorsOriginal: mosaico.requiredAnchors,
+      fulfilledAnchorsOriginal: mosaico.fulfilledAnchors,
+      qualitativeFeedbackOriginal: mosaico.qualitativeFeedback,
+    );
   }
 
   Map<String, dynamic> _decodificar(http.Response respuesta) {

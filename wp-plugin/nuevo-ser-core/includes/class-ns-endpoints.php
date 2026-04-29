@@ -72,6 +72,18 @@ class NS_Endpoints {
 				),
 			)
 		);
+
+		register_rest_route(
+			$namespace,
+			'/companion/mosaicos',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Companion_Mosaicos', 'crear_mosaico' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -769,10 +781,9 @@ class NS_Endpoints {
 	 */
 	private static function endpoints_companion(): array {
 		return array(
-			// Cuaderno y mosaicos (entries que el niño produce).
-			//   /companion/cuaderno/entries → ya implementado en
-			//   `registrar_companion_real` (NS_Companion_Cuaderno).
-			'/companion/mosaicos'                                         => 'POST',
+			// Cuaderno y mosaicos: ya implementados en
+			//   `registrar_companion_real` (NS_Companion_Cuaderno,
+			//   NS_Companion_Mosaicos).
 			// Agregados anonimizados que alimentan "Esta semana".
 			'/companion/aggregates/weekly'                                => 'POST',
 			// Aulas (profesor crea, niño se une, ver agregados).
