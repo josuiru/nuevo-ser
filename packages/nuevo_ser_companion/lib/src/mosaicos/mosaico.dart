@@ -90,4 +90,53 @@ class Mosaico {
       completedAt: DateTime.parse(json['completed_at'] as String),
     );
   }
+
+  /// Construye un mosaico a partir de una fila del listado
+  /// (`GET /companion/mosaicos`). Aquí el servidor sí devuelve
+  /// `content_meta`, `required_anchors`, `fulfilled_anchors` y
+  /// `qualitative_feedback` (tal como los guardó), por lo que NO se
+  /// preservan campos del cliente.
+  ///
+  /// `requiredAnchors`/`fulfilledAnchors` pueden venir como lista o como
+  /// objeto; los guardamos como `Object?` y normalizamos las claves de
+  /// los maps anidados a `String` para que `Map<String, dynamic>` siga
+  /// siendo válido en consumidores estrictos.
+  factory Mosaico.desdeJsonListado(Map<String, dynamic> json) {
+    return Mosaico(
+      id: (json['id'] as num).toInt(),
+      gameId: json['game_id'] as String,
+      arcId: json['arc_id'] as String,
+      format: (json['format'] as String?) ?? '',
+      title: json['title'] as String,
+      contentRef: (json['content_ref'] as String?) ?? '',
+      contentMeta: _mapaOpcional(json['content_meta']),
+      requiredAnchors: _coleccionOpcional(json['required_anchors']),
+      fulfilledAnchors: _coleccionOpcional(json['fulfilled_anchors']),
+      qualitativeFeedback: json['qualitative_feedback'] as String?,
+      completedAt: DateTime.parse(json['completed_at'] as String),
+    );
+  }
+
+  static Map<String, dynamic>? _mapaOpcional(Object? valor) {
+    if (valor == null) return null;
+    if (valor is Map<String, dynamic>) return valor;
+    if (valor is Map) {
+      return valor.map((k, v) => MapEntry(k.toString(), v));
+    }
+    return null;
+  }
+
+  /// Normaliza un campo que el servidor puede devolver como List o Map.
+  /// Listas se devuelven tal cual; mapas se les normaliza la clave a
+  /// String. Cualquier otro shape (string, número) → null, igual que
+  /// `decodificar_json` en PHP.
+  static Object? _coleccionOpcional(Object? valor) {
+    if (valor == null) return null;
+    if (valor is List) return valor;
+    if (valor is Map<String, dynamic>) return valor;
+    if (valor is Map) {
+      return valor.map((k, v) => MapEntry(k.toString(), v));
+    }
+    return null;
+  }
 }

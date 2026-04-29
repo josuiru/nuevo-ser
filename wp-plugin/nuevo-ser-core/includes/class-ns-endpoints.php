@@ -82,6 +82,11 @@ class NS_Endpoints {
 					'callback'            => array( 'NS_Companion_Mosaicos', 'crear_mosaico' ),
 					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
 				),
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Companion_Mosaicos', 'listar_mosaicos' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
 			)
 		);
 	}

@@ -11,6 +11,7 @@ Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*` del plugin `nu
 | `POST /companion/cuaderno/entries` | `ClienteCompanion.crearEntradaCuaderno` | `NS_Companion_Cuaderno::crear_entrada` |
 | `GET /companion/cuaderno/entries` | `ClienteCompanion.listarEntradasCuaderno` | `NS_Companion_Cuaderno::listar_entradas` |
 | `POST /companion/mosaicos` | `ClienteCompanion.crearMosaico` | `NS_Companion_Mosaicos::crear_mosaico` |
+| `GET /companion/mosaicos` | `ClienteCompanion.listarMosaicos` | `NS_Companion_Mosaicos::listar_mosaicos` |
 
 ## Pendiente (siguen 501 en el servidor)
 

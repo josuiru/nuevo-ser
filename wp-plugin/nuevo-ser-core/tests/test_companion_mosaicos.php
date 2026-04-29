@@ -276,6 +276,91 @@ afirmar( 'requerido', $campos['title'] ?? null, 'multi: title falta' );
 afirmar( 'formato_invalido', $campos['format'] ?? null, 'multi: format formato' );
 afirmar( 'debe_ser_lista_u_objeto', $campos['required_anchors'] ?? null, 'multi: required_anchors tipo' );
 
+// ─── validar_query_listado ──────────────────────────────────────
+
+// Defaults cuando no hay query.
+$resultado = NS_Companion_Mosaicos::validar_query_listado( array() );
+afirmar( array(), $resultado['campos_invalidos'], 'listado mosaicos: query vacía sin errores' );
+afirmar( '', $resultado['game_id'], 'listado mosaicos: game_id default vacío' );
+afirmar( '', $resultado['arc_id'], 'listado mosaicos: arc_id default vacío' );
+afirmar( 20, $resultado['limit'], 'listado mosaicos: limit default 20' );
+afirmar( 0, $resultado['offset'], 'listado mosaicos: offset default 0' );
+
+// Trim de game_id y arc_id.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array(
+		'game_id' => '  uno-roto  ',
+		'arc_id'  => '  distrito-A  ',
+	)
+);
+afirmar( 'uno-roto', $resultado['game_id'], 'listado mosaicos: game_id se trim-ea' );
+afirmar( 'distrito-A', $resultado['arc_id'], 'listado mosaicos: arc_id se trim-ea' );
+
+// arc_id demasiado largo.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'arc_id' => str_repeat( 'a', 65 ) )
+);
+afirmar( 'demasiado_largo', $resultado['campos_invalidos']['arc_id'] ?? null, 'listado mosaicos: arc_id 65 chars rechaza' );
+
+// arc_id frontera 64 pasa.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'arc_id' => str_repeat( 'a', 64 ) )
+);
+afirmar( array(), $resultado['campos_invalidos'], 'listado mosaicos: arc_id 64 chars pasa' );
+
+// limit fuera de rango (alto).
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'limit' => 999 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['limit'] ?? null, 'listado mosaicos: limit 999 rechaza' );
+
+// limit fronteras 100/101.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'limit' => 100 )
+);
+afirmar( array(), $resultado['campos_invalidos'], 'listado mosaicos: limit=100 pasa' );
+
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'limit' => 101 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['limit'] ?? null, 'listado mosaicos: limit=101 rechaza' );
+
+// limit 0 fuera de rango.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'limit' => 0 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['limit'] ?? null, 'listado mosaicos: limit 0 rechaza' );
+
+// limit no entero.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'limit' => 'abc' )
+);
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['limit'] ?? null, 'listado mosaicos: limit string rechaza' );
+
+// offset negativo.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'offset' => -1 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['offset'] ?? null, 'listado mosaicos: offset negativo rechaza' );
+
+// offset no entero.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array( 'offset' => 'xx' )
+);
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['offset'] ?? null, 'listado mosaicos: offset string rechaza' );
+
+// Múltiples errores.
+$resultado = NS_Companion_Mosaicos::validar_query_listado(
+	array(
+		'arc_id' => str_repeat( 'a', 70 ),
+		'limit'  => 'abc',
+		'offset' => -1,
+	)
+);
+afirmar( 'demasiado_largo', $resultado['campos_invalidos']['arc_id'] ?? null, 'multi listado mosaicos: arc_id error' );
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['limit'] ?? null, 'multi listado mosaicos: limit error' );
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['offset'] ?? null, 'multi listado mosaicos: offset error' );
+
 if ( 0 === $fallos ) {
 	echo "OK\n";
 	exit( 0 );

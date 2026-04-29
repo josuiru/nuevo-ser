@@ -5,6 +5,7 @@ import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import 'cuaderno/entrada_cuaderno.dart';
 import 'cuaderno/listado_entradas_cuaderno.dart';
+import 'mosaicos/listado_mosaicos.dart';
 import 'mosaicos/mosaico.dart';
 
 /// Cliente HTTP de los endpoints de acompañamiento del plugin
@@ -141,6 +142,40 @@ class ClienteCompanion {
       fulfilledAnchorsOriginal: mosaico.fulfilledAnchors,
       qualitativeFeedbackOriginal: mosaico.qualitativeFeedback,
     );
+  }
+
+  /// GET /companion/mosaicos
+  ///
+  /// Lista los mosaicos del niño dueño del [token], ordenados de más
+  /// reciente a más antiguo por `completedAt`.
+  ///
+  /// - [gameId]: filtra por juego (debe existir en `ns_games`).
+  /// - [arcId]: filtra por arco (max 64 chars).
+  /// - [limit]: 1..100.
+  /// - [offset]: 0 o más.
+  ///
+  /// Lanza [ExcepcionApi] con código 400 si la query es inválida; 401 si
+  /// el token no es válido; 5xx en otros fallos.
+  Future<ListadoMosaicos> listarMosaicos({
+    required String token,
+    String? gameId,
+    String? arcId,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final parametros = <String, String>{
+      'limit': '$limit',
+      'offset': '$offset',
+      if (gameId != null && gameId.isNotEmpty) 'game_id': gameId,
+      if (arcId != null && arcId.isNotEmpty) 'arc_id': arcId,
+    };
+    final url =
+        _uri('/companion/mosaicos').replace(queryParameters: parametros);
+    final r = await _cliente
+        .get(url, headers: _cabeceras(token: token))
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return ListadoMosaicos.desdeJson(cuerpo);
   }
 
   Map<String, dynamic> _decodificar(http.Response respuesta) {

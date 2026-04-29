@@ -10,6 +10,7 @@
 /// - Cuaderno: `crearEntradaCuaderno` cubre `POST /companion/cuaderno/entries`.
 /// - Cuaderno: `listarEntradasCuaderno` cubre `GET /companion/cuaderno/entries`.
 /// - Mosaicos: `crearMosaico` cubre `POST /companion/mosaicos`.
+/// - Mosaicos: `listarMosaicos` cubre `GET /companion/mosaicos`.
 ///
 /// Pendiente (siguen 501 en el servidor):
 /// - `POST /companion/aggregates/weekly`
@@ -22,4 +23,5 @@ library nuevo_ser_companion;
 export 'src/cliente_companion.dart';
 export 'src/cuaderno/entrada_cuaderno.dart';
 export 'src/cuaderno/listado_entradas_cuaderno.dart';
+export 'src/mosaicos/listado_mosaicos.dart';
 export 'src/mosaicos/mosaico.dart';
