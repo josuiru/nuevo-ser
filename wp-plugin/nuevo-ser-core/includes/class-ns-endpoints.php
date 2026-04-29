@@ -39,6 +39,10 @@ class NS_Endpoints {
 	public static function registrar(): void {
 		self::registrar_grupo( self::NAMESPACE_CANONICO );
 		self::registrar_grupo( self::NAMESPACE_ALIAS );
+		// Endpoints de acompañamiento (C7) — reservan superficie con 501.
+		// Solo en el canónico: los clientes desplegados de Uno Roto nunca
+		// los llamarán, no hay razón para cargar el alias con deuda nueva.
+		self::registrar_companion( self::NAMESPACE_CANONICO );
 		add_filter( 'rest_post_dispatch', array( __CLASS__, 'marcar_alias_deprecado' ), 10, 3 );
 	}
 
@@ -688,5 +692,92 @@ class NS_Endpoints {
 		// Esta función emite HTML directo y mata la ejecución; nunca
 		// retorna a WP_REST. Solo está aquí para registro de la ruta.
 		NS_Reset_Password::pagina_reset_html( $request );
+	}
+
+	// =================================================================
+	// Acompañamiento — endpoints reservados (C7).
+	// =================================================================
+	//
+	// Reservan la superficie REST descrita en la doc nuevo-ser-core-
+	// arquitectura.md §4.3 + §7. Las tablas asociadas (ns_classrooms,
+	// ns_caregiver_links, ns_cuaderno_entries, ns_mosaicos,
+	// ns_weekly_summaries) ya existen tras C7 — vacías. Los handlers
+	// devuelven 501 con cuerpo Problem Details (RFC 7807) hasta que un
+	// chunk posterior cablee la lógica.
+	//
+	// Razones para registrarlos ya:
+	//   - Documentación viva: `curl /wp-json/nuevo-ser/v1/companion/...`
+	//     devuelve un mensaje claro en lugar de 404 "endpoint no existe",
+	//     útil cuando un consumidor explora la API.
+	//   - Reserva de ruta: si alguien implementa una alternativa con
+	//     mismo nombre antes de tiempo, choca con el 501 — visible.
+	//   - Permite escribir tests cliente-servidor que verifiquen
+	//     "el endpoint existe pero aún no está disponible".
+
+	private static function registrar_companion( string $namespace ): void {
+		foreach ( self::endpoints_companion() as $ruta => $metodos ) {
+			register_rest_route(
+				$namespace,
+				$ruta,
+				array(
+					'methods'             => $metodos,
+					'callback'            => array( __CLASS__, 'companion_no_implementado' ),
+					// Permission abierto a propósito: 501 antes que 401 da
+					// más información a quien explora la API. Los handlers
+					// que sustituyan a éste sí pondrán el permission_callback
+					// adecuado (JWT, admin, etc.).
+					'permission_callback' => '__return_true',
+				)
+			);
+		}
+	}
+
+	/**
+	 * Mapa ruta → método HTTP de los endpoints de acompañamiento.
+	 * Espejo literal de la doc §4.3 (sección "POST /companion/*",
+	 * "POST /classrooms/*", "POST /caregivers/*"). Cualquier endpoint
+	 * que se mueva de aquí debe sustituirse por su handler real al
+	 * mismo tiempo, no antes.
+	 */
+	private static function endpoints_companion(): array {
+		return array(
+			// Cuaderno y mosaicos (entries que el niño produce).
+			'/companion/cuaderno/entries'                                 => 'POST',
+			'/companion/mosaicos'                                         => 'POST',
+			// Agregados anonimizados que alimentan "Esta semana".
+			'/companion/aggregates/weekly'                                => 'POST',
+			// Aulas (profesor crea, niño se une, ver agregados).
+			'/classrooms'                                                 => 'POST',
+			'/classrooms/(?P<code>[A-Z0-9]+)/join'                        => 'POST',
+			'/classrooms/(?P<id>\d+)/aggregates'                          => 'GET',
+			// Vínculo cuidador-niño con consentimiento parental.
+			'/caregivers/link/request'                                    => 'POST',
+			'/caregivers/link/verify'                                     => 'POST',
+			'/caregivers/(?P<caregiver_id>\d+)/children/(?P<child_id>\d+)/summary' => 'GET',
+		);
+	}
+
+	/**
+	 * Handler único de los endpoints reservados. Devuelve 501 con cuerpo
+	 * Problem Details (RFC 7807) — `application/problem+json` — para que
+	 * los clientes puedan distinguir esta respuesta de un error de
+	 * autenticación o de servidor sin parsear texto libre.
+	 */
+	public static function companion_no_implementado( WP_REST_Request $request ) {
+		$ruta = (string) $request->get_route();
+		$problema = array(
+			'type'     => 'https://coleccion-nuevo-ser.com/errors/not-implemented',
+			'title'    => 'Endpoint reservado, no implementado todavía',
+			'status'   => 501,
+			'detail'   => 'Esta ruta forma parte de la superficie del paquete '
+				. 'companion (doc nuevo-ser-core-arquitectura.md §7) y '
+				. 'estará disponible cuando arranque la fase de '
+				. 'acompañamiento. Hasta entonces, devuelve 501 '
+				. 'a propósito.',
+			'endpoint' => $ruta,
+		);
+		$respuesta = new WP_REST_Response( $problema, 501 );
+		$respuesta->header( 'Content-Type', 'application/problem+json; charset=utf-8' );
+		return $respuesta;
 	}
 }

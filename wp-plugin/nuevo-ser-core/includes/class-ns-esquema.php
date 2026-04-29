@@ -44,6 +44,16 @@ class NS_Esquema {
 		'estado_habilidades' => 'ns_estado_habilidades',
 		'cache_tutor'        => 'ns_cache_tutor',
 		'password_reset'     => 'ns_password_reset',
+		// Tablas de acompañamiento (C7). Soportan a la doc §5.5–5.9 y a los
+		// endpoints reservados con 501 (`/wp-json/nuevo-ser/v1/companion/*`,
+		// `/classrooms/*`, `/caregivers/*`). Se crean vacías; se rellenan
+		// cuando los flujos correspondientes entren en producción (C9+).
+		'classrooms'         => 'ns_classrooms',
+		'classroom_members'  => 'ns_classroom_members',
+		'caregiver_links'    => 'ns_caregiver_links',
+		'cuaderno_entries'   => 'ns_cuaderno_entries',
+		'mosaicos'           => 'ns_mosaicos',
+		'weekly_summaries'   => 'ns_weekly_summaries',
 	);
 
 	/** Mapeo del prefijo viejo al nuevo. Lo usa la migración M001. */
@@ -82,13 +92,19 @@ class NS_Esquema {
 	public static function sentencias_create(): array {
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
-		$games           = self::nombre_tabla( 'games' );
-		$usuarios        = self::nombre_tabla( 'usuarios' );
-		$ninos           = self::nombre_tabla( 'ninos' );
-		$progreso        = self::nombre_tabla( 'progreso' );
-		$habilidades     = self::nombre_tabla( 'estado_habilidades' );
-		$cache_tutor     = self::nombre_tabla( 'cache_tutor' );
-		$reset_password  = self::nombre_tabla( 'password_reset' );
+		$games            = self::nombre_tabla( 'games' );
+		$usuarios         = self::nombre_tabla( 'usuarios' );
+		$ninos            = self::nombre_tabla( 'ninos' );
+		$progreso         = self::nombre_tabla( 'progreso' );
+		$habilidades      = self::nombre_tabla( 'estado_habilidades' );
+		$cache_tutor      = self::nombre_tabla( 'cache_tutor' );
+		$reset_password   = self::nombre_tabla( 'password_reset' );
+		$classrooms       = self::nombre_tabla( 'classrooms' );
+		$classroom_member = self::nombre_tabla( 'classroom_members' );
+		$caregiver_links  = self::nombre_tabla( 'caregiver_links' );
+		$cuaderno_entries = self::nombre_tabla( 'cuaderno_entries' );
+		$mosaicos         = self::nombre_tabla( 'mosaicos' );
+		$weekly_summaries = self::nombre_tabla( 'weekly_summaries' );
 
 		return array(
 			"CREATE TABLE {$games} (
@@ -177,6 +193,102 @@ class NS_Esquema {
 				UNIQUE KEY token_hash (token_hash),
 				KEY usuario_id (usuario_id),
 				KEY expira_en (expira_en)
+			) {$charset_collate};",
+
+			// ---------------------------------------------------------
+			// Tablas de acompañamiento (C7) — doc §5.5–5.9.
+			//
+			// Se crean ahora con dbDelta para reservar la superficie de
+			// almacenamiento; los handlers asociados en NS_Endpoints
+			// devuelven 501 hasta que C9 implemente la lógica.
+			//
+			// FOREIGN KEYs declaradas a título informativo: dbDelta no
+			// las aplica realmente, así que la integridad referencial
+			// la garantizan los handlers PHP cuando arranquen.
+			// ---------------------------------------------------------
+
+			"CREATE TABLE {$classrooms} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				code VARCHAR(16) NOT NULL,
+				teacher_user_id BIGINT UNSIGNED NOT NULL,
+				name VARCHAR(128) NOT NULL,
+				game_ids LONGTEXT NOT NULL,
+				language VARCHAR(8) NOT NULL DEFAULT 'es',
+				active TINYINT(1) NOT NULL DEFAULT 1,
+				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY  (id),
+				UNIQUE KEY code (code),
+				KEY teacher_user_id (teacher_user_id)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$classroom_member} (
+				classroom_id BIGINT UNSIGNED NOT NULL,
+				user_id BIGINT UNSIGNED NOT NULL,
+				joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				active TINYINT(1) NOT NULL DEFAULT 1,
+				PRIMARY KEY  (classroom_id, user_id),
+				KEY user_id (user_id)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$caregiver_links} (
+				caregiver_user_id BIGINT UNSIGNED NOT NULL,
+				child_user_id BIGINT UNSIGNED NOT NULL,
+				consent_method VARCHAR(32) NOT NULL DEFAULT '',
+				consent_verified_at DATETIME NULL DEFAULT NULL,
+				consent_evidence LONGTEXT NULL DEFAULT NULL,
+				active TINYINT(1) NOT NULL DEFAULT 1,
+				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				revoked_at DATETIME NULL DEFAULT NULL,
+				PRIMARY KEY  (caregiver_user_id, child_user_id),
+				KEY child_user_id (child_user_id)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$cuaderno_entries} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				user_id BIGINT UNSIGNED NOT NULL,
+				game_id VARCHAR(64) NOT NULL,
+				type VARCHAR(32) NOT NULL DEFAULT '',
+				title VARCHAR(255) NOT NULL DEFAULT '',
+				content_ref VARCHAR(255) NOT NULL DEFAULT '',
+				content_meta LONGTEXT NULL DEFAULT NULL,
+				anchored_to LONGTEXT NULL DEFAULT NULL,
+				shared_with_classroom_ids LONGTEXT NULL DEFAULT NULL,
+				shared_with_caregiver_ids LONGTEXT NULL DEFAULT NULL,
+				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY  (id),
+				KEY user_game_created (user_id, game_id, created_at)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$mosaicos} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				user_id BIGINT UNSIGNED NOT NULL,
+				game_id VARCHAR(64) NOT NULL,
+				arc_id VARCHAR(64) NOT NULL,
+				format VARCHAR(32) NOT NULL DEFAULT '',
+				title VARCHAR(255) NOT NULL DEFAULT '',
+				content_ref VARCHAR(255) NOT NULL DEFAULT '',
+				content_meta LONGTEXT NULL DEFAULT NULL,
+				required_anchors LONGTEXT NULL DEFAULT NULL,
+				fulfilled_anchors LONGTEXT NULL DEFAULT NULL,
+				qualitative_feedback LONGTEXT NULL DEFAULT NULL,
+				shared_with_classroom_ids LONGTEXT NULL DEFAULT NULL,
+				shared_with_caregiver_ids LONGTEXT NULL DEFAULT NULL,
+				completed_at DATETIME NULL DEFAULT NULL,
+				PRIMARY KEY  (id),
+				KEY user_game_arc (user_id, game_id, arc_id)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$weekly_summaries} (
+				user_id BIGINT UNSIGNED NOT NULL,
+				game_id VARCHAR(64) NOT NULL,
+				iso_week VARCHAR(10) NOT NULL,
+				summary_text TEXT NOT NULL,
+				conversation_prompt TEXT NULL,
+				aggregates_hash VARCHAR(64) NOT NULL,
+				generated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY  (user_id, game_id, iso_week),
+				KEY aggregates_hash (aggregates_hash)
 			) {$charset_collate};",
 		);
 	}
