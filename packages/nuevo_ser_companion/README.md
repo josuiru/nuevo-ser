@@ -12,14 +12,14 @@ Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*` del plugin `nu
 | `GET /companion/cuaderno/entries` | `ClienteCompanion.listarEntradasCuaderno` | `NS_Companion_Cuaderno::listar_entradas` |
 | `POST /companion/mosaicos` | `ClienteCompanion.crearMosaico` | `NS_Companion_Mosaicos::crear_mosaico` |
 | `GET /companion/mosaicos` | `ClienteCompanion.listarMosaicos` | `NS_Companion_Mosaicos::listar_mosaicos` |
+| `POST /classrooms/{code}/join` | `ClienteCompanion.unirseAula` | `NS_Companion_Aulas::unirse` |
 
 ## Pendiente (siguen 501 en el servidor)
 
 | Ruta | Método | Notas |
 |---|---|---|
 | `/companion/aggregates/weekly` | POST | Anonimizado, alimenta "Esta semana". |
-| `/classrooms` | POST | Profesor crea aula. |
-| `/classrooms/{code}/join` | POST | Niño se une con código. |
+| `/classrooms` | POST | Profesor crea aula. Esperando decisión de auth de profesor. |
 | `/classrooms/{id}/aggregates` | GET | Profesor ve agregados. |
 | `/caregivers/link/request` | POST | Solicitud de vínculo cuidador-niño. |
 | `/caregivers/link/verify` | POST | Verificación con consentimiento parental. |

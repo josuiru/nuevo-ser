@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import 'aulas/membresia_aula.dart';
 import 'cuaderno/entrada_cuaderno.dart';
 import 'cuaderno/listado_entradas_cuaderno.dart';
 import 'mosaicos/listado_mosaicos.dart';
@@ -176,6 +177,30 @@ class ClienteCompanion {
         .timeout(tiempoEspera);
     final cuerpo = _decodificar(r);
     return ListadoMosaicos.desdeJson(cuerpo);
+  }
+
+  /// POST /classrooms/{code}/join
+  ///
+  /// El niño dueño del [token] se une al aula con [code]. Devuelve la
+  /// membresía resultante (idempotente: misma respuesta si ya era
+  /// miembro).
+  ///
+  /// Lanza [ExcepcionApi] con código 400 si el código tiene formato
+  /// inválido; 401 si el token no es válido; 404 si el aula no existe;
+  /// 409 si está inactiva; 5xx en otros fallos.
+  Future<MembresiaAula> unirseAula({
+    required String token,
+    required String code,
+  }) async {
+    final codeNormalizado = Uri.encodeComponent(code.toUpperCase().trim());
+    final r = await _cliente
+        .post(
+          _uri('/classrooms/$codeNormalizado/join'),
+          headers: _cabeceras(token: token),
+        )
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return MembresiaAula.desdeJson(cuerpo);
   }
 
   Map<String, dynamic> _decodificar(http.Response respuesta) {

@@ -11,6 +11,7 @@
 /// - Cuaderno: `listarEntradasCuaderno` cubre `GET /companion/cuaderno/entries`.
 /// - Mosaicos: `crearMosaico` cubre `POST /companion/mosaicos`.
 /// - Mosaicos: `listarMosaicos` cubre `GET /companion/mosaicos`.
+/// - Aulas: `unirseAula` cubre `POST /classrooms/{code}/join`.
 ///
 /// Pendiente (siguen 501 en el servidor):
 /// - `POST /companion/aggregates/weekly`
@@ -20,6 +21,7 @@
 ///   `GET /caregivers/{caregiverId}/children/{childId}/summary`
 library nuevo_ser_companion;
 
+export 'src/aulas/membresia_aula.dart';
 export 'src/cliente_companion.dart';
 export 'src/cuaderno/entrada_cuaderno.dart';
 export 'src/cuaderno/listado_entradas_cuaderno.dart';

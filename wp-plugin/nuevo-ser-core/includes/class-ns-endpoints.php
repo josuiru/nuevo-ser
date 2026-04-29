@@ -89,6 +89,18 @@ class NS_Endpoints {
 				),
 			)
 		);
+
+		register_rest_route(
+			$namespace,
+			'/classrooms/(?P<code>[A-Za-z0-9]+)/join',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Companion_Aulas', 'unirse' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -791,9 +803,10 @@ class NS_Endpoints {
 			//   NS_Companion_Mosaicos).
 			// Agregados anonimizados que alimentan "Esta semana".
 			'/companion/aggregates/weekly'                                => 'POST',
-			// Aulas (profesor crea, niño se une, ver agregados).
+			// Aulas: el `join` ya está cableado en `registrar_companion_real`
+			// (NS_Companion_Aulas); la creación y los agregados esperan al
+			// mecanismo de auth del profesor.
 			'/classrooms'                                                 => 'POST',
-			'/classrooms/(?P<code>[A-Z0-9]+)/join'                        => 'POST',
 			'/classrooms/(?P<id>\d+)/aggregates'                          => 'GET',
 			// Vínculo cuidador-niño con consentimiento parental.
 			'/caregivers/link/request'                                    => 'POST',
