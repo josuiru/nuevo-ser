@@ -1,20 +1,34 @@
-import '../datos/catalogo_habilidades.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
-/// Motor de maestría mínimo.
+import '../datos/catalogo_habilidades.dart';
+
+/// Facade del motor de maestría para Uno Roto.
 ///
-/// Implementa lo esencial del modelo descrito en `docs/02 §16` y
-/// `docs/03 §8`: recibe resultados de ejercicios, recalcula precisión
-/// ponderada, tiempo mediano y nivel de maestría. Aplica decaimiento
-/// por días sin práctica. Usa almacenamiento en memoria; la capa de
-/// persistencia lo inyecta vía [cargarEstado] / [guardarEstado].
+/// Tras el Chunk 6 del refactor, la lógica de cálculo vive en
+/// `MasteryEngine` (`packages/nuevo_ser_core/lib/src/mastery/`). Esta
+/// clase la envuelve para añadir lo específico del juego:
+///
+/// - Persistencia local vía callbacks `cargarEstado`/`guardarEstado`
+///   (Uno Roto usa `RepositorioProgreso` con `shared_preferences`).
+/// - Notificación `alSubirNivel` cuando el nivel sube de forma
+///   estricta — el orquestador la engancha al estado narrativo para
+///   activar flags como `fr_05_competente`.
+/// - Reglas de decaimiento del catálogo concreto (las "21d/14d" están
+///   en `assets/data/skills.json`).
+/// - Convención de flags `flagDeMaestria(...)`.
+///
+/// El cálculo agregado en sí (precisión ponderada, sesiones
+/// consecutivas, mapeo a nivel) no vive aquí: lo aporta el perfil
+/// `P1Precision` de la plataforma. La paridad bit a bit con la versión
+/// pre-refactor está cubierta por `test/motor_maestria_test.dart`.
 class MotorMaestria {
   MotorMaestria({
     required this.catalogo,
     required this.cargarEstado,
     required this.guardarEstado,
     this.alSubirNivel,
-  });
+    MasteryEngine? motor,
+  }) : _motor = motor ?? MasteryEngine();
 
   final CatalogoHabilidades catalogo;
 
@@ -31,13 +45,12 @@ class MotorMaestria {
   final void Function(String idHabilidad, NivelMaestria nuevoNivel)?
       alSubirNivel;
 
-  static const int _maxIntentosRecientes = 20;
+  final MasteryEngine _motor;
 
   /// Registra el resultado de un ejercicio para una habilidad y
-  /// devuelve el [EstadoHabilidad] actualizado. Calcula:
-  /// - precisión ponderada por dificultad sobre los últimos N intentos,
-  /// - tiempo mediano,
-  /// - nivel de maestría según umbrales del §4 del doc 02.
+  /// devuelve el [EstadoHabilidad] actualizado. Delega el cómputo al
+  /// `MasteryEngine` con el perfil P1 (único soportado por las 66
+  /// habilidades de Uno Roto).
   Future<EstadoHabilidad> registrarResultado({
     required String idHabilidad,
     required bool acierto,
@@ -45,47 +58,22 @@ class MotorMaestria {
     required int duracionSegundos,
     DateTime? ahora,
   }) async {
-    assert(dificultad >= 0.5 && dificultad <= 2.0);
     final ahoraEfectivo = ahora ?? DateTime.now();
     final estadoPrevio = (await cargarEstado(idHabilidad)) ??
         EstadoHabilidad.inicial(idHabilidad);
 
-    final nuevoIntento = IntentoHabilidad(
-      instante: ahoraEfectivo,
+    final payload = SessionPayload(
       acierto: acierto,
       dificultad: dificultad,
       duracionSegundos: duracionSegundos,
-    );
-    final intentos = [...estadoPrevio.intentosRecientes, nuevoIntento];
-    if (intentos.length > _maxIntentosRecientes) {
-      intentos.removeRange(0, intentos.length - _maxIntentosRecientes);
-    }
-
-    final precision = _calcularPrecisionPonderada(intentos);
-    final tiempoMediano = _calcularTiempoMediano(intentos);
-
-    final totalExposiciones = estadoPrevio.totalExposiciones + 1;
-    final sesionesConsecutivas = _actualizarSesionesConsecutivas(
-      estadoPrevio: estadoPrevio,
-      ahora: ahoraEfectivo,
-      precisionActual: precision,
-    );
-    final nivel = _nivelSegunPrecision(
-      precision: precision,
-      totalExposiciones: totalExposiciones,
-      sesionesConsecutivas: sesionesConsecutivas,
-      nivelPrevio: estadoPrevio.nivel,
+      instante: ahoraEfectivo,
     );
 
-    final estadoNuevo = estadoPrevio.copiarCon(
-      nivel: nivel,
-      precision: precision,
-      tiempoMedianoSeg: tiempoMediano,
-      ultimaPractica: ahoraEfectivo,
-      sesionesConsecutivasBuenas: sesionesConsecutivas,
-      totalExposiciones: totalExposiciones,
-      intentosRecientes: intentos,
+    final estadoNuevo = _motor.actualizarMaestria(
+      previo: estadoPrevio,
+      payload: payload,
     );
+
     await guardarEstado(estadoNuevo);
     if (estadoNuevo.nivel.valor > estadoPrevio.nivel.valor) {
       alSubirNivel?.call(idHabilidad, estadoNuevo.nivel);
@@ -118,7 +106,11 @@ class MotorMaestria {
   }
 
   /// Aplica decaimiento a un estado según el tiempo transcurrido.
-  /// No baja del nivel suelo (en desarrollo por defecto).
+  /// No baja del nivel suelo definido por el catálogo.
+  ///
+  /// Vive en la facade (no en `MasteryEngine`) porque las reglas de
+  /// decaimiento son del juego concreto: vienen de `assets/data/
+  /// skills.json` y pueden ser distintas en Las Versiones.
   EstadoHabilidad aplicarDecaimiento(
     EstadoHabilidad estado, {
     DateTime? ahora,
@@ -142,64 +134,5 @@ class MotorMaestria {
       nivel = suelo;
     }
     return nivel == estado.nivel ? estado : estado.copiarCon(nivel: nivel);
-  }
-
-  double _calcularPrecisionPonderada(List<IntentoHabilidad> intentos) {
-    if (intentos.isEmpty) return 0;
-    var numerador = 0.0;
-    var denominador = 0.0;
-    for (final intento in intentos) {
-      numerador += (intento.acierto ? 1 : 0) * intento.dificultad;
-      denominador += intento.dificultad;
-    }
-    if (denominador <= 0) return 0;
-    return numerador / denominador;
-  }
-
-  double _calcularTiempoMediano(List<IntentoHabilidad> intentos) {
-    if (intentos.isEmpty) return 0;
-    final tiempos = intentos.map((i) => i.duracionSegundos).toList()..sort();
-    final mitad = tiempos.length ~/ 2;
-    if (tiempos.length.isOdd) return tiempos[mitad].toDouble();
-    return (tiempos[mitad - 1] + tiempos[mitad]) / 2;
-  }
-
-  int _actualizarSesionesConsecutivas({
-    required EstadoHabilidad estadoPrevio,
-    required DateTime ahora,
-    required double precisionActual,
-  }) {
-    // Consideramos "sesión" un bloque de práctica con gap > 4 horas.
-    final gapHoras =
-        ahora.difference(estadoPrevio.ultimaPractica).inHours;
-    final esNuevaSesion = gapHoras >= 4;
-    if (!esNuevaSesion) return estadoPrevio.sesionesConsecutivasBuenas;
-    if (precisionActual >= 0.75) {
-      return estadoPrevio.sesionesConsecutivasBuenas + 1;
-    }
-    return 0;
-  }
-
-  NivelMaestria _nivelSegunPrecision({
-    required double precision,
-    required int totalExposiciones,
-    required int sesionesConsecutivas,
-    required NivelMaestria nivelPrevio,
-  }) {
-    // Maestría: ≥0.90 + ≥20 exposiciones + ≥5 sesiones consecutivas buenas.
-    if (precision >= 0.90 &&
-        totalExposiciones >= 20 &&
-        sesionesConsecutivas >= 5) {
-      return NivelMaestria.maestria;
-    }
-    // Competente: ≥0.75 + ≥3 sesiones consecutivas buenas.
-    if (precision >= 0.75 && sesionesConsecutivas >= 3) {
-      return NivelMaestria.competente;
-    }
-    // En desarrollo: ≥0.50.
-    if (precision >= 0.50) return NivelMaestria.enDesarrollo;
-    // Introducida: hay alguna exposición, no basta para en desarrollo.
-    if (totalExposiciones > 0) return NivelMaestria.introducida;
-    return NivelMaestria.inexplorada;
   }
 }

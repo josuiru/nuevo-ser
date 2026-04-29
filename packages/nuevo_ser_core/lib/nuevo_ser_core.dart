@@ -10,11 +10,19 @@
 ///   - `src/audio/`     — capa sonora, descargador de paquetes
 ///   - `src/narrative/` — sistema de cinemáticas genérico
 ///
-/// Estado de la extracción (Chunk 5):
-///   - mastery: `Habilidad`, `NivelHabilidad`, `IntentoHabilidad` ✓
-///   - sync:    `ClienteApi`, `ExcepcionApi` ✓
+/// Estado de la extracción tras Chunk 6:
+///   - mastery: modelos (`Habilidad`, `EstadoHabilidad`, `IntentoHabilidad`),
+///              motor adaptativo (`MasteryEngine` + 4 `MasteryProfile`:
+///              P1Precision funcional, P2/P3/P4 stubs).
+///   - sync:    `ClienteApi`, `ExcepcionApi`.
 ///   - resto:   pendiente (ver README del paquete para deuda asumida).
 library nuevo_ser_core;
 
 export 'src/mastery/habilidad.dart';
+export 'src/mastery/mastery_engine.dart';
+export 'src/mastery/mastery_profile.dart';
+export 'src/mastery/perfiles/p1_precision.dart';
+export 'src/mastery/perfiles/p2_detection.dart';
+export 'src/mastery/perfiles/p3_construction.dart';
+export 'src/mastery/perfiles/p4_calibration.dart';
 export 'src/sync/cliente_api.dart';
