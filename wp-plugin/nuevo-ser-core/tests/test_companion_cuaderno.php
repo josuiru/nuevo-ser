@@ -188,6 +188,92 @@ afirmar( 'requerido', $campos['title'] ?? null, 'multi: title falta' );
 afirmar( 'formato_invalido', $campos['type'] ?? null, 'multi: type formato' );
 afirmar( 'debe_ser_objeto', $campos['content_meta'] ?? null, 'multi: content_meta tipo' );
 
+// ─── validar_query_listado ──────────────────────────────────────
+
+// Defaults cuando no hay query.
+$resultado = NS_Companion_Cuaderno::validar_query_listado( array() );
+afirmar( array(), $resultado['campos_invalidos'], 'listado: query vacía sin errores' );
+afirmar( '', $resultado['game_id'], 'listado: game_id default vacío' );
+afirmar( 20, $resultado['limit'], 'listado: limit default 20' );
+afirmar( 0, $resultado['offset'], 'listado: offset default 0' );
+
+// game_id se trim-ea.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'game_id' => '  uno-roto  ' )
+);
+afirmar( 'uno-roto', $resultado['game_id'], 'listado: game_id se trim-ea' );
+
+// limit válido.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => '5' )
+);
+afirmar( array(), $resultado['campos_invalidos'], 'listado: limit numérico válido sin errores' );
+afirmar( 5, $resultado['limit'], 'listado: limit string-numérico → int' );
+
+// limit fuera de rango (alto).
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => 999 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['limit'] ?? null, 'listado: limit 999 rechaza' );
+
+// limit fuera de rango (cero).
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => 0 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['limit'] ?? null, 'listado: limit 0 rechaza' );
+
+// limit no entero.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => 'abc' )
+);
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['limit'] ?? null, 'listado: limit string no-numérico rechaza' );
+
+// limit float-no-entero.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => '5.5' )
+);
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['limit'] ?? null, 'listado: limit con decimales rechaza' );
+
+// offset válido.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'offset' => 100 )
+);
+afirmar( array(), $resultado['campos_invalidos'], 'listado: offset 100 sin errores' );
+afirmar( 100, $resultado['offset'], 'listado: offset 100 → int' );
+
+// offset negativo.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'offset' => -1 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['offset'] ?? null, 'listado: offset negativo rechaza' );
+
+// offset no entero.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'offset' => 'xx' )
+);
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['offset'] ?? null, 'listado: offset string no-numérico rechaza' );
+
+// Tope superior 100 pasa, 101 falla (frontera).
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => 100 )
+);
+afirmar( array(), $resultado['campos_invalidos'], 'listado: limit=100 pasa (tope)' );
+
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array( 'limit' => 101 )
+);
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['limit'] ?? null, 'listado: limit=101 rechaza' );
+
+// Múltiples errores se acumulan.
+$resultado = NS_Companion_Cuaderno::validar_query_listado(
+	array(
+		'limit'  => 'abc',
+		'offset' => -5,
+	)
+);
+afirmar( 'no_es_entero', $resultado['campos_invalidos']['limit'] ?? null, 'multi listado: limit error' );
+afirmar( 'fuera_de_rango', $resultado['campos_invalidos']['offset'] ?? null, 'multi listado: offset error' );
+
 if ( 0 === $fallos ) {
 	echo "OK\n";
 	exit( 0 );

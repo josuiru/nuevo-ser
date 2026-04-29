@@ -9,6 +9,7 @@ Cliente HTTP de los endpoints `/wp-json/nuevo-ser/v1/companion/*` del plugin `nu
 | Ruta | Cliente Dart | Handler PHP |
 |---|---|---|
 | `POST /companion/cuaderno/entries` | `ClienteCompanion.crearEntradaCuaderno` | `NS_Companion_Cuaderno::crear_entrada` |
+| `GET /companion/cuaderno/entries` | `ClienteCompanion.listarEntradasCuaderno` | `NS_Companion_Cuaderno::listar_entradas` |
 
 ## Pendiente (siguen 501 en el servidor)
 

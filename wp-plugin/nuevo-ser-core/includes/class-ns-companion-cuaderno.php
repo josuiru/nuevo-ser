@@ -23,6 +23,12 @@ class NS_Companion_Cuaderno {
 	/** Longitud máxima de `content_ref`. Coincide con el VARCHAR(255) de la tabla. */
 	private const MAX_CONTENT_REF = 255;
 
+	/** Tope superior del parámetro `limit` en el listado. */
+	public const MAX_LIMIT = 100;
+
+	/** Valor por defecto de `limit` cuando el cliente no lo pasa. */
+	public const DEFAULT_LIMIT = 20;
+
 	/**
 	 * POST /companion/cuaderno/entries
 	 *
@@ -118,6 +124,205 @@ class NS_Companion_Cuaderno {
 		);
 		$respuesta->header( 'Location', rest_url( "nuevo-ser/v1/companion/cuaderno/entries/{$id}" ) );
 		return $respuesta;
+	}
+
+	/**
+	 * GET /companion/cuaderno/entries
+	 *
+	 * Lista las entradas del cuaderno del niño dueño del JWT, con
+	 * paginación simple. Sólo se devuelven entradas suyas — `user_id`
+	 * está hardcodeado al `nino_id` del token, no se acepta por query.
+	 *
+	 * Query params:
+	 *   - `game_id` (opcional): filtra por juego.
+	 *   - `limit` (opcional, default 20, max 100).
+	 *   - `offset` (opcional, default 0).
+	 *
+	 * Devuelve `{ entries: [...], total: N, limit, offset }`.
+	 *
+	 * @param WP_REST_Request $request
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function listar_entradas( WP_REST_Request $request ) {
+		global $wpdb;
+
+		$nino_id = (int) $request->get_param( '_nino_id' );
+		if ( $nino_id <= 0 ) {
+			return new WP_Error(
+				'ns_cuaderno_sin_nino',
+				'Falta el identificador del niño en el token.',
+				array( 'status' => 401 )
+			);
+		}
+
+		$query = array(
+			'game_id' => $request->get_param( 'game_id' ),
+			'limit'   => $request->get_param( 'limit' ),
+			'offset'  => $request->get_param( 'offset' ),
+		);
+		$validacion = self::validar_query_listado( $query );
+		if ( ! empty( $validacion['campos_invalidos'] ) ) {
+			return self::error_validacion(
+				'campos_invalidos',
+				'Algunos parámetros de la consulta no pasan la validación.',
+				array( 'invalid_fields' => $validacion['campos_invalidos'] )
+			);
+		}
+
+		$game_id = $validacion['game_id'];
+		$limit   = $validacion['limit'];
+		$offset  = $validacion['offset'];
+
+		if ( '' !== $game_id && ! self::juego_existe( $game_id ) ) {
+			return self::error_validacion(
+				'campos_invalidos',
+				'Algunos parámetros de la consulta no pasan la validación.',
+				array( 'invalid_fields' => array( 'game_id' => 'no_existe' ) )
+			);
+		}
+
+		$tabla = NS_Esquema::nombre_tabla( 'cuaderno_entries' );
+
+		if ( '' === $game_id ) {
+			$sql_total = $wpdb->prepare( "SELECT COUNT(*) FROM {$tabla} WHERE user_id = %d", $nino_id );
+			$sql_lista = $wpdb->prepare(
+				"SELECT id, user_id, game_id, type, title, content_ref, content_meta, anchored_to, created_at, updated_at
+				 FROM {$tabla}
+				 WHERE user_id = %d
+				 ORDER BY created_at DESC, id DESC
+				 LIMIT %d OFFSET %d",
+				$nino_id,
+				$limit,
+				$offset
+			);
+		} else {
+			$sql_total = $wpdb->prepare(
+				"SELECT COUNT(*) FROM {$tabla} WHERE user_id = %d AND game_id = %s",
+				$nino_id,
+				$game_id
+			);
+			$sql_lista = $wpdb->prepare(
+				"SELECT id, user_id, game_id, type, title, content_ref, content_meta, anchored_to, created_at, updated_at
+				 FROM {$tabla}
+				 WHERE user_id = %d AND game_id = %s
+				 ORDER BY created_at DESC, id DESC
+				 LIMIT %d OFFSET %d",
+				$nino_id,
+				$game_id,
+				$limit,
+				$offset
+			);
+		}
+
+		$total = (int) $wpdb->get_var( $sql_total );
+		$filas = $wpdb->get_results( $sql_lista, ARRAY_A );
+		if ( ! is_array( $filas ) ) {
+			$filas = array();
+		}
+
+		$entries = array_map( array( __CLASS__, 'serializar_fila' ), $filas );
+
+		return new WP_REST_Response(
+			array(
+				'entries' => $entries,
+				'total'   => $total,
+				'limit'   => $limit,
+				'offset'  => $offset,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Convierte una fila cruda de la DB en la forma JSON que el cliente
+	 * espera: claves snake_case, content_meta/anchored_to deserializados
+	 * de su LONGTEXT.
+	 *
+	 * @param array<string,mixed> $fila
+	 * @return array<string,mixed>
+	 */
+	private static function serializar_fila( array $fila ): array {
+		return array(
+			'id'           => (int) $fila['id'],
+			'game_id'      => (string) $fila['game_id'],
+			'type'         => (string) $fila['type'],
+			'title'        => (string) $fila['title'],
+			'content_ref'  => (string) $fila['content_ref'],
+			'content_meta' => self::decodificar_json( $fila['content_meta'] ?? null ),
+			'anchored_to'  => self::decodificar_json( $fila['anchored_to'] ?? null ),
+			'created_at'   => (string) $fila['created_at'],
+			'updated_at'   => (string) $fila['updated_at'],
+		);
+	}
+
+	/**
+	 * Devuelve null si el valor es null o cadena vacía o JSON
+	 * inválido — la corrupción puntual de un campo no debe romper el
+	 * listado entero. El tipo es array|object|null para que el cliente
+	 * recupere lo que escribió.
+	 *
+	 * @param mixed $crudo
+	 * @return array<string,mixed>|null
+	 */
+	private static function decodificar_json( $crudo ) {
+		if ( null === $crudo || '' === $crudo ) {
+			return null;
+		}
+		$decodificado = json_decode( (string) $crudo, true );
+		if ( ! is_array( $decodificado ) ) {
+			return null;
+		}
+		return $decodificado;
+	}
+
+	/**
+	 * Valida y normaliza los parámetros del listado. Pura — testeable
+	 * sin WP. Devuelve `['campos_invalidos' => [...], 'game_id' => str,
+	 * 'limit' => int, 'offset' => int]`. Cuando hay errores, los
+	 * valores normalizados pueden ser parciales y no deben usarse.
+	 *
+	 * @param array{game_id:mixed, limit:mixed, offset:mixed} $query
+	 * @return array{campos_invalidos:array<string,string>, game_id:string, limit:int, offset:int}
+	 */
+	public static function validar_query_listado( array $query ): array {
+		$campos_invalidos = array();
+
+		$game_id = isset( $query['game_id'] ) ? trim( (string) $query['game_id'] ) : '';
+
+		$limit_raw = $query['limit'] ?? null;
+		if ( $limit_raw === null || $limit_raw === '' ) {
+			$limit = self::DEFAULT_LIMIT;
+		} elseif ( is_numeric( $limit_raw ) && (int) $limit_raw == (float) $limit_raw ) {
+			$limit = (int) $limit_raw;
+			if ( $limit < 1 || $limit > self::MAX_LIMIT ) {
+				$campos_invalidos['limit'] = 'fuera_de_rango';
+				$limit                     = self::DEFAULT_LIMIT;
+			}
+		} else {
+			$campos_invalidos['limit'] = 'no_es_entero';
+			$limit                     = self::DEFAULT_LIMIT;
+		}
+
+		$offset_raw = $query['offset'] ?? null;
+		if ( $offset_raw === null || $offset_raw === '' ) {
+			$offset = 0;
+		} elseif ( is_numeric( $offset_raw ) && (int) $offset_raw == (float) $offset_raw ) {
+			$offset = (int) $offset_raw;
+			if ( $offset < 0 ) {
+				$campos_invalidos['offset'] = 'fuera_de_rango';
+				$offset                     = 0;
+			}
+		} else {
+			$campos_invalidos['offset'] = 'no_es_entero';
+			$offset                     = 0;
+		}
+
+		return array(
+			'campos_invalidos' => $campos_invalidos,
+			'game_id'          => $game_id,
+			'limit'            => $limit,
+			'offset'           => $offset,
+		);
 	}
 
 	/**

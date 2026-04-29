@@ -60,9 +60,16 @@ class NS_Endpoints {
 			$namespace,
 			'/companion/cuaderno/entries',
 			array(
-				'methods'             => 'POST',
-				'callback'            => array( 'NS_Companion_Cuaderno', 'crear_entrada' ),
-				'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Companion_Cuaderno', 'crear_entrada' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Companion_Cuaderno', 'listar_entradas' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
 			)
 		);
 	}

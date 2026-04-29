@@ -57,10 +57,11 @@ Continuando la extracción anunciada en los READMEs de los paquetes, en slices p
 Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se cablea end-to-end:
 
 - **`POST /companion/cuaderno/entries`** — `NS_Companion_Cuaderno::crear_entrada` reemplaza el handler 501 reservado en C7 sólo para esta ruta; las otras 8 siguen como 501. Validación de formato pura (`validar_formato`) + comprobación de existencia de `game_id` contra `ns_games`. Devuelve 201 con `{id, game_id, type, title, content_ref, created_at}` y header `Location`. Plugin WP bumpa a v0.7.0.
-- **Cliente Dart** `ClienteCompanion.crearEntradaCuaderno` y modelo `EntradaCuaderno` (con campos opcionales `contentMeta`, `anchoredTo` que se preservan del cliente al respond). 6 tests con `MockClient`. Patrón gemelo de `ClienteApi` (core) y `ClienteTutor` (tutor): sin lógica de negocio, errores tipados con `ExcepcionApi`.
-- **Smoke PHP** `tests/test_companion_cuaderno.php` cubre 13 casos de validación de formato (campos requeridos, longitudes, regex de `type`, `content_meta`/`anchored_to` deben ser objeto, múltiples errores juntos).
+- **`GET /companion/cuaderno/entries`** — `NS_Companion_Cuaderno::listar_entradas` añade el segundo endpoint real (las otras 7 siguen 501). Lee `_nino_id` del JWT, valida query con `validar_query_listado` (game_id opcional, limit 1..100 default 20, offset >=0 default 0), comprueba existencia de `game_id` contra `ns_games`, ejecuta SELECT COUNT + SELECT paginado (DESC por created_at, id) y devuelve 200 con `{entries:[...], total, limit, offset}`. `serializar_fila` deserializa `content_meta`/`anchored_to` del LONGTEXT (auto-curación: JSON inválido → null, sin romper la lista entera).
+- **Cliente Dart** `ClienteCompanion.crearEntradaCuaderno`/`listarEntradasCuaderno`, modelos `EntradaCuaderno` (con campos opcionales `contentMeta`, `anchoredTo` preservados del cliente en la creación) y `ListadoEntradasCuaderno`. Factory `EntradaCuaderno.desdeJsonListado` parsea todos los campos incluyendo content_meta/anchored_to del servidor. 11 tests con `MockClient`. Patrón gemelo de `ClienteApi` (core) y `ClienteTutor` (tutor): sin lógica de negocio, errores tipados con `ExcepcionApi`.
+- **Smoke PHP** `tests/test_companion_cuaderno.php` cubre 13 casos de validación de formato + 14 de validación de query del listado (defaults, trim de game_id, limit fuera de rango/no-entero, offset negativo/no-entero, fronteras 100/101).
 
-Plugin WP en v0.7.0. Tests: 325 (uno-roto) + 55 (nuevo_ser_core) + 22 (nuevo_ser_tutor) + 6 (nuevo_ser_companion) Dart + 4 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, companion_cuaderno). `flutter analyze` limpio en los 5 paquetes.
+Plugin WP en v0.7.0. Tests: 325 (uno-roto) + 55 (nuevo_ser_core) + 22 (nuevo_ser_tutor) + 11 (nuevo_ser_companion) Dart + 4 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, companion_cuaderno). `flutter analyze` limpio en los 5 paquetes.
 
 ## Decisiones cerradas
 

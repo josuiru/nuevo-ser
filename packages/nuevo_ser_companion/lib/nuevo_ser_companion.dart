@@ -8,6 +8,7 @@
 ///
 /// Estado v0.1:
 /// - Cuaderno: `crearEntradaCuaderno` cubre `POST /companion/cuaderno/entries`.
+/// - Cuaderno: `listarEntradasCuaderno` cubre `GET /companion/cuaderno/entries`.
 ///
 /// Pendiente (siguen 501 en el servidor):
 /// - `POST /companion/mosaicos`
@@ -20,3 +21,4 @@ library nuevo_ser_companion;
 
 export 'src/cliente_companion.dart';
 export 'src/cuaderno/entrada_cuaderno.dart';
+export 'src/cuaderno/listado_entradas_cuaderno.dart';

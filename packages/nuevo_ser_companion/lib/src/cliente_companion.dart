@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import 'cuaderno/entrada_cuaderno.dart';
+import 'cuaderno/listado_entradas_cuaderno.dart';
 
 /// Cliente HTTP de los endpoints de acompañamiento del plugin
 /// `nuevo-ser-core` (`/wp-json/nuevo-ser/v1/companion/*`).
@@ -75,6 +76,39 @@ class ClienteCompanion {
       contentMetaOriginal: entrada.contentMeta,
       anchoredToOriginal: entrada.anchoredTo,
     );
+  }
+
+  /// GET /companion/cuaderno/entries
+  ///
+  /// Lista las entradas del cuaderno del niño dueño del [token],
+  /// ordenadas de más reciente a más antigua.
+  ///
+  /// - [gameId]: si se pasa, filtra por juego (debe existir en
+  ///   `ns_games`; el servidor responde 400 con `invalid_fields.game_id`
+  ///   si no).
+  /// - [limit]: 1..100 (el servidor recorta a 100).
+  /// - [offset]: 0 o más.
+  ///
+  /// Lanza [ExcepcionApi] con código 400 si la query es inválida; 401 si
+  /// el token no es válido; 5xx en otros fallos.
+  Future<ListadoEntradasCuaderno> listarEntradasCuaderno({
+    required String token,
+    String? gameId,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final parametros = <String, String>{
+      'limit': '$limit',
+      'offset': '$offset',
+      if (gameId != null && gameId.isNotEmpty) 'game_id': gameId,
+    };
+    final url =
+        _uri('/companion/cuaderno/entries').replace(queryParameters: parametros);
+    final r = await _cliente
+        .get(url, headers: _cabeceras(token: token))
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return ListadoEntradasCuaderno.desdeJson(cuerpo);
   }
 
   Map<String, dynamic> _decodificar(http.Response respuesta) {

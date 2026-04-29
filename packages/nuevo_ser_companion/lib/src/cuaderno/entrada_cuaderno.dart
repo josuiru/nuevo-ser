@@ -61,4 +61,31 @@ class EntradaCuaderno {
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
+
+  /// Construye una entrada a partir de la respuesta 200 del listado
+  /// (`GET /companion/cuaderno/entries`). A diferencia de
+  /// [desdeRespuestaCreacion], aquí el servidor sí devuelve
+  /// `content_meta` y `anchored_to` (deserializados de su LONGTEXT) por
+  /// lo que no se preservan campos del cliente.
+  factory EntradaCuaderno.desdeJsonListado(Map<String, dynamic> json) {
+    return EntradaCuaderno(
+      id: (json['id'] as num).toInt(),
+      gameId: json['game_id'] as String,
+      type: (json['type'] as String?) ?? '',
+      title: json['title'] as String,
+      contentRef: (json['content_ref'] as String?) ?? '',
+      contentMeta: _mapaOpcional(json['content_meta']),
+      anchoredTo: _mapaOpcional(json['anchored_to']),
+      createdAt: DateTime.parse(json['created_at'] as String),
+    );
+  }
+
+  static Map<String, dynamic>? _mapaOpcional(Object? valor) {
+    if (valor == null) return null;
+    if (valor is Map<String, dynamic>) return valor;
+    if (valor is Map) {
+      return valor.map((k, v) => MapEntry(k.toString(), v));
+    }
+    return null;
+  }
 }

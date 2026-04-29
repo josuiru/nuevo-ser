@@ -170,6 +170,191 @@ void main() {
     );
   });
 
+  test('GET /companion/cuaderno/entries: 200 vacío → listado sin entradas',
+      () async {
+    http.Request? capturada;
+    final mock = MockClient((request) async {
+      capturada = request;
+      return http.Response(
+        jsonEncode({
+          'entries': <Map<String, dynamic>>[],
+          'total': 0,
+          'limit': 20,
+          'offset': 0,
+        }),
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+    });
+    final cliente = ClienteCompanion(
+      urlBase: 'https://backend.example',
+      cliente: mock,
+    );
+
+    final listado = await cliente.listarEntradasCuaderno(
+      token: 'tok-jwt',
+    );
+
+    expect(listado.entradas, isEmpty);
+    expect(listado.total, 0);
+    expect(listado.limit, 20);
+    expect(listado.offset, 0);
+
+    expect(capturada!.method, 'GET');
+    final url = capturada!.url;
+    expect(url.path, '/wp-json/nuevo-ser/v1/companion/cuaderno/entries');
+    expect(url.queryParameters['limit'], '20');
+    expect(url.queryParameters['offset'], '0');
+    expect(url.queryParameters.containsKey('game_id'), isFalse);
+    expect(capturada!.headers['Authorization'], 'Bearer tok-jwt');
+  });
+
+  test(
+      'GET /companion/cuaderno/entries: 200 con entradas → parsea content_meta y anchored_to',
+      () async {
+    final mock = MockClient((_) async => http.Response(
+          jsonEncode({
+            'entries': [
+              {
+                'id': 17,
+                'game_id': 'uno-roto',
+                'type': 'reflexion',
+                'title': 'Las fracciones',
+                'content_ref': 'doc/123',
+                'content_meta': {'palabras': 42},
+                'anchored_to': {'habilidad': 'FR.05'},
+                'created_at': '2026-04-29 21:30:00',
+                'updated_at': '2026-04-29 21:30:00',
+              },
+              {
+                'id': 16,
+                'game_id': 'uno-roto',
+                'type': '',
+                'title': 'Sin meta',
+                'content_ref': '',
+                'content_meta': null,
+                'anchored_to': null,
+                'created_at': '2026-04-28 10:00:00',
+                'updated_at': '2026-04-28 10:00:00',
+              },
+            ],
+            'total': 2,
+            'limit': 20,
+            'offset': 0,
+          }),
+          200,
+        ));
+    final cliente = ClienteCompanion(
+      urlBase: 'https://backend.example',
+      cliente: mock,
+    );
+
+    final listado = await cliente.listarEntradasCuaderno(token: 'tok');
+
+    expect(listado.total, 2);
+    expect(listado.entradas, hasLength(2));
+
+    final primera = listado.entradas[0];
+    expect(primera.id, 17);
+    expect(primera.gameId, 'uno-roto');
+    expect(primera.type, 'reflexion');
+    expect(primera.title, 'Las fracciones');
+    expect(primera.contentRef, 'doc/123');
+    expect(primera.contentMeta, {'palabras': 42});
+    expect(primera.anchoredTo, {'habilidad': 'FR.05'});
+    expect(primera.createdAt, DateTime.parse('2026-04-29 21:30:00'));
+
+    final segunda = listado.entradas[1];
+    expect(segunda.id, 16);
+    expect(segunda.contentMeta, isNull);
+    expect(segunda.anchoredTo, isNull);
+    expect(segunda.type, '');
+    expect(segunda.contentRef, '');
+  });
+
+  test(
+      'GET /companion/cuaderno/entries: parámetros gameId/limit/offset llegan en la URL',
+      () async {
+    Uri? urlCapturada;
+    final mock = MockClient((request) async {
+      urlCapturada = request.url;
+      return http.Response(
+        jsonEncode({
+          'entries': <Map<String, dynamic>>[],
+          'total': 0,
+          'limit': 5,
+          'offset': 10,
+        }),
+        200,
+      );
+    });
+    final cliente = ClienteCompanion(
+      urlBase: 'https://backend.example',
+      cliente: mock,
+    );
+
+    await cliente.listarEntradasCuaderno(
+      token: 'tok',
+      gameId: 'uno-roto',
+      limit: 5,
+      offset: 10,
+    );
+
+    expect(urlCapturada!.queryParameters['game_id'], 'uno-roto');
+    expect(urlCapturada!.queryParameters['limit'], '5');
+    expect(urlCapturada!.queryParameters['offset'], '10');
+  });
+
+  test(
+      'GET /companion/cuaderno/entries: 400 con invalid_fields → ExcepcionApi(400)',
+      () async {
+    final mock = MockClient((_) async => http.Response(
+          jsonEncode({
+            'code': 'campos_invalidos',
+            'message':
+                'Algunos parámetros de la consulta no pasan la validación.',
+            'data': {
+              'status': 400,
+              'invalid_fields': {'limit': 'fuera_de_rango'},
+            },
+          }),
+          400,
+        ));
+    final cliente = ClienteCompanion(
+      urlBase: 'https://backend.example',
+      cliente: mock,
+    );
+
+    expect(
+      () => cliente.listarEntradasCuaderno(token: 'tok', limit: 999),
+      throwsA(
+        isA<ExcepcionApi>()
+            .having((e) => e.codigo, 'codigo', 400)
+            .having((e) => e.mensaje, 'mensaje', contains('validación')),
+      ),
+    );
+  });
+
+  test('GET /companion/cuaderno/entries: 401 → ExcepcionApi(401)', () async {
+    final mock = MockClient((_) async => http.Response(
+          jsonEncode({
+            'code': 'uroto_token_invalido',
+            'message': 'Token no válido o expirado.',
+            'data': {'status': 401},
+          }),
+          401,
+        ));
+    final cliente = ClienteCompanion(
+      urlBase: 'https://backend.example',
+      cliente: mock,
+    );
+
+    expect(
+      () => cliente.listarEntradasCuaderno(token: 'tok-malo'),
+      throwsA(isA<ExcepcionApi>().having((e) => e.codigo, 'codigo', 401)),
+    );
+  });
+
   test('Host override aparece en cabeceras (Local WP)', () async {
     Map<String, String>? cabeceras;
     final mock = MockClient((request) async {
