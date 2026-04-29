@@ -30,6 +30,11 @@ export 'src/mastery/perfiles/p2_detection.dart';
 export 'src/mastery/perfiles/p3_construction.dart';
 export 'src/mastery/perfiles/p4_calibration.dart';
 export 'src/mastery/selector_habilidades.dart';
+// narrative/ se re-exportará en F1.3 cuando uno-roto migre sus
+// modelos locales (`escena_cinematica.dart`, `plano_escena.dart`,
+// `voz_personaje.dart`) a la plataforma. Mientras tanto el contrato
+// es accesible por path explícito desde tests, y la deuda queda
+// declarada aquí mismo.
 export 'src/storage/gestor_perfiles.dart';
 export 'src/storage/repositorio_avatar_perfil.dart';
 export 'src/storage/repositorio_cuenta_backend.dart';
