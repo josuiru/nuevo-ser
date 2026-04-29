@@ -9,7 +9,8 @@ Avance acumulado desde el Chunk 5 — el paquete re-exporta vía `package:nuevo_
 ```
 lib/src/
 ├── audio/
-│   └── capa_audio.dart                 ← enum 4 capas (ambient/musica/efectos/narrativos) + defaultsPorClave
+│   ├── capa_audio.dart                 ← enum 4 capas (ambient/musica/efectos/narrativos) + defaultsPorClave
+│   └── descargador_audio.dart          ← cliente paquete sonoro (manifest + descarga + sha256 + descompresión) con callbacks invertidos
 ├── mastery/
 │   ├── habilidad.dart                  ← Habilidad, NivelMaestria, IntentoHabilidad, EstadoHabilidad
 │   ├── mastery_engine.dart             ← motor adaptativo Strategy (C6)
@@ -37,7 +38,7 @@ Los demás submódulos previstos (`account/`, `i18n/`, `narrative/`) siguen vac�
 | Resto de `repositorio_progreso.dart` (~550 LOC) | Concepts juego-específicos (arco, rango narrativo, ritmo, distrito, esquirlas, flags, variantes de entrenamiento, audio por capa). Convierte el shape del backend en lecturas/escrituras de SharedPreferences. | Definir un `RepositorioJuego` específico de uno-roto que use el `GestorPerfiles` del core; el repositorio actual queda como ese específico. |
 | `escena_cinematica.dart`, `plano_escena.dart` | Dependen de `voz_personaje` y `ambiente_cielo` (modelos de Uno Roto). | Definir modelos abstractos en `narrative/` y dejar la capa específica en la app. |
 | `servicio_sonoro.dart`, `catalogo_sonidos.dart` y resto de `lib/sonido/` | `servicio_sonoro` depende de `repositorio_progreso`; los catálogos son del juego concreto. | Salen detrás de `repositorio_progreso`. |
-| `descargador_audio.dart`, `localizador_audio.dart` | Dependen del catálogo del juego para mapear ids a rutas. | Mismo tren que `servicio_sonoro`. |
+| `localizador_audio.dart` | Depende del catálogo del juego (`CatalogoSonidos`) para mapear ids lógicos a rutas concretas en cache + asset bundle. | Sale detrás del catálogo de sonidos. |
 
 El motor adaptativo, el selector de habilidades, la gestión multi-perfil y la persistencia JSON de habilidades/tutor ya tienen su núcleo aquí; lo que queda en `apps/uno-roto/` son facades/wrappers finos que inyectan los acoplamientos juego-específicos (catálogo, distritos, conjunto de habilidades con puzzle implementado, claves globales del juego concreto) y delegan en la plataforma.
 

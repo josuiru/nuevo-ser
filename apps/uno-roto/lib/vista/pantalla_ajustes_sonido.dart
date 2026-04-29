@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../datos/config_api.dart';
-import '../datos/descargador_audio.dart';
 import '../datos/repositorio_progreso.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/textos_enums.dart';
 import '../nucleo/paleta.dart';
+import '../sonido/localizador_audio.dart';
 import '../sonido/servicio_sonoro.dart';
 
 /// Ajustes sonoros por perfil (doc 12 §Accesibilidad). Control
@@ -149,6 +149,13 @@ class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
         '${ConfigApi.urlBase}/wp-json/nuevo-ser/v1/audio/manifest',
       ),
       hostOverride: ConfigApi.hostOverride,
+      userAgent: 'UnoRoto/0.5 (Android)',
+      rutaBaseCache: () => LocalizadorAudio.instancia.rutaBaseCache(),
+      leerVersion: () => widget.repositorio.cargarVersionPaqueteAudio(),
+      escribirVersion: (v) =>
+          widget.repositorio.guardarVersionPaqueteAudio(v),
+      borrarVersion: () => widget.repositorio.borrarVersionPaqueteAudio(),
+      invalidarLocalizador: () => LocalizadorAudio.instancia.invalidar(),
     );
     _refrescarEstadoLocal();
   }
@@ -160,7 +167,7 @@ class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
   }
 
   Future<void> _refrescarEstadoLocal() async {
-    final version = await _descargador.versionLocal(widget.repositorio);
+    final version = await _descargador.versionLocal();
     final bytes = await _descargador.tamanoCacheBytes();
     if (!mounted) return;
     setState(() {
@@ -187,9 +194,7 @@ class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
       await ServicioSonoro.instancia.detenerCapa(capa, msFade: 200);
     }
 
-    _suscripcion = _descargador
-        .descargarEInstalar(manifest, widget.repositorio)
-        .listen((estado) async {
+    _suscripcion = _descargador.descargarEInstalar(manifest).listen((estado) async {
       if (!mounted) return;
       setState(() => _estadoEnVuelo = estado);
       if (estado is DescargaAudioCompletada) {
@@ -218,7 +223,7 @@ class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
     for (final capa in CapaAudio.values) {
       await ServicioSonoro.instancia.detenerCapa(capa, msFade: 200);
     }
-    await _descargador.borrarCache(widget.repositorio);
+    await _descargador.borrarCache();
     if (!mounted) return;
     setState(() => _estadoEnVuelo = null);
     _refrescarEstadoLocal();

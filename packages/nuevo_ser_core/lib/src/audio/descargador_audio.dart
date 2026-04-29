@@ -6,9 +6,6 @@ import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
 
-import '../sonido/localizador_audio.dart';
-import 'repositorio_progreso.dart';
-
 /// Estado de descarga del paquete sonoro. Se emite por el stream que
 /// devuelve [DescargadorAudio.descargarEInstalar] para que la UI muestre
 /// barra de progreso o mensaje de error sin acoplarse al motor sonoro.
@@ -51,9 +48,8 @@ class DescargaAudioFallida extends EstadoDescargaAudio {
   const DescargaAudioFallida(this.mensaje);
 }
 
-/// Manifest que el servidor expone en `/wp-json/nuevo-ser/v1/audio/manifest`
-/// (canónico desde C3; `/wp-json/uno-roto/v1/audio/manifest` sigue funcionando
-/// como alias deprecado hasta v1.5).
+/// Manifest que el servidor expone en
+/// `/wp-json/nuevo-ser/v1/audio/manifest`.
 class ManifestPaqueteAudio {
   final int version;
   final String urlPaquete;
@@ -82,35 +78,67 @@ class ManifestPaqueteAudio {
 }
 
 /// Cliente del paquete sonoro descargable. Pide el manifest, descarga
-/// con progreso, verifica el sha256, y descomprime los OGG en
-/// `<docs>/uroto/sonido/`. Persiste la versión instalada en
-/// shared_preferences (clave `uroto.audio.version_local`) para detectar
-/// upgrades.
+/// con progreso, verifica el sha256, y descomprime los archivos en la
+/// ruta de cache que devuelva [rutaBaseCache]. Persiste la versión
+/// instalada vía los callbacks [escribirVersion]/[leerVersion]; el
+/// almacén concreto (shared_preferences, Isar, etc.) lo decide cada
+/// juego.
 ///
 /// El descargador NO conoce el motor sonoro — la coordinación
-/// (detener loops antes de borrar archivos, recargar cache local) la
-/// hace el llamador.
+/// (detener loops antes de borrar archivos, recargar cache) la hace el
+/// llamador, opcionalmente con la ayuda del callback
+/// [invalidarLocalizador] que se invoca tras instalar/borrar.
 class DescargadorAudio {
   final Uri urlManifest;
 
-  /// Cabecera `Host` opcional para entornos Local WP donde el
-  /// dominio virtual (`uno-roto.local`) no resuelve y conectamos por
-  /// `127.0.0.1:<puerto>` con el host puesto a mano.
+  /// Cabecera `Host` opcional para entornos Local WP donde el dominio
+  /// virtual no resuelve y conectamos por IP+puerto con el host puesto
+  /// a mano.
   final String? hostOverride;
+
+  /// User-Agent que se envía en todas las peticiones HTTP. Algunos WAF
+  /// (mod_security CRS 920330) rechazan peticiones con `User-Agent`
+  /// vacío con 406, así que el caller debería pasar uno propio del
+  /// juego — p. ej. `'UnoRoto/0.5 (Android)'`.
+  final String userAgent;
+
+  /// Devuelve el path absoluto donde se descomprimirán los archivos.
+  /// Cada juego tiene su propia raíz (`<docs>/uroto/sonido/`,
+  /// `<docs>/lasversiones/sonido/`, etc.).
+  final Future<String> Function() rutaBaseCache;
+
+  /// Lee la versión instalada localmente o `null` si nunca se descargó.
+  final Future<int?> Function() leerVersion;
+
+  /// Persiste la versión [v] instalada tras una descarga exitosa.
+  final Future<void> Function(int v) escribirVersion;
+
+  /// Borra la versión instalada del almacén (lo invoca [borrarCache]).
+  final Future<void> Function() borrarVersion;
+
+  /// Callback opcional que se invoca tras instalar y tras borrar la
+  /// cache. Lo típico: el juego usa un singleton de "localizador de
+  /// audio" que cachea el path base; aquí se le dice "tu cache puede
+  /// estar obsoleta".
+  final void Function()? invalidarLocalizador;
 
   final http.Client _cliente;
 
   DescargadorAudio({
     required this.urlManifest,
+    required this.userAgent,
+    required this.rutaBaseCache,
+    required this.leerVersion,
+    required this.escribirVersion,
+    required this.borrarVersion,
+    this.invalidarLocalizador,
     this.hostOverride,
     http.Client? cliente,
   }) : _cliente = cliente ?? http.Client();
 
   Map<String, String> _cabeceras() {
-    // User-Agent fijo para esquivar mod_security CRS 920330
-    // (Empty User Agent Header → 406). Ver `cliente_api.dart`.
     final base = <String, String>{
-      'User-Agent': 'UnoRoto/0.5 (Android)',
+      'User-Agent': userAgent,
     };
     if (hostOverride != null && hostOverride!.isNotEmpty) {
       base['Host'] = hostOverride!;
@@ -120,9 +148,10 @@ class DescargadorAudio {
 
   /// Devuelve el manifest del servidor o lanza si la red falla.
   Future<ManifestPaqueteAudio> obtenerManifest() async {
-    final respuesta = await _cliente.get(urlManifest, headers: _cabeceras()).timeout(
-          const Duration(seconds: 15),
-        );
+    final respuesta =
+        await _cliente.get(urlManifest, headers: _cabeceras()).timeout(
+              const Duration(seconds: 15),
+            );
     if (respuesta.statusCode != 200) {
       throw HttpException(
         'manifest devolvió ${respuesta.statusCode}',
@@ -134,14 +163,12 @@ class DescargadorAudio {
   }
 
   /// Versión instalada localmente o `null` si nunca se descargó.
-  Future<int?> versionLocal(RepositorioProgreso repositorio) async {
-    return repositorio.cargarVersionPaqueteAudio();
-  }
+  Future<int?> versionLocal() => leerVersion();
 
   /// Tamaño en bytes que ocupa la cache local. 0 si está vacía o no existe.
   Future<int> tamanoCacheBytes() async {
     try {
-      final base = await LocalizadorAudio.instancia.rutaBaseCache();
+      final base = await rutaBaseCache();
       final dir = Directory(base);
       if (!await dir.exists()) return 0;
       var total = 0;
@@ -157,10 +184,10 @@ class DescargadorAudio {
   }
 
   /// Borra el directorio de cache. El llamador debe haber detenido los
-  /// loops del [ServicioSonoro] antes para liberar los archivos.
-  Future<void> borrarCache(RepositorioProgreso repositorio) async {
+  /// loops del motor sonoro antes para liberar los archivos.
+  Future<void> borrarCache() async {
     try {
-      final base = await LocalizadorAudio.instancia.rutaBaseCache();
+      final base = await rutaBaseCache();
       final dir = Directory(base);
       if (await dir.exists()) {
         await dir.delete(recursive: true);
@@ -169,25 +196,24 @@ class DescargadorAudio {
       // Si no se puede borrar (archivo abierto en Windows, p.ej.),
       // dejamos pasar — el siguiente arranque reintentará.
     }
-    await repositorio.borrarVersionPaqueteAudio();
-    LocalizadorAudio.instancia.invalidar();
+    await borrarVersion();
+    invalidarLocalizador?.call();
   }
 
   /// Descarga el paquete del manifest y lo descomprime en la cache local.
   /// Emite estados de progreso por el stream. Garantiza que el stream
   /// termina con [DescargaAudioCompletada] o [DescargaAudioFallida].
   ///
-  /// El llamador debería **detener todas las capas del ServicioSonoro
+  /// El llamador debería **detener todas las capas del motor sonoro
   /// antes de invocar este método** — extraer un OGG sobre un archivo
-  /// que `audioplayers` está reproduciendo da resultados raros.
+  /// que se está reproduciendo da resultados raros.
   Stream<EstadoDescargaAudio> descargarEInstalar(
     ManifestPaqueteAudio manifest,
-    RepositorioProgreso repositorio,
   ) async* {
     File? rutaTemporalZip;
     try {
       // 1. Descargar el zip a un archivo temporal con progreso.
-      final base = await LocalizadorAudio.instancia.rutaBaseCache();
+      final base = await rutaBaseCache();
       // El zip va a un hermano del directorio base, no dentro, para
       // que la limpieza del directorio no lo borre a media descarga.
       final dirPadre = Directory(base).parent;
@@ -276,8 +302,8 @@ class DescargadorAudio {
       }
 
       // 4. Persistir versión y limpiar.
-      await repositorio.guardarVersionPaqueteAudio(manifest.version);
-      LocalizadorAudio.instancia.invalidar();
+      await escribirVersion(manifest.version);
+      invalidarLocalizador?.call();
       yield DescargaAudioCompletada(manifest.version, entradasArchivo.length);
     } catch (e) {
       yield DescargaAudioFallida(e.toString());
@@ -304,8 +330,8 @@ class DescargadorAudio {
   }
 }
 
-/// Pequeño helper para acumular el digest streaming sin pulled-in
-/// `convert` extra.
+/// Pequeño helper para acumular el digest streaming sin tirar de un
+/// import extra de `convert`.
 class AccumulatorSink<T> implements Sink<T> {
   final List<T> events = [];
   @override

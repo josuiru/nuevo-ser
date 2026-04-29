@@ -19,6 +19,11 @@ dependencies:
   # solución de v0.x; v1.5 migrará a Isar.
   shared_preferences: ^2.2.2
 
+  # Usados por src/audio/descargador_audio.dart para descomprimir el zip
+  # del paquete sonoro y verificar su sha256.
+  archive: ^3.6.1
+  crypto: ^3.0.5
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

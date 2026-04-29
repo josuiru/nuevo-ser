@@ -19,6 +19,7 @@
 library nuevo_ser_core;
 
 export 'src/audio/capa_audio.dart';
+export 'src/audio/descargador_audio.dart';
 export 'src/mastery/habilidad.dart';
 export 'src/mastery/mastery_engine.dart';
 export 'src/mastery/mastery_profile.dart';

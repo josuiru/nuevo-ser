@@ -59,15 +59,11 @@ dependencies:
   # ignora la llamada y la app sigue silenciosa.
   audioplayers: ^6.1.0
 
-  # Para el paquete de audio descargable (ambient + música + narrativos
-  # se bajan del servidor al primer arranque para mantener el APK
-  # ligero — solo los efectos cortos van empaquetados). path_provider
-  # da el directorio de documentos donde se cachea el zip extraído;
-  # archive descomprime el zip; crypto verifica su sha256 contra el
-  # manifest del servidor.
+  # path_provider da el directorio de documentos donde el LocalizadorAudio
+  # cachea los OGG descargados por el DescargadorAudio del core. La
+  # descompresión del zip y la verificación sha256 viven en el core,
+  # con sus deps `archive` y `crypto` transitivas.
   path_provider: ^2.1.4
-  archive: ^3.6.1
-  crypto: ^3.0.5
 
   # Para que el niño pueda dibujar a sus personajes en papel,
   # fotografiarlos y subirlos a la app — image_picker abre la cámara
