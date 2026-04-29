@@ -101,6 +101,16 @@ class RepositorioProgreso {
     clave: _claveIdiomaApp,
   );
 
+  /// Versión del paquete sonoro descargable instalado localmente —
+  /// pareja directa de `DescargadorAudio` (los callbacks
+  /// leerVersion/escribirVersion/borrarVersion delegan aquí). Clave
+  /// global compartida entre perfiles.
+  late final RepositorioVersionPaqueteAudio _repoVersionPaqueteAudio =
+      RepositorioVersionPaqueteAudio(
+    prefs: SharedPreferences.getInstance,
+    clave: _claveVersionPaqueteAudio,
+  );
+
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
   Future<String> idPerfilActivo() => _gestor.idPerfilActivo();
@@ -131,23 +141,15 @@ class RepositorioProgreso {
 
   /// Versión del paquete sonoro descargable instalado localmente.
   /// Es global (compartido entre perfiles — los OGG no dependen de qué
-  /// niño juega). null si nunca se descargó. El descargador (
-  /// `lib/datos/descargador_audio.dart`) consulta esto para decidir si
-  /// hay un upgrade pendiente.
-  Future<int?> cargarVersionPaqueteAudio() async {
-    final prefs = await _prefs();
-    return prefs.getInt(_claveVersionPaqueteAudio);
-  }
+  /// niño juega). null si nunca se descargó. El `DescargadorAudio` del
+  /// core consulta esto a través de los callbacks de su constructor.
+  Future<int?> cargarVersionPaqueteAudio() =>
+      _repoVersionPaqueteAudio.cargar();
 
-  Future<void> guardarVersionPaqueteAudio(int version) async {
-    final prefs = await _prefs();
-    await prefs.setInt(_claveVersionPaqueteAudio, version);
-  }
+  Future<void> guardarVersionPaqueteAudio(int version) =>
+      _repoVersionPaqueteAudio.guardar(version);
 
-  Future<void> borrarVersionPaqueteAudio() async {
-    final prefs = await _prefs();
-    await prefs.remove(_claveVersionPaqueteAudio);
-  }
+  Future<void> borrarVersionPaqueteAudio() => _repoVersionPaqueteAudio.borrar();
 
   /// Si el aviso "¿quieres descargar el paquete de sonido?" ya se
   /// mostró al niño/adulto. Es global (no tiene sentido reofrecerlo

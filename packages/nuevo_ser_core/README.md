@@ -9,8 +9,9 @@ Avance acumulado desde el Chunk 5 — el paquete re-exporta vía `package:nuevo_
 ```
 lib/src/
 ├── audio/
-│   ├── capa_audio.dart                 ← enum 4 capas (ambient/musica/efectos/narrativos) + defaultsPorClave
-│   └── descargador_audio.dart          ← cliente paquete sonoro (manifest + descarga + sha256 + descompresión) con callbacks invertidos
+│   ├── capa_audio.dart                       ← enum 4 capas (ambient/musica/efectos/narrativos) + defaultsPorClave
+│   ├── descargador_audio.dart                ← cliente paquete sonoro (manifest + descarga + sha256 + descompresión) con callbacks invertidos
+│   └── repositorio_version_paquete_audio.dart ← versión instalada del paquete (global, pareja del descargador)
 ├── mastery/
 │   ├── habilidad.dart                  ← Habilidad, NivelMaestria, IntentoHabilidad, EstadoHabilidad
 │   ├── mastery_engine.dart             ← motor adaptativo Strategy (C6)
