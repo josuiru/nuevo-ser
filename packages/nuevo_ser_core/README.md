@@ -2,30 +2,38 @@
 
 Plataforma compartida de la **Colección Nuevo Ser Kids**.
 
-## Estado tras Chunk 5
+## Estado de la extracción
 
-Primera extracción real desde `apps/uno-roto/`. El paquete consume las siguientes piezas y las re-exporta vía `package:nuevo_ser_core/nuevo_ser_core.dart`:
+Avance acumulado desde el Chunk 5 — el paquete re-exporta vía `package:nuevo_ser_core/nuevo_ser_core.dart`:
 
 ```
 lib/src/
-├── mastery/habilidad.dart   ← Habilidad, NivelHabilidad, IntentoHabilidad
-└── sync/cliente_api.dart    ← ClienteApi, ExcepcionApi (REST con plugin WP)
+├── mastery/
+│   ├── habilidad.dart                  ← Habilidad, NivelMaestria, IntentoHabilidad, EstadoHabilidad
+│   ├── mastery_engine.dart             ← motor adaptativo Strategy (C6)
+│   ├── mastery_profile.dart            ← contrato MasteryProfile + SessionPayload (C6)
+│   ├── perfiles/p1_precision.dart      ← P1 funcional (C6)
+│   ├── perfiles/p2_detection.dart      ← stub (C6)
+│   ├── perfiles/p3_construction.dart   ← stub (C6)
+│   ├── perfiles/p4_calibration.dart    ← stub (C6)
+│   └── selector_habilidades.dart       ← selector adaptativo genérico
+└── sync/cliente_api.dart               ← ClienteApi, ExcepcionApi (REST con plugin WP)
 ```
 
-Los demás submódulos previstos (`account/`, `storage/`, `i18n/`, `audio/`, `narrative/`) siguen vacíos a la espera del Chunk 6 (motor adaptativo) y siguientes.
+Los demás submódulos previstos (`account/`, `storage/`, `i18n/`, `audio/`, `narrative/`) siguen vacíos a la espera de la próxima ronda de extracción.
 
-## Lo que NO se ha movido en C5 (deuda asumida hasta C6+)
+## Deuda de extracción pendiente
 
 | Pieza candidata | Por qué se queda en `apps/uno-roto/` | Plan |
 |---|---|---|
-| `motor_maestria.dart` | Importa `catalogo_habilidades.dart` (lista del juego concreto). | Refactor en C6 con `MasteryProfile` parametrizable. |
-| `selector_habilidades.dart` | Importa `distrito` y `mapeo_habilidades_puzzle` (Uno Roto-específicos). | C6: separar selector genérico + adaptación por juego. |
-| `repositorio_progreso.dart` (786 LOC) | Mezcla persistencia genérica con conceptos del juego (arco, rango, ritmo) e importa `disparador_tutor`. | C6: dividir en `KeyValueStore` core + `RepositorioUnoRoto` específico. |
-| `escena_cinematica.dart`, `plano_escena.dart` | Dependen de `voz_personaje` y `ambiente_cielo` (modelos de Uno Roto). | C6/C7: definir modelos abstractos en `narrative/` y dejar la capa específica en la app. |
-| `servicio_sonoro.dart`, `catalogo_sonidos.dart` y resto de `lib/sonido/` | `servicio_sonoro` depende de `repositorio_progreso`; los catálogos son del juego concreto. | C6 (cuando `repositorio_progreso` esté escindido) o C7. |
+| `repositorio_progreso.dart` (786 LOC) | Mezcla persistencia genérica con conceptos del juego (arco, rango, ritmo) e importa `disparador_tutor`. | Dividir en `KeyValueStore` core + `RepositorioUnoRoto` específico. |
+| `escena_cinematica.dart`, `plano_escena.dart` | Dependen de `voz_personaje` y `ambiente_cielo` (modelos de Uno Roto). | Definir modelos abstractos en `narrative/` y dejar la capa específica en la app. |
+| `servicio_sonoro.dart`, `catalogo_sonidos.dart` y resto de `lib/sonido/` | `servicio_sonoro` depende de `repositorio_progreso`; los catálogos son del juego concreto. | Salen detrás de `repositorio_progreso`. |
 | `descargador_audio.dart`, `localizador_audio.dart` | Dependen del catálogo del juego para mapear ids a rutas. | Mismo tren que `servicio_sonoro`. |
 
-Mantener la separación cuesta menos que extraer y luego revertir: el principio aquí es "mover solo lo genuinamente reutilizable hoy". Los siguientes chunks (especialmente C6) hacen el refactor estructural que habilita el resto.
+`motor_maestria.dart` y `selector_habilidades.dart` ya tienen su núcleo aquí; lo que queda en `apps/uno-roto/` son facades/wrappers finos que inyectan los acoplamientos juego-específicos (catálogo, distritos, conjunto de habilidades con puzzle implementado) y delegan el algoritmo en la plataforma.
+
+Mantener la separación cuesta menos que extraer y luego revertir: el principio aquí es "mover solo lo genuinamente reutilizable hoy".
 
 ## Submódulos previstos
 

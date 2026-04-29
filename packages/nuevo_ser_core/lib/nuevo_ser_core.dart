@@ -25,4 +25,5 @@ export 'src/mastery/perfiles/p1_precision.dart';
 export 'src/mastery/perfiles/p2_detection.dart';
 export 'src/mastery/perfiles/p3_construction.dart';
 export 'src/mastery/perfiles/p4_calibration.dart';
+export 'src/mastery/selector_habilidades.dart';
 export 'src/sync/cliente_api.dart';

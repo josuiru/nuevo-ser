@@ -42,7 +42,13 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 - **C7** ✓ 6 tablas de acompañamiento (`ns_classrooms`, `ns_classroom_members`, `ns_caregiver_links`, `ns_cuaderno_entries`, `ns_mosaicos`, `ns_weekly_summaries`) + 9 endpoints `501 Problem Details` (RFC 7807) reservando la superficie de companion. Solo en namespace canónico.
 - **C8** ✓ paridad Dart/PHP del motor: espejo `NS_Mastery_Engine` + fixture compartida (`packages/nuevo_ser_core/test/fixtures/motor_p1.json`) consumida por test Dart y test PHP.
 
-Plugin WP en v0.6.0. Tests al cierre: 339 (uno-roto) + 10 (nuevo_ser_core) Dart + 3 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor). `flutter analyze` limpio en los 5 paquetes.
+### Avance post-refactor (deuda C5/C6)
+
+Continuando la extracción anunciada en los READMEs de los paquetes, en slices pequeños con tests caracterización antes del movimiento:
+
+- **Selector adaptativo de habilidades** ✓ extraído a `packages/nuevo_ser_core/lib/src/mastery/selector_habilidades.dart` con API genérica (candidatas + contextoBonusId + aplicarBonusContexto). El archivo de uno-roto queda como wrapper fino que mantiene la API pública (`Distrito` + `dominioFiltrado`) y delega el algoritmo. 12 tests caracterización en el core (pesos por nivel, decay, bonus contexto, anti-repetición, dependencias, determinismo).
+
+Plugin WP en v0.6.0. Tests: 339 (uno-roto) + 22 (nuevo_ser_core) Dart + 3 PHP smoke. `flutter analyze` limpio en los 5 paquetes.
 
 ## Decisiones cerradas
 
