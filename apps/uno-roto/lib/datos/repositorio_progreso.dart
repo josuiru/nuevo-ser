@@ -111,6 +111,14 @@ class RepositorioProgreso {
     clave: _claveVersionPaqueteAudio,
   );
 
+  /// Bool global del banner "¿descargar paquete sonoro?" — clave
+  /// global, una vez visto no se desmarca.
+  late final RepositorioSugerenciaPaqueteAudio _repoSugerenciaPaqueteAudio =
+      RepositorioSugerenciaPaqueteAudio(
+    prefs: SharedPreferences.getInstance,
+    clave: _claveAudioSugerenciaVista,
+  );
+
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
   Future<String> idPerfilActivo() => _gestor.idPerfilActivo();
@@ -155,15 +163,11 @@ class RepositorioProgreso {
   /// mostró al niño/adulto. Es global (no tiene sentido reofrecerlo
   /// por cada perfil) y se persiste a `true` en cuanto el banner se
   /// dismisses, así no reaparece nunca aunque rechace.
-  Future<bool> cargarAudioSugerenciaVista() async {
-    final prefs = await _prefs();
-    return prefs.getBool(_claveAudioSugerenciaVista) ?? false;
-  }
+  Future<bool> cargarAudioSugerenciaVista() =>
+      _repoSugerenciaPaqueteAudio.cargar();
 
-  Future<void> marcarAudioSugerenciaVista() async {
-    final prefs = await _prefs();
-    await prefs.setBool(_claveAudioSugerenciaVista, true);
-  }
+  Future<void> marcarAudioSugerenciaVista() =>
+      _repoSugerenciaPaqueteAudio.marcar();
 
   /// Idioma elegido manualmente por el niño en la pantalla de
   /// configuración inicial. Es global (no por-perfil): la elección se
