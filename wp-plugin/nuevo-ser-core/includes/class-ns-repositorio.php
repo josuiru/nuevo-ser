@@ -5,14 +5,14 @@
  * JSON. No hace validación ni negocio; eso vive en los endpoints y
  * el sincronizador.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Repositorio {
+class NS_Repositorio {
 
 	// -------------------------------------------------------------
 	// Usuarios (tutores legales).
@@ -25,7 +25,7 @@ class UROTO_Repositorio {
 		string $locale = 'es'
 	): int {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'usuarios' );
+		$tabla = NS_Esquema::nombre_tabla( 'usuarios' );
 		$wpdb->insert(
 			$tabla,
 			array(
@@ -41,7 +41,7 @@ class UROTO_Repositorio {
 
 	public static function buscar_usuario_por_email( string $email ): ?array {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'usuarios' );
+		$tabla = NS_Esquema::nombre_tabla( 'usuarios' );
 		$fila  = $wpdb->get_row(
 			$wpdb->prepare( "SELECT * FROM {$tabla} WHERE email = %s LIMIT 1", $email ),
 			ARRAY_A
@@ -59,7 +59,7 @@ class UROTO_Repositorio {
 		string $locale = 'es'
 	): int {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'ninos' );
+		$tabla = NS_Esquema::nombre_tabla( 'ninos' );
 		$wpdb->insert(
 			$tabla,
 			array(
@@ -74,7 +74,7 @@ class UROTO_Repositorio {
 
 	public static function buscar_nino( int $nino_id ): ?array {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'ninos' );
+		$tabla = NS_Esquema::nombre_tabla( 'ninos' );
 		$fila  = $wpdb->get_row(
 			$wpdb->prepare( "SELECT * FROM {$tabla} WHERE id = %d LIMIT 1", $nino_id ),
 			ARRAY_A
@@ -84,7 +84,7 @@ class UROTO_Repositorio {
 
 	public static function ninos_de_usuario( int $usuario_id ): array {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'ninos' );
+		$tabla = NS_Esquema::nombre_tabla( 'ninos' );
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$tabla} WHERE usuario_id = %d ORDER BY creado_en ASC",
@@ -100,7 +100,7 @@ class UROTO_Repositorio {
 
 	public static function cargar_progreso( int $nino_id ): ?array {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'progreso' );
+		$tabla = NS_Esquema::nombre_tabla( 'progreso' );
 		$fila  = $wpdb->get_row(
 			$wpdb->prepare( "SELECT * FROM {$tabla} WHERE nino_id = %d LIMIT 1", $nino_id ),
 			ARRAY_A
@@ -135,7 +135,7 @@ class UROTO_Repositorio {
 		string $actualizado_en
 	): void {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'progreso' );
+		$tabla = NS_Esquema::nombre_tabla( 'progreso' );
 		$wpdb->replace(
 			$tabla,
 			array(
@@ -157,7 +157,7 @@ class UROTO_Repositorio {
 
 	public static function cargar_habilidades( int $nino_id ): array {
 		global $wpdb;
-		$tabla    = UROTO_Esquema::nombre_tabla( 'estado_habilidades' );
+		$tabla    = NS_Esquema::nombre_tabla( 'estado_habilidades' );
 		$filas    = $wpdb->get_results(
 			$wpdb->prepare( "SELECT * FROM {$tabla} WHERE nino_id = %d", $nino_id ),
 			ARRAY_A
@@ -185,7 +185,7 @@ class UROTO_Repositorio {
 
 	public static function guardar_habilidad( int $nino_id, array $estado ): void {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'estado_habilidades' );
+		$tabla = NS_Esquema::nombre_tabla( 'estado_habilidades' );
 		$wpdb->replace(
 			$tabla,
 			array(
@@ -213,23 +213,23 @@ class UROTO_Repositorio {
 		$ninos = self::ninos_de_usuario( $usuario_id );
 		foreach ( $ninos as $nino ) {
 			$wpdb->delete(
-				UROTO_Esquema::nombre_tabla( 'estado_habilidades' ),
+				NS_Esquema::nombre_tabla( 'estado_habilidades' ),
 				array( 'nino_id' => (int) $nino['id'] ),
 				array( '%d' )
 			);
 			$wpdb->delete(
-				UROTO_Esquema::nombre_tabla( 'progreso' ),
+				NS_Esquema::nombre_tabla( 'progreso' ),
 				array( 'nino_id' => (int) $nino['id'] ),
 				array( '%d' )
 			);
 		}
 		$wpdb->delete(
-			UROTO_Esquema::nombre_tabla( 'ninos' ),
+			NS_Esquema::nombre_tabla( 'ninos' ),
 			array( 'usuario_id' => $usuario_id ),
 			array( '%d' )
 		);
 		$wpdb->delete(
-			UROTO_Esquema::nombre_tabla( 'usuarios' ),
+			NS_Esquema::nombre_tabla( 'usuarios' ),
 			array( 'id' => $usuario_id ),
 			array( '%d' )
 		);

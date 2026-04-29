@@ -18,14 +18,14 @@
  * verdad sobre qué flags significan qué; el servidor solo los persiste
  * y los sincroniza.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Esquema {
+class NS_Esquema {
 
 	public static function nombre_tabla( string $clave ): string {
 		global $wpdb;

@@ -11,17 +11,17 @@
  *   6. Devuelve `{explicacion, fuente}`.
  *
  * El cliente HTTP a Anthropic se inyecta vía un callable opcional —
- * en producción usa `UROTO_Anthropic::pedir_explicacion`, en tests se
+ * en producción usa `NS_Anthropic::pedir_explicacion`, en tests se
  * pasa un stub. Misma estrategia que el `cliente HTTP` de Dart.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Tutor {
+class NS_Tutor {
 
 	/** TTL en segundos. 30 días — paralelo al cliente. */
 	public const TTL_CACHE = 30 * DAY_IN_SECONDS;
@@ -42,11 +42,11 @@ class UROTO_Tutor {
 		?string $contexto_fragmento = null,
 		?callable $cliente_anthropic = null
 	): WP_REST_Response {
-		$revision = UROTO_Filtro_Tutor::revisar_pregunta( $pregunta );
+		$revision = NS_Filtro_Tutor::revisar_pregunta( $pregunta );
 		if ( ! $revision['ok'] ) {
 			return new WP_REST_Response(
 				array(
-					'error'  => UROTO_Filtro_Tutor::mensaje_amable( $revision['motivo'] ),
+					'error'  => NS_Filtro_Tutor::mensaje_amable( $revision['motivo'] ),
 					'motivo' => $revision['motivo'],
 				),
 				422
@@ -54,7 +54,7 @@ class UROTO_Tutor {
 		}
 		$pregunta_limpia = $revision['limpio'];
 
-		$clave = UROTO_Filtro_Tutor::clave_cache( $id_habilidad, $pregunta_limpia );
+		$clave = NS_Filtro_Tutor::clave_cache( $id_habilidad, $pregunta_limpia );
 
 		$desde_cache = self::leer_cache( $clave );
 		if ( null !== $desde_cache ) {
@@ -65,7 +65,7 @@ class UROTO_Tutor {
 		}
 
 		try {
-			$cliente = $cliente_anthropic ?? array( 'UROTO_Anthropic', 'pedir_explicacion' );
+			$cliente = $cliente_anthropic ?? array( 'NS_Anthropic', 'pedir_explicacion' );
 			$cruda   = (string) call_user_func(
 				$cliente,
 				$id_habilidad,
@@ -79,7 +79,7 @@ class UROTO_Tutor {
 			);
 		}
 
-		$revision_salida = UROTO_Filtro_Tutor::revisar_respuesta( $cruda );
+		$revision_salida = NS_Filtro_Tutor::revisar_respuesta( $cruda );
 		if ( ! $revision_salida['ok'] ) {
 			return new WP_REST_Response(
 				array( 'error' => 'Hoy no puedo ayudarte con eso, prueba a preguntarlo de otra forma.' ),
@@ -97,7 +97,7 @@ class UROTO_Tutor {
 	}
 
 	private static function nombre_tabla(): string {
-		return UROTO_Esquema::nombre_tabla( 'cache_tutor' );
+		return NS_Esquema::nombre_tabla( 'cache_tutor' );
 	}
 
 	/** Devuelve la explicación cacheada o null si no existe / caducó. */

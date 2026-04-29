@@ -14,14 +14,14 @@
  * Todos devuelven JSON. Errores como WP_REST_Response con código
  * HTTP apropiado.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Endpoints {
+class NS_Endpoints {
 
 	private const NAMESPACE = 'uno-roto/v1';
 
@@ -185,7 +185,7 @@ class UROTO_Endpoints {
 	// -------------------------------------------------------------
 
 	public static function permiso_jwt( WP_REST_Request $request ) {
-		$token = UROTO_JWT::leer_token_de_request( $request );
+		$token = NS_JWT::leer_token_de_request( $request );
 		if ( ! $token ) {
 			return new WP_Error(
 				'uroto_sin_token',
@@ -193,7 +193,7 @@ class UROTO_Endpoints {
 				array( 'status' => 401 )
 			);
 		}
-		$carga = UROTO_JWT::validar( $token );
+		$carga = NS_JWT::validar( $token );
 		if ( ! $carga || ! isset( $carga['nino_id'] ) ) {
 			return new WP_Error(
 				'uroto_token_invalido',
@@ -229,24 +229,24 @@ class UROTO_Endpoints {
 			);
 		}
 
-		if ( UROTO_Repositorio::buscar_usuario_por_email( $email ) ) {
+		if ( NS_Repositorio::buscar_usuario_por_email( $email ) ) {
 			return new WP_REST_Response(
 				array( 'error' => 'El email ya está registrado.' ),
 				409
 			);
 		}
 
-		$usuario_id = UROTO_Repositorio::crear_usuario(
+		$usuario_id = NS_Repositorio::crear_usuario(
 			$email,
 			password_hash( $password, PASSWORD_DEFAULT ),
 			$nombre_tutor,
 			$locale
 		);
-		$nino_id    = UROTO_Repositorio::crear_nino( $usuario_id, $nombre_nino, $locale );
+		$nino_id    = NS_Repositorio::crear_nino( $usuario_id, $nombre_nino, $locale );
 
 		return new WP_REST_Response(
 			array(
-				'token'       => UROTO_JWT::firmar( array( 'nino_id' => $nino_id ) ),
+				'token'       => NS_JWT::firmar( array( 'nino_id' => $nino_id ) ),
 				'nino_id'     => $nino_id,
 				'usuario_id'  => $usuario_id,
 			),
@@ -262,7 +262,7 @@ class UROTO_Endpoints {
 		$email    = sanitize_email( (string) $request->get_param( 'email' ) );
 		$password = (string) $request->get_param( 'password' );
 
-		$usuario = UROTO_Repositorio::buscar_usuario_por_email( $email );
+		$usuario = NS_Repositorio::buscar_usuario_por_email( $email );
 		if ( ! $usuario || ! password_verify( $password, $usuario['password_hash'] ) ) {
 			return new WP_REST_Response(
 				array( 'error' => 'Credenciales incorrectas.' ),
@@ -270,7 +270,7 @@ class UROTO_Endpoints {
 			);
 		}
 
-		$ninos = UROTO_Repositorio::ninos_de_usuario( (int) $usuario['id'] );
+		$ninos = NS_Repositorio::ninos_de_usuario( (int) $usuario['id'] );
 		if ( empty( $ninos ) ) {
 			return new WP_REST_Response(
 				array( 'error' => 'La cuenta no tiene ningún perfil de niño.' ),
@@ -281,7 +281,7 @@ class UROTO_Endpoints {
 
 		return new WP_REST_Response(
 			array(
-				'token'   => UROTO_JWT::firmar( array( 'nino_id' => $nino_id ) ),
+				'token'   => NS_JWT::firmar( array( 'nino_id' => $nino_id ) ),
 				'nino_id' => $nino_id,
 			),
 			200
@@ -296,8 +296,8 @@ class UROTO_Endpoints {
 		$nino_id = (int) $request->get_param( '_nino_id' );
 		return new WP_REST_Response(
 			array(
-				'progreso'    => UROTO_Repositorio::cargar_progreso( $nino_id ),
-				'habilidades' => UROTO_Repositorio::cargar_habilidades( $nino_id ),
+				'progreso'    => NS_Repositorio::cargar_progreso( $nino_id ),
+				'habilidades' => NS_Repositorio::cargar_habilidades( $nino_id ),
 			),
 			200
 		);
@@ -313,7 +313,7 @@ class UROTO_Endpoints {
 			'progreso'    => $request->get_param( 'progreso' ) ?: null,
 			'habilidades' => $request->get_param( 'habilidades' ) ?: array(),
 		);
-		$resultado = UROTO_Sincronizador::sincronizar( $nino_id, $entrada );
+		$resultado = NS_Sincronizador::sincronizar( $nino_id, $entrada );
 		return new WP_REST_Response( $resultado, 200 );
 	}
 
@@ -323,14 +323,14 @@ class UROTO_Endpoints {
 
 	public static function borrar_cuenta( WP_REST_Request $request ) {
 		$nino_id = (int) $request->get_param( '_nino_id' );
-		$nino    = UROTO_Repositorio::buscar_nino( $nino_id );
+		$nino    = NS_Repositorio::buscar_nino( $nino_id );
 		if ( ! $nino ) {
 			return new WP_REST_Response(
 				array( 'error' => 'Niño no encontrado.' ),
 				404
 			);
 		}
-		UROTO_Repositorio::borrar_cuenta( (int) $nino['usuario_id'] );
+		NS_Repositorio::borrar_cuenta( (int) $nino['usuario_id'] );
 		return new WP_REST_Response( array( 'ok' => true ), 200 );
 	}
 
@@ -355,7 +355,7 @@ class UROTO_Endpoints {
 			);
 		}
 
-		return UROTO_Tutor::explicar( $id_habilidad, $pregunta, $contexto_fragmento );
+		return NS_Tutor::explicar( $id_habilidad, $pregunta, $contexto_fragmento );
 	}
 
 	// -------------------------------------------------------------
@@ -363,7 +363,7 @@ class UROTO_Endpoints {
 	// -------------------------------------------------------------
 
 	public static function tutor_stats( WP_REST_Request $request ) {
-		return new WP_REST_Response( UROTO_Tutor::metricas(), 200 );
+		return new WP_REST_Response( NS_Tutor::metricas(), 200 );
 	}
 
 	// -------------------------------------------------------------
@@ -504,7 +504,7 @@ class UROTO_Endpoints {
 	 * Inyecta `_usuario_id` en la request para los handlers.
 	 */
 	public static function permiso_jwt_tutor( WP_REST_Request $request ) {
-		$token = UROTO_JWT::leer_token_de_request( $request );
+		$token = NS_JWT::leer_token_de_request( $request );
 		if ( ! $token ) {
 			return new WP_Error(
 				'uroto_sin_token',
@@ -512,7 +512,7 @@ class UROTO_Endpoints {
 				array( 'status' => 401 )
 			);
 		}
-		$carga = UROTO_JWT::validar( $token );
+		$carga = NS_JWT::validar( $token );
 		if ( ! $carga || ! isset( $carga['usuario_id'] ) ) {
 			return new WP_Error(
 				'uroto_token_invalido',
@@ -539,7 +539,7 @@ class UROTO_Endpoints {
 			);
 		}
 
-		$usuario = UROTO_Repositorio::buscar_usuario_por_email( $email );
+		$usuario = NS_Repositorio::buscar_usuario_por_email( $email );
 		if ( ! $usuario || ! password_verify( $password, $usuario['password_hash'] ) ) {
 			return new WP_REST_Response(
 				array( 'error' => 'Credenciales incorrectas.' ),
@@ -547,7 +547,7 @@ class UROTO_Endpoints {
 			);
 		}
 
-		$token = UROTO_JWT::firmar(
+		$token = NS_JWT::firmar(
 			array( 'usuario_id' => (int) $usuario['id'] ),
 			self::TTL_TUTOR_SEGUNDOS
 		);
@@ -569,7 +569,7 @@ class UROTO_Endpoints {
 
 	public static function tutor_ninos( WP_REST_Request $request ) {
 		$usuario_id = (int) $request->get_param( '_usuario_id' );
-		$ninos      = UROTO_Repositorio::ninos_de_usuario( $usuario_id );
+		$ninos      = NS_Repositorio::ninos_de_usuario( $usuario_id );
 
 		// Para cada niño añadimos un mini-resumen del estado: esquirlas,
 		// rango, arco actual y nº de habilidades vistas. Deja a la app
@@ -578,8 +578,8 @@ class UROTO_Endpoints {
 		$lista = array();
 		foreach ( $ninos as $nino ) {
 			$nino_id     = (int) $nino['id'];
-			$progreso    = UROTO_Repositorio::cargar_progreso( $nino_id );
-			$habilidades = UROTO_Repositorio::cargar_habilidades( $nino_id );
+			$progreso    = NS_Repositorio::cargar_progreso( $nino_id );
+			$habilidades = NS_Repositorio::cargar_habilidades( $nino_id );
 			$lista[]     = array(
 				'nino_id'              => $nino_id,
 				'nombre_mostrar'       => (string) $nino['nombre_mostrar'],
@@ -602,7 +602,7 @@ class UROTO_Endpoints {
 		$usuario_id = (int) $request->get_param( '_usuario_id' );
 		$nino_id    = (int) $request->get_param( 'nino_id' );
 
-		$nino = UROTO_Repositorio::buscar_nino( $nino_id );
+		$nino = NS_Repositorio::buscar_nino( $nino_id );
 		if ( ! $nino ) {
 			return new WP_REST_Response(
 				array( 'error' => 'Niño no encontrado.' ),
@@ -621,8 +621,8 @@ class UROTO_Endpoints {
 			array(
 				'nino_id'        => $nino_id,
 				'nombre_mostrar' => (string) $nino['nombre_mostrar'],
-				'progreso'       => UROTO_Repositorio::cargar_progreso( $nino_id ),
-				'habilidades'    => UROTO_Repositorio::cargar_habilidades( $nino_id ),
+				'progreso'       => NS_Repositorio::cargar_progreso( $nino_id ),
+				'habilidades'    => NS_Repositorio::cargar_habilidades( $nino_id ),
 			),
 			200
 		);
@@ -641,7 +641,7 @@ class UROTO_Endpoints {
 			);
 		}
 		// Devolvemos siempre 200 — política anti-enumeración.
-		UROTO_Reset_Password::solicitar( $email );
+		NS_Reset_Password::solicitar( $email );
 		return new WP_REST_Response(
 			array( 'ok' => true ),
 			200
@@ -651,6 +651,6 @@ class UROTO_Endpoints {
 	public static function auth_pagina_reset( WP_REST_Request $request ) {
 		// Esta función emite HTML directo y mata la ejecución; nunca
 		// retorna a WP_REST. Solo está aquí para registro de la ruta.
-		UROTO_Reset_Password::pagina_reset_html( $request );
+		NS_Reset_Password::pagina_reset_html( $request );
 	}
 }

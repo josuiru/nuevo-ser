@@ -14,14 +14,14 @@
  *   - Lista corta de fuera-de-alcance.
  *   - Mensajes amables para los rechazos.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Filtro_Tutor {
+class NS_Filtro_Tutor {
 
 	public const LONGITUD_MAXIMA_PREGUNTA  = 280;
 	public const LONGITUD_MAXIMA_RESPUESTA = 1200;

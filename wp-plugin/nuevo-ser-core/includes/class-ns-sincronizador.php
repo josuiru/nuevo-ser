@@ -8,14 +8,14 @@
  * El cliente envía su estado local. El servidor compara timestamps
  * fila a fila y devuelve el estado ganador para cada una.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Sincronizador {
+class NS_Sincronizador {
 
 	/**
 	 * Aplica un sync completo para un niño. El $entrada es lo que
@@ -30,7 +30,7 @@ class UROTO_Sincronizador {
 	 *   }
 	 */
 	public static function sincronizar( int $nino_id, array $entrada ): array {
-		$progreso_servidor = UROTO_Repositorio::cargar_progreso( $nino_id );
+		$progreso_servidor = NS_Repositorio::cargar_progreso( $nino_id );
 		$progreso_cliente  = $entrada['progreso'] ?? null;
 
 		$progreso_final = self::mezclar_progreso(
@@ -39,7 +39,7 @@ class UROTO_Sincronizador {
 			$progreso_cliente
 		);
 
-		$habilidades_servidor = UROTO_Repositorio::cargar_habilidades( $nino_id );
+		$habilidades_servidor = NS_Repositorio::cargar_habilidades( $nino_id );
 		$habilidades_cliente  = $entrada['habilidades'] ?? array();
 
 		$habilidades_finales = self::mezclar_habilidades(
@@ -73,7 +73,7 @@ class UROTO_Sincronizador {
 			$cliente['actualizado_en'] ?? ''
 		) === 'servidor' ? $servidor : $cliente;
 
-		UROTO_Repositorio::guardar_progreso(
+		NS_Repositorio::guardar_progreso(
 			$nino_id,
 			(string) ( $ganador['nombre_jugador'] ?? '' ),
 			(int) ( $ganador['esquirlas_total'] ?? 0 ),
@@ -83,7 +83,7 @@ class UROTO_Sincronizador {
 			(string) ( $ganador['actualizado_en'] ?? current_time( 'mysql' ) )
 		);
 
-		return UROTO_Repositorio::cargar_progreso( $nino_id );
+		return NS_Repositorio::cargar_progreso( $nino_id );
 	}
 
 	private static function mezclar_habilidades(
@@ -111,7 +111,7 @@ class UROTO_Sincronizador {
 			$s = $indice_servidor[ $id_habilidad ] ?? null;
 			$c = $indice_cliente[ $id_habilidad ] ?? null;
 			if ( ! $s ) {
-				UROTO_Repositorio::guardar_habilidad( $nino_id, $c );
+				NS_Repositorio::guardar_habilidad( $nino_id, $c );
 				continue;
 			}
 			if ( ! $c ) {
@@ -122,10 +122,10 @@ class UROTO_Sincronizador {
 				$s['actualizado_en'] ?? '',
 				$c['actualizado_en'] ?? ''
 			) === 'servidor' ? $s : $c;
-			UROTO_Repositorio::guardar_habilidad( $nino_id, $ganador );
+			NS_Repositorio::guardar_habilidad( $nino_id, $ganador );
 		}
 
-		return UROTO_Repositorio::cargar_habilidades( $nino_id );
+		return NS_Repositorio::cargar_habilidades( $nino_id );
 	}
 
 	private static function ganador_lww( string $ts_servidor, string $ts_cliente ): string {

@@ -15,14 +15,14 @@
  *
  * Rate limit muy básico: máximo 3 emisiones por usuario en 15 minutos.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Reset_Password {
+class NS_Reset_Password {
 
 	/** Vida útil del token: 30 minutos. */
 	private const TTL_SEGUNDOS = 30 * 60;
@@ -40,7 +40,7 @@ class UROTO_Reset_Password {
 	 * 200 OK.
 	 */
 	public static function solicitar( string $email ): bool {
-		$usuario = UROTO_Repositorio::buscar_usuario_por_email( $email );
+		$usuario = NS_Repositorio::buscar_usuario_por_email( $email );
 		if ( ! $usuario ) {
 			return true; // anti-enumeración
 		}
@@ -57,7 +57,7 @@ class UROTO_Reset_Password {
 		$expira_en    = gmdate( 'Y-m-d H:i:s', time() + self::TTL_SEGUNDOS );
 
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'password_reset' );
+		$tabla = NS_Esquema::nombre_tabla( 'password_reset' );
 		$wpdb->insert(
 			$tabla,
 			array(
@@ -89,7 +89,7 @@ class UROTO_Reset_Password {
 		$token_hash = hash( 'sha256', $token_plano );
 
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'password_reset' );
+		$tabla = NS_Esquema::nombre_tabla( 'password_reset' );
 		$fila  = $wpdb->get_row(
 			$wpdb->prepare( "SELECT * FROM {$tabla} WHERE token_hash = %s", $token_hash ),
 			ARRAY_A
@@ -105,7 +105,7 @@ class UROTO_Reset_Password {
 		}
 
 		$nuevo_hash = password_hash( $nueva_password, PASSWORD_DEFAULT );
-		$tabla_usuarios = UROTO_Esquema::nombre_tabla( 'usuarios' );
+		$tabla_usuarios = NS_Esquema::nombre_tabla( 'usuarios' );
 		$wpdb->update(
 			$tabla_usuarios,
 			array( 'password_hash' => $nuevo_hash ),
@@ -134,7 +134,7 @@ class UROTO_Reset_Password {
 
 	private static function sobre_limite_de_emisiones( int $usuario_id ): bool {
 		global $wpdb;
-		$tabla = UROTO_Esquema::nombre_tabla( 'password_reset' );
+		$tabla = NS_Esquema::nombre_tabla( 'password_reset' );
 		$desde = gmdate( 'Y-m-d H:i:s', time() - self::VENTANA_RATE_LIMIT_SEGUNDOS );
 		$num   = (int) $wpdb->get_var(
 			$wpdb->prepare(

@@ -3,21 +3,39 @@
  * Hooks de activación y desactivación. En activación aplica las
  * migraciones con dbDelta(); idempotente si el esquema ya existe.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Activacion {
+class NS_Activacion {
 
 	private const HOOK_PURGA_TUTOR = 'uroto_cron_purga_tutor';
 
 	public static function activar(): void {
+		self::desactivar_plugin_viejo();
 		self::aplicar_esquema();
-		update_option( 'uroto_core_version', UROTO_CORE_VERSION );
+		update_option( 'uroto_core_version', NS_CORE_VERSION );
 		self::programar_cron();
+	}
+
+	/**
+	 * Si el plugin antiguo `uno-roto-core` sigue activo (testers que tenían
+	 * la versión previa instalada), lo desactivamos antes de proseguir.
+	 * Sin esto, los dos plugins registrarían los mismos hooks y endpoints,
+	 * provocando colisiones. La cabecera `Replaces: uno-roto-core` del
+	 * archivo principal documenta este comportamiento.
+	 */
+	private static function desactivar_plugin_viejo(): void {
+		$ruta_viejo = 'uno-roto-core/uno-roto-core.php';
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		if ( is_plugin_active( $ruta_viejo ) ) {
+			deactivate_plugins( $ruta_viejo, true );
+		}
 	}
 
 	public static function desactivar(): void {
@@ -38,11 +56,11 @@ class UROTO_Activacion {
 	 */
 	public static function migrar_si_hace_falta(): void {
 		$version_bd = get_option( 'uroto_core_version', '' );
-		if ( UROTO_CORE_VERSION === $version_bd ) {
+		if ( NS_CORE_VERSION === $version_bd ) {
 			return;
 		}
 		self::aplicar_esquema();
-		update_option( 'uroto_core_version', UROTO_CORE_VERSION );
+		update_option( 'uroto_core_version', NS_CORE_VERSION );
 		// Si el cron aún no estaba programado (sitio que se actualizó
 		// desde una versión antes de existir el cron), lo añadimos
 		// aquí — `programar_cron` es idempotente.
@@ -58,15 +76,15 @@ class UROTO_Activacion {
 
 	/** Callback del cron: borra entradas caducadas de la caché del tutor. */
 	public static function ejecutar_purga_tutor(): void {
-		if ( ! class_exists( 'UROTO_Tutor' ) ) {
+		if ( ! class_exists( 'NS_Tutor' ) ) {
 			return;
 		}
-		UROTO_Tutor::purgar_caduca();
+		NS_Tutor::purgar_caduca();
 	}
 
 	private static function aplicar_esquema(): void {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		foreach ( UROTO_Esquema::sentencias_create() as $sql ) {
+		foreach ( NS_Esquema::sentencias_create() as $sql ) {
 			dbDelta( $sql );
 		}
 	}

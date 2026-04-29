@@ -17,7 +17,7 @@ if ( ! function_exists( 'wp_json_encode' ) ) {
 	}
 }
 
-require_once __DIR__ . '/../includes/class-uroto-jwt.php';
+require_once __DIR__ . '/../includes/class-ns-jwt.php';
 
 // Polyfill mínimo de WP_REST_Request para no cargar todo WP.
 if ( ! class_exists( 'WP_REST_Request' ) ) {
@@ -48,8 +48,8 @@ function afirmar( $esperado, $real, string $titulo ): void {
 }
 
 // 1. Token de niño con TTL por defecto (30 días) firma y valida.
-$tokenNino = UROTO_JWT::firmar( array( 'nino_id' => 7 ) );
-$cargaNino = UROTO_JWT::validar( $tokenNino );
+$tokenNino = NS_JWT::firmar( array( 'nino_id' => 7 ) );
+$cargaNino = NS_JWT::validar( $tokenNino );
 afirmar( true, is_array( $cargaNino ), 'token niño válido' );
 afirmar( 7, $cargaNino['nino_id'] ?? null, 'nino_id presente' );
 afirmar(
@@ -59,8 +59,8 @@ afirmar(
 );
 
 // 2. Token de tutor con TTL 15 minutos.
-$tokenTutor = UROTO_JWT::firmar( array( 'usuario_id' => 42 ), 15 * 60 );
-$cargaTutor = UROTO_JWT::validar( $tokenTutor );
+$tokenTutor = NS_JWT::firmar( array( 'usuario_id' => 42 ), 15 * 60 );
+$cargaTutor = NS_JWT::validar( $tokenTutor );
 afirmar( true, is_array( $cargaTutor ), 'token tutor válido' );
 afirmar( 42, $cargaTutor['usuario_id'] ?? null, 'usuario_id presente' );
 afirmar(
@@ -79,12 +79,12 @@ afirmar( true, ! isset( $cargaTutor['nino_id'] ), 'token tutor no lleva nino_id'
 
 // 5. Token con firma corrupta es rechazado.
 $tokenRoto = $tokenTutor . 'X';
-afirmar( null, UROTO_JWT::validar( $tokenRoto ), 'firma corrupta rechazada' );
+afirmar( null, NS_JWT::validar( $tokenRoto ), 'firma corrupta rechazada' );
 
 // 6. Lectura del header Authorization: Bearer.
 $req = new WP_REST_Request();
 $req->set_header( 'authorization', 'Bearer ' . $tokenTutor );
-afirmar( $tokenTutor, UROTO_JWT::leer_token_de_request( $req ), 'header Bearer leído' );
+afirmar( $tokenTutor, NS_JWT::leer_token_de_request( $req ), 'header Bearer leído' );
 
 if ( 0 === $fallos ) {
 	echo "OK\n";

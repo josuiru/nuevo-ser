@@ -5,18 +5,18 @@
  * solo requiera tocar este archivo.
  *
  * Doc 03 §9: modelo barato (haiku), explicaciones cortas, system prompt
- * que limita el alcance al MVP. La key se lee de `UROTO_ANTHROPIC_KEY`
+ * que limita el alcance al MVP. La key se lee de `NS_ANTHROPIC_KEY`
  * (definida en wp-config.php) — fallar al no estar definida es
  * preferible a que el plugin envíe peticiones sin auth.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_Anthropic {
+class NS_Anthropic {
 
 	private const ENDPOINT      = 'https://api.anthropic.com/v1/messages';
 	private const VERSION_API   = '2023-06-01';
@@ -35,8 +35,8 @@ class UROTO_Anthropic {
 		string $pregunta,
 		?string $contexto_fragmento = null
 	): string {
-		if ( ! defined( 'UROTO_ANTHROPIC_KEY' ) || '' === UROTO_ANTHROPIC_KEY ) {
-			throw new RuntimeException( 'UROTO_ANTHROPIC_KEY no definida en wp-config.php.' );
+		if ( ! defined( 'NS_ANTHROPIC_KEY' ) || '' === NS_ANTHROPIC_KEY ) {
+			throw new RuntimeException( 'NS_ANTHROPIC_KEY no definida en wp-config.php.' );
 		}
 
 		$prompt_sistema = self::construir_prompt_sistema( $id_habilidad, $contexto_fragmento );
@@ -60,7 +60,7 @@ class UROTO_Anthropic {
 			array(
 				'headers' => array(
 					'Content-Type'      => 'application/json',
-					'x-api-key'         => UROTO_ANTHROPIC_KEY,
+					'x-api-key'         => NS_ANTHROPIC_KEY,
 					'anthropic-version' => self::VERSION_API,
 				),
 				'body'    => $cuerpo,

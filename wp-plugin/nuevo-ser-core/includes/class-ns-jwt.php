@@ -9,18 +9,18 @@
  *     "exp": 1713... (iat + 30 días por defecto)
  *   }
  *
- * El secret vive en UROTO_JWT_SECRET (wp-config.php). Si no está
+ * El secret vive en NS_JWT_SECRET (wp-config.php). Si no está
  * definido, la firma usa un secret derivado de AUTH_KEY — funcional
  * para desarrollo pero NO apto para producción.
  *
- * @package UnoRotoCore
+ * @package NuevoSerCore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class UROTO_JWT {
+class NS_JWT {
 
 	private const ALG                  = 'HS256';
 	private const DIAS_EXPIRACION      = 30;
@@ -92,8 +92,8 @@ class UROTO_JWT {
 	}
 
 	private static function firmar_hmac( string $mensaje ): string {
-		$secreto = defined( 'UROTO_JWT_SECRET' )
-			? UROTO_JWT_SECRET
+		$secreto = defined( 'NS_JWT_SECRET' )
+			? NS_JWT_SECRET
 			: hash( 'sha256', 'uroto-dev-' . ( defined( 'AUTH_KEY' ) ? AUTH_KEY : 'noauth' ) );
 		return self::base64url_encode( hash_hmac( 'sha256', $mensaje, $secreto, true ) );
 	}
