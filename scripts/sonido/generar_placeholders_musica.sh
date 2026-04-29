@@ -5,7 +5,7 @@
 # puro, para que la app respire mientras llega la música compositiva
 # real (Kai Engel, Satie, etc., ver scripts/sonido/bajar_musica.sh).
 #
-# Salida: app/assets/sonido/musica/<slot>.ogg
+# Salida: apps/uno-roto/assets/sonido/musica/<slot>.ogg
 #
 # Licencia: creación propia, CC-BY-SA 4.0 con el resto del contenido.
 # No tiene problema de redistribución.
@@ -27,7 +27,7 @@ set -euo pipefail
 #   C4=261.63, F4=349.23, G4=392.00, B4=493.88
 #   F#3=185.00, F#4=369.99, Bb3=233.08, Eb4=311.13
 
-DESTINO="$(dirname "$0")/../../app/assets/sonido/musica"
+DESTINO="$(dirname "$0")/../../apps/uno-roto/assets/sonido/musica"
 mkdir -p "$DESTINO"
 
 generar() {

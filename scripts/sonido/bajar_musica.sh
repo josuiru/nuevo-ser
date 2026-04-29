@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Descarga las 12 piezas musicales de la capa 2 (capa compositiva)
 # desde fuentes externas, verifica licencia compatible, convierte a
-# OGG y deja todo en app/assets/sonido/musica/ con su atribución
+# OGG y deja todo en apps/uno-roto/assets/sonido/musica/ con su atribución
 # anotada en CREDITOS.md.
 #
 # Cómo se usa:
@@ -19,14 +19,14 @@
 #   3. Lanza:  bash scripts/sonido/bajar_musica.sh
 #      Verifica licencia (best-effort) y convierte a OGG q=3 stereo.
 #
-#   4. Anota la atribución en app/assets/sonido/CREDITOS.md.
+#   4. Anota la atribución en apps/uno-roto/assets/sonido/CREDITOS.md.
 #
 # Mientras los slots no estén rellenados, los placeholders sintéticos
 # de generar_placeholders_musica.sh siguen presentes y la app respira.
 
 set -uo pipefail
 
-DESTINO="$(dirname "$0")/../../app/assets/sonido/musica"
+DESTINO="$(dirname "$0")/../../apps/uno-roto/assets/sonido/musica"
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 mkdir -p "$DESTINO"
@@ -181,5 +181,5 @@ FUENTE_amanecer_final=""
 [[ -n "$URL_amanecer_final" ]] && descargar_y_convertir amanecer_final "$URL_amanecer_final" "$AUTOR_amanecer_final" "$LICENCIA_amanecer_final" "$FUENTE_amanecer_final"
 
 echo
-echo "Final. Recuerda actualizar app/assets/sonido/CREDITOS.md con cada"
+echo "Final. Recuerda actualizar apps/uno-roto/assets/sonido/CREDITOS.md con cada"
 echo "atribución que hayas confirmado."

@@ -2,7 +2,7 @@
 # Genera audio TTS para frases canónicas del juego usando la API de
 # ElevenLabs. Lee la fuente de verdad de scripts/sonido/voces/*.tsv,
 # llama a la API por cada línea, recibe MP3, lo recodifica a OGG q=3
-# stereo, y lo coloca en app/assets/sonido/voces/<personaje>/<slug>.ogg.
+# stereo, y lo coloca en apps/uno-roto/assets/sonido/voces/<personaje>/<slug>.ogg.
 #
 # Configuración (variables de entorno OBLIGATORIAS — nunca commit):
 #   ELEVENLABS_API_KEY   tu API key de ElevenLabs
@@ -43,7 +43,7 @@ for arg in "$@"; do
 done
 [[ ${#TSVS[@]} -eq 0 ]] && TSVS=("$TSV_DEFAULT")
 
-DESTINO_BASE="$(dirname "$0")/../../app/assets/sonido/voces"
+DESTINO_BASE="$(dirname "$0")/../../apps/uno-roto/assets/sonido/voces"
 mkdir -p "$DESTINO_BASE"
 
 # Modelo TTS multilingüe (mejor para español que el default inglés).

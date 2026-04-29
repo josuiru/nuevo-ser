@@ -21,7 +21,7 @@
 set -euo pipefail
 
 DIR_RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DIR_SONIDO="$DIR_RAIZ/app/assets/sonido"
+DIR_SONIDO="$DIR_RAIZ/apps/uno-roto/assets/sonido"
 DIR_PACK="$DIR_SONIDO/_pack_owlishmedia"
 RUTA_ZIP="$DIR_SONIDO/_owlishmedia.zip"
 
@@ -60,7 +60,7 @@ echo
 echo "==> Pack listo. Siguiente paso: examinar el contenido y copiar"
 echo "    samples elegidos a los nombres que la app espera."
 echo
-echo "    Ver guía en app/assets/sonido/CREDITOS.md (§Cómo probar)."
+echo "    Ver guía en apps/uno-roto/assets/sonido/CREDITOS.md (§Cómo probar)."
 echo
 echo "    Ejemplo:"
 echo "      cp $DIR_PACK/UI/<nombre>.wav $DIR_SONIDO/efectos/acierto.wav"

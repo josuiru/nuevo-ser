@@ -1,0 +1,21 @@
+name: nuevo_ser_core
+description: Plataforma compartida de la Colección Nuevo Ser Kids — motor de maestría, sistema de cuentas, persistencia, capa sonora, descargador de paquetes, sistema de cinemáticas. Consumida por apps/uno-roto y apps/las-versiones.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Cliente HTTP usado por src/sync/cliente_api.dart (REST con WordPress
+  # nuevo-ser-core: register/login/sync/account/audio).
+  http: ^1.2.0
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter

@@ -15,7 +15,7 @@
 set -euo pipefail
 
 DIR_RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DIR_SONIDO="$DIR_RAIZ/app/assets/sonido"
+DIR_SONIDO="$DIR_RAIZ/apps/uno-roto/assets/sonido"
 DIR_PACK="$DIR_SONIDO/_pack_owlishmedia"
 
 if [[ ! -d "$DIR_PACK" ]]; then

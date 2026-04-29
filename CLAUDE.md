@@ -1,203 +1,88 @@
-# Uno Roto — CLAUDE.md
+# Monorepo Colección Nuevo Ser Kids — CLAUDE.md
 
-Cerebro persistente del proyecto. Se lee al inicio de cada sesión. Se mantiene corto. Para detalle: `docs/`.
+Cerebro persistente del monorepo. Se lee al inicio de cada sesión. Detalle por juego en `apps/<juego>/CLAUDE.md`.
 
 ## Encuadre del programa
 
-Uno Roto es uno de los juegos de la línea **Colección Nuevo Ser Kids** (juegos digitales pedagógicos infantiles/escolares). La **Colección Nuevo Ser** madre es un proyecto editorial y de pensamiento más amplio: editorial de libros, plugins para colectivos y comunidades, y herramientas para favorecer alternativas y pensamiento crítico y constructivo (https://coleccion-nuevo-ser.com/). Cuando los docs dicen "la Colección" sin más, se refieren a Kids.
+Este monorepo aloja los juegos digitales pedagógicos de **Colección Nuevo Ser Kids**, la línea infantil/escolar (juegos para 9-14 años) de la **Colección Nuevo Ser**. La Colección madre es un proyecto editorial y de pensamiento más amplio (editorial de libros, plugins para colectivos y comunidades, herramientas para favorecer alternativas y pensamiento crítico y constructivo): https://coleccion-nuevo-ser.com/.
 
-## Qué es Uno Roto
+Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 
-Juego educativo de matemáticas (fracciones, decimales, proporciones) para niños 9-12 años. MVP en Era 2. Narrativa-mecánica fusionada: las matemáticas **son** el gameplay, no su excusa.
+## Estructura
 
-Stack objetivo (doc 03):
-- **Cliente**: Flutter + Flame, offline-first, Isar local, Android APK.
-- **Backend**: WordPress plugin `uno-roto-core` (independiente de Flavor Platform), MySQL, REST API, JWT propio.
-- **IA tutor**: Claude API en servidor, solo en momentos concretos, caché agresivo, SafetyFilter.
-- **Idiomas**: castellano, euskera, catalán desde día cero.
-
-Licencia: código AGPL-3.0, contenido CC-BY-SA 4.0.
-
-## Principios innegociables (doc 01)
-
-1. **El niño es la medida.** No el mercado, no la moda, no la métrica.
-2. Las matemáticas son el mundo, no un peaje.
-3. La mesura es el sabor. Nada de euforia ni sonidos de castigo.
-4. Open source de verdad, no de marketing.
-5. Privacidad por diseño. Sin tracking, sin ads, sin monetización.
-
-## Documentos de diseño
-
-En `docs/`. Al empezar tarea → solo los relevantes (contexto limitado):
-
-- `01-biblia.md` — espíritu del juego
-- `02-mapa-habilidades-atomicas.md` — 66 habilidades del MVP
-- `03-arquitectura-tecnica.md` — stack, esquemas, API, roadmap 11 fases
-- `04-biblia-personajes.md` — voces y arcos
-- `05-biblia-worldbuilding.md` — lore profundo
-- `06-biblia-narrativa.md` — estructura narrativa global
-- `07-guion-arco-1.md` → `10-guion-arco-4.md` — 62 escenas
-- `11-guia-visual.md` — paleta, tipografía, formas
-- `12-guia-sonora.md` — capas, motivos, efectos
-- `13-storyboards.md` — 10 momentos clave plano a plano
-- `14-prompt-maestro.md` — este prompt operativo, 11 fases de desarrollo
-
-## Estado actual
-
-Repo existente con estructura real:
 ```
-uno-roto/
-├── app/                   # Flutter (prototipo funcional, no vacío)
-│   ├── lib/
-│   │   ├── datos/         # RepositorioProgreso, CatalogoHabilidades
-│   │   ├── dominio/       # Fragmentos, distritos, motor maestría, selector
-│   │   ├── nucleo/        # paleta
-│   │   └── vista/         # pantallas + CustomPainters
-│   ├── assets/data/skills.json
-│   └── test/
-└── docs/                  # 14 docs canónicos
+.
+├── apps/
+│   ├── uno-roto/         juego de matemáticas 9-12 (en producción, fase ~8-9 MVP)
+│   └── las-versiones/    juego de pensamiento histórico 10-14 (esqueleto, Fase 10)
+│
+├── packages/
+│   ├── nuevo_ser_core/        plataforma compartida (motor maestría, sync, audio, cinemáticas)
+│   ├── nuevo_ser_companion/   acompañamiento (Cuaderno, Mosaicos, dashboards) — v1.5
+│   └── nuevo_ser_tutor/       cliente Tutor IA con caché y filtros
+│
+├── content/              JSON exportables de habilidades/brechas por juego
+├── tests/                suites cross-package (paridad Dart/PHP)
+├── wp-plugin/            plugin WordPress backend (rename a nuevo-ser-core en C2)
+├── scripts/              scripts dev/sonido
+├── melos.yaml            gestión del monorepo
+└── pubspec.yaml          workspace raíz (instala Melos)
 ```
 
-**Ya implementado (pre-canon)**:
-- 6 distritos con posiciones, colores, saludos.
-- 66 habilidades cargadas, 66 con puzzle implementado **— catálogo completo del MVP**.
-- Motor de maestría (5 niveles, precisión ponderada, tiempo mediano, decaimiento 21d/14d).
-- Selector adaptativo con pesos por nivel + decay + distrito + anti-repetición.
-- Familias de puzzle: unitario, espejo, decimal (**DEC.08 fracción → decimal**: muestra una fracción y candidatos decimales — dirección correcta del catálogo), porcentaje, impropio, proporcional, dual (**FR.16 suma / FR.17 resta / FR.18 × natural / FR.19 × fracción / FR.20 ÷ natural / FR.21 ÷ fracción**: las "× natural" / "÷ natural" se distinguen porque el generador fija denB=1 y la pantalla muestra el segundo operando sin barra; idHabilidadPrincipal lee denB para devolver la skill correcta), operación decimal (**DEC.04 ± / DEC.05 × natural / DEC.06 × decimal / DEC.07 ÷**: pares curados separados para que DEC.05 use siempre un segundo factor entero), **comparación** (FR.05 mismo denominador / FR.06 mismo numerador — dos fracciones, tocar la mayor; el modo lo fija la skill y el generador produce fracciones propias con el ganador claro), **simplificar** (FR.10 — fracción reducible con cuatro candidatos; el ganador es único, la forma mínima. Distractores: el propio objetivo sin simplificar, otra amplificación, y una fracción cercana no equivalente), **amplificar** (FR.11 — ecuación "3/4 = ?/12" con cuatro numeradores candidatos; primera mecánica de "rellenar el hueco". Distractores: el numerador base sin amplificar, el factor confundido con numerador, y errores de ±1/±2), **divisibilidad** (DIV.03 con criterios básicos {2,3,5,10} y DIV.04 con criterios avanzados {4,6,9} — comparten pantalla y motor, el set de divisores se elige por skill vía `divisoresParaSkillId`. `idHabilidadPrincipal` distingue de vuelta cuál ejercita cada Fragmento según el divisor que cargue; DIV.04 pesa un escalón más en dificultad), **comparación decimal** (DEC.02 — dos decimales lado a lado, tocar el mayor. Generador sesgado a casos donde el decimal con más dígitos NO es el mayor (0,35 vs 0,4) — es justo el error sistemático que la habilidad pretende corregir; pista textual "lee las cifras, no las cuentes"), **lectura decimal** (DEC.01 — texto en castellano "veinticinco centésimas" + cuatro etiquetas numéricas. Mecánica nueva texto→número. Lista curada de 10 formas con distractores específicos por trampa de valor de posición; dificultad 1 evita milésimas y mixtos), **múltiplos** (DIV.01 — comparte pantalla y motor con divisibilidad pero usa fraseado inverso "¿N es múltiplo de M?". `ModoFraseoDivisibilidad.multiplo` cambia título y pregunta; el set de divisores es {2..10} en lugar de los criterios memorizados), **comparación con la unidad** (FR.04 — una fracción + tres botones (<1, =1, >1). Primera mecánica de tres opciones en Uno Roto, después de tantas binarias. Generador con reparto 45 % propias / 45 % impropias / 10 % iguales — el caso n/n se incluye explícitamente porque suele pasarse por alto), **lectura de fracción** (FR.02 — texto en castellano "tres quintos" + cuatro fracciones candidatas. Simétrico a DEC.01 pero con trampas propias del idioma de fracciones: invertir num/den (5/3), duplicar cifras (5/5 = 1, no 3/5), confundir ordinales con cardinales. 15 formas curadas; dificultad 1 evita denominadores > 5), **mixto a impropio** (FR.13 — número mixto "2 y 3/4" + cuatro fracciones impropias candidatas. Inverso pedagógico de FR.12. Distractores curados a los errores reales: suma errónea (e+n)/d, ignora el entero (n/d), producto sin sumar (e×n)/d, vecinos ±1 si hay colisión), **redondeo decimal** (DEC.09 — decimal con dos cifras "2,37" + cuatro candidatos a su redondeo a la décima. Distractores curados a los errores reales: truncar (2,3), redondear-pero-rellenar (2,40), truncar-y-rellenar (2,30), redondear de más cuando no hace falta. Generador con sesgo a centésimas en zona de duda 3..7), **comparación de fracciones distintas** (FR.07 — dos fracciones sin nada en común, tocar la mayor. Siguiente escalón sobre FR.05/FR.06: la intuición simple ya no basta, hay que comparar el valor (multiplicación cruzada o cálculo). El generador sesga ≥60% a casos contraintuitivos: la mayor por valor tiene num y den ambos menores que la otra, p. ej. 3/4 vs 5/7), **primos** (DIV.05 — mecánica binaria sí/no "¿es primo?". Pools curados por categoría pedagógica: confusos no-primos (1, 9, 15, 21, 25, 27, 33, 35), especiales (1 que no es primo, 2 único par primo), primos claros como contraste, pares obvios. Reparto 40/30/15/15 — el grueso son los casos donde el niño se equivoca de verdad), **regla de tres directa** (PROP.03 — proporción "a → b · c → ?" + cuatro candidatos. Mecánica del producto cruzado dividido entre el primer término: `? = b·c/a`. Triplas curadas (a,b,c) con resultado entero y c≠a para evitar trivialidad. Distractores curados a los errores reales: relación invertida (b·a/c en lugar de b·c/a), suma de los tres, ignorar la proporción y elegir solo b, suma parcial b+c), **ordenar decimales** (DEC.03 — tres decimales presentados sin orden + cuatro candidatos con permutaciones; el niño elige la que va de menor a mayor. Trios curados sesgados al error "más cifras = mayor": 0,5/0,35/0,8 (donde 0,35 tiene más cifras pero es el menor). Distractores: orden por número de cifras decimales, orden invertido, orden por la primera cifra solo), **MCM y MCD** (DIV.06 MCD / DIV.07 MCM — comparten pantalla y motor con `ModoMcmMcd`. Dos números + cuatro candidatos. Distractores curados a errores reales: confundir MCM↔MCD (el contrario), producto de los dos, suma, uno de los dos números), **jerarquía de operaciones** (OP.01 — expresión "a op b op c" sin paréntesis + cuatro candidatos. Casos curados con resultado entero garantizado y donde el cálculo izquierda-a-derecha siempre da un valor distinto del correcto. Distractor estrella: el cálculo izquierda-a-derecha sin respetar prioridad de × y ÷), **comparar con 1/2** (FR.03 — una fracción + tres botones (<1/2, =1/2, >1/2) con un rectángulo de referencia mostrando la mitad coloreada. La habilidad es interiorizar la heurística "doble del numerador frente al denominador": si 2·n < d → menor, 2·n = d → igual, 2·n > d → mayor. Generador con casos curados contraintuitivos: 5/9 > 1/2, 4/9 < 1/2, 3/6 = 1/2 (la equivalencia que se pasa por alto). Reparto 40/40/20), **porcentaje de cantidad** (PROP.04 — "el 25 % de 80 = ?" + cuatro candidatos. Cálculo directo % × cantidad / 100. Pares curados con resultado entero garantizado. Distractores: el % literal (25), multiplicar sin dividir entre 100 (2000), confundir con resta (cantidad − resultado)), **divisores** (DIV.02 — un número grande N + cuatro candidatos; tres son divisores reales y uno no. El niño toca el intruso. Mecánica de identificar divisor por contraste con un caso que no entra exacto. Pool curado: 12, 18, 24, 30, 36, 48, 60, 40), **fracción de cantidad** (FR.22 — "los 3/5 de 25 = ?" + cuatro candidatos. Paralelo a porcentajeCantidad pero con fracción. Triplas curadas (n,d,cantidad) con resultado entero garantizado y cantidad múltiplo del denominador. Distractores: n×c sin dividir (75), c÷d ignorando numerador (5), numerador literal (3), suma de los tres (33)), **ordenar fracciones** (FR.08 — tres fracciones desordenadas + cuatro permutaciones candidatas; el niño elige la que va de menor a mayor. Paralelo a ordenarDecimales pero con fracciones. Trios curados con comparación cruzada: 2/5/3/7/1/2 (todos cerca de 1/2). Distractores: orden por numerador, por denominador, invertido), **razón entre cantidades** (PROP.01 — dos cantidades en contexto concreto ("12 manzanas y 8 naranjas") + cuatro razones candidatas; el niño elige la reducida (3:2). Pares curados con MCD>1 y etiquetas naturales. Distractores curados a errores reales: razón sin reducir (12:8), invertida (2:3), suma como segundo término (3:5), off-by-one (4:2 / 3:3)), **unidades de longitud** (MED.01 — primera habilidad del dominio MED. "5 m = ? cm" + cuatro candidatos numéricos con la unidad destino en cada tarjeta. Conversión por la escalera del sistema métrico: cada peldaño multiplica/divide por 10. Triplas curadas (valor, origen, destino) con resultado entero. Distractores curados a errores reales: factor de orden de magnitud menor (×10 cuando era ×100 → 50 en vez de 500), dirección invertida (multiplicar cuando había que dividir), valor sin convertir, factor de un cero más), **masa y capacidad** (MED.02 — comparte motor y mecánica con MED.01 (escalera ×10) pero rota entre las familias de masa (kg/hg/dag/g/dg/cg/mg) y capacidad (kL/hL/daL/L/dL/cL/mL). Una sola pantalla muestra "MASA" o "CAPACIDAD" según la familia del Fragmento. `unidadDesdeSimboloMetrica` deduce la familia parseando el símbolo origen, así que el dispatcher es simétrico al de longitud), **qué porcentaje representa A de B** (PROP.05 — "12 de 50 → ¿qué %?" + cuatro candidatos. Inversa pedagógica de PROP.04: aquí el niño calcula `parte/total × 100`. Pares curados con resultado entero (12/50→24, 15/60→25, 9/30→30…). Distractores curados a errores reales: complemento `100−correcto` (76 cuando el correcto es 24), parte literal como % (12), total literal como % (50), mitad y doble del correcto), **tiempo sexagesimal** (MED.03 — conversión h/min/s con dos modos: simple ("3 h = ? min") y compuesto ("2 h y 30 min = ? min"). Sistema base 60, no decimal — la trampa estrella en compuestos es leer "2 h 30 min" como 230 (concatenar dígitos) en lugar de 150 (2·60+30). Distractores curados: la concatenación literal, ignorar la suma (solo h·60), tratar la mezcla como h·100+min, solo los minutos sueltos. En modo simple, distractores incluyen multiplicar por 100 o por 10 en lugar de por 60), **aumentos y descuentos porcentuales** (PROP.06 — "Aumenta un 15% sobre 200 → ?" o "Descuenta un 20% sobre 80 → ?". Mecánica: `cantidad ± (porcentaje × cantidad / 100)`. Pares curados con resultado entero garantizado. La pantalla muestra "AUMENTO" o "DESCUENTO" según el caso. Distractores curados a errores reales: operación inversa (descuento confundido con aumento), solo la variación absoluta (16€ en vez de 64€), cantidad sin tocar, restar el porcentaje literal sin calcular), **superficies y áreas** (MED.05 — "5 m² = ? cm²" → 50000 (NO 500). El sistema de áreas multiplica por 100 (no 10) por peldaño — la trampa estrella es aplicar el factor lineal por inercia. Distractor número 1: el factor lineal × correspondiente (500 cuando lo correcto es 50000). El símbolo "²" se preserva en decimalA/decimalB para que el dispatcher reconstruya bien las unidades), **jerarquía con fracciones** (OP.02 — "1/2 + 1/4 × 2/3" + cuatro candidatos. Extiende OP.01 a fracciones: el niño aplica × y ÷ antes que + y −, pero ahora con MCM y simplificación. Casos curados que el dispatcher reconstruye por índice (`GeneradorJerarquiaFracciones.generarPorIndice`). Trampa estrella: izquierda-a-derecha — incluido como distractor en cada caso. Casos descartados cuando l-r y prio coinciden), **escala** (PROP.07 — "Mapa 1:500 — 4 cm en plano = ? m" → 20 m. Mecánica: aplicar la escala (`valor × denominador`) y luego convertir cm → m. Pares curados con resultado entero. Distractores: olvidar la conversión y dar el resultado en cm (2000), confundir factor 100 con 1000, la escala literal (500), el valor del plano sin tocar), **ángulo** (MED.04 — primera mecánica visual de geometría: se pinta el ángulo con un arco de referencia y su valor en grados, y el niño elige entre las cuatro etiquetas (agudo/recto/obtuso/llano). Pool curado por categorías + casos frontera (89/91/179) latentes hasta dificultad 2 — en dificultad 1 el niño consolida la regla con casos claros antes de los casos límite. `clasificarAngulo` aplica la regla estricta con < y =), **operación mixta decimal+fracción** (OP.03 — "0,5 + 1/4" o "1/2 × 0,4" + cuatro candidatos decimales. Refuerza la equivalencia decimal ↔ fracción dentro de una operación. Casos curados con resultado decimal limpio (0,75, 0,2, 0,3, 0,95…). Distractor estrella: leer el numerador como décimas (1/4 → 0,4 en vez de 0,25, así 0,5+1/4 da 0,6 en vez de 0,75). Otros: el decimal sin operar, errores de signo, vecinos cercanos. `formatearDecimalEsAOrtografia` usa coma decimal española y omite ceros sobrantes), **clasificación de polígonos** (GEO.01 — primera mecánica visual del dominio GEO. Se dibuja un polígono regular con CustomPainter (`_PintorPoligono` calcula los vértices por rotación) y el niño elige su nombre entre cuatro candidatos. `TipoPoligono` cubre triángulo/cuadrado/pentágono/hexágono/heptágono/octágono. Distractores curados: el polígono con un lado de más, uno de menos y dos de distancia. Dificultad 1 limita a 3..6 lados, dificultad 2+ añade heptágono y octágono), **perímetro de polígonos** (GEO.02 — polígono dibujado con sus lados etiquetados (rectángulos en formato real, regulares centrados con vértices por rotación) + cuatro candidatos. Casos curados con triángulos pitagóricos, cuadrados, rectángulos, pentágonos y hexágonos regulares. Distractores: olvidar un lado (P − primer lado), suma parcial (lado1+lado2 — típico en rectángulos), semiperímetro, multiplicar primer lado × n), **área de rectángulo** (GEO.03 — rectángulo (o cuadrado) dibujado a escala con base y altura etiquetadas + cuatro candidatos. Mecánica: b × h. Casos curados con valores enteros pequeños y resultado exacto. Distractor estrella: el perímetro 2(b+h) confundido con el área. Otros: suma b+h, b² ignorando la altura, doble del área, mitad), **área de triángulo** (GEO.04 — triángulo dibujado con base + altura discontinua + marca de ángulo recto en el pie + cuatro candidatos. Mecánica: (b × h) / 2. Casos curados con b·h par para área entera. Distractor estrella: olvidar el /2 (b × h sin dividir) — la trampa más común al pasar de rectángulos a triángulos. Otros: suma b+h, mitad de mitad, doble del correcto), **círculo: área y perímetro** (GEO.05 — círculo dibujado con su radio marcado y la fórmula del modo (π·r² o 2·π·r) explícita + cuatro candidatos decimales. π ≈ 3,14. Radios curados {2, 3, 4, 5, 6, 8, 10}. Comparten pantalla y motor con `ModoCirculo`; el modo viaja en el `denominador` del Fragmento (1=perímetro, 2=área). Distractor estrella: confundir las dos fórmulas (área↔perímetro). Otros: usar diámetro en vez de radio, omitir π, redondear π a 3), **volumen de ortoedro** (GEO.06 — caja 3D pintada en proyección isométrica simple con sus tres dimensiones etiquetadas + cuatro candidatos numéricos. Mecánica: l × a × h. Casos curados con cubos pequeños y ortoedros sencillos. Distractor estrella: el área superficial 2(la+lh+ah) en lugar del volumen. Otros: suma l+a+h, área de una cara, doble y mitad), **simetría axial** (GEO.07 — figura dibujada con un eje vertical u horizontal sobreimpreso (rojo discontinuo); el niño decide sí/no si la figura es simétrica respecto al eje. Decisión binaria. Pool de 12 formas: cuadrado/rectángulo (simétricas en ambos ejes), polígonos regulares 3/5/6 lados, letras T/F/R, flecha, trapecio isósceles, triángulo escaleno (sin simetría). `tieneEjeDeSimetria` codifica la geometría real. Dificultad 1 limita a casos obvios; dificultad 2+ añade pentágono, hexágono, R, flecha y trapecio), **gráfico de barras** (EST.01 — gráfico de barras dibujado con eje y numerado, etiquetas debajo y barras de alturas proporcionales + cuatro candidatos. Dos modos: `valorDeBarra` (lee la altura de la barra resaltada en rosa) y `total` (suma de todas — solo en dificultad ≥3). El modo viaja en el `denominador` (1=valor, 2=total). Distractores: barra contigua, total, off-by-one en valorDeBarra; total−última barra, máximo, total−1 en modo total), **gráfico circular** (EST.02 — pie chart con porciones coloreadas (paleta de seis colores), una resaltada en rosa con el borde reforzado + cuatro candidatos en %. Casos curados con porcentajes que suman exactamente 100 (reparto típico 50/25/25, 40/30/20/10, 75/25, etc.). Distractores: porción contigua, complementario 100−correcto, doble y mitad, ±5).
-- Pantalla caza con spawn timer, combate enfoque sin dictado, pantalla habilidades debug.
-- Persistencia shared_preferences con keys `uroto.*`.
-- Ciudad con restauración progresiva según esquirlas.
-- **Distritos visualmente diferenciados** (`vista/escenario.dart`): el `PintorEscenario` recibe `idDistrito` y pinta atmósfera específica según docs 11/13. Tejados (skyline + ventanas ámbar — el original) / Canales (agua oscura con reflejos quebrados + farolillos amarillo vela + puente bajo + niebla baja permanente) / Mercado (toldos rosa-ámbar a rayas + farolillos cálidos densos + vapor vertical de cocinas) / Industria (chimeneas con humo + naves bajas con ventanas tipo fábrica + tuberías oblicuas + neón teal frío) / Puerto (mar oscuro 22% inferior + muelle de madera con postes + 3 grúas siluetadas + faro pulsante + niebla densa) / Afueras (Montaña ampliada con cumbre nevada + observatorio en el horizonte + banda de hierba ondulando + más estrellas). Solo el cazadero (`pantalla_caza`) cablea el distrito; las pantallas de puzzle siguen usando el fondo neutro `tejados` por simplicidad. Cumbre nevada solo aparece en Afueras.
-- **Tipografía Cormorant Garamond** en `app/assets/fonts/` (variable + variable italic, OFL desde google/fonts). Registrada en pubspec como familia `CormorantGaramond`. Usada por `VozPersonaje.estiloTextoCuerpo()` para voces de Fragmentos nombrados — la serif que distingue visualmente a Kurz/Eco/Zafrán/Vorax del habla humana (doc 11 §5).
-- **Sistema de cinemáticas v0.5** (dominio/): `VozPersonaje`, `PlanoEscena` sealed (PlanoAmbiente + PlanoDialogo + PlanoEleccion + PlanoInteractivo + PlanoCierreAmable), `OpcionEleccion` con flags, `EscenaCinematica` con flagsRequeridos + esCierreAmable. Player con reveal letra-a-letra, opciones con respuesta, widget tutorial jugable, botón de cierre "HASTA MAÑANA", callback alEstablecerFlag, fade 300ms, botón saltar. **Sustitución `{nombre}`** vía `aplicarTokens(texto, nombre)`.
-- **Sistema de nombre del jugador**: `PantallaNombre` con TextField + botón continuar. Persistido como `uroto.nombre_jugador`. Token `{nombre}` en escenas se sustituye automáticamente.
-- Escenas del Arco 1 implementadas y encadenadas:
-  - **1.1 El tejado** (completa, incluye bloque Montaña + elección + `{nombre}, ¿verdad?`).
-  - **1.2 La primera ventana** — tutorial FR.01: Sora guía a dividir un Pleno y desfragmentar las mitades con gestos reales.
-  - **1.3 El callejón** — mujer desorientada, 4 opciones.
-  - **1.4 Irune** — las tres reglas, dirigidas a `{nombre}`.
-  - **1.5 Kurz aparece** — primer Fragmento nombrado con voz en itálica (Cormorant pendiente). Cinemática-puente: el combate real está calibrado a derrota pero aún no implementado jugable.
-  - **1.6 La derrota** — cierre emocional tras el combate jugable de Kurz. Requiere `combate_kurz_1_completado`.
-  - **1.7 Kai visto de lejos** — pausa en punto elevado, Sora presenta a Kai ("va dos rangos por delante"). `esCierreAmable: true`. Se dispara al siguiente login.
-  - **1.9 Los Plenos** — latente en catálogo. Requiere `fr_05_competente` (flag que activará el motor de maestría cuando el niño domine FR.05). Intro de Impropios.
-  Cadena: 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 (cierre) → 1.7 (cierre) → [latente: 1.9 cuando FR.05 competente].
-- **Escenas pendientes** (requieren combate jugable o sistema de rangos): 1.8 (variantes entrenamiento), 1.10 (2ª derrota Kurz), 1.11 (cena silenciosa), 1.12 (Kurz vencido), 1.13 (ceremonia Aprendiz II), 1.14 (Canales desde arriba).
-- **Arco 2 (doc 08) — completo end-to-end**: 16 escenas implementadas (algunas latentes por maestría FR.09/FR.16). Voces nuevas: Rexán (ámbar #E8B85C), Ari (verde), Zafrán (Dual, no habla — Sora guía en su combate). Cadena: 2.1 Bajar solo → 2.2 Rexán → 2.3 Espejo → 2.4 variantes (rotan como 1.8, 4 versiones) → 2.5 pintada → 2.6 Zafrán mencionado (FR.09 competente) → 2.7 Dual+MCM (FR.16 introducida) → 2.8 Rexán+agua → 2.9 Ari → 2.10 silbido (FR.16 competente) → 2.11 Sora baja → 2.12 noche Zafrán → **combate zafran (jugable)** → 2.13 Zafrán escapa → 2.14 después → 2.15 Rexán espera → 2.16 cierre con HASTA MAÑANA.
-- **Combate Zafrán**: `DesafioKurz` refactorizado con campos `nombreFragmento`, `vozQueHabla`, `mostrarOjos`. `DesafioKurz.zafran` usa Sora como vocero (no el propio Fragmento — Zafrán no habla), sin ojos, halo rojo oxidado `PaletaNeon.rojoOxidado`. Preguntas sobre MCM(7,11)=77 + amplificación 5/7→55/77, 3/11→21/77, suma 76/77. ki=5, 10s/pregunta, calibrado a victoria narrativa (Zafrán escapa debilitado).
-- **Arco 3 (doc 09) — COMPLETO**: 17 escenas de 18 implementadas (falta 3.7 variantes máquinas). Voces nuevas: Vadic (gris metal). Cadena completa con duelo Kai jugable, Eco como escena clave (Cormorant italic, no combate), santuario Coleccionistas, Brina (17% trimestral), Montaña nombrada (Algebrista).
-- **Arco 4 (doc 10) — COMPLETO, cierre del MVP**: 14 escenas todas implementadas. 4.1 Oryn tutorial multiplicación → 4.2 El agua recuerda → 4.3 La bolsa (concha) → 4.4 Tercera pintada Opaca (tachada con respuesta) → 4.5 Eco casi (silencio, no aparece) → 4.6 Irune invitación → 4.7 Las tres pruebas (elección persistida) → 4.8 Sora antes (3 variantes: Fuego/Sendero/Espejo) → **4.9 Prueba (3 ramas: combate Vorax jugable / Sendero narrado / Espejo con Niko)** → 4.10 Ceremonia (5 maestros, 5 "Bien", 2 "Gracias" de Sora) → 4.11 Rexán té → 4.12 Kai enhorabuena → 4.13 Sora revela Kir → 4.14 La Montaña con HASTA ENTONCES.
-- **Combate Vorax** (`DesafioKurz.vorax`): vocero narrador (silencio absoluto en combate), halo verde, sin ojos. 5 preguntas sobre conversión Impropio→Mixto y descomposición en cuartos (11/4 → 2 y 3/4 → eliminar enteros → cuartos).
-- **HUD** soporta 4 arcos: `ProgresoArco.arco1/2/3/4` con 14/16/18/14 escenas; `arcoActual` prioriza 4 > 3 > 2 > 1.
-- **HUD del mapa** ahora elige el arco actual dinámicamente: `ProgresoArco.arcoActual(flagActivo)` — si hay progreso en Arco 2, muestra Arco 2; si no, Arco 1.
-- **Conexión motor → flags narrativos**: `MotorMaestria.alSubirNivel` callback se invoca cuando una habilidad sube de nivel estricto. `MotorMaestria.flagDeMaestria(id, nivel)` produce flags estables tipo `fr_05_competente`. `pantalla_caza.dart` engancha el callback al repositorio. La escena 1.9 se desbloquea automáticamente cuando el niño domina FR.05.
-- **Combate jugable de Kurz v0.2** (`dominio/desafio_kurz.dart` + `vista/pantalla_combate_kurz.dart`): Fragmento nombrado pintado con esfera radial violeta + ojos, valor flotante grande, frases de Kurz reactivas. Tres desafíos calibrados:
-  - **kurz_1**: 3 preguntas, ki=2, 4s/pregunta. Calibrado a derrota (1.5).
-  - **kurz_2**: 5 preguntas, ki=3, 6s/pregunta. Probable derrota, posible victoria (1.10).
-  - **kurz_3**: 4 preguntas, ki=4, 8s/pregunta. Calibrado a victoria (1.12).
-  El orquestador detecta combate pendiente vía `_combateKurzPendiente()` antes de buscar siguiente cinemática. Tras combate marca `combate_<id>_completado` + `victoria_<id>`/`derrota_<id>`.
-- **Sistema de rangos** (`dominio/rango_narrativo.dart`): enum RangoNarrativo (Aprendiz I/II/III/Iniciado), cada uno con `flagAlcanzado` estable (`rango_aprendiz_ii_alcanzado`...). Persistencia en repositorio. Dos disparadores:
-  - **Por esquirlas**: umbrales 0/30/100/250 — proxy. `pantalla_caza` verifica subida tras cada esquirla ganada.
-  - **Narrativos**: `repositorio.forzarRangoMinimo(rango)` sube si el actual es menor y activa flag. Usado tras kurz_3 victoria → garantiza Aprendiz II → desbloquea 1.13 ceremonia.
-- **HUD del mapa**: rango visible en el header del mapa, debajo de "UNO ROTO", seguido del progreso del arco ("Arco I · X/14") en tamaño pequeño y tenue.
-- **ProgresoArco** (`dominio/progreso_arco.dart`): mapeo de las 14 escenas oficiales del Arco 1 a sus flags equivalentes (1.10 y 1.12 agrupan sus ramas, 1.8 agrupa variantes). `contarVistas(flagActivo)` devuelve cuántas están completas — se muestra en el HUD para que el niño vea dónde está.
-- **Variantes de entrenamiento (1.8)** (`dominio/variantes_entrenamiento.dart`): 5 mini-cinemáticas recurrentes (noche despejada, niebla, lluvia ligera, pregunta sobre la Montaña con 4 opciones, buen entrenamiento). Se disparan antes de ir al mapa cuando la 1.7 está vista y el Arco 1 aún no cerró (1.14 no vista). `VariantesEntrenamiento.elegirSiguiente(Set)` devuelve la primera no usada, o null si el pool se agotó (el orquestador resetea y reelige). Persistido en repositorio como `uroto.variantes_entrenamiento_usadas`. Una variante por transición (flag `_varianteYaDisparadaEnEstaTransicion`) para no encadenar.
-- Escenas adicionales del Arco 1:
-  - **1.11 La cena que no se ve** (cierre amable, requiere 1.7).
-  - **1.10pre Kurz vuelve** + **combate kurz_2** + **1.10derrota/1.10victoria** — bloque del 2º combate. Ambas cierres marcan `escena_1_10_resuelta` para encadenar la 1.12.
-  - **1.12pre Hoy** + **combate kurz_3** + **1.12victoria/1.12derrota** — bloque del 3er combate. La victoria activa `escena_1_12_vista` que abre la 1.13.
-  - **1.13 Las palabras de Irune** (sigue latente porque también requiere `rango_aprendiz_ii_alcanzado`). Termina con `PlanoCierreAmable`.
-  - **1.14 Los Canales desde arriba** (latente, requiere 1.13). Cierre del Arco I con HASTA MAÑANA explícito.
-- Flags narrativos persistidos como `uroto.flag.<nombre>`.
-- Orquestador `main.dart` elige la siguiente escena cuyos `flagsRequeridos` estén activos.
-- Widget `WidgetFragmentoTutorial` renderiza un Pleno con pulso lento (esfera radial blanco-azul), dos mitades con CustomPaint de semicírculo, dispara callback al completar la acción.
-- **Selector de idioma de inicio** (`vista/pantalla_configuracion_inicial.dart` + `main.dart`): el primer arranque pide al niño el idioma en los tres a la vez ("Hola. / Kaixo. / Hola." + 3 botones). Persiste en `uroto.idioma_app` (clave global, NO por-perfil). `main()` precarga el valor antes de `runApp` para evitar flash con el locale del sistema. Si la clave no existe el orquestador muestra `PantallaConfiguracionInicial`. **Importante**: la migración heredada en `_migrarSiHaceFalta` mantiene una whitelist `clavesGlobales` (token/email backend, idioma, version paquete audio, perfil_activo_id, perfiles_lista) — sin esa whitelist el migrador movería `uroto.idioma_app` al prefijo del perfil y rompería la lectura. `localeAppUnoRoto` (`ValueNotifier<Locale?>`) global permite que `AppUnoRoto` siga siendo `StatelessWidget`.
-- **Modo entrenamiento** (`vista/pantalla_entrenamiento.dart`): botón "Entrenar" en el encabezado del mapa abre selector con los 8 dominios (`FR/DEC/PROP/DIV/OP/MED/GEO/EST`). Tocar uno entra al cazadero con `dominioFiltrado` y `nombreDominio` rellenos; el `SelectorHabilidades.elegirSiguienteHabilidad` cambia su pool de candidatas de `delDistrito` a `delDominio` (manteniendo dependencia + decaimiento + anti-repetición; desactiva el bonus de pertenencia al distrito). El cazadero reutiliza `tejados` como atmósfera (es el escenario familiar) y la barra superior muestra "ENTRENANDO · {dominio}" en violeta en lugar del nombre del distrito. El cazadero libre por distrito sigue funcionando idéntico.
-- **Sistema de perfiles** (`datos/repositorio_progreso.dart` + `vista/pantalla_perfiles.dart`): cada perfil guarda su progreso bajo `uroto.perfil.<id>.<sufijo>`. Al arrancar con claves heredadas `uroto.*`, se migran una vez al perfil `principal`. `listarPerfiles`, `crearPerfil(nombre)` (slug con sufijo numérico si colisiona), `cambiarAPerfil`, `borrarPerfil`. Con >1 perfil, la app arranca en el selector; con uno solo sigue el flujo normal. Desde `pantalla_habilidades` hay botón de cambio de perfil que al volver reinicia el orquestador (callback `alReiniciarConPerfilActivo`). `reiniciar()` borra solo el perfil activo preservando su nombre.
-- **Capa sonora v0.3 con paquete descargable** (doc 12): `sonido/servicio_sonoro.dart` es un singleton con 4 capas (ambient / música / efectos / narrativos — enum `CapaAudio`) y un AudioPlayer por capa (plugin `audioplayers`). Fades crossing, ducking cuando entra un narrativo. `CatalogoSonidos` mapea identificadores lógicos (`ambient_canales`, `musica_combate_zafran`, `motivo_sora`, `narrativo_silbido_zafran`…) a rutas WAV bajo `assets/sonido/{ambient,musica,efectos,narrativos}/`. **Tolera assets ausentes y plugin no registrado** (tests, headless): cualquier llamada falla en silencio, la app nunca deja de funcionar por no poder sonar. Preferencias de volumen por capa + modo silencio persisten **por perfil** (`audio.modo_silencio`, `audio.volumen.<capa>`). Pantalla `PantallaAjustesSonido` (accesible desde habilidades) con 4 sliders + switch. Cableado: `EscenaCinematica.sonidoDeEntrada/loopDeFondo` con motivos anotados en escenas clave (Sora/Kai/Montaña/ceremonia/silbido), música dedicada por Fragmento en `pantalla_combate_kurz`, ambient+música de distrito en `pantalla_caza` con fades largos. **Primer lote de assets integrado** (CC0, pack OwlishMedia de OpenGameArt): 7 efectos (`tap`, `acierto`, `error`, `whoosh`, `fusion`, `ki_subiendo`, `fragmento_disuelto`) + 4 ambient (`tejados` = vinilo lo-fi, `canales` = agua corriendo, `industria` = ticking clock, `afueras` = grillos nocturnos). Scripts reproducibles en `scripts/sonido/`: `bajar_sonidos.sh` baja el pack, `integrar_pack.sh` copia/loop-extiende los archivos a sus slots. Atribuciones en `app/assets/sonido/CREDITOS.md`. Binarios excluidos del git (`.gitignore`) — cada dev los regenera con los dos scripts. **Formato OGG Vorbis** (q=4 para ambient, q=5 para efectos): 51 MB → 3.5 MB (14× más pequeño que WAV). audioplayers reproduce OGG nativo en Android/iOS/Linux. Pendientes: `ambient_mercado/puerto`, toda la capa 2 (música compositiva por distrito y combate), motivos y narrativos.
-- **Paquete sonoro descargable v0.1** (`lib/datos/descargador_audio.dart` + `lib/sonido/localizador_audio.dart`): solo los efectos cortos van empaquetados en el APK (~150 KB total); ambient + música + narrativos se descargan del servidor al primer arranque o desde Ajustes de sonido. `LocalizadorAudio` resuelve cada id catalogado: cache local en `<docs>/uroto/sonido/` → asset bundle → silencio. `DescargadorAudio` pide manifest, descarga zip con progreso por chunk, verifica sha256, descomprime con `archive`, persiste versión. UI en `pantalla_ajustes_sonido` con barra de progreso por fase (descargando/verificando/descomprimiendo) y botón borrar. Backend WP: endpoint público `GET /wp-json/uno-roto/v1/audio/manifest` escanea `wp-content/uploads/uno-roto/audio/audio_v<N>.zip` y devuelve la versión más alta con sha256 (lee fichero hermano `.sha256` si existe, o calcula y cachea como transient 1h). Empaquetado: `scripts/sonido/empaquetar_paquete.sh <N>` produce `dist/audio_v<N>.zip` + `.sha256` + `.manifest.json`. Versión instalada local en `uroto.audio.version_local` (clave global, compartida entre perfiles). Antes de borrar/reinstalar, la UI llama `ServicioSonoro.detenerCapa` en las cuatro capas para liberar archivos.
-- **Tutor IA v0.2** (doc 03 §9, §11) **probado end-to-end con Anthropic real**. Doble capa de seguridad cliente/servidor.
-  - **Cliente Dart** en `dominio/tutor/`: FiltroSeguridad sealed `RevisionAceptada`/`RevisionRechazada` + 7 motivos, DisparadorTutor con umbral 3 fallos consecutivos + cooldown 10 min, EstadoTutorHabilidad serializable, ServicioTutor orquestador con 3 estados de respuesta `ok`/`rechazada`/`errorRed`.
-  - **Datos** en `datos/`: `ClienteTutor` HTTP a `/wp-json/uno-roto/v1/tutor/explicar`, `CacheTutor` con LRU 200 + TTL 30d, clave normalizada (lower + collapse spaces), persistencia global JSON tolerante a corrupción.
-  - **Vista** `pantalla_tutor.dart`: conversación con burbujas, max 280 chars en input, mensajes no-OK en color tenue, **burbuja "pensando" con tres puntos pulsantes** mientras la respuesta está en vuelo, `initState` arranca cooldown.
-  - **Cableado en pantalla_caza**: cada acierto/fallo en captura de Fragmento dispara `registrarResultado(idHabilidad, acierto)`. Tras un Fragmento que se escapa, si `deberiaOfrecer` es true → dialog cariñoso *"¿Hablo con Eco?"* con botones sí/no. Si acepta, abre PantallaTutor con el contexto del Fragmento. Sin token guardado, todo el flujo del tutor queda inerte (sin null pointer, sin oferta).
-  - **Token global** `uroto.token_backend` en RepositorioProgreso (NO por-perfil — backend separa por nino_id en JWT). Botón debug "Probar sync" lo persiste; botón debug "Probar tutor" abre PantallaTutor sin pasar por la oferta.
-  - **Backend WP**: clases `UROTO_Filtro_Tutor` (réplica PHP literal del filtro Dart — contrato canónico es Dart), `UROTO_Anthropic` (cliente HTTP a Messages API, modelo `claude-haiku-4-5`, system prompt cariñoso + alcance MVP + "no des solución directa", inyectable para tests), `UROTO_Tutor` orquestador (filtro entrada → cache BD → Anthropic → filtro salida → cache → respuesta + `metricas()` + `purgar_caduca()`), tabla `uroto_cache_tutor` (sha256 + id_habilidad + pregunta + respuesta + creado_en + usos, compartida entre niños porque no hay PII). Endpoints REST `POST /tutor/explicar` (JWT) y `GET /tutor/stats` (admin WP, métricas agregadas). Constante `UROTO_ANTHROPIC_KEY` requerida en wp-config.
-  - **Migración silenciosa**: hook `plugins_loaded` compara `uroto_core_version` vs constante; si difieren, dispara `dbDelta` (idempotente) + programa cron. Esto cubre el caso clave: si el plugin ya estaba activo cuando cambió el esquema, `register_activation_hook` no se dispara y las tablas nuevas no se crean. Bumpear la constante fuerza la migración en sitios ya instalados.
-  - **Cron diario** `uroto_cron_purga_tutor` que llama a `UROTO_Tutor::purgar_caduca()` — sin esto, entradas que nadie vuelve a preguntar se quedaban eternas porque el TTL solo se aplica al consultar.
-  - **Smoke test PHP** en `wp-plugin/uno-roto-core/tests/test_filtro_tutor.php` (sin PHPUnit — `php tests/test_filtro_tutor.php` sale 0 si todo verde).
-  - **Verificado end-to-end** contra Anthropic real: registro JWT → /tutor/explicar con pregunta válida → respuesta del LLM en castellano con voz cariñosa + metáforas + sin solución directa → segunda llamada con misma pregunta normalizada (espacios extra, mayúsculas) devuelve `fuente=cache` byte-idéntica → email se rechaza con 422 sin tocar la red → inyección rechaza con 422.
+## Estado del refactor `nuevo-ser-core`
 
-**Gap frente a doc 03 / prompt maestro**:
-- Sin Isar (usamos shared_preferences).
-- Sin Flame (CustomPainter puro).
-- Sin Riverpod.
-- Tutor IA v0.2 probado end-to-end con Anthropic real, cableado a la pantalla de caza tras Fragmento que se escapa. Pendiente: pulir cuando hay assets sonoros (motivo de Eco al aparecer la oferta), prueba con niños reales para calibrar umbrales.
-- Sin arte/música final (todo programático/placeholder).
+Estamos en la rama `refactor/nuevo-ser-core`. Plan de 9 chunks (ver `~/.claude/plans/vast-soaring-glacier.md`):
 
-**Fase actual**: ~8-9 del roadmap del doc 03/14 — catálogo de 66 puzzles cerrado, motor adaptativo, narrativa de los 4 arcos, combates jugables, capa sonora arquitectada, backend WP probado y wire cliente, tutor IA arquitectado en sus 4 capas. Pendiente: cableado del tutor a puzzles, prueba end-to-end con Anthropic, assets reales, migración a Flame/Isar/Riverpod cuando haya razón.
+- **C1** — esqueleto monorepo Melos + `git mv` de `app/` a `apps/uno-roto/`. Cero cambios de lógica. ← actual.
+- **C2** — rename plugin WP `uno-roto-core` → `nuevo-ser-core` + namespace PHP.
+- **C3** — endpoints duales `/uno-roto/v1/*` ↔ `/nuevo-ser/v1/*`.
+- **C4** — migración M001: prefijo `wp_uroto_*` → `wp_ns_*` + columna `game_id`.
+- **C5** — extracción real a `packages/nuevo_ser_core/`.
+- **C6** — motor adaptativo con `MasteryProfile` + stubs P2-P4.
+- **C7** — tablas acompañamiento + endpoints 501.
+- **C8** — tests regresión + paridad Dart/PHP + tag `v0.2.0-platform`.
 
-## Backlog priorizado
+## Decisiones cerradas
 
-1. ~~Sistema de cinemáticas~~ ✅
-2. ~~Fragmentos nombrados~~ ✅ (Kurz×3 + Zafrán + Vorax + Eco + Duel Kai)
-3. ~~Rangos~~ ✅
-4. ~~Cormorant Garamond~~ ✅
-5. ~~Capa sonora doc 12~~ ✅ **v0.1 arquitectura completa**. Pendiente: grabar/componer los WAV reales y sustituir los placeholders.
-6. ~~Pruebas de Ascenso~~ ✅ (las tres implementadas)
-7. ~~Backend WordPress~~ ✅ **v0.1 probado end-to-end en Local WP + wire sync cliente**.
-8. ~~Catálogo completo de 66 puzzles~~ ✅ **— FR/DEC/DIV/PROP/OP/MED/GEO/EST cubiertas**.
-9. **Migración a Flame + Isar** según se necesite, no antes.
-10. ~~Tutor IA Claude API~~ ✅ **v0.2 probado end-to-end con Anthropic real** (doc 03 §9, §11). Cableado a pantalla_caza, cron de purga, métricas admin, migración silenciosa.
-11. **Assets reales** (arte + música), sustituyendo placeholders programáticos.
+- **Persistencia local**: shared_preferences con prefijo `uroto.*` y `uroto.perfil.<id>.*` para Uno Roto. Juegos nuevos: `nuevoser.<juego>.*`. Migración a Isar **diferida a v1.5**.
+- **Tablas BD**: solo prefijo `wp_uroto_*` → `wp_ns_*` y añadir `game_id`. Renombrado semántico (`progreso` → `mastery_records`) **diferido a v1.5**.
+- **Endpoints**: `/uno-roto/v1/*` se mantiene como alias deprecado hasta v1.5; `/nuevo-ser/v1/*` es canónico.
+- **Workspace tool**: Melos ^6.0.0 (Dart 3.5).
 
 ## Comandos habituales
 
 ```bash
-# Desde /home/josu/Projects/uno-roto/app/
-flutter analyze
-flutter test
-flutter run -d linux        # desktop debug
-flutter build apk --release  # APK Android
+# Desde la raíz del monorepo:
+dart pub get                                  # instala Melos local
+dart pub global activate melos                # alternativa: instala Melos global
+melos bootstrap                               # resuelve dependencias en todos los paquetes
+melos run analyze                             # flutter analyze por paquete
+melos run test                                # flutter test por paquete con test/
 
-# Flutter path (no está en PATH del sistema):
-export PATH="$HOME/flutter/bin:$PATH"
-
-# Build Android requiere Java 17 (forzado en app/android/gradle.properties):
-# org.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64
+# Por paquete:
+( cd apps/uno-roto && flutter run -d linux )
+( cd apps/uno-roto && flutter test )
+( cd apps/uno-roto && flutter build apk --debug )
 ```
 
-## Decisiones técnicas tomadas
+```bash
+# Flutter no está en PATH del sistema:
+export PATH="$HOME/flutter/bin:$PATH"
 
-- **Flutter 3.24, Dart 3.5** sin Flame ni Riverpod (prototipo con CustomPainter + StatefulWidget). Migrar cuando haya razón real.
-- **shared_preferences 2.2.2** como persistencia inicial. Migrar a Isar en fase de sync.
-- **Gradle 8.5 + AGP 8.1 + Kotlin 1.9.20 + Java 17** para compilar en Ubuntu 24.
-- **Nombres descriptivos en castellano** para variables/clases/archivos (regla usuario). Técnicos en original (widget, builder, etc).
-- **Esquirlas como contador crudo** — temporal. Se sustituye por rangos narrativos.
-- **Idiomas**: castellano canónico + euskera + catalán. Infraestructura: `flutter_localizations` + `intl` + ARB (`app/lib/l10n/`) para UI; mapa runtime castellano→eu/ca para narrativa (`narrativa_eu.dart`, `narrativa_ca.dart`, ~860 entradas cada uno). Traducción automática inicial pendiente de revisión humana — voz de cada personaje (Sora seca, Kurz murmurando, Eco poética) puede no estar respetada.
+# Build Android requiere Java 17 (forzado en apps/uno-roto/android/gradle.properties).
+```
 
-## Reglas de interacción (doc 14)
+## Reglas de interacción
 
+- **Nombres descriptivos en castellano** para variables/clases/archivos. Términos técnicos (widget, builder…) en original.
 - **Commits pequeños**: <10 archivos salvo setup inicial.
-- **Tests antes del código no visual**: motor adaptativo, sync, API, persistencia.
-- **Documentar mientras**: actualizar CLAUDE.md al terminar tarea compleja.
-- **Verificar antes de inventar**: APIs Flame/WordPress confirmadas o preguntadas.
-- **Respetar tono**: si algo choca con doc 01 → señalar antes de implementar.
-- **Nunca cargar los 14 docs a la vez** — solo los de la fase.
+- **Tests antes del código no visual**: motor, sync, API, persistencia.
+- **Verificar antes de inventar**: APIs Flutter/Melos/WordPress confirmadas o preguntadas.
+- **Respetar tono**: si algo choca con `coleccion-nuevo-ser/coleccion/01-manifiesto.md` → señalar antes de implementar.
 
-## Cosas que NO hacer
+## Detalle por juego
 
-- No añadir librerías sin registrarlas en "Decisiones técnicas".
-- No generar código que viole AGPL.
-- No romper barrera cliente/backend (se comunican solo vía API).
-- No meter claves, secrets, endpoints producción en commits.
-- No hacer "mejoras" de tono sin justificación contra docs.
-- No reemplazar código funcional por abstracciones sin razón.
-- No usar `withValues(alpha:)` — la versión de Flutter pide `withOpacity()`.
-- No crear agujeros de gamificación (puntos, premios, combos) — doc 01 principio 3.
+Cada app mantiene su propio cerebro persistente:
 
-## Incidentes conocidos (para no repetir)
-
-- **MIUI INSTALL_FAILED_USER_RESTRICTED**: aceptar popup manualmente en Redmi Note 8.
-- **shared_preferences_android jlink error**: requiere forzar Java 17 en gradle.properties.
-- **Niños testers dicen "es para clase"**: el pivote fue quitar sesiones dictadas y abrir cazadero libre. No volver al modelo "ejercicio-por-ejercicio".
-- **pumpAndSettle timeout en tests**: usar `pump(duration)` discretos.
+- `apps/uno-roto/CLAUDE.md` — estado actual del juego en producción (fase, mecánicas implementadas, gap frente a doc 03, backlog).
+- `apps/las-versiones/CLAUDE.md` — pendiente (se crea al arrancar Fase 10).

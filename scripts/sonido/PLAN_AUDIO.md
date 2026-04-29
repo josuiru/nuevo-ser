@@ -1,8 +1,8 @@
 # Plan de descarga de audio — Uno Roto
 
-Este documento es la guía operativa para llenar `app/assets/sonido/`.
+Este documento es la guía operativa para llenar `apps/uno-roto/assets/sonido/`.
 Se ejecuta **una vez al principio** y se actualiza cuando se cambian
-piezas. Lectura recomendada antes: `app/assets/sonido/CREDITOS.md`.
+piezas. Lectura recomendada antes: `apps/uno-roto/assets/sonido/CREDITOS.md`.
 
 ## Pasos
 
@@ -13,11 +13,11 @@ bash scripts/sonido/bajar_sonidos.sh
 ```
 
 El script baja el pack OwlishMedia CC0 (~142 MB) y lo descomprime en
-`app/assets/sonido/_pack_owlishmedia/`. **Inspecciona** los nombres de
+`apps/uno-roto/assets/sonido/_pack_owlishmedia/`. **Inspecciona** los nombres de
 archivo del pack y copia los que mejor encajen al slot que toca:
 
 ```bash
-cd app/assets/sonido
+cd apps/uno-roto/assets/sonido
 # Ejemplos — los nombres exactos del pack los verás al descomprimir.
 cp _pack_owlishmedia/UI/Confirm_001.wav      efectos/acierto.wav
 cp _pack_owlishmedia/UI/Back_002.wav         efectos/error.wav
@@ -73,7 +73,7 @@ del compositor, elegir la que más encaje con el mood del doc 12, y:
 2. Convertir a WAV 44.1 kHz 16-bit con:
    ```bash
    ffmpeg -i pista_descargada.mp3 -acodec pcm_s16le -ar 44100 \
-     app/assets/sonido/musica/<slot>.wav
+     apps/uno-roto/assets/sonido/musica/<slot>.wav
    ```
 3. Si la pieza dura más de 4 min, recortar la parte más representativa
    con `ffmpeg -ss [inicio] -t [duracion]`.
@@ -89,7 +89,7 @@ Una vez tengas la música compositiva, los motivos se generan por
 recorte:
 
 ```bash
-cd app/assets/sonido
+cd apps/uno-roto/assets/sonido
 
 # Motivo de Sora — primeros 8 segundos de musica_tejados con fade out
 ffmpeg -i musica/tejados.wav -ss 0 -t 8 \

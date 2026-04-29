@@ -1,0 +1,149 @@
+{
+  "_doc": "Fixtures de paridad Dart/PHP para el motor adaptativo, perfil P1. Cada caso aplica `secuencia` sobre `estado_inicial` y debe producir `esperado_final` (campos id/nv/pr/tm/up/scb/te coinciden bit a bit; `ir` se compara elemento a elemento). Se consume desde packages/nuevo_ser_core/test/mastery_engine_paridad_test.dart (Dart) y wp-plugin/nuevo-ser-core/tests/test_paridad_motor.php (PHP). Cualquier cambio aquí debe pasar en ambos. Doc §6.2.",
+  "casos": [
+    {
+      "nombre": "estado inicial pasa a introducida tras un único fallo",
+      "estado_inicial": {
+        "id": "FR.01",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T10:00:00.000" }
+      ],
+      "esperado_final": {
+        "id": "FR.01",
+        "nv": 1, "pr": 0.0, "tm": 5.0,
+        "up": "2026-01-01T10:00:00.000",
+        "scb": 0, "te": 1,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": false, "d": 1.0, "s": 5 }
+        ]
+      }
+    },
+    {
+      "nombre": "precisión ponderada con dificultades mixtas (acierto dif 2.0 + fallo dif 1.0 = 2/3)",
+      "estado_inicial": {
+        "id": "FR.01",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true,  "dificultad": 2.0, "duracionSegundos": 5, "instante": "2026-01-01T10:00:00.000" },
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T10:00:30.000" }
+      ],
+      "esperado_final": {
+        "id": "FR.01",
+        "nv": 2,
+        "pr": 0.6666666666666666,
+        "tm": 5.0,
+        "up": "2026-01-01T10:00:30.000",
+        "scb": 1, "te": 2,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": true,  "d": 2.0, "s": 5 },
+          { "t": "2026-01-01T10:00:30.000", "a": false, "d": 1.0, "s": 5 }
+        ]
+      }
+    },
+    {
+      "nombre": "competente requiere precisión >=0.75 + 3 sesiones consecutivas",
+      "estado_inicial": {
+        "id": "FR.05",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T10:00:00.000" },
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T15:00:00.000" },
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T20:00:00.000" }
+      ],
+      "esperado_final": {
+        "id": "FR.05",
+        "nv": 3, "pr": 1.0, "tm": 5.0,
+        "up": "2026-01-01T20:00:00.000",
+        "scb": 3, "te": 3,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": true, "d": 1.0, "s": 5 },
+          { "t": "2026-01-01T15:00:00.000", "a": true, "d": 1.0, "s": 5 },
+          { "t": "2026-01-01T20:00:00.000", "a": true, "d": 1.0, "s": 5 }
+        ]
+      }
+    },
+    {
+      "nombre": "fallo dentro de la misma sesión NO resetea sesiones consecutivas",
+      "estado_inicial": {
+        "id": "FR.05",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true,  "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T10:00:00.000" },
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T10:10:00.000" }
+      ],
+      "esperado_final": {
+        "id": "FR.05",
+        "nv": 2, "pr": 0.5, "tm": 5.0,
+        "up": "2026-01-01T10:10:00.000",
+        "scb": 1, "te": 2,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": true,  "d": 1.0, "s": 5 },
+          { "t": "2026-01-01T10:10:00.000", "a": false, "d": 1.0, "s": 5 }
+        ]
+      }
+    },
+    {
+      "nombre": "nueva sesión con precisión <0.75 resetea contador a 0",
+      "estado_inicial": {
+        "id": "FR.05",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true,  "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T10:00:00.000" },
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 5, "instante": "2026-01-01T15:00:00.000" }
+      ],
+      "esperado_final": {
+        "id": "FR.05",
+        "nv": 2, "pr": 0.5, "tm": 5.0,
+        "up": "2026-01-01T15:00:00.000",
+        "scb": 0, "te": 2,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": true,  "d": 1.0, "s": 5 },
+          { "t": "2026-01-01T15:00:00.000", "a": false, "d": 1.0, "s": 5 }
+        ]
+      }
+    },
+    {
+      "nombre": "intentos previos en estado_inicial se preservan al añadir uno nuevo",
+      "estado_inicial": {
+        "id": "FR.05",
+        "nv": 2, "pr": 1.0, "tm": 5.0,
+        "up": "2026-01-01T10:00:00.000",
+        "scb": 1, "te": 1,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": true, "d": 1.0, "s": 5 }
+        ]
+      },
+      "secuencia": [
+        { "acierto": false, "dificultad": 2.0, "duracionSegundos": 8, "instante": "2026-01-01T10:00:30.000" }
+      ],
+      "esperado_final": {
+        "id": "FR.05",
+        "nv": 1,
+        "pr": 0.3333333333333333,
+        "tm": 6.5,
+        "up": "2026-01-01T10:00:30.000",
+        "scb": 1, "te": 2,
+        "ir": [
+          { "t": "2026-01-01T10:00:00.000", "a": true,  "d": 1.0, "s": 5 },
+          { "t": "2026-01-01T10:00:30.000", "a": false, "d": 2.0, "s": 8 }
+        ]
+      }
+    }
+  ]
+}
