@@ -1,7 +1,7 @@
 name: las_versiones
-description: Las Versiones — juego de pensamiento histórico para 10-14 años. Esqueleto vacío en C1; implementación entra en Fase 10 del roadmap.
-version: 0.0.1
+description: "Las Versiones — juego de pensamiento histórico para 10-14 años. Fase 10 del roadmap, esqueleto inicial cableado a la plataforma nuevo-ser-core."
 publish_to: none
+version: 0.0.1
 
 environment:
   sdk: ^3.5.0
@@ -11,6 +11,27 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+
+  # Localización del juego (doc 01 §14: castellano/euskera/catalán desde
+  # día cero). intl es la dependencia que la generación gen-l10n
+  # consume, aunque todavía no usemos ARBs — estará lista cuando empecemos.
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  # Persistencia local clave-valor — para idioma de la app, perfil
+  # activo, lista de perfiles, token JWT del backend. La migración a
+  # Isar (que el doc 14 §3.1 prescribe) está diferida a v1.5 igual que
+  # en uno-roto, para no inflar alcance antes de tener producto.
+  shared_preferences: ^2.2.2
+
+  # Plataforma compartida de la Colección Nuevo Ser Kids — extracciones
+  # del refactor C5/C6 (gestor multi-perfil, repositorio de cuenta
+  # backend, repositorio de idioma, motor adaptativo, capa audio…).
+  # Importada por path mientras vivamos en el monorepo; al publicarse
+  # se sustituirá por versión.
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
 
 dev_dependencies:
   flutter_lints: ^4.0.0

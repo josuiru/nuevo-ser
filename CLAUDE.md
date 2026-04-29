@@ -14,7 +14,7 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 .
 ├── apps/
 │   ├── uno-roto/         juego de matemáticas 9-12 (en producción, fase ~8-9 MVP)
-│   └── las-versiones/    juego de pensamiento histórico 10-14 (esqueleto, Fase 10)
+│   └── las-versiones/    juego de pensamiento histórico 10-14 (esqueleto cableado a la plataforma, Fase 10 arrancada)
 │
 ├── packages/
 │   ├── nuevo_ser_core/        plataforma compartida (motor maestría, sync, audio, cinemáticas)
@@ -59,6 +59,17 @@ Continuando la extracción anunciada en los READMEs de los paquetes, en slices p
 - **RepositorioSugerenciaPaqueteAudio** ✓ subido a `nuevo_ser_core/audio/repositorio_sugerencia_paquete_audio.dart`. Bool global del banner "¿quieres descargar el paquete sonoro?" — una vez mostrado pasa a `true` y NO se desmarca (rechazar el banner no debe reaparecerlo). API mínima `cargar` (default `false`)/`marcar`/`borrar` (este último para reofrecer el banner tras una actualización mayor del paquete o para tests). Mismo patrón de callbacks invertidos: `prefs` + `clave` explícita. Cierra el trío de claves globales del subsistema audio (paquete sonoro): versión instalada + sugerencia banner + descargador. 5 tests caracterización. `RepositorioProgreso` mantiene `cargarAudioSugerenciaVista`/`marcarAudioSugerenciaVista` como delegaciones.
 - **RepositorioAvatarPerfil** ✓ subido a `nuevo_ser_core/storage/repositorio_avatar_perfil.dart`. Ruta a la imagen-avatar del niño asociada al perfil activo (`<ns>.perfil.<id>.<sufijoRuta>`). **Por-perfil** (cada hermano del dispositivo tiene su personaje), así que monta sobre `GestorPerfiles` siguiendo el patrón de `RepositorioPreferenciasAudio` — no callbacks invertidos al `SharedPreferences` crudo, porque sí necesita el prefijo del perfil activo. La imagen apuntada por la ruta vive bajo el directorio de documentos de la app; el repositorio sólo guarda el string. Cadenas vacías o sólo-espacios se tratan como `null` para tolerar bugs en pantallas mal calibradas. API `cargarRuta`/`guardarRuta`/`borrarRuta` con sufijo configurable (default `'avatar.ruta'`). 7 tests caracterización (incluido aislamiento entre perfiles Niko↔Mara y sufijo personalizado). `RepositorioProgreso` mantiene `cargarRutaAvatar`/`guardarRutaAvatar`/`borrarRutaAvatar` como delegaciones.
 
+### Las Versiones (Fase 10) — primer commit del esqueleto
+
+Arrancado el segundo juego del monorepo. `apps/las-versiones/` ya no es la pantalla "Esqueleto. Implementación en Fase 10 del roadmap" original — está cableado a la plataforma:
+
+- **Encuadre**. Juego de **pensamiento histórico** 10-14 años, hermano epistémico de Uno Roto. Protagonista **Maren**, 13 años, ingresa al **Archivo de Iruña**. 4 arcos narrativos, **65 habilidades atómicas en 7 dominios** (PR/HF/CC/GH/PH/AH/CF), **4 perfiles de medición** (P1 ya funcional en core; P2/P3/P4 stubs que cobrarán vida con este juego — P4 calibración Brier es la única para AH.03 "declaración de niveles de confianza", **corazón pedagógico del juego**).
+- **Stack**. Decidido **minimalista** (opción b consensuada con el operador): shared_preferences + StatefulWidget + CustomPainter, igual que uno-roto al principio. Flame/Isar/Riverpod (que prescribe el doc 14 §3.1) se pospondrán hasta tener razón real. Esto preserva la simetría con uno-roto y mantiene el principio "mover sólo lo genuinamente reutilizable hoy" del README del core.
+- **Namespace prefs**. `nuevoser.lasversiones.*` (CLAUDE.md raíz prescribe este patrón para juegos nuevos). El primer test `clave de prefs sigue el namespace nuevoser.lasversiones.*` protege la convención contra regresiones.
+- **Esqueleto cableado**. `pubspec.yaml` con `nuevo_ser_core` por path + `flutter_localizations` + `intl` + `shared_preferences`. `lib/main.dart` con precarga de idioma + Orquestador mínimo de dos estados (configuración inicial / esqueleto). `lib/vista/pantalla_configuracion_inicial.dart` simétrica a la de uno-roto pero con paleta del Archivo (sepia/tinta/ámbar — provisional hasta cerrar doc 11). `lib/vista/pantalla_esqueleto.dart` provisional ("El Archivo abre sus puertas pronto"). Tests: 4 widget tests (primer arranque, idioma persistido, elegir idioma persiste, namespace correcto).
+- **Validación de la plataforma extraída**. Este primer commit usa directamente `RepositorioIdiomaApp` del core con clave `nuevoser.lasversiones.idioma_app`. Las extracciones C5/C6 funcionan como prometían — el repositorio es portable entre juegos **sin tocar el código del core**. Es la primera prueba real de que la plataforma vale la pena.
+- **`apps/las-versiones/CLAUDE.md`** creado — cerebro persistente del juego con encuadre, principios, hard limits del doc 14, mapeo de habilidades, validaciones humanas requeridas, decisiones tomadas y backlog.
+
 ### Companion v0.1: primer endpoint real
 
 Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se cablea end-to-end:
@@ -74,7 +85,7 @@ Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se c
 - **Smoke PHP** `cuaderno.php` (27), `mosaicos.php` (38), `aulas.php` (13), `agregados.php` (28: validación + hash determinista + parsear_respuesta_llm con JSON estricto/markdown/anidado/inválido/vacío + generar_resumen con stub OK/PII rechazada/cliente que lanza).
 - **Pendientes acoplados a auth de profesor/cuidador** (no decidida): `POST /classrooms`, `GET /classrooms/{id}/aggregates` y los 3 de cuidadores. JWT actual sólo lleva `nino_id`.
 
-Plugin WP en v0.7.0. Tests: 325 (uno-roto) + 103 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 7 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 5 paquetes.
+Plugin WP en v0.7.0. Tests: 325 (uno-roto) + 4 (las-versiones) + 103 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 7 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
 
 ## Decisiones cerradas
 
@@ -119,4 +130,4 @@ export PATH="$HOME/flutter/bin:$PATH"
 Cada app mantiene su propio cerebro persistente:
 
 - `apps/uno-roto/CLAUDE.md` — estado actual del juego en producción (fase, mecánicas implementadas, gap frente a doc 03, backlog).
-- `apps/las-versiones/CLAUDE.md` — pendiente (se crea al arrancar Fase 10).
+- `apps/las-versiones/CLAUDE.md` — encuadre del juego, mapa de habilidades, hard limits y validaciones del doc 14, decisiones tomadas, estado actual del esqueleto.
