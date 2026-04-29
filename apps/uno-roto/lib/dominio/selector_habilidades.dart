@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import '../datos/catalogo_habilidades.dart';
 import 'distrito.dart';
-import 'habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'mapeo_habilidades_puzzle.dart';
 
 /// Selector adaptativo de habilidades. Dado el estado de maestría del

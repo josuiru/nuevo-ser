@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uno_roto/dominio/estado_cuaderno.dart';
-import 'package:uno_roto/dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 EstadoHabilidad _construir({
   required NivelMaestria nivel,

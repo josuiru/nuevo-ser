@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'cliente_api.dart' show ExcepcionApi;
+import 'package:nuevo_ser_core/nuevo_ser_core.dart' show ExcepcionApi;
 
 /// Cliente HTTP del endpoint de tutor. El servidor (plugin WP) hace
 /// el proxy a Anthropic con su propio filtro PHP y caché en BD.

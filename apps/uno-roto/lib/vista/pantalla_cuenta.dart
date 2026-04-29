@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../datos/cliente_api.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../l10n/app_localizations.dart';

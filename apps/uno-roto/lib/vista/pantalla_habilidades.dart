@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../datos/cache_tutor.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import '../datos/catalogo_habilidades.dart';
-import '../datos/cliente_api.dart';
-import '../datos/cliente_tutor.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
-import '../dominio/habilidad.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/tutor/servicio_tutor.dart';

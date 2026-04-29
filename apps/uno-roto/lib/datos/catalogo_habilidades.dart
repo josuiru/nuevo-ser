@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Carga y expone el catálogo de 66 habilidades desde
 /// `assets/data/skills.json`. Singleton perezoso; las habilidades son

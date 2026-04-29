@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../dominio/tutor/filtro_seguridad.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import '../dominio/tutor/servicio_tutor.dart';
 import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';

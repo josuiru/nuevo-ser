@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
-import '../dominio/tutor/disparador_tutor.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 
 /// Persistencia del progreso del jugador, ahora con soporte multi-perfil:
 /// cada perfil guarda su propio estado bajo el prefijo

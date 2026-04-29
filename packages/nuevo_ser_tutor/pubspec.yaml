@@ -11,6 +11,17 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Cliente HTTP a /tutor/explicar (proxy a Anthropic en el plugin WP).
+  http: ^1.2.0
+
+  # Cache LRU del tutor persiste en SharedPreferences (clave global,
+  # compartida entre perfiles porque no contiene PII).
+  shared_preferences: ^2.2.2
+
+  # ExcepcionApi se reusa desde el cliente HTTP del core.
+  nuevo_ser_core:
+    path: ../nuevo_ser_core
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

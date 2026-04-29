@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
-import 'package:uno_roto/datos/cliente_api.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 void main() {
   const urlBase = 'https://test.example.org';

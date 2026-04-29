@@ -1,5 +1,5 @@
 import '../datos/catalogo_habilidades.dart';
-import 'habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Motor de maestría mínimo.
 ///

@@ -4,9 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../datos/cache_tutor.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import '../datos/catalogo_habilidades.dart';
-import '../datos/cliente_tutor.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/bonus_remonte.dart';

@@ -75,6 +75,14 @@ dependencies:
   # directorio de documentos del perfil; nunca salen del aparato.
   image_picker: ^1.1.2
 
+  # Plataforma compartida de la Colección Nuevo Ser Kids — extracción
+  # iniciada en C5 del refactor. Las apps de juegos consumen los
+  # packages por path; al migrar a pub.dev se sustituirá por versión.
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+  nuevo_ser_tutor:
+    path: ../../packages/nuevo_ser_tutor
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

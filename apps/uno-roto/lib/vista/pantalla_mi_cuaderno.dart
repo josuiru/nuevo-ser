@@ -6,7 +6,7 @@ import '../dominio/catalogo_distritos.dart';
 import '../dominio/cuaderno.dart';
 import '../dominio/distrito.dart';
 import '../dominio/estado_cuaderno.dart';
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../dominio/seleccionador_avatar.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/textos_enums.dart';

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Cliente HTTP del **panel de tutor** (no confundir con el Tutor IA).
 ///

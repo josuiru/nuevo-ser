@@ -1,4 +1,4 @@
-import 'habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Cinco estados visuales del cuaderno del niño. NO son los cinco
 /// niveles del [MotorMaestria] tal cual — los reagrupamos en lenguaje

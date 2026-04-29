@@ -6,7 +6,7 @@ import '../datos/config_api.dart';
 import '../dominio/catalogo_distritos.dart';
 import '../dominio/distrito.dart';
 import '../dominio/estado_cuaderno.dart';
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';

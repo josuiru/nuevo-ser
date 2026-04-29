@@ -1,5 +1,5 @@
 import '../dominio/cuaderno.dart';
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../dominio/problema_moda_mediana.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';

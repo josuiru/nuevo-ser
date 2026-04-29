@@ -4,7 +4,7 @@ import '../datos/catalogo_habilidades.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/distrito.dart';
 import '../dominio/estado_cuaderno.dart';
-import '../dominio/habilidad.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'widgets/indicador_ventana.dart';

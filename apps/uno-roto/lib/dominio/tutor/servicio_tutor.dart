@@ -1,9 +1,6 @@
-import '../../datos/cache_tutor.dart';
-import '../../datos/cliente_api.dart';
-import '../../datos/cliente_tutor.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import '../../datos/repositorio_progreso.dart';
-import 'disparador_tutor.dart';
-import 'filtro_seguridad.dart';
 
 /// Orquestador del Tutor IA. Compone las cuatro piezas independientes
 /// (filtro, disparador, caché, cliente HTTP) en la API de alto nivel

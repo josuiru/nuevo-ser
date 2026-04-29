@@ -5,9 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:uno_roto/datos/cache_tutor.dart';
-import 'package:uno_roto/datos/cliente_api.dart';
-import 'package:uno_roto/datos/cliente_tutor.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 void main() {
   const urlBase = 'https://test.example.org';
