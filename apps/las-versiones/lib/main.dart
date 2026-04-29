@@ -4,15 +4,18 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'datos/repositorio_cuaderno.dart';
 import 'datos/repositorio_estado_brecha.dart';
 import 'datos/repositorio_flags_narrativos.dart';
 import 'dominio/brecha.dart';
 import 'dominio/catalogo_brechas.dart';
+import 'dominio/cuaderno.dart';
 import 'dominio/escenas_arco_1.dart';
 import 'nucleo/paleta_archivo.dart';
 import 'vista/pantalla_brecha.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
+import 'vista/pantalla_cuaderno.dart';
 import 'vista/pantalla_esqueleto.dart';
 
 /// Clave global del idioma elegido por la Cronista en el primer
@@ -56,6 +59,7 @@ void main() async {
     repoIdioma: repoIdioma,
     repoFlags: const RepositorioFlagsNarrativos(),
     repoEstadoBrecha: const RepositorioEstadoBrecha(),
+    repoCuaderno: const RepositorioCuaderno(),
   ));
 }
 
@@ -63,12 +67,14 @@ class AppLasVersiones extends StatelessWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioFlagsNarrativos repoFlags;
   final RepositorioEstadoBrecha repoEstadoBrecha;
+  final RepositorioCuaderno repoCuaderno;
 
   const AppLasVersiones({
     super.key,
     required this.repoIdioma,
     required this.repoFlags,
     required this.repoEstadoBrecha,
+    required this.repoCuaderno,
   });
 
   @override
@@ -110,6 +116,7 @@ class AppLasVersiones extends StatelessWidget {
             repoIdioma: repoIdioma,
             repoFlags: repoFlags,
             repoEstadoBrecha: repoEstadoBrecha,
+            repoCuaderno: repoCuaderno,
           ),
         );
       },
@@ -144,12 +151,14 @@ class Orquestador extends StatefulWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioFlagsNarrativos repoFlags;
   final RepositorioEstadoBrecha repoEstadoBrecha;
+  final RepositorioCuaderno repoCuaderno;
 
   const Orquestador({
     super.key,
     required this.repoIdioma,
     required this.repoFlags,
     required this.repoEstadoBrecha,
+    required this.repoCuaderno,
   });
 
   @override
@@ -261,6 +270,14 @@ class _OrquestadorState extends State<Orquestador> {
     for (final flag in flagsACerrar) {
       await widget.repoFlags.activar(flag);
     }
+    // Si el flag de salida tiene entrada de Cuaderno asociada, se
+    // registra al cerrar la escena. Mantenemos el catálogo del
+    // Cuaderno separado del catálogo de escenas para poder editar
+    // textos de Cuaderno sin tocar el de escenas.
+    final entrada = CatalogoCuaderno.entradasPorFlag[escena.flagDeSalida];
+    if (entrada != null) {
+      await widget.repoCuaderno.registrarEntrada(entrada.id);
+    }
     if (!mounted) return;
     _flagsActivos = {..._flagsActivos, ...flagsACerrar};
     // Tras cerrar la escena puede haberse abierto una Brecha (caso
@@ -303,6 +320,23 @@ class _OrquestadorState extends State<Orquestador> {
     });
   }
 
+  /// Abre el Cuaderno como ruta superpuesta al estado actual del
+  /// orquestador. Cruza el catálogo (fuente de verdad del contenido)
+  /// con los IDs registrados en el repositorio (qué entradas ya
+  /// están escritas) y respeta el orden del catálogo.
+  Future<void> _alAbrirCuaderno() async {
+    final idsRegistrados = await widget.repoCuaderno.idsRegistrados();
+    final entradasVisibles = CatalogoCuaderno.todas
+        .where((entrada) => idsRegistrados.contains(entrada.id))
+        .toList(growable: false);
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaCuaderno(entradas: entradasVisibles),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext contexto) {
     if (_cargando) {
@@ -322,12 +356,15 @@ class _OrquestadorState extends State<Orquestador> {
         faseActiva: _faseBrechaActiva,
         alAvanzarFase: _alAvanzarFaseBrecha,
         alCompletarBrecha: _alCompletarBrecha,
+        alAbrirCuaderno: _alAbrirCuaderno,
       );
     }
     final escena = _escenaEnReproduccion;
     if (escena != null) {
       // Key por id de escena para que el StatefulWidget se reinicie
-      // limpio al cambiar de escena.
+      // limpio al cambiar de escena. Durante la cinemática el
+      // Cuaderno NO está accesible: distrae del momento narrativo y
+      // las cinemáticas son cortas.
       return PantallaCinematica(
         key: ValueKey(escena.id),
         escena: escena,
@@ -335,6 +372,6 @@ class _OrquestadorState extends State<Orquestador> {
         alTerminar: () => _alTerminarEscena(escena),
       );
     }
-    return const PantallaEsqueleto();
+    return PantallaEsqueleto(alAbrirCuaderno: _alAbrirCuaderno);
   }
 }

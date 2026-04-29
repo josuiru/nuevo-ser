@@ -27,12 +27,18 @@ class PantallaBrecha extends StatelessWidget {
   /// y libera la cinemática 1.1.7.
   final VoidCallback alCompletarBrecha;
 
+  /// Callback opcional para abrir el Cuaderno mientras se trabaja
+  /// la Brecha — la Cronista puede consultar entradas anteriores
+  /// en cualquier momento.
+  final VoidCallback? alAbrirCuaderno;
+
   const PantallaBrecha({
     super.key,
     required this.brecha,
     required this.faseActiva,
     required this.alAvanzarFase,
     required this.alCompletarBrecha,
+    this.alAbrirCuaderno,
   });
 
   bool get _esFaseFinal => faseActiva == FaseBrecha.concilio;
@@ -42,25 +48,40 @@ class PantallaBrecha extends StatelessWidget {
     return Scaffold(
       backgroundColor: PaletaArchivo.fondoProfundo,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            _HeaderBrecha(brecha: brecha, faseActiva: faseActiva),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _PlaceholderFase(fase: faseActiva),
-              ),
+            Column(
+              children: [
+                _HeaderBrecha(brecha: brecha, faseActiva: faseActiva),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: _PlaceholderFase(fase: faseActiva),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                  child: _BotonSiguienteFase(
+                    fase: faseActiva,
+                    esFaseFinal: _esFaseFinal,
+                    alAvanzar: alAvanzarFase,
+                    alCompletar: alCompletarBrecha,
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-              child: _BotonSiguienteFase(
-                fase: faseActiva,
-                esFaseFinal: _esFaseFinal,
-                alAvanzar: alAvanzarFase,
-                alCompletar: alCompletarBrecha,
+            if (alAbrirCuaderno != null)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: IconButton(
+                  tooltip: 'Cuaderno',
+                  icon: const Icon(Icons.menu_book_outlined,
+                      color: PaletaArchivo.ambarLacre),
+                  onPressed: alAbrirCuaderno,
+                ),
               ),
-            ),
           ],
         ),
       ),

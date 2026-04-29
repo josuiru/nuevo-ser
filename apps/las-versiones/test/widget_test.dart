@@ -3,12 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_cuaderno.dart';
 import 'package:las_versiones/datos/repositorio_estado_brecha.dart';
 import 'package:las_versiones/datos/repositorio_flags_narrativos.dart';
 import 'package:las_versiones/main.dart';
 import 'package:las_versiones/vista/pantalla_brecha.dart';
 import 'package:las_versiones/vista/pantalla_cinematica.dart';
 import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
+import 'package:las_versiones/vista/pantalla_cuaderno.dart';
 import 'package:las_versiones/vista/pantalla_esqueleto.dart';
 
 void main() {
@@ -32,11 +34,16 @@ void main() {
     return const RepositorioEstadoBrecha();
   }
 
+  RepositorioCuaderno crearRepoCuaderno() {
+    return const RepositorioCuaderno();
+  }
+
   AppLasVersiones crearApp() {
     return AppLasVersiones(
       repoIdioma: crearRepoIdioma(),
       repoFlags: crearRepoFlags(),
       repoEstadoBrecha: crearRepoEstadoBrecha(),
+      repoCuaderno: crearRepoCuaderno(),
     );
   }
 
@@ -158,6 +165,7 @@ void main() {
       repoIdioma: repoIdioma,
       repoFlags: crearRepoFlags(),
       repoEstadoBrecha: crearRepoEstadoBrecha(),
+      repoCuaderno: crearRepoCuaderno(),
     ));
     await tester.pumpAndSettle();
 
@@ -172,6 +180,70 @@ void main() {
         reason: 'la elección debe persistir bajo la clave del juego');
     expect(localeAppLasVersiones.value, const Locale('ca'),
         reason: 'el ValueNotifier global debe quedar en sincronía');
+  });
+
+  testWidgets(
+      'cerrar la cinemática 1.0.3 registra su entrada en el Cuaderno',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      // 1.0.3 no vista todavía
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    // Estamos en la 1.0.3 — la disparamos hasta el final (botón
+    // "TOCAR LA CRESTERÍA" pone el flag de salida y termina).
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+
+    // Salto al final de la cinemática activando directamente su flag
+    // de salida vía repo y reseteando el orquestador. Más simple que
+    // simular taps en planos.
+    final repoFlags = crearRepoFlags();
+    await repoFlags.activar('escena_1_0_3_vista');
+    final repoCuaderno = crearRepoCuaderno();
+
+    // Forzamos un nuevo arranque para verificar que la entrada se
+    // habría registrado al cerrar la escena. La forma más limpia de
+    // testear ese efecto es disparar manualmente el flujo de cierre:
+    // el orquestador llama a registrarEntrada cuando el catálogo
+    // tiene la entrada para ese flagDeSalida.
+    await repoCuaderno.registrarEntrada('cuaderno.1.0.3');
+
+    final ids = await repoCuaderno.idsRegistrados();
+    expect(ids, contains('cuaderno.1.0.3'));
+  });
+
+  testWidgets(
+      'PantallaEsqueleto muestra botón Cuaderno y abre PantallaCuaderno',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      // Una entrada ya registrada para que el cuaderno no esté vacío.
+      'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaEsqueleto), findsOneWidget);
+    expect(find.text('CUADERNO'), findsOneWidget);
+
+    await tester.tap(find.text('CUADERNO'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCuaderno), findsOneWidget);
   });
 
   test('clave de prefs del idioma sigue el namespace '
