@@ -47,8 +47,9 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 Continuando la extracción anunciada en los READMEs de los paquetes, en slices pequeños con tests caracterización antes del movimiento:
 
 - **Selector adaptativo de habilidades** ✓ extraído a `packages/nuevo_ser_core/lib/src/mastery/selector_habilidades.dart` con API genérica (candidatas + contextoBonusId + aplicarBonusContexto). El archivo de uno-roto queda como wrapper fino que mantiene la API pública (`Distrito` + `dominioFiltrado`) y delega el algoritmo. 12 tests caracterización en el core (pesos por nivel, decay, bonus contexto, anti-repetición, dependencias, determinismo).
+- **Gestión multi-perfil** ✓ extraída a `packages/nuevo_ser_core/lib/src/storage/gestor_perfiles.dart`. Encapsula identificación del perfil activo, listado, creación/borrado, slugify (con tildes y ñ → ASCII), migración silenciosa de claves legadas (`<ns>.X` → `<ns>.perfil.principal.X`) y whitelist de claves globales no migrables. Parametrizado por `namespace` para que cada juego use el suyo (`uroto`, `lasversiones`…). `PerfilInfo` también vive en el core; `RepositorioProgreso` lo re-exporta para no romper imports existentes. 17 tests caracterización en el core. `RepositorioProgreso` queda en 619 LOC (de 786) delegando los 6 métodos públicos de perfiles + la migración al gestor.
 
-Plugin WP en v0.6.0. Tests: 339 (uno-roto) + 22 (nuevo_ser_core) Dart + 3 PHP smoke. `flutter analyze` limpio en los 5 paquetes.
+Plugin WP en v0.6.0. Tests: 339 (uno-roto) + 39 (nuevo_ser_core) Dart + 3 PHP smoke. `flutter analyze` limpio en los 5 paquetes.
 
 ## Decisiones cerradas
 
