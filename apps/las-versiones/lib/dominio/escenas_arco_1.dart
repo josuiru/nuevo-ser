@@ -16,10 +16,19 @@ class EscenasArco1 {
   /// orquestador. El orden importa: cada escena declara sus
   /// `flagsRequeridos` apuntando al `flagDeSalida` de la anterior,
   /// así que el orquestador las dispara en cadena natural.
+  ///
+  /// La cadena tiene un hueco diegético entre 1.1.2 y 1.1.7: el
+  /// bloque jugable de la primera Brecha (1.1.3 a 1.1.6) ocurre
+  /// fuera de este catálogo de cinemáticas, gestionado por el
+  /// modelo `Brecha` (F4.2). El orquestador (F4.3) decide entre
+  /// cinemática y Brecha según los flags activos.
   static const List<EscenaCinematica> todas = [
     laEvaluacion,
     elRecorrido,
     laPrimeraTardeEnCasa,
+    caminoAAralar,
+    elCampoDeDolmenes,
+    elPrimerApunte,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -48,6 +57,15 @@ class EscenasArco1 {
     'escena_1_0_3_vista': {
       'told_family_archive',
       'naia_first_curiosity',
+    },
+    'escena_1_1_1_vista': {
+      'traveling_aralar_first',
+    },
+    'escena_1_1_2_vista': {
+      'aralar_dolmen_alcanzado',
+    },
+    'escena_1_1_7_vista': {
+      'arco_1_estacion_1_cerrada',
     },
   };
 
@@ -652,6 +670,283 @@ class EscenasArco1 {
             'Mañana voy a Aralar. No sé qué tengo que hacer. Isaura '
             'tampoco me lo ha dicho. Quizá ese sea el primer '
             'ejercicio.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),
+    ],
+  );
+
+  /// **1.1.1 — Camino a Aralar** (doc 07 §1.1.1).
+  ///
+  /// Día 2, 7:00 de la mañana. Isaura conduce el coche viejo de
+  /// Iruña a la sierra. Hora y media de viaje. La conversación
+  /// abre tres registros: el cuerpo (Maren ha dormido mal), el
+  /// oficio (Isaura cuenta su primera Brecha — fastidió la
+  /// datación), y la regla del día (no te explico nada antes; tú
+  /// miras, tú formulas; quédate, mira; eso ya es trabajo).
+  static const EscenaCinematica caminoAAralar = EscenaCinematica(
+    id: '1.1.1',
+    titulo: 'Camino a Aralar',
+    flagDeSalida: 'escena_1_1_1_vista',
+    flagsRequeridos: {'escena_1_0_3_vista'},
+    ambiente: AmbienteArchivo.cocheIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Día 2. 7:00 de la mañana. Isaura conduce despacio. El '
+            'paisaje cambia de Iruña a la sierra. Niebla baja, sol '
+            'pegando bajo.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Has dormido?'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Mal.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'La primera vez se duerme mal.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Treinta segundos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tú la primera vez también?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Yo dormí seis horas porque tenía 28 años.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 1),
+        textoLectura: 'Maren sonríe pequeñísimo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué Brecha hiciste tú la primera vez?',
+      ),
+
+      // La anécdota de Isaura sobre fastidiar la datación —
+      // pedagógicamente clave: la primera Brecha se puede fastidiar
+      // y se puede reabrir. La fiabilidad no nace de no equivocarse,
+      // nace de cómo se cierra después.
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Una capilla en ruinas en la Sakana. Visigoda, posible. '
+            'Resultó que era tardorromana. La fastidié con la datación.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cómo lo descubriste?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'No yo. El Concilio. Me dieron tres meses para reabrir.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Y la reabriste?'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y la cerraste bien?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'La cerré mejor. Bien no sé si se cierra alguna.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Silencio. Maren mira por la ventana. La sierra de '
+            'Aralar empieza a verse. Calizas blancas en lo alto, '
+            'hayedos abajo.',
+      ),
+
+      // Las instrucciones del día — la regla del oficio que el
+      // jugador va a vivir en las cinco fases siguientes.
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Hoy no vamos a una Brecha grande. Vamos a una pequeña. '
+            'Un dolmen. Te voy a dejar sola un rato.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No te explico nada antes. Tú miras. Tú formulas. Yo '
+            'vuelvo a la hora. Hablamos.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Si no se te ocurre nada, no pasa nada. Quédate. Mira. '
+            'Eso ya es trabajo.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren asiente. Silencio largo durante el resto del '
+            'trayecto.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'BAJAR DEL COCHE'),
+    ],
+  );
+
+  /// **1.1.2 — El campo de dólmenes** (doc 07 §1.1.2).
+  ///
+  /// Llegada al campo. Isaura señala el dolmen asignado a Maren
+  /// —marcado con poste y código— y le pasa una carpeta con tres
+  /// informes de excavaciones anteriores. Le anuncia que vuelve a
+  /// las once. Maren se queda sola con el dolmen, el cuaderno y
+  /// la carpeta.
+  ///
+  /// Esta cinemática cierra el primer bloque y cede el turno al
+  /// **bloque jugable de la Brecha 1.1** (fases 1.1.3 a 1.1.6 del
+  /// guion canónico, que en el código viven como las cinco fases
+  /// del modelo `Brecha`, no como cinemáticas).
+  static const EscenaCinematica elCampoDeDolmenes = EscenaCinematica(
+    id: '1.1.2',
+    titulo: 'El campo de dólmenes',
+    flagDeSalida: 'escena_1_1_2_vista',
+    flagsRequeridos: {'escena_1_1_1_vista'},
+    ambiente: AmbienteArchivo.dolmenAralar,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aparcan en una pista forestal. Bajan del coche. Maren '
+            'lleva el cuaderno, una mochila pequeña, y una libreta '
+            'de campo aparte que Isaura le ha dado. Caminan diez '
+            'minutos por una vereda.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aparece el primer dolmen entre la hierba alta. Después '
+            'otro. Después tres más. Maren se para.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cuántos hay?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'En este campo, quince catalogados. En toda Aralar, más '
+            'de cien.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren mira alrededor. Silencio del paisaje. Viento. '
+            'Una oveja muy lejos.',
+      ),
+
+      // Isaura señala el dolmen asignado y le explica por qué ése.
+      // Las menciones a "una excavación de los años 70" y "una de
+      // los años 2010" sustituyen las referencias canónicas a Pío
+      // Beltrán 1973 y revisión 2018 (entrada PIO-BELTRAN del doc
+      // 17 pendiente de validar; las décadas son plausibles para
+      // el período arqueológico real de Aralar).
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'El tuyo es ése.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura:
+            'Señala un dolmen mediano, parcialmente excavado, '
+            'marcado con un poste de madera y un código.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Por qué ése?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Porque tiene fuentes que puedes consultar y porque no '
+            'te van a venir colegas a interrumpir. Una excavación de '
+            'los años 70 lo sondeó, una más reciente lo revisó. Hay '
+            'tres informes en el Archivo. Te los he traído.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Le pasa una carpeta delgada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Léelos cuando quieras. No tienes que leerlos antes.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Maren coge la carpeta. Mira el dolmen.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Te dejo. Vuelvo a las once.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Isaura camina de vuelta hacia el coche. Maren la mira '
+            'irse. Después mira el dolmen. Se sienta en una piedra. '
+            'Saca el cuaderno. Lo abre.',
+      ),
+
+      // El cierre da paso al bloque jugable. El botón "EMPEZAR" no
+      // termina la sesión — encadena con la primera fase de la
+      // Brecha que el orquestador debe abrir.
+      PlanoCierreAmable(textoBoton: 'EMPEZAR'),
+    ],
+  );
+
+  /// **1.1.7 — El primer apunte** (doc 07 §1.1.7).
+  ///
+  /// Esa noche. Maren en su habitación con el cuaderno abierto.
+  /// Voz interna que cierra la primera Estación: "no sabemos cómo
+  /// se llamaban, pero sé que enterraron a alguien que les
+  /// importaba".
+  ///
+  /// Esta escena requiere `brecha_1_1_completada` — el orquestador
+  /// no la dispara hasta que el jugador haya terminado las cinco
+  /// fases de la Brecha 1.1 (F6).
+  static const EscenaCinematica elPrimerApunte = EscenaCinematica(
+    id: '1.1.7',
+    titulo: 'El primer apunte',
+    flagDeSalida: 'escena_1_1_7_vista',
+    flagsRequeridos: {'brecha_1_1_completada'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Esa noche. Maren en su habitación. El cuaderno abierto '
+            'en la mesa. La luz de la mesa encendida. La ventana '
+            'muestra el castaño del patio interior, recortado contra '
+            'el cielo oscuro.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'No sabemos cómo se llamaban. Pero sé que enterraron a '
+            'alguien que les importaba.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Eso es lo que aprendí hoy.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren cierra el cuaderno. Apaga la luz. La habitación '
+            'queda oscura.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'ESTACIÓN 1 — CERRADA',
       ),
 
       PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),

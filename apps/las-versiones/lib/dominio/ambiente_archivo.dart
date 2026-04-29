@@ -99,4 +99,18 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// tarde en casa".
   static const AmbienteArchivo casaMaren =
       AmbienteArchivo._('casa_maren');
+
+  /// Interior del coche viejo de Isaura — Citroën C3, asientos de
+  /// tela gastados, ventanas con paisaje en movimiento. Lugar
+  /// recurrente para conversaciones largas de viaje a las Brechas.
+  static const AmbienteArchivo cocheIsaura =
+      AmbienteArchivo._('coche_isaura');
+
+  /// Campo de dólmenes de Aralar — calizas blancas en lo alto,
+  /// hayedos abajo, hierba alta, viento, alguna oveja muy lejos.
+  /// Lugar de la primera Brecha: el dolmen mediano marcado con
+  /// poste y código de catálogo. Aralar y sus megalitos están
+  /// validados como entrada en el doc 17.
+  static const AmbienteArchivo dolmenAralar =
+      AmbienteArchivo._('dolmen_aralar');
 }

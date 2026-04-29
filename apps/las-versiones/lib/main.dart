@@ -4,9 +4,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'datos/repositorio_estado_brecha.dart';
 import 'datos/repositorio_flags_narrativos.dart';
+import 'dominio/brecha.dart';
+import 'dominio/catalogo_brechas.dart';
 import 'dominio/escenas_arco_1.dart';
 import 'nucleo/paleta_archivo.dart';
+import 'vista/pantalla_brecha.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_esqueleto.dart';
@@ -51,17 +55,20 @@ void main() async {
   runApp(AppLasVersiones(
     repoIdioma: repoIdioma,
     repoFlags: const RepositorioFlagsNarrativos(),
+    repoEstadoBrecha: const RepositorioEstadoBrecha(),
   ));
 }
 
 class AppLasVersiones extends StatelessWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioFlagsNarrativos repoFlags;
+  final RepositorioEstadoBrecha repoEstadoBrecha;
 
   const AppLasVersiones({
     super.key,
     required this.repoIdioma,
     required this.repoFlags,
+    required this.repoEstadoBrecha,
   });
 
   @override
@@ -102,6 +109,7 @@ class AppLasVersiones extends StatelessWidget {
           home: Orquestador(
             repoIdioma: repoIdioma,
             repoFlags: repoFlags,
+            repoEstadoBrecha: repoEstadoBrecha,
           ),
         );
       },
@@ -120,27 +128,28 @@ ThemeData _temaArchivo() {
   );
 }
 
-/// Orquestador del esqueleto. Tres estados posibles, en orden:
+/// Orquestador del juego. Cuatro estados posibles, en orden:
 ///
 /// 1. **Configuración inicial** si la Cronista nunca eligió idioma.
-/// 2. **Cinemática** si hay una escena pendiente cuyos
+/// 2. **Brecha** si una Brecha está abierta (su flag de disparo
+///    activo y su flag de completado aún no). Las cinemáticas
+///    pendientes que apunten al cierre de la Brecha (caso típico:
+///    1.1.7 después de cerrar 1.1) esperan a que la Brecha termine.
+/// 3. **Cinemática** si hay una escena pendiente cuyos
 ///    `flagsRequeridos` están todos activos y cuyo `flagDeSalida`
 ///    aún no lo está.
-/// 3. **Esqueleto** si todas las escenas implementadas están vistas
-///    (mientras no haya Brechas jugables).
-///
-/// Cuando llegue el sistema de Brechas, esta clase crecerá hasta ser
-/// hermana de `OrquestadorFases` de Uno Roto. Por ahora encarna sólo
-/// el ritmo "elige idioma → vive la primera cinemática → espera lo
-/// que viene".
+/// 4. **Esqueleto** si todas las unidades narrativas implementadas
+///    están vistas.
 class Orquestador extends StatefulWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioFlagsNarrativos repoFlags;
+  final RepositorioEstadoBrecha repoEstadoBrecha;
 
   const Orquestador({
     super.key,
     required this.repoIdioma,
     required this.repoFlags,
+    required this.repoEstadoBrecha,
   });
 
   @override
@@ -152,6 +161,8 @@ class _OrquestadorState extends State<Orquestador> {
   bool _idiomaElegido = false;
   Set<String> _flagsActivos = const {};
   EscenaCinematica? _escenaEnReproduccion;
+  Brecha? _brechaAbierta;
+  FaseBrecha _faseBrechaActiva = FaseBrecha.formulacionPreguntas;
 
   @override
   void initState() {
@@ -163,11 +174,20 @@ class _OrquestadorState extends State<Orquestador> {
     final codigo = await widget.repoIdioma.cargar();
     final flags = await widget.repoFlags.activos();
     if (!mounted) return;
+    _flagsActivos = flags;
+    _idiomaElegido = codigo != null;
+    final brecha = _proximaBrechaPendiente();
+    FaseBrecha faseInicial = FaseBrecha.formulacionPreguntas;
+    if (brecha != null) {
+      faseInicial = await widget.repoEstadoBrecha.faseActiva(brecha.id) ??
+          FaseBrecha.formulacionPreguntas;
+    }
+    if (!mounted) return;
     setState(() {
-      _idiomaElegido = codigo != null;
-      _flagsActivos = flags;
+      _brechaAbierta = brecha;
+      _faseBrechaActiva = faseInicial;
+      _escenaEnReproduccion = brecha == null ? _proximaEscenaPendiente() : null;
       _cargando = false;
-      _escenaEnReproduccion = _proximaEscenaPendiente();
     });
   }
 
@@ -187,13 +207,38 @@ class _OrquestadorState extends State<Orquestador> {
     return null;
   }
 
+  /// Devuelve la Brecha cuyo flag de disparo está activo y cuyo
+  /// flag de completado aún no lo está. `null` si ninguna está
+  /// abierta — entonces el orquestador pasa a evaluar cinemáticas
+  /// como hasta ahora.
+  Brecha? _proximaBrechaPendiente() {
+    if (!_idiomaElegido) return null;
+    for (final entrada in CatalogoBrechas.brechaPorFlagDeDisparo.entries) {
+      final flagDisparo = entrada.key;
+      final brecha = entrada.value;
+      final disparada = _flagsActivos.contains(flagDisparo);
+      final yaCompletada = _flagsActivos.contains(brecha.flagDeCompletado);
+      if (disparada && !yaCompletada) return brecha;
+    }
+    return null;
+  }
+
   Future<void> _alElegirIdioma(String codigo) async {
     await widget.repoIdioma.guardar(codigo);
     localeAppLasVersiones.value = Locale(codigo);
     if (!mounted) return;
+    _idiomaElegido = true;
+    final brecha = _proximaBrechaPendiente();
+    FaseBrecha faseInicial = FaseBrecha.formulacionPreguntas;
+    if (brecha != null) {
+      faseInicial = await widget.repoEstadoBrecha.faseActiva(brecha.id) ??
+          FaseBrecha.formulacionPreguntas;
+    }
+    if (!mounted) return;
     setState(() {
-      _idiomaElegido = true;
-      _escenaEnReproduccion = _proximaEscenaPendiente();
+      _brechaAbierta = brecha;
+      _faseBrechaActiva = faseInicial;
+      _escenaEnReproduccion = brecha == null ? _proximaEscenaPendiente() : null;
     });
   }
 
@@ -217,9 +262,43 @@ class _OrquestadorState extends State<Orquestador> {
       await widget.repoFlags.activar(flag);
     }
     if (!mounted) return;
-    final nuevosFlags = {..._flagsActivos, ...flagsACerrar};
+    _flagsActivos = {..._flagsActivos, ...flagsACerrar};
+    // Tras cerrar la escena puede haberse abierto una Brecha (caso
+    // 1.1.2 → flag aralar_dolmen_alcanzado activa Brecha 1.1).
+    final brecha = _proximaBrechaPendiente();
+    FaseBrecha faseInicial = FaseBrecha.formulacionPreguntas;
+    if (brecha != null) {
+      faseInicial = await widget.repoEstadoBrecha.faseActiva(brecha.id) ??
+          FaseBrecha.formulacionPreguntas;
+    }
+    if (!mounted) return;
     setState(() {
-      _flagsActivos = nuevosFlags;
+      _brechaAbierta = brecha;
+      _faseBrechaActiva = faseInicial;
+      _escenaEnReproduccion = brecha == null ? _proximaEscenaPendiente() : null;
+    });
+  }
+
+  Future<void> _alAvanzarFaseBrecha() async {
+    final brecha = _brechaAbierta;
+    if (brecha == null) return;
+    final indiceSiguiente = _faseBrechaActiva.index + 1;
+    if (indiceSiguiente >= FaseBrecha.values.length) return;
+    final siguiente = FaseBrecha.values[indiceSiguiente];
+    await widget.repoEstadoBrecha.establecerFase(brecha.id, siguiente);
+    if (!mounted) return;
+    setState(() => _faseBrechaActiva = siguiente);
+  }
+
+  Future<void> _alCompletarBrecha() async {
+    final brecha = _brechaAbierta;
+    if (brecha == null) return;
+    await widget.repoFlags.activar(brecha.flagDeCompletado);
+    await widget.repoEstadoBrecha.borrar(brecha.id);
+    if (!mounted) return;
+    _flagsActivos = {..._flagsActivos, brecha.flagDeCompletado};
+    setState(() {
+      _brechaAbierta = null;
       _escenaEnReproduccion = _proximaEscenaPendiente();
     });
   }
@@ -235,12 +314,20 @@ class _OrquestadorState extends State<Orquestador> {
     if (!_idiomaElegido) {
       return PantallaConfiguracionInicial(alElegirIdioma: _alElegirIdioma);
     }
+    final brecha = _brechaAbierta;
+    if (brecha != null) {
+      return PantallaBrecha(
+        key: ValueKey('brecha-${brecha.id}-${_faseBrechaActiva.name}'),
+        brecha: brecha,
+        faseActiva: _faseBrechaActiva,
+        alAvanzarFase: _alAvanzarFaseBrecha,
+        alCompletarBrecha: _alCompletarBrecha,
+      );
+    }
     final escena = _escenaEnReproduccion;
     if (escena != null) {
       // Key por id de escena para que el StatefulWidget se reinicie
-      // limpio si cambiamos a otra (no aplica todavía con sólo una,
-      // pero lo dejamos cableado para cuando lleguen 1.0.2 y
-      // siguientes).
+      // limpio al cambiar de escena.
       return PantallaCinematica(
         key: ValueKey(escena.id),
         escena: escena,

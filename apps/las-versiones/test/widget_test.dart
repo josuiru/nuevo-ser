@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_estado_brecha.dart';
 import 'package:las_versiones/datos/repositorio_flags_narrativos.dart';
 import 'package:las_versiones/main.dart';
+import 'package:las_versiones/vista/pantalla_brecha.dart';
 import 'package:las_versiones/vista/pantalla_cinematica.dart';
 import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
 import 'package:las_versiones/vista/pantalla_esqueleto.dart';
@@ -26,10 +28,15 @@ void main() {
     return const RepositorioFlagsNarrativos();
   }
 
+  RepositorioEstadoBrecha crearRepoEstadoBrecha() {
+    return const RepositorioEstadoBrecha();
+  }
+
   AppLasVersiones crearApp() {
     return AppLasVersiones(
       repoIdioma: crearRepoIdioma(),
       repoFlags: crearRepoFlags(),
+      repoEstadoBrecha: crearRepoEstadoBrecha(),
     );
   }
 
@@ -49,13 +56,18 @@ void main() {
   });
 
   testWidgets(
-      'arranque con idioma persistido y todas las escenas del Arco 1 '
-      'vistas → salta directo al esqueleto', (tester) async {
+      'arranque con idioma persistido y todas las unidades del Arco 1 '
+      'cerradas → salta directo al esqueleto', (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.lasversiones.idioma_app': 'eu',
       'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
       'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
       'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -63,7 +75,64 @@ void main() {
 
     expect(find.byType(PantallaEsqueleto), findsOneWidget);
     expect(find.byType(PantallaCinematica), findsNothing);
+    expect(find.byType(PantallaBrecha), findsNothing);
     expect(find.byType(PantallaConfiguracionInicial), findsNothing);
+  });
+
+  testWidgets(
+      'arranque con cinemática 1.1.2 cerrada y Brecha 1.1 sin completar → '
+      'abre la PantallaBrecha en fase formulación', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      // brecha_1_1_completada NO está → la brecha está abierta
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaBrecha), findsOneWidget);
+    expect(find.byType(PantallaCinematica), findsNothing);
+    expect(find.text('ARALAR — DOLMEN DE AROZTEGI'), findsOneWidget);
+    expect(find.textContaining('FASE 1'), findsOneWidget);
+  });
+
+  testWidgets(
+      'completar la Brecha 1.1 marca su flag y libera la cinemática 1.1.7',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      // Forzamos arranque ya en Concilio para no andar pulsando 4 veces.
+      'nuevoser.lasversiones.brecha.1.1.fase': 'concilio',
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaBrecha), findsOneWidget);
+    expect(find.text('CERRAR LA BRECHA'), findsOneWidget);
+
+    await tester.tap(find.text('CERRAR LA BRECHA'));
+    await tester.pumpAndSettle();
+
+    // Tras cerrar, la cinemática 1.1.7 (que requiere
+    // brecha_1_1_completada) debe arrancar.
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+    expect(find.byType(PantallaBrecha), findsNothing);
+
+    final repoFlags = crearRepoFlags();
+    expect(await repoFlags.estaActivo('brecha_1_1_completada'), isTrue);
   });
 
   testWidgets(
@@ -88,6 +157,7 @@ void main() {
     await tester.pumpWidget(AppLasVersiones(
       repoIdioma: repoIdioma,
       repoFlags: crearRepoFlags(),
+      repoEstadoBrecha: crearRepoEstadoBrecha(),
     ));
     await tester.pumpAndSettle();
 

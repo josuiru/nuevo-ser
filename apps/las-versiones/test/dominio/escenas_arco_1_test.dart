@@ -147,19 +147,53 @@ void main() {
   });
 
   group('cadena del Arco 1', () {
-    test('el orden en `todas` respeta la cadena de precondiciones — '
-        'cada escena requiere la flagDeSalida de la anterior', () {
-      String? salidaPrevia;
+    test('cada escena (excepto la primera) tiene precondiciones — el '
+        'orquestador no la dispara antes de su sitio', () {
+      var primera = true;
       for (final escena in EscenasArco1.todas) {
-        if (salidaPrevia != null) {
-          expect(
-            escena.flagsRequeridos,
-            contains(salidaPrevia),
-            reason: '${escena.id} debe requerir el cierre de la escena '
-                'anterior ($salidaPrevia)',
-          );
+        if (primera) {
+          primera = false;
+          continue;
         }
-        salidaPrevia = escena.flagDeSalida;
+        expect(
+          escena.flagsRequeridos,
+          isNotEmpty,
+          reason: '${escena.id} debe declarar al menos una precondición '
+              'para no dispararse antes de tiempo',
+        );
+      }
+    });
+
+    test('cada escena (excepto la primera) requiere o bien la flagDeSalida '
+        'de una escena anterior, o un flag conocido del juego (caso típico: '
+        'una escena posterior a una Brecha requiere brecha_<id>_completada)',
+        () {
+      // Construimos el conjunto de "flags producibles" antes de cada
+      // escena: flagDeSalida + flagsDeCierre de escenas previas, más
+      // los flags conocidos de cierre de Brechas (brecha_<id>_completada).
+      final flagsProducibles = <String>{};
+      // Las Brechas catalogadas también producen su flag de cierre.
+      // Lo añadimos al pool inicial para que escenas posteriores a
+      // una Brecha puedan referenciarlo libremente.
+      flagsProducibles.add('brecha_1_1_completada');
+
+      var primera = true;
+      for (final escena in EscenasArco1.todas) {
+        if (!primera) {
+          for (final requerido in escena.flagsRequeridos) {
+            expect(
+              flagsProducibles,
+              contains(requerido),
+              reason: '${escena.id} requiere "$requerido" pero no hay '
+                  'unidad narrativa anterior que lo produzca',
+            );
+          }
+        }
+        primera = false;
+        flagsProducibles.add(escena.flagDeSalida);
+        final cierres =
+            EscenasArco1.flagsDeCierrePorEscena[escena.flagDeSalida];
+        if (cierres != null) flagsProducibles.addAll(cierres);
       }
     });
 
