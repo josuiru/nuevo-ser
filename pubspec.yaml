@@ -1,0 +1,10 @@
+name: nuevo_ser_workspace
+description: Workspace raíz del monorepo de la Colección Nuevo Ser Kids. No publicable; sirve para que Melos instale sus dependencias.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+dev_dependencies:
+  melos: ^6.0.0

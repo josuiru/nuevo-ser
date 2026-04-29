@@ -2,7 +2,7 @@
 # Empaqueta el paquete sonoro descargable.
 #
 # Construye dist/audio_v<N>.zip a partir de los OGG en
-# app/assets/sonido/{efectos,ambient,musica,narrativos}/, calcula sha256
+# apps/uno-roto/assets/sonido/{efectos,ambient,musica,narrativos}/, calcula sha256
 # y produce un manifest.json listo para servir.
 #
 # Uso:
@@ -36,7 +36,7 @@ if ! [[ "$VERSION" =~ ^[0-9]+$ ]]; then
 fi
 
 DIR_RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DIR_FUENTE="$DIR_RAIZ/app/assets/sonido"
+DIR_FUENTE="$DIR_RAIZ/apps/uno-roto/assets/sonido"
 DIR_DIST="$DIR_RAIZ/dist"
 
 mkdir -p "$DIR_DIST"
@@ -66,7 +66,7 @@ done
 
 if [[ ${#ARCHIVOS[@]} -eq 0 ]]; then
   echo "ERROR: no se encontraron archivos .ogg para empaquetar." >&2
-  echo "Asegúrate de tener los assets en app/assets/sonido/{efectos,ambient,musica,narrativos}/" >&2
+  echo "Asegúrate de tener los assets en apps/uno-roto/assets/sonido/{efectos,ambient,musica,narrativos}/" >&2
   exit 1
 fi
 

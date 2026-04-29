@@ -1,0 +1,21 @@
+name: las_versiones
+description: Las Versiones — juego de pensamiento histórico para 10-14 años. Esqueleto vacío en C1; implementación entra en Fase 10 del roadmap.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

@@ -1,14 +1,28 @@
-# Flutter build artifacts
-app/build/
-app/.dart_tool/
-app/.flutter-plugins
-app/.flutter-plugins-dependencies
-app/.packages
-app/.pub-cache/
-app/.pub/
-app/**/generated_plugin_registrant.dart
+# Monorepo Colección Nuevo Ser Kids — .gitignore
 
+# ============================================================================
+# Flutter / Dart build artifacts (todos los paquetes)
+# ============================================================================
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/generated_plugin_registrant.dart
+**/pubspec_overrides.yaml
+
+# ============================================================================
+# Melos / monorepo
+# ============================================================================
+.melos_tool/
+melos_*.iml
+pubspec.lock
+
+# ============================================================================
 # IDE
+# ============================================================================
 .idea/
 .vscode/
 *.iml
@@ -16,49 +30,59 @@ app/**/generated_plugin_registrant.dart
 *.iws
 .metadata
 
-# Android
-app/android/.gradle/
-app/android/app/debug/
-app/android/app/profile/
-app/android/app/release/
-app/android/captures/
-app/android/gradlew
-app/android/gradlew.bat
-app/android/gradle/wrapper/gradle-wrapper.jar
-app/android/local.properties
-app/android/key.properties
+# ============================================================================
+# Android (apps/uno-roto)
+# ============================================================================
+apps/uno-roto/android/.gradle/
+apps/uno-roto/android/app/debug/
+apps/uno-roto/android/app/profile/
+apps/uno-roto/android/app/release/
+apps/uno-roto/android/captures/
+apps/uno-roto/android/gradlew
+apps/uno-roto/android/gradlew.bat
+apps/uno-roto/android/gradle/wrapper/gradle-wrapper.jar
+apps/uno-roto/android/local.properties
+apps/uno-roto/android/key.properties
 
-# Linux / Windows / macOS desktop build output
-app/linux/flutter/ephemeral/
-app/windows/flutter/ephemeral/
-app/macos/Flutter/ephemeral/
+# ============================================================================
+# Desktop builds
+# ============================================================================
+**/linux/flutter/ephemeral/
+**/windows/flutter/ephemeral/
+**/macos/Flutter/ephemeral/
 
+# ============================================================================
 # Coverage
-app/coverage/
+# ============================================================================
+**/coverage/
 
-# Logs
+# ============================================================================
+# Logs y OS
+# ============================================================================
 *.log
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Assets sonoros pesados (descargables vía scripts/sonido/bajar_sonidos.sh).
-# Los .md (CREDITOS.md, LEEME.md) se commitean para mantener trazabilidad.
-app/assets/sonido/_pack_owlishmedia/
-app/assets/sonido/_owlishmedia.zip
-app/assets/sonido/ambient/*.wav
-app/assets/sonido/ambient/*.ogg
-app/assets/sonido/ambient/*.mp3
-app/assets/sonido/musica/*.wav
-app/assets/sonido/musica/*.ogg
-app/assets/sonido/musica/*.mp3
-app/assets/sonido/efectos/*.wav
-app/assets/sonido/efectos/*.ogg
-app/assets/sonido/efectos/*.mp3
-app/assets/sonido/narrativos/*.wav
-app/assets/sonido/narrativos/*.ogg
-app/assets/sonido/narrativos/*.mp3
+# ============================================================================
+# Assets sonoros pesados de Uno Roto — descargables vía scripts/sonido/.
+# Los .md (CREDITOS.md, LEEME.md) sí se commitean para trazabilidad.
+# ============================================================================
+apps/uno-roto/assets/sonido/_pack_owlishmedia/
+apps/uno-roto/assets/sonido/_owlishmedia.zip
+apps/uno-roto/assets/sonido/ambient/*.wav
+apps/uno-roto/assets/sonido/ambient/*.ogg
+apps/uno-roto/assets/sonido/ambient/*.mp3
+apps/uno-roto/assets/sonido/musica/*.wav
+apps/uno-roto/assets/sonido/musica/*.ogg
+apps/uno-roto/assets/sonido/musica/*.mp3
+apps/uno-roto/assets/sonido/efectos/*.wav
+apps/uno-roto/assets/sonido/efectos/*.ogg
+apps/uno-roto/assets/sonido/efectos/*.mp3
+apps/uno-roto/assets/sonido/narrativos/*.wav
+apps/uno-roto/assets/sonido/narrativos/*.ogg
+apps/uno-roto/assets/sonido/narrativos/*.mp3
 
-# Salidas del empaquetador del paquete sonoro descargable.
+# ============================================================================
+# Salidas del empaquetador del paquete sonoro descargable
+# ============================================================================
 dist/

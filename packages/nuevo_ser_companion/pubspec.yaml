@@ -1,0 +1,17 @@
+name: nuevo_ser_companion
+description: Acompañamiento (Cuaderno, Mosaicos, dashboards de aula y cuidador) de la Colección Nuevo Ser Kids. Implementación diferida a v1.5.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
