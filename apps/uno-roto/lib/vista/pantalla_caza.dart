@@ -63,7 +63,6 @@ import '../dominio/problema_mixto_a_impropio.dart'
 import '../dominio/problema_redondeo_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
-import '../dominio/tutor/servicio_tutor.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
@@ -213,7 +212,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         urlBase: ConfigApi.urlBase,
         hostOverride: ConfigApi.hostOverride,
       ),
-      repositorio: widget.repositorio,
+      estadoTutor: widget.repositorio.estadoTutor,
       proveedorToken: () => token,
     );
   }

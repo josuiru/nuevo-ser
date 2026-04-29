@@ -12,16 +12,16 @@ lib/src/
 ├── cliente_tutor.dart                  ← POST /tutor/explicar (depende de ExcepcionApi del core)
 ├── filtro_seguridad.dart               ← contrato canónico de seguridad (Dart) — espejo en PHP
 ├── disparador_tutor.dart               ← heurística "ofrecer tutor" + EstadoTutorHabilidad
-└── repositorio_estado_tutor.dart       ← persistencia JSON de EstadoTutorHabilidad por perfil
+├── repositorio_estado_tutor.dart       ← persistencia JSON de EstadoTutorHabilidad por perfil
+└── servicio_tutor.dart                 ← orquestador: filtro + caché + cliente + estado
 ```
 
-`RepositorioEstadoTutor` se monta sobre el `GestorPerfiles` de `nuevo_ser_core` con auto-curación de claves corruptas.
+`RepositorioEstadoTutor` se monta sobre el `GestorPerfiles` de `nuevo_ser_core` con auto-curación de claves corruptas. `ServicioTutor` ya no depende del repositorio juego-específico — se le inyecta directamente un `RepositorioEstadoTutor`, así que cualquier app de la Colección puede componerlo con su propia identidad.
 
 ## Pendiente
 
 | Pieza | Por qué se queda en `apps/uno-roto/` |
 |---|---|
-| `servicio_tutor.dart` | Orquesta filtro + caché + cliente con `RepositorioProgreso`, que todavía modela conceptos de Uno Roto (arco, rango, ritmo). Se moverá cuando se escinda el repositorio específico. |
 | `cliente_tutor_panel.dart` | Cliente del panel admin del tutor — específico del flujo de Uno Roto, no se considera plataforma reusable hoy. |
 
 ## Dependencias

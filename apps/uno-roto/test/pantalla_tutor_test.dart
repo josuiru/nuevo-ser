@@ -6,22 +6,29 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
-import 'package:uno_roto/datos/repositorio_progreso.dart';
-import 'package:uno_roto/dominio/tutor/servicio_tutor.dart';
 import 'package:uno_roto/l10n/app_localizations.dart';
 import 'package:uno_roto/vista/pantalla_tutor.dart';
 
 void main() {
+  late RepositorioEstadoTutor estadoTutor;
+
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    estadoTutor = RepositorioEstadoTutor(
+      gestor: GestorPerfiles(
+        namespace: 'uroto',
+        sufijoNombreVisible: 'nombre_jugador',
+      ),
+    );
   });
 
   ServicioTutor crearServicio(MockClient mock) {
     return ServicioTutor(
       cache: CacheTutor(),
       cliente: ClienteTutor(urlBase: 'https://t.example', cliente: mock),
-      repositorio: RepositorioProgreso(),
+      estadoTutor: estadoTutor,
       proveedorToken: () => 'tk',
     );
   }

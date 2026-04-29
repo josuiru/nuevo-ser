@@ -1,31 +1,35 @@
-import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
-import '../../datos/repositorio_progreso.dart';
+
+import 'cache_tutor.dart';
+import 'cliente_tutor.dart';
+import 'disparador_tutor.dart';
+import 'filtro_seguridad.dart';
+import 'repositorio_estado_tutor.dart';
 
 /// Orquestador del Tutor IA. Compone las cuatro piezas independientes
 /// (filtro, disparador, caché, cliente HTTP) en la API de alto nivel
-/// que la `PantallaTutor` y el motor de combate usan.
+/// que la pantalla del tutor y el motor de combate usan.
 ///
 /// La capa pantalla NO conoce filtro, caché ni cliente HTTP por
-/// separado — solo este servicio. Eso permite cambiar la implementación
+/// separado — sólo este servicio. Eso permite cambiar la implementación
 /// de cualquier subpieza sin tocar la UI.
 ///
-/// El servicio NO mantiene estado: lee/escribe a través del repositorio
-/// (estados del disparador por skill) y de la caché (respuestas). Esto
-/// permite que cualquier pantalla cree una instancia ligera sin
-/// preocuparse por compartir estado.
+/// El servicio NO mantiene estado: lee/escribe a través del
+/// [RepositorioEstadoTutor] (estado del disparador por skill) y de la
+/// caché (respuestas). Cualquier pantalla puede crear una instancia
+/// ligera sin preocuparse por compartir estado.
 class ServicioTutor {
   final FiltroSeguridad _filtro;
   final DisparadorTutor _disparador;
   final CacheTutor _cache;
   final ClienteTutor _cliente;
-  final RepositorioProgreso _repositorio;
+  final RepositorioEstadoTutor _estadoTutor;
   final String Function() _proveedorToken;
 
   ServicioTutor({
     required CacheTutor cache,
     required ClienteTutor cliente,
-    required RepositorioProgreso repositorio,
+    required RepositorioEstadoTutor estadoTutor,
     required String Function() proveedorToken,
     FiltroSeguridad filtro = const FiltroSeguridad(),
     DisparadorTutor disparador = const DisparadorTutor(),
@@ -33,7 +37,7 @@ class ServicioTutor {
         _disparador = disparador,
         _cache = cache,
         _cliente = cliente,
-        _repositorio = repositorio,
+        _estadoTutor = estadoTutor,
         _proveedorToken = proveedorToken;
 
   // ─── Política: cuándo ofrecer / registrar resultados ──────────
@@ -45,25 +49,25 @@ class ServicioTutor {
     required String idHabilidad,
     required bool acierto,
   }) async {
-    final estado = await _repositorio.cargarEstadoTutor(idHabilidad);
+    final estado = await _estadoTutor.cargar(idHabilidad);
     final nuevo = acierto
         ? estado.registrandoAcierto()
         : estado.registrandoFallo();
-    await _repositorio.guardarEstadoTutor(idHabilidad, nuevo);
+    await _estadoTutor.guardar(idHabilidad, nuevo);
   }
 
   /// Decide si la pantalla del puzzle debe mostrar el botón de tutor
   /// para esta habilidad ahora.
   Future<bool> deberiaOfrecer(String idHabilidad, {DateTime? ahora}) async {
-    final estado = await _repositorio.cargarEstadoTutor(idHabilidad);
+    final estado = await _estadoTutor.cargar(idHabilidad);
     return _disparador.deberiaOfrecer(estado, ahora ?? DateTime.now());
   }
 
   /// Llamar cuando el niño ABRE el tutor (acepta la oferta o lo invoca
   /// manualmente). Marca la oferta como mostrada y arranca el cooldown.
   Future<void> registrarOferta(String idHabilidad, {DateTime? ahora}) async {
-    final estado = await _repositorio.cargarEstadoTutor(idHabilidad);
-    await _repositorio.guardarEstadoTutor(
+    final estado = await _estadoTutor.cargar(idHabilidad);
+    await _estadoTutor.guardar(
       idHabilidad,
       estado.registrandoOferta(ahora ?? DateTime.now()),
     );

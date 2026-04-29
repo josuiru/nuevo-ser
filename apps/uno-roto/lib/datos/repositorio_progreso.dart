@@ -71,7 +71,9 @@ class RepositorioProgreso {
       RepositorioHabilidades(gestor: _gestor);
 
   /// Persistencia de [EstadoTutorHabilidad] sobre el gestor activo.
-  late final RepositorioEstadoTutor _repoEstadoTutor =
+  /// Expuesto para el `ServicioTutor` (que vive en `nuevo_ser_tutor`),
+  /// los call-sites lo pasan al constructor del servicio.
+  late final RepositorioEstadoTutor estadoTutor =
       RepositorioEstadoTutor(gestor: _gestor);
 
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
@@ -464,18 +466,6 @@ class RepositorioProgreso {
 
   Future<void> guardarEstadoHabilidad(EstadoHabilidad estado) =>
       _repoHabilidades.guardar(estado);
-
-  /// Estado del tutor para una habilidad concreta (fallos consecutivos,
-  /// última oferta, veces usado). Por-perfil — no queremos que un niño
-  /// vea el contador de otro.
-  Future<EstadoTutorHabilidad> cargarEstadoTutor(String idHabilidad) =>
-      _repoEstadoTutor.cargar(idHabilidad);
-
-  Future<void> guardarEstadoTutor(
-    String idHabilidad,
-    EstadoTutorHabilidad estado,
-  ) =>
-      _repoEstadoTutor.guardar(idHabilidad, estado);
 
   /// Borra el progreso del perfil activo (sin eliminar el perfil ni
   /// afectar a otros perfiles).

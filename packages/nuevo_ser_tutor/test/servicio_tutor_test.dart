@@ -3,27 +3,37 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
-import 'package:uno_roto/datos/repositorio_progreso.dart';
-import 'package:uno_roto/dominio/tutor/servicio_tutor.dart';
-
+/// Suite de comportamiento del orquestador del Tutor IA.
+///
+/// El servicio depende de cuatro piezas inyectables (filtro, disparador,
+/// caché, cliente HTTP) más un repositorio de estado por habilidad. Los
+/// tests construyen un `RepositorioEstadoTutor` montado sobre un
+/// `GestorPerfiles` con prefs en memoria.
 void main() {
+  late GestorPerfiles gestor;
+  late RepositorioEstadoTutor estadoTutor;
+
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    gestor = GestorPerfiles(
+      namespace: 'uroto',
+      sufijoNombreVisible: 'nombre_jugador',
+    );
+    estadoTutor = RepositorioEstadoTutor(gestor: gestor);
   });
 
-  ServicioTutor crearServicio({
-    required MockClient mock,
-  }) {
+  ServicioTutor crearServicio({required MockClient mock}) {
     return ServicioTutor(
       cache: CacheTutor(),
       cliente: ClienteTutor(
         urlBase: 'https://t.example',
         cliente: mock,
       ),
-      repositorio: RepositorioProgreso(),
+      estadoTutor: estadoTutor,
       proveedorToken: () => 'tk',
     );
   }
@@ -169,17 +179,12 @@ void main() {
           mock: MockClient((_) async => http.Response('{}', 200)),
         );
         const id = 'FR.05';
-        // 3 fallos previos → la pantalla mostraría la oferta.
         for (var i = 0; i < fallosConsecutivosParaOfrecer; i++) {
           await servicio.registrarResultado(idHabilidad: id, acierto: false);
         }
         final ahora = DateTime(2026, 4, 27, 12, 0);
         expect(await servicio.deberiaOfrecer(id, ahora: ahora), isTrue);
-        // El niño elige "no, sigo solo". pantalla_caza arranca el
-        // cooldown igualmente, como si hubiera entrado al tutor.
         await servicio.registrarOferta(id, ahora: ahora);
-        // Sigue fallando; no debe reaparecer la oferta hasta que
-        // pase el cooldown.
         for (var i = 0; i < fallosConsecutivosParaOfrecer; i++) {
           await servicio.registrarResultado(idHabilidad: id, acierto: false);
         }
@@ -216,7 +221,6 @@ void main() {
       final ahora = DateTime(2026, 4, 27, 12, 0);
       expect(await servicio.deberiaOfrecer(id, ahora: ahora), isTrue);
       await servicio.registrarOferta(id, ahora: ahora);
-      // Aunque siga fallando, el cooldown impide ofrecer durante un rato.
       for (var i = 0; i < fallosConsecutivosParaOfrecer; i++) {
         await servicio.registrarResultado(idHabilidad: id, acierto: false);
       }
@@ -250,13 +254,6 @@ void main() {
       expect(await servicio.deberiaOfrecer('FR.06'), isFalse);
     });
 
-    // ─── Flujo de pantalla_caza ───
-    // pantalla_caza._alTocarFragmento registra (intentos-1) fallos
-    // PREVIOS al resultado final, evalúa la oferta del tutor con el
-    // contador en su pico, y luego registra acierto/fallo final. Estos
-    // tests congelan ese contrato: el motor del tutor no necesita saber
-    // si los fallos vienen del mismo Fragmento o de varios consecutivos.
-
     test(
       'flujo caza: 4 intentos con captura final → ofrece antes y resetea después',
       () async {
@@ -264,13 +261,10 @@ void main() {
           mock: MockClient((_) async => http.Response('{}', 200)),
         );
         const id = 'FR.05';
-        // pantalla_caza registra (intentos-1) = 3 fallos previos.
         for (var i = 0; i < 3; i++) {
           await servicio.registrarResultado(idHabilidad: id, acierto: false);
         }
-        // En este punto se evalúa la oferta — sí, está atascado.
         expect(await servicio.deberiaOfrecer(id), isTrue);
-        // Resultado final: capturó. El acierto resetea el contador.
         await servicio.registrarResultado(idHabilidad: id, acierto: true);
         expect(await servicio.deberiaOfrecer(id), isFalse);
       },
@@ -283,15 +277,11 @@ void main() {
           mock: MockClient((_) async => http.Response('{}', 200)),
         );
         const id = 'FR.05';
-        // (intentos-1) = 4 fallos previos.
         for (var i = 0; i < 4; i++) {
           await servicio.registrarResultado(idHabilidad: id, acierto: false);
         }
         expect(await servicio.deberiaOfrecer(id), isTrue);
-        // Escape: el resultado final es otro fallo más.
         await servicio.registrarResultado(idHabilidad: id, acierto: false);
-        // Sigue por encima del umbral (no hay cooldown porque la oferta
-        // aún no se ha registrado como mostrada).
         expect(await servicio.deberiaOfrecer(id), isTrue);
       },
     );
@@ -303,7 +293,6 @@ void main() {
           mock: MockClient((_) async => http.Response('{}', 200)),
         );
         const id = 'FR.05';
-        // (intentos-1) = 1 fallo previo, por debajo del umbral.
         await servicio.registrarResultado(idHabilidad: id, acierto: false);
         expect(await servicio.deberiaOfrecer(id), isFalse);
         await servicio.registrarResultado(idHabilidad: id, acierto: true);

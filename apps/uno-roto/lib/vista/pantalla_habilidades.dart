@@ -7,7 +7,6 @@ import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
-import '../dominio/tutor/servicio_tutor.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/textos_enums.dart';
 import '../main.dart' show localeAppUnoRoto;
@@ -508,7 +507,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         urlBase: ConfigApi.urlBase,
         hostOverride: ConfigApi.hostOverride,
       ),
-      repositorio: widget.repositorio,
+      estadoTutor: widget.repositorio.estadoTutor,
       proveedorToken: () => token,
     );
     await Navigator.of(context).push(
