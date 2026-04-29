@@ -93,6 +93,14 @@ class RepositorioProgreso {
     claveEmail: _claveEmailBackend,
   );
 
+  /// Idioma elegido en el primer arranque — clave global compartida
+  /// entre perfiles. La whitelist de claves no migrables (arriba) lo
+  /// conserva al migrar progresos pre-perfiles.
+  late final RepositorioIdiomaApp _repoIdiomaApp = RepositorioIdiomaApp(
+    prefs: SharedPreferences.getInstance,
+    clave: _claveIdiomaApp,
+  );
+
   Future<SharedPreferences> _prefs() => _gestor.prefsInicializadas();
 
   Future<String> idPerfilActivo() => _gestor.idPerfilActivo();
@@ -160,15 +168,10 @@ class RepositorioProgreso {
   /// hace antes de cualquier perfil. Valores: 'es', 'eu', 'ca'. null si
   /// no se ha elegido todavía — el orquestador lo interpreta como
   /// "primer arranque, mostrar configuración inicial".
-  Future<String?> cargarIdiomaApp() async {
-    final prefs = await _prefs();
-    return prefs.getString(_claveIdiomaApp);
-  }
+  Future<String?> cargarIdiomaApp() => _repoIdiomaApp.cargar();
 
-  Future<void> guardarIdiomaApp(String codigoIdioma) async {
-    final prefs = await _prefs();
-    await prefs.setString(_claveIdiomaApp, codigoIdioma);
-  }
+  Future<void> guardarIdiomaApp(String codigoIdioma) =>
+      _repoIdiomaApp.guardar(codigoIdioma);
 
   /// Atajo: borra token y email a la vez, equivalente a "cerrar sesión".
   Future<void> cerrarSesionBackend() => _cuentaBackend.cerrarSesion();

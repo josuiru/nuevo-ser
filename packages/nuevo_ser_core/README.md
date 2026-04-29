@@ -24,6 +24,7 @@ lib/src/
 │   ├── gestor_perfiles.dart                ← multi-perfil sobre SharedPreferences + PerfilInfo
 │   ├── repositorio_cuenta_backend.dart     ← token JWT + email del backend (global, no por-perfil)
 │   ├── repositorio_habilidades.dart        ← persistencia JSON de EstadoHabilidad por perfil + exportarParaSync
+│   ├── repositorio_idioma_app.dart         ← código de idioma elegido en el primer arranque (global)
 │   └── repositorio_preferencias_audio.dart ← modo silencio + volumen por capa, por perfil
 └── sync/
     ├── cliente_api.dart                ← ClienteApi, ExcepcionApi (REST con plugin WP)
