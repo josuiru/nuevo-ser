@@ -52,6 +52,7 @@ require_once NS_CORE_DIR . 'includes/class-ns-sincronizador.php';
 require_once NS_CORE_DIR . 'includes/class-ns-filtro-tutor.php';
 require_once NS_CORE_DIR . 'includes/class-ns-anthropic.php';
 require_once NS_CORE_DIR . 'includes/class-ns-tutor.php';
+require_once NS_CORE_DIR . 'includes/class-ns-mastery.php';
 require_once NS_CORE_DIR . 'includes/class-ns-reset-password.php';
 require_once NS_CORE_DIR . 'includes/class-ns-endpoints.php';
 
