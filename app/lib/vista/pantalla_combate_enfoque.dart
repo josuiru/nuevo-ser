@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../dominio/fragmento.dart';
 import '../dominio/resolucion_corte.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'lienzo_combate.dart';
@@ -289,9 +290,9 @@ class _BarraEnfoque extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Text(
-                'huir',
-                style: TextStyle(
+              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                style: const TextStyle(
                   color: PaletaNeon.textoTenue,
                   fontSize: 13,
                   letterSpacing: 1.5,
@@ -385,19 +386,19 @@ class _BarraAcciones extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _BotonAccion(
-            etiqueta: 'Deshacer',
+            etiqueta: AppLocalizations.of(contexto).combateBotonDeshacer,
             habilitado: hayTrazos,
             acentuado: false,
             alPulsar: alDeshacer,
           ),
           _BotonAccion(
-            etiqueta: 'De nuevo',
+            etiqueta: AppLocalizations.of(contexto).combateBotonDeNuevo,
             habilitado: hayTrazos,
             acentuado: false,
             alPulsar: alReiniciar,
           ),
           _BotonAccion(
-            etiqueta: 'Cortar',
+            etiqueta: AppLocalizations.of(contexto).combateBotonCortar,
             habilitado: puedeCortar,
             acentuado: true,
             alPulsar: alCortar,

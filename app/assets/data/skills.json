@@ -34,71 +34,1397 @@
     "Fraccionista_Mayor"
   ],
   "skills": [
-    {"id":"FR.01","name":"Reconocer fracción como parte de un todo","domain":"FR","deps":[],"families":["A","B"],"districts":["tejados"],"intro_rank":"Aprendiz_I","required_rank":"Aprendiz_I","precision_threshold":0.9,"time_median_seconds":[3,6]},
-    {"id":"FR.02","name":"Leer y escribir fracciones","domain":"FR","deps":["FR.01"],"families":["B"],"districts":["tejados"],"intro_rank":"Aprendiz_I","required_rank":"Aprendiz_II","precision_threshold":0.85,"time_median_seconds":[4,8]},
-    {"id":"FR.03","name":"Comparar fracción con 1/2","domain":"FR","deps":["FR.01","FR.02"],"families":["B","C"],"districts":["tejados"],"intro_rank":"Aprendiz_I","required_rank":"Aprendiz_II","precision_threshold":0.85,"time_median_seconds":[3,6]},
-    {"id":"FR.04","name":"Comparar fracción con la unidad","domain":"FR","deps":["FR.01"],"families":["A","E"],"districts":["tejados","canales"],"intro_rank":"Aprendiz_II","required_rank":"Aprendiz_III","precision_threshold":0.9,"time_median_seconds":[2,4]},
-    {"id":"FR.05","name":"Comparar dos fracciones con mismo denominador","domain":"FR","deps":["FR.01"],"families":["B","C"],"districts":["tejados","canales"],"intro_rank":"Aprendiz_II","required_rank":"Aprendiz_II","precision_threshold":0.9,"time_median_seconds":[2,4]},
-    {"id":"FR.06","name":"Comparar dos fracciones con mismo numerador","domain":"FR","deps":["FR.01","FR.05"],"families":["B","C"],"districts":["canales"],"intro_rank":"Aprendiz_II","required_rank":"Aprendiz_III","precision_threshold":0.85,"time_median_seconds":[3,6]},
-    {"id":"FR.07","name":"Comparar dos fracciones cualesquiera","domain":"FR","deps":["FR.05","FR.06","FR.11"],"families":["C","D"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.8,"time_median_seconds":[6,15]},
-    {"id":"FR.08","name":"Ordenar fracciones","domain":"FR","deps":["FR.07"],"families":["C","D"],"districts":["canales","mercado"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[15,30]},
-    {"id":"FR.09","name":"Identificar fracciones equivalentes","domain":"FR","deps":["FR.01","FR.05"],"families":["D"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[4,10]},
-    {"id":"FR.10","name":"Simplificar fracción","domain":"FR","deps":["FR.09","DIV.06"],"families":["D"],"districts":["canales"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[8,20]},
-    {"id":"FR.11","name":"Amplificar fracción a denominador dado","domain":"FR","deps":["FR.09"],"families":["D","F"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[4,8]},
-    {"id":"FR.12","name":"Convertir fracción impropia en número mixto","domain":"FR","deps":["FR.04"],"families":["E"],"districts":["canales","industria"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[5,12]},
-    {"id":"FR.13","name":"Convertir número mixto en fracción impropia","domain":"FR","deps":["FR.12"],"families":["E"],"districts":["canales"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[4,10]},
-    {"id":"FR.14","name":"Sumar fracciones con mismo denominador","domain":"FR","deps":["FR.01","FR.02"],"families":["B","C"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.9,"time_median_seconds":[3,6]},
-    {"id":"FR.15","name":"Restar fracciones con mismo denominador","domain":"FR","deps":["FR.14"],"families":["B","C"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.9,"time_median_seconds":[3,6]},
-    {"id":"FR.16","name":"Sumar fracciones con denominadores distintos","domain":"FR","deps":["FR.11","FR.14","DIV.07"],"families":["F"],"districts":["canales"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[10,25]},
-    {"id":"FR.17","name":"Restar fracciones con denominadores distintos","domain":"FR","deps":["FR.16"],"families":["F"],"districts":["canales"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[10,25]},
-    {"id":"FR.18","name":"Multiplicar fracción por número natural","domain":"FR","deps":["FR.14"],"families":["B","C"],"districts":["canales","puerto"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[5,12]},
-    {"id":"FR.19","name":"Multiplicar fracción por fracción","domain":"FR","deps":["FR.18","FR.10"],"families":["C","F"],"districts":["puerto"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.8,"time_median_seconds":[8,20]},
-    {"id":"FR.20","name":"Dividir fracción por número natural","domain":"FR","deps":["FR.18"],"families":["B","C"],"districts":["puerto"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.8,"time_median_seconds":[6,15]},
-    {"id":"FR.21","name":"Dividir fracción por fracción","domain":"FR","deps":["FR.19","FR.20"],"families":["F"],"districts":["puerto"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista","precision_threshold":0.75,"time_median_seconds":[10,25]},
-    {"id":"FR.22","name":"Fracción de una cantidad","domain":"FR","deps":["FR.18","FR.20"],"families":["C","H"],"districts":["mercado"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.85,"time_median_seconds":[8,20]},
-    {"id":"DEC.01","name":"Leer y escribir decimales","domain":"DEC","deps":[],"families":["G"],"districts":["industria"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.9,"time_median_seconds":[3,6]},
-    {"id":"DEC.02","name":"Comparar decimales","domain":"DEC","deps":["DEC.01"],"families":["G"],"districts":["industria"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[3,6]},
-    {"id":"DEC.03","name":"Ordenar decimales","domain":"DEC","deps":["DEC.02"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_I","precision_threshold":0.8,"time_median_seconds":[12,25]},
-    {"id":"DEC.04","name":"Sumar y restar decimales","domain":"DEC","deps":["DEC.01"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[6,15]},
-    {"id":"DEC.05","name":"Multiplicar decimal por número natural","domain":"DEC","deps":["DEC.04"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[8,18]},
-    {"id":"DEC.06","name":"Multiplicar decimal por decimal","domain":"DEC","deps":["DEC.05"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.75,"time_median_seconds":[10,25]},
-    {"id":"DEC.07","name":"Dividir decimales","domain":"DEC","deps":["DEC.01"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.75,"time_median_seconds":[12,30]},
-    {"id":"DEC.08","name":"Convertir fracción a decimal casos simples","domain":"DEC","deps":["DEC.01","FR.01"],"families":["D","G"],"districts":["canales","industria","mercado"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[4,10]},
-    {"id":"DEC.09","name":"Redondear decimal","domain":"DEC","deps":["DEC.01"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[3,8]},
-    {"id":"PROP.01","name":"Reconocer razón entre dos cantidades","domain":"PROP","deps":["FR.01"],"families":["I"],"districts":["mercado"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[5,12]},
-    {"id":"PROP.02","name":"Identificar proporcionalidad directa","domain":"PROP","deps":["PROP.01"],"families":["I"],"districts":["mercado","afueras"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.8,"time_median_seconds":[8,18]},
-    {"id":"PROP.03","name":"Regla de tres directa","domain":"PROP","deps":["PROP.02","FR.18","DIV.02"],"families":["I"],"districts":["mercado"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.75,"time_median_seconds":[15,40]},
-    {"id":"PROP.04","name":"Calcular porcentaje de una cantidad","domain":"PROP","deps":["FR.22","DEC.08"],"families":["H"],"districts":["mercado"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.85,"time_median_seconds":[8,20]},
-    {"id":"PROP.05","name":"Calcular qué porcentaje representa A de B","domain":"PROP","deps":["PROP.04","FR.10"],"families":["H"],"districts":["mercado"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista","precision_threshold":0.75,"time_median_seconds":[12,30]},
-    {"id":"PROP.06","name":"Aumentos y descuentos porcentuales","domain":"PROP","deps":["PROP.04"],"families":["H"],"districts":["mercado"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista","precision_threshold":0.75,"time_median_seconds":[15,30]},
-    {"id":"PROP.07","name":"Escala","domain":"PROP","deps":["PROP.03","MED.05"],"families":["I"],"districts":["afueras"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista","precision_threshold":0.7,"time_median_seconds":[15,40]},
-    {"id":"DIV.01","name":"Múltiplos de un número","domain":"DIV","deps":[],"families":["B"],"districts":["canales","industria"],"intro_rank":"Aprendiz_II","required_rank":"Aprendiz_III","precision_threshold":0.9,"time_median_seconds":[3,8]},
-    {"id":"DIV.02","name":"Divisores de un número","domain":"DIV","deps":["DIV.01"],"families":["B","C"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[10,25]},
-    {"id":"DIV.03","name":"Criterios divisibilidad básicos (2, 3, 5, 10)","domain":"DIV","deps":["DIV.01"],"families":["B"],"districts":["canales"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[2,6]},
-    {"id":"DIV.04","name":"Criterios divisibilidad avanzados (4, 6, 9)","domain":"DIV","deps":["DIV.03"],"families":["B"],"districts":["canales"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[3,8]},
-    {"id":"DIV.05","name":"Números primos","domain":"DIV","deps":["DIV.03","DIV.04"],"families":["B"],"districts":["canales"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[5,12]},
-    {"id":"DIV.06","name":"Máximo Común Divisor (MCD)","domain":"DIV","deps":["DIV.02","DIV.05"],"families":["D"],"districts":["canales"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_II","precision_threshold":0.75,"time_median_seconds":[10,30]},
-    {"id":"DIV.07","name":"Mínimo Común Múltiplo (MCM)","domain":"DIV","deps":["DIV.01","DIV.05"],"families":["F"],"districts":["canales"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_II","precision_threshold":0.75,"time_median_seconds":[10,30]},
-    {"id":"OP.01","name":"Jerarquía de operaciones","domain":"OP","deps":[],"families":[],"districts":["todos"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[8,20]},
-    {"id":"OP.02","name":"Operaciones combinadas con fracciones","domain":"OP","deps":["OP.01","FR.16","FR.19"],"families":["F","C"],"districts":["canales","puerto"],"intro_rank":"Iniciado_II","required_rank":"Fraccionista","precision_threshold":0.7,"time_median_seconds":[20,45]},
-    {"id":"OP.03","name":"Operaciones combinadas con decimales y fracciones","domain":"OP","deps":["OP.02","DEC.08"],"families":["G","F","C"],"districts":["industria","puerto"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista_Mayor","precision_threshold":0.7,"time_median_seconds":[25,50]},
-    {"id":"MED.01","name":"Unidades de longitud y conversión","domain":"MED","deps":["DEC.01"],"families":["G"],"districts":["industria"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[4,10]},
-    {"id":"MED.02","name":"Unidades de masa y capacidad","domain":"MED","deps":["MED.01"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[4,10]},
-    {"id":"MED.03","name":"Unidades de tiempo sexagesimal","domain":"MED","deps":[],"families":[],"districts":["industria"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[10,25]},
-    {"id":"MED.04","name":"Ángulos y grados","domain":"MED","deps":[],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[8,20]},
-    {"id":"MED.05","name":"Superficies y áreas (unidades)","domain":"MED","deps":["MED.01"],"families":["G"],"districts":["industria"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.75,"time_median_seconds":[8,20]},
-    {"id":"GEO.01","name":"Clasificación ángulos y polígonos","domain":"GEO","deps":["MED.04"],"families":[],"districts":["todos"],"intro_rank":"Aprendiz_III","required_rank":"Iniciado_I","precision_threshold":0.85,"time_median_seconds":[3,8]},
-    {"id":"GEO.02","name":"Perímetro de polígonos","domain":"GEO","deps":["GEO.01","MED.01"],"families":[],"districts":["todos"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[5,12]},
-    {"id":"GEO.03","name":"Área de rectángulos y cuadrados","domain":"GEO","deps":["GEO.01","MED.05"],"families":[],"districts":["industria","afueras"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[5,12]},
-    {"id":"GEO.04","name":"Área de triángulos","domain":"GEO","deps":["GEO.03"],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[6,15]},
-    {"id":"GEO.05","name":"Área y perímetro de círculo","domain":"GEO","deps":["GEO.03","DEC.05"],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista","precision_threshold":0.75,"time_median_seconds":[10,25]},
-    {"id":"GEO.06","name":"Volumen de ortoedro","domain":"GEO","deps":["GEO.03"],"families":[],"districts":["industria"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.8,"time_median_seconds":[8,18]},
-    {"id":"GEO.07","name":"Simetría y transformaciones","domain":"GEO","deps":["GEO.01"],"families":["D"],"districts":["canales","afueras"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[5,12]},
-    {"id":"EST.01","name":"Leer tablas y gráficos de barras","domain":"EST","deps":[],"families":[],"districts":["afueras"],"intro_rank":"Aprendiz_II","required_rank":"Aprendiz_III","precision_threshold":0.85,"time_median_seconds":[5,15]},
-    {"id":"EST.02","name":"Leer gráficos de líneas y circulares","domain":"EST","deps":["EST.01","PROP.04"],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.8,"time_median_seconds":[8,20]},
-    {"id":"EST.03","name":"Media aritmética","domain":"EST","deps":["DEC.07"],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_I","required_rank":"Iniciado_II","precision_threshold":0.85,"time_median_seconds":[8,20]},
-    {"id":"EST.04","name":"Moda y mediana","domain":"EST","deps":["EST.01"],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.8,"time_median_seconds":[10,25]},
-    {"id":"EST.05","name":"Probabilidad simple (Laplace)","domain":"EST","deps":["FR.01","FR.10"],"families":[],"districts":["afueras"],"intro_rank":"Iniciado_II","required_rank":"Iniciado_III","precision_threshold":0.75,"time_median_seconds":[10,25]},
-    {"id":"EST.06","name":"Probabilidad como fracción decimal y porcentaje","domain":"EST","deps":["EST.05","DEC.08","PROP.04"],"families":[],"districts":["afueras","mercado"],"intro_rank":"Iniciado_III","required_rank":"Fraccionista","precision_threshold":0.75,"time_median_seconds":[8,18]}
+    {
+      "id": "FR.01",
+      "name": "Reconocer fracción como parte de un todo",
+      "domain": "FR",
+      "deps": [],
+      "families": [
+        "A",
+        "B"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_I",
+      "required_rank": "Aprendiz_I",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "FR.02",
+      "name": "Leer y escribir fracciones",
+      "domain": "FR",
+      "deps": [
+        "FR.01"
+      ],
+      "families": [
+        "B"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_I",
+      "required_rank": "Aprendiz_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        8
+      ]
+    },
+    {
+      "id": "FR.03",
+      "name": "Comparar fracción con 1/2",
+      "domain": "FR",
+      "deps": [
+        "FR.01",
+        "FR.02"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_I",
+      "required_rank": "Aprendiz_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "FR.04",
+      "name": "Comparar fracción con la unidad",
+      "domain": "FR",
+      "deps": [
+        "FR.01"
+      ],
+      "families": [
+        "A",
+        "E"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_III",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "FR.05",
+      "name": "Comparar dos fracciones con mismo denominador",
+      "domain": "FR",
+      "deps": [
+        "FR.01"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_II",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": "FR.06",
+      "name": "Comparar dos fracciones con mismo numerador",
+      "domain": "FR",
+      "deps": [
+        "FR.01",
+        "FR.05"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_III",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "FR.07",
+      "name": "Comparar dos fracciones cualesquiera",
+      "domain": "FR",
+      "deps": [
+        "FR.05",
+        "FR.06",
+        "FR.11"
+      ],
+      "families": [
+        "C",
+        "D"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        6,
+        15
+      ]
+    },
+    {
+      "id": "FR.08",
+      "name": "Ordenar fracciones",
+      "domain": "FR",
+      "deps": [
+        "FR.07"
+      ],
+      "families": [
+        "C",
+        "D"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        15,
+        30
+      ]
+    },
+    {
+      "id": "FR.09",
+      "name": "Identificar fracciones equivalentes",
+      "domain": "FR",
+      "deps": [
+        "FR.01",
+        "FR.05"
+      ],
+      "families": [
+        "D"
+      ],
+      "districts": [
+        "tejados"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "FR.10",
+      "name": "Simplificar fracción",
+      "domain": "FR",
+      "deps": [
+        "FR.09",
+        "DIV.06"
+      ],
+      "families": [
+        "D"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "FR.11",
+      "name": "Amplificar fracción a denominador dado",
+      "domain": "FR",
+      "deps": [
+        "FR.09"
+      ],
+      "families": [
+        "D",
+        "F"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        8
+      ]
+    },
+    {
+      "id": "FR.12",
+      "name": "Convertir fracción impropia en número mixto",
+      "domain": "FR",
+      "deps": [
+        "FR.04"
+      ],
+      "families": [
+        "E"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "FR.13",
+      "name": "Convertir número mixto en fracción impropia",
+      "domain": "FR",
+      "deps": [
+        "FR.12"
+      ],
+      "families": [
+        "E"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "FR.14",
+      "name": "Sumar fracciones con mismo denominador",
+      "domain": "FR",
+      "deps": [
+        "FR.01",
+        "FR.02"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "FR.15",
+      "name": "Restar fracciones con mismo denominador",
+      "domain": "FR",
+      "deps": [
+        "FR.14"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "FR.16",
+      "name": "Sumar fracciones con denominadores distintos",
+      "domain": "FR",
+      "deps": [
+        "FR.11",
+        "FR.14",
+        "DIV.07"
+      ],
+      "families": [
+        "F"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "FR.17",
+      "name": "Restar fracciones con denominadores distintos",
+      "domain": "FR",
+      "deps": [
+        "FR.16"
+      ],
+      "families": [
+        "F"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "FR.18",
+      "name": "Multiplicar fracción por número natural",
+      "domain": "FR",
+      "deps": [
+        "FR.14"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "FR.19",
+      "name": "Multiplicar fracción por fracción",
+      "domain": "FR",
+      "deps": [
+        "FR.18",
+        "FR.10"
+      ],
+      "families": [
+        "C",
+        "F"
+      ],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "FR.20",
+      "name": "Dividir fracción por número natural",
+      "domain": "FR",
+      "deps": [
+        "FR.18"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        6,
+        15
+      ]
+    },
+    {
+      "id": "FR.21",
+      "name": "Dividir fracción por fracción",
+      "domain": "FR",
+      "deps": [
+        "FR.19",
+        "FR.20"
+      ],
+      "families": [
+        "F"
+      ],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "FR.22",
+      "name": "Fracción de una cantidad",
+      "domain": "FR",
+      "deps": [
+        "FR.18",
+        "FR.20"
+      ],
+      "families": [
+        "C",
+        "H"
+      ],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "DEC.01",
+      "name": "Leer y escribir decimales",
+      "domain": "DEC",
+      "deps": [],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "DEC.02",
+      "name": "Comparar decimales",
+      "domain": "DEC",
+      "deps": [
+        "DEC.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        3,
+        6
+      ]
+    },
+    {
+      "id": "DEC.03",
+      "name": "Ordenar decimales",
+      "domain": "DEC",
+      "deps": [
+        "DEC.02"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        12,
+        25
+      ]
+    },
+    {
+      "id": "DEC.04",
+      "name": "Sumar y restar decimales",
+      "domain": "DEC",
+      "deps": [
+        "DEC.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        6,
+        15
+      ]
+    },
+    {
+      "id": "DEC.05",
+      "name": "Multiplicar decimal por número natural",
+      "domain": "DEC",
+      "deps": [
+        "DEC.04"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        18
+      ]
+    },
+    {
+      "id": "DEC.06",
+      "name": "Multiplicar decimal por decimal",
+      "domain": "DEC",
+      "deps": [
+        "DEC.05"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "DEC.07",
+      "name": "Dividir decimales",
+      "domain": "DEC",
+      "deps": [
+        "DEC.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        12,
+        30
+      ]
+    },
+    {
+      "id": "DEC.08",
+      "name": "Convertir fracción a decimal casos simples",
+      "domain": "DEC",
+      "deps": [
+        "DEC.01",
+        "FR.01"
+      ],
+      "families": [
+        "D",
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "DEC.09",
+      "name": "Redondear decimal",
+      "domain": "DEC",
+      "deps": [
+        "DEC.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "PROP.01",
+      "name": "Reconocer razón entre dos cantidades",
+      "domain": "PROP",
+      "deps": [
+        "FR.01"
+      ],
+      "families": [
+        "I"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "PROP.02",
+      "name": "Identificar proporcionalidad directa",
+      "domain": "PROP",
+      "deps": [
+        "PROP.01"
+      ],
+      "families": [
+        "I"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        18
+      ]
+    },
+    {
+      "id": "PROP.03",
+      "name": "Regla de tres directa",
+      "domain": "PROP",
+      "deps": [
+        "PROP.02",
+        "FR.18",
+        "DIV.02"
+      ],
+      "families": [
+        "I"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        15,
+        40
+      ]
+    },
+    {
+      "id": "PROP.04",
+      "name": "Calcular porcentaje de una cantidad",
+      "domain": "PROP",
+      "deps": [
+        "FR.22",
+        "DEC.08"
+      ],
+      "families": [
+        "H"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "PROP.05",
+      "name": "Calcular qué porcentaje representa A de B",
+      "domain": "PROP",
+      "deps": [
+        "PROP.04",
+        "FR.10"
+      ],
+      "families": [
+        "H"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        12,
+        30
+      ]
+    },
+    {
+      "id": "PROP.06",
+      "name": "Aumentos y descuentos porcentuales",
+      "domain": "PROP",
+      "deps": [
+        "PROP.04"
+      ],
+      "families": [
+        "H"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        15,
+        30
+      ]
+    },
+    {
+      "id": "PROP.07",
+      "name": "Escala",
+      "domain": "PROP",
+      "deps": [
+        "PROP.03",
+        "MED.05"
+      ],
+      "families": [
+        "I"
+      ],
+      "districts": [
+        "mercado"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.7,
+      "time_median_seconds": [
+        15,
+        40
+      ]
+    },
+    {
+      "id": "DIV.01",
+      "name": "Múltiplos de un número",
+      "domain": "DIV",
+      "deps": [],
+      "families": [
+        "B"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_III",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "DIV.02",
+      "name": "Divisores de un número",
+      "domain": "DIV",
+      "deps": [
+        "DIV.01"
+      ],
+      "families": [
+        "B",
+        "C"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "DIV.03",
+      "name": "Criterios divisibilidad básicos (2, 3, 5, 10)",
+      "domain": "DIV",
+      "deps": [
+        "DIV.01"
+      ],
+      "families": [
+        "B"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        2,
+        6
+      ]
+    },
+    {
+      "id": "DIV.04",
+      "name": "Criterios divisibilidad avanzados (4, 6, 9)",
+      "domain": "DIV",
+      "deps": [
+        "DIV.03"
+      ],
+      "families": [
+        "B"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "DIV.05",
+      "name": "Números primos",
+      "domain": "DIV",
+      "deps": [
+        "DIV.03",
+        "DIV.04"
+      ],
+      "families": [
+        "B"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "DIV.06",
+      "name": "Máximo Común Divisor (MCD)",
+      "domain": "DIV",
+      "deps": [
+        "DIV.02",
+        "DIV.05"
+      ],
+      "families": [
+        "D"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        10,
+        30
+      ]
+    },
+    {
+      "id": "DIV.07",
+      "name": "Mínimo Común Múltiplo (MCM)",
+      "domain": "DIV",
+      "deps": [
+        "DIV.01",
+        "DIV.05"
+      ],
+      "families": [
+        "F"
+      ],
+      "districts": [
+        "canales"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        10,
+        30
+      ]
+    },
+    {
+      "id": "OP.01",
+      "name": "Jerarquía de operaciones",
+      "domain": "OP",
+      "deps": [],
+      "families": [],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "OP.02",
+      "name": "Operaciones combinadas con fracciones",
+      "domain": "OP",
+      "deps": [
+        "OP.01",
+        "FR.16",
+        "FR.19"
+      ],
+      "families": [
+        "F",
+        "C"
+      ],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.7,
+      "time_median_seconds": [
+        20,
+        45
+      ]
+    },
+    {
+      "id": "OP.03",
+      "name": "Operaciones combinadas con decimales y fracciones",
+      "domain": "OP",
+      "deps": [
+        "OP.02",
+        "DEC.08"
+      ],
+      "families": [
+        "G",
+        "F",
+        "C"
+      ],
+      "districts": [
+        "puerto"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista_Mayor",
+      "precision_threshold": 0.7,
+      "time_median_seconds": [
+        25,
+        50
+      ]
+    },
+    {
+      "id": "MED.01",
+      "name": "Unidades de longitud y conversión",
+      "domain": "MED",
+      "deps": [
+        "DEC.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "MED.02",
+      "name": "Unidades de masa y capacidad",
+      "domain": "MED",
+      "deps": [
+        "MED.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "MED.03",
+      "name": "Unidades de tiempo sexagesimal",
+      "domain": "MED",
+      "deps": [],
+      "families": [],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "MED.04",
+      "name": "Ángulos y grados",
+      "domain": "MED",
+      "deps": [],
+      "families": [],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "MED.05",
+      "name": "Superficies y áreas (unidades)",
+      "domain": "MED",
+      "deps": [
+        "MED.01"
+      ],
+      "families": [
+        "G"
+      ],
+      "districts": [
+        "industria"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "GEO.01",
+      "name": "Clasificación ángulos y polígonos",
+      "domain": "GEO",
+      "deps": [
+        "MED.04"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Aprendiz_III",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "GEO.02",
+      "name": "Perímetro de polígonos",
+      "domain": "GEO",
+      "deps": [
+        "GEO.01",
+        "MED.01"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "GEO.03",
+      "name": "Área de rectángulos y cuadrados",
+      "domain": "GEO",
+      "deps": [
+        "GEO.01",
+        "MED.05"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "GEO.04",
+      "name": "Área de triángulos",
+      "domain": "GEO",
+      "deps": [
+        "GEO.03"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        6,
+        15
+      ]
+    },
+    {
+      "id": "GEO.05",
+      "name": "Área y perímetro de círculo",
+      "domain": "GEO",
+      "deps": [
+        "GEO.03",
+        "DEC.05"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "GEO.06",
+      "name": "Volumen de ortoedro",
+      "domain": "GEO",
+      "deps": [
+        "GEO.03"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        18
+      ]
+    },
+    {
+      "id": "GEO.07",
+      "name": "Simetría y transformaciones",
+      "domain": "GEO",
+      "deps": [
+        "GEO.01"
+      ],
+      "families": [
+        "D"
+      ],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        5,
+        12
+      ]
+    },
+    {
+      "id": "EST.01",
+      "name": "Leer tablas y gráficos de barras",
+      "domain": "EST",
+      "deps": [],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_III",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        5,
+        15
+      ]
+    },
+    {
+      "id": "EST.02",
+      "name": "Leer gráficos de líneas y circulares",
+      "domain": "EST",
+      "deps": [
+        "EST.01",
+        "PROP.04"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "EST.03",
+      "name": "Media aritmética",
+      "domain": "EST",
+      "deps": [
+        "DEC.07"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_I",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "EST.04",
+      "name": "Moda y mediana",
+      "domain": "EST",
+      "deps": [
+        "EST.01"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "EST.05",
+      "name": "Probabilidad simple (Laplace)",
+      "domain": "EST",
+      "deps": [
+        "FR.01",
+        "FR.10"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        10,
+        25
+      ]
+    },
+    {
+      "id": "EST.06",
+      "name": "Probabilidad como fracción decimal y porcentaje",
+      "domain": "EST",
+      "deps": [
+        "EST.05",
+        "DEC.08",
+        "PROP.04"
+      ],
+      "families": [],
+      "districts": [
+        "afueras"
+      ],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        8,
+        18
+      ]
+    }
   ]
 }

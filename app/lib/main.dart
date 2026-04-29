@@ -4,23 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'datos/repositorio_progreso.dart';
+import 'l10n/app_localizations.dart';
 import 'dominio/catalogo_escenas.dart';
 import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
 import 'dominio/rango_narrativo.dart';
 import 'dominio/ritmo_juego.dart';
 import 'dominio/variantes_entrenamiento.dart';
+import 'dominio/variantes_maquinas.dart';
 import 'dominio/variantes_puentes.dart';
 import 'nucleo/paleta.dart';
 import 'sonido/servicio_sonoro.dart';
 import 'vista/pantalla_apertura.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_combate_kurz.dart';
+import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_mapa.dart';
 import 'vista/pantalla_nombre.dart';
 import 'vista/pantalla_perfiles.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -30,25 +33,69 @@ void main() {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
   ));
+  // Precarga del idioma elegido por el niño en sesiones previas. Si lo
+  // hay, se aplica al ValueNotifier global ANTES del primer build de
+  // MaterialApp para evitar un flash con el idioma del sistema. Si no
+  // lo hay (primer arranque), el ValueNotifier sigue null y
+  // localeResolutionCallback decide; el orquestador detectará la
+  // ausencia y abrirá PantallaConfiguracionInicial.
+  final repositorio = RepositorioProgreso();
+  final codigoIdiomaPersistido = await repositorio.cargarIdiomaApp();
+  if (codigoIdiomaPersistido != null) {
+    localeAppUnoRoto.value = Locale(codigoIdiomaPersistido);
+  }
   runApp(const AppUnoRoto());
 }
+
+/// Locale activo de la app. Lo lee `AppUnoRoto` para configurar
+/// `MaterialApp` y se actualiza desde [OrquestadorFases] cuando el niño
+/// elige idioma en la pantalla de configuración inicial. Permite que
+/// `AppUnoRoto` siga siendo `StatelessWidget` (así los tests existentes
+/// que hacen `pumpWidget(const AppUnoRoto())` siguen funcionando) y a
+/// la vez tener un `Locale` reactivo que rebuilds `MaterialApp` al
+/// cambiar.
+final ValueNotifier<Locale?> localeAppUnoRoto = ValueNotifier<Locale?>(null);
 
 class AppUnoRoto extends StatelessWidget {
   const AppUnoRoto({super.key});
 
   @override
   Widget build(BuildContext contexto) {
-    return MaterialApp(
-      title: 'Uno Roto — Prototipo del combate',
-      theme: temaUnoRoto(),
-      debugShowCheckedModeBanner: false,
-      home: const OrquestadorFases(),
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeAppUnoRoto,
+      builder: (ctx, localeActivo, _) {
+        return MaterialApp(
+          title: 'Uno Roto — Prototipo del combate',
+          theme: temaUnoRoto(),
+          debugShowCheckedModeBanner: false,
+          // Si el niño eligió idioma en PantallaConfiguracionInicial,
+          // localeAppUnoRoto manda. Si no, el localeResolutionCallback
+          // mira el sistema y cae a castellano para idiomas no
+          // soportados — sin eso el delegate elegiría el primero
+          // alfabético (catalán) para usuarios en inglés.
+          locale: localeActivo,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localeResolutionCallback: (localeDispositivo, soportados) {
+            if (localeDispositivo != null) {
+              for (final soportado in soportados) {
+                if (soportado.languageCode == localeDispositivo.languageCode) {
+                  return soportado;
+                }
+              }
+            }
+            return const Locale('es');
+          },
+          home: const OrquestadorFases(),
+        );
+      },
     );
   }
 }
 
 enum _FaseApp {
   cargando,
+  configuracionInicial,
   perfiles,
   apertura,
   nombre,
@@ -84,6 +131,18 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   }
 
   Future<void> _inicializar() async {
+    // Primer arranque: si no hay idioma elegido, paramos aquí y dejamos
+    // que el niño lo decida. Tras la elección, _alElegirIdiomaInicial
+    // persiste, actualiza el ValueNotifier global y arranca el flujo
+    // del perfil. En arranques posteriores, main() ya precargó el
+    // idioma en el ValueNotifier antes de runApp, así que aquí solo
+    // miramos si existe la clave para decidir si mostrar la pantalla.
+    final codigoIdioma = await _repositorio.cargarIdiomaApp();
+    if (codigoIdioma == null) {
+      if (!mounted) return;
+      setState(() => _fase = _FaseApp.configuracionInicial);
+      return;
+    }
     final perfiles = await _repositorio.listarPerfilesConInfo();
     // Si hay más de un perfil, pedimos al usuario que elija al arrancar.
     // Con un único perfil seguimos el flujo normal (el activo).
@@ -117,6 +176,22 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
       return;
     }
     await _resolverCinematicaPendienteOMapa();
+  }
+
+  Future<void> _alElegirIdiomaInicial(String codigo) async {
+    await _repositorio.guardarIdiomaApp(codigo);
+    // Cambiar el locale global rebuilds MaterialApp; los textos a
+    // partir de ahora salen en el nuevo idioma.
+    localeAppUnoRoto.value = Locale(codigo);
+    if (!mounted) return;
+    setState(() => _fase = _FaseApp.cargando);
+    final perfiles = await _repositorio.listarPerfilesConInfo();
+    if (perfiles.length > 1) {
+      if (!mounted) return;
+      setState(() => _fase = _FaseApp.perfiles);
+      return;
+    }
+    await _iniciarFlujoDelPerfilActivo();
   }
 
   Future<void> _alElegirPerfil() async {
@@ -231,11 +306,21 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
   }
 
   /// Dispara la siguiente variante recurrente adecuada al arco en
-  /// curso. Prioridad: Arco 2 (puentes con Rexán) si ya visitamos la
-  /// 2.3 y no cerramos el Arco 2; Arco 1 (entrenamiento con Sora) si
-  /// ya vimos 1.7 y no cerramos el Arco 1. Solo una por transición.
+  /// curso. Prioridad por arco más reciente: Arco 3 (máquinas con
+  /// Vadic) si ya visitamos la 3.6 y no cerramos el Arco 3; Arco 2
+  /// (puentes con Rexán) si ya visitamos la 2.3 y no cerramos el Arco
+  /// 2; Arco 1 (entrenamiento con Sora) si ya vimos 1.7 y no cerramos
+  /// el Arco 1. Solo una por transición.
   Future<bool> _intentarDispararVarianteEntrenamiento() async {
     if (_varianteYaDisparadaEnEstaTransicion) return false;
+
+    final arco3Empezado =
+        await _repositorio.flagNarrativoActivo('escena_3_6_vista');
+    final arco3Cerrado =
+        await _repositorio.flagNarrativoActivo('escena_3_18_vista');
+    if (arco3Empezado && !arco3Cerrado) {
+      return _dispararVarianteMaquinas();
+    }
 
     final arco2Empezado =
         await _repositorio.flagNarrativoActivo('escena_2_3_vista');
@@ -295,6 +380,25 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     return true;
   }
 
+  Future<bool> _dispararVarianteMaquinas() async {
+    var usadas = await _repositorio.cargarVariantesMaquinasUsadas();
+    var siguiente = VariantesMaquinas.elegirSiguiente(usadas);
+    if (siguiente == null) {
+      await _repositorio.resetearVariantesMaquinas();
+      usadas = {};
+      siguiente = VariantesMaquinas.elegirSiguiente(usadas);
+    }
+    if (siguiente == null) return false;
+    await _repositorio.marcarVarianteMaquinaUsada(siguiente.id);
+    if (!mounted) return false;
+    setState(() {
+      _escenaPendiente = siguiente;
+      _fase = _FaseApp.cinematica;
+      _varianteYaDisparadaEnEstaTransicion = true;
+    });
+    return true;
+  }
+
   Future<void> _alTerminarCombateKurz(ResultadoCombateKurz resultado) async {
     final desafio = _desafioKurzActivo;
     if (desafio != null) {
@@ -344,6 +448,10 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     switch (_fase) {
       case _FaseApp.cargando:
         return const ColoredBox(color: PaletaNeon.fondoProfundo);
+      case _FaseApp.configuracionInicial:
+        return PantallaConfiguracionInicial(
+          alElegirIdioma: _alElegirIdiomaInicial,
+        );
       case _FaseApp.perfiles:
         return PantallaPerfiles(
           repositorio: _repositorio,

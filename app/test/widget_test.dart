@@ -63,7 +63,9 @@ import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
 import 'package:uno_roto/dominio/progreso_arco.dart';
 import 'package:uno_roto/dominio/rango_narrativo.dart';
+import 'package:uno_roto/dominio/bonus_remonte.dart';
 import 'package:uno_roto/dominio/variantes_entrenamiento.dart';
+import 'package:uno_roto/dominio/variantes_maquinas.dart';
 import 'package:uno_roto/dominio/variantes_puentes.dart';
 import 'package:uno_roto/main.dart';
 import 'package:uno_roto/sonido/capa_audio.dart';
@@ -72,7 +74,12 @@ import 'package:uno_roto/vista/pantalla_cinematica.dart';
 
 void main() {
   setUp(() {
-    SharedPreferences.setMockInitialValues({});
+    // Idioma 'es' por defecto en tests para saltar la pantalla de
+    // configuración inicial (que en producción sale solo el primer
+    // arranque). Los tests específicos pueden sobreescribir con
+    // setMockInitialValues({...}) y deben incluir esta clave si quieren
+    // saltarse la pantalla — o no incluirla para probar dicha pantalla.
+    SharedPreferences.setMockInitialValues({'uroto.idioma_app': 'es'});
   });
 
   testWidgets(
@@ -246,6 +253,7 @@ void main() {
     'Tras la 1.5, si el combate de Kurz no se ha resuelto, se lanza',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
+        'uroto.idioma_app': 'es',
         'uroto.ya_vio_apertura': true,
         'uroto.nombre_jugador': 'Leo',
         'uroto.flag.escena_1_1_vista': true,
@@ -296,6 +304,160 @@ void main() {
       expect(
         VariantesPuentes.elegirSiguiente(todas),
         isNull,
+      );
+    },
+  );
+
+  test(
+    'VariantesMaquinas.elegirSiguiente evita las usadas',
+    () {
+      final primera = VariantesMaquinas.elegirSiguiente(const {});
+      expect(primera!.id, '3.7a');
+
+      final sinPrimera = VariantesMaquinas.elegirSiguiente(const {'3.7a'});
+      expect(sinPrimera!.id, '3.7b');
+
+      final todasMenosUltima = VariantesMaquinas.todas
+          .take(VariantesMaquinas.todas.length - 1)
+          .map((e) => e.id)
+          .toSet();
+      final ultima = VariantesMaquinas.elegirSiguiente(todasMenosUltima);
+      expect(ultima!.id, VariantesMaquinas.todas.last.id);
+
+      final todas = VariantesMaquinas.todas.map((e) => e.id).toSet();
+      expect(
+        VariantesMaquinas.elegirSiguiente(todas),
+        isNull,
+        reason: 'Cuando el pool se agota devuelve null.',
+      );
+    },
+  );
+
+  test(
+    'Variantes de máquinas se marcan y se pueden resetear',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final repo = RepositorioProgreso();
+
+      expect(await repo.cargarVariantesMaquinasUsadas(), isEmpty);
+
+      await repo.marcarVarianteMaquinaUsada('3.7a');
+      await repo.marcarVarianteMaquinaUsada('3.7b');
+      await repo.marcarVarianteMaquinaUsada('3.7a'); // idempotente
+
+      expect(
+        await repo.cargarVariantesMaquinasUsadas(),
+        {'3.7a', '3.7b'},
+      );
+
+      await repo.resetearVariantesMaquinas();
+      expect(await repo.cargarVariantesMaquinasUsadas(), isEmpty);
+    },
+  );
+
+  test(
+    'Variantes de máquinas son cierre amable y voz de Vadic',
+    () {
+      for (final variante in VariantesMaquinas.todas) {
+        expect(
+          variante.esCierreAmable,
+          isTrue,
+          reason:
+              'Toda variante 3.7 debe cerrar la sesión en lugar de '
+              'encadenar otra cinemática.',
+        );
+        expect(
+          variante.flagDeSalida,
+          startsWith('variante_3_7_'),
+          reason:
+              'El flag de salida sigue la convención de las otras '
+              'variantes recurrentes.',
+        );
+      }
+    },
+  );
+
+  // ─── Bonus de remonte ───
+  test(
+    'aplicaBonusRemonte: precisión < 0.5 y captura → bonus',
+    () {
+      expect(
+        aplicaBonusRemonte(
+          esquirlasGanadas: 2,
+          precisionPrevia: 0.35,
+          yaRemontada: false,
+        ),
+        isTrue,
+      );
+    },
+  );
+
+  test(
+    'aplicaBonusRemonte: precisión ≥ 0.5 → no bonus',
+    () {
+      expect(
+        aplicaBonusRemonte(
+          esquirlasGanadas: 2,
+          precisionPrevia: 0.5,
+          yaRemontada: false,
+        ),
+        isFalse,
+        reason: 'Justo en el umbral 0.5 ya no es "difícil".',
+      );
+      expect(
+        aplicaBonusRemonte(
+          esquirlasGanadas: 2,
+          precisionPrevia: 0.85,
+          yaRemontada: false,
+        ),
+        isFalse,
+      );
+    },
+  );
+
+  test(
+    'aplicaBonusRemonte: nunca tocada → no bonus',
+    () {
+      expect(
+        aplicaBonusRemonte(
+          esquirlasGanadas: 2,
+          precisionPrevia: null,
+          yaRemontada: false,
+        ),
+        isFalse,
+        reason: 'Sin historia previa no hay nada que remontar.',
+      );
+    },
+  );
+
+  test(
+    'aplicaBonusRemonte: ya remontada esta sesión → no bonus',
+    () {
+      expect(
+        aplicaBonusRemonte(
+          esquirlasGanadas: 2,
+          precisionPrevia: 0.2,
+          yaRemontada: true,
+        ),
+        isFalse,
+        reason: 'Una habilidad solo paga bonus una vez por sesión.',
+      );
+    },
+  );
+
+  test(
+    'aplicaBonusRemonte: captura por descarte (0 esquirlas) → no bonus',
+    () {
+      expect(
+        aplicaBonusRemonte(
+          esquirlasGanadas: 0,
+          precisionPrevia: 0.2,
+          yaRemontada: false,
+        ),
+        isFalse,
+        reason:
+            'Acertar en el último intento posible es chiripa, no '
+            'remonte.',
       );
     },
   );
@@ -699,6 +861,7 @@ void main() {
     'Con más de un perfil, la app arranca en el selector de perfiles',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
+        'uroto.idioma_app': 'es',
         'uroto.perfil_activo_id': 'principal',
         'uroto.perfiles_lista': ['principal', 'irune'],
         'uroto.perfil.principal.nombre_jugador': 'Leo',
@@ -3982,6 +4145,7 @@ void main() {
     'Tras la apertura, si la escena 1.1 no se ha visto, se reproduce',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
+        'uroto.idioma_app': 'es',
         'uroto.ya_vio_apertura': true,
         'uroto.nombre_jugador': 'Leo',
       });
@@ -3998,6 +4162,7 @@ void main() {
     'Si la apertura ha pasado pero falta el nombre, se pide el nombre',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
+        'uroto.idioma_app': 'es',
         'uroto.ya_vio_apertura': true,
       });
       await tester.pumpWidget(const AppUnoRoto());
@@ -4013,6 +4178,7 @@ void main() {
     'Si todas las escenas del Arco 1 abierto están vistas, va al mapa',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
+        'uroto.idioma_app': 'es',
         'uroto.ya_vio_apertura': true,
         'uroto.nombre_jugador': 'Leo',
         'uroto.flag.escena_1_1_vista': true,
@@ -4100,6 +4266,7 @@ void main() {
     'Tras la 1.1, si la 1.2 no está vista, se dispara la 1.2',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
+        'uroto.idioma_app': 'es',
         'uroto.ya_vio_apertura': true,
         'uroto.nombre_jugador': 'Leo',
         'uroto.flag.escena_1_1_vista': true,

@@ -1,13 +1,32 @@
-/// Configuración de conexión al backend. En desarrollo apunta al
-/// Local WP local por IP+puerto con cabecera `Host: uno-roto.local`.
-/// En producción se usará la URL real del sitio WordPress.
+/// Configuración de conexión al backend Uno Roto.
 ///
-/// Para cambiar el puerto: mirar el my.cnf del sitio en
-/// `~/.config/Local/run/<id>/conf/nginx/site.conf` → listen <puerto>.
+/// Hay dos entornos:
+///   - **Local WP** (Ubuntu): `http://127.0.0.1:10063` con cabecera
+///     `Host: uno-roto.local`. Para que llegue desde un móvil físico hace
+///     falta `adb reverse tcp:10063 tcp:10063`
+///     (script: `scripts/dev/abrir_puente_wp.sh`).
+///   - **Producción**: el sitio WordPress real con HTTPS y sin cabecera Host.
+///
+/// El interruptor [usarProduccion] decide cuál se usa. Los consumidores
+/// deben leer [urlBase] y [hostOverride] en lugar de las constantes de
+/// entorno directas.
 class ConfigApi {
-  /// Local WP en Ubuntu: el router de Local resuelve `uno-roto.local`
-  /// internamente pero fuera (Flutter) no siempre — apuntamos al
-  /// nginx del sitio directamente con cabecera Host.
+  /// Local WP en Ubuntu: nginx escucha en 10063, exige cabecera Host.
   static const String urlBaseLocal = 'http://127.0.0.1:10063';
   static const String hostLocal = 'uno-roto.local';
+
+  /// Producción: HTTPS, sin cabecera Host (la resuelve el DNS).
+  static const String urlBaseProduccion = 'https://uno-roto.gailu.it';
+
+  /// Si es `true`, la app habla con producción. Si es `false`, con Local WP.
+  /// Cambiar este flag basta para alternar todo el cableado.
+  static const bool usarProduccion = true;
+
+  /// URL base activa según [usarProduccion].
+  static String get urlBase =>
+      usarProduccion ? urlBaseProduccion : urlBaseLocal;
+
+  /// Cabecera `Host` a forzar, o `null` si el entorno no la necesita.
+  /// En producción no se usa porque el dominio resuelve por DNS.
+  static String? get hostOverride => usarProduccion ? null : hostLocal;
 }

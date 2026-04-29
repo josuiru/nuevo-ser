@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 
 /// Pantalla minimalista de entrada de nombre. Se muestra una sola vez
@@ -45,6 +46,7 @@ class _PantallaNombreState extends State<PantallaNombre> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       body: SafeArea(
@@ -55,10 +57,10 @@ class _PantallaNombreState extends State<PantallaNombre> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  '¿Cómo te llamas?',
+                Text(
+                  textos.nombreTitulo,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                     color: PaletaNeon.textoPrincipal,
                     letterSpacing: 0.5,
@@ -67,7 +69,7 @@ class _PantallaNombreState extends State<PantallaNombre> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'sora te va a preguntar en un momento',
+                  textos.nombreSubtitulo,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
@@ -123,9 +125,9 @@ class _PantallaNombreState extends State<PantallaNombre> {
                             : PaletaNeon.textoTenue.withOpacity(0.2),
                       ),
                     ),
-                    child: const Text(
-                      'continuar',
-                      style: TextStyle(letterSpacing: 3, fontSize: 13),
+                    child: Text(
+                      textos.nombreBotonContinuar,
+                      style: const TextStyle(letterSpacing: 3, fontSize: 13),
                     ),
                   ),
                 ),

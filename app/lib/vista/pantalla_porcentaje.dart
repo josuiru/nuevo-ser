@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_porcentaje.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de Familia H (Porcentuales). Se muestra un porcentaje y el
 /// niño elige entre cuatro fracciones cuál es la equivalente.
@@ -56,6 +58,7 @@ class _PantallaPorcentajeState extends State<PantallaPorcentaje>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -102,9 +105,9 @@ class _PantallaPorcentajeState extends State<PantallaPorcentaje>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -113,9 +116,8 @@ class _PantallaPorcentajeState extends State<PantallaPorcentaje>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'PORCENTAJE',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderPorcentaje,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,9 +128,9 @@ class _PantallaPorcentajeState extends State<PantallaPorcentaje>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        '¿qué fracción vale igual?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrPorcentajeFraccion,
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

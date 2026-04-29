@@ -95,6 +95,73 @@ class UROTO_Endpoints {
 				'permission_callback' => array( __CLASS__, 'permiso_admin_wp' ),
 			)
 		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/audio/manifest',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'audio_manifest' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		// Endpoints del modo tutor. JWT distinto al del cliente del niño
+		// (carga `usuario_id` en lugar de `nino_id`, TTL 15 minutos) para
+		// que un dispositivo en manos del niño no pueda usarlo si el
+		// tutor olvida cerrar.
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/auth/iniciar-sesion-tutor',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'iniciar_sesion_tutor' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		// Reset de contraseña: público, anti-enumeración + rate limit.
+		register_rest_route(
+			self::NAMESPACE,
+			'/auth/solicitar-reset',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'auth_solicitar_reset' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+		// La página HTML que el usuario abre desde el email. Acepta GET
+		// (formulario) y POST (envío del formulario).
+		register_rest_route(
+			self::NAMESPACE,
+			'/auth/pagina-reset',
+			array(
+				'methods'             => array( 'GET', 'POST' ),
+				'callback'            => array( __CLASS__, 'auth_pagina_reset' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/tutor/ninos',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'tutor_ninos' ),
+				'permission_callback' => array( __CLASS__, 'permiso_jwt_tutor' ),
+			)
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/tutor/progreso-nino/(?P<nino_id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'tutor_progreso_nino' ),
+				'permission_callback' => array( __CLASS__, 'permiso_jwt_tutor' ),
+			)
+		);
 	}
 
 	/**
@@ -297,5 +364,293 @@ class UROTO_Endpoints {
 
 	public static function tutor_stats( WP_REST_Request $request ) {
 		return new WP_REST_Response( UROTO_Tutor::metricas(), 200 );
+	}
+
+	// -------------------------------------------------------------
+	// GET /audio/manifest  (público, sin JWT)
+	// -------------------------------------------------------------
+	//
+	// Devuelve el manifest del paquete sonoro descargable más reciente:
+	//   { version, url, sha256, tamano_bytes }
+	//
+	// El paquete se sirve desde wp-content/uploads/uno-roto/audio/.
+	// Convención de nombres: audio_v<N>.zip + audio_v<N>.sha256.
+	//
+	// El servidor escanea el directorio y elige la versión numérica más
+	// alta. Si no hay paquetes, devuelve 404.
+	//
+	// El cliente Flutter (lib/datos/descargador_audio.dart) consume este
+	// endpoint al primer arranque y desde Ajustes de sonido →
+	// "Comprobar actualizaciones".
+
+	public static function audio_manifest( WP_REST_Request $request ) {
+		$dir_uploads = wp_upload_dir();
+		$dir_audio   = trailingslashit( $dir_uploads['basedir'] ) . 'uno-roto/audio';
+		$base_url    = trailingslashit( $dir_uploads['baseurl'] ) . 'uno-roto/audio';
+
+		if ( ! is_dir( $dir_audio ) ) {
+			return new WP_REST_Response(
+				array( 'error' => 'Paquete sonoro no publicado todavía.' ),
+				404
+			);
+		}
+
+		// Busca audio_vN.zip y se queda con la N más alta.
+		$candidatos      = glob( $dir_audio . '/audio_v*.zip' ) ?: array();
+		$mejor_version   = -1;
+		$mejor_zip       = null;
+		foreach ( $candidatos as $ruta ) {
+			$nombre = basename( $ruta );
+			if ( preg_match( '/^audio_v(\d+)\.zip$/', $nombre, $m ) ) {
+				$version_int = (int) $m[1];
+				if ( $version_int > $mejor_version ) {
+					$mejor_version = $version_int;
+					$mejor_zip     = $ruta;
+				}
+			}
+		}
+
+		if ( $mejor_version < 0 || null === $mejor_zip ) {
+			return new WP_REST_Response(
+				array( 'error' => 'No hay audio_v<N>.zip en uno-roto/audio.' ),
+				404
+			);
+		}
+
+		// El sha256 se lee de un fichero hermano audio_vN.sha256 si
+		// existe (escrito por el script de despliegue), o se calcula al
+		// vuelo y se cachea como transient 1h.
+		$ruta_sha = preg_replace( '/\.zip$/', '.sha256', $mejor_zip );
+		$sha256   = '';
+		if ( file_exists( $ruta_sha ) ) {
+			$contenido = trim( (string) file_get_contents( $ruta_sha ) );
+			// Aceptamos formato `<sha>` o `<sha>  <archivo>` (sha256sum).
+			$partes = preg_split( '/\s+/', $contenido );
+			$sha256 = strtolower( $partes[0] ?? '' );
+		}
+		if ( '' === $sha256 ) {
+			$clave_cache = 'uroto_audio_sha256_v' . $mejor_version;
+			$cacheado    = get_transient( $clave_cache );
+			if ( false !== $cacheado ) {
+				$sha256 = $cacheado;
+			} else {
+				$sha256 = strtolower( hash_file( 'sha256', $mejor_zip ) ?: '' );
+				set_transient( $clave_cache, $sha256, HOUR_IN_SECONDS );
+			}
+		}
+
+		$tamano = filesize( $mejor_zip );
+
+		// La URL devuelta sigue el esquema (http/https) de la petición que
+		// llega al endpoint, no el del `siteurl` de WP. Así el cliente
+		// móvil siempre recibe URLs coherentes con el dominio por el que
+		// entró, aunque el admin tenga `home_url()` mal configurado o el
+		// sitio se mueva a otro dominio. `set_url_scheme()` también acepta
+		// detrás de un proxy si éste pasa `X-Forwarded-Proto`/`HTTPS`.
+		$url_zip      = $base_url . '/' . basename( $mejor_zip );
+		$esquema_real = self::detectar_esquema_petición( $request );
+		$url_zip      = set_url_scheme( $url_zip, $esquema_real );
+
+		return new WP_REST_Response(
+			array(
+				'version'      => $mejor_version,
+				'url'          => $url_zip,
+				'sha256'       => $sha256,
+				'tamano_bytes' => (int) $tamano,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Determina si la petición entró por HTTPS, robusto a proxies
+	 * (Cloudflare, nginx delante de Apache, Local WP, etc.). Devuelve
+	 * `'https'` o `'http'`.
+	 *
+	 * `is_ssl()` solo mira `$_SERVER['HTTPS']` y el puerto, lo que falla
+	 * cuando hay un proxy SSL terminator delante. Además miramos las
+	 * cabeceras `X-Forwarded-Proto` y `X-Forwarded-Ssl` que casi todos
+	 * los proxies envían.
+	 */
+	private static function detectar_esquema_petición( WP_REST_Request $request ) {
+		if ( is_ssl() ) {
+			return 'https';
+		}
+		$cabecera_proto = $request->get_header( 'x-forwarded-proto' );
+		if ( is_string( $cabecera_proto ) && strtolower( trim( $cabecera_proto ) ) === 'https' ) {
+			return 'https';
+		}
+		$cabecera_ssl = $request->get_header( 'x-forwarded-ssl' );
+		if ( is_string( $cabecera_ssl ) && strtolower( trim( $cabecera_ssl ) ) === 'on' ) {
+			return 'https';
+		}
+		return 'http';
+	}
+
+	// =================================================================
+	// Modo tutor
+	// =================================================================
+	//
+	// El tutor entra desde la pantalla "Cuaderno" del cliente con su
+	// email + password, recibe un JWT con `usuario_id` y TTL corto (15
+	// min). Con ese token puede listar sus niños y consultar el
+	// progreso detallado de cada uno. NO puede modificar nada — solo
+	// lectura. El tutor no usa el mismo JWT que el cliente del niño.
+
+	private const TTL_TUTOR_SEGUNDOS = 15 * 60;
+
+	/**
+	 * Permission callback: valida un JWT de tutor (carga `usuario_id`).
+	 * Inyecta `_usuario_id` en la request para los handlers.
+	 */
+	public static function permiso_jwt_tutor( WP_REST_Request $request ) {
+		$token = UROTO_JWT::leer_token_de_request( $request );
+		if ( ! $token ) {
+			return new WP_Error(
+				'uroto_sin_token',
+				'Falta el header Authorization: Bearer.',
+				array( 'status' => 401 )
+			);
+		}
+		$carga = UROTO_JWT::validar( $token );
+		if ( ! $carga || ! isset( $carga['usuario_id'] ) ) {
+			return new WP_Error(
+				'uroto_token_invalido',
+				'Token de tutor no válido o expirado.',
+				array( 'status' => 401 )
+			);
+		}
+		$request->set_param( '_usuario_id', (int) $carga['usuario_id'] );
+		return true;
+	}
+
+	// -------------------------------------------------------------
+	// POST /auth/iniciar-sesion-tutor
+	// -------------------------------------------------------------
+
+	public static function iniciar_sesion_tutor( WP_REST_Request $request ) {
+		$email    = sanitize_email( (string) $request->get_param( 'email' ) );
+		$password = (string) $request->get_param( 'password' );
+
+		if ( '' === $email || '' === $password ) {
+			return new WP_REST_Response(
+				array( 'error' => 'email y password requeridos.' ),
+				400
+			);
+		}
+
+		$usuario = UROTO_Repositorio::buscar_usuario_por_email( $email );
+		if ( ! $usuario || ! password_verify( $password, $usuario['password_hash'] ) ) {
+			return new WP_REST_Response(
+				array( 'error' => 'Credenciales incorrectas.' ),
+				401
+			);
+		}
+
+		$token = UROTO_JWT::firmar(
+			array( 'usuario_id' => (int) $usuario['id'] ),
+			self::TTL_TUTOR_SEGUNDOS
+		);
+
+		return new WP_REST_Response(
+			array(
+				'token'              => $token,
+				'usuario_id'         => (int) $usuario['id'],
+				'nombre_tutor'       => (string) $usuario['nombre_tutor'],
+				'expira_en_segundos' => self::TTL_TUTOR_SEGUNDOS,
+			),
+			200
+		);
+	}
+
+	// -------------------------------------------------------------
+	// GET /tutor/ninos
+	// -------------------------------------------------------------
+
+	public static function tutor_ninos( WP_REST_Request $request ) {
+		$usuario_id = (int) $request->get_param( '_usuario_id' );
+		$ninos      = UROTO_Repositorio::ninos_de_usuario( $usuario_id );
+
+		// Para cada niño añadimos un mini-resumen del estado: esquirlas,
+		// rango, arco actual y nº de habilidades vistas. Deja a la app
+		// pintar el selector sin tener que llamar al endpoint detallado
+		// para los seis perfiles a la vez.
+		$lista = array();
+		foreach ( $ninos as $nino ) {
+			$nino_id     = (int) $nino['id'];
+			$progreso    = UROTO_Repositorio::cargar_progreso( $nino_id );
+			$habilidades = UROTO_Repositorio::cargar_habilidades( $nino_id );
+			$lista[]     = array(
+				'nino_id'              => $nino_id,
+				'nombre_mostrar'       => (string) $nino['nombre_mostrar'],
+				'locale'               => (string) $nino['locale'],
+				'esquirlas_total'      => $progreso ? (int) $progreso['esquirlas_total'] : 0,
+				'rango'                => $progreso ? (int) $progreso['rango'] : 0,
+				'arco_actual'          => $progreso ? (int) $progreso['arco_actual'] : 1,
+				'habilidades_vistas'   => count( $habilidades ),
+			);
+		}
+
+		return new WP_REST_Response( array( 'ninos' => $lista ), 200 );
+	}
+
+	// -------------------------------------------------------------
+	// GET /tutor/progreso-nino/{nino_id}
+	// -------------------------------------------------------------
+
+	public static function tutor_progreso_nino( WP_REST_Request $request ) {
+		$usuario_id = (int) $request->get_param( '_usuario_id' );
+		$nino_id    = (int) $request->get_param( 'nino_id' );
+
+		$nino = UROTO_Repositorio::buscar_nino( $nino_id );
+		if ( ! $nino ) {
+			return new WP_REST_Response(
+				array( 'error' => 'Niño no encontrado.' ),
+				404
+			);
+		}
+		// Aislamiento: un tutor solo puede ver progreso de SUS niños.
+		if ( (int) $nino['usuario_id'] !== $usuario_id ) {
+			return new WP_REST_Response(
+				array( 'error' => 'Este niño no pertenece a tu cuenta.' ),
+				403
+			);
+		}
+
+		return new WP_REST_Response(
+			array(
+				'nino_id'        => $nino_id,
+				'nombre_mostrar' => (string) $nino['nombre_mostrar'],
+				'progreso'       => UROTO_Repositorio::cargar_progreso( $nino_id ),
+				'habilidades'    => UROTO_Repositorio::cargar_habilidades( $nino_id ),
+			),
+			200
+		);
+	}
+
+	// =================================================================
+	// Reset de contraseña
+	// =================================================================
+
+	public static function auth_solicitar_reset( WP_REST_Request $request ) {
+		$email = sanitize_email( (string) $request->get_param( 'email' ) );
+		if ( '' === $email ) {
+			return new WP_REST_Response(
+				array( 'error' => 'email requerido.' ),
+				400
+			);
+		}
+		// Devolvemos siempre 200 — política anti-enumeración.
+		UROTO_Reset_Password::solicitar( $email );
+		return new WP_REST_Response(
+			array( 'ok' => true ),
+			200
+		);
+	}
+
+	public static function auth_pagina_reset( WP_REST_Request $request ) {
+		// Esta función emite HTML directo y mata la ejecución; nunca
+		// retorna a WP_REST. Solo está aquí para registro de la ruta.
+		UROTO_Reset_Password::pagina_reset_html( $request );
 	}
 }

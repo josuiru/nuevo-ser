@@ -1,9 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- INTERNET es obligatorio en release. En debug se hereda del
+         manifest de src/debug, pero el merge de release usa SOLO este,
+         así que sin esta línea el APK release no puede ni resolver DNS
+         (errno=7 "No address associated with hostname"). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Para que el niño pueda hacer foto a su dibujo del personaje
+         desde la pantalla "Mi cuaderno". image_picker delega en una
+         actividad externa de cámara, así que sólo necesitamos la
+         permiso, no la feature obligatoria. La galería usa el photo
+         picker del sistema (sin permiso adicional en Android 13+ y
+         getContent() en versiones anteriores). -->
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:label="uno_roto"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true">
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".MainActivity"
             android:exported="true"

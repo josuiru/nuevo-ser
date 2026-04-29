@@ -1,0 +1,19 @@
+# Fuente de verdad para el lote inicial de voces TTS.
+# Formato:  <personaje>	<slug>	<texto_canónico_castellano>
+# - personaje:   coincide con VozPersonaje (sora, fragmentoKurz, fragmentoEco…).
+# - slug:        nombre del archivo .ogg de salida (sin extensión).
+# - texto:       castellano canónico tal y como aparece en catalogo_escenas.dart.
+#
+# Si en una sesión generas voces y el slug ya existe en disco, el script lo
+# salta para no consumir cuota dos veces. Para regenerar, borra el .ogg
+# correspondiente o usa --force.
+sora	1_1_llegas_tarde	Llegas tarde.
+sora	1_1_siempre_llegais	Siempre llegáis tarde.
+sora	1_1_mm	Mm.
+sora	1_1_eso_es_la_montana	Eso es la Montaña. Hoy no.
+sora	1_1_yo_voy_a_ensenarte	Yo voy a enseñarte.
+fragmentoKurz	1_5_otro	Otro.
+fragmentoKurz	1_5_pequeno	Pequeño.
+fragmentoKurz	1_5_empezamos	¿Empezamos?
+fragmentoEco	primera_hola	Hola.
+fragmentoEco	primera_otro_nuevo	Otro nuevo.

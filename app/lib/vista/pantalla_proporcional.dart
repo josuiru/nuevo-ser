@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_proporcional.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de Familia I (Proporcionales). Se muestra una razón a:b y
 /// otra incompleta c:?. El niño elige el número que mantiene la
@@ -62,6 +64,7 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -108,9 +111,9 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -119,9 +122,8 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'PROPORCIÓN',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderProporcion,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -132,10 +134,10 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'completa la proporción',
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCompletaProporcion,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

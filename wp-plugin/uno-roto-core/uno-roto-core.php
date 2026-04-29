@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'UROTO_CORE_VERSION', '0.3.0' );
+define( 'UROTO_CORE_VERSION', '0.4.0' );
 define( 'UROTO_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'UROTO_CORE_URL', plugin_dir_url( __FILE__ ) );
 
@@ -33,6 +33,7 @@ require_once UROTO_CORE_DIR . 'includes/class-uroto-sincronizador.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-filtro-tutor.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-anthropic.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-tutor.php';
+require_once UROTO_CORE_DIR . 'includes/class-uroto-reset-password.php';
 require_once UROTO_CORE_DIR . 'includes/class-uroto-endpoints.php';
 
 register_activation_hook( __FILE__, array( 'UROTO_Activacion', 'activar' ) );

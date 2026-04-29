@@ -4,6 +4,8 @@
 > Versión 0.1 — MVP Era 2.
 > Estado: borrador vivo. Se amplía con cada iteración.
 
+> **Encuadre del programa.** *Uno Roto* es un juego de la línea **Colección Nuevo Ser Kids** (juegos digitales pedagógicos infantiles/escolares). La **Colección Nuevo Ser** madre es un proyecto editorial y de pensamiento más amplio (editorial de libros, plugins para colectivos y comunidades, herramientas para alternativas y pensamiento crítico y constructivo): https://coleccion-nuevo-ser.com/. Aquí, "la Colección" se refiere a Kids salvo aviso.
+
 ---
 
 ## 1. Qué es esto

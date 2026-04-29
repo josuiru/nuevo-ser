@@ -1,6 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../datos/config_api.dart';
+import '../datos/descargador_audio.dart';
 import '../datos/repositorio_progreso.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/textos_enums.dart';
 import '../nucleo/paleta.dart';
 import '../sonido/capa_audio.dart';
 import '../sonido/servicio_sonoro.dart';
@@ -60,13 +66,14 @@ class _PantallaAjustesSonidoState extends State<PantallaAjustesSonido> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'sonido',
-          style: TextStyle(
+        title: Text(
+          textos.sonidoTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
             letterSpacing: 4,
@@ -88,7 +95,7 @@ class _PantallaAjustesSonidoState extends State<PantallaAjustesSonido> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'VOLUMEN POR CAPA',
+                  textos.sonidoSeccionVolumen,
                   style: TextStyle(
                     color: PaletaNeon.textoTenue.withOpacity(0.7),
                     fontSize: 11,
@@ -105,9 +112,328 @@ class _PantallaAjustesSonidoState extends State<PantallaAjustesSonido> {
                     alCambiar: (v) => _alCambiarVolumen(capa, v),
                   ),
                 const SizedBox(height: 24),
+                _BloquePaqueteSonoro(repositorio: widget.repositorio),
+                const SizedBox(height: 24),
                 const _NotaAccesibilidad(),
               ],
             ),
+    );
+  }
+}
+
+/// Bloque que gestiona el paquete sonoro descargable. Solo los efectos
+/// cortos van empaquetados en el APK; ambient + música + narrativos se
+/// bajan del servidor a la cache local. Este widget muestra el estado
+/// (versión instalada, tamaño en disco) y ofrece descargar / actualizar
+/// / borrar.
+class _BloquePaqueteSonoro extends StatefulWidget {
+  final RepositorioProgreso repositorio;
+  const _BloquePaqueteSonoro({required this.repositorio});
+
+  @override
+  State<_BloquePaqueteSonoro> createState() => _BloquePaqueteSonoroState();
+}
+
+class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
+  late final DescargadorAudio _descargador;
+  int? _versionInstalada;
+  int _tamanoCacheBytes = 0;
+  EstadoDescargaAudio? _estadoEnVuelo;
+  StreamSubscription<EstadoDescargaAudio>? _suscripcion;
+
+  @override
+  void initState() {
+    super.initState();
+    _descargador = DescargadorAudio(
+      urlManifest: Uri.parse(
+        '${ConfigApi.urlBase}/wp-json/uno-roto/v1/audio/manifest',
+      ),
+      hostOverride: ConfigApi.hostOverride,
+    );
+    _refrescarEstadoLocal();
+  }
+
+  @override
+  void dispose() {
+    _suscripcion?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refrescarEstadoLocal() async {
+    final version = await _descargador.versionLocal(widget.repositorio);
+    final bytes = await _descargador.tamanoCacheBytes();
+    if (!mounted) return;
+    setState(() {
+      _versionInstalada = version;
+      _tamanoCacheBytes = bytes;
+    });
+  }
+
+  Future<void> _descargar() async {
+    final textos = AppLocalizations.of(context);
+    setState(() => _estadoEnVuelo = const PreparandoDescargaAudio());
+    ManifestPaqueteAudio manifest;
+    try {
+      manifest = await _descargador.obtenerManifest();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _estadoEnVuelo = DescargaAudioFallida(e.toString()));
+      _mostrarMensajeBreve(textos.sonidoMensajeFallido(e.toString()));
+      return;
+    }
+
+    // Detener loops antes de tocar archivos en cache.
+    for (final capa in CapaAudio.values) {
+      await ServicioSonoro.instancia.detenerCapa(capa, msFade: 200);
+    }
+
+    _suscripcion = _descargador
+        .descargarEInstalar(manifest, widget.repositorio)
+        .listen((estado) async {
+      if (!mounted) return;
+      setState(() => _estadoEnVuelo = estado);
+      if (estado is DescargaAudioCompletada) {
+        // Los archivos ya están en cache: limpiamos los ids que
+        // hubieran fallado antes de la descarga para que el motor
+        // los vuelva a intentar al próximo play.
+        await ServicioSonoro.instancia.reintentarSonidosAusentes();
+        _refrescarEstadoLocal();
+        _mostrarMensajeBreve(textos.sonidoMensajeInstalado);
+      } else if (estado is DescargaAudioFallida) {
+        _mostrarMensajeBreve(textos.sonidoMensajeFallido(estado.mensaje));
+      }
+    });
+  }
+
+  Future<void> _borrarCache() async {
+    final textos = AppLocalizations.of(context);
+    final confirmar = await _confirmar(
+      textos.sonidoPaqueteConfirmTitulo,
+      textos.sonidoPaqueteConfirmTexto(
+        _formatearTamano(_tamanoCacheBytes),
+      ),
+      confirmTexto: textos.sonidoPaqueteConfirmBotonBorrar,
+    );
+    if (confirmar != true) return;
+    for (final capa in CapaAudio.values) {
+      await ServicioSonoro.instancia.detenerCapa(capa, msFade: 200);
+    }
+    await _descargador.borrarCache(widget.repositorio);
+    if (!mounted) return;
+    setState(() => _estadoEnVuelo = null);
+    _refrescarEstadoLocal();
+    _mostrarMensajeBreve(textos.sonidoMensajeBorrado);
+  }
+
+  Future<bool?> _confirmar(
+    String titulo,
+    String texto, {
+    required String confirmTexto,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: Text(titulo,
+            style: const TextStyle(color: PaletaNeon.textoPrincipal)),
+        content: Text(texto,
+            style: const TextStyle(color: PaletaNeon.textoTenue)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(AppLocalizations.of(ctx).sonidoBotonCancelar),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: PaletaNeon.azulNeon),
+            child: Text(confirmTexto),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _mostrarMensajeBreve(String mensaje) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensaje),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  static String _formatearTamano(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(0)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    final estado = _estadoEnVuelo;
+    final descargaEnCurso = estado is DescargandoAudio ||
+        estado is VerificandoAudio ||
+        estado is DescomprimiendoAudio ||
+        estado is PreparandoDescargaAudio;
+
+    final textos = AppLocalizations.of(contexto);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: PaletaNeon.fondoMedio.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: PaletaNeon.violetaBase.withOpacity(0.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            textos.sonidoPaqueteTitulo,
+            style: const TextStyle(
+              color: PaletaNeon.textoTenue,
+              fontSize: 11,
+              letterSpacing: 3,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _versionInstalada == null
+                ? textos.sonidoPaqueteNoInstalado
+                : textos.sonidoPaqueteVersion(
+                    _versionInstalada!,
+                    _formatearTamano(_tamanoCacheBytes),
+                  ),
+            style: const TextStyle(
+              color: PaletaNeon.textoPrincipal,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            textos.sonidoPaqueteExplicacion,
+            style: TextStyle(
+              color: PaletaNeon.textoTenue.withOpacity(0.7),
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 14),
+          if (descargaEnCurso) _ProgresoDescarga(estado: estado!),
+          if (!descargaEnCurso) ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton(
+                  onPressed: _descargar,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: PaletaNeon.azulNeon.withOpacity(0.85),
+                    foregroundColor: PaletaNeon.fondoProfundo,
+                  ),
+                  child: Text(_versionInstalada == null
+                      ? textos.sonidoPaqueteBotonDescargar
+                      : textos.sonidoPaqueteBotonComprobar),
+                ),
+                if (_versionInstalada != null)
+                  TextButton(
+                    onPressed: _borrarCache,
+                    style: TextButton.styleFrom(
+                      foregroundColor: PaletaNeon.textoTenue,
+                    ),
+                    child: Text(textos.sonidoPaqueteBotonBorrar),
+                  ),
+              ],
+            ),
+            if (estado is DescargaAudioFallida)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  estado.mensaje,
+                  style: TextStyle(
+                    color: PaletaNeon.rojoOxidado.withOpacity(0.9),
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            if (estado is DescargaAudioCompletada)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  '✓ ${estado.archivosInstalados} archivos · versión ${estado.version}',
+                  style: TextStyle(
+                    color: PaletaNeon.exitoSuave.withOpacity(0.9),
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ProgresoDescarga extends StatelessWidget {
+  final EstadoDescargaAudio estado;
+  const _ProgresoDescarga({required this.estado});
+
+  @override
+  Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
+    String texto;
+    double? fraccion;
+    final estadoActual = estado;
+    if (estadoActual is PreparandoDescargaAudio) {
+      texto = textos.sonidoDescargaConectando;
+      fraccion = null;
+    } else if (estadoActual is DescargandoAudio) {
+      final mb = (estadoActual.recibidoBytes / (1024 * 1024))
+          .toStringAsFixed(1);
+      final total = estadoActual.totalBytes / (1024 * 1024);
+      texto = total > 0
+          ? textos.sonidoDescargaBajandoConTotal(
+              mb,
+              total.toStringAsFixed(1),
+            )
+          : textos.sonidoDescargaBajandoSinTotal(mb);
+      fraccion = estadoActual.fraccion >= 0 ? estadoActual.fraccion : null;
+    } else if (estadoActual is VerificandoAudio) {
+      texto = textos.sonidoDescargaVerificando;
+      fraccion = null;
+    } else if (estadoActual is DescomprimiendoAudio) {
+      texto = textos.sonidoDescargaInstalando(
+        estadoActual.archivoActual,
+        estadoActual.archivosTotal,
+      );
+      fraccion = estadoActual.archivosTotal > 0
+          ? estadoActual.archivoActual / estadoActual.archivosTotal
+          : null;
+    } else {
+      texto = '';
+      fraccion = null;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          texto,
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(
+          value: fraccion,
+          backgroundColor: PaletaNeon.violetaBase.withOpacity(0.3),
+          color: PaletaNeon.azulNeon,
+          minHeight: 4,
+        ),
+      ],
     );
   }
 }
@@ -134,16 +460,16 @@ class _ModoSilencioTile extends StatelessWidget {
         value: activo,
         onChanged: alCambiar,
         activeColor: PaletaNeon.azulNeon,
-        title: const Text(
-          'Modo sin sonido',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(contexto).sonidoModoSilencioTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 14,
             letterSpacing: 0.6,
           ),
         ),
         subtitle: Text(
-          'el juego es completamente jugable en silencio',
+          AppLocalizations.of(contexto).sonidoModoSilencioSubtitulo,
           style: TextStyle(
             color: PaletaNeon.textoTenue.withOpacity(0.8),
             fontSize: 11,
@@ -167,21 +493,22 @@ class _SliderCapa extends StatelessWidget {
     required this.alCambiar,
   });
 
-  String _descripcionCapa(CapaAudio capa) {
+  String _descripcionCapa(CapaAudio capa, AppLocalizations textos) {
     switch (capa) {
       case CapaAudio.ambient:
-        return 'viento, agua, ruido rosa del mundo';
+        return textos.sonidoCapaAmbient;
       case CapaAudio.musica:
-        return 'loops de distrito y de combate';
+        return textos.sonidoCapaMusica;
       case CapaAudio.efectos:
-        return 'taps, aciertos, errores';
+        return textos.sonidoCapaEfectos;
       case CapaAudio.narrativos:
-        return 'motivos y efectos únicos';
+        return textos.sonidoCapaNarrativos;
     }
   }
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Opacity(
       opacity: habilitado ? 1.0 : 0.45,
       child: Padding(
@@ -192,7 +519,7 @@ class _SliderCapa extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  capa.nombreVisible,
+                  capa.nombreLocalizado(textos),
                   style: const TextStyle(
                     color: PaletaNeon.textoPrincipal,
                     fontSize: 13,
@@ -210,7 +537,7 @@ class _SliderCapa extends StatelessWidget {
               ],
             ),
             Text(
-              _descripcionCapa(capa),
+              _descripcionCapa(capa, textos),
               style: TextStyle(
                 color: PaletaNeon.textoTenue.withOpacity(0.6),
                 fontSize: 10,
@@ -247,8 +574,7 @@ class _NotaAccesibilidad extends StatelessWidget {
   @override
   Widget build(BuildContext contexto) {
     return Text(
-      'Los ajustes se guardan por perfil. Cada niño que juegue con '
-      'su perfil tendrá su propia configuración de volúmenes.',
+      AppLocalizations.of(contexto).sonidoNotaAccesibilidad,
       style: TextStyle(
         color: PaletaNeon.textoTenue.withOpacity(0.6),
         fontSize: 11,

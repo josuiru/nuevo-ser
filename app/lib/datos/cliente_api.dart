@@ -46,7 +46,14 @@ class ClienteApi {
   Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/uno-roto/v1$ruta');
 
   Map<String, String> _cabeceras({String? token}) {
-    final base = {'Content-Type': 'application/json'};
+    // Importante: el WAF de Apache (mod_security CRS) rechaza con 406
+    // las peticiones sin User-Agent — el package:http de Dart en
+    // Android no lo añade por defecto. Lo fijamos siempre.
+    final base = {
+      'Content-Type': 'application/json',
+      'User-Agent': 'UnoRoto/0.5 (Android)',
+      'Accept': 'application/json',
+    };
     if (token != null && token.isNotEmpty) {
       base['Authorization'] = 'Bearer $token';
     }
@@ -139,6 +146,22 @@ class ClienteApi {
   Future<void> borrarCuenta(String token) async {
     final r = await _cliente
         .delete(_uri('/account'), headers: _cabeceras(token: token))
+        .timeout(tiempoEspera);
+    _decodificar(r);
+  }
+
+  /// POST /auth/solicitar-reset. Pide al backend que envíe un email
+  /// con enlace para crear nueva contraseña. **Anti-enumeración**: el
+  /// servidor responde 200 igualmente aunque el email no exista, así
+  /// que un cliente no puede usar este endpoint para descubrir si una
+  /// dirección está registrada o no.
+  Future<void> solicitarResetPassword({required String email}) async {
+    final r = await _cliente
+        .post(
+          _uri('/auth/solicitar-reset'),
+          headers: _cabeceras(),
+          body: jsonEncode({'email': email}),
+        )
         .timeout(tiempoEspera);
     _decodificar(r);
   }

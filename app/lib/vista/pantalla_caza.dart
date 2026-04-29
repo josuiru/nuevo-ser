@@ -9,6 +9,8 @@ import '../datos/catalogo_habilidades.dart';
 import '../datos/cliente_tutor.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
+import '../dominio/bonus_remonte.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 import '../dominio/distrito.dart';
 import '../dominio/fragmento_en_tejado.dart';
 import '../dominio/generador_caza.dart';
@@ -63,6 +65,8 @@ import '../dominio/problema_redondeo_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
 import '../dominio/selector_habilidades.dart';
 import '../dominio/tutor/servicio_tutor.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import '../sonido/capa_audio.dart';
 import '../sonido/catalogo_sonidos.dart';
@@ -134,10 +138,23 @@ class PantallaCaza extends StatefulWidget {
   final RepositorioProgreso repositorio;
   final Distrito distrito;
 
+  /// Si está presente, el cazadero entra en "modo entrenamiento": el
+  /// selector adaptativo restringe candidatas al dominio indicado
+  /// (FR/DEC/PROP/…) en lugar de a las habilidades del distrito. La UI
+  /// añade un badge para que el niño no se desoriente. El distrito sigue
+  /// fijando la atmósfera visual y sonora.
+  final String? dominioFiltrado;
+
+  /// Etiqueta legible del dominio entrenado (p. ej. "Fracciones"). Se
+  /// muestra en el badge. Solo se usa si `dominioFiltrado` no es null.
+  final String? nombreDominio;
+
   const PantallaCaza({
     super.key,
     required this.repositorio,
     required this.distrito,
+    this.dominioFiltrado,
+    this.nombreDominio,
   });
 
   @override
@@ -158,6 +175,10 @@ class _PantallaCazaState extends State<PantallaCaza>
 
   int _esquirlasTotal = 0;
   int _esquirlasEstaSesion = 0;
+  // Habilidades que el niño ya remontó esta sesión (bonus dado).
+  // Una habilidad solo paga bonus la primera vez que se captura un
+  // Fragmento de ella en la sesión actual; los siguientes sin extra.
+  final Set<String> _habilidadesRemontadasEstaSesion = <String>{};
   String? _lineaAmbienteSora;
   Timer? _temporizadorSpawn;
   Timer? _temporizadorTick;
@@ -190,8 +211,8 @@ class _PantallaCazaState extends State<PantallaCaza>
     _servicioTutor = ServicioTutor(
       cache: CacheTutor(),
       cliente: ClienteTutor(
-        urlBase: ConfigApi.urlBaseLocal,
-        hostOverride: ConfigApi.hostLocal,
+        urlBase: ConfigApi.urlBase,
+        hostOverride: ConfigApi.hostOverride,
       ),
       repositorio: widget.repositorio,
       proveedorToken: () => token,
@@ -295,6 +316,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     final selector = _selectorHabilidades!;
     final idHabilidad = await selector.elegirSiguienteHabilidad(
       distrito: widget.distrito,
+      dominioFiltrado: widget.dominioFiltrado,
     );
     if (idHabilidad == null) {
       return _generador.siguiente(
@@ -334,19 +356,40 @@ class _PantallaCazaState extends State<PantallaCaza>
   Future<void> _alTocarFragmento(FragmentoEnTejado fragmento) async {
     HapticFeedback.selectionClick();
     _instanteAperturaPuzzle[fragmento.identificador] = DateTime.now();
+    // Reseteamos el contador para que cada puzzle empiece "a la
+    // primera". Cada respuesta incorrecta dentro de la pantalla del
+    // puzzle lo incrementa; al volver, [intentosPuzzleActual] nos
+    // dice en qué intento acertó el niño y escalamos las esquirlas.
+    reiniciarIntentosPuzzle();
     final capturado = await _abrirPuzzleSegunTipo(fragmento);
     if (!mounted) return;
+    final intentos = intentosPuzzleActual;
+    // Leemos la precisión histórica ANTES de registrar el nuevo
+    // intento — la usamos para decidir si esta captura cuenta como
+    // "remonte" de una habilidad que costaba (precisión < 0.5).
+    final idHabilidad = idHabilidadPrincipal(fragmento);
+    final precisionPrevia =
+        (await _motorMaestria?.cargarEstado(idHabilidad))?.precision;
     _registrarResultadoMaestria(fragmento, capturado == true);
-    _registrarEnTutor(fragmento, capturado == true);
-    setState(() => _activos.remove(fragmento));
-    if (capturado != true) {
-      // El Fragmento se le escapó. Antes de continuar, si el niño
-      // está atascado en esta habilidad, le ofrecemos hablar con Eco.
-      await _quizasOfrecerTutor(fragmento);
-      if (!mounted) return;
+    // Registramos los fallos PREVIOS al resultado final (intentos-1)
+    // para que el contador del tutor refleje cuánto le costó este
+    // puzzle, no solo el resultado binario. Así "tres errores aunque
+    // al final acertara" puede activar la oferta de Eco igual que
+    // "tres Fragmentos seguidos escapados".
+    for (var i = 1; i < intentos; i++) {
+      await _registrarEnTutor(fragmento, false);
     }
+    setState(() => _activos.remove(fragmento));
+    // La oferta se evalúa con el contador en su pico (antes del
+    // acierto final, que lo resetea). Vale tanto para captura
+    // difícil como para escape — `_quizasOfrecerTutor` decide por
+    // dentro con `deberiaOfrecer` y el cooldown.
+    await _quizasOfrecerTutor(fragmento);
+    if (!mounted) return;
+    // Resultado final: acierto resetea contador; escape suma uno más.
+    await _registrarEnTutor(fragmento, capturado == true);
     if (capturado == true) {
-      final esquirlasGanadas = switch (fragmento.tipo) {
+      final esquirlasBase = switch (fragmento.tipo) {
         TipoFragmentoEnTejado.espejo => 2,
         TipoFragmentoEnTejado.decimal => 2,
         TipoFragmentoEnTejado.porcentaje => 2,
@@ -402,16 +445,61 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.operacionDecimal => 4,
         TipoFragmentoEnTejado.unitario => fragmento.numerador,
       };
+      // Escalado motivacional: acertar a la primera da [esquirlasBase];
+      // cada reintento adicional resta una esquirla. Llegar al último
+      // intento posible (descarte) da 0. Nunca se pierden esquirlas
+      // ya ganadas — solo se gana menos esta vez.
+      final esquirlasGanadas = esquirlasSegunIntentos(
+        base: esquirlasBase,
+        totalOpciones: _totalOpcionesDePuzzle(fragmento.tipo),
+      );
+      // Bonus de remonte: si la habilidad llevaba precisión < 0.5 y
+      // hoy la captura, le sumamos +1. Lógica en `bonus_remonte.dart`.
+      final esRemonte = aplicaBonusRemonte(
+        esquirlasGanadas: esquirlasGanadas,
+        precisionPrevia: precisionPrevia,
+        yaRemontada:
+            _habilidadesRemontadasEstaSesion.contains(idHabilidad),
+      );
+      if (esRemonte) {
+        _habilidadesRemontadasEstaSesion.add(idHabilidad);
+      }
+      final bonusRemonte = esRemonte ? 1 : 0;
+      final esquirlasFinales = esquirlasGanadas + bonusRemonte;
       setState(() {
-        _esquirlasEstaSesion += esquirlasGanadas;
-        _esquirlasTotal += esquirlasGanadas;
+        _esquirlasEstaSesion += esquirlasFinales;
+        _esquirlasTotal += esquirlasFinales;
       });
       await widget.repositorio.guardarEsquirlas(_esquirlasTotal);
       await _verificarSubidaDeRango();
-      _comentarTrasCaptura();
+      if (bonusRemonte > 0) {
+        _mostrarLineaAmbienteSora('Esta te costaba.');
+      } else {
+        _comentarTrasCaptura();
+      }
     } else {
       _mostrarLineaAmbienteSora('Ya volverá otro.');
     }
+  }
+
+  /// Cuántas tarjetas/botones presenta el puzzle del [tipo] dado. Lo
+  /// usa [esquirlasSegunIntentos] para detectar "último intento por
+  /// descarte" y devolver 0 esquirlas en ese caso.
+  ///
+  /// La gran mayoría son de 4 candidatos. Los binarios sí/no son 2.
+  /// Tres puzzles de fracciones (FR.03 / FR.04) son de 3 botones.
+  int _totalOpcionesDePuzzle(TipoFragmentoEnTejado tipo) {
+    return switch (tipo) {
+      TipoFragmentoEnTejado.primo ||
+      TipoFragmentoEnTejado.simetria ||
+      TipoFragmentoEnTejado.divisibilidad ||
+      TipoFragmentoEnTejado.multiplos =>
+        2,
+      TipoFragmentoEnTejado.comparacionMedia ||
+      TipoFragmentoEnTejado.comparacionUnidad =>
+        3,
+      _ => 4,
+    };
   }
 
   Future<bool?> _abrirPuzzleSegunTipo(FragmentoEnTejado fragmento) {
@@ -1221,9 +1309,11 @@ class _PantallaCazaState extends State<PantallaCaza>
 
   /// Si el niño se ha atascado en esta habilidad y la política dice
   /// que toca, le mostramos un dialog cariñoso con la voz de Sora
-  /// para que pueda hablar con Eco. Si rechaza, no insistimos —
-  /// `registrarOferta` desde la propia `PantallaTutor` arranca el
-  /// cooldown solo cuando entra de verdad.
+  /// para que pueda hablar con Eco. Tanto si acepta como si rechaza
+  /// arrancamos el cooldown de la oferta — el "no, sigo solo" cuenta
+  /// como respuesta válida y no queremos repetir la oferta cada
+  /// pocos minutos. Si la sigue necesitando, el contador del tutor
+  /// se mantiene: cuando expire el cooldown volverá a ofrecerse.
   Future<void> _quizasOfrecerTutor(FragmentoEnTejado fragmento) async {
     final servicio = _servicioTutor;
     if (servicio == null) return;
@@ -1232,61 +1322,61 @@ class _PantallaCazaState extends State<PantallaCaza>
     if (!mounted) return;
     final nombreHabilidad = _nombreVisibleDeHabilidad(idHabilidad);
 
+    // Firma sonora de Eco al aparecer la oferta. Capa narrativos
+    // → ducking automático sobre ambient/música. Si el asset aún
+    // no está, ServicioSonoro lo registra como ausente y prosigue
+    // en silencio, sin crash.
+    ServicioSonoro.instancia.reproducirEfecto('motivo_eco');
+
+    final textos = AppLocalizations.of(context);
     final acepta = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),
       builder: (contexto) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          '¿Quieres una pista?',
-          style: TextStyle(
+        title: Text(
+          textos.tutorOfertaTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 18,
             fontWeight: FontWeight.w300,
             letterSpacing: 2,
           ),
         ),
-        content: RichText(
-          text: TextSpan(
-            style: const TextStyle(
-              color: PaletaNeon.textoTenue,
-              fontSize: 14,
-              height: 1.5,
-            ),
-            children: [
-              const TextSpan(text: 'Sobre '),
-              TextSpan(
-                text: nombreHabilidad.toLowerCase(),
-                style: const TextStyle(
-                  color: PaletaNeon.textoPrincipal,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              const TextSpan(
-                text: '. Una pista, no la solución.',
-              ),
-            ],
+        content: Text(
+          textos.tutorOfertaCuerpo(nombreHabilidad.toLowerCase()),
+          style: const TextStyle(
+            color: PaletaNeon.textoTenue,
+            fontSize: 14,
+            height: 1.5,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(contexto).pop(false),
-            child: const Text(
-              'sigo solo',
-              style: TextStyle(color: PaletaNeon.textoTenue),
+            child: Text(
+              textos.tutorOfertaSigoSolo,
+              style: const TextStyle(color: PaletaNeon.textoTenue),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(contexto).pop(true),
-            child: const Text(
-              'sí',
-              style: TextStyle(color: PaletaNeon.violetaNeon),
+            child: Text(
+              textos.tutorOfertaSi,
+              style: const TextStyle(color: PaletaNeon.violetaNeon),
             ),
           ),
         ],
       ),
     );
-    if (acepta != true || !mounted) return;
+    if (!mounted) return;
+    if (acepta != true) {
+      // Rechazó la oferta. Arrancamos cooldown para no insistir.
+      // (Si la hubiera aceptado, PantallaTutor llama a registrarOferta
+      // por su cuenta cuando se monta — no duplicamos aquí.)
+      await servicio.registrarOferta(idHabilidad);
+      return;
+    }
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => PantallaTutor(
@@ -1368,16 +1458,23 @@ class _PantallaCazaState extends State<PantallaCaza>
                   fasePulso: _controladorCielo.value,
                   nivelRestauracion:
                       (_esquirlasTotal / 30).clamp(0.0, 1.0),
+                  idDistrito: widget.distrito.identificador,
                 ),
               ),
               SafeArea(
                 child: Column(
                   children: [
                     _BarraSuperior(
-                      nombreDistrito: widget.distrito.nombre,
+                      nombreDistrito: traducirNarrativa(
+                        widget.distrito.nombre,
+                        Localizations.localeOf(context),
+                      ),
                       esquirlas: _esquirlasTotal,
                       esquirlasNuevasDestello: _esquirlasEstaSesion,
                       alVolverAlMapa: () => Navigator.of(context).pop(),
+                      etiquetaEntrenamiento: widget.dominioFiltrado != null
+                          ? widget.nombreDominio
+                          : null,
                     ),
                     Expanded(
                       child: LayoutBuilder(
@@ -1398,7 +1495,14 @@ class _PantallaCazaState extends State<PantallaCaza>
                         },
                       ),
                     ),
-                    SoraPresencia(textoActivo: _lineaAmbienteSora),
+                    SoraPresencia(
+                      textoActivo: _lineaAmbienteSora == null
+                          ? null
+                          : traducirNarrativa(
+                              _lineaAmbienteSora!,
+                              Localizations.localeOf(context),
+                            ),
+                    ),
                   ],
                 ),
               ),
@@ -1416,15 +1520,22 @@ class _BarraSuperior extends StatelessWidget {
   final int esquirlasNuevasDestello;
   final VoidCallback alVolverAlMapa;
 
+  /// Cuando el cazadero está en modo entrenamiento, esta etiqueta
+  /// (nombre legible del dominio) sustituye al nombre del distrito en
+  /// el centro de la barra y se prefija con "Entrenando ·" en violeta.
+  final String? etiquetaEntrenamiento;
+
   const _BarraSuperior({
     required this.nombreDistrito,
     required this.esquirlas,
     required this.esquirlasNuevasDestello,
     required this.alVolverAlMapa,
+    this.etiquetaEntrenamiento,
   });
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 20, 8),
       child: Row(
@@ -1441,9 +1552,9 @@ class _BarraSuperior extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Text(
-                '‹ mapa',
-                style: TextStyle(
+              child: Text(
+                textos.cazaBotonMapa,
+                style: const TextStyle(
                   color: PaletaNeon.textoTenue,
                   fontSize: 12,
                   letterSpacing: 1.4,
@@ -1453,16 +1564,41 @@ class _BarraSuperior extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              nombreDistrito.toUpperCase(),
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 13,
-                letterSpacing: 3,
-                color: PaletaNeon.textoTenue,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
+            child: etiquetaEntrenamiento != null
+                ? RichText(
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(
+                      style: const TextStyle(
+                        fontSize: 12,
+                        letterSpacing: 2.4,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: textos.cazaBadgeEntrenando,
+                          style: TextStyle(
+                            color: PaletaNeon.violetaNeon.withOpacity(0.85),
+                          ),
+                        ),
+                        TextSpan(
+                          text: etiquetaEntrenamiento!.toUpperCase(),
+                          style: const TextStyle(
+                            color: PaletaNeon.textoPrincipal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Text(
+                    nombreDistrito.toUpperCase(),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      letterSpacing: 3,
+                      color: PaletaNeon.textoTenue,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
           ),
           _ContadorEsquirlas(
             total: esquirlas,

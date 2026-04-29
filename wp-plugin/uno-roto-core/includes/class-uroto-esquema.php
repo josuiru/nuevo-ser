@@ -10,6 +10,8 @@
  *   nombre_jugador, flags JSON, arco actual).
  * - uroto_estado_habilidades: fila por (niño, habilidad) con nivel,
  *   precisión y métricas del motor de maestría.
+ * - uroto_password_reset: tokens de reset de contraseña con expiración
+ *   y flag de usado. Solo guardamos hash del token, nunca el original.
  *
  * El guion completo del juego y los flags narrativos se guardan como
  * JSON en uroto_progreso.flags_json — el cliente es la fuente de
@@ -45,6 +47,7 @@ class UROTO_Esquema {
 		$progreso        = self::nombre_tabla( 'progreso' );
 		$habilidades     = self::nombre_tabla( 'estado_habilidades' );
 		$cache_tutor     = self::nombre_tabla( 'cache_tutor' );
+		$reset_password  = self::nombre_tabla( 'password_reset' );
 
 		return array(
 			"CREATE TABLE {$usuarios} (
@@ -105,6 +108,19 @@ class UROTO_Esquema {
 				PRIMARY KEY  (clave_hash),
 				KEY id_habilidad (id_habilidad),
 				KEY creado_en (creado_en)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$reset_password} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				usuario_id BIGINT UNSIGNED NOT NULL,
+				token_hash CHAR(64) NOT NULL,
+				expira_en DATETIME NOT NULL,
+				usado_en DATETIME NULL DEFAULT NULL,
+				creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY  (id),
+				UNIQUE KEY token_hash (token_hash),
+				KEY usuario_id (usuario_id),
+				KEY expira_en (expira_en)
 			) {$charset_collate};",
 		);
 	}

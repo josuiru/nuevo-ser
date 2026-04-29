@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import '../dominio/fragmento_en_tejado.dart' show SimboloOperador;
 import '../dominio/problema_operacion_mixta.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle OP.03: el niño ve "0,5 + 1/4" o "1/2 × 0,4" y elige el
 /// resultado decimal correcto entre cuatro candidatos. La trampa
@@ -61,6 +63,7 @@ class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -107,9 +110,9 @@ class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -118,9 +121,8 @@ class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'DECIMAL Y FRACCIÓN',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderDecimalFraccion,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -131,9 +133,9 @@ class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'la fracción y el decimal son lo mismo',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrFraccionDecimal,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 17,
                           letterSpacing: 1.1,

@@ -74,11 +74,40 @@ class _LienzoCombateState extends State<LienzoCombate>
     );
   }
 
+  /// Snap angular: si el ángulo del dedo cae a menos de [_radSnap] de
+  /// alguna de las 12 marcas tipo reloj (cada 30°, alineadas con las
+  /// pintadas en `PintorFragmento`), ajustamos exactamente a esa marca.
+  /// Para denominadores divisibles por 12 (2/3/4/6/12) las marcas
+  /// alinean perfecto y el imán da una sensación de "click". Para 5/7/8
+  /// el snap es estrecho a propósito (≈5°) y no interfiere — el niño
+  /// usa las marcas solo como referencia visual.
+  static const double _radSnap = 5 * math.pi / 180; // 5° en radianes
+  static const int _totalMarcas = 12;
+
+  double _snapAMarcaSiCerca(double anguloRad) {
+    // Las marcas se pintan en `-π/2 + i·(2π/12)`. Recorremos las 12 y
+    // nos quedamos con la más cercana si está dentro del umbral.
+    const paso = 2 * math.pi / _totalMarcas;
+    var mejorAngulo = anguloRad;
+    var mejorDistancia = double.infinity;
+    for (var i = 0; i < _totalMarcas; i++) {
+      final anguloMarca = -math.pi / 2 + i * paso;
+      // Diferencia angular mínima en módulo 2π.
+      var delta = (anguloRad - anguloMarca).abs() % (2 * math.pi);
+      if (delta > math.pi) delta = 2 * math.pi - delta;
+      if (delta < mejorDistancia) {
+        mejorDistancia = delta;
+        mejorAngulo = anguloMarca;
+      }
+    }
+    return mejorDistancia <= _radSnap ? mejorAngulo : anguloRad;
+  }
+
   RadioTrazado _anguloDesdePunto(Offset punto) {
     final centro = _centroDelLienzo();
     final dx = punto.dx - centro.dx;
     final dy = punto.dy - centro.dy;
-    return RadioTrazado(math.atan2(dy, dx));
+    return RadioTrazado(_snapAMarcaSiCerca(math.atan2(dy, dx)));
   }
 
   void _alIniciarTrazo(DragStartDetails detalle) {

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_lectura_decimal.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle DEC.01: el niño ve un decimal escrito en palabras
 /// ("veinticinco centésimas") y elige su etiqueta numérica
@@ -59,6 +62,7 @@ class _PantallaLecturaDecimalState extends State<PantallaLecturaDecimal>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -105,9 +109,9 @@ class _PantallaLecturaDecimalState extends State<PantallaLecturaDecimal>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -116,9 +120,8 @@ class _PantallaLecturaDecimalState extends State<PantallaLecturaDecimal>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'LEER',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderLeer,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -129,9 +132,9 @@ class _PantallaLecturaDecimalState extends State<PantallaLecturaDecimal>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        '¿qué número es?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrQueNumero,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -139,7 +142,12 @@ class _PantallaLecturaDecimalState extends State<PantallaLecturaDecimal>
                         ),
                       ),
                       const SizedBox(height: 22),
-                      _TarjetaTexto(texto: _problema.texto),
+                      _TarjetaTexto(
+                        texto: traducirNarrativa(
+                          _problema.texto,
+                          Localizations.localeOf(contexto),
+                        ),
+                      ),
                       const SizedBox(height: 36),
                       Expanded(
                         child: GridView.count(

@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_mixto_a_impropio.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.13: el niño ve un número mixto ("2 y 3/4") y elige la
 /// fracción impropia equivalente entre cuatro candidatos. Inverso de
@@ -58,6 +60,7 @@ class _PantallaMixtoAImpropioState extends State<PantallaMixtoAImpropio>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -104,9 +107,9 @@ class _PantallaMixtoAImpropioState extends State<PantallaMixtoAImpropio>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -115,9 +118,8 @@ class _PantallaMixtoAImpropioState extends State<PantallaMixtoAImpropio>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'CONVERTIR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderConvertir,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -128,9 +130,9 @@ class _PantallaMixtoAImpropioState extends State<PantallaMixtoAImpropio>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        '¿qué fracción impropia es?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrConvertirImpropia,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

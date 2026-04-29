@@ -25,14 +25,25 @@ class UROTO_JWT {
 	private const ALG                  = 'HS256';
 	private const DIAS_EXPIRACION      = 30;
 
-	public static function firmar( array $carga_util ): string {
-		$cabecera = array( 'alg' => self::ALG, 'typ' => 'JWT' );
-		$ahora    = time();
-		$carga    = array_merge(
+	/**
+	 * Firma un JWT con la carga útil dada. Por defecto expira en 30 días
+	 * (uso normal del cliente del niño). Para tokens de corta duración
+	 * (modo tutor: 15 min) pasar [expira_en_segundos].
+	 *
+	 * @param int|null $expira_en_segundos TTL del token. Si null, 30 días.
+	 */
+	public static function firmar(
+		array $carga_util,
+		?int $expira_en_segundos = null
+	): string {
+		$cabecera   = array( 'alg' => self::ALG, 'typ' => 'JWT' );
+		$ahora      = time();
+		$ttl        = $expira_en_segundos ?? ( self::DIAS_EXPIRACION * 86400 );
+		$carga      = array_merge(
 			$carga_util,
 			array(
 				'iat' => $ahora,
-				'exp' => $ahora + ( self::DIAS_EXPIRACION * 86400 ),
+				'exp' => $ahora + $ttl,
 			)
 		);
 		$cabecera_b64 = self::base64url_encode( wp_json_encode( $cabecera ) );

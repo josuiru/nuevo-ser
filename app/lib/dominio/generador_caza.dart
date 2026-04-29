@@ -1713,6 +1713,11 @@ class GeneradorCaza {
   }
 
   int _elegirDenominador(int dificultad) {
+    // Tope a 6 deliberado: la mecánica de corte exige N radios desde el
+    // centro para 1/N, así que 1/11 obliga al niño a hacer 11 trazos
+    // separados — un suplicio en pantalla pequeña sin valor pedagógico
+    // adicional. Los denominadores grandes ya viven en los puzzles
+    // abstractos (FR.05/06/07/09/10/11…); aquí queremos el gesto.
     final candidatos = <int>[];
     switch (dificultad) {
       case 0:
@@ -1722,51 +1727,40 @@ class GeneradorCaza {
         candidatos.addAll([2, 3, 3, 4, 5]);
         break;
       case 2:
-        candidatos.addAll([2, 3, 4, 4, 5, 5, 6, 7]);
+        candidatos.addAll([2, 3, 4, 4, 5, 5, 6]);
         break;
       case 3:
-        candidatos.addAll([3, 4, 5, 5, 6, 6, 7, 8, 9]);
+        candidatos.addAll([3, 4, 5, 5, 6, 6]);
         break;
       case 4:
-        candidatos.addAll([4, 5, 6, 7, 7, 8, 9, 10, 11]);
+        candidatos.addAll([3, 4, 5, 5, 6, 6]);
         break;
       case 5:
-        candidatos.addAll([5, 6, 7, 8, 9, 10, 11, 11, 12]);
+        candidatos.addAll([4, 5, 5, 6, 6]);
         break;
       case 6:
-        candidatos.addAll([7, 8, 9, 10, 11, 12, 12]);
+        candidatos.addAll([4, 5, 6, 6]);
         break;
       case 7:
       default:
-        // Territorio del Fraccionista avanzado: solo denominadores
-        // grandes, muchos primos.
-        candidatos.addAll([7, 9, 11, 11, 12, 13]);
+        // Territorio del Fraccionista avanzado: la dificultad ya no se
+        // expresa en denominadores más grandes (eso pasa a los puzzles
+        // abstractos), sino en menos margen de tiempo y más mezcla de
+        // tipos. Aquí pesamos un poco más los denominadores altos.
+        candidatos.addAll([4, 5, 6, 6, 6]);
     }
     return candidatos[_azar.nextInt(candidatos.length)];
   }
 
   int _elegirNumerador(int denominador, int dificultad) {
-    if (denominador <= 2) return 1;
-    if (dificultad < 2) return 1;
-
-    // Probabilidad creciente de compuesto con el nivel.
-    final probCompuesto = switch (dificultad) {
-      2 => 0.33,
-      3 => 0.42,
-      4 => 0.5,
-      5 => 0.58,
-      6 => 0.65,
-      _ => 0.7,
-    };
-    if (_azar.nextDouble() >= probCompuesto) return 1;
-
-    // Compuesto: a niveles altos el numerador tiende al máximo
-    // (7/8, 11/12) para que el compuesto se sienta casi-entero.
-    final maximoNumerador = denominador - 1;
-    if (dificultad >= 5 && _azar.nextInt(3) == 0) {
-      return maximoNumerador; // caso extremo 7/8, 11/12
-    }
-    return 2 + _azar.nextInt(maximoNumerador - 1);
+    // En cazadero el numerador del unitario siempre es 1: nada de
+    // Fragmentos compuestos como 10/11 que obligan al niño a repetir
+    // el mismo corte de 1/11 diez veces seguidas (110 trazos para un
+    // Fragmento es absurdo y se siente como bug aunque sea
+    // matemáticamente coherente). Los compuestos viven en las sesiones
+    // curadas del guión, donde el diseñador decide cuándo introducirlos
+    // con peso narrativo.
+    return 1;
   }
 
   /// Tiempo de vida del Fragmento antes de empezar a escapar.

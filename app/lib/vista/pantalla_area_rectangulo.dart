@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_area_rectangulo.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle GEO.03: el niño ve un rectángulo etiquetado con base y
 /// altura, y elige el área entre cuatro candidatos.
@@ -56,6 +58,7 @@ class _PantallaAreaRectanguloState extends State<PantallaAreaRectangulo>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -102,9 +105,9 @@ class _PantallaAreaRectanguloState extends State<PantallaAreaRectangulo>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -126,9 +129,9 @@ class _PantallaAreaRectanguloState extends State<PantallaAreaRectangulo>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'área = base × altura',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrAreaRectangulo,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

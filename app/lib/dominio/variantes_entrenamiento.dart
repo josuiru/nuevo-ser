@@ -1,3 +1,4 @@
+import 'ambiente_cielo.dart';
 import 'escena_cinematica.dart';
 import 'plano_escena.dart';
 import 'voz_personaje.dart';
@@ -18,6 +19,7 @@ class VariantesEntrenamiento {
     titulo: 'Entrenar — noche despejada',
     flagDeSalida: 'variante_1_8_a_usada',
     esCierreAmable: true,
+    ambiente: AmbienteCielo.nocheDespejada,
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 1800),
@@ -63,6 +65,7 @@ class VariantesEntrenamiento {
     titulo: 'Entrenar — niebla',
     flagDeSalida: 'variante_1_8_b_usada',
     esCierreAmable: true,
+    ambiente: AmbienteCielo.niebla,
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2000),
@@ -102,6 +105,7 @@ class VariantesEntrenamiento {
     titulo: 'Entrenar — lluvia ligera',
     flagDeSalida: 'variante_1_8_c_usada',
     esCierreAmable: true,
+    ambiente: AmbienteCielo.lluviaLigera,
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 1800),
@@ -138,6 +142,7 @@ class VariantesEntrenamiento {
     titulo: 'Entrenar — con la Montaña visible',
     flagDeSalida: 'variante_1_8_d_usada',
     esCierreAmable: true,
+    ambiente: AmbienteCielo.cieloLimpioMontana,
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 2200),
@@ -182,6 +187,7 @@ class VariantesEntrenamiento {
     titulo: 'Entrenar — buen entrenamiento',
     flagDeSalida: 'variante_1_8_e_usada',
     esCierreAmable: true,
+    ambiente: AmbienteCielo.nocheDespejada,
     planos: [
       PlanoAmbiente(
         duracion: Duration(milliseconds: 1800),

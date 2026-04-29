@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../dominio/fragmento.dart';
 import '../dominio/resolucion_corte.dart';
 import '../dominio/sesion.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/dialogos_sora.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -526,11 +527,11 @@ class _PantallaCombateState extends State<PantallaCombate>
                         (_fase == _FaseSesion.presentacion ||
                             _fase == _FaseSesion.interrupcion ||
                             _fase == _FaseSesion.invocando))
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
-                          'toca para continuar',
-                          style: TextStyle(
+                          AppLocalizations.of(context).tocaParaContinuar,
+                          style: const TextStyle(
                             color: PaletaNeon.textoTenue,
                             fontSize: 11,
                             letterSpacing: 1.5,
@@ -626,19 +627,19 @@ class _BarraAcciones extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _BotonAccion(
-            etiqueta: 'Deshacer',
+            etiqueta: AppLocalizations.of(contexto).combateBotonDeshacer,
             habilitado: hayTrazos,
             acentuado: false,
             alPulsar: alDeshacer,
           ),
           _BotonAccion(
-            etiqueta: 'De nuevo',
+            etiqueta: AppLocalizations.of(contexto).combateBotonDeNuevo,
             habilitado: hayTrazos,
             acentuado: false,
             alPulsar: alReiniciar,
           ),
           _BotonAccion(
-            etiqueta: 'Cortar',
+            etiqueta: AppLocalizations.of(contexto).combateBotonCortar,
             habilitado: puedeCortar,
             acentuado: true,
             alPulsar: alCortar,

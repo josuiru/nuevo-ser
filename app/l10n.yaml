@@ -1,0 +1,8 @@
+arb-dir: lib/l10n
+template-arb-file: app_es.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false
+# Genera dentro de lib/l10n para poder importar con paths relativos
+# (en vez del synthetic package package:flutter_gen).
+synthetic-package: false

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Política de tráfico de red para Uno Roto.
+
+  - Por defecto: HTTPS estricto, cleartext (HTTP plano) BLOQUEADO. Esto
+    protege todo el tráfico a producción (uno-roto.gailu.it y cualquier
+    otro dominio futuro).
+
+  - Excepción explícita: solo se permite cleartext a:
+      * 127.0.0.1   — Local WP servido por nginx en :10063 (vía adb reverse).
+      * uno-roto.local — alias del Local WP (cabecera Host).
+    El cliente Flutter usa esos dos cuando ConfigApi.usarProduccion = false.
+
+  Si en el futuro se quita el modo Local WP del cliente, este fichero
+  puede eliminarse completo y volver al default (cleartext bloqueado).
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">uno-roto.local</domain>
+    </domain-config>
+</network-security-config>

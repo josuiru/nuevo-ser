@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_masa_capacidad.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle MED.02: el niño ve "3 kg = ? g" o "5 L = ? mL" y elige el
 /// resultado entre cuatro candidatos. Comparte mecánica con MED.01
@@ -55,6 +57,7 @@ class _PantallaMasaCapacidadState extends State<PantallaMasaCapacidad>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -104,9 +107,9 @@ class _PantallaMasaCapacidadState extends State<PantallaMasaCapacidad>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -128,9 +131,9 @@ class _PantallaMasaCapacidadState extends State<PantallaMasaCapacidad>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'convierte la medida',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrConvierteMedida,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../datos/cliente_api.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
+import 'pantalla_solicitar_reset.dart';
 
 /// Estado de la cuenta con el backend. Tres modos:
 /// - **Sin cuenta**: el niño juega offline; no hay sync ni tutor IA.
@@ -64,31 +66,32 @@ class _EstadoPantallaCuenta extends State<PantallaCuenta> {
   }
 
   Future<void> _confirmarCerrarSesion() async {
+    final textos = AppLocalizations.of(context);
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (contexto) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'Cerrar sesión',
-          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        title: Text(
+          textos.cuentaCerrarSesionTitulo,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
-        content: const Text(
-          'El progreso local sigue intacto, solo se desconecta del servidor.',
-          style: TextStyle(color: PaletaNeon.textoTenue),
+        content: Text(
+          textos.cuentaCerrarSesionCuerpo,
+          style: const TextStyle(color: PaletaNeon.textoTenue),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(contexto).pop(false),
-            child: const Text(
-              'cancelar',
-              style: TextStyle(color: PaletaNeon.textoTenue),
+            child: Text(
+              textos.comunCancelar,
+              style: const TextStyle(color: PaletaNeon.textoTenue),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(contexto).pop(true),
-            child: const Text(
-              'cerrar',
-              style: TextStyle(color: PaletaNeon.rosaAcento),
+            child: Text(
+              textos.cuentaBotonCerrar,
+              style: const TextStyle(color: PaletaNeon.rosaAcento),
             ),
           ),
         ],
@@ -105,9 +108,9 @@ class _EstadoPantallaCuenta extends State<PantallaCuenta> {
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'cuenta',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(contexto).cuentaTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
             letterSpacing: 4,
@@ -158,12 +161,13 @@ class _ModoSinCuenta extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'Sin cuenta vinculada',
-          style: TextStyle(
+        Text(
+          textos.cuentaSinCuentaTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 18,
             fontWeight: FontWeight.w300,
@@ -171,9 +175,9 @@ class _ModoSinCuenta extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'Puedes seguir jugando offline. Si vinculas una cuenta, el progreso se guarda en el servidor y se desbloquea el tutor para cuando te atasques.',
-          style: TextStyle(
+        Text(
+          textos.cuentaSinCuentaCuerpo,
+          style: const TextStyle(
             color: PaletaNeon.textoTenue,
             fontSize: 14,
             height: 1.5,
@@ -181,13 +185,13 @@ class _ModoSinCuenta extends StatelessWidget {
         ),
         const SizedBox(height: 32),
         _BotonGrande(
-          texto: 'crear cuenta',
+          texto: textos.cuentaBotonCrear,
           color: PaletaNeon.violetaNeon,
           alPulsar: alRegistrarse,
         ),
         const SizedBox(height: 12),
         _BotonGrande(
-          texto: 'iniciar sesión',
+          texto: textos.cuentaBotonIniciar,
           color: PaletaNeon.azulNeon,
           alPulsar: alIniciarSesion,
         ),
@@ -207,12 +211,13 @@ class _ModoVinculado extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'Cuenta vinculada',
-          style: TextStyle(
+        Text(
+          textos.cuentaVinculadaTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 18,
             fontWeight: FontWeight.w300,
@@ -229,9 +234,9 @@ class _ModoVinculado extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        const Text(
-          'El progreso se sincroniza con el servidor y el tutor está disponible cuando te atascas.',
-          style: TextStyle(
+        Text(
+          textos.cuentaVinculadaCuerpo,
+          style: const TextStyle(
             color: PaletaNeon.textoTenue,
             fontSize: 13,
             height: 1.5,
@@ -240,9 +245,9 @@ class _ModoVinculado extends StatelessWidget {
         const Spacer(),
         TextButton(
           onPressed: alCerrarSesion,
-          child: const Text(
-            'cerrar sesión',
-            style: TextStyle(
+          child: Text(
+            textos.cuentaBotonCerrarSesion,
+            style: const TextStyle(
               color: PaletaNeon.rosaAcento,
               letterSpacing: 2,
             ),
@@ -264,12 +269,13 @@ class _ModoSesionExpirada extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'Sesión caducada',
-          style: TextStyle(
+        Text(
+          textos.cuentaCaducadaTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 18,
             fontWeight: FontWeight.w300,
@@ -278,7 +284,7 @@ class _ModoSesionExpirada extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          'Vuelve a iniciar sesión para sincronizar y usar el tutor:\n$email',
+          textos.cuentaCaducadaCuerpo(email),
           style: const TextStyle(
             color: PaletaNeon.textoTenue,
             fontSize: 14,
@@ -287,7 +293,7 @@ class _ModoSesionExpirada extends StatelessWidget {
         ),
         const SizedBox(height: 32),
         _BotonGrande(
-          texto: 'iniciar sesión',
+          texto: textos.cuentaBotonIniciar,
           color: PaletaNeon.azulNeon,
           alPulsar: alIniciarSesion,
         ),
@@ -375,7 +381,7 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
     final nombreNino = _nombreNino.text.trim();
     if (email.isEmpty || password.length < 8 || nombreNino.isEmpty) {
       setState(() => _mensajeError =
-          'Pon email, contraseña (mínimo 8 caracteres) y nombre del niño.');
+          AppLocalizations.of(context).cuentaErrorCamposRegistro);
       return;
     }
     setState(() {
@@ -383,8 +389,8 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
       _mensajeError = null;
     });
     final api = ClienteApi(
-      urlBase: ConfigApi.urlBaseLocal,
-      hostOverride: ConfigApi.hostLocal,
+      urlBase: ConfigApi.urlBase,
+      hostOverride: ConfigApi.hostOverride,
     );
     try {
       final resp = await api.registrar(
@@ -400,9 +406,14 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
     } on ExcepcionApi catch (e) {
       if (!mounted) return;
       setState(() => _mensajeError = e.mensaje);
-    } catch (e) {
+    } catch (e, st) {
+      // ignore: avoid_print
+      print('[uroto.cuenta] excepción registrar: $e');
+      // ignore: avoid_print
+      print(st);
       if (!mounted) return;
-      setState(() => _mensajeError = 'No se pudo conectar.');
+      setState(() =>
+          _mensajeError = AppLocalizations.of(context).cuentaErrorRed);
     } finally {
       api.cerrar();
       if (mounted) setState(() => _enviando = false);
@@ -411,13 +422,14 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'crear cuenta',
-          style: TextStyle(
+        title: Text(
+          textos.cuentaCrearTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
             letterSpacing: 4,
@@ -434,24 +446,24 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
             children: [
               _Campo(
                 controlador: _email,
-                etiqueta: 'email del tutor',
+                etiqueta: textos.cuentaCampoEmail,
                 tecladoEmail: true,
               ),
               const SizedBox(height: 16),
               _Campo(
                 controlador: _password,
-                etiqueta: 'contraseña (mínimo 8)',
+                etiqueta: textos.cuentaCampoPasswordMin,
                 obscure: true,
               ),
               const SizedBox(height: 16),
               _Campo(
                 controlador: _nombreTutor,
-                etiqueta: 'nombre del tutor (opcional)',
+                etiqueta: textos.cuentaCampoNombreTutor,
               ),
               const SizedBox(height: 16),
               _Campo(
                 controlador: _nombreNino,
-                etiqueta: 'nombre del niño',
+                etiqueta: textos.cuentaCampoNombreNino,
               ),
               if (_mensajeError != null) ...[
                 const SizedBox(height: 16),
@@ -465,7 +477,9 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
               ],
               const SizedBox(height: 24),
               _BotonGrande(
-                texto: _enviando ? 'creando…' : 'crear cuenta',
+                texto: _enviando
+                    ? textos.cuentaBotonCreando
+                    : textos.cuentaBotonCrear,
                 color: PaletaNeon.violetaNeon,
                 alPulsar: _enviando ? () {} : _registrar,
               ),
@@ -519,7 +533,8 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
     final email = _email.text.trim();
     final password = _password.text;
     if (email.isEmpty || password.isEmpty) {
-      setState(() => _mensajeError = 'Pon el email y la contraseña.');
+      setState(() =>
+          _mensajeError = AppLocalizations.of(context).cuentaErrorCamposLogin);
       return;
     }
     setState(() {
@@ -527,8 +542,8 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
       _mensajeError = null;
     });
     final api = ClienteApi(
-      urlBase: ConfigApi.urlBaseLocal,
-      hostOverride: ConfigApi.hostLocal,
+      urlBase: ConfigApi.urlBase,
+      hostOverride: ConfigApi.hostOverride,
     );
     try {
       final resp =
@@ -540,9 +555,14 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
     } on ExcepcionApi catch (e) {
       if (!mounted) return;
       setState(() => _mensajeError = e.mensaje);
-    } catch (e) {
+    } catch (e, st) {
+      // ignore: avoid_print
+      print('[uroto.cuenta] excepción login: $e');
+      // ignore: avoid_print
+      print(st);
       if (!mounted) return;
-      setState(() => _mensajeError = 'No se pudo conectar.');
+      setState(() =>
+          _mensajeError = AppLocalizations.of(context).cuentaErrorRed);
     } finally {
       api.cerrar();
       if (mounted) setState(() => _enviando = false);
@@ -551,13 +571,14 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'iniciar sesión',
-          style: TextStyle(
+        title: Text(
+          textos.cuentaIniciarTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
             letterSpacing: 4,
@@ -574,13 +595,13 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
             children: [
               _Campo(
                 controlador: _email,
-                etiqueta: 'email del tutor',
+                etiqueta: textos.cuentaCampoEmail,
                 tecladoEmail: true,
               ),
               const SizedBox(height: 16),
               _Campo(
                 controlador: _password,
-                etiqueta: 'contraseña',
+                etiqueta: textos.cuentaCampoPassword,
                 obscure: true,
               ),
               if (_mensajeError != null) ...[
@@ -595,9 +616,32 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
               ],
               const SizedBox(height: 24),
               _BotonGrande(
-                texto: _enviando ? 'entrando…' : 'iniciar sesión',
+                texto: _enviando
+                    ? textos.cuentaBotonEntrando
+                    : textos.cuentaBotonIniciar,
                 color: PaletaNeon.azulNeon,
                 alPulsar: _enviando ? () {} : _iniciar,
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: _enviando
+                    ? null
+                    : () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const PantallaSolicitarReset(),
+                          ),
+                        );
+                      },
+                child: const Text(
+                  'He olvidado mi contraseña',
+                  style: TextStyle(
+                    color: PaletaNeon.textoTenue,
+                    fontSize: 13,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
             ],
           ),
@@ -607,7 +651,7 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
   }
 }
 
-class _Campo extends StatelessWidget {
+class _Campo extends StatefulWidget {
   final TextEditingController controlador;
   final String etiqueta;
   final bool obscure;
@@ -621,11 +665,24 @@ class _Campo extends StatelessWidget {
   });
 
   @override
+  State<_Campo> createState() => _CampoState();
+}
+
+class _CampoState extends State<_Campo> {
+  late bool _oculto;
+
+  @override
+  void initState() {
+    super.initState();
+    _oculto = widget.obscure;
+  }
+
+  @override
   Widget build(BuildContext contexto) {
     return TextField(
-      controller: controlador,
-      obscureText: obscure,
-      keyboardType: tecladoEmail
+      controller: widget.controlador,
+      obscureText: _oculto,
+      keyboardType: widget.tecladoEmail
           ? TextInputType.emailAddress
           : TextInputType.text,
       autocorrect: false,
@@ -633,7 +690,7 @@ class _Campo extends StatelessWidget {
       style: const TextStyle(color: PaletaNeon.textoPrincipal),
       cursorColor: PaletaNeon.violetaNeon,
       decoration: InputDecoration(
-        labelText: etiqueta,
+        labelText: widget.etiqueta,
         labelStyle: const TextStyle(color: PaletaNeon.textoTenue),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
@@ -645,6 +702,19 @@ class _Campo extends StatelessWidget {
           borderSide: const BorderSide(color: PaletaNeon.violetaNeon),
           borderRadius: BorderRadius.circular(6),
         ),
+        // Solo mostramos el icono ojo cuando el campo es de password
+        // (es decir, fue creado con obscure=true) — para los demás
+        // el toggle no tiene sentido.
+        suffixIcon: widget.obscure
+            ? IconButton(
+                onPressed: () => setState(() => _oculto = !_oculto),
+                icon: Icon(
+                  _oculto ? Icons.visibility_off : Icons.visibility,
+                  size: 18,
+                  color: PaletaNeon.textoTenue,
+                ),
+              )
+            : null,
       ),
     );
   }

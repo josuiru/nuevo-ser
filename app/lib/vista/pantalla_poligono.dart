@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_poligono.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle GEO.01: el niño ve un polígono regular dibujado y elige su
 /// nombre entre cuatro candidatos. Mecánica visual de
@@ -57,6 +60,7 @@ class _PantallaPoligonoState extends State<PantallaPoligono>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -103,9 +107,9 @@ class _PantallaPoligonoState extends State<PantallaPoligono>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -114,9 +118,8 @@ class _PantallaPoligonoState extends State<PantallaPoligono>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'POLÍGONO',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderPoligono,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -127,9 +130,9 @@ class _PantallaPoligonoState extends State<PantallaPoligono>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'cuenta los lados',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrPoligono,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -150,8 +153,10 @@ class _PantallaPoligonoState extends State<PantallaPoligono>
                                 indice < _problema.candidatos.length;
                                 indice++)
                               _TarjetaCandidato(
-                                etiqueta:
-                                    _problema.candidatos[indice].etiqueta,
+                                etiqueta: traducirNarrativa(
+                                  _problema.candidatos[indice].etiqueta,
+                                  Localizations.localeOf(contexto),
+                                ),
                                 seleccionado: _indiceSeleccionado == indice,
                                 marcarCorrecto: _revelado &&
                                     _indiceSeleccionado == indice &&

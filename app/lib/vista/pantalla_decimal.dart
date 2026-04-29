@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 
 import '../dominio/problema_decimal.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle DEC.08 — Convertir fracción a decimal casos simples. Se
 /// muestra una fracción y el niño elige entre cuatro decimales cuál
@@ -60,6 +62,7 @@ class _PantallaDecimalState extends State<PantallaDecimal>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -106,9 +109,9 @@ class _PantallaDecimalState extends State<PantallaDecimal>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -117,9 +120,8 @@ class _PantallaDecimalState extends State<PantallaDecimal>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'DECIMAL',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderDecimal,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -130,9 +132,9 @@ class _PantallaDecimalState extends State<PantallaDecimal>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        '¿qué decimal vale igual?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrQueDecimal,
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

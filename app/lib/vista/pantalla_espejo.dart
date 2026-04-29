@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_espejo.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de Familia D (Espejos): el niño ve una fracción y tiene que
 /// elegir cuál de los cuatro candidatos es su equivalente. Toque,
@@ -66,6 +68,7 @@ class _PantallaEspejoState extends State<PantallaEspejo>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       // Tras un instante, permitimos otro intento.
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
@@ -113,9 +116,9 @@ class _PantallaEspejoState extends State<PantallaEspejo>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -124,9 +127,8 @@ class _PantallaEspejoState extends State<PantallaEspejo>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'ESPEJO',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderEspejo,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -137,9 +139,9 @@ class _PantallaEspejoState extends State<PantallaEspejo>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'busca su equivalente',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrEspejo,
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

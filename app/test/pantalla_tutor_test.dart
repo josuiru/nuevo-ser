@@ -10,6 +10,7 @@ import 'package:uno_roto/datos/cache_tutor.dart';
 import 'package:uno_roto/datos/cliente_tutor.dart';
 import 'package:uno_roto/datos/repositorio_progreso.dart';
 import 'package:uno_roto/dominio/tutor/servicio_tutor.dart';
+import 'package:uno_roto/l10n/app_localizations.dart';
 import 'package:uno_roto/vista/pantalla_tutor.dart';
 
 void main() {
@@ -27,7 +28,12 @@ void main() {
   }
 
   Widget envolver(Widget pantalla) {
-    return MaterialApp(home: pantalla);
+    return MaterialApp(
+      locale: const Locale('es'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: pantalla,
+    );
   }
 
   testWidgets(

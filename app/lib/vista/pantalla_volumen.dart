@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_volumen.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle GEO.06: el niño ve una caja 3D (ortoedro) con sus tres
 /// dimensiones etiquetadas y elige el volumen entre cuatro candidatos.
@@ -56,6 +58,7 @@ class _PantallaVolumenState extends State<PantallaVolumen>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -102,9 +105,9 @@ class _PantallaVolumenState extends State<PantallaVolumen>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -113,9 +116,8 @@ class _PantallaVolumenState extends State<PantallaVolumen>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'VOLUMEN',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderVolumen,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,9 +128,9 @@ class _PantallaVolumenState extends State<PantallaVolumen>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'V = largo × ancho × alto',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrVolumenFormula,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 17,
                           letterSpacing: 1.2,

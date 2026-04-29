@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_simplificar.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.10: el niño ve una fracción reducible (p. ej. 6/8) y
 /// tiene que elegir su forma más simple entre cuatro candidatos.
@@ -62,6 +64,7 @@ class _PantallaSimplificarState extends State<PantallaSimplificar>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -108,9 +111,9 @@ class _PantallaSimplificarState extends State<PantallaSimplificar>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -119,9 +122,8 @@ class _PantallaSimplificarState extends State<PantallaSimplificar>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'SIMPLIFICAR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderSimplificar,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -132,9 +134,9 @@ class _PantallaSimplificarState extends State<PantallaSimplificar>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'redúcela al máximo',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrSimplificar,
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

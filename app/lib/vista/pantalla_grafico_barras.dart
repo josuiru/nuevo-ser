@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_grafico_barras.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle EST.01: el niño ve un gráfico de barras simple y elige el
 /// valor de una barra concreta o el total entre cuatro candidatos.
@@ -54,6 +57,7 @@ class _PantallaGraficoBarrasState extends State<PantallaGraficoBarras>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -100,9 +104,9 @@ class _PantallaGraficoBarrasState extends State<PantallaGraficoBarras>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -111,9 +115,8 @@ class _PantallaGraficoBarrasState extends State<PantallaGraficoBarras>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'GRÁFICO',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderGrafico,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -125,7 +128,15 @@ class _PantallaGraficoBarrasState extends State<PantallaGraficoBarras>
                       ),
                       const SizedBox(height: 22),
                       Text(
-                        _problema.preguntaTexto(),
+                        _problema.modo == ModoGraficoBarras.valorDeBarra
+                            ? AppLocalizations.of(contexto).barrasPreguntaValor(
+                                traducirNarrativa(
+                                  _problema.etiquetas[
+                                      _problema.indiceBarraPreguntada],
+                                  Localizations.localeOf(contexto),
+                                ),
+                              )
+                            : AppLocalizations.of(contexto).barrasPreguntaTotal,
                         style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 17,
@@ -135,7 +146,12 @@ class _PantallaGraficoBarrasState extends State<PantallaGraficoBarras>
                       ),
                       const SizedBox(height: 18),
                       _TarjetaGrafico(
-                        etiquetas: _problema.etiquetas,
+                        etiquetas: _problema.etiquetas
+                            .map((e) => traducirNarrativa(
+                                  e,
+                                  Localizations.localeOf(contexto),
+                                ))
+                            .toList(),
                         valores: _problema.valores,
                         indiceResaltada:
                             _problema.modo == ModoGraficoBarras.valorDeBarra

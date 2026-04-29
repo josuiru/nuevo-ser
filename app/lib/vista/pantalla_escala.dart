@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_escala.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle PROP.07: el niño ve "Mapa 1:500 — 4 cm en plano → ? m" y
 /// elige el resultado entre cuatro candidatos. Mecánica: aplicar la
@@ -55,6 +57,7 @@ class _PantallaEscalaState extends State<PantallaEscala>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -101,9 +104,9 @@ class _PantallaEscalaState extends State<PantallaEscala>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -112,9 +115,9 @@ class _PantallaEscalaState extends State<PantallaEscala>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'ESCALA',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(contexto).puzzleHeaderEscala,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,7 +129,8 @@ class _PantallaEscalaState extends State<PantallaEscala>
                       ),
                       const SizedBox(height: 22),
                       Text(
-                        'mapa 1:${_problema.denominadorEscala}',
+                        AppLocalizations.of(contexto)
+                            .puzzleInstrEscalaMapa(_problema.denominadorEscala),
                         style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
@@ -221,9 +225,9 @@ class _TarjetaPregunta extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 14),
-          const Text(
-            'en plano',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(contexto).puzzleInstrEnPlano,
+            style: const TextStyle(
               color: PaletaNeon.textoTenue,
               fontSize: 18,
               fontWeight: FontWeight.w300,

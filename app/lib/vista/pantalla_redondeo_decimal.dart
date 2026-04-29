@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_redondeo_decimal.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle DEC.09: el niño ve un decimal con dos cifras (2,37) y elige
 /// su redondeo a la décima entre cuatro candidatos. Las trampas son
@@ -57,6 +59,7 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -103,9 +106,9 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -114,9 +117,8 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'REDONDEAR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderRedondear,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -127,9 +129,9 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'redondea a la décima',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrRedondear,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

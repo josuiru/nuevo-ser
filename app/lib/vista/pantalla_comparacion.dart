@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import '../dominio/fragmento_en_tejado.dart' show ModoComparacion;
 import '../dominio/problema_comparacion.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.05 / FR.06: el niño ve dos fracciones y tiene que tocar
 /// la mayor. El modo decide qué se comparte (denominador o numerador)
@@ -70,6 +72,7 @@ class _PantallaComparacionState extends State<PantallaComparacion>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -81,12 +84,13 @@ class _PantallaComparacionState extends State<PantallaComparacion>
     Navigator.of(context).pop(false);
   }
 
-  String get _pistaSegunModo {
+  String _pistaSegunModo(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     switch (widget.modo) {
       case ModoComparacion.mismoDenominador:
-        return 'mismo tamaño de trozo';
+        return textos.comparacionMismoTamano;
       case ModoComparacion.mismoNumerador:
-        return 'el mismo número de trozos';
+        return textos.comparacionMismoNumero;
     }
   }
 
@@ -125,9 +129,9 @@ class _PantallaComparacionState extends State<PantallaComparacion>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -136,9 +140,8 @@ class _PantallaComparacionState extends State<PantallaComparacion>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'COMPARAR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderComparar,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -149,9 +152,9 @@ class _PantallaComparacionState extends State<PantallaComparacion>
                         ],
                       ),
                       const SizedBox(height: 36),
-                      const Text(
-                        '¿cuál es mayor?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCualEsMayor,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 20,
                           letterSpacing: 1.4,
@@ -160,7 +163,7 @@ class _PantallaComparacionState extends State<PantallaComparacion>
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        _pistaSegunModo,
+                        _pistaSegunModo(contexto),
                         style: TextStyle(
                           color: PaletaNeon.textoTenue.withOpacity(0.8),
                           fontSize: 12,

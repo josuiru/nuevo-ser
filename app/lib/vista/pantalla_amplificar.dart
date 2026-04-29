@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_amplificar.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.11: se muestra la ecuación "3/4 = ?/12" y el niño
 /// elige el numerador que la completa. Mecánica de "rellenar el
@@ -63,6 +65,7 @@ class _PantallaAmplificarState extends State<PantallaAmplificar>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -109,9 +112,9 @@ class _PantallaAmplificarState extends State<PantallaAmplificar>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -120,9 +123,8 @@ class _PantallaAmplificarState extends State<PantallaAmplificar>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'AMPLIFICAR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderAmplificar,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -133,9 +135,9 @@ class _PantallaAmplificarState extends State<PantallaAmplificar>
                         ],
                       ),
                       const SizedBox(height: 36),
-                      const Text(
-                        'completa la equivalencia',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrAmplificar,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 20,
                           letterSpacing: 1.2,

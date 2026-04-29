@@ -11,6 +11,7 @@ import '../sonido/capa_audio.dart';
 import '../sonido/catalogo_sonidos.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
+import '../l10n/traducciones_narrativa.dart';
 import 'pantalla_cinematica.dart' show aplicarTokens;
 
 /// Combate jugable contra Kurz. Doc 07 §1.5 / §1.10 / §1.12.
@@ -128,8 +129,10 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
     }
   }
 
-  String _conTokens(String texto) =>
-      aplicarTokens(texto, widget.nombreJugador);
+  String _conTokens(String texto) => aplicarTokens(
+        traducirNarrativa(texto, Localizations.localeOf(context)),
+        widget.nombreJugador,
+      );
 
   void _registrarAcierto() {
     _temporizadorPregunta?.cancel();
@@ -253,7 +256,10 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
                 ),
                 const Spacer(),
                 _PreguntaArea(
-                  enunciado: pregunta.enunciado,
+                  enunciado: traducirNarrativa(
+                    pregunta.enunciado,
+                    Localizations.localeOf(context),
+                  ),
                   opciones: pregunta.opciones,
                   bloqueado: _bloqueado,
                   alElegir: _alElegir,

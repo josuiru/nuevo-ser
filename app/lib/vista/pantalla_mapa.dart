@@ -7,11 +7,16 @@ import '../dominio/cuaderno.dart';
 import '../dominio/distrito.dart';
 import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/textos_enums.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import 'pantalla_ajustes_sonido.dart';
 import 'pantalla_caza.dart';
-import 'pantalla_cuaderno.dart';
+import 'pantalla_entrenamiento.dart';
 import 'pantalla_habilidades.dart';
+import 'pantalla_mi_cuaderno.dart';
 
 /// Mapa de la ciudad. Muestra los distritos del catálogo posicionados
 /// según biblia §3.4 y la Montaña al fondo. Los distritos bloqueados
@@ -82,17 +87,78 @@ class _PantallaMapaState extends State<PantallaMapa>
       _entradasCuadernoDisponibles = entradas.length;
       _cargado = true;
     });
+    _quizasSugerirDescargaAudio();
   }
 
-  Future<void> _abrirCuaderno() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => PantallaCuaderno(repositorio: widget.repositorio),
+  /// Una sola vez por instalación: si el paquete de sonido aún no se
+  /// descargó, le proponemos al niño/adulto bajarlo. La sugerencia se
+  /// marca como vista en cuanto el banner aparece — no reaparece
+  /// aunque la rechace, para no resultar pesada.
+  Future<void> _quizasSugerirDescargaAudio() async {
+    final yaSugerido =
+        await widget.repositorio.cargarAudioSugerenciaVista();
+    if (yaSugerido) return;
+    final version =
+        await widget.repositorio.cargarVersionPaqueteAudio();
+    if (version != null) return;
+    if (!mounted) return;
+    await widget.repositorio.marcarAudioSugerenciaVista();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: PaletaNeon.fondoMedio,
+        duration: const Duration(seconds: 12),
+        behavior: SnackBarBehavior.floating,
+        content: const Text(
+          'Música y voces (~3,5 MB). Mejora mucho el ambiente. '
+          '¿Descargar ahora con wifi?',
+          style: TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            height: 1.35,
+          ),
+        ),
+        action: SnackBarAction(
+          label: 'DESCARGAR',
+          textColor: PaletaNeon.azulNeon,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => PantallaAjustesSonido(
+                  repositorio: widget.repositorio,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
-    // Recargamos por si se abrieron nuevas entradas desde dentro.
+  }
+
+  Future<void> _abrirMiCuaderno() async {
+    HapticFeedback.selectionClick();
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PantallaMiCuaderno(repositorio: widget.repositorio),
+      ),
+    );
+    // Recargamos por si se abrieron entradas o subió maestría dentro.
     _cargar();
   }
+
+  Future<void> _abrirEntrenamiento() async {
+    HapticFeedback.selectionClick();
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PantallaEntrenamiento(repositorio: widget.repositorio),
+      ),
+    );
+    // Al volver del entrenamiento puede haber esquirlas nuevas que
+    // afectan al desbloqueo de distritos en el mapa.
+    await _cargar();
+  }
+
 
   Future<void> _entrarADistrito(Distrito distrito) async {
     HapticFeedback.selectionClick();
@@ -147,7 +213,8 @@ class _PantallaMapaState extends State<PantallaMapa>
                         arco: _arcoMostrado,
                         escenasVistasDelArco: _escenasDelArcoVistas,
                         entradasCuaderno: _entradasCuadernoDisponibles,
-                        alAbrirCuaderno: _abrirCuaderno,
+                        alAbrirCuaderno: _abrirMiCuaderno,
+                        alAbrirEntrenamiento: _abrirEntrenamiento,
                       ),
                     ),
                     Expanded(
@@ -179,6 +246,7 @@ class _Encabezado extends StatelessWidget {
   final int escenasVistasDelArco;
   final int entradasCuaderno;
   final VoidCallback alAbrirCuaderno;
+  final VoidCallback alAbrirEntrenamiento;
 
   const _Encabezado({
     required this.esquirlas,
@@ -187,16 +255,25 @@ class _Encabezado extends StatelessWidget {
     required this.escenasVistasDelArco,
     required this.entradasCuaderno,
     required this.alAbrirCuaderno,
+    required this.alAbrirEntrenamiento,
   });
 
   @override
   Widget build(BuildContext contexto) {
+    // Diseño compacto fijo. Antes se intentaba mostrar etiquetas en
+    // móviles "anchos" y ocultarlas en estrechos, pero el cálculo era
+    // frágil — un Redmi Note 8 a 440 dpi tiene 392 dp lógicos y los
+    // chips con texto sumaban más que el ancho disponible, aplastando
+    // la columna izquierda hasta romper "UNO ROTO" letra a letra. Con
+    // iconos siempre + tooltips la barra cabe en cualquier teléfono y
+    // queda holgada en tablet (donde igualmente no estorba).
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 4),
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 4),
       child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
                 'UNO ROTO',
@@ -206,87 +283,146 @@ class _Encabezado extends StatelessWidget {
                   color: PaletaNeon.textoTenue,
                   fontWeight: FontWeight.w300,
                 ),
+                maxLines: 1,
+                softWrap: false,
               ),
               const SizedBox(height: 2),
               Text(
-                rango.nombreVisible,
+                rango.nombreLocalizado(AppLocalizations.of(contexto)),
                 style: TextStyle(
                   fontSize: 11,
                   letterSpacing: 2.5,
                   color: PaletaNeon.violetaNeon.withOpacity(0.85),
                   fontWeight: FontWeight.w400,
                 ),
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.fade,
               ),
               const SizedBox(height: 1),
               Text(
-                'Arco ${arco.nombreRomano} · $escenasVistasDelArco/${arco.totalEscenas}',
+                AppLocalizations.of(contexto).mapaArcoResumen(
+                  arco.nombreRomano,
+                  escenasVistasDelArco,
+                  arco.totalEscenas,
+                ),
                 style: TextStyle(
                   fontSize: 9,
                   letterSpacing: 2,
                   color: PaletaNeon.textoTenue.withOpacity(0.55),
                   fontWeight: FontWeight.w300,
                 ),
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.fade,
               ),
             ],
           ),
           const Spacer(),
-          if (entradasCuaderno > 0)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: InkWell(
-                onTap: alAbrirCuaderno,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: PaletaNeon.violetaNeon.withOpacity(0.5),
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.auto_stories,
-                        size: 13,
-                        color: PaletaNeon.violetaNeon.withOpacity(0.85),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '$entradasCuaderno',
-                        style: TextStyle(
-                          color: PaletaNeon.violetaNeon.withOpacity(0.85),
-                          fontSize: 11,
-                          letterSpacing: 1.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+          _ChipAccion(
+            icono: Icons.menu_book,
+            color: PaletaNeon.azulNeon,
+            badge: entradasCuaderno > 0
+                ? entradasCuaderno.toString()
+                : null,
+            alPulsar: alAbrirCuaderno,
+            tooltip: 'Mi cuaderno',
+          ),
+          const SizedBox(width: 8),
+          _ChipAccion(
+            icono: Icons.fitness_center,
+            color: PaletaNeon.violetaNeon,
+            alPulsar: alAbrirEntrenamiento,
+            tooltip: AppLocalizations.of(contexto).mapaBotonEntrenar,
+          ),
+          const SizedBox(width: 8),
+          Tooltip(
+            message: AppLocalizations.of(contexto)
+                .habEsquirlasResumen(esquirlas),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: PaletaNeon.azulNeon.withOpacity(0.6),
                 ),
+                borderRadius: BorderRadius.circular(20),
               ),
-            ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: PaletaNeon.azulNeon.withOpacity(0.6),
-              ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              '$esquirlas esquirlas',
-              style: const TextStyle(
-                color: PaletaNeon.textoPrincipal,
-                fontSize: 12,
-                letterSpacing: 1.2,
+              child: Text(
+                esquirlas.toString(),
+                style: const TextStyle(
+                  color: PaletaNeon.textoPrincipal,
+                  fontSize: 12,
+                  letterSpacing: 1.0,
+                ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Chip circular del encabezado del mapa: icono pequeño + borde de
+/// color, opcional badge numérico (p. ej. entradas nuevas en el
+/// cuaderno). El [tooltip] suple la etiqueta porque no hay texto
+/// visible — la barra prioriza compactación sobre verbosidad.
+class _ChipAccion extends StatelessWidget {
+  final IconData icono;
+  final Color color;
+  final String? badge;
+  final VoidCallback alPulsar;
+  final String tooltip;
+
+  const _ChipAccion({
+    required this.icono,
+    required this.color,
+    required this.alPulsar,
+    required this.tooltip,
+    this.badge,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final hijo = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        border: Border.all(color: color.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icono, size: 16, color: color.withOpacity(0.85)),
+          if (badge != null) ...[
+            const SizedBox(width: 6),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                badge!,
+                style: const TextStyle(
+                  color: PaletaNeon.textoPrincipal,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(20),
+        child: hijo,
       ),
     );
   }
@@ -317,9 +453,9 @@ class _LienzoMapa extends StatelessWidget {
           right: 0,
           child: Column(
             children: [
-              const Text(
-                'LA MONTAÑA',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(contexto).mapaMontanaTitulo,
+                style: const TextStyle(
                   color: PaletaNeon.violetaNeon,
                   fontSize: 12,
                   letterSpacing: 4,
@@ -328,7 +464,7 @@ class _LienzoMapa extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'el horizonte espera',
+                AppLocalizations.of(contexto).mapaMontanaSubtitulo,
                 style: TextStyle(
                   color: PaletaNeon.textoTenue.withOpacity(0.7),
                   fontSize: 10,
@@ -401,7 +537,10 @@ class _NodoDistrito extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                distrito.nombre,
+                traducirNarrativa(
+                  distrito.nombre,
+                  Localizations.localeOf(contexto),
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -417,8 +556,12 @@ class _NodoDistrito extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 desbloqueado
-                    ? distrito.descripcionCorta
-                    : 'se abre a las ${distrito.esquirlasParaDesbloquear} esquirlas',
+                    ? traducirNarrativa(
+                        distrito.descripcionCorta,
+                        Localizations.localeOf(contexto),
+                      )
+                    : AppLocalizations.of(contexto)
+                        .mapaDistritoBloqueado(distrito.esquirlasParaDesbloquear),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(

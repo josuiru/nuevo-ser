@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_jerarquia.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle OP.01: el niño ve una expresión con tres números y dos
 /// operadores ("2 + 3 × 4") y elige el resultado correcto entre
@@ -56,6 +58,7 @@ class _PantallaJerarquiaState extends State<PantallaJerarquia>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -102,9 +105,9 @@ class _PantallaJerarquiaState extends State<PantallaJerarquia>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -113,9 +116,8 @@ class _PantallaJerarquiaState extends State<PantallaJerarquia>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'JERARQUÍA',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderJerarquia,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,9 +128,9 @@ class _PantallaJerarquiaState extends State<PantallaJerarquia>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'calcula',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCalcula,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -136,8 +138,7 @@ class _PantallaJerarquiaState extends State<PantallaJerarquia>
                         ),
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        'primero × y ÷, después + y −',
+                      Text(AppLocalizations.of(contexto).puzzleInstrJerarquiaPrimero,
                         style: TextStyle(
                           color: PaletaNeon.textoTenue.withOpacity(0.8),
                           fontSize: 12,

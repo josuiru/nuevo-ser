@@ -31,6 +31,13 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Localización del juego (doc 03 §idiomas: es/eu/ca desde día cero).
+  # Castellano por defecto; euskera y catalán como esqueleto listo para
+  # recibir las traducciones humanas del guion. flutter_localizations es
+  # de Flutter; intl es la dependencia que la generación gen-l10n usa.
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -51,6 +58,22 @@ dependencies:
   # estándar bien mantenida en Android; si falta el asset, el motor
   # ignora la llamada y la app sigue silenciosa.
   audioplayers: ^6.1.0
+
+  # Para el paquete de audio descargable (ambient + música + narrativos
+  # se bajan del servidor al primer arranque para mantener el APK
+  # ligero — solo los efectos cortos van empaquetados). path_provider
+  # da el directorio de documentos donde se cachea el zip extraído;
+  # archive descomprime el zip; crypto verifica su sha256 contra el
+  # manifest del servidor.
+  path_provider: ^2.1.4
+  archive: ^3.6.1
+  crypto: ^3.0.5
+
+  # Para que el niño pueda dibujar a sus personajes en papel,
+  # fotografiarlos y subirlos a la app — image_picker abre la cámara
+  # o la galería. Las imágenes se guardan localmente bajo el
+  # directorio de documentos del perfil; nunca salen del aparato.
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +97,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # Genera la clase AppLocalizations a partir de los ARB en lib/l10n.
+  # Configurado en l10n.yaml.
+  generate: true
+
   assets:
     - assets/data/skills.json
     # Carpetas de sonido (doc 12). Pueden estar vacías: el motor
@@ -82,6 +109,12 @@ flutter:
     - assets/sonido/musica/
     - assets/sonido/efectos/
     - assets/sonido/narrativos/
+    # Voces TTS por personaje (generadas via ElevenLabs, ver
+    # scripts/sonido/generar_voces_eleven.sh). Subcarpetas vacías
+    # son válidas: el motor sonoro tolera ausencia de archivos.
+    - assets/sonido/voces/sora/
+    - assets/sonido/voces/fragmentoKurz/
+    - assets/sonido/voces/fragmentoEco/
 
   fonts:
     # Cormorant Garamond — voz de los Fragmentos nombrados (Kurz, Eco,

@@ -7,7 +7,10 @@ import '../dominio/escena_cinematica.dart';
 import '../dominio/plano_escena.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/voz_personaje.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
+import '../sonido/catalogo_voces.dart';
 import '../sonido/capa_audio.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
@@ -58,6 +61,17 @@ String aplicarTokens(String texto, String nombreJugador) {
   return texto.replaceAll('{nombre}', nombreJugador);
 }
 
+/// Traduce primero al idioma del [locale] y luego sustituye `{nombre}`.
+/// Las claves de la traducción incluyen el token literal `{nombre}`,
+/// así que el orden importa: traducir antes de aplicar tokens.
+String traducirYAplicarTokens(
+  String textoEs,
+  String nombreJugador,
+  Locale? locale,
+) {
+  return aplicarTokens(traducirNarrativa(textoEs, locale), nombreJugador);
+}
+
 enum _FaseReproduccion {
   pausaPrevia,
   revelando,
@@ -87,6 +101,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
       );
 
   late final AnimationController _controladorCielo;
+  late final AnimationController _controladorLluvia;
   late final AnimationController _controladorFade;
   late final Animation<Offset> _desplazamientoEntrada;
 
@@ -105,6 +120,13 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     _controladorCielo = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 16),
+    )..repeat();
+    // Periodo corto para la lluvia: cada ~1.5s las gotas hacen una pasada
+    // completa por la pantalla. Solo se activa visiblemente cuando la
+    // escena trae intensidadLluvia > 0.
+    _controladorLluvia = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
     )..repeat();
     _controladorFade = AnimationController(
       vsync: this,
@@ -159,6 +181,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
   @override
   void dispose() {
     _controladorCielo.dispose();
+    _controladorLluvia.dispose();
     _controladorFade.dispose();
     _temporizador?.cancel();
     // Si la escena trajo loop propio, lo apagamos al salir con fade
@@ -219,12 +242,24 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     }
   }
 
-  String _conTokens(String texto) => aplicarTokens(texto, widget.nombreJugador);
+  String _conTokens(String texto) => traducirYAplicarTokens(
+        texto,
+        widget.nombreJugador,
+        Localizations.maybeLocaleOf(context),
+      );
 
   void _empezarRevealDialogo() {
     if (!mounted) return;
     final plano = _planoActual;
     if (plano is! PlanoDialogo) return;
+    // Si esta frase canónica tiene voz TTS generada, la disparamos
+    // al inicio del reveal. Capa narrativos → ducking automático
+    // sobre música/ambient. Si no está catalogada, sigue como hoy
+    // (texto en pantalla y sin audio).
+    final rutaVoz = CatalogoVoces.rutaVozPara(plano.voz, plano.texto);
+    if (rutaVoz != null) {
+      ServicioSonoro.instancia.reproducirVoz(rutaVoz);
+    }
     _revelarTexto(
       _conTokens(plano.texto),
       faseAlTerminar: _FaseReproduccion.esperandoTap,
@@ -361,11 +396,15 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
           fit: StackFit.expand,
           children: [
             AnimatedBuilder(
-              animation: _controladorCielo,
+              animation: Listenable.merge(
+                [_controladorCielo, _controladorLluvia],
+              ),
               builder: (_, __) => CustomPaint(
                 painter: PintorEscenario(
                   fasePulso: _controladorCielo.value,
+                  fasePulsoLluvia: _controladorLluvia.value,
                   nivelRestauracion: 0.15,
+                  ambiente: widget.escena.ambiente,
                 ),
               ),
             ),
@@ -494,7 +533,7 @@ class _VistaDialogo extends StatelessWidget {
             opacity: mostrandoIndicador ? 0.55 : 0.0,
             duration: const Duration(milliseconds: 220),
             child: Text(
-              'toca para continuar',
+              AppLocalizations.of(contexto).tocaParaContinuar,
               style: TextStyle(
                 fontSize: 11,
                 letterSpacing: 2.2,
@@ -608,7 +647,7 @@ class _VistaEleccion extends StatelessWidget {
               opacity: esperandoTapRespuesta ? 0.55 : 0.0,
               duration: const Duration(milliseconds: 220),
               child: Text(
-                'toca para continuar',
+                AppLocalizations.of(contexto).tocaParaContinuar,
                 style: TextStyle(
                   fontSize: 11,
                   letterSpacing: 2.2,
@@ -715,9 +754,10 @@ class _PistaGesto extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     final pista = switch (accion) {
-      AccionEsperada.dividirPleno => 'desliza para dividir',
-      AccionEsperada.desfragmentarMitades => 'toca cada mitad',
+      AccionEsperada.dividirPleno => textos.cinematicaAccionDividir,
+      AccionEsperada.desfragmentarMitades => textos.cinematicaAccionDesfragmentar,
     };
     return Text(
       pista,
@@ -791,9 +831,9 @@ class _IndicadorSaltar extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: PaletaNeon.textoTenue.withOpacity(0.55),
             ),
-            child: const Text(
-              'saltar',
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(contexto).botonSaltar,
+              style: const TextStyle(
                 fontSize: 11,
                 letterSpacing: 2,
               ),

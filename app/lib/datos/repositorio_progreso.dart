@@ -21,6 +21,9 @@ class RepositorioProgreso {
   static const _claveListaPerfiles = 'uroto.perfiles_lista';
   static const _claveTokenBackend = 'uroto.token_backend';
   static const _claveEmailBackend = 'uroto.email_backend';
+  static const _claveVersionPaqueteAudio = 'uroto.audio.version_local';
+  static const _claveAudioSugerenciaVista = 'uroto.audio.sugerencia_vista';
+  static const _claveIdiomaApp = 'uroto.idioma_app';
   static const idPerfilPorDefecto = 'principal';
 
   // Sufijos (sin prefijo de perfil).
@@ -33,7 +36,9 @@ class RepositorioProgreso {
   static const _sufVariantesEntrenamientoUsadas =
       'variantes_entrenamiento_usadas';
   static const _sufVariantesPuentesUsadas = 'variantes_puentes_usadas';
+  static const _sufVariantesMaquinasUsadas = 'variantes_maquinas_usadas';
   static const _sufRitmoJuego = 'ritmo_juego';
+  static const _sufRutaAvatar = 'avatar.ruta';
   static const _prefijoCuadernoLeida = 'cuaderno.leida.';
   static const _prefijoDistritoVisitado = 'distrito_visitado.';
   static const _prefijoFlagNarrativo = 'flag.';
@@ -57,13 +62,22 @@ class RepositorioProgreso {
   Future<void> _migrarSiHaceFalta(SharedPreferences prefs) async {
     if (prefs.getString(_claveIdPerfilActivo) != null) return;
 
+    // Claves globales (no por-perfil): no se migran.
+    const clavesGlobales = <String>{
+      _claveTokenBackend,
+      _claveEmailBackend,
+      _claveVersionPaqueteAudio,
+      _claveAudioSugerenciaVista,
+      _claveIdiomaApp,
+      _claveIdPerfilActivo,
+      _claveListaPerfiles,
+    };
     final todasLasClaves = prefs.getKeys().toList();
     final clavesHeredadas = todasLasClaves
         .where((clave) =>
             clave.startsWith('uroto.') &&
             !clave.startsWith('uroto.perfil.') &&
-            clave != _claveIdPerfilActivo &&
-            clave != _claveListaPerfiles)
+            !clavesGlobales.contains(clave))
         .toList();
 
     final prefijoDestino = _prefijoDePerfil(idPerfilPorDefecto);
@@ -142,6 +156,55 @@ class RepositorioProgreso {
   Future<void> borrarEmailBackend() async {
     final prefs = await _prefs();
     await prefs.remove(_claveEmailBackend);
+  }
+
+  /// Versión del paquete sonoro descargable instalado localmente.
+  /// Es global (compartido entre perfiles — los OGG no dependen de qué
+  /// niño juega). null si nunca se descargó. El descargador (
+  /// `lib/datos/descargador_audio.dart`) consulta esto para decidir si
+  /// hay un upgrade pendiente.
+  Future<int?> cargarVersionPaqueteAudio() async {
+    final prefs = await _prefs();
+    return prefs.getInt(_claveVersionPaqueteAudio);
+  }
+
+  Future<void> guardarVersionPaqueteAudio(int version) async {
+    final prefs = await _prefs();
+    await prefs.setInt(_claveVersionPaqueteAudio, version);
+  }
+
+  Future<void> borrarVersionPaqueteAudio() async {
+    final prefs = await _prefs();
+    await prefs.remove(_claveVersionPaqueteAudio);
+  }
+
+  /// Si el aviso "¿quieres descargar el paquete de sonido?" ya se
+  /// mostró al niño/adulto. Es global (no tiene sentido reofrecerlo
+  /// por cada perfil) y se persiste a `true` en cuanto el banner se
+  /// dismisses, así no reaparece nunca aunque rechace.
+  Future<bool> cargarAudioSugerenciaVista() async {
+    final prefs = await _prefs();
+    return prefs.getBool(_claveAudioSugerenciaVista) ?? false;
+  }
+
+  Future<void> marcarAudioSugerenciaVista() async {
+    final prefs = await _prefs();
+    await prefs.setBool(_claveAudioSugerenciaVista, true);
+  }
+
+  /// Idioma elegido manualmente por el niño en la pantalla de
+  /// configuración inicial. Es global (no por-perfil): la elección se
+  /// hace antes de cualquier perfil. Valores: 'es', 'eu', 'ca'. null si
+  /// no se ha elegido todavía — el orquestador lo interpreta como
+  /// "primer arranque, mostrar configuración inicial".
+  Future<String?> cargarIdiomaApp() async {
+    final prefs = await _prefs();
+    return prefs.getString(_claveIdiomaApp);
+  }
+
+  Future<void> guardarIdiomaApp(String codigoIdioma) async {
+    final prefs = await _prefs();
+    await prefs.setString(_claveIdiomaApp, codigoIdioma);
   }
 
   /// Atajo: borra token y email a la vez, equivalente a "cerrar sesión".
@@ -314,6 +377,31 @@ class RepositorioProgreso {
     await prefs.setString(await _clave(_sufNombreJugador), nombre.trim());
   }
 
+  /// Ruta absoluta a la imagen-avatar del niño (foto de su dibujo en
+  /// papel, o cualquier imagen elegida desde la galería). Se persiste
+  /// **por perfil** — cada niño tiene su propio personaje. La imagen
+  /// vive bajo el directorio de documentos de la app, así que la
+  /// ruta es estable mientras la app esté instalada.
+  ///
+  /// `null` significa "todavía no ha subido nada" — la vista cae al
+  /// avatar genérico (Icons.person en círculo violeta).
+  Future<String?> cargarRutaAvatar() async {
+    final prefs = await _prefs();
+    final ruta = prefs.getString(await _clave(_sufRutaAvatar));
+    if (ruta == null || ruta.trim().isEmpty) return null;
+    return ruta;
+  }
+
+  Future<void> guardarRutaAvatar(String ruta) async {
+    final prefs = await _prefs();
+    await prefs.setString(await _clave(_sufRutaAvatar), ruta);
+  }
+
+  Future<void> borrarRutaAvatar() async {
+    final prefs = await _prefs();
+    await prefs.remove(await _clave(_sufRutaAvatar));
+  }
+
   Future<RangoNarrativo> cargarRango() async {
     final prefs = await _prefs();
     final guardado = prefs.getInt(await _clave(_sufRangoActual)) ?? 0;
@@ -371,6 +459,29 @@ class RepositorioProgreso {
   Future<void> resetearVariantesPuentes() async {
     final prefs = await _prefs();
     await prefs.remove(await _clave(_sufVariantesPuentesUsadas));
+  }
+
+  Future<Set<String>> cargarVariantesMaquinasUsadas() async {
+    final prefs = await _prefs();
+    final lista =
+        prefs.getStringList(await _clave(_sufVariantesMaquinasUsadas)) ?? [];
+    return lista.toSet();
+  }
+
+  Future<void> marcarVarianteMaquinaUsada(String id) async {
+    final prefs = await _prefs();
+    final usadas = await cargarVariantesMaquinasUsadas();
+    if (usadas.contains(id)) return;
+    usadas.add(id);
+    await prefs.setStringList(
+      await _clave(_sufVariantesMaquinasUsadas),
+      usadas.toList(),
+    );
+  }
+
+  Future<void> resetearVariantesMaquinas() async {
+    final prefs = await _prefs();
+    await prefs.remove(await _clave(_sufVariantesMaquinasUsadas));
   }
 
   Future<RitmoJuego> cargarRitmo() async {

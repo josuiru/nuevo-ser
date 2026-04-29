@@ -32,9 +32,13 @@ class ClienteTutor {
   Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/uno-roto/v1$ruta');
 
   Map<String, String> _cabeceras(String token) {
+    // Necesario para esquivar la regla 920330 de mod_security
+    // (Empty User Agent Header → 406). Ver `cliente_api.dart`.
     final base = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
+      'User-Agent': 'UnoRoto/0.5 (Android)',
+      'Accept': 'application/json',
     };
     if (hostOverride != null) {
       base['Host'] = hostOverride!;

@@ -1,3 +1,4 @@
+import 'ambiente_cielo.dart';
 import 'plano_escena.dart';
 
 /// Una escena es una secuencia ordenada de planos. El player recorre
@@ -42,6 +43,11 @@ class EscenaCinematica {
   /// Diferente de [sonidoDeEntrada], que es un sample puntual.
   final String? loopDeFondo;
 
+  /// Ambiente atmosférico del cielo. Las variantes de entrenamiento
+  /// (1.8a-e) lo usan para que el niño reconozca cada noche por su
+  /// cielo. El resto de escenas usa [AmbienteCielo.neutro].
+  final AmbienteCielo ambiente;
+
   const EscenaCinematica({
     required this.id,
     required this.titulo,
@@ -51,5 +57,6 @@ class EscenaCinematica {
     this.esCierreAmable = false,
     this.sonidoDeEntrada,
     this.loopDeFondo,
+    this.ambiente = AmbienteCielo.neutro,
   });
 }

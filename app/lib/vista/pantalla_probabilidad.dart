@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_probabilidad.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle EST.05: "saco con 3 rojas y 5 azules → P(roja) = ?" + cuatro
 /// fracciones candidatas. Mecánica de Laplace básica con reducción.
@@ -55,6 +57,7 @@ class _PantallaProbabilidadState extends State<PantallaProbabilidad>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -101,9 +104,9 @@ class _PantallaProbabilidadState extends State<PantallaProbabilidad>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -112,9 +115,9 @@ class _PantallaProbabilidadState extends State<PantallaProbabilidad>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'PROBABILIDAD',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(contexto).puzzleHeaderProbabilidad,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,8 +129,11 @@ class _PantallaProbabilidadState extends State<PantallaProbabilidad>
                       ),
                       const SizedBox(height: 22),
                       Text(
-                        'saco con ${_problema.favorables} rojas '
-                        'y ${_problema.otros} azules',
+                        AppLocalizations.of(contexto)
+                            .puzzleInstrProbabilidadSaco(
+                          _problema.favorables,
+                          _problema.otros,
+                        ),
                         style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
@@ -136,9 +142,10 @@ class _PantallaProbabilidadState extends State<PantallaProbabilidad>
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'P(sacar roja) = ?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto)
+                            .puzzleInstrProbabilidadFormula,
+                        style: const TextStyle(
                           color: PaletaNeon.azulNeon,
                           fontSize: 22,
                           fontWeight: FontWeight.w300,

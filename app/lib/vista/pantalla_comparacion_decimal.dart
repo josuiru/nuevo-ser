@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_comparacion_decimal.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle DEC.02: dos decimales lado a lado, el niño toca el mayor.
 /// Visualmente paralelo a [PantallaComparacion] pero con etiquetas de
@@ -63,6 +65,7 @@ class _PantallaComparacionDecimalState
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -109,9 +112,9 @@ class _PantallaComparacionDecimalState
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -120,9 +123,8 @@ class _PantallaComparacionDecimalState
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'COMPARAR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderComparar,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -133,9 +135,9 @@ class _PantallaComparacionDecimalState
                         ],
                       ),
                       const SizedBox(height: 36),
-                      const Text(
-                        '¿cuál es mayor?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCualEsMayor,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 20,
                           letterSpacing: 1.4,
@@ -143,8 +145,7 @@ class _PantallaComparacionDecimalState
                         ),
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        'lee las cifras, no las cuentes',
+                      Text(AppLocalizations.of(contexto).puzzleInstrLeerCifras,
                         style: TextStyle(
                           color: PaletaNeon.textoTenue.withOpacity(0.8),
                           fontSize: 12,

@@ -1,0 +1,440 @@
+{
+  "@@locale": "es",
+  "botonSaltar": "saltar",
+  "tocaParaContinuar": "toca para continuar",
+  "comunCancelar": "cancelar",
+  "tutorCabecera": "pista — {habilidad}",
+  "@tutorCabecera": {
+    "placeholders": {
+      "habilidad": { "type": "String" }
+    }
+  },
+  "tutorInputPista": "pregunta",
+  "tutorBotonPreguntar": "preguntar",
+  "tutorEstadoVacio": "Cuéntame qué te ha trabado.\nCon tus palabras.",
+  "tutorOfertaTitulo": "¿Quieres una pista?",
+  "tutorOfertaCuerpo": "Sobre {habilidad}. Una pista, no la solución.",
+  "@tutorOfertaCuerpo": {
+    "placeholders": {
+      "habilidad": { "type": "String" }
+    }
+  },
+  "tutorOfertaSigoSolo": "sigo solo",
+  "tutorOfertaSi": "sí",
+  "habTitulo": "habilidades",
+  "habTooltipPerfiles": "Cambiar de perfil",
+  "habTooltipSonido": "Ajustes de sonido",
+  "habTooltipRitmo": "Cambiar ritmo del juego",
+  "habTooltipCuenta": "Cuenta (vincular / sesión)",
+  "habTooltipSync": "Sincronizar progreso",
+  "habTooltipDebugTutor": "Probar tutor IA (debug)",
+  "habTooltipReiniciar": "Reiniciar progreso (debug)",
+  "habTooltipIdioma": "Cambiar idioma",
+  "habIdiomaTitulo": "Idioma de la app",
+  "habIdiomaSnack": "Idioma cambiado.",
+  "mapaBotonEntrenar": "Entrenar",
+  "cazaBotonMapa": "‹ mapa",
+  "cazaBadgeEntrenando": "ENTRENANDO · ",
+  "entrenamientoTitulo": "ENTRENAMIENTO",
+  "entrenamientoPregunta": "¿En qué quieres centrarte hoy?",
+  "sonidoPaqueteTitulo": "PAQUETE SONORO",
+  "sonidoPaqueteNoInstalado": "No instalado. Solo suenan los efectos cortos.",
+  "sonidoPaqueteVersion": "Versión {version} · {tamano}",
+  "@sonidoPaqueteVersion": {
+    "placeholders": {
+      "version": {"type": "int"},
+      "tamano": {"type": "String"}
+    }
+  },
+  "sonidoPaqueteExplicacion": "Ambient, música y narrativos se descargan del servidor para no inflar el tamaño de la app.",
+  "sonidoPaqueteBotonDescargar": "Descargar paquete",
+  "sonidoPaqueteBotonComprobar": "Comprobar actualizaciones",
+  "sonidoPaqueteBotonBorrar": "Borrar paquete",
+  "sonidoPaqueteConfirmTitulo": "Borrar paquete sonoro",
+  "sonidoPaqueteConfirmTexto": "Se eliminarán {tamano} del dispositivo. Podrás volver a descargarlo cuando quieras.",
+  "@sonidoPaqueteConfirmTexto": {
+    "placeholders": {
+      "tamano": {"type": "String"}
+    }
+  },
+  "sonidoPaqueteConfirmBotonBorrar": "Borrar",
+  "sonidoBotonCancelar": "Cancelar",
+  "sonidoMensajeInstalado": "Paquete sonoro instalado.",
+  "sonidoMensajeBorrado": "Paquete sonoro borrado.",
+  "sonidoMensajeFallido": "Descarga fallida: {mensaje}",
+  "@sonidoMensajeFallido": {
+    "placeholders": {
+      "mensaje": {"type": "String"}
+    }
+  },
+  "cierreBotonSeguir": "Seguir practicando",
+  "cierreBotonBuenasNoches": "Buenas noches",
+  "combateBotonDeshacer": "Deshacer",
+  "combateBotonDeNuevo": "De nuevo",
+  "combateBotonCortar": "Cortar",
+  "cinematicaAccionDividir": "desliza para dividir",
+  "cinematicaAccionDesfragmentar": "toca cada mitad",
+  "comparacionMismoTamano": "mismo tamaño de trozo",
+  "comparacionMismoNumero": "el mismo número de trozos",
+  "simetriaPreguntaVertical": "¿es simétrica respecto al eje vertical?",
+  "simetriaPreguntaHorizontal": "¿es simétrica respecto al eje horizontal?",
+  "barrasPreguntaValor": "¿cuántos en \"{etiqueta}\"?",
+  "@barrasPreguntaValor": {
+    "placeholders": {
+      "etiqueta": {"type": "String"}
+    }
+  },
+  "barrasPreguntaTotal": "¿cuál es el total?",
+  "aumentoVerbo": "aumenta un {porcentaje}% sobre",
+  "@aumentoVerbo": {
+    "placeholders": {
+      "porcentaje": {"type": "int"}
+    }
+  },
+  "descuentoVerbo": "descuenta un {porcentaje}% sobre",
+  "@descuentoVerbo": {
+    "placeholders": {
+      "porcentaje": {"type": "int"}
+    }
+  },
+  "respuestaSi": "sí",
+  "respuestaNo": "no",
+  "habRitmoTitulo": "Ritmo del juego",
+  "habRitmoSnack": "Ritmo \"{ritmo}\". Se aplicará en la próxima escena.",
+  "@habRitmoSnack": {
+    "placeholders": {
+      "ritmo": { "type": "String" }
+    }
+  },
+  "habSyncFaltaToken": "Vincula primero una cuenta desde el icono de perfil.",
+  "habSyncEnProgreso": "Sincronizando…",
+  "habSyncResumen": "Sync OK. Esquirlas {esquirlas} · {flags} flags · {habilidades} habilidades.",
+  "@habSyncResumen": {
+    "placeholders": {
+      "esquirlas": { "type": "int" },
+      "flags": { "type": "int" },
+      "habilidades": { "type": "int" }
+    }
+  },
+  "habSyncSesionCaduco": "La sesión caducó. Ábrela desde \"Cuenta\" e inicia sesión otra vez.",
+  "habApiError": "API {codigo}: {mensaje}",
+  "@habApiError": {
+    "placeholders": {
+      "codigo": { "type": "int" },
+      "mensaje": { "type": "String" }
+    }
+  },
+  "habRedError": "Red: {error}",
+  "@habRedError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "habReiniciarTitulo": "Reiniciar progreso",
+  "habReiniciarCuerpo": "Borra escenas vistas, habilidades, esquirlas y rango. La próxima vez que abras la app, empezarás desde la apertura.",
+  "habReiniciarBoton": "reiniciar",
+  "habReiniciarHecho": "Progreso reiniciado. Cierra la app y vuélvela a abrir.",
+  "habEsquirlasResumen": "{n} esquirlas",
+  "@habEsquirlasResumen": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "habNivelInexplorada": "sin tocar",
+  "habNivelIntroducida": "introducida",
+  "habNivelEnDesarrollo": "en desarrollo",
+  "habNivelCompetente": "competente",
+  "habNivelMaestria": "maestría",
+  "habChipNivel": "{n} {etiqueta}",
+  "@habChipNivel": {
+    "placeholders": {
+      "n": { "type": "int" },
+      "etiqueta": { "type": "String" }
+    }
+  },
+  "habFilaResumen": "{nivel} · precisión {precision}% · {intentos} intentos",
+  "@habFilaResumen": {
+    "placeholders": {
+      "nivel": { "type": "String" },
+      "precision": { "type": "int" },
+      "intentos": { "type": "int" }
+    }
+  },
+  "cuentaTitulo": "cuenta",
+  "cuentaCrearTitulo": "crear cuenta",
+  "cuentaIniciarTitulo": "iniciar sesión",
+  "cuentaCerrarSesionTitulo": "Cerrar sesión",
+  "cuentaCerrarSesionCuerpo": "El progreso local sigue intacto, solo se desconecta del servidor.",
+  "cuentaBotonCerrar": "cerrar",
+  "cuentaSinCuentaTitulo": "Sin cuenta vinculada",
+  "cuentaSinCuentaCuerpo": "Puedes seguir jugando offline. Si vinculas una cuenta, el progreso se guarda en el servidor y se desbloquea el tutor para cuando te atasques.",
+  "cuentaBotonCrear": "crear cuenta",
+  "cuentaBotonIniciar": "iniciar sesión",
+  "cuentaVinculadaTitulo": "Cuenta vinculada",
+  "cuentaVinculadaCuerpo": "El progreso se sincroniza con el servidor y el tutor está disponible cuando te atascas.",
+  "cuentaBotonCerrarSesion": "cerrar sesión",
+  "cuentaCaducadaTitulo": "Sesión caducada",
+  "cuentaCaducadaCuerpo": "Vuelve a iniciar sesión para sincronizar y usar el tutor:\n{email}",
+  "@cuentaCaducadaCuerpo": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "cuentaCampoEmail": "email del tutor",
+  "cuentaCampoPassword": "contraseña",
+  "cuentaCampoPasswordMin": "contraseña (mínimo 8)",
+  "cuentaCampoNombreTutor": "nombre del tutor (opcional)",
+  "cuentaCampoNombreNino": "nombre del niño",
+  "cuentaErrorCamposRegistro": "Pon email, contraseña (mínimo 8 caracteres) y nombre del niño.",
+  "cuentaErrorCamposLogin": "Pon el email y la contraseña.",
+  "cuentaErrorRed": "No se pudo conectar.",
+  "cuentaBotonCreando": "creando…",
+  "cuentaBotonEntrando": "entrando…",
+  "cuentaResetTitulo": "OLVIDÉ MI CONTRASEÑA",
+  "cuentaResetEmailInvalido": "Escribe un email válido.",
+  "cuentaResetErrorRed": "No se pudo conectar. Inténtalo más tarde.",
+  "cuentaResetTagline": "No pasa nada.",
+  "cuentaResetIntro": "Pon tu email y te mandamos un enlace para crear una contraseña nueva. Caduca en 30 minutos.",
+  "cuentaResetCampoEmail": "Email",
+  "cuentaResetBoton": "ENVIAR ENLACE",
+  "cuentaResetEnviadoCuerpo": "Si esa dirección está registrada,\nte llegará un enlace en unos minutos.",
+  "cuentaResetEnviadoSpam": "Revisa también la carpeta de spam.",
+  "cuentaResetBotonVolver": "VOLVER",
+  "panelTutorTitulo": "MODO TUTOR",
+  "panelTutorTooltipSalir": "Cerrar sesión",
+  "panelTutorErrorAuth": "Email o contraseña incorrectos.",
+  "panelTutorErrorServidor": "Error del servidor ({codigo}).",
+  "@panelTutorErrorServidor": {
+    "placeholders": {
+      "codigo": { "type": "int" }
+    }
+  },
+  "panelTutorErrorRed": "No se pudo conectar al servidor.",
+  "panelTutorErrorProgreso": "No se pudo cargar el progreso (token caducado).",
+  "panelTutorTagline": "Para ti, no para el peque.",
+  "panelTutorIntro": "Entra con tu email y contraseña para ver el progreso real.",
+  "panelTutorCampoEmail": "Email",
+  "panelTutorCampoPassword": "Contraseña",
+  "panelTutorBotonEntrar": "ENTRAR",
+  "panelTutorSinNinos": "Esta cuenta aún no tiene ningún niño.",
+  "panelTutorElegirNino": "Elige un niño para ver su progreso.",
+  "panelTutorSaludoConNombre": "Hola, {nombre}.",
+  "@panelTutorSaludoConNombre": {
+    "placeholders": {
+      "nombre": { "type": "String" }
+    }
+  },
+  "panelTutorSubtituloSaludo": "Aquí tienes el progreso real, sin adornos.",
+  "sonidoTitulo": "sonido",
+  "sonidoSeccionVolumen": "VOLUMEN POR CAPA",
+  "sonidoModoSilencioTitulo": "Modo sin sonido",
+  "sonidoModoSilencioSubtitulo": "el juego es completamente jugable en silencio",
+  "sonidoCapaAmbient": "viento, agua, ruido rosa del mundo",
+  "sonidoCapaMusica": "loops de distrito y de combate",
+  "sonidoCapaEfectos": "taps, aciertos, errores",
+  "sonidoCapaNarrativos": "motivos y efectos únicos",
+  "sonidoNotaAccesibilidad": "Los ajustes se guardan por perfil. Cada niño que juegue con su perfil tendrá su propia configuración de volúmenes.",
+  "perfHeaderQuienEres": "¿QUIÉN ERES?",
+  "perfHeaderSubtitulo": "elige un perfil o crea uno nuevo",
+  "perfBadgeActual": "perfil actual",
+  "perfTooltipBorrar": "borrar perfil",
+  "perfBotonNuevo": "nuevo perfil",
+  "perfDialogNuevoTitulo": "Nuevo perfil",
+  "perfDialogNuevoHint": "nombre del jugador",
+  "perfBotonCrear": "crear",
+  "perfDialogBorrarTitulo": "Borrar perfil",
+  "perfDialogBorrarCuerpo": "Se borrará todo el progreso de {nombre}. Esta acción no se puede deshacer.",
+  "@perfDialogBorrarCuerpo": {
+    "placeholders": {
+      "nombre": { "type": "String" }
+    }
+  },
+  "perfBotonBorrar": "borrar",
+  "nombreTitulo": "¿Cómo te llamas?",
+  "nombreSubtitulo": "sora te va a preguntar en un momento",
+  "nombreBotonContinuar": "continuar",
+  "cuadernoTitulo": "cuaderno",
+  "cuadernoVacio": "Aún no has desbloqueado entradas.\nSigue jugando — cada persona o lugar que conozcas abre una página.",
+  "cuadernoResumen": "{leidas} leídas · {desbloqueadas} de {total} desbloqueadas",
+  "@cuadernoResumen": {
+    "placeholders": {
+      "leidas": { "type": "int" },
+      "desbloqueadas": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "mapaArcoResumen": "Arco {romano} · {vistas}/{total}",
+  "@mapaArcoResumen": {
+    "placeholders": {
+      "romano": { "type": "String" },
+      "vistas": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "mapaMontanaTitulo": "LA MONTAÑA",
+  "mapaMontanaSubtitulo": "el horizonte espera",
+  "mapaDistritoBloqueado": "se abre a las {n} esquirlas",
+  "@mapaDistritoBloqueado": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "puzzleBotonHuir": "huir",
+  "rangoAprendiz1": "Aprendiz I",
+  "rangoAprendiz2": "Aprendiz II",
+  "rangoAprendiz3": "Aprendiz III",
+  "rangoIniciado": "Iniciado",
+  "ritmoTranquilo": "Tranquilo",
+  "ritmoEstandar": "Estándar",
+  "ritmoExigente": "Exigente",
+  "ritmoTranquiloDesc": "Las palabras aparecen más despacio. Los combates dan más tiempo.",
+  "ritmoEstandarDesc": "La velocidad base del juego.",
+  "ritmoExigenteDesc": "Todo va más rápido. Los combates piden más agilidad.",
+  "capaAmbient": "Ambiente",
+  "capaMusica": "Música",
+  "capaEfectos": "Efectos",
+  "capaNarrativos": "Narrativos",
+  "catCuadernoPersonajes": "Personajes",
+  "catCuadernoFragmentos": "Fragmentos",
+  "catCuadernoLugares": "Lugares",
+  "catCuadernoHistoria": "Historia",
+  "catCuadernoNaturaleza": "Naturaleza",
+  "catCuadernoMitos": "Mitos",
+  "puzzleHeaderAmplificar": "AMPLIFICAR",
+  "puzzleInstrAmplificar": "completa la equivalencia",
+  "puzzleHeaderAngulo": "ÁNGULO",
+  "puzzleInstrAngulo": "identifica el tipo",
+  "puzzleInstrAreaRectangulo": "área = base × altura",
+  "puzzleHeaderTriangulo": "TRIÁNGULO",
+  "puzzleInstrAreaTriangulo": "área = base × altura ÷ 2",
+  "puzzleInstrCirculoPi": "usa π ≈ 3,14",
+  "puzzleHeaderComparar": "COMPARAR",
+  "puzzleInstrCualEsMayor": "¿cuál es mayor?",
+  "puzzleInstrLeerCifras": "lee las cifras, no las cuentes",
+  "puzzleInstrMiraValor": "mira el valor, no las cifras",
+  "puzzleHeaderContraMitad": "CONTRA 1/2",
+  "puzzleInstrContraMitad": "¿comparada con 1/2?",
+  "puzzleHeaderContraUno": "CONTRA 1",
+  "puzzleInstrContraUno": "compárala con 1",
+  "puzzleHeaderDecimal": "DECIMAL",
+  "puzzleInstrQueDecimal": "¿qué decimal vale igual?",
+  "puzzleHeaderDivisores": "DIVISORES",
+  "puzzleInstrCualNoDivisor": "¿cuál NO es divisor?",
+  "puzzleHeaderDual": "DUAL",
+  "puzzleInstrDual": "funde los dos en uno solo",
+  "puzzleHeaderEscala": "ESCALA",
+  "puzzleInstrEscalaMapa": "mapa 1:{denominador}",
+  "@puzzleInstrEscalaMapa": {
+    "placeholders": {
+      "denominador": { "type": "int" }
+    }
+  },
+  "puzzleInstrEnPlano": "en plano",
+  "puzzleHeaderEspejo": "ESPEJO",
+  "puzzleInstrEspejo": "busca su equivalente",
+  "puzzleHeaderParte": "PARTE",
+  "puzzleInstrCalcula": "calcula",
+  "puzzleHeaderGrafico": "GRÁFICO",
+  "puzzleHeaderCircular": "CIRCULAR",
+  "puzzleHeaderImpropio": "IMPROPIO",
+  "puzzleInstrImpropio": "escribe este Fragmento como mixto",
+  "puzzleHeaderJerarquia": "JERARQUÍA",
+  "puzzleInstrJerarquiaPrimero": "primero × y ÷, después + y −",
+  "puzzleInstrJerarquiaRecuerda": "recuerda × y ÷ antes que + y −",
+  "puzzleHeaderLeer": "LEER",
+  "puzzleInstrQueNumero": "¿qué número es?",
+  "puzzleInstrQueFraccion": "¿qué fracción es?",
+  "puzzleHeaderLongitud": "LONGITUD",
+  "puzzleInstrConvierteMedida": "convierte la medida",
+  "puzzleHeaderMedia": "MEDIA",
+  "puzzleInstrCalculaMedia": "calcula la media",
+  "puzzleHeaderConvertir": "CONVERTIR",
+  "puzzleInstrConvertirImpropia": "¿qué fracción impropia es?",
+  "puzzleInstrCualEsModa": "¿cuál es la {modo}?",
+  "@puzzleInstrCualEsModa": {
+    "placeholders": {
+      "modo": { "type": "String" }
+    }
+  },
+  "puzzleHeaderOpDecimal": "OP. DECIMAL",
+  "puzzleInstrCuantoValeOp": "cuánto vale la operación",
+  "puzzleHeaderDecimalFraccion": "DECIMAL Y FRACCIÓN",
+  "puzzleInstrFraccionDecimal": "la fracción y el decimal son lo mismo",
+  "puzzleHeaderOrdenar": "ORDENAR",
+  "puzzleInstrOrdenar": "de menor a mayor",
+  "puzzleHeaderPerimetro": "PERÍMETRO",
+  "puzzleInstrPerimetro": "suma todos los lados",
+  "puzzleHeaderPoligono": "POLÍGONO",
+  "puzzleInstrPoligono": "cuenta los lados",
+  "puzzleHeaderPorcentaje": "PORCENTAJE",
+  "puzzleInstrPorcentajeFraccion": "¿qué fracción vale igual?",
+  "puzzleInstrPorcentajeDe": "el {porcentaje} % de {cantidad}",
+  "@puzzleInstrPorcentajeDe": {
+    "placeholders": {
+      "porcentaje": { "type": "int" },
+      "cantidad": { "type": "int" }
+    }
+  },
+  "puzzleHeaderQuePorcentaje": "¿QUÉ %?",
+  "puzzleInstrQuePorcentaje": "qué porcentaje representa",
+  "puzzleHeaderPrimos": "PRIMOS",
+  "puzzleInstrEsPrimo": "¿es primo?",
+  "puzzleHeaderProbabilidad": "PROBABILIDAD",
+  "puzzleInstrProbabilidadSaco": "saco con {favorables} rojas y {otros} azules",
+  "@puzzleInstrProbabilidadSaco": {
+    "placeholders": {
+      "favorables": { "type": "int" },
+      "otros": { "type": "int" }
+    }
+  },
+  "puzzleInstrProbabilidadFormula": "P(sacar roja) = ?",
+  "puzzleHeaderPProb": "P → %",
+  "puzzleInstrPEquals": "P = {numerador}/{denominador}",
+  "@puzzleInstrPEquals": {
+    "placeholders": {
+      "numerador": { "type": "int" },
+      "denominador": { "type": "int" }
+    }
+  },
+  "puzzleInstrComoPorcentaje": "expresada como porcentaje",
+  "puzzleHeaderProporcion": "PROPORCIÓN",
+  "puzzleInstrCompletaProporcion": "completa la proporción",
+  "puzzleInstrSiEsto": "si esto, entonces…",
+  "puzzleHeaderRazon": "RAZÓN",
+  "puzzleInstrRazon": "¿qué razón los relaciona?",
+  "puzzleHeaderRedondear": "REDONDEAR",
+  "puzzleInstrRedondear": "redondea a la décima",
+  "puzzleHeaderSimetria": "SIMETRÍA",
+  "puzzleHeaderSimplificar": "SIMPLIFICAR",
+  "puzzleInstrSimplificar": "redúcela al máximo",
+  "puzzleHeaderSuperficie": "SUPERFICIE",
+  "puzzleInstrSuperficie": "convierte la superficie",
+  "puzzleHeaderTiempo": "TIEMPO",
+  "puzzleInstrTiempo": "pasa al destino indicado",
+  "puzzleHeaderVolumen": "VOLUMEN",
+  "puzzleInstrVolumenFormula": "V = largo × ancho × alto",
+  "estadisticoModa": "moda",
+  "estadisticoMediana": "mediana",
+  "sonidoDescargaConectando": "Conectando con el servidor…",
+  "sonidoDescargaBajandoConTotal": "Bajando {mb} / {total} MB",
+  "@sonidoDescargaBajandoConTotal": {
+    "placeholders": {
+      "mb": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "sonidoDescargaBajandoSinTotal": "Bajando {mb} MB",
+  "@sonidoDescargaBajandoSinTotal": {
+    "placeholders": {
+      "mb": { "type": "String" }
+    }
+  },
+  "sonidoDescargaVerificando": "Verificando integridad…",
+  "sonidoDescargaInstalando": "Instalando {actual} / {total}",
+  "@sonidoDescargaInstalando": {
+    "placeholders": {
+      "actual": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
+}

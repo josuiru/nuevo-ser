@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 
 import '../dominio/fragmento_en_tejado.dart' show OperadorAritmetico;
 import '../dominio/problema_operacion_decimal.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de operación con decimales: el niño ve "a OP b" con a y b
 /// decimales y elige el resultado correcto entre cuatro candidatos.
@@ -66,6 +68,7 @@ class _PantallaOperacionDecimalState extends State<PantallaOperacionDecimal>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -112,9 +115,9 @@ class _PantallaOperacionDecimalState extends State<PantallaOperacionDecimal>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -123,9 +126,8 @@ class _PantallaOperacionDecimalState extends State<PantallaOperacionDecimal>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'OP. DECIMAL',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderOpDecimal,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -136,10 +138,10 @@ class _PantallaOperacionDecimalState extends State<PantallaOperacionDecimal>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'cuánto vale la operación',
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCuantoValeOp,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

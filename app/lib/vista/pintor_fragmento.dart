@@ -80,6 +80,18 @@ class PintorFragmento extends CustomPainter {
       ..strokeWidth = 2;
     canvas.drawCircle(centro, radioLatido, pinturaBorde);
 
+    // Marcas tipo reloj: 12 rayitas cada 30° justo por fuera del borde,
+    // como referencia visual + indicador de los puntos donde el snap
+    // angular ajusta al soltar (ver `_LienzoCombateState`). Las cuatro
+    // cardinales (12, 3, 6, 9) salen un punto más largas para que el
+    // niño tenga "norte" rápido.
+    _pintarMarcasReloj(
+      canvas: canvas,
+      centro: centro,
+      radio: radioLatido,
+      colorBase: colorAura,
+    );
+
     _pintarCara(
       canvas: canvas,
       centro: centro,
@@ -292,6 +304,45 @@ class PintorFragmento extends CustomPainter {
         break;
     }
     canvas.drawPath(trazo, pintura);
+  }
+
+  /// 12 marcas radiales por fuera del borde. Las cuatro cardinales
+  /// (cada 90°: 12/3/6/9) son ligeramente más largas y opacas. El resto
+  /// son rayitas finas. Sirven de referencia visual y coinciden con los
+  /// puntos donde el snap angular del lienzo ajusta el radio al soltar.
+  void _pintarMarcasReloj({
+    required Canvas canvas,
+    required Offset centro,
+    required double radio,
+    required Color colorBase,
+  }) {
+    const totalMarcas = 12;
+    final largoCorto = radio * 0.04;
+    final largoLargo = radio * 0.07;
+    const separacion = 4.0; // Pequeño hueco entre el borde y la marca.
+
+    for (var i = 0; i < totalMarcas; i++) {
+      final esCardinal = i % 3 == 0;
+      final largoMarca = esCardinal ? largoLargo : largoCorto;
+      final opacidadMarca =
+          (esCardinal ? 0.55 : 0.32) * opacidad;
+      // 0° en la convención de Flutter apunta a la derecha; restamos π/2
+      // para que la primera marca quede arriba (las "12" del reloj).
+      final angulo = -math.pi / 2 + i * (2 * math.pi / totalMarcas);
+      final puntoInterior = Offset(
+        centro.dx + math.cos(angulo) * (radio + separacion),
+        centro.dy + math.sin(angulo) * (radio + separacion),
+      );
+      final puntoExterior = Offset(
+        centro.dx + math.cos(angulo) * (radio + separacion + largoMarca),
+        centro.dy + math.sin(angulo) * (radio + separacion + largoMarca),
+      );
+      final pintura = Paint()
+        ..color = colorBase.withOpacity(opacidadMarca)
+        ..strokeWidth = esCardinal ? 1.6 : 1.0
+        ..strokeCap = StrokeCap.round;
+      canvas.drawLine(puntoInterior, puntoExterior, pintura);
+    }
   }
 
   void _dibujarRadio({

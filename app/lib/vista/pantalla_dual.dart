@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import '../dominio/fragmento_en_tejado.dart' show OperadorAritmetico, SimboloOperador;
 import '../dominio/problema_dual.dart';
 import '../dominio/problema_espejo.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de Familia F (Duales). Se muestra una suma a/b + c/d y el
 /// niño elige el resultado correcto entre cuatro candidatos.
@@ -70,6 +72,7 @@ class _PantallaDualState extends State<PantallaDual>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -116,9 +119,9 @@ class _PantallaDualState extends State<PantallaDual>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -127,9 +130,8 @@ class _PantallaDualState extends State<PantallaDual>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'DUAL',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderDual,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -140,10 +142,10 @@ class _PantallaDualState extends State<PantallaDual>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'funde los dos en uno solo',
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrDual,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

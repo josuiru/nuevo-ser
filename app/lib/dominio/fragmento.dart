@@ -16,7 +16,7 @@ class FragmentoUnitario {
   final int denominador;
 
   const FragmentoUnitario(this.denominador)
-      : assert(denominador >= 2 && denominador <= 12);
+      : assert(denominador >= 2 && denominador <= 8);
 
   double get valor => 1.0 / denominador;
 
@@ -24,17 +24,18 @@ class FragmentoUnitario {
 
   double get anguloEsperadoEntreCortes => (2 * math.pi) / denominador;
 
-  /// Número de trazos que el jugador debe realizar.
+  /// Número de trazos que el jugador debe realizar para partir el
+  /// Fragmento en [denominador] sectores iguales.
   ///
-  /// Para denominadores pares hasta 4, basta con n/2 líneas diametrales.
-  /// Para el MVP del prototipo exigimos exactamente los trazos mínimos:
-  /// - 1/2 → 1 trazo diametral.
-  /// - 1/3 → 3 radios desde el centro (no hay línea recta que divida en tres).
-  /// - 1/4 → 2 trazos diametrales perpendiculares.
-  /// - 1/5 → 5 radios desde el centro.
+  /// Modelamos cada gesto como un radio desde el centro hacia el borde
+  /// (ver [LienzoCombate]: el ángulo se toma del punto final del gesto
+  /// respecto al centro). Por tanto cortar 1/N exige exactamente N
+  /// trazos radiales — sin atajos diametrales.
   ///
-  /// Modelamos todo como "radios desde el centro" por uniformidad: cada
-  /// trazo es una línea que sale del centro hacia el borde.
+  /// El tope superior del [denominador] se mantiene bajo a propósito:
+  /// pedirle al niño 11 trazos en una pantalla de móvil no aporta
+  /// nada pedagógico, y los denominadores grandes ya se ejercitan en
+  /// los puzzles abstractos.
   int get radiosRequeridos => denominador;
 
   TemperamentoFragmento get temperamento {

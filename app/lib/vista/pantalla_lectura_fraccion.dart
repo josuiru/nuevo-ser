@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../dominio/problema_lectura_fraccion.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.02: el niño ve una fracción escrita en palabras
 /// ("tres quintos") y elige la fracción equivalente entre cuatro
@@ -59,6 +62,7 @@ class _PantallaLecturaFraccionState extends State<PantallaLecturaFraccion>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -105,9 +109,9 @@ class _PantallaLecturaFraccionState extends State<PantallaLecturaFraccion>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -116,9 +120,8 @@ class _PantallaLecturaFraccionState extends State<PantallaLecturaFraccion>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'LEER',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderLeer,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -129,9 +132,9 @@ class _PantallaLecturaFraccionState extends State<PantallaLecturaFraccion>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        '¿qué fracción es?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrQueFraccion,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -139,7 +142,12 @@ class _PantallaLecturaFraccionState extends State<PantallaLecturaFraccion>
                         ),
                       ),
                       const SizedBox(height: 22),
-                      _TarjetaTexto(texto: _problema.texto),
+                      _TarjetaTexto(
+                        texto: traducirNarrativa(
+                          _problema.texto,
+                          Localizations.localeOf(contexto),
+                        ),
+                      ),
                       const SizedBox(height: 36),
                       Expanded(
                         child: GridView.count(

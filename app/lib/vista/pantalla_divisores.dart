@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_divisores.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle DIV.02: el niño ve un número grande y cuatro candidatos.
 /// Tres son divisores reales y uno no lo es — toca el intruso. La
@@ -56,6 +58,7 @@ class _PantallaDivisoresState extends State<PantallaDivisores>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -102,9 +105,9 @@ class _PantallaDivisoresState extends State<PantallaDivisores>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -113,9 +116,8 @@ class _PantallaDivisoresState extends State<PantallaDivisores>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'DIVISORES',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderDivisores,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,9 +128,9 @@ class _PantallaDivisoresState extends State<PantallaDivisores>
                         ],
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        '¿cuál NO es divisor?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCualNoDivisor,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

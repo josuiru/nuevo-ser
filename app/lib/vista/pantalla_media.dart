@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_media.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle EST.03: el niño ve "media de [4, 6, 8, 10]" y elige el
 /// resultado entre cuatro candidatos. Mecánica suma/cantidad.
@@ -54,6 +56,7 @@ class _PantallaMediaState extends State<PantallaMedia>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -100,9 +103,9 @@ class _PantallaMediaState extends State<PantallaMedia>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -111,9 +114,8 @@ class _PantallaMediaState extends State<PantallaMedia>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'MEDIA',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderMedia,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -124,9 +126,9 @@ class _PantallaMediaState extends State<PantallaMedia>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'calcula la media',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCalculaMedia,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

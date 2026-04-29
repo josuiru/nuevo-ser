@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../datos/repositorio_progreso.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 
 /// Pantalla de selección de perfiles. Lista los perfiles existentes, el
@@ -47,24 +48,25 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
   }
 
   Future<void> _crearPerfilNuevo() async {
+    final textos = AppLocalizations.of(context);
     final controladorNombre = TextEditingController();
     final nombreIntroducido = await showDialog<String>(
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'Nuevo perfil',
-          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        title: Text(
+          textos.perfDialogNuevoTitulo,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
         content: TextField(
           controller: controladorNombre,
           autofocus: true,
           maxLength: 20,
           style: const TextStyle(color: PaletaNeon.textoPrincipal),
-          decoration: const InputDecoration(
-            hintText: 'nombre del jugador',
-            hintStyle: TextStyle(color: PaletaNeon.textoTenue),
-            counterStyle: TextStyle(color: PaletaNeon.textoTenue),
+          decoration: InputDecoration(
+            hintText: textos.perfDialogNuevoHint,
+            hintStyle: const TextStyle(color: PaletaNeon.textoTenue),
+            counterStyle: const TextStyle(color: PaletaNeon.textoTenue),
           ),
           onSubmitted: (texto) =>
               Navigator.of(context).pop(texto.trim()),
@@ -72,17 +74,17 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'cancelar',
-              style: TextStyle(color: PaletaNeon.textoTenue),
+            child: Text(
+              textos.comunCancelar,
+              style: const TextStyle(color: PaletaNeon.textoTenue),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context)
                 .pop(controladorNombre.text.trim()),
-            child: const Text(
-              'crear',
-              style: TextStyle(color: PaletaNeon.violetaNeon),
+            child: Text(
+              textos.perfBotonCrear,
+              style: const TextStyle(color: PaletaNeon.violetaNeon),
             ),
           ),
         ],
@@ -97,32 +99,32 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
   }
 
   Future<void> _borrarPerfil(PerfilInfo perfil) async {
+    final textos = AppLocalizations.of(context);
     final confirmado = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'Borrar perfil',
-          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        title: Text(
+          textos.perfDialogBorrarTitulo,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
         content: Text(
-          'Se borrará todo el progreso de ${perfil.nombreVisible}. '
-          'Esta acción no se puede deshacer.',
+          textos.perfDialogBorrarCuerpo(perfil.nombreVisible),
           style: const TextStyle(color: PaletaNeon.textoTenue),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(
-              'cancelar',
-              style: TextStyle(color: PaletaNeon.textoTenue),
+            child: Text(
+              textos.comunCancelar,
+              style: const TextStyle(color: PaletaNeon.textoTenue),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(
-              'borrar',
-              style: TextStyle(color: PaletaNeon.rosaAcento),
+            child: Text(
+              textos.perfBotonBorrar,
+              style: const TextStyle(color: PaletaNeon.rosaAcento),
             ),
           ),
         ],
@@ -135,6 +137,7 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       body: SafeArea(
@@ -143,9 +146,9 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '¿QUIÉN ERES?',
-                style: TextStyle(
+              Text(
+                textos.perfHeaderQuienEres,
+                style: const TextStyle(
                   color: PaletaNeon.textoTenue,
                   fontSize: 13,
                   letterSpacing: 5,
@@ -154,7 +157,7 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
               ),
               const SizedBox(height: 8),
               Text(
-                'elige un perfil o crea uno nuevo',
+                textos.perfHeaderSubtitulo,
                 style: TextStyle(
                   color: PaletaNeon.textoTenue.withOpacity(0.7),
                   fontSize: 12,
@@ -261,7 +264,7 @@ class _TarjetaPerfil extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
-                          'perfil actual',
+                          AppLocalizations.of(contexto).perfBadgeActual,
                           style: TextStyle(
                             color: PaletaNeon.violetaNeon
                                 .withOpacity(0.8),
@@ -275,7 +278,7 @@ class _TarjetaPerfil extends StatelessWidget {
               ),
               if (alBorrar != null)
                 IconButton(
-                  tooltip: 'borrar perfil',
+                  tooltip: AppLocalizations.of(contexto).perfTooltipBorrar,
                   icon: Icon(
                     Icons.delete_outline,
                     color: PaletaNeon.textoTenue.withOpacity(0.7),
@@ -307,9 +310,9 @@ class _BotonCrearNuevo extends StatelessWidget {
           color: PaletaNeon.azulNeon,
           size: 18,
         ),
-        label: const Text(
-          'nuevo perfil',
-          style: TextStyle(
+        label: Text(
+          AppLocalizations.of(contexto).perfBotonNuevo,
+          style: const TextStyle(
             color: PaletaNeon.azulNeon,
             fontSize: 13,
             letterSpacing: 2.5,

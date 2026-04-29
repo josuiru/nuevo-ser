@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_angulo.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle MED.04: el niño ve "65°" + un dibujo del ángulo y elige el
 /// tipo entre cuatro candidatos. Mecánica de reconocimiento.
@@ -56,6 +59,7 @@ class _PantallaAnguloState extends State<PantallaAngulo>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -102,9 +106,9 @@ class _PantallaAnguloState extends State<PantallaAngulo>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -113,9 +117,8 @@ class _PantallaAnguloState extends State<PantallaAngulo>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'ÁNGULO',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderAngulo,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -126,9 +129,9 @@ class _PantallaAnguloState extends State<PantallaAngulo>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'identifica el tipo',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrAngulo,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -149,8 +152,10 @@ class _PantallaAnguloState extends State<PantallaAngulo>
                                 indice < _problema.candidatos.length;
                                 indice++)
                               _TarjetaCandidato(
-                                etiqueta:
-                                    _problema.candidatos[indice].etiqueta,
+                                etiqueta: traducirNarrativa(
+                                  _problema.candidatos[indice].etiqueta,
+                                  Localizations.localeOf(contexto),
+                                ),
                                 seleccionado: _indiceSeleccionado == indice,
                                 marcarCorrecto: _revelado &&
                                     _indiceSeleccionado == indice &&

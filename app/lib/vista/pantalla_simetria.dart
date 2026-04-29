@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_simetria.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle GEO.07: el niño ve una figura con un eje (vertical u
 /// horizontal) sobreimpreso, y decide si la figura es simétrica
@@ -57,6 +59,7 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() {
@@ -106,9 +109,9 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -117,9 +120,8 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'SIMETRÍA',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderSimetria,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -131,7 +133,11 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
                       ),
                       const SizedBox(height: 22),
                       Text(
-                        '¿es simétrica respecto al eje ${_problema.eje == EjeSimetria.vertical ? "vertical" : "horizontal"}?',
+                        _problema.eje == EjeSimetria.vertical
+                            ? AppLocalizations.of(contexto)
+                                .simetriaPreguntaVertical
+                            : AppLocalizations.of(contexto)
+                                .simetriaPreguntaHorizontal,
                         style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 17,
@@ -150,7 +156,8 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _BotonSiNo(
-                            etiqueta: 'sí',
+                            etiqueta:
+                                AppLocalizations.of(contexto).respuestaSi,
                             seleccionado: _eleccion == true,
                             marcarCorrecto: _revelado &&
                                 _eleccion == true &&
@@ -162,7 +169,8 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
                           ),
                           const SizedBox(width: 22),
                           _BotonSiNo(
-                            etiqueta: 'no',
+                            etiqueta:
+                                AppLocalizations.of(contexto).respuestaNo,
                             seleccionado: _eleccion == false,
                             marcarCorrecto: _revelado &&
                                 _eleccion == false &&

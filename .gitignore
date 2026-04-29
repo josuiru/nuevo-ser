@@ -42,3 +42,23 @@ app/coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# Assets sonoros pesados (descargables vía scripts/sonido/bajar_sonidos.sh).
+# Los .md (CREDITOS.md, LEEME.md) se commitean para mantener trazabilidad.
+app/assets/sonido/_pack_owlishmedia/
+app/assets/sonido/_owlishmedia.zip
+app/assets/sonido/ambient/*.wav
+app/assets/sonido/ambient/*.ogg
+app/assets/sonido/ambient/*.mp3
+app/assets/sonido/musica/*.wav
+app/assets/sonido/musica/*.ogg
+app/assets/sonido/musica/*.mp3
+app/assets/sonido/efectos/*.wav
+app/assets/sonido/efectos/*.ogg
+app/assets/sonido/efectos/*.mp3
+app/assets/sonido/narrativos/*.wav
+app/assets/sonido/narrativos/*.ogg
+app/assets/sonido/narrativos/*.mp3
+
+# Salidas del empaquetador del paquete sonoro descargable.
+dist/

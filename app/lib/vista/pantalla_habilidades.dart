@@ -10,7 +10,11 @@ import '../dominio/habilidad.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
 import '../dominio/tutor/servicio_tutor.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/textos_enums.dart';
+import '../main.dart' show localeAppUnoRoto;
 import '../nucleo/paleta.dart';
+import 'pantalla_acerca_de.dart';
 import 'pantalla_ajustes_sonido.dart';
 import 'pantalla_cuenta.dart';
 import 'pantalla_perfiles.dart';
@@ -74,13 +78,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'habilidades',
-          style: TextStyle(
+        title: Text(
+          textos.habTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
             letterSpacing: 4,
@@ -88,9 +93,13 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           ),
         ),
         iconTheme: const IconThemeData(color: PaletaNeon.textoTenue),
+        // Sólo las tres acciones más usadas son visibles. El resto
+        // (ritmo, idioma, sync, tutor debug, reiniciar) viven en el
+        // menú overflow `⋮` para que el AppBar no se monte sobre el
+        // título en móviles estrechos.
         actions: [
           IconButton(
-            tooltip: 'Cambiar de perfil',
+            tooltip: textos.habTooltipPerfiles,
             onPressed: _abrirPantallaPerfiles,
             icon: Icon(
               Icons.switch_account,
@@ -98,7 +107,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             ),
           ),
           IconButton(
-            tooltip: 'Ajustes de sonido',
+            tooltip: textos.habTooltipSonido,
             onPressed: _abrirAjustesSonido,
             icon: Icon(
               Icons.volume_up_outlined,
@@ -106,44 +115,66 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             ),
           ),
           IconButton(
-            tooltip: 'Cambiar ritmo del juego',
-            onPressed: _abrirDialogoRitmo,
-            icon: Icon(
-              Icons.speed,
-              color: PaletaNeon.textoTenue.withOpacity(0.7),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Cuenta (vincular / sesión)',
+            tooltip: textos.habTooltipCuenta,
             onPressed: _abrirCuenta,
             icon: Icon(
               Icons.account_circle_outlined,
               color: PaletaNeon.textoTenue.withOpacity(0.7),
             ),
           ),
-          IconButton(
-            tooltip: 'Sincronizar progreso',
-            onPressed: _sincronizar,
-            icon: Icon(
-              Icons.cloud_sync_outlined,
-              color: PaletaNeon.textoTenue.withOpacity(0.7),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Probar tutor IA (debug)',
-            onPressed: _probarTutor,
-            icon: Icon(
-              Icons.chat_bubble_outline,
-              color: PaletaNeon.textoTenue.withOpacity(0.7),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Reiniciar progreso (debug)',
-            onPressed: _confirmarYReiniciar,
-            icon: Icon(
-              Icons.refresh,
-              color: PaletaNeon.textoTenue.withOpacity(0.7),
-            ),
+          PopupMenuButton<String>(
+            tooltip: 'Más opciones',
+            color: PaletaNeon.fondoMedio,
+            iconColor: PaletaNeon.textoTenue.withOpacity(0.7),
+            onSelected: (id) {
+              switch (id) {
+                case 'ritmo':
+                  _abrirDialogoRitmo();
+                case 'idioma':
+                  _abrirDialogoIdioma();
+                case 'acerca':
+                  _abrirAcercaDe();
+                case 'sync':
+                  _sincronizar();
+                case 'tutor':
+                  _probarTutor();
+                case 'reiniciar':
+                  _confirmarYReiniciar();
+              }
+            },
+            itemBuilder: (_) => [
+              _itemMenu(
+                id: 'ritmo',
+                icono: Icons.speed,
+                etiqueta: textos.habTooltipRitmo,
+              ),
+              _itemMenu(
+                id: 'idioma',
+                icono: Icons.translate,
+                etiqueta: textos.habTooltipIdioma,
+              ),
+              _itemMenu(
+                id: 'acerca',
+                icono: Icons.info_outline,
+                etiqueta: 'Acerca de Uno Roto',
+              ),
+              const PopupMenuDivider(),
+              _itemMenu(
+                id: 'sync',
+                icono: Icons.cloud_sync_outlined,
+                etiqueta: textos.habTooltipSync,
+              ),
+              _itemMenu(
+                id: 'tutor',
+                icono: Icons.chat_bubble_outline,
+                etiqueta: textos.habTooltipDebugTutor,
+              ),
+              _itemMenu(
+                id: 'reiniciar',
+                icono: Icons.refresh,
+                etiqueta: textos.habTooltipReiniciar,
+              ),
+            ],
           ),
         ],
       ),
@@ -152,6 +183,32 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
               child: CircularProgressIndicator(color: PaletaNeon.azulNeon),
             )
           : _listaPorDominio(),
+    );
+  }
+
+  /// Helper para construir cada entrada del menú overflow del AppBar.
+  /// Centraliza estilo (icono tenue + texto pequeño) para que las
+  /// cinco entradas debug se vean iguales.
+  PopupMenuItem<String> _itemMenu({
+    required String id,
+    required IconData icono,
+    required String etiqueta,
+  }) {
+    return PopupMenuItem<String>(
+      value: id,
+      child: Row(
+        children: [
+          Icon(icono, size: 16, color: PaletaNeon.textoTenue),
+          const SizedBox(width: 12),
+          Text(
+            etiqueta,
+            style: const TextStyle(
+              color: PaletaNeon.textoPrincipal,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -184,13 +241,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
   Future<void> _abrirDialogoRitmo() async {
     final actual = await widget.repositorio.cargarRitmo();
     if (!mounted) return;
+    final textos = AppLocalizations.of(context);
     final elegido = await showDialog<RitmoJuego>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'Ritmo del juego',
-          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        title: Text(
+          textos.habRitmoTitulo,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -201,14 +259,14 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
                 groupValue: actual,
                 activeColor: PaletaNeon.violetaNeon,
                 title: Text(
-                  ritmo.nombreVisible,
+                  ritmo.nombreLocalizado(textos),
                   style: const TextStyle(
                     color: PaletaNeon.textoPrincipal,
                     fontSize: 14,
                   ),
                 ),
                 subtitle: Text(
-                  ritmo.descripcionCorta,
+                  ritmo.descripcionLocalizada(textos),
                   style: TextStyle(
                     color: PaletaNeon.textoTenue.withOpacity(0.75),
                     fontSize: 11,
@@ -228,7 +286,9 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         backgroundColor: PaletaNeon.fondoMedio,
         duration: const Duration(seconds: 3),
         content: Text(
-          'Ritmo "${elegido.nombreVisible}". Se aplicará en la próxima escena.',
+          AppLocalizations.of(context).habRitmoSnack(
+            elegido.nombreLocalizado(AppLocalizations.of(context)),
+          ),
           style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
       ),
@@ -243,36 +303,102 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     setState(() {});
   }
 
+  Future<void> _abrirAcercaDe() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => const PantallaAcercaDe(),
+    ));
+  }
+
+  /// Abre el selector de idioma. Persiste la elección como clave global
+  /// `uroto.idioma_app` y empuja el nuevo locale al `ValueNotifier` que
+  /// alimenta `MaterialApp` — todos los textos `AppLocalizations.of(...)`
+  /// rebuilden al instante. Las etiquetas del diálogo van en su propio
+  /// idioma (Castellano/Euskara/Català) para que el niño las reconozca
+  /// aunque haya elegido mal antes.
+  Future<void> _abrirDialogoIdioma() async {
+    final actual = await widget.repositorio.cargarIdiomaApp() ?? 'es';
+    if (!mounted) return;
+    final textos = AppLocalizations.of(context);
+    final elegido = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: Text(
+          textos.habIdiomaTitulo,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final entrada in const [
+              ('es', 'Castellano'),
+              ('eu', 'Euskara'),
+              ('ca', 'Català'),
+            ])
+              RadioListTile<String>(
+                value: entrada.$1,
+                groupValue: actual,
+                activeColor: PaletaNeon.violetaNeon,
+                title: Text(
+                  entrada.$2,
+                  style: const TextStyle(
+                    color: PaletaNeon.textoPrincipal,
+                    fontSize: 14,
+                  ),
+                ),
+                onChanged: (v) => Navigator.of(ctx).pop(v),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (elegido == null || elegido == actual) return;
+    await widget.repositorio.guardarIdiomaApp(elegido);
+    localeAppUnoRoto.value = Locale(elegido);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: PaletaNeon.fondoMedio,
+        duration: const Duration(seconds: 3),
+        content: Text(
+          AppLocalizations.of(context).habIdiomaSnack,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+      ),
+    );
+  }
+
   /// Sincroniza el progreso usando el token guardado. Si no hay
   /// cuenta vinculada o el token caducó, redirige al usuario a la
   /// pantalla de cuenta para que vincule o reinicie sesión —
   /// preferimos no bloquearlo con un mensaje técnico.
   Future<void> _sincronizar() async {
     final mensajero = ScaffoldMessenger.of(context);
+    final textos = AppLocalizations.of(context);
     final token = await widget.repositorio.cargarTokenBackend();
     if (token == null || token.isEmpty) {
       mensajero.showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
           content: Text(
-            'Vincula primero una cuenta desde el icono de perfil.',
-            style: TextStyle(color: PaletaNeon.textoTenue),
+            textos.habSyncFaltaToken,
+            style: const TextStyle(color: PaletaNeon.textoTenue),
           ),
         ),
       );
       return;
     }
     final api = ClienteApi(
-      urlBase: ConfigApi.urlBaseLocal,
-      hostOverride: ConfigApi.hostLocal,
+      urlBase: ConfigApi.urlBase,
+      hostOverride: ConfigApi.hostOverride,
     );
     try {
       mensajero.showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
           content: Text(
-            'Sincronizando…',
-            style: TextStyle(color: PaletaNeon.textoTenue),
+            textos.habSyncEnProgreso,
+            style: const TextStyle(color: PaletaNeon.textoTenue),
           ),
         ),
       );
@@ -298,9 +424,11 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           backgroundColor: PaletaNeon.fondoMedio,
           duration: const Duration(seconds: 6),
           content: Text(
-            'Sync OK. Esquirlas ${esquirlas ?? 0} · '
-            '${flagsServidor.length} flags · '
-            '$habilidadesServidor habilidades.',
+            textos.habSyncResumen(
+              esquirlas ?? 0,
+              flagsServidor.length,
+              habilidadesServidor,
+            ),
             style: const TextStyle(color: PaletaNeon.exitoSuave),
           ),
         ),
@@ -315,12 +443,12 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
         await widget.repositorio.borrarTokenBackend();
         if (!mounted) return;
         mensajero.showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: PaletaNeon.fondoMedio,
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
             content: Text(
-              'La sesión caducó. Ábrela desde "Cuenta" e inicia sesión otra vez.',
-              style: TextStyle(color: PaletaNeon.rosaAcento),
+              textos.habSyncSesionCaduco,
+              style: const TextStyle(color: PaletaNeon.rosaAcento),
             ),
           ),
         );
@@ -330,7 +458,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
             backgroundColor: PaletaNeon.fondoMedio,
             duration: const Duration(seconds: 6),
             content: Text(
-              'API ${e.codigo}: ${e.mensaje}',
+              textos.habApiError(e.codigo, e.mensaje),
               style: const TextStyle(color: PaletaNeon.rosaAcento),
             ),
           ),
@@ -344,7 +472,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
           backgroundColor: PaletaNeon.fondoMedio,
           duration: const Duration(seconds: 6),
           content: Text(
-            'Red: $e',
+            textos.habRedError(e.toString()),
             style: const TextStyle(color: PaletaNeon.rosaAcento),
           ),
         ),
@@ -361,14 +489,15 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
   /// _probarSync para conseguir uno.
   Future<void> _probarTutor() async {
     final mensajero = ScaffoldMessenger.of(context);
+    final textos = AppLocalizations.of(context);
     final token = await widget.repositorio.cargarTokenBackend();
     if (token == null || token.isEmpty) {
       mensajero.showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: PaletaNeon.fondoMedio,
           content: Text(
-            'Vincula primero una cuenta desde el icono de perfil.',
-            style: TextStyle(color: PaletaNeon.rosaAcento),
+            textos.habSyncFaltaToken,
+            style: const TextStyle(color: PaletaNeon.rosaAcento),
           ),
         ),
       );
@@ -378,8 +507,8 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     final servicio = ServicioTutor(
       cache: CacheTutor(),
       cliente: ClienteTutor(
-        urlBase: ConfigApi.urlBaseLocal,
-        hostOverride: ConfigApi.hostLocal,
+        urlBase: ConfigApi.urlBase,
+        hostOverride: ConfigApi.hostOverride,
       ),
       repositorio: widget.repositorio,
       proveedorToken: () => token,
@@ -396,32 +525,35 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
   }
 
   Future<void> _confirmarYReiniciar() async {
+    final textos = AppLocalizations.of(context);
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (contextoDialog) => AlertDialog(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'Reiniciar progreso',
-          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        title: Text(
+          textos.habReiniciarTitulo,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
-        content: const Text(
-          'Borra escenas vistas, habilidades, esquirlas y rango. '
-          'La próxima vez que abras la app, empezarás desde la apertura.',
-          style: TextStyle(color: PaletaNeon.textoTenue),
+        content: Text(
+          textos.habReiniciarCuerpo,
+          style: const TextStyle(color: PaletaNeon.textoTenue),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(contextoDialog).pop(false),
-            child: const Text(
-              'cancelar',
-              style: TextStyle(color: PaletaNeon.textoTenue, letterSpacing: 2),
+            child: Text(
+              textos.comunCancelar,
+              style: const TextStyle(
+                color: PaletaNeon.textoTenue,
+                letterSpacing: 2,
+              ),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(contextoDialog).pop(true),
-            child: const Text(
-              'reiniciar',
-              style: TextStyle(
+            child: Text(
+              textos.habReiniciarBoton,
+              style: const TextStyle(
                 color: PaletaNeon.rosaAcento,
                 letterSpacing: 2,
               ),
@@ -434,13 +566,13 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     await widget.repositorio.reiniciar();
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         backgroundColor: PaletaNeon.fondoMedio,
         content: Text(
-          'Progreso reiniciado. Cierra la app y vuélvela a abrir.',
-          style: TextStyle(color: PaletaNeon.textoPrincipal),
+          textos.habReiniciarHecho,
+          style: const TextStyle(color: PaletaNeon.textoPrincipal),
         ),
-        duration: Duration(seconds: 5),
+        duration: const Duration(seconds: 5),
       ),
     );
   }
@@ -522,7 +654,9 @@ class _CabeceraResumen extends StatelessWidget {
           Row(
             children: [
               Text(
-                rango.nombreVisible.toUpperCase(),
+                rango
+                    .nombreLocalizado(AppLocalizations.of(contexto))
+                    .toUpperCase(),
                 style: const TextStyle(
                   color: PaletaNeon.azulNeon,
                   fontSize: 14,
@@ -532,7 +666,7 @@ class _CabeceraResumen extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '$esquirlas esquirlas',
+                AppLocalizations.of(contexto).habEsquirlasResumen(esquirlas),
                 style: const TextStyle(
                   color: PaletaNeon.textoTenue,
                   fontSize: 12,
@@ -585,24 +719,25 @@ class _ChipNivel extends StatelessWidget {
     }
   }
 
-  String _etiqueta() {
+  String _etiqueta(AppLocalizations textos) {
     switch (nivel) {
       case NivelMaestria.inexplorada:
-        return 'sin tocar';
+        return textos.habNivelInexplorada;
       case NivelMaestria.introducida:
-        return 'introducida';
+        return textos.habNivelIntroducida;
       case NivelMaestria.enDesarrollo:
-        return 'en desarrollo';
+        return textos.habNivelEnDesarrollo;
       case NivelMaestria.competente:
-        return 'competente';
+        return textos.habNivelCompetente;
       case NivelMaestria.maestria:
-        return 'maestría';
+        return textos.habNivelMaestria;
     }
   }
 
   @override
   Widget build(BuildContext contexto) {
     final color = _colorPorNivel();
+    final textos = AppLocalizations.of(contexto);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -616,7 +751,7 @@ class _ChipNivel extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          '$cantidad ${_etiqueta()}',
+          textos.habChipNivel(cantidad, _etiqueta(textos)),
           style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 12,
@@ -741,9 +876,11 @@ class _FilaHabilidad extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${nivel.nombreCastellano} '
-                  '· precisión ${(precision * 100).toStringAsFixed(0)}% '
-                  '· $exposiciones intentos',
+                  AppLocalizations.of(contexto).habFilaResumen(
+                    nivel.nombreLocalizado(AppLocalizations.of(contexto)),
+                    (precision * 100).round(),
+                    exposiciones,
+                  ),
                   style: TextStyle(
                     color: color,
                     fontSize: 11,

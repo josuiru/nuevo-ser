@@ -164,6 +164,49 @@ void main() {
       expect(await servicio.deberiaOfrecer(id), isFalse);
     });
 
+    test(
+      'rechazo simulado: registrarOferta tras "no, sigo solo" frena reofertas',
+      () async {
+        final servicio = crearServicio(
+          mock: MockClient((_) async => http.Response('{}', 200)),
+        );
+        const id = 'FR.05';
+        // 3 fallos previos → la pantalla mostraría la oferta.
+        for (var i = 0; i < fallosConsecutivosParaOfrecer; i++) {
+          await servicio.registrarResultado(idHabilidad: id, acierto: false);
+        }
+        final ahora = DateTime(2026, 4, 27, 12, 0);
+        expect(await servicio.deberiaOfrecer(id, ahora: ahora), isTrue);
+        // El niño elige "no, sigo solo". pantalla_caza arranca el
+        // cooldown igualmente, como si hubiera entrado al tutor.
+        await servicio.registrarOferta(id, ahora: ahora);
+        // Sigue fallando; no debe reaparecer la oferta hasta que
+        // pase el cooldown.
+        for (var i = 0; i < fallosConsecutivosParaOfrecer; i++) {
+          await servicio.registrarResultado(idHabilidad: id, acierto: false);
+        }
+        expect(
+          await servicio.deberiaOfrecer(
+            id,
+            ahora: ahora.add(const Duration(minutes: 2)),
+          ),
+          isFalse,
+          reason:
+              'Justo después del rechazo, la oferta NO debe volver a '
+              'salir aunque siga atascado.',
+        );
+        expect(
+          await servicio.deberiaOfrecer(
+            id,
+            ahora: ahora.add(cooldownEntreOfertas),
+          ),
+          isTrue,
+          reason:
+              'Pasado el cooldown, si sigue atascado la oferta vuelve.',
+        );
+      },
+    );
+
     test('registrarOferta arranca cooldown', () async {
       final servicio = crearServicio(
         mock: MockClient((_) async => http.Response('{}', 200)),
@@ -208,5 +251,66 @@ void main() {
       expect(await servicio.deberiaOfrecer('FR.05'), isTrue);
       expect(await servicio.deberiaOfrecer('FR.06'), isFalse);
     });
+
+    // ─── Flujo de pantalla_caza ───
+    // pantalla_caza._alTocarFragmento registra (intentos-1) fallos
+    // PREVIOS al resultado final, evalúa la oferta del tutor con el
+    // contador en su pico, y luego registra acierto/fallo final. Estos
+    // tests congelan ese contrato: el motor del tutor no necesita saber
+    // si los fallos vienen del mismo Fragmento o de varios consecutivos.
+
+    test(
+      'flujo caza: 4 intentos con captura final → ofrece antes y resetea después',
+      () async {
+        final servicio = crearServicio(
+          mock: MockClient((_) async => http.Response('{}', 200)),
+        );
+        const id = 'FR.05';
+        // pantalla_caza registra (intentos-1) = 3 fallos previos.
+        for (var i = 0; i < 3; i++) {
+          await servicio.registrarResultado(idHabilidad: id, acierto: false);
+        }
+        // En este punto se evalúa la oferta — sí, está atascado.
+        expect(await servicio.deberiaOfrecer(id), isTrue);
+        // Resultado final: capturó. El acierto resetea el contador.
+        await servicio.registrarResultado(idHabilidad: id, acierto: true);
+        expect(await servicio.deberiaOfrecer(id), isFalse);
+      },
+    );
+
+    test(
+      'flujo caza: 5 intentos con escape → ofrece y suma fallo final',
+      () async {
+        final servicio = crearServicio(
+          mock: MockClient((_) async => http.Response('{}', 200)),
+        );
+        const id = 'FR.05';
+        // (intentos-1) = 4 fallos previos.
+        for (var i = 0; i < 4; i++) {
+          await servicio.registrarResultado(idHabilidad: id, acierto: false);
+        }
+        expect(await servicio.deberiaOfrecer(id), isTrue);
+        // Escape: el resultado final es otro fallo más.
+        await servicio.registrarResultado(idHabilidad: id, acierto: false);
+        // Sigue por encima del umbral (no hay cooldown porque la oferta
+        // aún no se ha registrado como mostrada).
+        expect(await servicio.deberiaOfrecer(id), isTrue);
+      },
+    );
+
+    test(
+      'flujo caza: 2 intentos con captura no dispara oferta',
+      () async {
+        final servicio = crearServicio(
+          mock: MockClient((_) async => http.Response('{}', 200)),
+        );
+        const id = 'FR.05';
+        // (intentos-1) = 1 fallo previo, por debajo del umbral.
+        await servicio.registrarResultado(idHabilidad: id, acierto: false);
+        expect(await servicio.deberiaOfrecer(id), isFalse);
+        await servicio.registrarResultado(idHabilidad: id, acierto: true);
+        expect(await servicio.deberiaOfrecer(id), isFalse);
+      },
+    );
   });
 }

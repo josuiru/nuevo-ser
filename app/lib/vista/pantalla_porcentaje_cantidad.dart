@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_porcentaje_cantidad.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle PROP.03: el niño ve "el 25 % de 80" y elige el resultado
 /// entre cuatro candidatos. Mecánica de cálculo directo con trampas
@@ -61,6 +63,7 @@ class _PantallaPorcentajeCantidadState
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -107,9 +110,9 @@ class _PantallaPorcentajeCantidadState
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -118,9 +121,9 @@ class _PantallaPorcentajeCantidadState
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'PORCENTAJE',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(contexto).puzzleHeaderPorcentaje,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -131,9 +134,9 @@ class _PantallaPorcentajeCantidadState
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'calcula',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCalcula,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -207,7 +210,8 @@ class _TarjetaEnunciado extends StatelessWidget {
         ],
       ),
       child: Text(
-        'el $porcentaje % de $cantidad',
+        AppLocalizations.of(contexto)
+            .puzzleInstrPorcentajeDe(porcentaje, cantidad),
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: PaletaNeon.textoPrincipal,

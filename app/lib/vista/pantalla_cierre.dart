@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
 import 'sora_presencia.dart';
@@ -84,12 +85,14 @@ class _PantallaCierreState extends State<PantallaCierre>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _BotonCierre(
-                              etiqueta: 'Seguir practicando',
+                              etiqueta: AppLocalizations.of(context)
+                                  .cierreBotonSeguir,
                               acentuado: false,
                               alPulsar: widget.alSeguirPracticando,
                             ),
                             _BotonCierre(
-                              etiqueta: 'Buenas noches',
+                              etiqueta: AppLocalizations.of(context)
+                                  .cierreBotonBuenasNoches,
                               acentuado: true,
                               alPulsar: () {
                                 SystemNavigator.pop();
@@ -100,11 +103,11 @@ class _PantallaCierreState extends State<PantallaCierre>
                         ),
                       )
                     else
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 40),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 40),
                         child: Text(
-                          'toca para continuar',
-                          style: TextStyle(
+                          AppLocalizations.of(context).tocaParaContinuar,
+                          style: const TextStyle(
                             color: PaletaNeon.textoTenue,
                             fontSize: 12,
                             letterSpacing: 1.5,

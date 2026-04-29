@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_divisibilidad.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle DIV.03/DIV.01: el niño ve un número y un divisor; decide si
 /// es divisible (DIV.03/04) o si es múltiplo (DIV.01) con un toque "sí"
@@ -66,6 +68,7 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -112,9 +115,9 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -165,7 +168,7 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
                         children: [
                           Expanded(
                             child: _BotonRespuesta(
-                              etiqueta: 'no',
+                              etiqueta: AppLocalizations.of(contexto).respuestaNo,
                               colorPrincipal: PaletaNeon.rosaAcento,
                               seleccionado: _respuestaDada == false,
                               marcarCorrecto: _revelado &&
@@ -180,7 +183,7 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
                           const SizedBox(width: 16),
                           Expanded(
                             child: _BotonRespuesta(
-                              etiqueta: 'sí',
+                              etiqueta: AppLocalizations.of(contexto).respuestaSi,
                               colorPrincipal: PaletaNeon.exitoSuave,
                               seleccionado: _respuestaDada == true,
                               marcarCorrecto: _revelado &&

@@ -24,11 +24,20 @@ class SelectorHabilidades {
 
   /// Elige la siguiente habilidad a practicar. Devuelve null si
   /// ninguna está disponible (nunca en la práctica del MVP).
+  ///
+  /// En modo entrenamiento (`dominioFiltrado != null`), las candidatas
+  /// se restringen a las habilidades de ese dominio (FR/DEC/PROP/…) en
+  /// lugar de a las del distrito. La penalización de anti-repetición y
+  /// el bonus por nivel siguen aplicando, pero la bonificación de
+  /// pertenencia al distrito se desactiva — en entrenamiento el niño
+  /// elige el dominio explícitamente, el distrito ambiental no manda.
   Future<String?> elegirSiguienteHabilidad({
     required Distrito distrito,
+    String? dominioFiltrado,
   }) async {
-    final candidatas = catalogo
-        .delDistrito(distrito.identificador)
+    final candidatas = (dominioFiltrado != null
+            ? catalogo.delDominio(dominioFiltrado)
+            : catalogo.delDistrito(distrito.identificador))
         .where((h) => skillsConPuzzleImplementado.contains(h.identificador))
         .toList();
 
@@ -51,6 +60,7 @@ class SelectorHabilidades {
         habilidad: habilidad,
         estado: estado,
         distrito: distrito,
+        modoEntrenamiento: dominioFiltrado != null,
       );
     }
 
@@ -90,6 +100,7 @@ class SelectorHabilidades {
     required Habilidad habilidad,
     required EstadoHabilidad estado,
     required Distrito distrito,
+    bool modoEntrenamiento = false,
   }) {
     double puntos = 0;
 
@@ -121,8 +132,10 @@ class SelectorHabilidades {
     }
 
     // Bonificación si la habilidad pertenece específicamente al
-    // distrito actual (frente a "todos").
-    if (habilidad.distritos.contains(distrito.identificador)) {
+    // distrito actual (frente a "todos"). En entrenamiento el niño
+    // elige el dominio, no el distrito, así que no aplica.
+    if (!modoEntrenamiento &&
+        habilidad.distritos.contains(distrito.identificador)) {
       puntos += 2;
     }
 

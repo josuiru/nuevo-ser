@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../dominio/tutor/filtro_seguridad.dart';
 import '../dominio/tutor/servicio_tutor.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 
 /// Pantalla del Tutor IA. Una sola conversación por sesión, ligada a
@@ -97,12 +98,13 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
         title: Text(
-          'pista — ${widget.nombreHabilidad.toLowerCase()}',
+          textos.tutorCabecera(widget.nombreHabilidad.toLowerCase()),
           style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
@@ -261,13 +263,13 @@ class _EstadoVacio extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Text(
-          'Cuéntame qué te ha trabado.\nCon tus palabras.',
+          AppLocalizations.of(contexto).tutorEstadoVacio,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             color: PaletaNeon.textoTenue,
             fontSize: 16,
             height: 1.5,
@@ -291,6 +293,7 @@ class _Compositor extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
       decoration: const BoxDecoration(
@@ -311,9 +314,9 @@ class _Compositor extends StatelessWidget {
               maxLength: longitudMaximaPregunta,
               cursorColor: PaletaNeon.violetaNeon,
               style: const TextStyle(color: PaletaNeon.textoPrincipal),
-              decoration: const InputDecoration(
-                hintText: 'pregunta',
-                hintStyle: TextStyle(color: PaletaNeon.textoTenue),
+              decoration: InputDecoration(
+                hintText: textos.tutorInputPista,
+                hintStyle: const TextStyle(color: PaletaNeon.textoTenue),
                 counterText: '',
                 border: InputBorder.none,
               ),
@@ -321,7 +324,7 @@ class _Compositor extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            tooltip: 'preguntar',
+            tooltip: textos.tutorBotonPreguntar,
             onPressed: habilitado ? alEnviar : null,
             icon: const Icon(
               Icons.send,

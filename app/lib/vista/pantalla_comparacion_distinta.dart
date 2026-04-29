@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_comparacion_distinta.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.07: el niño ve dos fracciones sin nada en común
 /// (denominadores y numeradores distintos) y toca la mayor. El sesgo
@@ -66,6 +68,7 @@ class _PantallaComparacionDistintaState
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -112,9 +115,9 @@ class _PantallaComparacionDistintaState
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -123,9 +126,8 @@ class _PantallaComparacionDistintaState
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'COMPARAR',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderComparar,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -136,9 +138,9 @@ class _PantallaComparacionDistintaState
                         ],
                       ),
                       const SizedBox(height: 36),
-                      const Text(
-                        '¿cuál es mayor?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCualEsMayor,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 20,
                           letterSpacing: 1.4,
@@ -146,8 +148,7 @@ class _PantallaComparacionDistintaState
                         ),
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        'mira el valor, no las cifras',
+                      Text(AppLocalizations.of(contexto).puzzleInstrMiraValor,
                         style: TextStyle(
                           color: PaletaNeon.textoTenue.withOpacity(0.8),
                           fontSize: 12,

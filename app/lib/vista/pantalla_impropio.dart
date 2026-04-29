@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_impropio.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de Familia E (Impropios). Se muestra una fracción impropia
 /// (7/4, 9/5) y el niño elige su forma mixta entre cuatro candidatos.
@@ -61,6 +63,7 @@ class _PantallaImpropioState extends State<PantallaImpropio>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -107,9 +110,9 @@ class _PantallaImpropioState extends State<PantallaImpropio>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -118,9 +121,8 @@ class _PantallaImpropioState extends State<PantallaImpropio>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'IMPROPIO',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderImpropio,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -131,10 +133,10 @@ class _PantallaImpropioState extends State<PantallaImpropio>
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'escribe este Fragmento como mixto',
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrImpropio,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: PaletaNeon.textoTenue,
                           fontSize: 14,
                           letterSpacing: 1.2,

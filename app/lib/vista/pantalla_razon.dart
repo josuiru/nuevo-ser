@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_razon.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle PROP.01: el niño ve dos cantidades en un contexto concreto
 /// y elige la razón reducida que las relaciona entre cuatro candidatos.
@@ -55,6 +58,7 @@ class _PantallaRazonState extends State<PantallaRazon>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -101,9 +105,9 @@ class _PantallaRazonState extends State<PantallaRazon>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -112,9 +116,8 @@ class _PantallaRazonState extends State<PantallaRazon>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'RAZÓN',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderRazon,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -125,9 +128,9 @@ class _PantallaRazonState extends State<PantallaRazon>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        '¿qué razón los relaciona?',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrRazon,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
@@ -138,8 +141,14 @@ class _PantallaRazonState extends State<PantallaRazon>
                       _TarjetaContexto(
                         primero: _problema.primero,
                         segundo: _problema.segundo,
-                        etiquetaPrimero: _problema.etiquetaPrimero,
-                        etiquetaSegundo: _problema.etiquetaSegundo,
+                        etiquetaPrimero: traducirNarrativa(
+                          _problema.etiquetaPrimero,
+                          Localizations.localeOf(contexto),
+                        ),
+                        etiquetaSegundo: traducirNarrativa(
+                          _problema.etiquetaSegundo,
+                          Localizations.localeOf(contexto),
+                        ),
                       ),
                       const SizedBox(height: 32),
                       Expanded(

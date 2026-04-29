@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_fraccion_de_cantidad.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.22: el niño ve "los 3/5 de 20" y elige el resultado
 /// entre cuatro candidatos. Paralelo a PROP.04 (porcentaje de
@@ -60,6 +62,7 @@ class _PantallaFraccionDeCantidadState
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -106,9 +109,9 @@ class _PantallaFraccionDeCantidadState
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -117,9 +120,8 @@ class _PantallaFraccionDeCantidadState
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'PARTE',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderParte,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -130,9 +132,9 @@ class _PantallaFraccionDeCantidadState
                         ],
                       ),
                       const SizedBox(height: 32),
-                      const Text(
-                        'calcula',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrCalcula,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,

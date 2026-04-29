@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../datos/repositorio_progreso.dart';
 import 'capa_audio.dart';
 import 'catalogo_sonidos.dart';
+import 'localizador_audio.dart';
 
 /// Motor sonoro central. Gestiona un AudioPlayer por capa (ambient,
 /// música, efectos, narrativos) con volumen independiente y fades
@@ -113,7 +114,8 @@ class ServicioSonoro {
         ..setReleaseMode(ReleaseMode.release);
       final volumen = _volumenEfectivoDe(sonido.capa);
       await player.setVolume(volumen);
-      await player.play(AssetSource(_sinPrefijoAssets(sonido.rutaAsset)));
+      final fuente = await LocalizadorAudio.instancia.resolver(sonido.rutaAsset);
+      await player.play(fuente);
     } on PlatformException {
       _idsAusentes.add(identificador);
     } on FlutterError {
@@ -121,6 +123,34 @@ class ServicioSonoro {
     } catch (_) {
       // Cualquier otro error — lo silenciamos para no romper el juego.
       _idsAusentes.add(identificador);
+    }
+  }
+
+  /// Reproduce una voz TTS desde un asset directo (sin pasar por
+  /// CatalogoSonidos). Útil para el catálogo de voces, donde habrá
+  /// cientos de OGGs y catalogarlos uno a uno no escala. Va por la
+  /// capa narrativos para que active el ducking automático sobre
+  /// ambient/música mientras suena la frase.
+  ///
+  /// Si el asset no existe o el plugin de audio no está disponible
+  /// (tests, headless), falla en silencio igual que [reproducirEfecto].
+  Future<void> reproducirVoz(String rutaAsset) async {
+    if (!_inicializado || _modoSilencio) return;
+    if (_idsAusentes.contains(rutaAsset)) return;
+    try {
+      final player = AudioPlayer(
+        playerId: 'voz_${DateTime.now().microsecondsSinceEpoch}',
+      )..setReleaseMode(ReleaseMode.release);
+      final volumen = _volumenEfectivoDe(CapaAudio.narrativos);
+      await player.setVolume(volumen);
+      final fuente = await LocalizadorAudio.instancia.resolver(rutaAsset);
+      await player.play(fuente);
+    } on PlatformException {
+      _idsAusentes.add(rutaAsset);
+    } on FlutterError {
+      _idsAusentes.add(rutaAsset);
+    } catch (_) {
+      _idsAusentes.add(rutaAsset);
     }
   }
 
@@ -149,7 +179,8 @@ class ServicioSonoro {
         sonido.enBucle ? ReleaseMode.loop : ReleaseMode.stop,
       );
       await player.setVolume(0);
-      await player.play(AssetSource(_sinPrefijoAssets(sonido.rutaAsset)));
+      final fuente = await LocalizadorAudio.instancia.resolver(sonido.rutaAsset);
+      await player.play(fuente);
       _pistaActual[capa] = identificador;
       await _hacerFadeEntrada(capa, msFade);
     } on PlatformException {
@@ -183,6 +214,25 @@ class ServicioSonoro {
     await _aplicarVolumenesVigentes();
   }
 
+  /// Limpia el conjunto de identificadores marcados como ausentes y
+  /// detiene los loops activos para forzar una resolución fresca al
+  /// siguiente [reproducirLoop] / [reproducirEfecto]. Llamar tras
+  /// descargar o borrar el paquete sonoro: si la app arrancó sin paquete,
+  /// los ids fallaron una vez y quedaron cacheados como ausentes; sin
+  /// este reset nunca se volverían a intentar dentro de la misma sesión.
+  Future<void> reintentarSonidosAusentes() async {
+    _idsAusentes.clear();
+    // Invalidamos el cache de path por si el motor pudiera resolver
+    // a otro directorio (no es habitual, pero es trivial y robusto).
+    LocalizadorAudio.instancia.invalidar();
+    for (final capa in CapaAudio.values) {
+      _cancelarFade(capa);
+      final player = _reproductores[capa];
+      await player?.stop();
+      _pistaActual[capa] = null;
+    }
+  }
+
   /// Libera todos los players. Útil si el motor debe reiniciarse al
   /// cambiar de perfil tras operaciones destructivas — la política
   /// normal es recargar preferencias sin liberar.
@@ -200,14 +250,6 @@ class ServicioSonoro {
   }
 
   // ═══ Helpers internos ═══
-
-  String _sinPrefijoAssets(String ruta) {
-    // AssetSource ya añade 'assets/' como prefijo — si la ruta empieza
-    // con él, lo quitamos para no duplicarlo.
-    const prefijo = 'assets/';
-    if (ruta.startsWith(prefijo)) return ruta.substring(prefijo.length);
-    return ruta;
-  }
 
   double _volumenEfectivoDe(CapaAudio capa) {
     if (_modoSilencio) return 0;

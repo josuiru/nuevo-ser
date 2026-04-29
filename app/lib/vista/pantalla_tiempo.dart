@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../dominio/problema_tiempo.dart';
+import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle MED.03: el niño ve "3 h = ? min" o "2 h y 30 min = ? min" y
 /// elige el resultado entre cuatro candidatos. Sistema base 60 — la
@@ -55,6 +57,7 @@ class _PantallaTiempoState extends State<PantallaTiempo>
       });
     } else {
       HapticFeedback.vibrate();
+      contarFalloPuzzle();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -101,9 +104,9 @@ class _PantallaTiempoState extends State<PantallaTiempo>
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                'huir',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                                style: const TextStyle(
                                   color: PaletaNeon.textoTenue,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
@@ -112,9 +115,8 @@ class _PantallaTiempoState extends State<PantallaTiempo>
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'TIEMPO',
-                            style: TextStyle(
+                          Text(AppLocalizations.of(contexto).puzzleHeaderTiempo,
+                            style: const TextStyle(
                               color: PaletaNeon.textoTenue,
                               fontSize: 12,
                               letterSpacing: 3,
@@ -125,9 +127,9 @@ class _PantallaTiempoState extends State<PantallaTiempo>
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const Text(
-                        'pasa al destino indicado',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(contexto).puzzleInstrTiempo,
+                        style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 18,
                           letterSpacing: 1.2,
