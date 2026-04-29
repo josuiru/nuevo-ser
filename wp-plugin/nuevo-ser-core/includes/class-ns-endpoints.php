@@ -1,6 +1,13 @@
 <?php
 /**
- * Registra las rutas REST bajo /wp-json/uno-roto/v1/*.
+ * Registra las rutas REST bajo dos namespaces:
+ *
+ *   /wp-json/nuevo-ser/v1/*   ← canónico (a partir de C3)
+ *   /wp-json/uno-roto/v1/*    ← alias deprecado (clientes Flutter desplegados)
+ *
+ * Las rutas alias devuelven el header HTTP `Deprecation: true` (RFC 9745) más
+ * `Sunset` apuntando a v1.5 cuando se retiren. Internamente delegan al mismo
+ * callback — comportamiento funcional idéntico.
  *
  * Endpoints públicos (sin JWT):
  *   POST /register   email + password + nombre_tutor + nombre_nino
@@ -23,11 +30,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class NS_Endpoints {
 
-	private const NAMESPACE = 'uno-roto/v1';
+	/** Namespace canónico — usar en clientes nuevos. */
+	public const NAMESPACE_CANONICO = 'nuevo-ser/v1';
+
+	/** Namespace alias — vivo hasta v1.5 para clientes Flutter desplegados. */
+	public const NAMESPACE_ALIAS = 'uno-roto/v1';
 
 	public static function registrar(): void {
+		self::registrar_grupo( self::NAMESPACE_CANONICO );
+		self::registrar_grupo( self::NAMESPACE_ALIAS );
+		add_filter( 'rest_post_dispatch', array( __CLASS__, 'marcar_alias_deprecado' ), 10, 3 );
+	}
+
+	/**
+	 * Filtro `rest_post_dispatch`: si la ruta resuelta vive bajo el namespace
+	 * alias, añade `Deprecation: true` y un `Sunset` informativo a la respuesta.
+	 * Los clientes nuevos usan la canónica y no ven estos headers.
+	 */
+	public static function marcar_alias_deprecado( $response, $server, $request ) {
+		if ( ! ( $response instanceof WP_REST_Response ) ) {
+			return $response;
+		}
+		$ruta = (string) $request->get_route();
+		if ( str_starts_with( $ruta, '/' . self::NAMESPACE_ALIAS . '/' ) ) {
+			$response->header( 'Deprecation', 'true' );
+			$response->header( 'Sunset', 'planned for plugin v1.5' );
+			$ruta_canonica = '/' . self::NAMESPACE_CANONICO . substr( $ruta, strlen( self::NAMESPACE_ALIAS ) + 1 );
+			$response->header( 'Link', '<' . rest_url( ltrim( $ruta_canonica, '/' ) ) . '>; rel="successor-version"' );
+		}
+		return $response;
+	}
+
+	private static function registrar_grupo( string $namespace ): void {
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/register',
 			array(
 				'methods'             => 'POST',
@@ -37,7 +73,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/login',
 			array(
 				'methods'             => 'POST',
@@ -47,7 +83,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/progress',
 			array(
 				'methods'             => 'GET',
@@ -57,7 +93,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/sync/progress',
 			array(
 				'methods'             => 'POST',
@@ -67,7 +103,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/account',
 			array(
 				'methods'             => 'DELETE',
@@ -77,7 +113,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/tutor/explicar',
 			array(
 				'methods'             => 'POST',
@@ -87,7 +123,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/tutor/stats',
 			array(
 				'methods'             => 'GET',
@@ -97,7 +133,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/audio/manifest',
 			array(
 				'methods'             => 'GET',
@@ -112,7 +148,7 @@ class NS_Endpoints {
 		// tutor olvida cerrar.
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/auth/iniciar-sesion-tutor',
 			array(
 				'methods'             => 'POST',
@@ -123,7 +159,7 @@ class NS_Endpoints {
 
 		// Reset de contraseña: público, anti-enumeración + rate limit.
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/auth/solicitar-reset',
 			array(
 				'methods'             => 'POST',
@@ -134,7 +170,7 @@ class NS_Endpoints {
 		// La página HTML que el usuario abre desde el email. Acepta GET
 		// (formulario) y POST (envío del formulario).
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/auth/pagina-reset',
 			array(
 				'methods'             => array( 'GET', 'POST' ),
@@ -144,7 +180,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/tutor/ninos',
 			array(
 				'methods'             => 'GET',
@@ -154,7 +190,7 @@ class NS_Endpoints {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			$namespace,
 			'/tutor/progreso-nino/(?P<nino_id>\d+)',
 			array(
 				'methods'             => 'GET',

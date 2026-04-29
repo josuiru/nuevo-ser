@@ -51,7 +51,9 @@ class DescargaAudioFallida extends EstadoDescargaAudio {
   const DescargaAudioFallida(this.mensaje);
 }
 
-/// Manifest que el servidor expone en `/wp-json/uno-roto/v1/audio/manifest`.
+/// Manifest que el servidor expone en `/wp-json/nuevo-ser/v1/audio/manifest`
+/// (canónico desde C3; `/wp-json/uno-roto/v1/audio/manifest` sigue funcionando
+/// como alias deprecado hasta v1.5).
 class ManifestPaqueteAudio {
   final int version;
   final String urlPaquete;

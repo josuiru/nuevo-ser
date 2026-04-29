@@ -13,7 +13,7 @@ void main() {
     final mock = MockClient((peticion) async {
       expect(peticion.method, 'POST');
       expect(peticion.url.toString(),
-          '$urlBase/wp-json/uno-roto/v1/register');
+          '$urlBase/wp-json/nuevo-ser/v1/register');
       expect(peticion.headers['Content-Type'], 'application/json');
       final cuerpo = jsonDecode(peticion.body);
       expect(cuerpo['email'], 'padre@example.org');

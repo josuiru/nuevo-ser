@@ -29,7 +29,7 @@ class ClienteTutor {
 
   void cerrar() => _cliente.close();
 
-  Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/uno-roto/v1$ruta');
+  Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/nuevo-ser/v1$ruta');
 
   Map<String, String> _cabeceras(String token) {
     // Necesario para esquivar la regla 920330 de mod_security

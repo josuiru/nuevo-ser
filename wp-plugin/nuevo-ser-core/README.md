@@ -6,7 +6,7 @@ Backend compartido de **Colección Nuevo Ser Kids**: sync, autenticación y tuto
 
 ## Estado
 
-v0.5 — refactor en curso. Chunk 2 del plan: rename de `uno-roto-core` → `nuevo-ser-core` con prefijo `NS_*` en clases y constantes. Tablas, endpoints y nombre de la opción `uroto_core_version` se mantienen sin cambio en este chunk (se renombran en C3/C4).
+v0.5 — refactor en curso. Chunks 2-3 del plan: rename de `uno-roto-core` → `nuevo-ser-core` con prefijo `NS_*` (C2) y endpoints duales `/uno-roto/v1/*` (alias deprecado) ↔ `/nuevo-ser/v1/*` (canónico) (C3). Tablas y nombre de la opción `uroto_core_version` se mantienen sin cambio (se renombran en C4).
 
 ## Instalación
 
@@ -21,9 +21,11 @@ v0.5 — refactor en curso. Chunk 2 del plan: rename de `uno-roto-core` → `nue
    **Backward compat**: si tu wp-config.php ya define `UROTO_JWT_SECRET` o `UROTO_ANTHROPIC_KEY` (del plugin antiguo), el nuevo plugin las promueve automáticamente — no hace falta editar wp-config.php al actualizar.
 
 3. Activa desde el panel. Si el plugin viejo `uno-roto-core` estaba activo, se desactivará automáticamente. Las tablas se crean idempotentes vía `dbDelta`.
-4. Verifica endpoints: `curl https://tu-wp.example.org/wp-json/uno-roto/v1/login -I`.
-
-   Las rutas REST mantienen el prefijo `/wp-json/uno-roto/v1/*` durante este refactor. En C3 se añade el prefijo canónico `/wp-json/nuevo-ser/v1/*` y `/uno-roto/v1/*` queda como alias deprecado.
+4. Verifica endpoints (canónico):
+   ```
+   curl https://tu-wp.example.org/wp-json/nuevo-ser/v1/login -I
+   ```
+   El alias deprecado `/wp-json/uno-roto/v1/login` también responde — devuelve el header `Deprecation: true` y un `Link: <…>; rel="successor-version"` apuntando al canónico, pero el cuerpo de la respuesta es idéntico. Vivirá hasta v1.5 para no romper APKs de testers desplegados.
 
 ## Tablas creadas
 
@@ -38,7 +40,7 @@ Todas con prefijo `{$wpdb->prefix}uroto_` (renombrado a `wp_ns_*` en C4 con migr
 
 ## Endpoints REST
 
-Todos bajo `/wp-json/uno-roto/v1/` durante este chunk. (Canónico `/wp-json/nuevo-ser/v1/*` entra en C3.)
+Todos bajo `/wp-json/nuevo-ser/v1/` (canónico). El alias `/wp-json/uno-roto/v1/*` sigue activo para clientes desplegados; sus respuestas llevan `Deprecation: true` y `Link: …; rel="successor-version"` apuntando al canónico.
 
 ### Públicos
 
@@ -101,7 +103,7 @@ Doble capa de seguridad: el cliente Flutter filtra antes de enviar y el plugin f
 | Clases PHP | `UROTO_JWT`, `UROTO_Tutor`… | `NS_JWT`, `NS_Tutor`… | C2 |
 | Constantes PHP | `UROTO_CORE_VERSION`, `UROTO_JWT_SECRET`… | `NS_CORE_VERSION`, `NS_JWT_SECRET`… | C2 (con fallback) |
 | Text domain | `uno-roto-core` | `nuevo-ser-core` | C2 |
-| Endpoints REST | `/wp-json/uno-roto/v1/*` | + `/wp-json/nuevo-ser/v1/*` (canónico) | C3 (uno-roto queda como alias) |
+| Endpoints REST | `/wp-json/uno-roto/v1/*` | `/wp-json/nuevo-ser/v1/*` (canónico) + alias deprecado | C3 ✓ |
 | Prefijo tablas | `wp_uroto_*` | `wp_ns_*` | C4 (con migración aditiva + `game_id`) |
 | `wp_options` key | `uroto_core_version` | sin cambio en C2 | renombrado posible en C4 |
 | Cron hook | `uroto_cron_purga_tutor` | sin cambio en C2 | mantiene scheduling existente |

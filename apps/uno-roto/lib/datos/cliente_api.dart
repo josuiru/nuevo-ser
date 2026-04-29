@@ -43,7 +43,7 @@ class ClienteApi {
 
   void cerrar() => _cliente.close();
 
-  Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/uno-roto/v1$ruta');
+  Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/nuevo-ser/v1$ruta');
 
   Map<String, String> _cabeceras({String? token}) {
     // Importante: el WAF de Apache (mod_security CRS) rechaza con 406

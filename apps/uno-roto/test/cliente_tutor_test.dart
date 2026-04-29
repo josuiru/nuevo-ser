@@ -19,7 +19,7 @@ void main() {
         expect(peticion.method, 'POST');
         expect(
           peticion.url.toString(),
-          '$urlBase/wp-json/uno-roto/v1/tutor/explicar',
+          '$urlBase/wp-json/nuevo-ser/v1/tutor/explicar',
         );
         expect(peticion.headers['Authorization'], 'Bearer tk');
         expect(peticion.headers['Content-Type'], 'application/json');

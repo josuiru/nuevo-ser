@@ -4,7 +4,7 @@
  *
  *   solicitar_reset(email): genera un token aleatorio, guarda su hash
  *     en BD con expiración 30 min, envía email al usuario con link
- *     `https://<sitio>/wp-json/uno-roto/v1/auth/pagina-reset?token=...`.
+ *     `https://<sitio>/wp-json/nuevo-ser/v1/auth/pagina-reset?token=...`.
  *     Si el email no existe en la BD devuelve 200 igualmente — política
  *     anti-enumeración: que un atacante no pueda saber qué emails
  *     tenemos registrados.
@@ -170,7 +170,7 @@ class NS_Reset_Password {
 		// si el sitio está mal configurado en DB (`siteurl` http
 		// cuando entra https). `home_url()` la base, después la
 		// reescribimos.
-		$path = rest_url( 'uno-roto/v1/auth/pagina-reset' );
+		$path = rest_url( NS_Endpoints::NAMESPACE_CANONICO . '/auth/pagina-reset' );
 		$path = add_query_arg( 'token', $token_plano, $path );
 		// Forzamos https si la request actual es https.
 		if ( is_ssl() ) {

@@ -146,7 +146,7 @@ class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
     super.initState();
     _descargador = DescargadorAudio(
       urlManifest: Uri.parse(
-        '${ConfigApi.urlBase}/wp-json/uno-roto/v1/audio/manifest',
+        '${ConfigApi.urlBase}/wp-json/nuevo-ser/v1/audio/manifest',
       ),
       hostOverride: ConfigApi.hostOverride,
     );

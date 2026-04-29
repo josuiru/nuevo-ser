@@ -3,8 +3,8 @@
  * Plugin Name: Nuevo Ser Core
  * Plugin URI:  https://coleccion-nuevo-ser.com/
  * Description: Backend compartido de la Colección Nuevo Ser Kids: sync, auth y tutor IA
- *              para Uno Roto y futuros juegos. Expone /wp-json/uno-roto/v1/* (alias deprecado)
- *              y /wp-json/nuevo-ser/v1/* (canónico, en C3) con JWT propios.
+ *              para Uno Roto y futuros juegos. Expone /wp-json/nuevo-ser/v1/* (canónico)
+ *              y /wp-json/uno-roto/v1/* (alias deprecado, vivo hasta v1.5) con JWT propios.
  * Version:     0.5.0
  * Author:      Equipo Colección Nuevo Ser
  * Author URI:  https://coleccion-nuevo-ser.com/
