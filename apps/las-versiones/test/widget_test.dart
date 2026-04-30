@@ -121,6 +121,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      // F2-10b: la 2.2.4 activa `omisiones_quintiliano_estudiadas`,
+      // que es el flag de disparo de la Brecha 2.2 jugable. Marcamos
+      // la brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+      'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
       // Latente 2.B.1 (cuaderno de Isaura) cerrada.
@@ -428,6 +433,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      // F2-10b: la 2.2.4 activa `omisiones_quintiliano_estudiadas`,
+      // que es el flag de disparo de la Brecha 2.2 jugable. Marcamos
+      // la brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+      'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
       // Latente 2.B.1 (cuaderno de Isaura) cerrada.
@@ -541,6 +551,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      // F2-10b: la 2.2.4 activa `omisiones_quintiliano_estudiadas`,
+      // que es el flag de disparo de la Brecha 2.2 jugable. Marcamos
+      // la brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+      'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
       // Latente 2.B.1 (cuaderno de Isaura) cerrada.

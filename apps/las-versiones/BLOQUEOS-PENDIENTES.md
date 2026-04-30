@@ -300,6 +300,38 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
+## Brecha 2.2 jugable — Calagurris + Quintiliano (F2-10b)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: la segunda Brecha jugable del Arco 2 está implementada en `CatalogoBrechas.brecha22` y cableada al orquestador. Se dispara con `omisiones_quintiliano_estudiadas` (flag que la cinemática 2.2.4 *Lo que omite* activa al cerrar) y se interpone entre la 2.2.4 y la 2.2.5 *El Concilio en Calahorra* — ahora la 2.2.5 requiere `brecha_2_2_completada` en lugar del previo `escena_2_2_4_vista`. La 2.2.5 sigue siendo cinemática (videollamada con Aitor + voz de Begoña por mensaje) según el doc 08 §2.2.5; lo jugable es la mesa de trabajo previa donde Maren declara qué afirma la *Institutio Oratoria* directamente vs. qué se infiere de sus omisiones.
+
+**Catálogo de la Brecha 2.2**:
+- 4 fuentes diegéticas: pasajes seleccionados de la *Institutio Oratoria* (primaria, sesgo invisibilizador — núcleo pedagógico de HF.10 *detección de omisiones*), restos arqueológicos de Calagurris (primaria), comparación arqueológica Calagurris/Pompaelo (secundaria) y testimonio de una arqueóloga local (secundaria).
+- 7 afirmaciones canónicas distribuidas pedagógicamente 4 Sólido + 1 Probable + 2 Disputado: la *Institutio Oratoria* es texto rico en datos directos sobre lo que Quintiliano dice (origen Calagurris, magisterio en Roma, mecenazgo de Vitorio Marcelo, autoridad pedagógica), pero la pedagogía clave de la Estación 2.2 — articulada por Aitor en la 2.2.5 — es declarar las inferencias **por omisión** como Probable o Disputado (la identidad cultural predominante de Quintiliano cuando escribe; las razones de su silencio sobre Calagurris; el peso real de Calagurris en su formación).
+- `minimoAfirmacionesParaConcilio: 5` — declarar al menos 5 de 7 obliga a tocar al menos una de las inferencias sobre omisiones, no escaparse declarando sólo los 4 datos directos. El parámetro lo introduce F2-9.
+- **HF.10 detección de omisiones — debut jugable**: el doc 02 lista HF.10 como habilidad de Análisis de Fuentes con perfil P2 (Detección F1). En la Brecha 2.2 hace su primera aparición jugable real — no como mecánica explícita "marca lo que falta" (que requeriría P2 funcional en core, hoy stub), sino como parte de la calibración Brier P4: las 3 afirmaciones por omisión (1 Probable + 2 Disputado) **son** la mecánica de detección de omisiones encarnada en el modelo de calibración existente. Cuando P2 entre en core con metadata por intento, se podrá medir HF.10 separadamente.
+
+**Material trazable** (sin sustitución):
+- **Quintiliano de Calagurris**: figura histórica documentada por su propia obra y por Suetonio. Los pasajes citados en el catálogo (autopresentación como hispano, omisión de detalles biográficos sobre Calagurris, mecenazgo de Vitorio Marcelo) están en la *Institutio Oratoria* y son trazables por capítulo. No se reproducen citas literales en latín.
+- **Vitorio Marcelo y Galieno**: nombres históricos documentados como mecenas y dedicatarios de la *Institutio Oratoria*. La existencia del libro y el patronazgo son hechos históricos.
+- **Cátedra de retórica de Vespasiano**: el establecimiento por Vespasiano de la primera cátedra de retórica latina remunerada en Roma, ocupada por Quintiliano, está documentado por Suetonio y por la propia obra. Trazable.
+
+**Sustituciones diegéticas adicionales aplicadas en el catálogo**:
+- **Restos arqueológicos de Calagurris**: descritos genéricamente como "fragmentos de cerámica, basas de columna, pavimentos de mosaico geométrico" en la sala romana del Museo de Calahorra (Calagurris Iulia Nassica). No se afirma yacimiento concreto ni pieza catalogada en CALA o en repertorios museísticos específicos. Calahorra tiene yacimientos romanos reales documentados, pero el dossier específico de la Brecha es selección diegética, no catálogo museístico real.
+- **Sala dedicada del Museo Romano**: el Museo de la Romanización (Calahorra) existe; la "sala dedicada a Quintiliano" como dispositivo narrativo de la Brecha es presentación pedagógica, no necesariamente reflejo de la museografía actual de la institución.
+- **Comparación arqueológica Calagurris/Pompaelo**: el dossier comparativo que la Brecha presenta (densidad de inscripciones honoríficas, vías, dotaciones) es composición pedagógica para el ejercicio. Calahorra y Pamplona/Pompaelo tienen registros arqueológicos parcialmente comparables, pero el cuadro específico no se reproduce de un estudio comparado real publicado.
+- **Testimonio de la arqueóloga local**: figura ficticia diegética sin nombre histórico. Encarna la voz de la arqueología contemporánea local sin afirmar identidad concreta.
+
+**Pendiente de revisión humana**:
+- ¿La distribución 4 Sólido + 1 Probable + 2 Disputado encaja con la pedagogía que el doc 08 §2.2.4 / §2.2.5 prescribe para la Estación? El doc subraya que la lección clave es declarar lo que **se infiere de la omisión** como Probable/Disputado. La distribución actual da 3 niveles "no Sólido" (1P+2D) sobre 7 — un 43% del catálogo encarna la lección de omisión. Posible ajuste si el comité prefiere mayor peso (p.ej. 3 Sólido + 2 Probable + 2 Disputado).
+- ¿La afirmación Probable única (`identidad_romana_predominante`) es la inferencia correcta a calibrar como Probable? El doc 08 §2.2.5 sitúa esta inferencia como ejemplo central de la lección de Aitor ("Quintiliano probablemente se sentía romano predominantemente cuando escribía, no calagurritano. Pero esto es **inferencia por omisión**, no afirmación textual"). Mantener Probable preserva la lección.
+- ¿Las dos Disputadas (`razones_omision_calagurris`, `peso_calagurris_formacion`) son las preguntas correctas a marcar como genuinamente abiertas? Son las dos inferencias donde el silencio de la *Institutio* impide ir más allá: por qué omite Calagurris (¿pudor social? ¿estrategia retórica? ¿mero formato?) y cuánto peso tuvo Calagurris en su formación intelectual real. El doc 08 las sostiene como Disputadas explícitas.
+
+**Cuando el comité valide**: se pueden citar pasajes literales de la *Institutio Oratoria* (con referencia al libro/capítulo), nombrar piezas concretas del Museo de la Romanización con su número de inventario, sustituir el dossier comparativo Calagurris/Pompaelo por estudios académicos publicados (si existen), y reemplazar el testimonio ficticio de la arqueóloga local por entrevista validada.
+
+---
+
 ## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).

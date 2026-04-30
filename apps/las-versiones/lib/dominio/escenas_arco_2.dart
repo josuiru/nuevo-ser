@@ -1621,11 +1621,17 @@ class EscenasArco2 {
   /// omisiones son evidencia más débil que las afirmaciones.
   ///
   /// Doc 08 §2.2.5.
+  /// **Precondición desde F2-10b**: requiere `brecha_2_2_completada`
+  /// (en lugar del previo `escena_2_2_4_vista`). La Brecha 2.2
+  /// jugable se interpone entre 2.2.4 y esta 2.2.5 — el Concilio
+  /// reducido con la arqueóloga local + Aitor por videollamada
+  /// llega tras la reconstrucción jugable que Maren produce en
+  /// la Mesa de Trabajo.
   static const EscenaCinematica elConcilioEnCalahorra = EscenaCinematica(
     id: '2.2.5',
     titulo: 'El Concilio en Calahorra',
     flagDeSalida: 'escena_2_2_5_vista',
-    flagsRequeridos: {'escena_2_2_4_vista'},
+    flagsRequeridos: {'brecha_2_2_completada'},
     ambiente: AmbienteArchivo.salaTrabajoMuseoCalahorra,
     planos: [
       PlanoAmbiente(

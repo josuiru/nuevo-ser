@@ -1320,12 +1320,275 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 2.2 — Quintiliano de Calagurris** (Arco 2, segunda
+  /// Estación). Maren viaja a Calahorra con Isaura y trabaja en el
+  /// museo local con una arqueóloga que avisó Karim. La Brecha gira
+  /// alrededor de la *Institutio Oratoria* y de lo que Quintiliano
+  /// **omite** sobre Calagurris, sus padres, su infancia y su
+  /// trayectoria pre-romana. La pedagogía clave del arco se
+  /// inaugura aquí: la habilidad **HF.10 detección de omisiones**
+  /// (que más tarde se eleva a corazón epistémico del arco con la
+  /// Estación 2.4 sobre Wamba). Maren sale con la lección de
+  /// Isaura sobre identidades sucesivas: *"Calagurris fue
+  /// Calagurris. Después fue navarra. Después dejó de serlo.
+  /// Quintiliano fue de aquí. Después no."*
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-04 — formulación de preguntas de profundidad sobre
+  ///   omisiones.
+  /// - HF.05 — lectura crítica de fuentes textuales.
+  /// - HF.07 — qué se omite (núcleo de la Brecha).
+  /// - HF.09 — detección de sesgos.
+  /// - HF.10 — detección de omisiones (debut jugable).
+  /// - PH.01 — no presentismo (al leer la identidad cultural de
+  ///   Quintiliano sin proyectar la nuestra).
+  /// - AH.01-03 — argumentación + calibración Brier.
+  ///
+  /// **Catálogo amplio**: 4 fuentes y **7 afirmaciones canónicas**.
+  /// Distribución pedagógica 4 Sólido + 1 Probable + 2 Disputado:
+  /// la *Institutio* es texto rico en datos directos sobre
+  /// Quintiliano cuando habla, así que las afirmaciones positivas
+  /// son sólidas. Lo que la Brecha enseña es declarar **Probable**
+  /// la inferencia de identidad cultural basada en omisiones
+  /// (las omisiones son evidencia más débil que las afirmaciones,
+  /// como dice Aitor por videollamada en 2.2.5) y **Disputado** lo
+  /// que las omisiones permiten múltiples explicaciones.
+  ///
+  /// `minimoAfirmacionesParaConcilio: 5` — declarar al menos 5 de
+  /// 7 marca un mínimo significativo (no se puede ir al Concilio
+  /// sin tocar al menos una de las inferencias sobre omisiones).
+  ///
+  /// **Material trazable preservado**:
+  /// - Quintiliano de Calagurris, la *Institutio Oratoria* y los
+  ///   prefacios de los libros I/II/IV/VI son referencias reales y
+  ///   trazables en bibliografía estándar (edición Cousin / Les
+  ///   Belles Lettres).
+  /// - Vitorio Marcelo (patrono de Quintiliano según el prefacio
+  ///   del libro IV de la *Institutio*) es real.
+  /// - 1076 (frontera de Calagurris/Calahorra entre Navarra y
+  ///   Castilla/Rioja) es fecha trazable.
+  ///
+  /// **Sustituciones diegéticas**: el yacimiento romano de
+  /// Calahorra, el museo local y la arqueóloga (sin nombre en
+  /// pantalla) son dispositivos narrativos. La sala dedicada a
+  /// Quintiliano en el museo y los fragmentos cerámicos del barrio
+  /// donde se cree que vivió son verosímiles para Calahorra pero
+  /// no se afirman piezas concretas catalogadas. Ver
+  /// `BLOQUEOS-PENDIENTES.md`.
+  static const Brecha brecha22 = Brecha(
+    id: '2.2',
+    titulo: 'Quintiliano de Calagurris',
+    ubicacionVisible: 'CALAHORRA — MUSEO ROMANO',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'HF.05',
+      'HF.07',
+      'HF.09',
+      'HF.10',
+      'PH.01',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha22,
+    afirmacionesCanonicas: _afirmacionesBrecha22,
+    flagDeCompletado: 'brecha_2_2_completada',
+    minimoAfirmacionesParaConcilio: 5,
+  );
+
+  static const List<Fuente> _fuentesBrecha22 = [
+    Fuente(
+      id: 'institutio_oratoria_pasajes',
+      tipoVisible: 'Pasajes seleccionados de la Institutio Oratoria',
+      descripcion:
+          'Cuatro pasajes traducidos al castellano, fotocopiados por '
+          'la arqueóloga local y aportados por Maren con los dos '
+          'volúmenes que su padre le prestó. Pasaje A: prooemium del '
+          'libro I, Quintiliano habla de su retirada tras años de '
+          'enseñanza. Pasaje B: libro II, mención breve a su llegada '
+          'a Roma. Pasaje C: prefacio del libro IV, dedicatoria a su '
+          'patrón Vitorio Marcelo. Pasaje D: prefacio del libro VI, '
+          'lamento por la muerte de su hijo.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Marco Fabio Quintiliano',
+        fecha: 'En torno a 95 d.C., cuarenta años después de salir '
+            'de Calagurris',
+        publico: 'Élite intelectual romana — maestros de retórica, '
+            'oradores, jóvenes en formación',
+        intereses: 'Sistematizar la formación retórica para uso '
+            'profesional; honrar al patrón',
+        omisiones: 'No describe Calagurris, no nombra a sus padres, '
+            'no habla de su infancia ni de las razones de su salida '
+            'de Hispania',
+        corroboraOContradice: 'Es la fuente principal — el resto del '
+            'catálogo la contextualiza',
+        sesgo: SesgoFuente.invisibilizador,
+      ),
+    ),
+    Fuente(
+      id: 'yacimiento_calagurris',
+      tipoVisible: 'Yacimiento romano de Calahorra y sala del museo',
+      descripcion:
+          'Foro romano parcialmente conservado, restos de termas, '
+          'cimientos. Calahorra moderna construida encima de manera '
+          'paralela a Iruña sobre Pompaelo. En el museo local hay '
+          'una sala dedicada a Quintiliano: una estatua moderna, '
+          'una placa, fragmentos cerámicos del barrio donde se cree '
+          'que vivió.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Las personas que vivieron y construyeron Calagurris '
+            'romana',
+        fecha: 'Romano altoimperial (s. I-II d.C.)',
+        publico: 'En su origen: la propia comunidad de Calagurris. '
+            'Hoy: visitantes del museo',
+        intereses: 'Útiles cotidianos, infraestructura urbana, '
+            'representación cívica',
+        omisiones: 'No hay restos directamente atribuibles a la '
+            'familia de Quintiliano; "el barrio donde se cree que '
+            'vivió" es atribución académica, no certeza',
+        corroboraOContradice: 'Corrobora que Calagurris era ciudad '
+            'romana de cierta entidad en la época formativa de '
+            'Quintiliano',
+      ),
+    ),
+    Fuente(
+      id: 'comparacion_calagurris_pompaelo',
+      tipoVisible: 'Comparación con Pompaelo',
+      descripcion:
+          'Maren ya conoce Pompaelo bajo Iruña por la Brecha 2.1. La '
+          'arqueóloga señala el paralelo: Calahorra moderna sobre '
+          'Calagurris romana funciona como Iruña sobre Pompaelo — '
+          'misma lógica de superposición urbana, ambas en la red '
+          'de ciudades romanas del valle del Ebro y el Pirineo '
+          'occidental.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Tradición arqueológica académica',
+        fecha: 'Conocimiento construido a lo largo del s. XX',
+        publico: 'Investigadores y aprendices del oficio',
+        intereses: 'Establecer marcos comparativos para entender '
+            'la red urbana romana provincial',
+        omisiones: 'La comparación urbana no dice nada sobre '
+            'identidades culturales individuales como la de '
+            'Quintiliano',
+        corroboraOContradice: 'Sostiene que Calagurris era ciudad '
+            'romana plenamente integrada — coherente con que un '
+            'hijo suyo educado pudiera marcharse a Roma',
+      ),
+    ),
+    Fuente(
+      id: 'testimonio_arqueologa_local',
+      tipoVisible: 'Testimonio oral de la arqueóloga local',
+      descripcion:
+          'La arqueóloga del museo de Calahorra (sin nombre en '
+          'pantalla, doc 08 §2.2.2) aporta a Maren una observación '
+          'clave durante el trabajo de mesa: "Cuando escribe la '
+          'Institutio, ya no estaba aquí. Llevaba cuarenta años en '
+          'Roma. Es probable que cuando escribe ya no se sintiera '
+          'de aquí." Voz de territorio cercana, técnica pero '
+          'accesible, sin protocolo del Archivo.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Arqueóloga del museo de Calahorra',
+        fecha: 'Comentario contemporáneo, fundado en bibliografía '
+            'académica de la última década',
+        publico: 'Aprendiz del Archivo de Iruña en visita',
+        intereses: 'Pedagógicos — facilitar la lectura de la fuente '
+            'textual con contexto biográfico y cultural',
+        omisiones: 'No cita bibliografía concreta en el momento; el '
+            'apoyo académico de la observación queda implícito',
+        corroboraOContradice: 'Aporta un marco interpretativo para '
+            'declarar Probable la identidad romana predominante de '
+            'Quintiliano cuando escribe',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha22 = [
+    AfirmacionCanonica(
+      id: 'origen_calagurris',
+      texto: 'Quintiliano fue originario de Calagurris (Calahorra '
+          'romana), una ciudad romana plenamente integrada del valle '
+          'del Ebro.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'institutio_oratoria_pasajes',
+        'yacimiento_calagurris',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'maestro_retorica_roma',
+      texto: 'Quintiliano fue maestro profesional de retórica en '
+          'Roma durante varias décadas hasta retirarse para '
+          'escribir la Institutio Oratoria.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['institutio_oratoria_pasajes'],
+    ),
+    AfirmacionCanonica(
+      id: 'patron_vitorio_marcelo',
+      texto: 'Quintiliano dedicó parte de la Institutio a su patrón '
+          'Vitorio Marcelo (mencionado nominalmente en el prefacio '
+          'del libro IV).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['institutio_oratoria_pasajes'],
+    ),
+    AfirmacionCanonica(
+      id: 'autoridad_pedagogica_io',
+      texto: 'La Institutio Oratoria es fuente fiable sobre las '
+          'prácticas pedagógicas retóricas de la élite romana de '
+          'fines del s. I d.C.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'institutio_oratoria_pasajes',
+        'comparacion_calagurris_pompaelo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'identidad_romana_predominante',
+      texto: 'Cuando Quintiliano escribe la Institutio (cuarenta '
+          'años después de salir de Calagurris), su identidad '
+          'cultural predominante es la romana, no la hispana '
+          'provincial.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'institutio_oratoria_pasajes',
+        'testimonio_arqueologa_local',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'razones_omision_calagurris',
+      texto: 'Se pueden determinar las razones específicas por las '
+          'que Quintiliano omite información sobre Calagurris en '
+          'la Institutio (público romano sin interés, preferencia '
+          'identitaria personal, convención del género).',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: ['institutio_oratoria_pasajes'],
+    ),
+    AfirmacionCanonica(
+      id: 'peso_calagurris_formacion',
+      texto: 'Se puede determinar el peso real que Calagurris '
+          '(lugar e infancia) tuvo en la formación intelectual y '
+          'pedagógica de Quintiliano.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'institutio_oratoria_pasajes',
+        'yacimiento_calagurris',
+      ],
+    ),
+  ];
+
   static const List<Brecha> todas = [
     brecha11,
     brecha12,
     brecha13,
     brecha14,
     brecha21,
+    brecha22,
   ];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
@@ -1357,5 +1620,13 @@ class CatalogoBrechas {
     // `escena_2_1_4_vista` a `brecha_2_1_completada` para mantener
     // la separación de los dos Concilios distintos del doc 08.
     'inscripcion_romana_estudiada': brecha21,
+    // 2.2 se dispara con `omisiones_quintiliano_estudiadas` (cierre
+    // de la cinemática 2.2.4 "Lo que omite") — el doc 08 fija que
+    // tras detectar las tres hipótesis sobre las omisiones, Maren
+    // produce la reconstrucción jugable. La 2.2.5 "El Concilio en
+    // Calahorra" (formal, con Aitor por videollamada) requiere
+    // ahora `brecha_2_2_completada` en lugar del previo
+    // `escena_2_2_4_vista`.
+    'omisiones_quintiliano_estudiadas': brecha22,
   };
 }

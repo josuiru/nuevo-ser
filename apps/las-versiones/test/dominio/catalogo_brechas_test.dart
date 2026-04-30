@@ -4,13 +4,13 @@ import 'package:las_versiones/dominio/catalogo_brechas.dart';
 
 void main() {
   group('CatalogoBrechas.todas', () {
-    test('catálogo cubre las 4 Brechas del Arco 1 + Brecha 2.1 del '
-        'Arco 2 (5 Brechas implementadas) — las 2.2/2.3/2.4 todavía '
+    test('catálogo cubre las 4 Brechas del Arco 1 + Brechas 2.1 y 2.2 '
+        'del Arco 2 (6 Brechas implementadas) — las 2.3/2.4 todavía '
         'no están en el catálogo', () {
-      expect(CatalogoBrechas.todas, hasLength(5));
+      expect(CatalogoBrechas.todas, hasLength(6));
       expect(
         CatalogoBrechas.todas.map((brecha) => brecha.id).toList(),
-        ['1.1', '1.2', '1.3', '1.4', '2.1'],
+        ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2'],
       );
     });
 
@@ -154,12 +154,105 @@ void main() {
     });
   });
 
+  group('CatalogoBrechas.brecha22 — Quintiliano de Calagurris', () {
+    test('id, título, ubicación y flag de completado estables', () {
+      expect(CatalogoBrechas.brecha22.id, '2.2');
+      expect(
+        CatalogoBrechas.brecha22.titulo,
+        'Quintiliano de Calagurris',
+      );
+      expect(
+        CatalogoBrechas.brecha22.ubicacionVisible,
+        'CALAHORRA — MUSEO ROMANO',
+      );
+      expect(
+        CatalogoBrechas.brecha22.flagDeCompletado,
+        'brecha_2_2_completada',
+      );
+    });
+
+    test('catálogo: 4 fuentes y 7 afirmaciones canónicas — la '
+        'pedagogía pide más afirmaciones que la 2.1 porque la '
+        'Institutio Oratoria es texto rico en datos directos sobre '
+        'lo que Quintiliano dice + lo que omite', () {
+      expect(CatalogoBrechas.brecha22.fuentes, hasLength(4));
+      expect(CatalogoBrechas.brecha22.afirmacionesCanonicas, hasLength(7));
+    });
+
+    test('minimoAfirmacionesParaConcilio: 5 — declarar al menos 5 '
+        'de 7 obliga a tocar al menos una de las inferencias sobre '
+        'omisiones (Probable o Disputado)', () {
+      expect(
+        CatalogoBrechas.brecha22.minimoAfirmacionesParaConcilio,
+        5,
+      );
+    });
+
+    test('distribución pedagógica 4 Sólido + 1 Probable + 2 '
+        'Disputado — la Institutio es fuente rica en datos directos '
+        '(mucho Sólido) pero la pedagogía clave es declarar las '
+        'inferencias por omisión como Probable/Disputado', () {
+      final niveles = CatalogoBrechas.brecha22.afirmacionesCanonicas
+          .map((a) => a.calibracionCorrecta)
+          .toList();
+      expect(niveles.where((n) => n == NivelConfianza.solido), hasLength(4));
+      expect(niveles.where((n) => n == NivelConfianza.probable), hasLength(1));
+      expect(niveles.where((n) => n == NivelConfianza.disputado), hasLength(2));
+    });
+
+    test('la afirmación Probable es justamente la identidad cultural '
+        'predominante de Quintiliano cuando escribe — basada en '
+        'omisiones, no en afirmaciones (lección de Aitor por '
+        'videollamada en 2.2.5)', () {
+      final probables = CatalogoBrechas.brecha22.afirmacionesCanonicas
+          .where((a) => a.calibracionCorrecta == NivelConfianza.probable)
+          .map((a) => a.id)
+          .toSet();
+      expect(probables, {'identidad_romana_predominante'});
+    });
+
+    test('todas las afirmaciones citan al menos una fuente del '
+        'catálogo — anclaje a evidencia (P3) tiene a qué apuntar', () {
+      final idsFuentes =
+          CatalogoBrechas.brecha22.fuentes.map((f) => f.id).toSet();
+      for (final afirmacion in CatalogoBrechas.brecha22.afirmacionesCanonicas) {
+        expect(afirmacion.idsFuentesAnclaje, isNotEmpty);
+        for (final idFuente in afirmacion.idsFuentesAnclaje) {
+          expect(idsFuentes, contains(idFuente));
+        }
+      }
+    });
+
+    test('la Institutio Oratoria lleva sesgo invisibilizador — '
+        'omite lo no romano e invisibiliza la propia identidad '
+        'provincial de Quintiliano (núcleo pedagógico de HF.10 '
+        'detección de omisiones)', () {
+      final io = CatalogoBrechas.brecha22.fuentes
+          .firstWhere((f) => f.id == 'institutio_oratoria_pasajes');
+      expect(io.propiedadesCanonicas.tipo, TipoFuente.primaria);
+      expect(
+        io.propiedadesCanonicas.sesgo,
+        SesgoFuente.invisibilizador,
+      );
+    });
+  });
+
   group('CatalogoBrechas.brechaPorFlagDeDisparo', () {
     test('la Brecha 2.1 se dispara con `inscripcion_romana_estudiada` '
         '(flag que la cinemática 2.1.4 activa al cerrar)', () {
       expect(
         CatalogoBrechas.brechaPorFlagDeDisparo['inscripcion_romana_estudiada'],
         same(CatalogoBrechas.brecha21),
+      );
+    });
+
+    test('la Brecha 2.2 se dispara con '
+        '`omisiones_quintiliano_estudiadas` (flag que la cinemática '
+        '2.2.4 "Lo que omite" activa al cerrar)', () {
+      expect(
+        CatalogoBrechas
+            .brechaPorFlagDeDisparo['omisiones_quintiliano_estudiadas'],
+        same(CatalogoBrechas.brecha22),
       );
     });
 
