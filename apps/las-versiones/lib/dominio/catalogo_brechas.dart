@@ -52,7 +52,7 @@ class CatalogoBrechas {
       'AH.03',
     ],
     fuentes: _fuentesBrecha11,
-    afirmacionesCanonicas: [],
+    afirmacionesCanonicas: _afirmacionesBrecha11,
     flagDeCompletado: 'brecha_1_1_completada',
   );
 
@@ -148,6 +148,75 @@ class CatalogoBrechas {
         corroboraOContradice: 'Aporta una pista lingüística sobre la '
             'función del monumento que las fuentes escritas no tienen',
       ),
+    ),
+  ];
+
+  /// Afirmaciones precanónicas que la Cronista puede considerar
+  /// sostenidas en la Fase 4 de Reconstrucción. Cada una declara su
+  /// `calibracionCorrecta` —el nivel de confianza que el oficio
+  /// pondría hoy— y los IDs de las fuentes que la anclan. P4 Brier
+  /// compara la elección de la Cronista con la calibración correcta.
+  ///
+  /// **Las afirmaciones siguen siendo ficticias y diegéticas**. Lo que
+  /// se afirma no es contenido histórico real sobre el dolmen de
+  /// Aroztegi (no validado por el comité asesor), sino formulaciones
+  /// genéricas y redondeadas que ejemplifican la estructura del
+  /// pensamiento histórico —"esto es Sólido, esto es Probable, esto
+  /// es Disputado"— sin afirmar identificación, autoría o datación
+  /// con precisión que requeriría revisión externa.
+  static const List<AfirmacionCanonica> _afirmacionesBrecha11 = [
+    AfirmacionCanonica(
+      id: 'es_un_enterramiento',
+      texto: 'En este lugar se realizaron enterramientos humanos.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'restos_oseos_in_situ',
+        'informe_excavacion_antiguo',
+        'informe_revision_moderno',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'fechado_neolitico',
+      texto: 'El uso del lugar se sitúa en un rango temporal '
+          'compatible con el Neolítico.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'informe_revision_moderno',
+        'material_litico_entorno',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'numero_personas_enterradas',
+      texto: 'Se puede precisar cuántas personas fueron enterradas '
+          'aquí en total a lo largo del uso del monumento.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: ['restos_oseos_in_situ'],
+    ),
+    AfirmacionCanonica(
+      id: 'origen_atlantico',
+      texto: 'El monumento es producto directo de una influencia '
+          'cultural llegada desde la fachada atlántica europea.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: ['informe_excavacion_antiguo'],
+    ),
+    AfirmacionCanonica(
+      id: 'funcion_ritual',
+      texto: 'El lugar tuvo función ritual además de funeraria.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'restos_oseos_in_situ',
+        'toponimo_local',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'comunidad_pastoril',
+      texto: 'Quienes lo construyeron eran ya una comunidad con '
+          'cierta estabilidad y vínculo con el territorio circundante.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'material_litico_entorno',
+        'toponimo_local',
+      ],
     ),
   ];
 

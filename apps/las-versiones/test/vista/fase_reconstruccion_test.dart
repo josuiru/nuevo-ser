@@ -1,0 +1,148 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:las_versiones/dominio/brecha.dart';
+import 'package:las_versiones/dominio/catalogo_brechas.dart';
+import 'package:las_versiones/vista/fase_reconstruccion.dart';
+
+void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
+  Future<void> bombearFase(
+    WidgetTester tester, {
+    required Brecha brecha,
+    required VoidCallback alAvanzar,
+  }) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: FaseReconstruccion(
+              brecha: brecha,
+              alAvanzarFase: alAvanzar,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets(
+      'arranque sin declaraciones → CTA bloqueado y mensaje "faltan 3"',
+      (tester) async {
+    await bombearFase(
+      tester,
+      brecha: CatalogoBrechas.brecha11,
+      alAvanzar: () {},
+    );
+
+    final cta = tester.widget<TextButton>(
+      find.ancestor(
+        of: find.text('AL CONCILIO'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(cta.onPressed, isNull);
+    expect(find.textContaining('faltan 3'), findsOneWidget);
+  });
+
+  testWidgets(
+      'declarar tres afirmaciones desbloquea el CTA y guarda en repo',
+      (tester) async {
+    var avancesInvocados = 0;
+    await bombearFase(
+      tester,
+      brecha: CatalogoBrechas.brecha11,
+      alAvanzar: () => avancesInvocados++,
+    );
+
+    // Tres taps "Sólido" en las primeras tres tarjetas. Hago scroll
+    // para asegurar visibilidad antes de cada tap.
+    for (int i = 0; i < 3; i++) {
+      final solidoFinder = find.text('Sólido').at(i);
+      await tester.scrollUntilVisible(solidoFinder, 80);
+      await tester.tap(solidoFinder);
+      await tester.pumpAndSettle();
+    }
+
+    final cta = tester.widget<TextButton>(
+      find.ancestor(
+        of: find.text('AL CONCILIO'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(cta.onPressed, isNotNull);
+    expect(find.textContaining('Sostienes 3'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('AL CONCILIO'), 80);
+    await tester.tap(find.text('AL CONCILIO'));
+    await tester.pumpAndSettle();
+    expect(avancesInvocados, 1);
+
+    // Persistencia: las 3 declaraciones deben estar en prefs.
+    final prefs = await SharedPreferences.getInstance();
+    final blob = prefs.getString(
+      'nuevoser.lasversiones.brecha.1.1.reconstruccion',
+    );
+    expect(blob, isNotNull);
+    expect(blob, contains('solido'));
+  });
+
+  testWidgets('quitar una afirmación devuelve al estado bloqueado',
+      (tester) async {
+    await bombearFase(
+      tester,
+      brecha: CatalogoBrechas.brecha11,
+      alAvanzar: () {},
+    );
+
+    for (int i = 0; i < 3; i++) {
+      final solidoFinder = find.text('Sólido').at(i);
+      await tester.scrollUntilVisible(solidoFinder, 80);
+      await tester.tap(solidoFinder);
+      await tester.pumpAndSettle();
+    }
+
+    final quitarFinder = find.text('Quitar de mi versión').first;
+    await tester.scrollUntilVisible(quitarFinder, 80);
+    await tester.tap(quitarFinder);
+    await tester.pumpAndSettle();
+
+    final cta = tester.widget<TextButton>(
+      find.ancestor(
+        of: find.text('AL CONCILIO'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(cta.onPressed, isNull, reason: 'al bajar a 2 vuelve a bloquearse');
+  });
+
+  testWidgets('declaraciones persistidas reaparecen al abrir la fase',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.brecha.1.1.reconstruccion':
+          '{"es_un_enterramiento":"solido",'
+              '"fechado_neolitico":"solido",'
+              '"funcion_ritual":"probable"}',
+    });
+    await bombearFase(
+      tester,
+      brecha: CatalogoBrechas.brecha11,
+      alAvanzar: () {},
+    );
+
+    final cta = tester.widget<TextButton>(
+      find.ancestor(
+        of: find.text('AL CONCILIO'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(cta.onPressed, isNotNull);
+    expect(find.textContaining('Sostienes 3'), findsOneWidget);
+  });
+}
