@@ -21,6 +21,11 @@ class RepositorioMemoria implements RepositorioLocal {
   }
 
   @override
+  Future<Observacion?> obtenerObservacionPorId(String id) async {
+    return _observaciones[id];
+  }
+
+  @override
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,

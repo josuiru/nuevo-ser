@@ -33,6 +33,15 @@ class RepositorioIsar implements RepositorioLocal {
   }
 
   @override
+  Future<Observacion?> obtenerObservacionPorId(String id) async {
+    final modelo = await _isar.observacionIsars
+        .where()
+        .idDominioEqualTo(id)
+        .findFirst();
+    return modelo?.aDominio();
+  }
+
+  @override
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,

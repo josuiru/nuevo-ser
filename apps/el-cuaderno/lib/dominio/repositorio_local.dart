@@ -23,6 +23,11 @@ abstract class RepositorioLocal {
   /// ya existe, sobrescribe.
   Future<void> guardarObservacion(Observacion observacion);
 
+  /// Devuelve la observación con [id] o `null` si no existe. Útil para
+  /// la cola de sincronización (S2-D), que persiste UUIDs pendientes y
+  /// rehidrata cada observación al intentar enviarla.
+  Future<Observacion?> obtenerObservacionPorId(String id);
+
   /// Lista observaciones, ordenadas por `cuandoOcurrio` descendente
   /// (la más reciente primero — coherente con la sección "última
   /// página" del home, biblia §5.4).
