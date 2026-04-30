@@ -235,4 +235,30 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// cambios que ella misma no ve.
   static const AmbienteArchivo plazaCastilloIruna =
       AmbienteArchivo._('plaza_castillo_iruna');
+
+  /// Biblioteca del Archivo — primera planta, salón largo con
+  /// estanterías de roble del suelo al techo, mesas largas con
+  /// flexos antiguos, ventanales al patio. Espacio donde Maren
+  /// trabaja con fuentes textuales largas (crónicas, recopilaciones,
+  /// ediciones críticas). Lugar de la 2.4.2 (Maren lee la *Historia
+  /// Wambae regis* de Julián de Toledo y otras fuentes visigodas
+  /// con un café junto al codo).
+  static const AmbienteArchivo bibliotecaArchivo =
+      AmbienteArchivo._('biblioteca_archivo');
+
+  /// Yacimiento vascón al norte — asentamiento documentado del
+  /// periodo bajoimperial/altomedieval, restos modestos: estructuras
+  /// de habitación de piedra seca, fragmentos cerámicos hechos a
+  /// mano (sin torno, lo cual es información), herramientas, sin
+  /// epigrafía propia. Lugar de la 2.4.3 (el silencio vascón).
+  ///
+  /// **Sin nombre histórico concreto en código**: el doc 08 §2.4.3
+  /// dice explícitamente "yacimiento al norte de Iruña — un
+  /// asentamiento vascón documentado del periodo (a definir con
+  /// asesoría — candidatos: zona de Aralar, Pirineo navarro, valle
+  /// de Baztán)". Hasta que el comité asesor elija entre los tres
+  /// candidatos del doc 5 §3.2, el ambiente queda etiquetado
+  /// genéricamente. Registrado en BLOQUEOS-PENDIENTES.md.
+  static const AmbienteArchivo yacimientoVasconNorte =
+      AmbienteArchivo._('yacimiento_vascon_norte');
 }

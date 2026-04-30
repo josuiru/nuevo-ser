@@ -119,22 +119,56 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 + Estación 2.3 + latente 2.C.1 implementadas (F2-1 a F2-6)
+## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 + Estación 2.3 + latente 2.C.1 + Estación 2.4 implementadas (F2-1 a F2-7)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementadas las 23 cinemáticas que cubren la apertura del Arco 2 (2.0.1), las tres primeras Estaciones enteras (2.1 Pompaelo, 2.2 Calagurris, 2.3 domus de los mosaicos) y las tres cinemáticas latentes post-Estación que cosen el arco emocionalmente (2.A.1 + 2.A.2 tras Pompaelo, 2.B.1 tras Calagurris, 2.C.1 tras la domus). 2.C.1 *Eider y el cambio* es deliberadamente breve y emocionalmente directa: terraza de café en la plaza del Castillo de Iruña, mediados de febrero, frío. Eider — amiga del instituto, ajena al Archivo, ya vista en 1.A — hace una pregunta directa que Maren no se había planteado en pantalla todavía ("¿sigues siendo amiga mía?"). Maren articula un compromiso con la doble pertenencia ("estoy aprendiendo a estar en muchos sitios a la vez. Pero contigo estoy") que la obliga a explicitar lo que el oficio le está haciendo: cambia, pero no abandona. Cierre con un plan al cine — la amistad sigue, el cambio se acepta sin dramatismo. Las restantes 11+ escenas del Arco 2 (2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco la Brecha 2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 31 cinemáticas que cubren la apertura del Arco 2 (2.0.1), las cuatro Estaciones enteras (2.1 Pompaelo, 2.2 Calagurris, 2.3 domus de los mosaicos, 2.4 Wamba contra los vascones) y las tres cinemáticas latentes post-Estación que cosen el arco emocionalmente (2.A.1 + 2.A.2 tras Pompaelo, 2.B.1 tras Calagurris, 2.C.1 tras la domus). La Estación 2.4 (8 cinemáticas, doc 08 §2.4.1–2.4.8) cierra con `aprendizDosLogrado` (Aprendiz II) en el patio del Archivo — cierre simbólico de las cuatro Estaciones del arco en el mismo espacio donde abrió la 2.0.1. La línea epistémica clave del arco se fija en 2.4.5 (cocina del Archivo, conversación con Karim): **"el silencio vascón es el dato. No es ausencia de dato. Es dato. Es información sobre cómo funcionaba la maquinaria de la fuente"**. La Estación 2.4 se diferencia de las tres anteriores en que la asimetría documental es deliberadamente extrema: una sola perspectiva, la del productor visigodo (Julián de Toledo). El Concilio dividido (2.4.7) reproduce las cinco voces revisoras del Arco 2 — Karim Reformista, Aitor Constructor, Joana, Begoña, Isaura — con desacuerdo explícito sobre la calibración de la afirmación 8 (Joana propone "Sólido tirando a Probable alto", Aitor la quiere "Disputada"). Las restantes ~3 escenas del Arco 2 (M2 + 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas jugables 2.1/2.2/2.3/2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 23 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.C.1 requiere `arco_2_estacion_3_cerrada` (que la 2.3.6 activa). Tras cerrar la 2.C.1 el orquestador cae al esqueleto porque la 2.4.1 todavía no está implementada.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 31 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.4.1 requiere `escena_2_c_1_vista` (que la 2.C.1 activa) y la 2.4.8 cierra activando `aprendiz_dos_alcanzado` + `arco_2_estacion_4_cerrada`. Tras cerrar la 2.4.8 el orquestador cae al esqueleto porque las cinemáticas M2/2.Z todavía no están implementadas.
 
 **Pendiente para próximas iteraciones**:
-- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 + brecha22 + brecha23 + brecha24 jugables).
-- Estación 2.4 (Wamba contra los vascones).
+- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 + brecha22 + brecha23 + brecha24 jugables) — requiere refactor previo de `FaseBrecha` para admitir distintos números de afirmaciones por Brecha (entrada propia más abajo).
 - Mosaico M2 ("audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
 - Cinemática de cierre del arco 2.Z.
-- Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en sección siguiente.
+- Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en secciones siguientes.
 
 **Sin sustituciones diegéticas en 2.B.1 ni 2.C.1**: el cuaderno marrón de Isaura es ficticio del juego; en 2.C.1 la plaza del Castillo es lugar real validable de Iruña y la cinemática no nombra fechas, dataciones ni personajes históricos. Eider sigue siendo personaje ficticio del juego (validación humana sobre su voz registrada en la entrada EIDER existente).
+
+---
+
+## Estación 2.4 (Wamba contra los vascones) — yacimiento sin nombre + nueve afirmaciones canónicas (F2-7)
+
+**Tracker doc 17**: pendiente.
+
+**Material trazable** (sin sustitución, ya en el tracker general o en publicaciones de referencia abierta):
+- **Wamba** (rey visigodo) y **Julián de Toledo** (autor de la *Historia Wambae regis*) son figuras históricas reales y trazables. La fecha 673 d.C. para la campaña narrada por Julián está en bibliografía estándar.
+- **La asimetría documental sobre el lado vascón** del periodo 5-7 d.C. es hecho historiográfico bien documentado: no hay fuentes producidas por las comunidades vascónicas para este periodo concreto. La pedagogía de la Estación se construye sobre esta ausencia documentada, no sobre una afirmación histórica novedosa.
+
+**Sustitución diegética aplicada**:
+- **2.4.3 — yacimiento vascón del norte sin nombre histórico en pantalla**. El doc 08 v0.2 §2.4.3 sugiere visitar un yacimiento vascónico real concreto. La cinemática se construye en un yacimiento del norte de Nafarroa **sin nombrarlo**: descripción genérica de poblamiento del periodo, ausencia de cerámica con inscripciones, sin paneles museográficos, ladera mirando al norte. La pedagogía (el silencio del lugar habla del silencio documental) se preserva sin afirmar yacimiento concreto hasta validación del comité asesor sobre cuál usar. Ambiente nuevo: `AmbienteArchivo.yacimientoVasconNorte`.
+
+**Material diegético deliberadamente articulado**:
+- **Las 9 afirmaciones canónicas de la Brecha 2.4** (declaradas en 2.4.6, *Reconstrucción honesta*) están calibradas con el mismo rigor que las 8 de la 2.3.5, y dos de ellas son experimentales:
+  - **Afirmación 7** ("No se conservan fuentes producidas por los vascones de este periodo, contemporáneas o anteriores") declarada como **"Sólido (la ausencia)"** — paralela a la afirmación 6 de la Brecha 2.3 (la ausencia documental de las personas esclavizadas en la domus). La forma de calificación marca el aprendizaje del juego: la ausencia documentada **es** dato sólido, no incertidumbre.
+  - **Afirmación 9** ("La reconstrucción del lado vascón tiene un techo metodológico determinado por la asimetría de las fuentes") declarada como **"Sólido como declaración metodológica"** — el aprendiz declara explícitamente el límite de su propia reconstrucción, marcando AH.03 (declaración de niveles de confianza) en su forma más madura del Arco 2.
+
+**Voces nuevas del Concilio dividido (2.4.7)**:
+- **Joana** aparece con material narrativo largo por primera vez en el juego. Su voz Anclada (doc 04) se fija aquí: pide más matices ("Sólido tirando a Probable alto" para la afirmación 8, defiende el "(la ausencia)" de la 7), no compite con Maren, busca reforzar la calibración. La voz Anclada de Joana se vio fugazmente en la 1.4.3 del Arco 1; aquí se consolida.
+- **Begoña** aparece en el Concilio del Arco 2 por primera vez. Voz neutra, pide claridad sobre la afirmación 8 (¿"esta ausencia documental no es accidente" requiere matización para evitar argumento conspirativo?), recibe respuesta precisa de Maren.
+- **Karim Reformista** marca su carácter explícito por primera vez con palabra de Cronista superior ("la afirmación 7 es la más importante de la Brecha. La ausencia es dato. Punto"). Coherente con el rasgo Reformista del doc 04 articulado en 2.4.5.
+- **Aitor Constructor** vuelve a hacer su trabajo de presión: pide rebajar la afirmación 8 a Disputada porque "no es accidente" suena interpretativo. Maren no cede pero matiza la formulación. El desacuerdo se cierra sin consenso, registrado en el Concilio.
+
+**Pendiente de revisión humana**:
+- ¿La elección de **no nombrar el yacimiento concreto** del norte (sustitución diegética en 2.4.3) es la correcta, o el comité asesor prefiere anclar la Estación a un yacimiento real documentado (con bibliografía y limitaciones explícitas)? La elección actual es coherente con el espíritu de la Estación (el silencio del lugar es el dato), pero pierde la trazabilidad arqueológica que sí preserva el resto del Arco 2.
+- ¿La calibración de la **afirmación 8** ("esta ausencia documental no es accidente: refleja la dirección desigual del poder narrativo") está bien como **Sólido**? El Concilio interno del juego ya tensiona la pregunta (Joana propone Sólido tirando a Probable alto, Aitor propone Disputada). Se ha mantenido como Sólido porque la asimetría del poder narrativo de la Antigüedad Tardía frente a las poblaciones vascónicas está bien establecida en historiografía estándar, pero el comité podría preferir Probable o Sólido (limitado a la generalización metodológica). La forma "no es accidente" es deliberadamente directa para enseñar a no rebajar afirmaciones bien fundadas por timidez.
+- **Tono de Karim Reformista** en 2.4.5 cuando le dice a Maren "el silencio vascón es el dato" — primera articulación pedagógica explícita de Karim en posición casi tutorial (hasta ahora ha funcionado más como revisor de Concilio). ¿Encaja con la voz fijada en doc 04? El Reformismo se hace explícito en la frase de cierre ("¿Eso es Reformismo? — Eso es honestidad. El Reformismo es nombrar de dónde viene la ausencia").
+- **Voz de Joana** consolidada — primera vez con material narrativo largo. ¿Encaja con la entrada de Joana en doc 04 o requiere ajuste?
+- **Voz de Begoña** estrenada en el Concilio del Arco 2 — primera aparición jugable larga (apuntes previos cortos en doc 04). ¿Encaja con su perfil de Cronista superior cauta?
+- **Línea de cierre de Maren en 2.4.7** ante el desacuerdo ("acepto el desacuerdo. La afirmación queda como Sólido en mi reconstrucción y Disputada en la lectura de Aitor") — primera vez que el aprendiz declara explícitamente que dos calibraciones distintas pueden coexistir como lectura del Concilio. El doc 14 §6.5 prescribe que el Concilio NO premia tener razón sino haber juzgado bien con lo disponible; la formulación encaja, pero el comité podría afinarla.
+- **Continuidad pedagógica con la Estación 2.3**: la afirmación 7 de 2.4 ("la ausencia es dato") es paralela funcional a la afirmación 6 de 2.3 (la ausencia documental de las personas esclavizadas). ¿La repetición consciente del recurso pedagógico es la elección correcta o el comité prefiere variación? La repetición se ha hecho deliberadamente para consolidar el aprendizaje cruzado de Estaciones distintas con el mismo recurso epistémico.
+
+**Sin sustituciones en el resto de la Estación**: 2.4.1 (encargo en el despacho de Isaura), 2.4.2 (lectura crítica de Julián de Toledo en la biblioteca del Archivo), 2.4.4 (frustración interna en la mesa de trabajo), 2.4.6 (declaración de las 9 afirmaciones), 2.4.7 (Concilio), 2.4.8 (Aprendiz II en el patio del Archivo) no nombran yacimientos concretos, dataciones específicas ni publicaciones identificables más allá de Wamba + Julián + el año 673.
 
 ---
 

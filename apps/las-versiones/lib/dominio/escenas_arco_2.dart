@@ -26,9 +26,10 @@ class EscenasArco2 {
   /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6), la cinemática
   /// latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*), la
   /// Estación 2.3 completa (La domus de los mosaicos, doc 08
-  /// §2.3.1–2.3.6) y la cinemática latente post-Estación 2.3 (2.C.1
-  /// *Eider y el cambio*); la Estación 2.4 + Mosaico M2 + cierre
-  /// 2.Z se añadirán en commits posteriores.
+  /// §2.3.1–2.3.6), la cinemática latente post-Estación 2.3 (2.C.1
+  /// *Eider y el cambio*) y la Estación 2.4 completa (Wamba contra
+  /// los vascones, doc 08 §2.4.1–2.4.8); el Mosaico M2 + cierre 2.Z
+  /// se añadirán en commits posteriores.
   ///
   /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
   /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa).
@@ -36,7 +37,11 @@ class EscenasArco2 {
   /// `arco_2_estacion_2_cerrada` (que la 2.2.6 activa). La Estación
   /// 2.3 arranca con 2.3.1 que requiere `escena_2_b_1_vista`. La
   /// latente 2.C.1 se ordena detrás de 2.3.6 porque requiere
-  /// `arco_2_estacion_3_cerrada` (que la 2.3.6 activa).
+  /// `arco_2_estacion_3_cerrada` (que la 2.3.6 activa). La Estación
+  /// 2.4 arranca con 2.4.1 que requiere `escena_2_c_1_vista` y
+  /// cierra con 2.4.8 que activa el ascenso a Aprendiz II y el
+  /// hito `arco_2_estacion_4_cerrada` (precondición para el
+  /// Mosaico M2 cuando se implemente).
   static const List<EscenaCinematica> todas = [
     primerDiaDelArco,
     bajarAlSotano,
@@ -61,6 +66,14 @@ class EscenasArco2 {
     reconstruccionDeLaDomus,
     concilioDeLaDomus,
     eiderYElCambio,
+    unaBrechaDeUnSoloLado,
+    lasCronicasVisigodas,
+    elSilencioVascon,
+    laFrustracion,
+    conversacionConKarim,
+    reconstruccionHonesta,
+    elConcilioDividido,
+    aprendizDosLogrado,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -143,6 +156,32 @@ class EscenasArco2 {
     },
     'escena_2_c_1_vista': {
       'relacion_con_eider_recalibrada',
+    },
+    'escena_2_4_1_vista': {
+      'brecha_2_4_encargada',
+    },
+    'escena_2_4_2_vista': {
+      'cronicas_visigodas_estudiadas',
+    },
+    'escena_2_4_3_vista': {
+      'yacimiento_vascon_visitado',
+    },
+    'escena_2_4_4_vista': {
+      'frustracion_2_4_atravesada',
+    },
+    'escena_2_4_5_vista': {
+      'silencio_es_dato_aprendido',
+    },
+    'escena_2_4_6_vista': {
+      'reconstruccion_2_4_hecha',
+    },
+    'escena_2_4_7_vista': {
+      'concilio_2_4_cerrado',
+      'brecha_2_4_completada',
+    },
+    'escena_2_4_8_vista': {
+      'aprendiz_dos_alcanzado',
+      'arco_2_estacion_4_cerrada',
     },
   };
 
@@ -2768,6 +2807,939 @@ class EscenasArco2 {
             'tontería del grupo. La amistad sigue.',
       ),
       PlanoCierreAmable(textoBoton: 'TERMINAR EL CAFÉ'),
+    ],
+  );
+
+  /// 2.4.1 — *Una Brecha de un solo lado*. Apertura de la Estación
+  /// 2.4 a mediados de febrero. Despacho de Isaura. La mentora
+  /// presenta a Maren la Brecha de cierre del arco con la mesa
+  /// preparada — tres libros y una carpeta. La cinemática introduce
+  /// el dispositivo pedagógico de la Estación entera con una
+  /// declaración estructural que Maren tiene que aceptar antes de
+  /// empezar: "esta Brecha tiene un problema estructural. Y no se
+  /// puede resolver. Sólo se puede declarar." Las fuentes son todas
+  /// de un solo lado — Crónica de Wamba escrita por Julián de
+  /// Toledo y otras menciones en concilios y crónicas visigodas;
+  /// los vascones no se defienden por escrito (no porque no
+  /// escribieran nada, porque no se conserva). Maren confirma con
+  /// la pregunta de oficio del Arco 2: "¿materia arqueológica?"
+  ///
+  /// El cierre con "no la vas a fastidiar, Maren / eso no lo sabes /
+  /// tienes razón, no lo sé" reproduce la postura epistémica del
+  /// oficio aplicada a la propia mentora — Isaura predica con el
+  /// ejemplo lo que Maren va a tener que sostener en la Brecha.
+  ///
+  /// Doc 08 §2.4.1.
+  static const EscenaCinematica unaBrechaDeUnSoloLado = EscenaCinematica(
+    id: '2.4.1',
+    titulo: 'Una Brecha de un solo lado',
+    flagDeSalida: 'escena_2_4_1_vista',
+    flagsRequeridos: {'escena_2_c_1_vista'},
+    ambiente: AmbienteArchivo.despachoIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mediados de febrero. Despacho de Isaura. Maren entra. '
+            'Isaura la espera con tres libros sobre la mesa y una '
+            'carpeta marrón ya abierta — una de las gastadas, no '
+            'una nueva.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Tu Brecha de cierre.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Wamba?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Wamba.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Año 673.',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sí. Campaña visigótica contra los vascones del norte.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa. Isaura ordena dos de los libros sin urgencia.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Quiero que entiendas algo antes de empezar.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Esta Brecha tiene un problema estructural. Y no se puede '
+            'resolver. Sólo se puede declarar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cuál?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Que las fuentes son todas de un solo lado. Crónica de '
+            'Wamba escrita por Julián de Toledo, otras menciones en '
+            'concilios y crónicas visigodas. Visigodos hablando de '
+            'vascones derrotados. Los vascones no se defienden por '
+            'escrito. No porque no escribieran nada — porque no se '
+            'conserva.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Materia arqueológica?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Algo. Limitada. Te lo doy.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Isaura le pasa la carpeta. Maren la apoya sobre el '
+            'regazo sin abrirla todavía.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Tu Brecha es: ¿qué pasó realmente en la campaña del '
+            '673? Y vas a tener que reconstruir desde fuentes '
+            'hostiles, declarar el sesgo, y aceptar que tu '
+            'reconstrucción tendrá un techo.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Esta es la del Concilio entero, ¿verdad?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué pasa si la fastidio?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Te quedas Aprendiz I un tiempo más. Reabres. Trabajas. '
+            'Lo intentas otra vez.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'No la vas a fastidiar, Maren.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Eso no lo sabes.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Tienes razón. No lo sé.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoCierreAmable(textoBoton: 'COGER LA CARPETA'),
+    ],
+  );
+
+  /// 2.4.2 — *Las crónicas visigodas*. Biblioteca del Archivo,
+  /// primera planta. Maren con los textos de Julián de Toledo y
+  /// otras fuentes visigodas. Voz larga del Cuaderno articulando
+  /// la postura crítica frente a la *Historia Wambae regis*: hagiografía
+  /// del rey, vascones aparecen tres veces y siempre como objeto
+  /// (gente que vive en montañas, derrotados, "pacificados"). La
+  /// pregunta clave que Maren formula desde dentro del oficio —
+  /// "la palabra rebelde presupone autoridad legítima previa,
+  /// ¿era legítima la autoridad visigoda sobre los vascones?" —
+  /// la cruza Aitor por la biblioteca con un comentario de pasada
+  /// que confirma la intuición de la Cronista sin hacer escena
+  /// de ello.
+  ///
+  /// Doc 08 §2.4.2.
+  static const EscenaCinematica lasCronicasVisigodas = EscenaCinematica(
+    id: '2.4.2',
+    titulo: 'Las crónicas visigodas',
+    flagDeSalida: 'escena_2_4_2_vista',
+    flagsRequeridos: {'escena_2_4_1_vista'},
+    ambiente: AmbienteArchivo.bibliotecaArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Biblioteca del Archivo, primera planta. Salón largo, '
+            'estanterías de roble, mesas con flexos antiguos. Maren '
+            'lleva tres días ahí. Tiene la *Historia Wambae regis* '
+            'de Julián de Toledo abierta, una edición moderna con '
+            'aparato crítico, y un cuaderno con las páginas '
+            'marcadas con clips amarillos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Lectura crítica. La fuente es retórica, narrativa, '
+            'hagiográfica del rey Wamba. Los vascones aparecen como '
+            'pueblo "rebelde" que el rey "pacifica". Maren toma '
+            'notas en columna. A la izquierda lo que dice. A la '
+            'derecha lo que esa formulación presupone.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Julián de Toledo escribe sesenta años después de los '
+            'hechos. Es propaganda dinástica. La campaña de Wamba '
+            'aparece como gesta heroica.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Los vascones aparecen tres veces. La primera, descritos '
+            'como gente que vive en montañas y "no acepta autoridad". '
+            'La segunda, derrotados en una batalla. La tercera, '
+            '"pacificados" por el rey.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La palabra "rebelde" presupone autoridad legítima previa. '
+            '¿Era legítima la autoridad visigoda sobre los vascones? '
+            'Julián lo da por hecho. Pero esa es la pregunta.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aitor entra a la biblioteca a por un libro de uno de '
+            'los estantes altos. Pasa por delante de la mesa de '
+            'Maren con el libro ya en la mano, sin pararse del todo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Pregunta de oficio: ¿estaban los vascones bajo dominio '
+            'visigodo antes del 673?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren levanta la vista. Aitor la mira de pasada — no se '
+            'queda, no se sienta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Es la pregunta. Las fuentes visigodas dicen que sí. Pero '
+            'el hecho de que cada generación tenga que enviar una '
+            'campaña significa que no del todo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aitor sigue caminando hacia la salida con su libro. '
+            'Maren vuelve al texto. La intuición confirmada sin '
+            'aspavientos. La biblioteca en silencio.',
+      ),
+      PlanoCierreAmable(textoBoton: 'CERRAR LA EDICIÓN'),
+    ],
+  );
+
+  /// 2.4.3 — *El silencio vascón*. Yacimiento al norte de Iruña.
+  /// Maren e Isaura visitan los restos de un asentamiento vascón
+  /// del periodo. Materia silenciosa: estructuras de habitación
+  /// modestas, fragmentos cerámicos hechos a mano (sin torno —
+  /// información), herramientas, ninguna inscripción propia.
+  /// Isaura formula el principio epistémico que organiza la
+  /// Estación entera: para reconstruir el lado vascón hay que
+  /// combinar la materia con la lectura crítica de las fuentes
+  /// hostiles. Maren conecta con la prehistoria del Arco 1
+  /// ("volver a la prehistoria, en cierto sentido"), Isaura
+  /// asiente despacio.
+  ///
+  /// **Sustitución diegética activa**: el yacimiento concreto
+  /// queda **sin nombrar** — el doc 08 §2.4.3 explícitamente
+  /// dice "a definir con asesoría — candidatos: zona de Aralar,
+  /// Pirineo navarro, valle de Baztán". Hasta que el comité
+  /// elija entre los tres del doc 5 §3.2, el ambiente se llama
+  /// genéricamente `yacimientoVasconNorte` y la cinemática
+  /// describe sólo el material visible sin afirmar topónimo.
+  /// Registrado en BLOQUEOS-PENDIENTES.md.
+  ///
+  /// Doc 08 §2.4.3.
+  static const EscenaCinematica elSilencioVascon = EscenaCinematica(
+    id: '2.4.3',
+    titulo: 'El silencio vascón',
+    flagDeSalida: 'escena_2_4_3_vista',
+    flagsRequeridos: {'escena_2_4_2_vista'},
+    ambiente: AmbienteArchivo.yacimientoVasconNorte,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Días después. Yacimiento al norte de Iruña — un '
+            'asentamiento vascón documentado del periodo. Mañana '
+            'fría. Restos modestos: estructuras de habitación de '
+            'piedra seca, una pared baja, fragmentos cerámicos '
+            'esparcidos junto al sondeo. Hierba alta, viento. '
+            'Maren e Isaura caminan despacio por encima de los '
+            'cimientos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Esto es lo que tenemos del lado vascón.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren mira. Hay poco. Una pared baja. Cerámica hecha a '
+            'mano — sin torno, lo cual ya es información: técnica '
+            'distinta, escala distinta, sociedad distinta de la '
+            'romana o la visigótica.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No hay inscripciones.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'No.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Eso significa que no escribían?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Significa que no se conservan inscripciones suyas. Que '
+            'escribieran o no es otra pregunta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Probablemente no escribían como los romanos o los '
+            'visigodos.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Probablemente. Pero no del todo seguro.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa. Isaura se agacha junto a un fragmento cerámico, '
+            'lo mira sin tocarlo, se levanta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Lo que tenemos del lado vascón son objetos. Materia '
+            'silenciosa. Para reconstruir su lado de la campaña '
+            'del 673, tienes que combinar estos objetos con la '
+            'lectura crítica de las fuentes hostiles.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Volver a la prehistoria, en cierto sentido.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'En cierto sentido sí.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoCierreAmable(textoBoton: 'BAJAR DEL YACIMIENTO'),
+    ],
+  );
+
+  /// 2.4.4 — *La frustración*. Mesa de Trabajo del Archivo. Maren
+  /// trabaja varias horas durante varios días. La Brecha es difícil:
+  /// sabe lo que dicen los visigodos, sabe que su lectura es
+  /// sesgada, no sabe qué pasó realmente. Voz larga del Cuaderno
+  /// articulando la frustración legítima del oficio cuando el
+  /// techo metodológico es estructural — no se puede declarar
+  /// Sólido lo que las fuentes no permiten declarar Sólido.
+  /// Pedagógicamente: el motor adaptativo detecta la dificultad
+  /// y reduce el ritmo de demanda; la cinemática lo registra
+  /// narrativamente sin hacer escena del mecanismo del juego.
+  ///
+  /// Doc 08 §2.4.4.
+  static const EscenaCinematica laFrustracion = EscenaCinematica(
+    id: '2.4.4',
+    titulo: 'La frustración',
+    flagDeSalida: 'escena_2_4_4_vista',
+    flagsRequeridos: {'escena_2_4_3_vista'},
+    ambiente: AmbienteArchivo.mesaTrabajoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mesa de Trabajo del Archivo. Tres días encadenados. '
+            'Maren con las fuentes ordenadas por columnas: visigodas '
+            'a la izquierda, materiales en el centro, hipótesis a '
+            'la derecha. La columna derecha está casi vacía. Lleva '
+            'una hora sin escribir.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Tres días con esto. No avanza. Sé lo que dicen los '
+            'visigodos. Sé que su lectura es sesgada. No sé qué '
+            'pasó realmente. Y eso me frustra como nunca antes.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Quiero declarar Sólido más cosas. No puedo. Casi todo '
+            'es Probable o Disputado.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Es como si la Brecha me dijera "aprende a aceptar el '
+            'techo o te quedas aquí encallada."',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren cierra la libreta sin terminar la columna. La '
+            'deja sobre la mesa. Se levanta. Necesita salir.',
+      ),
+      PlanoCierreAmable(textoBoton: 'IR A POR UN CAFÉ'),
+    ],
+  );
+
+  /// 2.4.5 — *Conversación con Karim*. Cocina del Archivo. Maren
+  /// se está haciendo un café cuando entra Karim. La cinemática
+  /// es la pieza pedagógica clave de la Estación: Karim reformula
+  /// la frustración de Maren como **el dato mismo de la Brecha**.
+  /// "El silencio vascón es el dato. No es ausencia de dato. Es
+  /// dato. Es información sobre cómo funcionaba la dominación."
+  /// Maren lo lleva más allá ("o que las había y se perdieron",
+  /// que también es información sobre dominación posterior).
+  /// Karim cierra con la frase que marca el oficio del juego
+  /// frente a la historia que se escribe sin atender a los
+  /// silencios — "la gente que escribe la historia normalmente
+  /// no escribe sobre los silencios. Tu trabajo va a notarse
+  /// precisamente porque tú sí vas a escribir sobre los
+  /// silencios". Y la respuesta a "¿eso es Reformismo?" — "eso
+  /// es oficio. El reformismo es lo mismo aplicado con otra
+  /// urgencia. Pero en la base es el mismo trabajo".
+  ///
+  /// Doc 08 §2.4.5.
+  static const EscenaCinematica conversacionConKarim = EscenaCinematica(
+    id: '2.4.5',
+    titulo: 'Conversación con Karim',
+    flagDeSalida: 'escena_2_4_5_vista',
+    flagsRequeridos: {'escena_2_4_4_vista'},
+    ambiente: AmbienteArchivo.cocinaArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cocina del Archivo. Maren con la cafetera, leche '
+            'caliente, taza ancha. Karim entra. Ve a Maren. La mira.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Wamba.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Wamba.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Cuéntame qué te pasa.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Karim se sienta en una de las sillas de madera. Maren '
+            'cuenta. Diez minutos. La frustración, las fuentes, el '
+            'techo que no se mueve. Karim escucha sin interrumpir, '
+            'taza vacía entre las dos manos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Vale. Te voy a decir algo que igual te molesta.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Lo que te frustra es lo más importante de la Brecha.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No te entiendo.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'El silencio vascón es el dato. No es ausencia de dato. '
+            'Es dato. Es información sobre cómo funcionaba la '
+            'dominación. Las fuentes son hostiles porque la sociedad '
+            'las controlaba la parte hostil. Que no haya fuentes '
+            'vasconas significa que no había instituciones vasconas '
+            'con capacidad de producir y conservar texto a la altura '
+            'de las visigodas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'O que las había y se perdieron.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'O eso. Lo segundo también es información — significa '
+            'que la dominación posterior eliminó lo que pudo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Y eso lo declaro.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Eso lo declaras.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa. Karim se levanta a por un café. Vuelve a la '
+            'silla.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Maren. La gente que escribe la historia normalmente no '
+            'escribe sobre los silencios. Tu trabajo va a notarse '
+            'precisamente porque tú sí vas a escribir sobre los '
+            'silencios.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Eso es Reformismo?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Eso es oficio. El reformismo es lo mismo aplicado con '
+            'otra urgencia. Pero en la base es el mismo trabajo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren asiente. Lleva el café a la Mesa de Trabajo. La '
+            'columna derecha empieza a llenarse de otra manera.',
+      ),
+      PlanoCierreAmable(textoBoton: 'VOLVER A LA MESA'),
+    ],
+  );
+
+  /// 2.4.6 — *Reconstrucción honesta*. Mesa de Trabajo. Maren
+  /// produce las 9 afirmaciones canónicas de la Brecha. Mezcla
+  /// densa de Sólido (campaña en 673, propaganda dinástica de
+  /// Julián, narrativa visigoda como "rebelión", afirmación 7
+  /// como Sólido (la ausencia)), Probable (enfrentamiento
+  /// localizable, asimetría documental como estructura) y
+  /// Disputado (estatus previo, alcance real de la pacificación).
+  /// La afirmación 9 es **declaración metodológica explícita**
+  /// — Sólido como declaración metodológica — que reconoce el
+  /// techo estructural de la reconstrucción para que cualquier
+  /// cronista futuro sepa qué se puede y qué no se puede pedir
+  /// a las fuentes.
+  ///
+  /// Voz breve del Cuaderno tras terminar: "no he resuelto la
+  /// Brecha. La he declarado. Igual eso es lo que tenía que
+  /// hacer."
+  ///
+  /// Doc 08 §2.4.6.
+  static const EscenaCinematica reconstruccionHonesta = EscenaCinematica(
+    id: '2.4.6',
+    titulo: 'Reconstrucción honesta',
+    flagDeSalida: 'escena_2_4_6_vista',
+    flagsRequeridos: {'escena_2_4_5_vista'},
+    ambiente: AmbienteArchivo.mesaTrabajoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Días después. Mesa de Trabajo del Archivo. Maren ha '
+            'releído lo que le dijo Karim. La frustración no se ha '
+            'ido del todo, pero la frustración ya no bloquea. Ahora '
+            'la columna derecha del cuaderno tiene texto.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            '1. Wamba dirigió una campaña militar contra los '
+            'vascones del norte en 673. Sólido.\n'
+            '2. La campaña fue narrada décadas después por Julián '
+            'de Toledo en función propagandística. Sólido.\n'
+            '3. La narrativa visigoda presenta a los vascones como '
+            'pueblo "rebelde", presuponiendo dominio previo. Sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            '4. El estatus real de los vascones antes de la campaña '
+            '— sometidos, aliados, independientes, mixto — es '
+            'Disputado. Las fuentes visigodas afirman lo primero, '
+            'pero las campañas recurrentes lo ponen en duda. '
+            'Disputado.\n'
+            '5. La campaña incluyó al menos un enfrentamiento '
+            'militar con derrota vascona localizable cronológicamente. '
+            'Probable.\n'
+            '6. El alcance real de la "pacificación" tras la '
+            'campaña es Disputado — campañas posteriores sugieren '
+            'que no fue duradera. Disputado.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 9),
+        textoLectura:
+            '7. No se conservan fuentes producidas por los vascones '
+            'del periodo. Ni textuales ni epigráficas. Las fuentes '
+            'para reconstruir su lado son material arqueológico, '
+            'mención indirecta en fuentes hostiles, y comparación '
+            'con periodos anteriores y posteriores. Sólido (la '
+            'ausencia).\n'
+            '8. Esta ausencia documental no es accidente: refleja '
+            'una estructura social donde una de las partes tenía '
+            'instituciones de producción y conservación textual y '
+            'la otra no, en la medida documentada. Probable.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            '9. La reconstrucción del lado vascón tiene un techo '
+            'metodológico estructural. Cualquier afirmación sobre '
+            'su perspectiva específica del conflicto será Probable '
+            'o Disputado por defecto, salvo que aparezcan nuevas '
+            'fuentes. Sólido como declaración metodológica.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'No he resuelto la Brecha. La he declarado.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Igual eso es lo que tenía que hacer.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoCierreAmable(textoBoton: 'PREPARAR EL CONCILIO'),
+    ],
+  );
+
+  /// 2.4.7 — *El Concilio dividido*. Salón del Concilio del
+  /// Archivo. Concilio entero — primera vez en el Arco 2 que
+  /// las cinco voces revisoras coinciden en la mesa: Begoña
+  /// preside, Isaura, Karim, Aitor y **Joana** (primera aparición
+  /// narrativa larga de Joana en el Arco 2). Marina observa.
+  /// Maren presenta. La afirmación 8 ("esta ausencia documental
+  /// no es accidente") genera el debate: Joana (Anclada) la lee
+  /// como interpretativa, Karim (Reformista) la habría declarado
+  /// "Sólido tirando a Probable alto", Aitor (Constructor) la
+  /// habría declarado "Probable bajo". Las tres escuelas
+  /// convergen en Probable desde distintos lados — el doc lo
+  /// describe como "exactamente lo que el oficio celebra".
+  ///
+  /// Begoña pregunta por la afirmación 9 (declaración
+  /// metodológica). Maren articula la justificación: el techo
+  /// estructural debe declararse para que ningún cronista futuro
+  /// confunda "no se sabe" con "se puede saber con más trabajo".
+  /// Begoña sella sin sonreír — pero Marina capta la sonrisa
+  /// de dos segundos en el pasillo de salida ("Begoña ha sonreído /
+  /// no la vi / has sonreído tú. Ella también, dos segundos").
+  ///
+  /// Doc 08 §2.4.7.
+  static const EscenaCinematica elConcilioDividido = EscenaCinematica(
+    id: '2.4.7',
+    titulo: 'El Concilio dividido',
+    flagDeSalida: 'escena_2_4_7_vista',
+    flagsRequeridos: {'escena_2_4_6_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Salón del Concilio. Mesa larga. Begoña preside desde '
+            'la cabecera. Isaura, Karim, Aitor y Joana en los lados. '
+            'Marina al fondo, en una silla apartada, observa sin '
+            'derecho de palabra. Maren entra, saluda con la cabeza, '
+            'se queda de pie con la hoja de las nueve afirmaciones.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Adelante.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren presenta durante quince minutos. Las nueve '
+            'afirmaciones, los anclajes en cada fuente, los niveles '
+            'de confianza con sus razones. Cuando termina, el '
+            'Concilio entra en discusión. La afirmación 8 — "esta '
+            'ausencia documental no es accidente" — es la que '
+            'genera debate.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'La afirmación 8 es interpretativa. ¿No estás declarando '
+            'como Probable algo que es más bien hipótesis?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Es interpretativa. Pero la base — ausencia de fuentes '
+            'vasconas, presencia de fuentes visigodas en cantidad — '
+            'es documentada. La inferencia sobre lo que esa '
+            'asimetría significa es interpretativa.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto: 'Y la declaras Probable.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Sí. Si la marcara Sólido, estaría afirmando como hecho '
+            'lo que es inferencia. Si la marcara Disputado, estaría '
+            'exagerando la duda — la asimetría es real.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto: 'Vale. Probable acepto.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Yo la habría declarado Sólido tirando a Probable alto. '
+            'Pero acepto Probable.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Yo la habría declarado Probable bajo. Acepto Probable.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Risa breve y respetuosa en la sala. Las tres escuelas '
+            'convergiendo en Probable desde distintos lados es '
+            'exactamente lo que el oficio celebra.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Una pregunta para Maren.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto:
+            'Tu reconstrucción tiene una afirmación que es '
+            'declaración metodológica. La 9. ¿Por qué la incluyes?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque si no la incluyo, quien lea mi reconstrucción '
+            'podría pensar que con más trabajo se podría llegar a '
+            'más certeza sobre el lado vascón. Y eso no es verdad. '
+            'El techo es estructural. Lo declaro para que cualquier '
+            'cronista que retome esta Brecha sepa qué se puede y '
+            'qué no se puede pedir a las fuentes.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Pausa larga. Begoña la mira. Cinco segundos. La sala '
+            'en silencio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Sellada.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Salen del Concilio. Maren con la hoja en la mano. '
+            'Marina detrás, alcanzándola en el pasillo, en voz baja.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Begoña ha sonreído.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No la vi.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Has sonreído tú. Ella también, dos segundos.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoCierreAmable(textoBoton: 'IR AL PATIO'),
+    ],
+  );
+
+  /// 2.4.8 — *"Aprendiz II"*. Patio del Archivo, banco junto al
+  /// brocal del pozo. Cierre formal de la Estación 2.4 y del
+  /// Arco 2 entero. Isaura aparece detrás de Maren. Las dos se
+  /// sientan. Isaura pronuncia "Aprendiz II". Maren pregunta si
+  /// el cuaderno de Isaura tiene una pregunta sobre Wamba —
+  /// resonancia con la 2.B.1, primera vez que Maren ata el
+  /// dispositivo del cuaderno de la mentora a una Brecha
+  /// concreta. Isaura responde con tres preguntas; una resuelta,
+  /// dos siguen. Cierre con el flotante "APRENDIZ II".
+  ///
+  /// Doc 08 §2.4.8.
+  static const EscenaCinematica aprendizDosLogrado = EscenaCinematica(
+    id: '2.4.8',
+    titulo: 'Aprendiz II',
+    flagDeSalida: 'escena_2_4_8_vista',
+    flagsRequeridos: {'escena_2_4_7_vista'},
+    ambiente: AmbienteArchivo.patioArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Patio del Archivo. Banco junto al brocal del pozo. Tarde '
+            'fría de finales de febrero. Maren se sienta sola al '
+            'principio. Isaura aparece detrás unos minutos después '
+            'y se sienta a su lado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Aprendiz II.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No me lo creo.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hazte.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa larga. Las dos miran el patio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Isaura.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Sí?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tu cuaderno tiene una pregunta sobre Wamba?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Isaura se queda quieta. Diez segundos. Mira al brocal. '
+            'No al banco, no a Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Tres preguntas. De hace mucho.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Las has resuelto?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Una. Las otras dos siguen.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Maren asiente. Las dos se quedan sentadas. La cámara '
+            'se aleja despacio. Tres segundos. Aparece flotante: '
+            'APRENDIZ II.',
+      ),
+      PlanoCierreAmable(textoBoton: 'CERRAR LA ESTACIÓN'),
     ],
   );
 }

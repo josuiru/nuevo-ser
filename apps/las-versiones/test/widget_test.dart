@@ -127,9 +127,20 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
-      // Latente 2.C.1 (Eider y el cambio) cerrada — la 2.4.x
-      // todavía no está implementada.
+      // Latente 2.C.1 (Eider y el cambio) cerrada.
       'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+      // Estación 2.4 completa (Wamba contra los vascones, doc 08
+      // §2.4.1–2.4.8) cerrada con Aprendiz II — el orquestador no
+      // tiene cinemáticas posteriores implementadas, así que cae
+      // al esqueleto.
+      'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -414,9 +425,20 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
-      // Latente 2.C.1 (Eider y el cambio) cerrada — la 2.4.x
-      // todavía no está implementada.
+      // Latente 2.C.1 (Eider y el cambio) cerrada.
       'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+      // Estación 2.4 completa (Wamba contra los vascones, doc 08
+      // §2.4.1–2.4.8) cerrada con Aprendiz II — el orquestador no
+      // tiene cinemáticas posteriores implementadas, así que cae
+      // al esqueleto.
+      'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -507,9 +529,20 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
-      // Latente 2.C.1 (Eider y el cambio) cerrada — la 2.4.x
-      // todavía no está implementada.
+      // Latente 2.C.1 (Eider y el cambio) cerrada.
       'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+      // Estación 2.4 completa (Wamba contra los vascones, doc 08
+      // §2.4.1–2.4.8) cerrada con Aprendiz II — el orquestador no
+      // tiene cinemáticas posteriores implementadas, así que cae
+      // al esqueleto.
+      'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

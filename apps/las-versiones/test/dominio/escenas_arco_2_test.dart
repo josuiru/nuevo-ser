@@ -73,9 +73,10 @@ void main() {
         '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) + '
         'Estación 2.2 completa (2.2.1 a 2.2.6) + latente post-Estación '
         '2.2 (2.B.1) + Estación 2.3 completa (2.3.1 a 2.3.6) + latente '
-        'post-Estación 2.3 (2.C.1) — 23 cinemáticas implementadas hoy',
-        () {
-      expect(EscenasArco2.todas, hasLength(23));
+        'post-Estación 2.3 (2.C.1) + Estación 2.4 completa (2.4.1 a '
+        '2.4.8, incluido el cierre Aprendiz II en 2.4.8) — 31 '
+        'cinemáticas implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(31));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
         [
@@ -102,6 +103,14 @@ void main() {
           '2.3.5',
           '2.3.6',
           '2.C.1',
+          '2.4.1',
+          '2.4.2',
+          '2.4.3',
+          '2.4.4',
+          '2.4.5',
+          '2.4.6',
+          '2.4.7',
+          '2.4.8',
         ],
       );
     });
@@ -426,6 +435,182 @@ void main() {
             'Maren articula explícitamente el compromiso con la doble '
             'pertenencia',
       );
+    });
+
+    test('Estación 2.4 arranca con 2.4.1 que requiere escena_2_c_1_vista '
+        '— la latente 2.C.1 actúa como precondición, igual que las dos '
+        'estaciones anteriores con sus latentes', () {
+      expect(
+        EscenasArco2.unaBrechaDeUnSoloLado.flagsRequeridos,
+        {'escena_2_c_1_vista'},
+      );
+    });
+
+    test('Estación 2.4 cierra con 2.4.8 que activa al mismo tiempo el '
+        'aprendiz_dos_alcanzado y la arco_2_estacion_4_cerrada — hito '
+        'doble de cierre de la última Estación del Arco 2', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_4_8_vista'],
+        containsAll([
+          'aprendiz_dos_alcanzado',
+          'arco_2_estacion_4_cerrada',
+        ]),
+      );
+    });
+
+    test('Concilio 2.4.7 activa brecha_2_4_completada al cerrar — mismo '
+        'patrón que 2.1.5 / 2.2.5 / 2.3.6 con sus respectivas Brechas', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_4_7_vista'],
+        containsAll(['concilio_2_4_cerrado', 'brecha_2_4_completada']),
+      );
+    });
+
+    test('2.4.1 (encargo) viaja con el despacho de Isaura — Brecha '
+        'asignada en privado, mismo sub-espacio íntimo que 2.B.1', () {
+      expect(
+        EscenasArco2.unaBrechaDeUnSoloLado.ambiente,
+        same(AmbienteArchivo.despachoIsaura),
+      );
+    });
+
+    test('2.4.2 (crónicas visigodas) viaja con la biblioteca del '
+        'Archivo — primera aparición de este sub-ambiente: Maren lee '
+        'sola Julián de Toledo y otras crónicas de la perspectiva '
+        'ganadora', () {
+      expect(
+        EscenasArco2.lasCronicasVisigodas.ambiente,
+        same(AmbienteArchivo.bibliotecaArchivo),
+      );
+    });
+
+    test('2.4.3 (silencio vascón) viaja con un yacimiento del norte sin '
+        'nombre histórico en pantalla — sustitución diegética hasta '
+        'validación del comité asesor (registrada en BLOQUEOS)', () {
+      expect(
+        EscenasArco2.elSilencioVascon.ambiente,
+        same(AmbienteArchivo.yacimientoVasconNorte),
+      );
+    });
+
+    test('2.4.4 y 2.4.6 viajan con la mesa de trabajo del Archivo — la '
+        'frustración primero, la reconstrucción honesta después, en el '
+        'mismo espacio físico para subrayar la transformación interna', () {
+      for (final escena in [
+        EscenasArco2.laFrustracion,
+        EscenasArco2.reconstruccionHonesta,
+      ]) {
+        expect(
+          escena.ambiente,
+          same(AmbienteArchivo.mesaTrabajoArchivo),
+          reason: '${escena.id} debería usar mesaTrabajoArchivo',
+        );
+      }
+    });
+
+    test('2.4.5 (conversación con Karim) viaja con la cocina del '
+        'Archivo — espacio íntimo recurrente para las lecciones '
+        'epistémicas clave (mismo patrón que 2.3.4)', () {
+      expect(
+        EscenasArco2.conversacionConKarim.ambiente,
+        same(AmbienteArchivo.cocinaArchivo),
+      );
+    });
+
+    test('2.4.5 contiene la lección epistémica clave del Arco 2 — el '
+        'silencio vascón es dato, no ausencia de dato', () {
+      final dialogos = EscenasArco2.conversacionConKarim.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('silencio vascón') &&
+            texto.contains('dato') &&
+            texto.contains('ausencia')),
+        isTrue,
+        reason: 'Karim debe articular explícitamente que el silencio es '
+            'dato y no ausencia de dato',
+      );
+    });
+
+    test('2.4.6 reproduce las nueve afirmaciones canónicas — incluida '
+        'la afirmación 7 declarada como "Sólido (la ausencia)" y la 9 '
+        'como "Sólido como declaración metodológica"', () {
+      final textoCompleto = EscenasArco2.reconstruccionHonesta.planos
+          .whereType<PlanoAmbiente>()
+          .map((plano) => plano.textoLectura)
+          .join(' ');
+      expect(textoCompleto, contains('1.'));
+      expect(textoCompleto, contains('9.'));
+      expect(
+        textoCompleto,
+        contains('Sólido (la ausencia)'),
+        reason: 'la afirmación 7 declara la ausencia documental como '
+            'información, calificada como Sólido',
+      );
+      expect(
+        textoCompleto,
+        contains('Sólido como declaración metodológica'),
+        reason: 'la afirmación 9 declara explícitamente el techo de '
+            'reconstrucción como afirmación metodológica',
+      );
+    });
+
+    test('2.4.7 (Concilio) viaja con el salón del Concilio del Archivo '
+        '— mesa formal de revisores, igual que 2.3.6 cierra la 2.3', () {
+      expect(
+        EscenasArco2.elConcilioDividido.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test('2.4.7 (Concilio dividido) lleva las cinco voces revisoras del '
+        'Arco 2 — Karim (Reformista), Aitor (Constructor), Joana, '
+        'Begoña, Isaura — más Maren que presenta', () {
+      final voces = EscenasArco2.elConcilioDividido.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, containsAll([
+        VozPersonaje.karim,
+        VozPersonaje.aitor,
+        VozPersonaje.joana,
+        VozPersonaje.begona,
+        VozPersonaje.maren,
+      ]));
+    });
+
+    test('2.4.8 (Aprendiz II) viaja con el patio del Archivo — cierre '
+        'simbólico de la Estación 2.4 en el mismo espacio donde abrió '
+        'el Arco 2 con la 2.0.1 (peso narrativo del brocal del pozo)', () {
+      expect(
+        EscenasArco2.aprendizDosLogrado.ambiente,
+        same(AmbienteArchivo.patioArchivo),
+      );
+    });
+
+    test('2.4.8 contiene la línea pedagógica clave de cierre — Isaura '
+        'declara Aprendiz II y revela que su cuaderno tiene tres '
+        'preguntas sobre Wamba con dos sin resolver desde hace mucho '
+        'tiempo (continuidad del oficio)', () {
+      final dialogos = EscenasArco2.aprendizDosLogrado.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(dialogos, contains('Aprendiz II.'));
+      expect(dialogos, contains('Tres preguntas. De hace mucho.'));
+      expect(dialogos, contains('Una. Las otras dos siguen.'));
+    });
+
+    test('2.4.8 sólo habla Isaura y Maren — escena íntima de cierre '
+        'sin terceros, simétrica a 2.0.1 que abrió el arco con las '
+        'mismas dos voces', () {
+      final voces = EscenasArco2.aprendizDosLogrado.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, {VozPersonaje.isaura, VozPersonaje.maren});
     });
   });
 }
