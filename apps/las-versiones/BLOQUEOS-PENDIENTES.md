@@ -421,6 +421,26 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
+## Mosaico M2 — sincronización con `/companion/mosaicos` (F2-12)
+
+**Tracker doc 17**: no aplica (acoplamiento técnico, no contenido histórico).
+
+**Estado**: cableado. `lib/datos/sincronizador_mosaico.dart` añade la clase `SincronizadorMosaicoArco2` paralela a la `SincronizadorMosaicoArco1` (mismo diseño: opt-in, sin reintento automático, sin cola persistente, lee el token al construir el payload). El orquestador (`_alEntregarMosaicoArco2`) llama al sincronizador en segundo plano tras la entrega local — sin bloquear la cinemática `M2.entrega` que entra justo después. Si no hay token JWT, devuelve `SyncMosaicoSinToken` sin tocar red; si hay token y el backend responde 201, devuelve `SyncMosaicoExito`; los errores HTTP/timeout/socket caen en `SyncMosaicoError`.
+
+El payload incluye:
+- `game_id = 'las-versiones'` (el mismo que el M1 — sembrado en `ns_games` por `class-ns-esquema.php`).
+- `arc_id = MosaicoArco2.idArco = 'arco_2'` (distinto del `'arco_1'` del M1; el backend los archiva como dos mosaicos separados).
+- `format = 'audio_guia_arco_2'` (constante `formatoAudioGuiaArco2`, distinta de `formatoMosaicoV2 = 'comic_8_vinetas_confianza'` del M1; el adulto acompañante en la futura vista del cuidador podrá distinguir el formato y presentar la vista correspondiente).
+- `required_anchors`: ids de los 8 fragmentos (todos llevan anclaje obligatorio en el M2 — la audio-guía ancla cada declaración a evidencia documental o material; en el M1 había una viñeta sin anclaje obligatorio, `cromlech_dialogo_con_sira`, pero el M2 no tiene equivalente).
+- `fulfilled_anchors`: ids de los fragmentos marcados, ordenados alfabéticamente.
+- `content_meta`: mapa `idFragmento → 'solido'|'probable'|'disputado'`.
+
+**Pendiente humano**: igual que el M1, hace falta una pantalla de login para alimentar `RepositorioCuentaBackend` con un token JWT real. Hasta entonces el sincronizador del M2 se queda en `SyncMosaicoSinToken` cuando se llama tras la entrega — el Mosaico se preserva en local.
+
+**No requiere bumpear el plugin WP**: el endpoint `POST /companion/mosaicos` ya acepta `format` como string libre (lo guarda crudo en LONGTEXT). No hace falta añadir `'audio_guia_arco_2'` a una lista de formatos válidos en PHP — el backend acepta cualquier string. La distinción de formato es responsabilidad del cliente que lee el mosaico (el cuidador en su vista futura, o el propio juego si añade una vista de "mis mosaicos").
+
+---
+
 ## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).

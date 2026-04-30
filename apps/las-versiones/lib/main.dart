@@ -220,12 +220,18 @@ class _OrquestadorState extends State<Orquestador> {
 
   late final companion.ClienteCompanion _clienteCompanion;
   late final SincronizadorMosaicoArco1 _sincronizadorMosaico;
+  late final SincronizadorMosaicoArco2 _sincronizadorMosaicoArco2;
 
   @override
   void initState() {
     super.initState();
     _clienteCompanion = companion.ClienteCompanion(urlBase: _urlBaseBackend);
     _sincronizadorMosaico = SincronizadorMosaicoArco1(
+      repoCuenta: widget.repoCuenta,
+      repoMosaico: widget.repoMosaico,
+      clienteCompanion: _clienteCompanion,
+    );
+    _sincronizadorMosaicoArco2 = SincronizadorMosaicoArco2(
       repoCuenta: widget.repoCuenta,
       repoMosaico: widget.repoMosaico,
       clienteCompanion: _clienteCompanion,
@@ -466,12 +472,31 @@ class _OrquestadorState extends State<Orquestador> {
     // referencia `mosaico_arco_2_entregado`. Recalculamos la próxima
     // escena para que el orquestador la dispare antes del esqueleto;
     // luego encadenarán las dos cinemáticas del cierre del Arco 2
-    // (2.Z.1 con Antonio y 2.Z.2 La grabación). El cableado al
-    // companion (`POST /companion/mosaicos`) llegará en F2-12 con
-    // `format='audio_guia_arco_2'`.
+    // (2.Z.1 con Antonio y 2.Z.2 La grabación).
     setState(() {
       _escenaEnReproduccion = _proximaEscenaPendiente();
     });
+    // Sincronización opt-in: el Mosaico ya está en local. Si hay
+    // token, se intenta archivar en el backend con
+    // `format='audio_guia_arco_2'`. No bloquea ni avisa al jugador
+    // — un `SyncMosaicoError` o `SyncMosaicoSinToken` no debe
+    // interrumpir el flujo narrativo (cinemática `M2.entrega`) que
+    // entra justo después.
+    _sincronizarMosaicoArco2EnSegundoPlano();
+  }
+
+  Future<void> _sincronizarMosaicoArco2EnSegundoPlano() async {
+    final resultado = await _sincronizadorMosaicoArco2.sincronizar();
+    if (kDebugMode) {
+      switch (resultado) {
+        case SyncMosaicoSinToken():
+          debugPrint('Mosaico Arco 2: sin token, queda local.');
+        case SyncMosaicoExito():
+          debugPrint('Mosaico Arco 2: archivado en backend.');
+        case SyncMosaicoError(:final razon):
+          debugPrint('Mosaico Arco 2: error de sync — $razon');
+      }
+    }
   }
 
   /// Abre el Cuaderno como ruta superpuesta al estado actual del
