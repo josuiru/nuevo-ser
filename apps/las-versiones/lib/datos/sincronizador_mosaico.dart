@@ -68,7 +68,11 @@ class SyncMosaicoError extends ResultadoSyncMosaico {
   final String razon;
 }
 
-/// Sube el Mosaico del Arco 1 al endpoint `POST /companion/mosaicos`.
+/// Base común a los sincronizadores de Mosaicos del juego (M1 cómic
+/// + M2 audio-guía). Encapsula el flujo `sincronizar()` idéntico a
+/// los dos arcos: lee token, lee marcas del repositorio local,
+/// construye payload, llama al cliente y mapea las excepciones a
+/// los tres `ResultadoSyncMosaico` posibles.
 ///
 /// Diseño:
 /// - El componente NO decide cuándo sincronizar. Lo dispara el
@@ -81,13 +85,17 @@ class SyncMosaicoError extends ResultadoSyncMosaico {
 ///   ofrecerle reintentar.
 /// - El token se lee al construir el payload — puede haber cambiado
 ///   desde la última llamada.
-class SincronizadorMosaicoArco1 {
-  SincronizadorMosaicoArco1({
+///
+/// Cada subclase concreta provee su `idArco`, su `titulo` visible y
+/// la lista de ids de piezas (viñetas en el M1, fragmentos en el M2)
+/// que llevan anclaje obligatorio.
+abstract class SincronizadorMosaicoBase {
+  SincronizadorMosaicoBase({
     required this.repoCuenta,
     required this.repoMosaico,
     required this.clienteCompanion,
-    this.gameId = gameIdLasVersiones,
-    this.formato = formatoMosaicoV2,
+    required this.gameId,
+    required this.formato,
   });
 
   final RepositorioCuentaBackend repoCuenta;
@@ -101,18 +109,28 @@ class SincronizadorMosaicoArco1 {
   final String gameId;
   final String formato;
 
-  /// Sincroniza el Mosaico del Arco 1 con el backend. Lee el token, lee
-  /// las marcas del repositorio local, construye el payload (con
-  /// `requiredAnchors` = ids de las viñetas con anclaje obligatorio,
-  /// `fulfilledAnchors` = ids de las viñetas que el jugador marcó, y
-  /// `contentMeta` = mapa nivel-por-viñeta) y llama al cliente. Devuelve
-  /// el [ResultadoSyncMosaico] correspondiente.
+  /// Identificador del arco que se sincroniza ("arco_1", "arco_2"…).
+  /// Se usa como `arc_id` en el payload y como clave para cargar las
+  /// marcas del `RepositorioMosaico`.
+  String get idArco;
+
+  /// Título visible del Mosaico — sube tal cual al backend.
+  String get titulo;
+
+  /// IDs de las piezas del Mosaico (viñetas en el M1, fragmentos en
+  /// el M2) con anclaje obligatorio. Cada subclase los lee de su
+  /// catálogo estático correspondiente.
+  List<String> get idsPiezasConAnclajeObligatorio;
+
+  /// Sincroniza el Mosaico del arco con el backend. Lee el token, lee
+  /// las marcas del repositorio local, construye el payload y llama
+  /// al cliente. Devuelve el [ResultadoSyncMosaico] correspondiente.
   Future<ResultadoSyncMosaico> sincronizar() async {
     final token = await repoCuenta.cargarToken();
     if (token == null || token.isEmpty) {
       return const SyncMosaicoSinToken();
     }
-    final marcas = await repoMosaico.cargar(MosaicoArco1.idArco);
+    final marcas = await repoMosaico.cargar(idArco);
     final mosaico = construirPayload(marcas: marcas);
     try {
       final mosaicoBackend = await clienteCompanion.crearMosaico(
@@ -130,21 +148,19 @@ class SincronizadorMosaicoArco1 {
   }
 
   /// Construye el payload `Mosaico` que el cliente envía al backend.
-  /// Pública para que los tests puedan verificar la forma sin tocar la
-  /// red. `requiredAnchors` lista los ids de **todas** las viñetas que
-  /// llevan anclaje arqueológico obligatorio (la pieza de cómic anclada
-  /// a fuentes catalogadas); `fulfilledAnchors` lista los ids de
-  /// **las que el jugador marcó** con cualquier nivel de confianza.
-  /// `contentMeta` lleva el mapa completo `idVineta → nivel` para que
-  /// el adulto acompañante (cuando entre la vista del cuidador) pueda
-  /// ver lo que la Cronista declaró.
+  /// Pública para que los tests puedan verificar la forma sin tocar
+  /// la red. `requiredAnchors` lista los ids de **todas** las piezas
+  /// con anclaje obligatorio (lo que cada subclase devuelve en
+  /// [idsPiezasConAnclajeObligatorio]); `fulfilledAnchors` lista los
+  /// ids de las piezas marcadas por el jugador con cualquier nivel
+  /// de confianza, ordenados alfabéticamente. `contentMeta` lleva el
+  /// mapa completo `idPieza → nivel` para que el adulto acompañante
+  /// (cuando entre la vista del cuidador) pueda ver lo que la
+  /// Cronista declaró.
   companion.Mosaico construirPayload({
     required Map<String, NivelConfianza> marcas,
   }) {
-    final idsObligatorios = <String>[
-      for (final v in MosaicoArco1.vinetas)
-        if (v.esAnclajeObligatorio) v.id,
-    ];
+    final idsObligatorios = idsPiezasConAnclajeObligatorio;
     final idsMarcados = marcas.keys.toList()..sort();
     final contentMeta = <String, dynamic>{
       for (final entrada in marcas.entries)
@@ -152,9 +168,9 @@ class SincronizadorMosaicoArco1 {
     };
     return companion.Mosaico(
       gameId: gameId,
-      arcId: MosaicoArco1.idArco,
+      arcId: idArco,
       format: formato,
-      title: MosaicoArco1.titulo,
+      title: titulo,
       contentRef: '',
       contentMeta: contentMeta,
       requiredAnchors: idsObligatorios,
@@ -174,99 +190,55 @@ class SincronizadorMosaicoArco1 {
   }
 }
 
-/// Sube el Mosaico del Arco 2 (audio-guía) al endpoint
-/// `POST /companion/mosaicos`. Paralelo al `SincronizadorMosaicoArco1`
-/// — mismo diseño (no decide cuándo sincronizar, sin reintento
-/// automático, lee el token al construir el payload), distinta
-/// fuente de datos (`MosaicoArco2.fragmentos` en lugar de
-/// `MosaicoArco1.vinetas`) y distinto `format` por defecto
-/// (`formatoAudioGuiaArco2`).
-class SincronizadorMosaicoArco2 {
-  SincronizadorMosaicoArco2({
-    required this.repoCuenta,
-    required this.repoMosaico,
-    required this.clienteCompanion,
-    this.gameId = gameIdLasVersiones,
-    this.formato = formatoAudioGuiaArco2,
+/// Sube el Mosaico del Arco 1 (cómic mudo de 8 viñetas) al endpoint
+/// `POST /companion/mosaicos`. Hereda el flujo de
+/// [SincronizadorMosaicoBase]; sólo aporta la fuente concreta de
+/// datos (`MosaicoArco1.vinetas`) y los defaults del formato.
+class SincronizadorMosaicoArco1 extends SincronizadorMosaicoBase {
+  SincronizadorMosaicoArco1({
+    required super.repoCuenta,
+    required super.repoMosaico,
+    required super.clienteCompanion,
+    super.gameId = gameIdLasVersiones,
+    super.formato = formatoMosaicoV2,
   });
 
-  final RepositorioCuentaBackend repoCuenta;
+  @override
+  String get idArco => MosaicoArco1.idArco;
 
-  /// Repositorio local — el mismo `RepositorioMosaico` del M1 (que
-  /// es genérico por `idArco`). Lo lee el sincronizador para
-  /// construir el payload con `MosaicoArco2.idArco`.
-  final RepositorioMosaico repoMosaico;
+  @override
+  String get titulo => MosaicoArco1.titulo;
 
-  final companion.ClienteCompanion clienteCompanion;
-  final String gameId;
-  final String formato;
+  @override
+  List<String> get idsPiezasConAnclajeObligatorio => [
+        for (final vineta in MosaicoArco1.vinetas)
+          if (vineta.esAnclajeObligatorio) vineta.id,
+      ];
+}
 
-  /// Sincroniza el Mosaico del Arco 2 con el backend. Lee el token,
-  /// lee las marcas del repositorio local con `MosaicoArco2.idArco`,
-  /// construye el payload y llama al cliente. Devuelve el
-  /// [ResultadoSyncMosaico] correspondiente.
-  Future<ResultadoSyncMosaico> sincronizar() async {
-    final token = await repoCuenta.cargarToken();
-    if (token == null || token.isEmpty) {
-      return const SyncMosaicoSinToken();
-    }
-    final marcas = await repoMosaico.cargar(MosaicoArco2.idArco);
-    final mosaico = construirPayload(marcas: marcas);
-    try {
-      final mosaicoBackend = await clienteCompanion.crearMosaico(
-        token: token,
-        mosaico: mosaico,
-      );
-      return SyncMosaicoExito(mosaicoBackend: mosaicoBackend);
-    } on ExcepcionApi catch (e) {
-      return SyncMosaicoError(razon: 'API ${e.codigo}: ${e.mensaje}');
-    } on TimeoutException {
-      return const SyncMosaicoError(razon: 'Tiempo de espera agotado.');
-    } on SocketException {
-      return const SyncMosaicoError(razon: 'Sin conexión.');
-    }
-  }
+/// Sube el Mosaico del Arco 2 (audio-guía de 8 fragmentos) al
+/// endpoint `POST /companion/mosaicos`. Hereda el flujo de
+/// [SincronizadorMosaicoBase]; sólo aporta la fuente concreta de
+/// datos (`MosaicoArco2.fragmentos` — todos llevan anclaje obligatorio
+/// en el M2) y los defaults del formato.
+class SincronizadorMosaicoArco2 extends SincronizadorMosaicoBase {
+  SincronizadorMosaicoArco2({
+    required super.repoCuenta,
+    required super.repoMosaico,
+    required super.clienteCompanion,
+    super.gameId = gameIdLasVersiones,
+    super.formato = formatoAudioGuiaArco2,
+  });
 
-  /// Construye el payload `Mosaico` que el cliente envía al backend.
-  /// `requiredAnchors` lista los ids de los fragmentos con anclaje
-  /// arqueológico/documental obligatorio (en el M2 son **todos** los
-  /// fragmentos — la audio-guía ancla cada declaración a evidencia,
-  /// no hay fragmentos de transición pura como sí los había en
-  /// alguna viñeta del M1). `fulfilledAnchors` lista los ids de los
-  /// fragmentos que el jugador marcó. `contentMeta` lleva el mapa
-  /// completo `idFragmento → nivel`.
-  companion.Mosaico construirPayload({
-    required Map<String, NivelConfianza> marcas,
-  }) {
-    final idsObligatorios = <String>[
-      for (final fragmento in MosaicoArco2.fragmentos)
-        if (fragmento.esAnclajeObligatorio) fragmento.id,
-    ];
-    final idsMarcados = marcas.keys.toList()..sort();
-    final contentMeta = <String, dynamic>{
-      for (final entrada in marcas.entries)
-        entrada.key: _serializarNivel(entrada.value),
-    };
-    return companion.Mosaico(
-      gameId: gameId,
-      arcId: MosaicoArco2.idArco,
-      format: formato,
-      title: MosaicoArco2.titulo,
-      contentRef: '',
-      contentMeta: contentMeta,
-      requiredAnchors: idsObligatorios,
-      fulfilledAnchors: idsMarcados,
-    );
-  }
+  @override
+  String get idArco => MosaicoArco2.idArco;
 
-  static String _serializarNivel(NivelConfianza nivel) {
-    switch (nivel) {
-      case NivelConfianza.solido:
-        return 'solido';
-      case NivelConfianza.probable:
-        return 'probable';
-      case NivelConfianza.disputado:
-        return 'disputado';
-    }
-  }
+  @override
+  String get titulo => MosaicoArco2.titulo;
+
+  @override
+  List<String> get idsPiezasConAnclajeObligatorio => [
+        for (final fragmento in MosaicoArco2.fragmentos)
+          if (fragmento.esAnclajeObligatorio) fragmento.id,
+      ];
 }
