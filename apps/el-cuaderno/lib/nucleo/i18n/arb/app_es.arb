@@ -196,6 +196,17 @@
   "ajustesBorrarConfirmacionBoton": "Borrar todo",
   "ajustesBorradoCompleto": "Listo. Tu cuaderno está vacío.",
 
+  "ajustesTutorDebugTitulo": "Tutor (debug)",
+  "@ajustesTutorDebugTitulo": {
+    "description": "Bloque visible sólo en builds de debug. Permite pegar un JWT del backend para probar el Tutor real end-to-end sin pantalla de login."
+  },
+  "ajustesTutorDebugDescripcion": "Pega aquí un token del backend para activar el Tutor real. Visible sólo en debug.",
+  "ajustesTutorDebugPlaceholder": "JWT del backend",
+  "ajustesTutorDebugBotonGuardar": "Guardar token",
+  "ajustesTutorDebugBotonBorrar": "Borrar token",
+  "ajustesTutorDebugGuardado": "Token guardado. Vuelve al Tutor para probarlo.",
+  "ajustesTutorDebugBorrado": "Token borrado. El Tutor vuelve a la respuesta canónica.",
+
   "cuidadorTitulo": "Página del cuidador",
   "@cuidadorTitulo": {
     "description": "Título de la pantalla del cuidador."

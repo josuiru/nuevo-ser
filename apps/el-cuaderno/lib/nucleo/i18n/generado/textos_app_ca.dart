@@ -190,6 +190,27 @@ class TextosAppCa extends TextosApp {
   String get ajustesBorradoCompleto => 'TODO_CA · Listo. Tu cuaderno está vacío.';
 
   @override
+  String get ajustesTutorDebugTitulo => 'TODO_CA · Tutor (debug)';
+
+  @override
+  String get ajustesTutorDebugDescripcion => 'TODO_CA · Pega aquí un token del backend para activar el Tutor real. Visible sólo en debug.';
+
+  @override
+  String get ajustesTutorDebugPlaceholder => 'TODO_CA · JWT del backend';
+
+  @override
+  String get ajustesTutorDebugBotonGuardar => 'TODO_CA · Guardar token';
+
+  @override
+  String get ajustesTutorDebugBotonBorrar => 'TODO_CA · Borrar token';
+
+  @override
+  String get ajustesTutorDebugGuardado => 'TODO_CA · Token guardado. Vuelve al Tutor para probarlo.';
+
+  @override
+  String get ajustesTutorDebugBorrado => 'TODO_CA · Token borrado. El Tutor vuelve a la respuesta canónica.';
+
+  @override
   String get cuidadorTitulo => 'TODO_CA · Página del cuidador';
 
   @override

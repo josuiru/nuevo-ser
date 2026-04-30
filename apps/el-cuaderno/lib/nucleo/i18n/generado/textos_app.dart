@@ -439,6 +439,48 @@ abstract class TextosApp {
   /// **'Listo. Tu cuaderno está vacío.'**
   String get ajustesBorradoCompleto;
 
+  /// Bloque visible sólo en builds de debug. Permite pegar un JWT del backend para probar el Tutor real end-to-end sin pantalla de login.
+  ///
+  /// In es, this message translates to:
+  /// **'Tutor (debug)'**
+  String get ajustesTutorDebugTitulo;
+
+  /// No description provided for @ajustesTutorDebugDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega aquí un token del backend para activar el Tutor real. Visible sólo en debug.'**
+  String get ajustesTutorDebugDescripcion;
+
+  /// No description provided for @ajustesTutorDebugPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'JWT del backend'**
+  String get ajustesTutorDebugPlaceholder;
+
+  /// No description provided for @ajustesTutorDebugBotonGuardar.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar token'**
+  String get ajustesTutorDebugBotonGuardar;
+
+  /// No description provided for @ajustesTutorDebugBotonBorrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar token'**
+  String get ajustesTutorDebugBotonBorrar;
+
+  /// No description provided for @ajustesTutorDebugGuardado.
+  ///
+  /// In es, this message translates to:
+  /// **'Token guardado. Vuelve al Tutor para probarlo.'**
+  String get ajustesTutorDebugGuardado;
+
+  /// No description provided for @ajustesTutorDebugBorrado.
+  ///
+  /// In es, this message translates to:
+  /// **'Token borrado. El Tutor vuelve a la respuesta canónica.'**
+  String get ajustesTutorDebugBorrado;
+
   /// Título de la pantalla del cuidador.
   ///
   /// In es, this message translates to:

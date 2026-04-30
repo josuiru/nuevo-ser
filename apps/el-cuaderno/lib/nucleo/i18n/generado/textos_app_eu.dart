@@ -190,6 +190,27 @@ class TextosAppEu extends TextosApp {
   String get ajustesBorradoCompleto => 'TODO_EU · Listo. Tu cuaderno está vacío.';
 
   @override
+  String get ajustesTutorDebugTitulo => 'TODO_EU · Tutor (debug)';
+
+  @override
+  String get ajustesTutorDebugDescripcion => 'TODO_EU · Pega aquí un token del backend para activar el Tutor real. Visible sólo en debug.';
+
+  @override
+  String get ajustesTutorDebugPlaceholder => 'TODO_EU · JWT del backend';
+
+  @override
+  String get ajustesTutorDebugBotonGuardar => 'TODO_EU · Guardar token';
+
+  @override
+  String get ajustesTutorDebugBotonBorrar => 'TODO_EU · Borrar token';
+
+  @override
+  String get ajustesTutorDebugGuardado => 'TODO_EU · Token guardado. Vuelve al Tutor para probarlo.';
+
+  @override
+  String get ajustesTutorDebugBorrado => 'TODO_EU · Token borrado. El Tutor vuelve a la respuesta canónica.';
+
+  @override
   String get cuidadorTitulo => 'TODO_EU · Página del cuidador';
 
   @override

@@ -25,6 +25,8 @@ class PantallaCuaderno extends StatefulWidget {
     this.locale,
     this.alCambiarIdioma,
     this.enviarPreguntaTutor,
+    this.repoCuentaDebug,
+    this.alCambiarTokenDebug,
   });
 
   final RepositorioLocal repositorio;
@@ -42,6 +44,16 @@ class PantallaCuaderno extends StatefulWidget {
   /// response. La construcción de la closure (cliente HTTP + lectura
   /// de token) vive en `main.dart`.
   final EnviarPreguntaTutor? enviarPreguntaTutor;
+
+  /// Inyectado solo en builds de debug. Se reenvía a `PantallaAjustes`
+  /// para activar el bloque de pegado de JWT. En release siempre llega
+  /// null.
+  final RepositorioCuentaBackend? repoCuentaDebug;
+
+  /// Callback debug: invocado desde el bloque de pegado de JWT de
+  /// Ajustes tras guardar o borrar el token. `main.dart` lo cablea a
+  /// un `setState` que refresca el `FutureBuilder` del Tutor.
+  final VoidCallback? alCambiarTokenDebug;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -160,6 +172,8 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           repoIdioma: repoIdioma,
           locale: locale,
           alCambiarIdioma: alCambiarIdioma,
+          repoCuentaDebug: widget.repoCuentaDebug,
+          alCambiarTokenDebug: widget.alCambiarTokenDebug,
         ),
       ),
     );

@@ -155,6 +155,7 @@ class _OrquestadorJuego extends StatefulWidget {
 class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final EstadoCuaderno _estado;
   late final ClienteTutorCuaderno _clienteTutor;
+  late Future<EnviarPreguntaTutor?> _futureEnviarPregunta;
 
   @override
   void initState() {
@@ -164,6 +165,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
       urlBase: _urlBaseBackend,
       obtenerToken: widget.repoCuenta.cargarToken,
     );
+    _futureEnviarPregunta = _resolverEnviarPregunta();
   }
 
   @override
@@ -192,10 +194,20 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     return _enviarPreguntaTutor;
   }
 
+  /// Invocado desde el bloque debug de Ajustes tras guardar o borrar el
+  /// token. Recompone el `Future` para que el `FutureBuilder` reevalúe
+  /// la presencia de token y la pantalla del Tutor cambie de canal sin
+  /// reiniciar la app.
+  void _refrescarTokenTutor() {
+    setState(() {
+      _futureEnviarPregunta = _resolverEnviarPregunta();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<EnviarPreguntaTutor?>(
-      future: _resolverEnviarPregunta(),
+      future: _futureEnviarPregunta,
       builder: (context, snapshot) {
         return PantallaCuaderno(
           repositorio: widget.repositorio,
@@ -204,6 +216,8 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           locale: widget.locale,
           alCambiarIdioma: widget.alCambiarIdioma,
           enviarPreguntaTutor: snapshot.data,
+          repoCuentaDebug: kDebugMode ? widget.repoCuenta : null,
+          alCambiarTokenDebug: kDebugMode ? _refrescarTokenTutor : null,
         );
       },
     );

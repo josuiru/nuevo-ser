@@ -28,6 +28,8 @@ void main() {
   Future<void> bombear(
     WidgetTester tester, {
     Future<void> Function()? alCambiarIdioma,
+    RepositorioCuentaBackend? repoCuentaDebug,
+    VoidCallback? alCambiarTokenDebug,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
@@ -41,11 +43,19 @@ void main() {
           repoIdioma: repoIdioma,
           locale: const Locale('es'),
           alCambiarIdioma: alCambiarIdioma ?? () async {},
+          repoCuentaDebug: repoCuentaDebug,
+          alCambiarTokenDebug: alCambiarTokenDebug,
         ),
       ),
     );
     await tester.pumpAndSettle();
   }
+
+  RepositorioCuentaBackend crearRepoCuenta() => RepositorioCuentaBackend(
+        prefs: SharedPreferences.getInstance,
+        claveToken: 'nuevoser.elcuaderno.token_backend',
+        claveEmail: 'nuevoser.elcuaderno.email_backend',
+      );
 
   testWidgets('renderiza las cuatro acciones principales', (tester) async {
     await bombear(tester);
@@ -125,6 +135,69 @@ void main() {
     // Repositorio queda vacío.
     expect(await repositorio.obtenerObservaciones(), isEmpty);
     expect(await repositorio.obtenerMisteriosAbiertos(), isEmpty);
+  });
+
+  testWidgets('sin repoCuentaDebug: el bloque "Tutor (debug)" no aparece',
+      (tester) async {
+    await bombear(tester);
+    expect(find.text('Tutor (debug)'), findsNothing);
+  });
+
+  testWidgets(
+      'con repoCuentaDebug + token vacío: bloque presente, botón borrar deshabilitado',
+      (tester) async {
+    final repoCuenta = crearRepoCuenta();
+    await bombear(tester, repoCuentaDebug: repoCuenta);
+    expect(find.text('Tutor (debug)'), findsOneWidget);
+    final botonBorrar = find.widgetWithText(TextButton, 'Borrar token');
+    expect(tester.widget<TextButton>(botonBorrar).onPressed, isNull);
+  });
+
+  testWidgets('guardar token: persiste, llama callback y muestra snackbar',
+      (tester) async {
+    final repoCuenta = crearRepoCuenta();
+    var llamado = 0;
+    await bombear(
+      tester,
+      repoCuentaDebug: repoCuenta,
+      alCambiarTokenDebug: () => llamado++,
+    );
+    await tester.enterText(find.byType(TextField), 'jwt-de-prueba');
+    await tester.tap(find.widgetWithText(FilledButton, 'Guardar token'));
+    await tester.pump(); // dispara los await internos
+    await tester.pump();
+    expect(await repoCuenta.cargarToken(), 'jwt-de-prueba');
+    expect(llamado, 1);
+    expect(
+      find.text('Token guardado. Vuelve al Tutor para probarlo.'),
+      findsOneWidget,
+    );
+    // Tras guardar, borrar token queda habilitado.
+    final botonBorrar = find.widgetWithText(TextButton, 'Borrar token');
+    expect(tester.widget<TextButton>(botonBorrar).onPressed, isNotNull);
+  });
+
+  testWidgets('borrar token: borra del repo, llama callback y deshabilita',
+      (tester) async {
+    final repoCuenta = crearRepoCuenta();
+    await repoCuenta.guardarToken('jwt-existente');
+    var llamado = 0;
+    await bombear(
+      tester,
+      repoCuentaDebug: repoCuenta,
+      alCambiarTokenDebug: () => llamado++,
+    );
+    final botonBorrar = find.widgetWithText(TextButton, 'Borrar token');
+    expect(tester.widget<TextButton>(botonBorrar).onPressed, isNotNull);
+    await tester.tap(botonBorrar);
+    await tester.pump();
+    await tester.pump();
+    expect(await repoCuenta.cargarToken(), isNull);
+    expect(llamado, 1);
+    expect(
+      find.text('Token borrado. El Tutor vuelve a la respuesta canónica.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('cancelar el primer dialog NO borra nada', (tester) async {
