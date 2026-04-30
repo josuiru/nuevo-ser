@@ -11,12 +11,12 @@ void main() {
 
   group('RepositorioReconstruccion', () {
     test('cargar en almacén limpio devuelve mapa vacío', () async {
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       expect(await repositorio.cargar('1.1'), isEmpty);
     });
 
     test('guardar y cargar conserva pares idAfirmacion → nivel', () async {
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       await repositorio.guardar('1.1', const {
         'A': NivelConfianza.solido,
         'B': NivelConfianza.disputado,
@@ -29,7 +29,7 @@ void main() {
 
     test('clave persistida sigue el namespace '
         'nuevoser.lasversiones.brecha.<id>.reconstruccion', () async {
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       await repositorio.guardar(
         '1.1',
         const {'A': NivelConfianza.solido},
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('aislamiento entre brechas distintas', () async {
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       await repositorio.guardar('1.1', const {'A': NivelConfianza.solido});
       await repositorio.guardar('1.2', const {'X': NivelConfianza.probable});
       expect(
@@ -59,7 +59,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.brecha.1.1.reconstruccion': '{ no es JSON }',
       });
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       expect(await repositorio.cargar('1.1'), isEmpty);
     });
 
@@ -68,7 +68,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.brecha.1.1.reconstruccion': '["solido"]',
       });
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       expect(await repositorio.cargar('1.1'), isEmpty);
     });
 
@@ -78,13 +78,13 @@ void main() {
         'nuevoser.lasversiones.brecha.1.1.reconstruccion':
             '{"A":"solido","B":"inventado"}',
       });
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       final cargado = await repositorio.cargar('1.1');
       expect(cargado.keys, equals({'A'}));
     });
 
     test('borrar quita el blob sin tocar otras brechas', () async {
-      final repositorio = const RepositorioReconstruccion();
+      const repositorio = RepositorioReconstruccion();
       await repositorio.guardar('1.1', const {'A': NivelConfianza.solido});
       await repositorio.guardar('1.2', const {'X': NivelConfianza.solido});
       await repositorio.borrar('1.1');

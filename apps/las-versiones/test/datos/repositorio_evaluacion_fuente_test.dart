@@ -12,12 +12,12 @@ void main() {
 
   group('RepositorioEvaluacionFuente', () {
     test('cargar en almacén limpio devuelve null', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       expect(await repositorio.cargar('1.1', 'A'), isNull);
     });
 
     test('guardar y cargar conserva tipo y sesgo', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       const respuesta = RespuestaEvaluacionFuente(
         tipoElegido: TipoFuente.secundaria,
         sesgoElegido: SesgoFuente.difusionista,
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('guardar respuesta parcial — sólo tipo', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       const respuesta = RespuestaEvaluacionFuente(
         tipoElegido: TipoFuente.primaria,
       );
@@ -43,7 +43,7 @@ void main() {
 
     test('clave persistida sigue el namespace '
         'nuevoser.lasversiones.brecha.<id>.evaluacion.<idFuente>', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       await repositorio.guardar(
         '1.1',
         'A',
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('aislamiento entre brechas y entre fuentes', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       await repositorio.guardar(
         '1.1',
         'A',
@@ -68,7 +68,7 @@ void main() {
     });
 
     test('cargarTodasDeBrecha mapea las evaluaciones por idFuente', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       await repositorio.guardar(
         '1.1',
         'A',
@@ -100,12 +100,12 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.brecha.1.1.evaluacion.A': '{ no es JSON }',
       });
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       expect(await repositorio.cargar('1.1', 'A'), isNull);
     });
 
     test('borrar quita las evaluaciones de la brecha', () async {
-      final repositorio = const RepositorioEvaluacionFuente();
+      const repositorio = RepositorioEvaluacionFuente();
       await repositorio.guardar(
         '1.1',
         'A',

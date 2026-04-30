@@ -11,13 +11,13 @@ void main() {
 
   group('RepositorioMosaico (v2 — códigos de confianza)', () {
     test('cargar en almacén limpio devuelve mapa vacío', () async {
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       expect(await repositorio.cargar('arco_1'), isEmpty);
     });
 
     test('guardar y cargar conserva las marcas de confianza por viñeta',
         () async {
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       await repositorio.guardar('arco_1', const {
         'aralar_dolmen_visita': NivelConfianza.solido,
         'cromlech_banquete': NivelConfianza.probable,
@@ -31,7 +31,7 @@ void main() {
     });
 
     test('aislamiento entre arcos distintos', () async {
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       await repositorio.guardar(
         'arco_1',
         const {'aralar_dolmen_visita': NivelConfianza.solido},
@@ -52,7 +52,7 @@ void main() {
 
     test('clave persistida sigue el namespace '
         'nuevoser.lasversiones.mosaico.<idArco>', () async {
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       await repositorio.guardar(
         'arco_1',
         const {'aralar_dolmen_visita': NivelConfianza.solido},
@@ -68,7 +68,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.mosaico.arco_1': '{ no es JSON }',
       });
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       expect(await repositorio.cargar('arco_1'), isEmpty);
     });
 
@@ -78,7 +78,7 @@ void main() {
             '{"aralar_dolmen_visita":"solido","mal":42,"cromlech_banquete":'
             '"probable"}',
       });
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       final cargado = await repositorio.cargar('arco_1');
       expect(
         cargado.keys,
@@ -96,7 +96,7 @@ void main() {
             '"que_te_queda":"Por qué el sitio se llamaba así."'
             '}',
       });
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       final cargado = await repositorio.cargar('arco_1');
       expect(
         cargado.keys,
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('borrar quita el blob', () async {
-      final repositorio = const RepositorioMosaico();
+      const repositorio = RepositorioMosaico();
       await repositorio.guardar(
         'arco_1',
         const {'aralar_dolmen_visita': NivelConfianza.solido},

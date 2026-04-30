@@ -201,7 +201,7 @@ class _PantallaMosaicoArco1State extends State<PantallaMosaicoArco1> {
 
   String _textoContador(int cantidadMarcadas) {
     final total = MosaicoArco1.vinetas.length;
-    final minimo = MosaicoArco1.minimoVinetasMarcadasParaEntregar;
+    const minimo = MosaicoArco1.minimoVinetasMarcadasParaEntregar;
     if (cantidadMarcadas < minimo) {
       final faltan = minimo - cantidadMarcadas;
       return '$cantidadMarcadas de $total marcadas — faltan $faltan para '
@@ -236,9 +236,7 @@ class _CartaVineta extends StatelessWidget {
         decoration: BoxDecoration(
           color: PaletaArchivo.fondoMedio.withOpacity(0.55),
           border: Border.all(
-            color: color != null
-                ? color
-                : PaletaArchivo.ambarLacre.withOpacity(0.4),
+            color: color ?? PaletaArchivo.ambarLacre.withOpacity(0.4),
             width: color != null ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(6),
@@ -249,7 +247,7 @@ class _CartaVineta extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${indice.toString().padLeft(2, '0')}',
+                  indice.toString().padLeft(2, '0'),
                   style: TextStyle(
                     fontSize: 11,
                     letterSpacing: 2.5,

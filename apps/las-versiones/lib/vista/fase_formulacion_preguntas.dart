@@ -302,7 +302,7 @@ class _TarjetaPregunta extends StatelessWidget {
                   children: [
                     Text(
                       '${indice + 1}.',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: 2,
                         color: PaletaArchivo.ambarLacre,

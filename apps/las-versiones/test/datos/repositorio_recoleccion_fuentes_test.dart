@@ -10,7 +10,7 @@ void main() {
 
   group('RepositorioRecoleccionFuentes', () {
     test('tieneFuente devuelve false en almacén limpio', () async {
-      final repositorio = const RepositorioRecoleccionFuentes();
+      const repositorio = RepositorioRecoleccionFuentes();
       expect(
         await repositorio.tieneFuente('1.1', 'restos_oseos_in_situ'),
         isFalse,
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('registrarFuente y leer la marca', () async {
-      final repositorio = const RepositorioRecoleccionFuentes();
+      const repositorio = RepositorioRecoleccionFuentes();
       await repositorio.registrarFuente('1.1', 'restos_oseos_in_situ');
       expect(
         await repositorio.tieneFuente('1.1', 'restos_oseos_in_situ'),
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('aislamiento entre brechas distintas', () async {
-      final repositorio = const RepositorioRecoleccionFuentes();
+      const repositorio = RepositorioRecoleccionFuentes();
       await repositorio.registrarFuente('1.1', 'restos_oseos_in_situ');
       expect(
         await repositorio.tieneFuente('1.2', 'restos_oseos_in_situ'),
@@ -43,7 +43,7 @@ void main() {
         'nuevoser.lasversiones.brecha.1.1.fuente.B': true,
         'nuevoser.lasversiones.brecha.1.2.fuente.X': true,
       });
-      final repositorio = const RepositorioRecoleccionFuentes();
+      const repositorio = RepositorioRecoleccionFuentes();
       expect(
         await repositorio.idsFuentesRecogidas('1.1'),
         equals({'A', 'B'}),
@@ -56,7 +56,7 @@ void main() {
 
     test('clave persistida sigue el namespace '
         'nuevoser.lasversiones.brecha.<id>.fuente.<idFuente>', () async {
-      final repositorio = const RepositorioRecoleccionFuentes();
+      const repositorio = RepositorioRecoleccionFuentes();
       await repositorio.registrarFuente('1.1', 'restos_oseos_in_situ');
       final prefs = await SharedPreferences.getInstance();
       expect(
@@ -73,7 +73,7 @@ void main() {
         'nuevoser.lasversiones.brecha.1.2.fuente.X': true,
         'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
       });
-      final repositorio = const RepositorioRecoleccionFuentes();
+      const repositorio = RepositorioRecoleccionFuentes();
       await repositorio.borrar('1.1');
       expect(await repositorio.idsFuentesRecogidas('1.1'), isEmpty);
       expect(

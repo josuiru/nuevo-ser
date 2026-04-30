@@ -523,7 +523,7 @@ class _LineaCampo extends StatelessWidget {
           children: [
             TextSpan(
               text: '$etiqueta: ',
-              style: TextStyle(
+              style: const TextStyle(
                 color: PaletaArchivo.textoTenue,
                 fontStyle: FontStyle.italic,
               ),

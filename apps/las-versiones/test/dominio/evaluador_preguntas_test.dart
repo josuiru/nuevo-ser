@@ -67,7 +67,7 @@ void main() {
     });
 
     test('texto demasiado largo → no válido', () {
-      final textoLargo = '¿' + ('palabra ' * 50) + '?';
+      final textoLargo = '¿${'palabra ' * 50}?';
       final resultado = evaluador.evaluar(textoLargo);
       expect(resultado.esValida, isFalse);
       expect(resultado.mensajePedagogico, contains('larga'));

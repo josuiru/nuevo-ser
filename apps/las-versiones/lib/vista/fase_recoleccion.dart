@@ -231,15 +231,15 @@ class _TarjetaFuente extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: yaRecogida
-                ? Row(
+                ? const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.check_circle_outline,
                         size: 16,
                         color: PaletaArchivo.ambarLacre,
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Text(
                         'EN LA MESA',
                         style: TextStyle(

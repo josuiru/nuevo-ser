@@ -10,18 +10,18 @@ void main() {
 
   group('RepositorioCuaderno', () {
     test('tieneEntrada devuelve false en almacén limpio', () async {
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       expect(await repositorio.tieneEntrada('cuaderno.1.0.3'), isFalse);
     });
 
     test('registrarEntrada y leer la marca', () async {
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       await repositorio.registrarEntrada('cuaderno.1.0.3');
       expect(await repositorio.tieneEntrada('cuaderno.1.0.3'), isTrue);
     });
 
     test('registrarEntrada es idempotente', () async {
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       await repositorio.registrarEntrada('cuaderno.1.0.3');
       await repositorio.registrarEntrada('cuaderno.1.0.3');
       expect(await repositorio.tieneEntrada('cuaderno.1.0.3'), isTrue);
@@ -40,14 +40,14 @@ void main() {
         // considera activa.
         'nuevoser.lasversiones.cuaderno.entrada.cuaderno.X': false,
       });
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       final ids = await repositorio.idsRegistrados();
       expect(ids, equals({'cuaderno.1.0.3', 'cuaderno.1.1.7'}));
     });
 
     test('clave persistida lleva el namespace '
         'nuevoser.lasversiones.cuaderno.entrada.*', () async {
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       await repositorio.registrarEntrada('cuaderno.1.0.3');
       final prefs = await SharedPreferences.getInstance();
       expect(
@@ -65,7 +65,7 @@ void main() {
         'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
         'uroto.cuaderno.entrada.X': true,
       });
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       final ids = await repositorio.idsRegistrados();
       expect(ids, equals({'cuaderno.1.0.3'}),
           reason: 'sólo claves bajo nuestro prefijo concreto');
@@ -78,7 +78,7 @@ void main() {
         'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.1.7': true,
         'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
       });
-      final repositorio = const RepositorioCuaderno();
+      const repositorio = RepositorioCuaderno();
       await repositorio.borrarTodas();
       expect(await repositorio.idsRegistrados(), isEmpty);
       final prefs = await SharedPreferences.getInstance();

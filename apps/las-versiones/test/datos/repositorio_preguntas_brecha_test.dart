@@ -10,12 +10,12 @@ void main() {
 
   group('RepositorioPreguntasBrecha', () {
     test('cargar en almacén limpio devuelve lista vacía', () async {
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       expect(await repositorio.cargar('1.1'), isEmpty);
     });
 
     test('guardar y cargar conserva orden y contenido', () async {
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       const preguntas = ['¿Qué pasó aquí?', '¿Por qué importa?'];
       await repositorio.guardar('1.1', preguntas);
       final cargadas = await repositorio.cargar('1.1');
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('aislamiento por id de Brecha', () async {
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       await repositorio.guardar('1.1', ['¿una?']);
       await repositorio.guardar('1.2', ['¿dos?', '¿tres?']);
       expect(await repositorio.cargar('1.1'), equals(['¿una?']));
@@ -32,7 +32,7 @@ void main() {
 
     test('clave persistida sigue el namespace '
         'nuevoser.lasversiones.brecha.<id>.preguntas', () async {
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       await repositorio.guardar('1.1', ['¿una?']);
       final prefs = await SharedPreferences.getInstance();
       expect(
@@ -45,7 +45,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.brecha.1.1.preguntas': '{ no es JSON }',
       });
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       expect(await repositorio.cargar('1.1'), isEmpty);
     });
 
@@ -54,7 +54,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.brecha.1.1.preguntas': '{"clave":"valor"}',
       });
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       expect(await repositorio.cargar('1.1'), isEmpty);
     });
 
@@ -63,12 +63,12 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'nuevoser.lasversiones.brecha.1.1.preguntas': '["¿una?", 42, "¿dos?"]',
       });
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       expect(await repositorio.cargar('1.1'), equals(['¿una?', '¿dos?']));
     });
 
     test('borrar quita el blob', () async {
-      final repositorio = const RepositorioPreguntasBrecha();
+      const repositorio = RepositorioPreguntasBrecha();
       await repositorio.guardar('1.1', ['¿una?']);
       await repositorio.borrar('1.1');
       expect(await repositorio.cargar('1.1'), isEmpty);

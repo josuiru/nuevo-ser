@@ -24,5 +24,18 @@ linter:
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
+    # Decisión de estilo del proyecto: variables/parámetros en castellano
+    # (ver CLAUDE.md raíz §"Reglas de interacción"). El parámetro
+    # `contexto` traduce `context` a propósito; el lint reclama un match
+    # nominal exacto que va en contra de la convención.
+    avoid_renaming_method_parameters: false
+
+    # Importaciones a `nuevo_ser_core/src/...` por path explícito —
+    # deliberadas para evitar colisiones nominales con `el-cuaderno`,
+    # que define un `NivelConfianza` distinto bajo el mismo nombre. Las
+    # razones están documentadas en cada call-site (lib/dominio/brecha.dart
+    # y lib/dominio/calibracion.dart).
+    implementation_imports: false
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

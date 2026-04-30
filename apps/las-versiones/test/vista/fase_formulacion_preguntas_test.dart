@@ -101,7 +101,7 @@ void main() {
   });
 
   testWidgets('preguntas persisten entre reaperturas', (tester) async {
-    final brecha = CatalogoBrechas.brecha11;
+    const brecha = CatalogoBrechas.brecha11;
     await bombearFase(tester, brecha: brecha, alAvanzar: () {});
 
     await tester.enterText(

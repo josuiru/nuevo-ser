@@ -60,7 +60,7 @@ class PantallaEsqueleto extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 28),
-                  Text(
+                  const Text(
                     'Estamos preparando las primeras Brechas — fragmentos '
                     'de historia donde el registro se rompe y donde tu '
                     'oficio comenzará. Vuelve pronto.',
