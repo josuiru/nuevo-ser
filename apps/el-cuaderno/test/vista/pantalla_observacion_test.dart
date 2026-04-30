@@ -174,4 +174,106 @@ void main() {
       expect(despues.creadoEn, antes.creadoEn);
     },
   );
+
+  group('sugerencia de Misterio desde queVio', () {
+    testWidgets(
+      'al escribir "una golondrina" aparece el chip "esto suena al Misterio" '
+      'con la pregunta de las golondrinas',
+      (tester) async {
+        await bombearPantalla(tester);
+        await tester.enterText(
+          find.byType(TextField).first,
+          'vi una golondrina sobre el balcón',
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('esto suena al Misterio:'), findsOneWidget);
+        expect(
+          find.text('¿Cuándo se fueron las golondrinas de tu barrio?'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'sin texto el chip no aparece',
+      (tester) async {
+        await bombearPantalla(tester);
+        expect(find.text('esto suena al Misterio:'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'pulsar "anclar" en el chip selecciona el Misterio y oculta el chip',
+      (tester) async {
+        await bombearPantalla(tester);
+        // Usamos una palabra de un Misterio abierto del seed: la
+        // lluvia (caracol). polillas-farolas no está abierto.
+        await tester.enterText(
+          find.byType(TextField).first,
+          'un caracol grande tras la lluvia',
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('esto suena al Misterio:'), findsOneWidget);
+
+        await tester.tap(find.widgetWithText(FilledButton, 'anclar'));
+        await tester.pumpAndSettle();
+
+        // Tras anclar: chip oculto (Misterio ya seleccionado).
+        expect(find.text('esto suena al Misterio:'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'pulsar "no" rechaza la sugerencia y no la vuelve a ofrecer aunque el '
+      'texto siga conteniendo la palabra clave',
+      (tester) async {
+        await bombearPantalla(tester);
+        await tester.enterText(
+          find.byType(TextField).first,
+          'vi una golondrina sobre el balcón',
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('esto suena al Misterio:'), findsOneWidget);
+
+        await tester.tap(find.widgetWithText(TextButton, 'no'));
+        await tester.pumpAndSettle();
+        expect(find.text('esto suena al Misterio:'), findsNothing);
+
+        // Modificamos el texto añadiendo más palabras: la golondrina
+        // ya está rechazada, no debe volver.
+        await tester.enterText(
+          find.byType(TextField).first,
+          'vi una golondrina sobre el balcón hacia el sur',
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('esto suena al Misterio:'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'si el niño ya seleccionó un Misterio manualmente, el chip no aparece',
+      (tester) async {
+        await bombearPantalla(tester);
+        // Anclamos primero la sugerencia de las golondrinas, luego
+        // añadimos texto con keyword de otro Misterio (lombriz) — el
+        // sistema no debería ofrecer otra sugerencia porque ya hay
+        // un Misterio seleccionado.
+        await tester.enterText(
+          find.byType(TextField).first,
+          'una golondrina',
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'anclar'));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+          find.byType(TextField).first,
+          'una golondrina y una lombriz tras la lluvia',
+        );
+        await tester.pumpAndSettle();
+        // Misterio ya seleccionado → no se ofrece otra sugerencia.
+        expect(find.text('esto suena al Misterio:'), findsNothing);
+      },
+    );
+  });
 }

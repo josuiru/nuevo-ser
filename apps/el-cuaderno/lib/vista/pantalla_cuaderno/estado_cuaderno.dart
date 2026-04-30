@@ -44,6 +44,7 @@ class EstadoCuaderno extends ChangeNotifier {
   List<Misterio> _misteriosAbiertos = const [];
   List<Observacion> _ultimasObservaciones = const [];
   Map<String, int> _evidenciasPorMisterio = const {};
+  Set<String> _misteriosEnVentanaCaliente = const {};
   Estacion? _estacionActual;
   String? _regionActual;
   DateTime? _fechaContexto;
@@ -78,6 +79,13 @@ class EstadoCuaderno extends ChangeNotifier {
   /// las pantallas tratan ausencia y `0` como equivalentes.
   Map<String, int> get evidenciasPorMisterio => _evidenciasPorMisterio;
 
+  /// Ids de Misterios que acaban de entrar en su estación (aplican
+  /// hoy pero no aplicaban hace ~21 días). La `TarjetaMisterio` les
+  /// pinta el marcador "estos días" en el footer. Misterios
+  /// atemporales (seasons vacía) nunca están aquí — aplican siempre,
+  /// el marcador diluiría la información.
+  Set<String> get misteriosEnVentanaCaliente => _misteriosEnVentanaCaliente;
+
   Future<void> cargar() async {
     _cargando = true;
     notifyListeners();
@@ -87,12 +95,26 @@ class EstadoCuaderno extends ChangeNotifier {
       final ultimas = await repositorio.obtenerObservaciones(limite: 5);
       final ahora = _proveedorAhora();
       final estacionActual = estacionDeFecha(ahora);
+      final estacionAnterior = estacionDeFecha(
+        ahora.subtract(const Duration(days: 21)),
+      );
       final regionActual = _proveedorRegion(sitSpotResultado);
       final misteriosFiltrados = filtrarMisteriosAlContexto(
         misteriosCrudo,
         estacionActual: estacionActual,
         regionActual: regionActual,
       );
+      final calientes = <String>{};
+      for (final misterio in misteriosFiltrados) {
+        if (estaEnVentanaCaliente(
+          misterio,
+          estacionActual: estacionActual,
+          estacionAnterior: estacionAnterior,
+          regionActual: regionActual,
+        )) {
+          calientes.add(misterio.id);
+        }
+      }
       // Conteo por Misterio: una observación por cada id abierto. La
       // alternativa sería leer `misterio.observacionesIds.length`, pero
       // el query es la fuente de verdad — observacionesIds del modelo
@@ -108,6 +130,7 @@ class EstadoCuaderno extends ChangeNotifier {
       _misteriosAbiertos = misteriosFiltrados;
       _ultimasObservaciones = ultimas;
       _evidenciasPorMisterio = evidencias;
+      _misteriosEnVentanaCaliente = calientes;
       _estacionActual = estacionActual;
       _regionActual = regionActual;
       _fechaContexto = ahora;

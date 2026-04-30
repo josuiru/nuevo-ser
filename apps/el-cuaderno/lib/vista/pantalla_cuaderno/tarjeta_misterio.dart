@@ -17,6 +17,7 @@ class TarjetaMisterio extends StatelessWidget {
     super.key,
     required this.misterio,
     this.evidencias,
+    this.enVentanaCaliente = false,
     this.alPulsar,
   });
 
@@ -30,6 +31,13 @@ class TarjetaMisterio extends StatelessWidget {
   /// claves para Misterios con conteo conocido — la ausencia es lo
   /// mismo que cero.
   final int? evidencias;
+
+  /// Si el Misterio acaba de entrar en su estación (estaba fuera
+  /// hace ~21 días, está dentro hoy). El caller (estado del cuaderno)
+  /// lo calcula con `estaEnVentanaCaliente`. Si `true`, el footer se
+  /// prefija con "estos días · " antes del estado, marcador discreto
+  /// que invita al niño sin gritar.
+  final bool enVentanaCaliente;
 
   final VoidCallback? alPulsar;
 
@@ -93,7 +101,8 @@ class TarjetaMisterio extends StatelessWidget {
         : n == 1
             ? '1 evidencia anotada'
             : '$n evidencias anotadas';
-    return '$estado · $contador';
+    final base = '$estado · $contador';
+    return enVentanaCaliente ? 'estos días · $base' : base;
   }
 
   static String _idioma(TextosApp textos) => textos.localeName;

@@ -83,3 +83,37 @@ List<Misterio> filtrarMisteriosAlContexto(
       )
       .toList();
 }
+
+/// Si el Misterio acaba de entrar en su estación: aplica hoy pero
+/// no aplicaba en [estacionAnterior] (típicamente la de hace ~21
+/// días). Pedagógicamente útil para destacar tarjetas con un
+/// marcador "estos días" — el niño nota que algo cambió y la
+/// pregunta es de hoy, no atemporal.
+///
+/// Misterios atemporales ([Misterio.seasons] vacía) **nunca** están
+/// en ventana caliente: aplican siempre, así que decir "estos días"
+/// no aporta información — al contrario, la diluye.
+///
+/// La región sigue las mismas reglas que [aplicaMisterioEnContexto]
+/// — un Misterio que NO aplica en mi región nunca está caliente
+/// para mí.
+bool estaEnVentanaCaliente(
+  Misterio misterio, {
+  required Estacion estacionActual,
+  required Estacion estacionAnterior,
+  String? regionActual,
+}) {
+  if (misterio.seasons.isEmpty) return false;
+  final aplicaHoy = aplicaMisterioEnContexto(
+    misterio,
+    estacionActual: estacionActual,
+    regionActual: regionActual,
+  );
+  if (!aplicaHoy) return false;
+  final aplicabaAntes = aplicaMisterioEnContexto(
+    misterio,
+    estacionActual: estacionAnterior,
+    regionActual: regionActual,
+  );
+  return !aplicabaAntes;
+}

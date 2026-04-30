@@ -414,4 +414,48 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'ventana caliente: el Misterio de la lluvia destaca "estos días" al '
+    'entrar el otoño',
+    (tester) async {
+      // 1 octubre 2026: estación = otoño; hace 21 días (10 sep) =
+      // verano. El Misterio de la lluvia (seasons: [primavera, otono])
+      // aplica hoy y NO aplicaba hace 21 días → ventana caliente.
+      // El Misterio de las golondrinas (seasons: [verano, otono])
+      // aplica hoy PERO también hace 21 días → no caliente.
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: () => DateTime(2026, 10, 1),
+      );
+      await bombearPantalla(tester);
+
+      expect(
+        find.text(
+          'estos días · consenso · 1 evidencia anotada',
+          skipOffstage: false,
+        ),
+        findsAtLeastNWidgets(1),
+        reason: 'la tarjeta de la lluvia debe llevar el prefijo "estos días"',
+      );
+      // Las golondrinas siguen visibles (otoño aplica) pero sin el
+      // prefijo: ya aplicaban en verano.
+      expect(
+        find.text(
+          '¿Cuándo se fueron las golondrinas de tu barrio?',
+          skipOffstage: false,
+        ),
+        findsAtLeastNWidgets(1),
+      );
+      expect(
+        find.textContaining(
+          'estos días · hipótesis activa',
+          skipOffstage: false,
+        ),
+        findsNothing,
+        reason: 'las golondrinas (hipótesis activa) ya aplicaban en verano',
+      );
+    },
+  );
 }

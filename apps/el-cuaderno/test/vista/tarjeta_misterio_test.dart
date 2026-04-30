@@ -101,4 +101,37 @@ void main() {
       expect(llamadas, 1);
     },
   );
+
+  testWidgets(
+    'enVentanaCaliente: el footer prefija "estos días · " antes del estado',
+    (tester) async {
+      await bombear(
+        tester,
+        TarjetaMisterio(
+          misterio: crear(),
+          evidencias: 2,
+          enVentanaCaliente: true,
+        ),
+      );
+      expect(
+        find.text('estos días · hipótesis activa · 2 evidencias anotadas'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'enVentanaCaliente=false (default): el footer no lleva el prefijo',
+    (tester) async {
+      await bombear(
+        tester,
+        TarjetaMisterio(misterio: crear(), evidencias: 2),
+      );
+      expect(
+        find.text('hipótesis activa · 2 evidencias anotadas'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('estos días'), findsNothing);
+    },
+  );
 }

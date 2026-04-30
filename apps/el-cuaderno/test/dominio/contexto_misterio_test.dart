@@ -226,4 +226,89 @@ void main() {
       expect(filtrados, isEmpty);
     });
   });
+
+  group('estaEnVentanaCaliente', () {
+    test('Misterio que aplica hoy (verano) y no aplicaba antes (primavera) '
+        'está caliente', () {
+      final golondrinas = crear(seasons: const ['verano', 'otono']);
+      expect(
+        estaEnVentanaCaliente(
+          golondrinas,
+          estacionActual: Estacion.verano,
+          estacionAnterior: Estacion.primavera,
+        ),
+        isTrue,
+      );
+    });
+
+    test('Misterio que aplica hoy y ya aplicaba hace 21 días NO está '
+        'caliente (lleva tiempo en su estación)', () {
+      final golondrinas = crear(seasons: const ['verano', 'otono']);
+      // Mediados de verano: hace 21 días también era verano.
+      expect(
+        estaEnVentanaCaliente(
+          golondrinas,
+          estacionActual: Estacion.verano,
+          estacionAnterior: Estacion.verano,
+        ),
+        isFalse,
+      );
+    });
+
+    test('Misterio que NO aplica hoy NO está caliente', () {
+      final petirrojo = crear(seasons: const ['otono', 'invierno']);
+      expect(
+        estaEnVentanaCaliente(
+          petirrojo,
+          estacionActual: Estacion.primavera,
+          estacionAnterior: Estacion.invierno,
+        ),
+        isFalse,
+      );
+    });
+
+    test('Misterio atemporal NUNCA está caliente — aplica siempre, "estos '
+        'días" diluye', () {
+      final liquenes = crear();
+      expect(
+        estaEnVentanaCaliente(
+          liquenes,
+          estacionActual: Estacion.primavera,
+          estacionAnterior: Estacion.invierno,
+        ),
+        isFalse,
+      );
+    });
+
+    test('Misterio que aplica hoy en mi región pero no aplicaba en '
+        'invierno → caliente al entrar la primavera', () {
+      // Mariposas blancas: primavera + verano. Hace 21 días era invierno.
+      final mariposas = crear(seasons: const ['primavera', 'verano']);
+      expect(
+        estaEnVentanaCaliente(
+          mariposas,
+          estacionActual: Estacion.primavera,
+          estacionAnterior: Estacion.invierno,
+        ),
+        isTrue,
+      );
+    });
+
+    test('Misterio fuera de mi región nunca está caliente para mí', () {
+      final cigarras = crear(
+        seasons: const ['verano'],
+        regions: const ['ES-MD', 'ES-AN'],
+      );
+      // En Bilbao en verano, hace 21 días primavera — no aplica nunca.
+      expect(
+        estaEnVentanaCaliente(
+          cigarras,
+          estacionActual: Estacion.verano,
+          estacionAnterior: Estacion.primavera,
+          regionActual: 'ES-BI',
+        ),
+        isFalse,
+      );
+    });
+  });
 }
