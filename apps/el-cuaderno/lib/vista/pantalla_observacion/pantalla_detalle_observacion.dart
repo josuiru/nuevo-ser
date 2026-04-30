@@ -67,6 +67,44 @@ class _EstadoPantallaDetalleObservacion
     _resolverDependencias();
   }
 
+  Future<void> _confirmarBorrar() async {
+    final navegador = Navigator.of(context);
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (dialogo) => AlertDialog(
+        title: const Text('Borrar este registro'),
+        content: const Text(
+          'Vas a borrar esta página del cuaderno. La foto y el dibujo, '
+          'si los tenía, también se borrarán. No se puede deshacer.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogo).pop(false),
+            child: const Text('cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogo).pop(true),
+            child: const Text('borrar'),
+          ),
+        ],
+      ),
+    );
+    if (confirmar != true || !mounted) return;
+    await widget.repositorio.borrarObservacion(widget.observacion.id);
+    final almacenador = widget.almacenadorMedios;
+    final obs = widget.observacion;
+    if (almacenador != null) {
+      if (obs.fotoRutaLocal != null) {
+        await almacenador.borrar(obs.fotoRutaLocal!);
+      }
+      if (obs.dibujoRutaLocal != null) {
+        await almacenador.borrar(obs.dibujoRutaLocal!);
+      }
+    }
+    if (!mounted) return;
+    navegador.pop();
+  }
+
   Future<void> _resolverDependencias() async {
     final obs = widget.observacion;
     Misterio? misterio;
@@ -132,7 +170,24 @@ class _EstadoPantallaDetalleObservacion
     final obs = widget.observacion;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Página del cuaderno')),
+      appBar: AppBar(
+        title: const Text('Página del cuaderno'),
+        actions: [
+          PopupMenuButton<String>(
+            tooltip: 'opciones de la página',
+            icon: const Icon(Icons.more_vert),
+            onSelected: (valor) {
+              if (valor == 'borrar') _confirmarBorrar();
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem<String>(
+                value: 'borrar',
+                child: Text('borrar este registro'),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SafeArea(
         child: _cargando
             ? const Center(child: CircularProgressIndicator.adaptive())

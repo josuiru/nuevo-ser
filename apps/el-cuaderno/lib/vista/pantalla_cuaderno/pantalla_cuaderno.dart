@@ -293,9 +293,14 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
       MaterialPageRoute(
         builder: (_) => PantallaListaObservaciones(
           repositorio: widget.repositorio,
+          alAbrirDetalle: _abrirDetalleObservacion,
         ),
       ),
     );
+    if (mounted) {
+      // Tras volver, una observación pudo borrarse desde el detalle.
+      await widget.estado.cargar();
+    }
   }
 
   Future<void> _abrirCrearSitSpot() async {

@@ -28,6 +28,16 @@ abstract class RepositorioLocal {
   /// rehidrata cada observación al intentar enviarla.
   Future<Observacion?> obtenerObservacionPorId(String id);
 
+  /// Borra una observación por id. Idempotente: si no existe, no
+  /// lanza. Si la observación estaba anclada a un Misterio, la
+  /// implementación se encarga de retirarla de la lista
+  /// `Misterio.observacionesIds` para que la página del Misterio no
+  /// muestre fantasmas. La cola de sync de S2-D no se toca aquí —
+  /// si la observación todavía estaba pendiente, esa entrada queda
+  /// huérfana y se descarta cuando el reintento la rehidrate vía
+  /// [obtenerObservacionPorId] y reciba `null`.
+  Future<void> borrarObservacion(String id);
+
   /// Lista observaciones, ordenadas por `cuandoOcurrio` descendente
   /// (la más reciente primero — coherente con la sección "última
   /// página" del home, biblia §5.4).

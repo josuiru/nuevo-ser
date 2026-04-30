@@ -42,6 +42,31 @@ class RepositorioIsar implements RepositorioLocal {
   }
 
   @override
+  Future<void> borrarObservacion(String id) async {
+    await _isar.writeTxn(() async {
+      final observacionModelo = await _isar.observacionIsars
+          .where()
+          .idDominioEqualTo(id)
+          .findFirst();
+      if (observacionModelo == null) return;
+      final misterioId = observacionModelo.misterioId;
+      await _isar.observacionIsars.delete(observacionModelo.isarId);
+      if (misterioId == null) return;
+      final misterioModelo = await _isar.misterioIsars
+          .where()
+          .idDominioEqualTo(misterioId)
+          .findFirst();
+      if (misterioModelo == null) return;
+      if (!misterioModelo.observacionesIds.contains(id)) return;
+      misterioModelo.observacionesIds = [
+        for (final ref in misterioModelo.observacionesIds)
+          if (ref != id) ref,
+      ];
+      await _isar.misterioIsars.put(misterioModelo);
+    });
+  }
+
+  @override
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,

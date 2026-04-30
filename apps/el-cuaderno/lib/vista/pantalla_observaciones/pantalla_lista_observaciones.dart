@@ -21,9 +21,15 @@ class PantallaListaObservaciones extends StatefulWidget {
   const PantallaListaObservaciones({
     super.key,
     required this.repositorio,
+    this.alAbrirDetalle,
   });
 
   final RepositorioLocal repositorio;
+
+  /// Callback que el home cabla a `PantallaDetalleObservacion`. Si es
+  /// null, las tarjetas del listado son lectura simple — modo S1 /
+  /// tests aislados.
+  final void Function(Observacion observacion)? alAbrirDetalle;
 
   @override
   State<PantallaListaObservaciones> createState() =>
@@ -56,6 +62,15 @@ class _EstadoPantallaListaObservaciones
       _todas = observaciones;
       _cargando = false;
     });
+  }
+
+  Future<void> _abrirDetalle(Observacion observacion) async {
+    final cb = widget.alAbrirDetalle;
+    if (cb == null) return;
+    cb(observacion);
+    // Tras volver del detalle el niño puede haber borrado la
+    // observación; recargamos para que la lista refleje el estado.
+    if (mounted) await _cargar();
   }
 
   /// Filtro case-insensitive **y accent-insensitive** sobre los tres
@@ -167,6 +182,7 @@ class _EstadoPantallaListaObservaciones
                           _controladorBusqueda.text.trim().isNotEmpty,
                       esquema: esquema,
                       textos: textos,
+                      alAbrirDetalle: _abrirDetalle,
                     ),
             ),
           ],
@@ -183,6 +199,7 @@ class _Contenido extends StatelessWidget {
     required this.hayBusquedaActiva,
     required this.esquema,
     required this.textos,
+    this.alAbrirDetalle,
   });
 
   final int total;
@@ -190,6 +207,7 @@ class _Contenido extends StatelessWidget {
   final bool hayBusquedaActiva;
   final ColorScheme esquema;
   final TextosApp textos;
+  final void Function(Observacion observacion)? alAbrirDetalle;
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +247,7 @@ class _Contenido extends StatelessWidget {
         observacion: filtradas[indice],
         esquema: esquema,
         textos: textos,
+        alPulsar: alAbrirDetalle,
       ),
     );
   }
@@ -239,52 +258,62 @@ class _TarjetaObservacion extends StatelessWidget {
     required this.observacion,
     required this.esquema,
     required this.textos,
+    this.alPulsar,
   });
 
   final Observacion observacion;
   final ColorScheme esquema;
   final TextosApp textos;
+  final void Function(Observacion observacion)? alPulsar;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: esquema.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: esquema.outline, width: 0.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    final contenido = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _cabecera(observacion),
+          style: TipografiaCuaderno.sans(
+            color: esquema.tertiary,
+            tamano: TipografiaCuaderno.tamano12,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          observacion.queVio,
+          style: TipografiaCuaderno.serif(
+            color: esquema.onSurface,
+            tamano: TipografiaCuaderno.tamano14,
+            altoLinea: 1.5,
+          ),
+        ),
+        if (observacion.creesQueEs != null &&
+            observacion.creesQueEs!.isNotEmpty) ...[
+          const SizedBox(height: 4),
           Text(
-            _cabecera(observacion),
+            '${observacion.creesQueEs} · ${observacion.confianza.toLocaleLabel(textos.localeName)}',
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            observacion.queVio,
-            style: TipografiaCuaderno.serif(
-              color: esquema.onSurface,
-              tamano: TipografiaCuaderno.tamano14,
-              altoLinea: 1.5,
-            ),
-          ),
-          if (observacion.creesQueEs != null &&
-              observacion.creesQueEs!.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Text(
-              '${observacion.creesQueEs} · ${observacion.confianza.toLocaleLabel(textos.localeName)}',
-              style: TipografiaCuaderno.sans(
-                color: esquema.tertiary,
-                tamano: TipografiaCuaderno.tamano12,
-              ),
-            ),
-          ],
         ],
+      ],
+    );
+
+    return Material(
+      color: esquema.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar == null ? null : () => alPulsar!(observacion),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: contenido,
+        ),
       ),
     );
   }

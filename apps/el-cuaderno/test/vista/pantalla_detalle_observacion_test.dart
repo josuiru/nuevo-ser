@@ -208,4 +208,83 @@ void main() {
       expect(find.text('dibujo'), findsNothing);
     },
   );
+
+  testWidgets(
+    'borrar: pide confirmación y NO toca el repo si se cancela',
+    (tester) async {
+      final obs = crear(id: 'obs-1');
+      await repositorio.guardarObservacion(obs);
+      await bombear(tester, obs);
+
+      await tester.tap(find.byTooltip('opciones de la página'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('borrar este registro'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Borrar este registro'), findsOneWidget);
+      expect(
+        find.textContaining('No se puede deshacer'),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.widgetWithText(TextButton, 'cancelar'));
+      await tester.pumpAndSettle();
+
+      // La observación sigue existiendo.
+      final despues = await repositorio.obtenerObservacionPorId('obs-1');
+      expect(despues, isNotNull);
+    },
+  );
+
+  testWidgets(
+    'borrar: confirmar elimina la observación del repo y cierra la pantalla',
+    (tester) async {
+      final obs = crear(id: 'obs-1', queVio: 'esto se borra');
+      await repositorio.guardarObservacion(obs);
+      // Wrapper con un botón antes para detectar el pop tras borrar.
+      await tester.binding.setSurfaceSize(const Size(800, 1200));
+      await tester.pumpWidget(MaterialApp(
+        theme: TemaCuaderno.claro(),
+        localizationsDelegates: TextosApp.localizationsDelegates,
+        supportedLocales: TextosApp.supportedLocales,
+        locale: const Locale('es'),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (_) => PantallaDetalleObservacion(
+                      repositorio: repositorio,
+                      observacion: obs,
+                    ),
+                  ),
+                ),
+                child: const Text('abrir detalle'),
+              ),
+            ),
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('abrir detalle'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('esto se borra'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('opciones de la página'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('borrar este registro'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'borrar'));
+      await tester.pumpAndSettle();
+
+      // Tras confirmar, el detalle se cierra y volvemos al wrapper.
+      expect(find.text('abrir detalle'), findsOneWidget);
+      expect(find.text('esto se borra'), findsNothing);
+      // Y el repo ya no la conserva.
+      final despues = await repositorio.obtenerObservacionPorId('obs-1');
+      expect(despues, isNull);
+    },
+  );
 }

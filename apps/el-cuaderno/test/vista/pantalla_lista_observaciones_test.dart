@@ -129,4 +129,34 @@ void main() {
     await tester.pump();
     expect(find.byTooltip('limpiar búsqueda'), findsOneWidget);
   });
+
+  testWidgets(
+    'pulsar una tarjeta del listado invoca alAbrirDetalle con la observación',
+    (tester) async {
+      await sembrar(id: 'obs-1', queVio: 'pájaro pequeño marrón');
+      await sembrar(id: 'obs-2', queVio: 'caracol grande');
+      Observacion? recibida;
+      await tester.binding.setSurfaceSize(const Size(800, 1200));
+      await tester.pumpWidget(MaterialApp(
+        theme: TemaCuaderno.claro(),
+        localizationsDelegates: TextosApp.localizationsDelegates,
+        supportedLocales: TextosApp.supportedLocales,
+        locale: const Locale('es'),
+        home: PantallaListaObservaciones(
+          repositorio: repositorio,
+          alAbrirDetalle: (obs) {
+            recibida = obs;
+          },
+        ),
+      ));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.textContaining('caracol grande'));
+      await tester.pumpAndSettle();
+
+      expect(recibida, isNotNull);
+      expect(recibida!.id, 'obs-2');
+      expect(recibida!.queVio, 'caracol grande');
+    },
+  );
 }

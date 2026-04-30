@@ -26,6 +26,23 @@ class RepositorioMemoria implements RepositorioLocal {
   }
 
   @override
+  Future<void> borrarObservacion(String id) async {
+    final observacion = _observaciones.remove(id);
+    if (observacion == null) return;
+    final misterioId = observacion.misterioId;
+    if (misterioId == null) return;
+    final misterio = _misterios[misterioId];
+    if (misterio == null) return;
+    if (!misterio.observacionesIds.contains(id)) return;
+    final actualizadas = [
+      for (final ref in misterio.observacionesIds)
+        if (ref != id) ref,
+    ];
+    _misterios[misterioId] =
+        misterio.copyWith(observacionesIds: actualizadas);
+  }
+
+  @override
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,
