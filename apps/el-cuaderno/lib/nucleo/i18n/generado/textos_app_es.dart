@@ -262,4 +262,22 @@ class TextosAppEs extends TextosApp {
     );
     return '$_temp0';
   }
+
+  @override
+  String get cuidadorSincronizarBoton => 'Compartir resumen con el adulto';
+
+  @override
+  String get cuidadorSincronizarEnVuelo => 'Pidiéndolo…';
+
+  @override
+  String get cuidadorSincronizarSinToken => 'Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón pedirá un resumen escrito.';
+
+  @override
+  String get cuidadorSincronizarErrorRed => 'Hoy no se ha podido conectar. Puedes volver a intentarlo más tarde.';
+
+  @override
+  String get cuidadorSincronizarSinResumen => 'El servidor no ha podido generar un resumen esta vez. La pregunta de abajo sigue valiendo.';
+
+  @override
+  String get cuidadorResumenCabecera => 'Esta semana, en una frase';
 }

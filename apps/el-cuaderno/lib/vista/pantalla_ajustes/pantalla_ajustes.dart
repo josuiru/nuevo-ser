@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
@@ -37,6 +38,7 @@ class PantallaAjustes extends StatelessWidget {
     required this.alCambiarIdioma,
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
+    this.sincronizadorAgregados,
   });
 
   final RepositorioLocal repositorio;
@@ -56,6 +58,10 @@ class PantallaAjustes extends StatelessWidget {
   /// Notifica al orquestador (`main.dart`) que el token cambió, para
   /// que recompute la closure del Tutor sin reiniciar la app.
   final VoidCallback? alCambiarTokenDebug;
+
+  /// Si llega, se reenvía a la vista del cuidador para activar el botón
+  /// opt-in "Compartir resumen con el adulto".
+  final SincronizadorAgregadosCuaderno? sincronizadorAgregados;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +119,10 @@ class PantallaAjustes extends StatelessWidget {
   Future<void> _abrirCuidador(BuildContext context) async {
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
-        builder: (_) => PantallaCuidador(repositorio: repositorio),
+        builder: (_) => PantallaCuidador(
+          repositorio: repositorio,
+          sincronizador: sincronizadorAgregados,
+        ),
       ),
     );
   }

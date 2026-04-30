@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'datos/cliente_tutor_cuaderno.dart';
+import 'datos/sincronizador_agregados.dart';
 import 'datos_simulados/seed.dart';
 import 'dominio/repositorio_local.dart';
 import 'infraestructura/isar/isar_setup.dart';
@@ -155,6 +157,8 @@ class _OrquestadorJuego extends StatefulWidget {
 class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final EstadoCuaderno _estado;
   late final ClienteTutorCuaderno _clienteTutor;
+  late final companion.ClienteCompanion _clienteCompanion;
+  late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
   late Future<EnviarPreguntaTutor?> _futureEnviarPregunta;
 
   @override
@@ -165,6 +169,12 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
       urlBase: _urlBaseBackend,
       obtenerToken: widget.repoCuenta.cargarToken,
     );
+    _clienteCompanion = companion.ClienteCompanion(urlBase: _urlBaseBackend);
+    _sincronizadorAgregados = SincronizadorAgregadosCuaderno(
+      repositorio: widget.repositorio,
+      repoCuenta: widget.repoCuenta,
+      clienteCompanion: _clienteCompanion,
+    );
     _futureEnviarPregunta = _resolverEnviarPregunta();
   }
 
@@ -172,6 +182,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   void dispose() {
     _estado.dispose();
     _clienteTutor.cerrar();
+    _clienteCompanion.cerrar();
     super.dispose();
   }
 
@@ -218,6 +229,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           enviarPreguntaTutor: snapshot.data,
           repoCuentaDebug: kDebugMode ? widget.repoCuenta : null,
           alCambiarTokenDebug: kDebugMode ? _refrescarTokenTutor : null,
+          sincronizadorAgregados: _sincronizadorAgregados,
         );
       },
     );

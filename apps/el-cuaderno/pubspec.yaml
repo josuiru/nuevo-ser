@@ -48,6 +48,16 @@ dependencies:
   nuevo_ser_core:
     path: ../../packages/nuevo_ser_core
 
+  # Cliente HTTP de los endpoints de acompañamiento del plugin
+  # `nuevo-ser-core` (`/wp-json/nuevo-ser/v1/companion/*`). El Cuaderno
+  # lo usa en S9 para subir agregados semanales (counts y reparto, sin
+  # texto libre) a `/companion/aggregates/weekly` y obtener el
+  # `summary_text` y `conversation_prompt` que el LLM server-side
+  # genera para la vista del cuidador. La frontera de privacidad sigue
+  # siendo la misma del cliente local: solo viajan IDs y counts.
+  nuevo_ser_companion:
+    path: ../../packages/nuevo_ser_companion
+
   # Cliente HTTP de la cola de sincronización (`ClienteElCuaderno`).
   # Llamadas al backend WP `/wp-json/nuevo-ser/v1/el-cuaderno/*`. Las
   # respuestas son JSON; serialización a mano para mantener el cliente

@@ -528,6 +528,42 @@ abstract class TextosApp {
   /// In es, this message translates to:
   /// **'{count, plural, =0{Sin visitas al sit spot} =1{Una visita al sit spot} other{{count} visitas al sit spot}}'**
   String cuidadorMetricaSitSpot(int count);
+
+  /// Botón opt-in que sube el agregado semanal al backend para que el LLM server-side genere el resumen y la pregunta para la cena. Sin push: lo dispara el adulto explícitamente cuando está con el niño.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir resumen con el adulto'**
+  String get cuidadorSincronizarBoton;
+
+  /// No description provided for @cuidadorSincronizarEnVuelo.
+  ///
+  /// In es, this message translates to:
+  /// **'Pidiéndolo…'**
+  String get cuidadorSincronizarEnVuelo;
+
+  /// No description provided for @cuidadorSincronizarSinToken.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón pedirá un resumen escrito.'**
+  String get cuidadorSincronizarSinToken;
+
+  /// No description provided for @cuidadorSincronizarErrorRed.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy no se ha podido conectar. Puedes volver a intentarlo más tarde.'**
+  String get cuidadorSincronizarErrorRed;
+
+  /// No description provided for @cuidadorSincronizarSinResumen.
+  ///
+  /// In es, this message translates to:
+  /// **'El servidor no ha podido generar un resumen esta vez. La pregunta de abajo sigue valiendo.'**
+  String get cuidadorSincronizarSinResumen;
+
+  /// Cabecera del párrafo cualitativo que el LLM server-side genera. Solo se muestra si el sync trae un texto no vacío.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta semana, en una frase'**
+  String get cuidadorResumenCabecera;
 }
 
 class _TextosAppDelegate extends LocalizationsDelegate<TextosApp> {

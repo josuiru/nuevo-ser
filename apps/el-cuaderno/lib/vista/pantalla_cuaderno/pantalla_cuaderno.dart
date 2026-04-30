@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
@@ -27,6 +28,7 @@ class PantallaCuaderno extends StatefulWidget {
     this.enviarPreguntaTutor,
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
+    this.sincronizadorAgregados,
   });
 
   final RepositorioLocal repositorio;
@@ -54,6 +56,11 @@ class PantallaCuaderno extends StatefulWidget {
   /// Ajustes tras guardar o borrar el token. `main.dart` lo cablea a
   /// un `setState` que refresca el `FutureBuilder` del Tutor.
   final VoidCallback? alCambiarTokenDebug;
+
+  /// Sincronizador de agregados semanales con el companion. Se reenvía
+  /// a `PantallaCuidador` para activar el botón "Compartir resumen con
+  /// el adulto" — opt-in, lo dispara la persona adulta.
+  final SincronizadorAgregadosCuaderno? sincronizadorAgregados;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -174,6 +181,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           alCambiarIdioma: alCambiarIdioma,
           repoCuentaDebug: widget.repoCuentaDebug,
           alCambiarTokenDebug: widget.alCambiarTokenDebug,
+          sincronizadorAgregados: widget.sincronizadorAgregados,
         ),
       ),
     );

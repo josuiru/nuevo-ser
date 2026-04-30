@@ -240,5 +240,18 @@
     "placeholders": {
       "count": {"type": "int"}
     }
+  },
+
+  "cuidadorSincronizarBoton": "Compartir resumen con el adulto",
+  "@cuidadorSincronizarBoton": {
+    "description": "Botón opt-in que sube el agregado semanal al backend para que el LLM server-side genere el resumen y la pregunta para la cena. Sin push: lo dispara el adulto explícitamente cuando está con el niño."
+  },
+  "cuidadorSincronizarEnVuelo": "Pidiéndolo…",
+  "cuidadorSincronizarSinToken": "Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón pedirá un resumen escrito.",
+  "cuidadorSincronizarErrorRed": "Hoy no se ha podido conectar. Puedes volver a intentarlo más tarde.",
+  "cuidadorSincronizarSinResumen": "El servidor no ha podido generar un resumen esta vez. La pregunta de abajo sigue valiendo.",
+  "cuidadorResumenCabecera": "Esta semana, en una frase",
+  "@cuidadorResumenCabecera": {
+    "description": "Cabecera del párrafo cualitativo que el LLM server-side genera. Solo se muestra si el sync trae un texto no vacío."
   }
 }

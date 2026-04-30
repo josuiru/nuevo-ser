@@ -117,5 +117,11 @@
   "cuidadorMetricaSitSpot": "{count, plural, =0{TODO_CA · Sin visitas al sit spot} =1{TODO_CA · Una visita al sit spot} other{TODO_CA · {count} visitas al sit spot}}",
   "@cuidadorMetricaSitSpot": {
     "placeholders": {"count": {"type": "int"}}
-  }
+  },
+  "cuidadorSincronizarBoton": "TODO_CA · Compartir resumen con el adulto",
+  "cuidadorSincronizarEnVuelo": "TODO_CA · Pidiéndolo…",
+  "cuidadorSincronizarSinToken": "TODO_CA · Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón pedirá un resumen escrito.",
+  "cuidadorSincronizarErrorRed": "TODO_CA · Hoy no se ha podido conectar. Puedes volver a intentarlo más tarde.",
+  "cuidadorSincronizarSinResumen": "TODO_CA · El servidor no ha podido generar un resumen esta vez. La pregunta de abajo sigue valiendo.",
+  "cuidadorResumenCabecera": "TODO_CA · Esta semana, en una frase"
 }
