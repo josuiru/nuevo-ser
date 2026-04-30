@@ -1864,6 +1864,323 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 2.4 — Wamba contra los vascones** (Iruña + yacimiento
+  /// vascón del norte sin nombre). Cuarta y última Brecha jugable
+  /// del Arco 2. Se interpone entre la cinemática 2.4.5 *El silencio
+  /// es el dato* (Karim articula la lección epistémica clave del
+  /// Arco — *"el silencio vascón es el dato. No es ausencia de
+  /// dato"*) y la 2.4.6 *Reconstrucción honesta* (puesta en limpio
+  /// narrativa de las 9 afirmaciones que Maren produce). La Brecha
+  /// es donde Maren declara con calibración Brier; la 2.4.6
+  /// cinemática es la puesta en limpio.
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-04 — formulación crítica de preguntas sobre fuentes
+  ///   asimétricas.
+  /// - HF.05/07/09/10 — análisis de fuentes oficialista/silencios
+  ///   y detección de omisiones (la afirmación 7 *"Sólido (la
+  ///   ausencia)"* y la 9 *"Sólido como declaración metodológica"*).
+  /// - PH.01 — no presentismo. PH.08 — comprender sin justificar.
+  ///   PH.10 — articular el techo metodológico de la reconstrucción.
+  /// - AH.01-03 — argumentación + calibración con dos calibraciones
+  ///   de Sólido especiales en el catálogo (la ausencia y la
+  ///   declaración metodológica).
+  ///
+  /// **Catálogo más amplio del MVP (9 afirmaciones canónicas + 4
+  /// fuentes diegéticas) con `minimoAfirmacionesParaConcilio: 7`**:
+  /// la pedagogía pide al menos 7 de 9 declaradas para que el
+  /// jugador no escape declarando sólo las 5 Sólido del catálogo
+  /// (que cubren los datos de la fuente visigoda + los dos Sólidos
+  /// especiales) sin tocar las 2 Probable o las 2 Disputado, que
+  /// son donde se encarna el oficio de declarar las inferencias
+  /// sobre el silencio sin justificar la propaganda.
+  ///
+  /// **Distribución pedagógica 5 Sólido + 2 Probable + 2 Disputado**
+  /// (3 Sólido directos + 1 Sólido (la ausencia) + 1 Sólido como
+  /// declaración metodológica): la pedagogía de la Estación 2.4 —
+  /// la *"Brecha de un solo lado"* del encargo de Isaura en 2.4.1 —
+  /// es que cuando la asimetría documental es estructural y no
+  /// circunstancial, **la ausencia y el techo metodológico son
+  /// declaraciones positivas del oficio**. Las 5 Sólido cubren la
+  /// campaña en 673, la propaganda dinástica de Julián, la
+  /// presuposición visigoda de "rebelión", la ausencia documental
+  /// del lado vascón (afirmación 7 *"Sólido (la ausencia)"*) y el
+  /// techo metodológico estructural de la reconstrucción
+  /// (afirmación 9 *"Sólido como declaración metodológica"*). Las
+  /// 2 Probable cubren el enfrentamiento militar localizable y la
+  /// ausencia documental como estructura social. Las 2 Disputado
+  /// cubren el estatus previo de los vascones y el alcance real
+  /// de la "pacificación".
+  ///
+  /// **Los matices "Sólido (la ausencia)" y "Sólido como declaración
+  /// metodológica"**: viven en el `texto` de las `AfirmacionCanonica`
+  /// correspondientes, NO como niveles nuevos del enum
+  /// `NivelConfianza`. El jugador declara `NivelConfianza.solido` que
+  /// es la calibración correcta en ambos casos (la ausencia es
+  /// Sólido; el techo metodológico es Sólido); el matiz pedagógico
+  /// (la ausencia es información estructural; la declaración
+  /// metodológica es declarar el techo para que ningún cronista
+  /// futuro confunda "no se sabe" con "se puede saber con más
+  /// trabajo") es contenido textual de la afirmación que la pantalla
+  /// muestra y el Concilio dividido comenta — sin que el motor Brier
+  /// lo interprete. Preserva la paridad Dart/PHP del core.
+  ///
+  /// **Las 4 fuentes son trazables o explícitamente diegéticas**:
+  /// la *Historia Wambae regis* de Julián de Toledo es fuente
+  /// histórica documentada (preservada con su nombre canónico, sin
+  /// reproducir traducciones literales). El yacimiento vascón del
+  /// norte es **deliberadamente sin nombre histórico** hasta
+  /// validación del comité asesor (registro completo en
+  /// BLOQUEOS-PENDIENTES.md). Las menciones en otras fuentes
+  /// visigodas son referencias trazables genéricas. La comparación
+  /// con periodos anteriores y posteriores (campañas de Suintila,
+  /// Recaredo posteriores) es marco académico documentado.
+  static const Brecha brecha24 = Brecha(
+    id: '2.4',
+    titulo: 'Wamba contra los vascones',
+    ubicacionVisible: 'IRUÑA — BIBLIOTECA + YACIMIENTO DEL NORTE',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'HF.05',
+      'HF.07',
+      'HF.09',
+      'HF.10',
+      'PH.01',
+      'PH.08',
+      'PH.10',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha24,
+    afirmacionesCanonicas: _afirmacionesBrecha24,
+    flagDeCompletado: 'brecha_2_4_completada',
+    minimoAfirmacionesParaConcilio: 7,
+  );
+
+  static const List<Fuente> _fuentesBrecha24 = [
+    Fuente(
+      id: 'historia_wambae_regis',
+      tipoVisible: 'Historia Wambae regis de Julián de Toledo',
+      descripcion:
+          'Crónica retórica y hagiográfica del rey Wamba escrita por '
+          'Julián de Toledo seis décadas después de los hechos. Edición '
+          'moderna con aparato crítico, leída en la biblioteca del '
+          'Archivo. Los vascones aparecen tres veces: descritos como '
+          'pueblo de las montañas que "no acepta autoridad", derrotados '
+          'en batalla, "pacificados" por el rey. Propaganda dinástica '
+          'visigoda — la fuente principal sobre la campaña de 673.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Julián de Toledo (obispo de Toledo, fines del s. VII)',
+        fecha: 'Aproximadamente sesenta años después de los hechos '
+            '(en torno a 730 d.C.)',
+        publico: 'Élite eclesiástica y cortesana visigoda — quienes '
+            'leían crónicas hagiográficas de los reyes godos',
+        intereses: 'Legitimar la dinastía visigoda; presentar al rey '
+            'Wamba como gesta militar; consolidar la narrativa de '
+            'autoridad legítima sobre los pueblos del reino',
+        omisiones: 'No nombra a interlocutores vascones individuales, '
+            'no recoge versión vascona alguna, presupone autoridad '
+            'visigoda previa sin justificarla, oculta el carácter '
+            'recurrente de las campañas',
+        corroboraOContradice: 'Es la fuente principal sobre la campaña '
+            '— la lectura crítica permite separar lo que afirma '
+            '(campaña, fechas, marco narrativo) de lo que presupone '
+            '(legitimidad de la autoridad visigoda, "rebeldía" como '
+            'naturaleza vascona)',
+        sesgo: SesgoFuente.oficialista,
+      ),
+    ),
+    Fuente(
+      id: 'menciones_otras_fuentes_visigodas',
+      tipoVisible: 'Menciones en otras fuentes visigodas',
+      descripcion:
+          'Referencias breves en cronografía y legislación visigoda '
+          '(sin contextualización extensa, recogidas en el aparato '
+          'crítico de la edición moderna). Ratifican la existencia de '
+          'campañas y permiten enmarcar la de 673 dentro de una serie '
+          'recurrente. Aportan masa crítica oficialista — coherente '
+          'con Julián, sin abrir el lado vascón.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Cronistas y juristas visigodos diversos',
+        fecha: 'Siglos VII-VIII d.C.',
+        publico: 'Élite letrada visigoda — eclesiástica y palatina',
+        intereses: 'Registro institucional de la actividad regia y '
+            'enumeración de campañas militares en el marco del reino',
+        omisiones: 'Igual que Julián: presuposiciones de legitimidad '
+            'no examinadas; ausencia sistemática del lado vascón',
+        corroboraOContradice: 'Corrobora la recurrencia de campañas, '
+            'lo que matiza la afirmación visigoda de dominio efectivo '
+            'previo y sostiene como Disputado el alcance real de la '
+            '"pacificación"',
+        sesgo: SesgoFuente.oficialista,
+      ),
+    ),
+    Fuente(
+      id: 'yacimiento_vascon_norte',
+      tipoVisible: 'Yacimiento vascón del norte (sin nombre)',
+      descripcion:
+          'Restos de un asentamiento vascón del periodo, visitados '
+          'con Isaura en la cinemática 2.4.3. Estructuras de habitación '
+          'modestas, fragmentos cerámicos hechos a mano (sin torno), '
+          'herramientas. Ninguna inscripción propia. Materia silenciosa '
+          'que permite reconstruir condiciones materiales de vida sin '
+          'devolver subjetividades. **Yacimiento deliberadamente sin '
+          'nombre histórico** hasta validación del comité asesor.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Las personas que vivieron en este asentamiento '
+            'durante el periodo',
+        fecha: 'Aproximadamente s. VII d.C., contemporáneo de la '
+            'campaña de Wamba',
+        publico: 'En su origen: la propia comunidad. Hoy: la '
+            'arqueología contemporánea',
+        intereses: 'Habitar, alimentarse, fabricar herramientas — '
+            'sin intención historiográfica',
+        omisiones: 'No hay producción textual ni epigráfica propia. '
+            'La materialidad no devuelve nombres, ni narrativas, ni '
+            'perspectiva subjetiva sobre el conflicto',
+        corroboraOContradice: 'Documenta condiciones materiales de '
+            'vida del lado vascón sin permitir afirmaciones directas '
+            'sobre cómo vivieron la campaña — la asimetría documental '
+            'estructural del Arco 2 encarnada en la materia',
+      ),
+    ),
+    Fuente(
+      id: 'comparacion_campanas_anteriores_posteriores',
+      tipoVisible: 'Comparación con campañas anteriores y posteriores',
+      descripcion:
+          'Marco académico comparativo: campañas visigodas anteriores '
+          '(Suintila, Recaredo) y posteriores a la de 673. La sucesión '
+          'de campañas recurrentes a lo largo de generaciones '
+          'matiza la narrativa visigoda de dominio efectivo y sugiere '
+          'que la "pacificación" de Wamba no fue duradera.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Tradición historiográfica académica de los siglos '
+            'XX-XXI',
+        fecha: 'Conocimiento construido en publicaciones recientes',
+        publico: 'Investigadores y aprendices del oficio',
+        intereses: 'Establecer marcos comparativos para evaluar la '
+            'narrativa visigoda contra los patrones recurrentes',
+        omisiones: 'La comparación trabaja sobre fuentes visigodas — '
+            'el lado vascón sigue ausente en las series comparadas. '
+            'La asimetría no se rompe por comparar más fuentes del '
+            'mismo lado',
+        corroboraOContradice: 'Sostiene como Disputado el alcance '
+            'real de la "pacificación" tras la campaña de 673; '
+            'corrobora la afirmación visigoda de marco recurrente sin '
+            'cerrar el debate sobre dominio efectivo previo',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha24 = [
+    AfirmacionCanonica(
+      id: 'campana_wamba_673',
+      texto: 'Wamba dirigió una campaña militar contra los vascones '
+          'del norte en 673 d.C.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'historia_wambae_regis',
+        'menciones_otras_fuentes_visigodas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'cronica_julian_propagandistica',
+      texto: 'La campaña fue narrada décadas después por Julián de '
+          'Toledo en función propagandística — hagiografía dinástica '
+          'visigoda, no relato neutral.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['historia_wambae_regis'],
+    ),
+    AfirmacionCanonica(
+      id: 'narrativa_visigoda_rebelion',
+      texto: 'La narrativa visigoda presenta a los vascones como '
+          'pueblo "rebelde", presuponiendo dominio previo cuya '
+          'legitimidad no examina.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'historia_wambae_regis',
+        'menciones_otras_fuentes_visigodas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'estatus_previo_vascones',
+      texto: 'El estatus real de los vascones antes de la campaña — '
+          'sometidos, aliados, independientes, mixto — es Disputado. '
+          'Las fuentes visigodas afirman lo primero, pero las campañas '
+          'recurrentes lo ponen en duda.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'historia_wambae_regis',
+        'comparacion_campanas_anteriores_posteriores',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'enfrentamiento_militar_localizable',
+      texto: 'La campaña incluyó al menos un enfrentamiento militar '
+          'con derrota vascona localizable cronológicamente en el '
+          'curso del año 673.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: ['historia_wambae_regis'],
+    ),
+    AfirmacionCanonica(
+      id: 'alcance_pacificacion',
+      texto: 'El alcance real de la "pacificación" tras la campaña '
+          'es Disputado — la sucesión de campañas posteriores sugiere '
+          'que el efecto sobre la autonomía vascona no fue duradero.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'historia_wambae_regis',
+        'comparacion_campanas_anteriores_posteriores',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'ausencia_fuentes_vasconas',
+      texto: 'No se conservan fuentes producidas por los vascones del '
+          'periodo. Ni textuales ni epigráficas. Las fuentes para '
+          'reconstruir su lado son material arqueológico, mención '
+          'indirecta en fuentes hostiles, y comparación con periodos '
+          'anteriores y posteriores. Sólido (la ausencia).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'yacimiento_vascon_norte',
+        'historia_wambae_regis',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'ausencia_estructural_no_accidente',
+      texto: 'Esta ausencia documental no es accidente: refleja una '
+          'estructura social donde una de las partes tenía instituciones '
+          'de producción y conservación textual y la otra no, en la '
+          'medida documentada.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'historia_wambae_regis',
+        'yacimiento_vascon_norte',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'techo_metodologico_reconstruccion',
+      texto: 'La reconstrucción del lado vascón tiene un techo '
+          'metodológico estructural. Cualquier afirmación sobre su '
+          'perspectiva específica del conflicto será Probable o '
+          'Disputado por defecto, salvo que aparezcan nuevas fuentes. '
+          'Sólido como declaración metodológica.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'yacimiento_vascon_norte',
+        'comparacion_campanas_anteriores_posteriores',
+      ],
+    ),
+  ];
+
   static const List<Brecha> todas = [
     brecha11,
     brecha12,
@@ -1872,6 +2189,7 @@ class CatalogoBrechas {
     brecha21,
     brecha22,
     brecha23,
+    brecha24,
   ];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
@@ -1922,5 +2240,17 @@ class CatalogoBrechas {
     // requiere ahora `brecha_2_3_completada` en lugar del previo
     // `escena_2_3_4_vista`.
     'comprender_sin_justificar_aprendido': brecha23,
+    // 2.4 se dispara con `silencio_es_dato_aprendido` (cierre de la
+    // cinemática 2.4.5 *El silencio es el dato* — Karim articula la
+    // lección epistémica clave del Arco 2 *"el silencio vascón es el
+    // dato. No es ausencia de dato"*). La Brecha jugable es donde
+    // Maren produce las 9 afirmaciones canónicas con calibración
+    // Brier (incluida la afirmación 7 *"Sólido (la ausencia)"* y la
+    // 9 *"Sólido como declaración metodológica"* — el techo
+    // metodológico de la reconstrucción). La 2.4.6 cinemática
+    // *Reconstrucción honesta* (puesta en limpio narrativa)
+    // requiere ahora `brecha_2_4_completada` en lugar del previo
+    // `escena_2_4_5_vista`.
+    'silencio_es_dato_aprendido': brecha24,
   };
 }

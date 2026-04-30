@@ -189,7 +189,10 @@ class EscenasArco2 {
     },
     'escena_2_4_7_vista': {
       'concilio_2_4_cerrado',
-      'brecha_2_4_completada',
+      // F2-10d: `brecha_2_4_completada` lo activa ahora la Brecha
+      // 2.4 jugable al cerrar — antes (F2-7) lo activaba esta
+      // 2.4.7 cinemática como provisional hasta que la Brecha
+      // jugable existiera. Ya existe.
     },
     'escena_2_4_8_vista': {
       'aprendiz_dos_alcanzado',
@@ -3460,11 +3463,21 @@ class EscenasArco2 {
   /// hacer."
   ///
   /// Doc 08 §2.4.6.
+  ///
+  /// **Precondición desde F2-10d**: requiere `brecha_2_4_completada`
+  /// (en lugar del previo `escena_2_4_5_vista`). La Brecha 2.4
+  /// jugable se interpone entre 2.4.5 (lección epistémica clave de
+  /// Karim *"el silencio vascón es el dato. No es ausencia de
+  /// dato"*) y esta 2.4.6 — el jugador produce las 9 afirmaciones
+  /// con calibración Brier en la mesa (incluida la afirmación 7
+  /// *"Sólido (la ausencia)"* y la 9 *"Sólido como declaración
+  /// metodológica"*), y la 2.4.6 cinemática es la puesta en limpio
+  /// narrativa de lo que ya declaró en la Brecha.
   static const EscenaCinematica reconstruccionHonesta = EscenaCinematica(
     id: '2.4.6',
     titulo: 'Reconstrucción honesta',
     flagDeSalida: 'escena_2_4_6_vista',
-    flagsRequeridos: {'escena_2_4_5_vista'},
+    flagsRequeridos: {'brecha_2_4_completada'},
     ambiente: AmbienteArchivo.mesaTrabajoArchivo,
     planos: [
       PlanoAmbiente(

@@ -151,6 +151,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      // F2-10d: la 2.4.5 activa `silencio_es_dato_aprendido`, que es
+      // el flag de disparo de la Brecha 2.4 jugable. Marcamos la
+      // brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
@@ -468,6 +473,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      // F2-10d: la 2.4.5 activa `silencio_es_dato_aprendido`, que es
+      // el flag de disparo de la Brecha 2.4 jugable. Marcamos la
+      // brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
@@ -591,6 +601,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      // F2-10d: la 2.4.5 activa `silencio_es_dato_aprendido`, que es
+      // el flag de disparo de la Brecha 2.4 jugable. Marcamos la
+      // brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,

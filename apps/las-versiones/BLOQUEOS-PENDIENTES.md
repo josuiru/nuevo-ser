@@ -367,6 +367,36 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
+## Brecha 2.4 jugable — Wamba contra los vascones (F2-10d)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: la cuarta y última Brecha jugable del Arco 2 está implementada en `CatalogoBrechas.brecha24` y cableada al orquestador. Se dispara con `silencio_es_dato_aprendido` (flag que la cinemática 2.4.5 *El silencio es el dato* activa al cerrar — Karim articula la lección epistémica clave del Arco 2: *"el silencio vascón es el dato. No es ausencia de dato"*) y se interpone entre la 2.4.5 y la 2.4.6 *Reconstrucción honesta* (puesta en limpio narrativa) — ahora la 2.4.6 requiere `brecha_2_4_completada` en lugar del previo `escena_2_4_5_vista`. Además, F2-10d retira el flag `brecha_2_4_completada` del cierre de la cinemática 2.4.7 *El Concilio dividido* (era provisional desde F2-7 cuando aún no había Brecha jugable; ahora ya lo activa la Brecha jugable antes incluso que la 2.4.6 se pueda ver). El test `Concilio 2.4.7 activa concilio_2_4_cerrado al cerrar` se ajusta para confirmar tanto la presencia de `concilio_2_4_cerrado` como la **ausencia explícita** de `brecha_2_4_completada` en el cierre de la 2.4.7.
+
+**Catálogo de la Brecha 2.4** (catálogo más amplio del MVP):
+- 4 fuentes (3 trazables + 1 explícitamente diegética sin nombre): la *Historia Wambae regis* de Julián de Toledo (primaria, sesgo oficialista — propaganda dinástica visigoda hagiográfica, fuente principal sobre la campaña), menciones en otras fuentes visigodas (primaria, sesgo oficialista — cronografía y legislación), yacimiento vascón del norte **deliberadamente sin nombre histórico** (primaria material, fuente muda), y comparación con campañas anteriores (Suintila, Recaredo) y posteriores (secundaria, marco académico).
+- 9 afirmaciones canónicas distribuidas pedagógicamente 5 Sólido + 2 Probable + 2 Disputado (3 Sólido directos + 1 Sólido (la ausencia) + 1 Sólido como declaración metodológica): la pedagogía de la Estación 2.4 — la *"Brecha de un solo lado"* del encargo de Isaura en 2.4.1 — es que cuando la asimetría documental es estructural y no circunstancial, **la ausencia y el techo metodológico son declaraciones positivas del oficio**. Las 5 Sólido cubren la campaña en 673, la propaganda dinástica de Julián, la presuposición visigoda de "rebelión", la ausencia documental del lado vascón (afirmación 7 *"Sólido (la ausencia)"*) y el techo metodológico estructural de la reconstrucción (afirmación 9 *"Sólido como declaración metodológica"*). Las 2 Probable cubren el enfrentamiento militar localizable y la ausencia documental como estructura social. Las 2 Disputado cubren el estatus previo de los vascones y el alcance real de la "pacificación".
+- `minimoAfirmacionesParaConcilio: 7` — declarar al menos 7 de 9 obliga a tocar al menos una afirmación no Sólido (las dos Probable o las dos Disputado), evitando que el jugador escape sólo con las cinco Sólido del catálogo (que cubren los datos visigodos y los dos Sólidos especiales) sin tocar las inferencias sobre el silencio.
+
+**Material trazable preservado** (sin sustitución):
+- **Wamba** (rey visigodo, reinado 672-680 d.C.) y la **campaña de 673 contra los vascones**: figuras y eventos históricos documentados. Trazables.
+- **Julián de Toledo** y la ***Historia Wambae regis*** (también conocida como *Historia regis Wambae*): obispo y obra históricos documentados, con edición moderna disponible. La obra y su carácter hagiográfico-propagandístico son consenso académico. Se cita por su nombre canónico sin reproducir traducciones literales.
+- **Aproximadamente 730 d.C. como datación de Julián**: cronología consensuada (Julián de Toledo escribió en torno a las décadas finales del s. VII; el "sesenta años después de los hechos" del juego es aproximación pedagógica que el doc 08 sostiene).
+- **Suintila y Recaredo** como reyes visigodos anteriores con campañas registradas: figuras históricas documentadas. Las campañas recurrentes vasconas son consenso historiográfico.
+
+**Sustituciones diegéticas residuales aplicadas en el catálogo**:
+- **Yacimiento vascón del norte**: deliberadamente **sin nombre histórico** hasta validación del comité asesor. El doc 08 §2.4.3 explícitamente lo deja sin nombrar; el catálogo respeta esa decisión. La descripción ("estructuras de habitación modestas, fragmentos cerámicos hechos a mano sin torno, herramientas, ninguna inscripción propia") es modelo arqueológico verosímil para un asentamiento vascón del periodo, pero el yacimiento concreto — si existe uno catalogable que el comité valide para el juego — no se afirma.
+- **Afirmaciones específicas sobre presuposiciones visigodas, "rebeldía", legitimidad**: la formulación textual de las 9 afirmaciones canónicas reproduce conceptualmente lo que el doc 08 §2.4.6 sostiene, sin afirmar como cita literal traducciones específicas de Julián que no se han validado lingüísticamente.
+
+**Pendiente de revisión humana**:
+- ¿La distribución 5 Sólido + 2 Probable + 2 Disputado encaja con la pedagogía que el doc 08 §2.4.6–2.4.7 prescribe? El doc tiene esta distribución exacta; el catálogo la reproduce fielmente. La afirmación 8 *(estructura social que produce la asimetría documental)* es **explícitamente Probable** según el doc 08 §2.4.7 — donde Joana (Anclada), Karim (Reformista) y Aitor (Constructor) convergen en Probable desde distintos lados ("exactamente lo que el oficio celebra"). Mantener Probable preserva la lección de las tres escuelas.
+- ¿Las dos afirmaciones Sólido especiales (`ausencia_fuentes_vasconas` *Sólido (la ausencia)* y `techo_metodologico_reconstruccion` *Sólido como declaración metodológica*) son lo bastante claras textualmente para que el jugador entienda que no son niveles nuevos del enum sino matices interpretativos de Sólido? Los textos incluyen las frases literales al final, replicando la convención del doc 08 §2.4.6. Mismo patrón que la afirmación 6 de la Brecha 2.3.
+- ¿Es razonable que la Brecha 2.4 cierre antes que la cinemática 2.4.6 *Reconstrucción honesta*? El doc 08 §2.4.6 reproduce las 9 afirmaciones que Maren produce en la mesa — la Brecha jugable es donde Maren las declara con calibración Brier, y la 2.4.6 es la puesta en limpio narrativa. Mismo patrón que 2.3 (Brecha jugable + 2.3.5 cinemática). El Concilio formal con cinco voces revisoras de la 2.4.7 sigue siendo cinemática (no jugable), preservando el contraste con el Concilio jugable de la Brecha. Posible ajuste si el comité prefiere otra disposición.
+
+**Cuando el comité valide**: se puede dar nombre histórico al yacimiento vascón del norte (el comité podrá decidir si conviene un asentamiento real catalogable o mantener la abstracción diegética), citar pasajes literales de la *Historia Wambae regis* con referencia precisa, sustituir el marco comparativo genérico por estudios académicos publicados específicos, o mantener la formulación actual con la trazabilidad histórica que ya preserva (Wamba + 673 + Julián + propaganda dinástica visigoda).
+
+---
+
 ## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).

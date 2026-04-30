@@ -4,13 +4,13 @@ import 'package:las_versiones/dominio/catalogo_brechas.dart';
 
 void main() {
   group('CatalogoBrechas.todas', () {
-    test('catálogo cubre las 4 Brechas del Arco 1 + Brechas 2.1, 2.2 '
-        'y 2.3 del Arco 2 (7 Brechas implementadas) — la 2.4 '
-        'todavía no está en el catálogo', () {
-      expect(CatalogoBrechas.todas, hasLength(7));
+    test('catálogo cubre las 4 Brechas del Arco 1 + las 4 Brechas '
+        'del Arco 2 (8 Brechas implementadas) — el MVP de las 4 '
+        'Estaciones del Arco 2 jugables al completo', () {
+      expect(CatalogoBrechas.todas, hasLength(8));
       expect(
         CatalogoBrechas.todas.map((brecha) => brecha.id).toList(),
-        ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '2.3'],
+        ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '2.3', '2.4'],
       );
     });
 
@@ -362,6 +362,139 @@ void main() {
     });
   });
 
+  group('CatalogoBrechas.brecha24 — Wamba contra los vascones', () {
+    test('id, título, ubicación y flag de completado estables', () {
+      expect(CatalogoBrechas.brecha24.id, '2.4');
+      expect(
+        CatalogoBrechas.brecha24.titulo,
+        'Wamba contra los vascones',
+      );
+      expect(
+        CatalogoBrechas.brecha24.ubicacionVisible,
+        'IRUÑA — BIBLIOTECA + YACIMIENTO DEL NORTE',
+      );
+      expect(
+        CatalogoBrechas.brecha24.flagDeCompletado,
+        'brecha_2_4_completada',
+      );
+    });
+
+    test('catálogo más amplio del MVP: 4 fuentes y 9 afirmaciones '
+        'canónicas — la "Brecha de un solo lado" del encargo de '
+        'Isaura pide más declaraciones para que la asimetría '
+        'documental se vea estructuralmente y no como excepción', () {
+      expect(CatalogoBrechas.brecha24.fuentes, hasLength(4));
+      expect(CatalogoBrechas.brecha24.afirmacionesCanonicas, hasLength(9));
+    });
+
+    test('minimoAfirmacionesParaConcilio: 7 — declarar al menos 7 de '
+        '9 obliga a tocar al menos una afirmación no Sólido (las '
+        'dos Probable o las dos Disputado), evitando que el jugador '
+        'escape sólo con las cinco Sólido del catálogo', () {
+      expect(
+        CatalogoBrechas.brecha24.minimoAfirmacionesParaConcilio,
+        7,
+      );
+    });
+
+    test('distribución pedagógica 5 Sólido + 2 Probable + 2 Disputado '
+        '— catálogo asimétrico que refleja una fuente visigoda '
+        'oficialista (mucho Sólido sobre la campaña), un silencio '
+        'vascón estructural (Sólido (la ausencia)) y un techo '
+        'metodológico de la reconstrucción (Sólido como declaración '
+        'metodológica)', () {
+      final niveles = CatalogoBrechas.brecha24.afirmacionesCanonicas
+          .map((a) => a.calibracionCorrecta)
+          .toList();
+      expect(niveles.where((n) => n == NivelConfianza.solido), hasLength(5));
+      expect(niveles.where((n) => n == NivelConfianza.probable), hasLength(2));
+      expect(niveles.where((n) => n == NivelConfianza.disputado), hasLength(2));
+    });
+
+    test('la afirmación 7 sobre la ausencia de fuentes vasconas se '
+        'calibra como Sólido (no Disputado) — el silencio vascón '
+        'es el dato, no la ausencia de dato; lección epistémica '
+        'clave articulada por Karim en 2.4.5', () {
+      final ausencia = CatalogoBrechas.brecha24.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'ausencia_fuentes_vasconas');
+      expect(ausencia.calibracionCorrecta, NivelConfianza.solido);
+      expect(ausencia.texto, contains('Sólido (la ausencia)'));
+    });
+
+    test('la afirmación 9 sobre el techo metodológico se calibra '
+        'como Sólido — declaración metodológica explícita que '
+        'cualquier cronista futuro debe poder leer para no '
+        'confundir "no se sabe" con "se puede saber con más '
+        'trabajo"', () {
+      final techoMetodologico = CatalogoBrechas.brecha24.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'techo_metodologico_reconstruccion');
+      expect(techoMetodologico.calibracionCorrecta, NivelConfianza.solido);
+      expect(
+        techoMetodologico.texto,
+        contains('Sólido como declaración metodológica'),
+      );
+      expect(techoMetodologico.texto, contains('techo'));
+    });
+
+    test('las dos afirmaciones Disputado son el estatus previo de '
+        'los vascones y el alcance real de la "pacificación" — '
+        'las dos preguntas que la propaganda visigoda no permite '
+        'cerrar contra la evidencia de campañas recurrentes', () {
+      final disputadas = CatalogoBrechas.brecha24.afirmacionesCanonicas
+          .where((a) => a.calibracionCorrecta == NivelConfianza.disputado)
+          .map((a) => a.id)
+          .toSet();
+      expect(disputadas, {'estatus_previo_vascones', 'alcance_pacificacion'});
+    });
+
+    test('todas las afirmaciones citan al menos una fuente del '
+        'catálogo — anclaje a evidencia (P3) tiene a qué apuntar '
+        'incluso para las dos Sólido especiales (la ausencia y la '
+        'declaración metodológica)', () {
+      final idsFuentes =
+          CatalogoBrechas.brecha24.fuentes.map((f) => f.id).toSet();
+      for (final afirmacion in CatalogoBrechas.brecha24.afirmacionesCanonicas) {
+        expect(afirmacion.idsFuentesAnclaje, isNotEmpty);
+        for (final idFuente in afirmacion.idsFuentesAnclaje) {
+          expect(idsFuentes, contains(idFuente));
+        }
+      }
+    });
+
+    test('la Historia Wambae regis lleva sesgo oficialista — '
+        'propaganda dinástica visigoda hagiográfica, fuente '
+        'principal sobre la campaña pero con presuposiciones de '
+        'legitimidad no examinadas', () {
+      final julian = CatalogoBrechas.brecha24.fuentes
+          .firstWhere((f) => f.id == 'historia_wambae_regis');
+      expect(julian.propiedadesCanonicas.tipo, TipoFuente.primaria);
+      expect(
+        julian.propiedadesCanonicas.sesgo,
+        SesgoFuente.oficialista,
+      );
+    });
+
+    test('el yacimiento vascón del norte permanece sin nombre '
+        'histórico — sustitución diegética hasta validación del '
+        'comité asesor (registrada en BLOQUEOS-PENDIENTES.md), '
+        'preserva la pedagogía de fuente material muda sin '
+        'afirmar yacimiento concreto', () {
+      final yacimiento = CatalogoBrechas.brecha24.fuentes
+          .firstWhere((f) => f.id == 'yacimiento_vascon_norte');
+      expect(yacimiento.tipoVisible, contains('sin nombre'));
+      expect(yacimiento.propiedadesCanonicas.tipo, TipoFuente.primaria);
+    });
+
+    test('la afirmación 8 (estructura social que produce la '
+        'asimetría documental) se calibra como Probable — el doc '
+        '08 §2.4.7 la marca explícitamente como interpretativa, '
+        'donde Joana/Karim/Aitor convergen desde distintos lados', () {
+      final estructura = CatalogoBrechas.brecha24.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'ausencia_estructural_no_accidente');
+      expect(estructura.calibracionCorrecta, NivelConfianza.probable);
+    });
+  });
+
   group('CatalogoBrechas.brechaPorFlagDeDisparo', () {
     test('la Brecha 2.1 se dispara con `inscripcion_romana_estudiada` '
         '(flag que la cinemática 2.1.4 activa al cerrar)', () {
@@ -390,6 +523,17 @@ void main() {
         CatalogoBrechas
             .brechaPorFlagDeDisparo['comprender_sin_justificar_aprendido'],
         same(CatalogoBrechas.brecha23),
+      );
+    });
+
+    test('la Brecha 2.4 se dispara con `silencio_es_dato_aprendido` '
+        '(flag que la cinemática 2.4.5 *El silencio es el dato* '
+        'activa al cerrar — Karim articula la lección epistémica '
+        'clave del Arco 2 *"el silencio vascón es el dato. No es '
+        'ausencia de dato"*)', () {
+      expect(
+        CatalogoBrechas.brechaPorFlagDeDisparo['silencio_es_dato_aprendido'],
+        same(CatalogoBrechas.brecha24),
       );
     });
 

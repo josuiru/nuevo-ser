@@ -461,11 +461,18 @@ void main() {
       );
     });
 
-    test('Concilio 2.4.7 activa brecha_2_4_completada al cerrar — mismo '
-        'patrón que 2.1.5 / 2.2.5 / 2.3.6 con sus respectivas Brechas', () {
+    test('Concilio 2.4.7 activa concilio_2_4_cerrado al cerrar — '
+        'desde F2-10d ya NO activa `brecha_2_4_completada` (lo activa '
+        'la Brecha 2.4 jugable antes que la 2.4.7 cinemática se '
+        'pueda ver, mismo patrón que 2.1 / 2.2 / 2.3 con sus '
+        'respectivas Brechas jugables)', () {
       expect(
         EscenasArco2.flagsDeCierrePorEscena['escena_2_4_7_vista'],
-        containsAll(['concilio_2_4_cerrado', 'brecha_2_4_completada']),
+        contains('concilio_2_4_cerrado'),
+      );
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_4_7_vista'],
+        isNot(contains('brecha_2_4_completada')),
       );
     });
 
