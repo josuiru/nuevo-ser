@@ -33,6 +33,32 @@ dependencies:
   # Resolución del directorio de documentos para colocar la base Isar.
   path_provider: ^2.1.4
 
+  # Persistencia clave-valor para configuración global (idioma elegido,
+  # token JWT del backend cuando lo haya, versión de paquete sonoro
+  # cuando lleguen). Convive con Isar: shared_preferences se queda con
+  # los singletons globales; Isar se ocupa del cuaderno completo
+  # (observaciones, sit spots, fotos, dibujos).
+  shared_preferences: ^2.2.2
+
+  # Plataforma compartida de la Colección Nuevo Ser Kids — extracciones
+  # del refactor C5/C6 (RepositorioIdiomaApp, RepositorioCuentaBackend,
+  # GestorPerfiles, ClienteApi, motor adaptativo…). Importada por path
+  # mientras vivamos en el monorepo; se sustituye por versión publicada
+  # cuando el monorepo se separe.
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+  # Cliente HTTP de la cola de sincronización (`ClienteElCuaderno`).
+  # Llamadas al backend WP `/wp-json/nuevo-ser/v1/el-cuaderno/*`. Las
+  # respuestas son JSON; serialización a mano para mantener el cliente
+  # auditable.
+  http: ^1.2.2
+
+  # Hash sha256 del `what_seen` antes de cruzar la red. La frontera
+  # de privacidad (doc 03 §3.3) impide que el texto libre del niño
+  # llegue al servidor — solo viaja el digest.
+  crypto: ^3.0.5
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
