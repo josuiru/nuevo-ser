@@ -31,6 +31,13 @@ export 'src/audio/capa_audio.dart';
 export 'src/audio/descargador_audio.dart';
 export 'src/audio/repositorio_sugerencia_paquete_audio.dart';
 export 'src/audio/repositorio_version_paquete_audio.dart';
+// Nota: el módulo `calibration/` se expone por path explícito desde
+// los juegos que lo necesitan, no desde este barrel — `NivelConfianza`
+// es un nombre que otros juegos (p. ej. el-cuaderno) usan para
+// conceptos no relacionados con calibración Brier, así que evitamos
+// la colisión vía barrel. Los juegos que lo quieran hacen
+// `import 'package:nuevo_ser_core/src/calibration/nivel_confianza.dart';`
+// directamente.
 export 'src/mastery/habilidad.dart';
 export 'src/mastery/mastery_engine.dart';
 export 'src/mastery/mastery_profile.dart';
@@ -38,6 +45,7 @@ export 'src/mastery/perfiles/p1_precision.dart';
 export 'src/mastery/perfiles/p2_detection.dart';
 export 'src/mastery/perfiles/p3_construction.dart';
 export 'src/mastery/perfiles/p4_calibration.dart';
+export 'src/mastery/perfiles/p5_compuesto.dart';
 export 'src/mastery/selector_habilidades.dart';
 export 'src/narrative/ambiente_escena.dart';
 export 'src/narrative/escena_cinematica.dart';

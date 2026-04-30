@@ -9,6 +9,16 @@
 /// cinco fases— vive aquí.
 library;
 
+// Tomamos el tipo del módulo `calibration/` del core por path
+// explícito — el barrel no lo expone para evitar colisión con
+// otros juegos de la Colección que usen el mismo nombre para
+// conceptos no relacionados con calibración Brier.
+import 'package:nuevo_ser_core/src/calibration/nivel_confianza.dart'
+    show NivelConfianza;
+
+export 'package:nuevo_ser_core/src/calibration/nivel_confianza.dart'
+    show NivelConfianza;
+
 /// Las cinco fases pedagógicas de una Brecha. El orden es la
 /// secuencia natural; el orquestador no permite saltar fases.
 ///
@@ -34,15 +44,12 @@ enum TipoFuente {
   secundaria,
 }
 
-/// Nivel de confianza con el que la Cronista ancla cada afirmación
-/// reconstruida (AH.03, doc 14 §1). Es el corazón pedagógico del
-/// juego: declarar Sólido cuando es Disputado es sobreconfianza, lo
-/// contrario es timidez epistémica. P4 Brier mide la calibración.
-enum NivelConfianza {
-  solido,
-  probable,
-  disputado,
-}
+/// `NivelConfianza` se importa de `nuevo_ser_core` (módulo
+/// `calibration`) y se re-exporta por compatibilidad con el código
+/// existente. Es el corazón pedagógico del juego (AH.03, doc 14 §1):
+/// declarar Sólido cuando es Disputado es sobreconfianza; lo
+/// contrario, timidez epistémica. La calibración Brier vive en el
+/// core para que cualquier juego de la Colección pueda usarla.
 
 /// Categoría de sesgo historiográfico detectable en una fuente.
 /// Habilidad HF.09. Cada Brecha define qué sesgos esperar; el

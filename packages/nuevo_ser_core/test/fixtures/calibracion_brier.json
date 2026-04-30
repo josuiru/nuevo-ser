@@ -1,0 +1,54 @@
+{
+  "_comentario": "Fixture compartida para verificar paridad Dart/PHP del cálculo Brier multiclass normalizado del módulo `calibration/` del core. Cada caso lista pares (correcto, declarado) y el `score_medio` esperado en [0, 1]. La implementación PHP espejo (`NS_Calibracion::score_medio`) debe devolver exactamente los mismos valores que la Dart (`EvaluadorCalibracion`). Niveles válidos: solido, probable, disputado.",
+  "casos": [
+    {
+      "nombre": "lista_vacia",
+      "entradas": [],
+      "score_medio_esperado": 0.0
+    },
+    {
+      "nombre": "todas_aciertan",
+      "entradas": [
+        {"correcto": "solido", "declarado": "solido"},
+        {"correcto": "probable", "declarado": "probable"},
+        {"correcto": "disputado", "declarado": "disputado"}
+      ],
+      "score_medio_esperado": 1.0
+    },
+    {
+      "nombre": "todas_fallan_extremo",
+      "entradas": [
+        {"correcto": "disputado", "declarado": "solido"},
+        {"correcto": "solido", "declarado": "disputado"}
+      ],
+      "score_medio_esperado": 0.0
+    },
+    {
+      "nombre": "todas_fallan_adyacente",
+      "entradas": [
+        {"correcto": "solido", "declarado": "probable"},
+        {"correcto": "probable", "declarado": "disputado"}
+      ],
+      "score_medio_esperado": 0.0
+    },
+    {
+      "nombre": "dos_de_tres",
+      "entradas": [
+        {"correcto": "solido", "declarado": "solido"},
+        {"correcto": "probable", "declarado": "probable"},
+        {"correcto": "disputado", "declarado": "solido"}
+      ],
+      "score_medio_esperado": 0.6666666666666666
+    },
+    {
+      "nombre": "uno_de_cuatro",
+      "entradas": [
+        {"correcto": "solido", "declarado": "solido"},
+        {"correcto": "probable", "declarado": "solido"},
+        {"correcto": "disputado", "declarado": "solido"},
+        {"correcto": "probable", "declarado": "disputado"}
+      ],
+      "score_medio_esperado": 0.25
+    }
+  ]
+}
