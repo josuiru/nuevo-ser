@@ -119,6 +119,20 @@ class NS_Endpoints {
 			)
 		);
 
+		// GET /classrooms/{id}/aggregates — agregados k≥5 del aula
+		// para el profesor dueño.
+		register_rest_route(
+			$namespace,
+			'/classrooms/(?P<id>\d+)/aggregates',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Companion_Aulas', 'agregados_aula' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt_profesor' ),
+				),
+			)
+		);
+
 		register_rest_route(
 			$namespace,
 			'/companion/aggregates/weekly',
@@ -944,10 +958,8 @@ class NS_Endpoints {
 			// Cuaderno, mosaicos y agregados: ya implementados en
 			//   `registrar_companion_real` (NS_Companion_Cuaderno,
 			//   NS_Companion_Mosaicos, NS_Companion_Agregados).
-			// Aulas: `join` y `crear_aula` ya están cableadas en
-			// `registrar_companion_real` (NS_Companion_Aulas); los
-			// agregados de aula esperan a un slice posterior.
-			'/classrooms/(?P<id>\d+)/aggregates'                          => 'GET',
+			// Aulas: `join`, `crear_aula` y `agregados_aula` ya están
+			// cableadas en `registrar_companion_real` (NS_Companion_Aulas).
 			// Vínculo cuidador-niño con consentimiento parental.
 			'/caregivers/link/request'                                    => 'POST',
 			'/caregivers/link/verify'                                     => 'POST',

@@ -296,6 +296,7 @@ class NS_Esquema {
 				summary_text TEXT NOT NULL,
 				conversation_prompt TEXT NULL,
 				aggregates_hash VARCHAR(64) NOT NULL,
+				aggregates_payload LONGTEXT NOT NULL DEFAULT '',
 				generated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				PRIMARY KEY  (user_id, game_id, iso_week),
 				KEY aggregates_hash (aggregates_hash)

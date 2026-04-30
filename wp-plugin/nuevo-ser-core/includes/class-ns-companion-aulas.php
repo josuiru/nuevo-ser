@@ -47,6 +47,17 @@ class NS_Companion_Aulas {
 	public const MAX_IDIOMA = 8;
 
 	/**
+	 * Mínimo de miembros activos del aula para que la vista de
+	 * agregados sea visible al profesor. Por debajo, los datos
+	 * podrían identificar a un niño individual; el endpoint
+	 * responde 403 con `k_minimo_no_alcanzado`.
+	 *
+	 * Doc 03 §6.2 de El Cuaderno y doc 14 §4 de Las Versiones lo
+	 * fijan en 5.
+	 */
+	public const K_MINIMO_AGREGADOS = 5;
+
+	/**
 	 * POST /classrooms/{code}/join
 	 *
 	 * El niño dueño del JWT se une al aula que tiene ese `code`. Si ya
@@ -300,6 +311,259 @@ class NS_Companion_Aulas {
 			sprintf( '/wp-json/nuevo-ser/v1/classrooms/%d', $classroom_id )
 		);
 		return $respuesta;
+	}
+
+	/**
+	 * GET /classrooms/{id}/aggregates (con JWT del profesor)
+	 *
+	 * Devuelve los counts agregados del aula para una `iso_week` y
+	 * `game_id` opcionales. Sólo el profesor dueño del aula
+	 * (teacher_user_id == _user_id) puede consultar — 403 si no.
+	 *
+	 * **k mínimo = 5**: si el aula tiene menos de 5 miembros
+	 * activos *con resumen para esa semana/juego*, devuelve 403
+	 * con `k_minimo_no_alcanzado`. El profesor ve el contador de
+	 * miembros pero NO los counts — los datos de menos podrían
+	 * identificar a un niño concreto.
+	 *
+	 * Query params:
+	 * - `game_id` (opcional, default = todos los juegos del aula).
+	 * - `iso_week` (opcional, default = última semana con datos).
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function agregados_aula( WP_REST_Request $request ) {
+		global $wpdb;
+
+		$user_id = (int) $request->get_param( '_user_id' );
+		if ( $user_id <= 0 ) {
+			return new WP_Error(
+				'ns_aulas_sin_user',
+				'Falta el identificador del profesor en el token.',
+				array( 'status' => 401 )
+			);
+		}
+
+		$classroom_id = (int) $request->get_param( 'id' );
+		if ( $classroom_id <= 0 ) {
+			return new WP_Error(
+				'ns_aulas_id_invalido',
+				'El identificador del aula es inválido.',
+				array( 'status' => 400 )
+			);
+		}
+
+		$game_id_filtro  = trim( (string) $request->get_param( 'game_id' ) );
+		$iso_week_filtro = trim( (string) $request->get_param( 'iso_week' ) );
+
+		// Carga del aula. 404 si no existe; 403 si no es del profesor.
+		$tabla_aulas = NS_Esquema::nombre_tabla( 'classrooms' );
+		$aula = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT id, code, name, teacher_user_id, language
+				 FROM {$tabla_aulas}
+				 WHERE id = %d",
+				$classroom_id
+			),
+			ARRAY_A
+		);
+		if ( ! $aula ) {
+			return new WP_Error(
+				'ns_aulas_no_existe',
+				'No existe un aula con ese identificador.',
+				array( 'status' => 404 )
+			);
+		}
+		if ( (int) $aula['teacher_user_id'] !== $user_id ) {
+			return new WP_Error(
+				'ns_aulas_no_propia',
+				'No tienes permiso para ver los agregados de este aula.',
+				array( 'status' => 403 )
+			);
+		}
+
+		// Listamos miembros activos. Servirá para el contador y como
+		// filtro en la consulta de weekly_summaries.
+		$tabla_miembros = NS_Esquema::nombre_tabla( 'classroom_members' );
+		$miembros_activos = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT user_id FROM {$tabla_miembros}
+				 WHERE classroom_id = %d AND active = 1",
+				$classroom_id
+			)
+		);
+		$miembros_activos = array_map( 'intval', (array) $miembros_activos );
+		$total_activos    = count( $miembros_activos );
+
+		if ( $total_activos < self::K_MINIMO_AGREGADOS ) {
+			return new WP_Error(
+				'ns_aulas_k_minimo_no_alcanzado',
+				sprintf(
+					'El aula necesita al menos %d miembros activos para que la vista de agregados sea visible.',
+					self::K_MINIMO_AGREGADOS
+				),
+				array(
+					'status'             => 403,
+					'k_minimo'           => self::K_MINIMO_AGREGADOS,
+					'miembros_activos'  => $total_activos,
+				)
+			);
+		}
+
+		// Lectura de los weekly_summaries de los miembros activos.
+		// `aggregates_payload` puede ser '' (filas archivadas antes de
+		// la migración S4a); `decodificar_payload` filtra esos casos.
+		$tabla_summaries = NS_Esquema::nombre_tabla( 'weekly_summaries' );
+		$placeholders    = implode( ',', array_fill( 0, $total_activos, '%d' ) );
+		$where_extras    = '';
+		$valores_extras  = array();
+		if ( '' !== $game_id_filtro ) {
+			$where_extras    .= ' AND game_id = %s';
+			$valores_extras[] = $game_id_filtro;
+		}
+		if ( '' !== $iso_week_filtro ) {
+			$where_extras    .= ' AND iso_week = %s';
+			$valores_extras[] = $iso_week_filtro;
+		}
+
+		$filas = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT user_id, game_id, iso_week, aggregates_payload, generated_at
+				 FROM {$tabla_summaries}
+				 WHERE user_id IN ({$placeholders}){$where_extras}", // phpcs:ignore WordPress.DB.PreparedSQL
+				...array_merge( $miembros_activos, $valores_extras )
+			),
+			ARRAY_A
+		);
+		$filas = (array) $filas;
+
+		// Si no se pidió iso_week explícita, nos quedamos con la última
+		// presente en los datos (la más reciente lexicográficamente —
+		// formato ISO YYYY-Www ordena bien). Igual con game_id si no
+		// se filtró: agrupamos por juego.
+		$iso_week_efectiva = $iso_week_filtro;
+		if ( '' === $iso_week_efectiva && ! empty( $filas ) ) {
+			$semanas = array_unique( array_column( $filas, 'iso_week' ) );
+			rsort( $semanas );
+			$iso_week_efectiva = (string) $semanas[0];
+			$filas = array_values( array_filter(
+				$filas,
+				static fn( $f ) => $f['iso_week'] === $iso_week_efectiva
+			) );
+		}
+
+		// Niños distintos con datos para esa semana — segundo gate del
+		// k mínimo. Si menos de 5 alimentaron la semana, los aggregates
+		// agregados se podrían correlacionar con quién faltó. Mismo 403.
+		$ninos_con_datos = array_unique( array_column( $filas, 'user_id' ) );
+		if ( count( $ninos_con_datos ) < self::K_MINIMO_AGREGADOS ) {
+			return new WP_Error(
+				'ns_aulas_k_minimo_no_alcanzado',
+				'No hay suficientes niños con datos esta semana para mostrar agregados.',
+				array(
+					'status'             => 403,
+					'k_minimo'           => self::K_MINIMO_AGREGADOS,
+					'ninos_con_datos'    => count( $ninos_con_datos ),
+					'iso_week'           => $iso_week_efectiva,
+				)
+			);
+		}
+
+		// Sumar aggregates por juego (un aula puede mezclar juegos).
+		$payloads_por_juego = array();
+		foreach ( $filas as $fila ) {
+			$payload = self::decodificar_payload( $fila['aggregates_payload'] ?? null );
+			if ( null === $payload ) {
+				continue;
+			}
+			$gid = (string) $fila['game_id'];
+			$payloads_por_juego[ $gid ][] = $payload;
+		}
+
+		$agregados_por_juego = array();
+		foreach ( $payloads_por_juego as $gid => $payloads ) {
+			$agregados_por_juego[ $gid ] = self::sumar_aggregates( $payloads );
+		}
+
+		return new WP_REST_Response(
+			array(
+				'classroom_id'    => $classroom_id,
+				'code'            => (string) $aula['code'],
+				'name'            => (string) $aula['name'],
+				'language'        => (string) $aula['language'],
+				'iso_week'        => $iso_week_efectiva,
+				'member_count'    => $total_activos,
+				'reporting_count' => count( $ninos_con_datos ),
+				'aggregates'      => $agregados_por_juego,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Suma una lista de payloads de aggregates en un único array de
+	 * counts por clave canónica. Función pura — no toca DB ni WP.
+	 *
+	 * Reglas:
+	 * - Las claves cuyos valores son `int` se suman (typical:
+	 *   `observaciones_total`, `sit_spot_visitas`).
+	 * - Las claves cuyos valores son `array` asociativo de strings→int
+	 *   (typical: `observaciones_por_misterio`,
+	 *   `observaciones_por_confianza`) se mergean sumando
+	 *   coincidencias.
+	 * - Las claves string sueltas (`region_code`) se ignoran — no
+	 *   tienen sentido agregadas a nivel aula.
+	 * - Cualquier clave con tipo inesperado se descarta silenciosamente.
+	 *
+	 * @param array<int,array<string,mixed>> $payloads
+	 * @return array<string,mixed>
+	 */
+	public static function sumar_aggregates( array $payloads ): array {
+		$resultado = array();
+		foreach ( $payloads as $payload ) {
+			if ( ! is_array( $payload ) ) {
+				continue;
+			}
+			foreach ( $payload as $clave => $valor ) {
+				if ( ! is_string( $clave ) ) {
+					continue;
+				}
+				if ( is_int( $valor ) ) {
+					$resultado[ $clave ] = ( $resultado[ $clave ] ?? 0 ) + $valor;
+					continue;
+				}
+				if ( is_array( $valor ) ) {
+					$existente = $resultado[ $clave ] ?? array();
+					if ( ! is_array( $existente ) ) {
+						continue;
+					}
+					foreach ( $valor as $sub_clave => $sub_valor ) {
+						if ( ! is_string( $sub_clave ) || ! is_int( $sub_valor ) ) {
+							continue;
+						}
+						$existente[ $sub_clave ] = ( $existente[ $sub_clave ] ?? 0 ) + $sub_valor;
+					}
+					$resultado[ $clave ] = $existente;
+				}
+				// Otros tipos (string, float, bool…) se descartan en silencio.
+			}
+		}
+		return $resultado;
+	}
+
+	/**
+	 * Deserializa un `aggregates_payload` con auto-curación: '' →
+	 * null, JSON inválido → null. Devuelve sólo arrays asociativos.
+	 *
+	 * @param mixed $crudo
+	 * @return array<string,mixed>|null
+	 */
+	private static function decodificar_payload( $crudo ): ?array {
+		if ( null === $crudo || '' === $crudo ) {
+			return null;
+		}
+		$decodificado = json_decode( (string) $crudo, true );
+		return is_array( $decodificado ) ? $decodificado : null;
 	}
 
 	/**

@@ -163,6 +163,76 @@ afirmar( 50, count( array_unique( $generados ) ), 'aulas: 50 codes únicos en 50
 $code = NS_Companion_Aulas::generar_codigo();
 afirmar( array(), NS_Companion_Aulas::validar_codigo( $code ), 'aulas: code generado pasa validar_codigo' );
 
+// ─── sumar_aggregates ──────────────────────────────────────────
+
+// Lista vacía → array vacío.
+afirmar( array(), NS_Companion_Aulas::sumar_aggregates( array() ), 'aulas: sumar 0 payloads → []' );
+
+// Un solo payload → mismo payload (filtrado de claves no agregables).
+$uno = array(
+	'observaciones_total'         => 7,
+	'sit_spot_visitas'            => 2,
+	'observaciones_por_misterio'  => array( 'mist-001' => 5, 'mist-002' => 2 ),
+	'observaciones_por_confianza' => array( 'consenso' => 4, 'hipotesis_activa' => 3 ),
+	'region_code'                 => 'ES',
+);
+$resultado = NS_Companion_Aulas::sumar_aggregates( array( $uno ) );
+afirmar( 7, $resultado['observaciones_total'] ?? null, 'aulas: 1 payload, total preservado' );
+afirmar( 2, $resultado['sit_spot_visitas'] ?? null, 'aulas: 1 payload, sit_spot preservado' );
+afirmar(
+	array( 'mist-001' => 5, 'mist-002' => 2 ),
+	$resultado['observaciones_por_misterio'] ?? null,
+	'aulas: 1 payload, mapa misterio preservado'
+);
+afirmar( false, isset( $resultado['region_code'] ), 'aulas: region_code (string) descartado en agregado' );
+
+// Dos payloads — counts ints sumados, mapas mergeados sumando claves
+// coincidentes y manteniendo las nuevas.
+$dos = array(
+	array(
+		'observaciones_total'         => 3,
+		'observaciones_por_misterio'  => array( 'mist-001' => 2, 'mist-003' => 1 ),
+	),
+	array(
+		'observaciones_total'         => 4,
+		'observaciones_por_misterio'  => array( 'mist-001' => 1, 'mist-002' => 5 ),
+	),
+);
+$resultado = NS_Companion_Aulas::sumar_aggregates( $dos );
+afirmar( 7, $resultado['observaciones_total'], 'aulas: 2 payloads, total = 3+4 = 7' );
+afirmar(
+	array( 'mist-001' => 3, 'mist-003' => 1, 'mist-002' => 5 ),
+	$resultado['observaciones_por_misterio'],
+	'aulas: 2 payloads, mapa misterio mergeado correctamente'
+);
+
+// Payload corrupto en medio — se ignora silenciosamente.
+$con_corrupto = array(
+	array( 'observaciones_total' => 5 ),
+	'no soy un array',
+	array( 'observaciones_total' => 3 ),
+	null,
+	array( 'observaciones_total' => 'string que no debería estar aquí' ),
+	array( 'observaciones_total' => 2 ),
+);
+$resultado = NS_Companion_Aulas::sumar_aggregates( $con_corrupto );
+afirmar( 10, $resultado['observaciones_total'], 'aulas: payloads corruptos se ignoran (5+3+2=10)' );
+
+// Tipos inesperados a nivel sub-clave: string en vez de int → ignora.
+$mezcla = array(
+	array( 'observaciones_por_misterio' => array( 'mist-001' => 5, 'mist-002' => 'no soy int' ) ),
+	array( 'observaciones_por_misterio' => array( 'mist-001' => 2, 'mist-002' => 3 ) ),
+);
+$resultado = NS_Companion_Aulas::sumar_aggregates( $mezcla );
+afirmar(
+	array( 'mist-001' => 7, 'mist-002' => 3 ),
+	$resultado['observaciones_por_misterio'],
+	'aulas: subvalor no-int en un payload se ignora, sigue sumando los válidos'
+);
+
+// Constante k mínimo expuesta.
+afirmar( 5, NS_Companion_Aulas::K_MINIMO_AGREGADOS, 'aulas: K_MINIMO_AGREGADOS = 5 (regla de privacidad)' );
+
 if ( 0 === $fallos ) {
 	echo "OK\n";
 	exit( 0 );

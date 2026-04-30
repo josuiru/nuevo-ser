@@ -134,6 +134,16 @@ class NS_Companion_Agregados {
 			$conversation_prompt = null;
 		}
 
+		// Persistimos también el JSON original de aggregates. La vista del
+		// aula (k≥5, GET /classrooms/{id}/aggregates) lo lee y suma los
+		// counts de los miembros activos. El payload son sólo metadatos
+		// agregables (counts numéricos, IDs canónicos, region_code) — no
+		// hay texto libre del niño aquí.
+		$payload_serializado = wp_json_encode( $aggregates );
+		if ( ! is_string( $payload_serializado ) ) {
+			$payload_serializado = '';
+		}
+
 		if ( $existente ) {
 			$resultado = $wpdb->update(
 				$tabla,
@@ -141,6 +151,7 @@ class NS_Companion_Agregados {
 					'summary_text'        => $summary_text,
 					'conversation_prompt' => $conversation_prompt,
 					'aggregates_hash'     => $hash_actual,
+					'aggregates_payload'  => $payload_serializado,
 					'generated_at'        => $ahora,
 				),
 				array(
@@ -148,7 +159,7 @@ class NS_Companion_Agregados {
 					'game_id'  => $game_id,
 					'iso_week' => $iso_week,
 				),
-				array( '%s', '%s', '%s', '%s' ),
+				array( '%s', '%s', '%s', '%s', '%s' ),
 				array( '%d', '%s', '%s' )
 			);
 			if ( false === $resultado ) {
@@ -169,9 +180,10 @@ class NS_Companion_Agregados {
 					'summary_text'        => $summary_text,
 					'conversation_prompt' => $conversation_prompt,
 					'aggregates_hash'     => $hash_actual,
+					'aggregates_payload'  => $payload_serializado,
 					'generated_at'        => $ahora,
 				),
-				array( '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
+				array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 			);
 			if ( false === $resultado ) {
 				return new WP_Error(
