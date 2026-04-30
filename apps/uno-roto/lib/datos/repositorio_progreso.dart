@@ -448,6 +448,22 @@ class RepositorioProgreso {
     await prefs.setBool(await _clave('$_prefijoFlagNarrativo$flag'), true);
   }
 
+  /// Devuelve el conjunto de flags narrativos activos del perfil
+  /// actual. Útil para `OrquestadorEscenas.decidir`, que toma una
+  /// snapshot en lugar de hacer N consultas individuales.
+  Future<Set<String>> flagsNarrativosActivos() async {
+    final prefs = await _prefs();
+    final prefijo = await _prefijoActivo();
+    final prefijoFlags = '$prefijo$_prefijoFlagNarrativo';
+    final activos = <String>{};
+    for (final clave in prefs.getKeys()) {
+      if (!clave.startsWith(prefijoFlags)) continue;
+      if (prefs.getBool(clave) != true) continue;
+      activos.add(clave.substring(prefijoFlags.length));
+    }
+    return activos;
+  }
+
   Future<EstadoHabilidad?> cargarEstadoHabilidad(String idHabilidad) =>
       _repoHabilidades.cargar(idHabilidad);
 

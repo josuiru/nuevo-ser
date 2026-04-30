@@ -5,14 +5,11 @@ import 'package:flutter/services.dart';
 
 import 'datos/repositorio_progreso.dart';
 import 'l10n/app_localizations.dart';
-import 'dominio/catalogo_escenas.dart';
 import 'dominio/desafio_kurz.dart';
 import 'dominio/escena_cinematica.dart';
+import 'dominio/orquestador_escenas.dart';
 import 'dominio/rango_narrativo.dart';
 import 'dominio/ritmo_juego.dart';
-import 'dominio/variantes_entrenamiento.dart';
-import 'dominio/variantes_maquinas.dart';
-import 'dominio/variantes_puentes.dart';
 import 'nucleo/paleta.dart';
 import 'sonido/servicio_sonoro.dart';
 import 'vista/pantalla_apertura.dart';
@@ -234,169 +231,86 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     await _resolverCinematicaPendienteOMapa();
   }
 
-  /// Combate Kurz pendiente — devuelve el desafío correspondiente o
-  /// null si no hay ninguno pendiente. Permite añadir combates futuros
-  /// sin tocar el orquestador principal.
-  Future<DesafioKurz?> _combateKurzPendiente() async {
-    final vio15 = await _repositorio.flagNarrativoActivo('escena_1_5_vista');
-    final completo1 =
-        await _repositorio.flagNarrativoActivo('combate_kurz_1_completado');
-    if (vio15 && !completo1) return DesafioKurz.primero;
-    final vio110pre =
-        await _repositorio.flagNarrativoActivo('escena_1_10_pre_vista');
-    final completo2 =
-        await _repositorio.flagNarrativoActivo('combate_kurz_2_completado');
-    if (vio110pre && !completo2) return DesafioKurz.segundo;
-    final vio112pre =
-        await _repositorio.flagNarrativoActivo('escena_1_12_pre_vista');
-    final completo3 =
-        await _repositorio.flagNarrativoActivo('combate_kurz_3_completado');
-    if (vio112pre && !completo3) return DesafioKurz.tercero;
-    final vio212 =
-        await _repositorio.flagNarrativoActivo('escena_2_12_vista');
-    final completoZafran =
-        await _repositorio.flagNarrativoActivo('combate_zafran_completado');
-    if (vio212 && !completoZafran) return DesafioKurz.zafran;
-    final vio33 =
-        await _repositorio.flagNarrativoActivo('escena_3_3_vista');
-    final completoDuel =
-        await _repositorio.flagNarrativoActivo('combate_duel_kai_completado');
-    if (vio33 && !completoDuel) return DesafioKurz.duelKai;
-    final vio48fuego = await _repositorio
-        .flagNarrativoActivo('escena_4_8_fuego_vista');
-    final completoVorax =
-        await _repositorio.flagNarrativoActivo('combate_vorax_completado');
-    if (vio48fuego && !completoVorax) return DesafioKurz.vorax;
-    return null;
-  }
+  final OrquestadorEscenas _orquestador = OrquestadorEscenas();
 
-  /// Busca la siguiente escena no vista **cuyos prerrequisitos se
-  /// cumplan** y la reproduce. Antes de buscar la siguiente cinemática,
-  /// comprueba si toca un combate jugable (Kurz). Si no hay ni combate
-  /// ni cinemática disponible, va al mapa.
+  /// Resuelve la siguiente pantalla a mostrar delegando la decisión
+  /// pura al [OrquestadorEscenas] y traduciendo la decisión a
+  /// `setState` + persistencia (marcar variante usada, resetear pool
+  /// cuando hace falta).
   Future<void> _resolverCinematicaPendienteOMapa() async {
-    final combatePendiente = await _combateKurzPendiente();
-    if (combatePendiente != null) {
-      if (!mounted) return;
-      setState(() {
-        _desafioKurzActivo = combatePendiente;
-        _fase = _FaseApp.combateKurz;
-      });
-      return;
-    }
-    for (final escena in CatalogoEscenas.todas) {
-      final vista = await _repositorio.flagNarrativoActivo(escena.flagDeSalida);
-      if (vista) continue;
-      final prerrequisitosOk =
-          await _todosLosFlagsActivos(escena.flagsRequeridos);
-      if (!prerrequisitosOk) continue;
-      if (!mounted) return;
-      setState(() {
-        _escenaPendiente = escena;
-        _fase = _FaseApp.cinematica;
-      });
-      return;
-    }
-    if (await _intentarDispararVarianteEntrenamiento()) return;
-    if (!mounted) return;
-    setState(() {
-      _fase = _FaseApp.mapa;
-      _varianteYaDisparadaEnEstaTransicion = false;
-    });
-  }
-
-  /// Dispara la siguiente variante recurrente adecuada al arco en
-  /// curso. Prioridad por arco más reciente: Arco 3 (máquinas con
-  /// Vadic) si ya visitamos la 3.6 y no cerramos el Arco 3; Arco 2
-  /// (puentes con Rexán) si ya visitamos la 2.3 y no cerramos el Arco
-  /// 2; Arco 1 (entrenamiento con Sora) si ya vimos 1.7 y no cerramos
-  /// el Arco 1. Solo una por transición.
-  Future<bool> _intentarDispararVarianteEntrenamiento() async {
-    if (_varianteYaDisparadaEnEstaTransicion) return false;
-
-    final arco3Empezado =
-        await _repositorio.flagNarrativoActivo('escena_3_6_vista');
-    final arco3Cerrado =
-        await _repositorio.flagNarrativoActivo('escena_3_18_vista');
-    if (arco3Empezado && !arco3Cerrado) {
-      return _dispararVarianteMaquinas();
-    }
-
-    final arco2Empezado =
-        await _repositorio.flagNarrativoActivo('escena_2_3_vista');
-    final arco2Cerrado =
-        await _repositorio.flagNarrativoActivo('escena_2_16_vista');
-    if (arco2Empezado && !arco2Cerrado) {
-      return _dispararVariantePuente();
-    }
-
-    final arco1Empezado =
-        await _repositorio.flagNarrativoActivo('escena_1_7_vista');
-    final arco1Cerrado =
-        await _repositorio.flagNarrativoActivo('escena_1_14_vista');
-    if (arco1Empezado && !arco1Cerrado) {
-      return _dispararVarianteEntrenamientoArco1();
-    }
-
-    return false;
-  }
-
-  Future<bool> _dispararVarianteEntrenamientoArco1() async {
-    var usadas =
+    final flagsActivos = await _repositorio.flagsNarrativosActivos();
+    final variantesArco1Usadas =
         await _repositorio.cargarVariantesEntrenamientoUsadas();
-    var siguiente = VariantesEntrenamiento.elegirSiguiente(usadas);
-    if (siguiente == null) {
-      await _repositorio.resetearVariantesEntrenamiento();
-      usadas = {};
-      siguiente = VariantesEntrenamiento.elegirSiguiente(usadas);
+    final variantesArco2Usadas =
+        await _repositorio.cargarVariantesPuentesUsadas();
+    final variantesArco3Usadas =
+        await _repositorio.cargarVariantesMaquinasUsadas();
+
+    final decision = _orquestador.decidir(
+      flagsActivos: flagsActivos,
+      variantesArco1Usadas: variantesArco1Usadas,
+      variantesArco2Usadas: variantesArco2Usadas,
+      variantesArco3Usadas: variantesArco3Usadas,
+      varianteYaDisparadaEnEstaTransicion:
+          _varianteYaDisparadaEnEstaTransicion,
+    );
+
+    switch (decision) {
+      case CombateKurzPendiente(:final desafio):
+        if (!mounted) return;
+        setState(() {
+          _desafioKurzActivo = desafio;
+          _fase = _FaseApp.combateKurz;
+        });
+      case CinematicaPendiente(:final escena):
+        if (!mounted) return;
+        setState(() {
+          _escenaPendiente = escena;
+          _fase = _FaseApp.cinematica;
+        });
+      case VariantePendiente(:final variante, :final arco, :final poolReseteado):
+        await _persistirVarianteElegida(arco, variante, poolReseteado);
+        if (!mounted) return;
+        setState(() {
+          _escenaPendiente = variante;
+          _fase = _FaseApp.cinematica;
+          _varianteYaDisparadaEnEstaTransicion = true;
+        });
+      case IrAlMapa():
+        if (!mounted) return;
+        setState(() {
+          _fase = _FaseApp.mapa;
+          _varianteYaDisparadaEnEstaTransicion = false;
+        });
     }
-    if (siguiente == null) return false;
-    await _repositorio.marcarVarianteEntrenamientoUsada(siguiente.id);
-    if (!mounted) return false;
-    setState(() {
-      _escenaPendiente = siguiente;
-      _fase = _FaseApp.cinematica;
-      _varianteYaDisparadaEnEstaTransicion = true;
-    });
-    return true;
   }
 
-  Future<bool> _dispararVariantePuente() async {
-    var usadas = await _repositorio.cargarVariantesPuentesUsadas();
-    var siguiente = VariantesPuentes.elegirSiguiente(usadas);
-    if (siguiente == null) {
-      await _repositorio.resetearVariantesPuentes();
-      usadas = {};
-      siguiente = VariantesPuentes.elegirSiguiente(usadas);
+  /// Persiste el estado del pool de variantes: si el orquestador
+  /// indica `poolReseteado=true` significa que las cinco estaban
+  /// usadas y ha elegido la primera de un pool reseteado, así que
+  /// borramos el set persistido antes de marcar la nueva.
+  Future<void> _persistirVarianteElegida(
+    ArcoConVariantes arco,
+    EscenaCinematica variante,
+    bool poolReseteado,
+  ) async {
+    switch (arco) {
+      case ArcoConVariantes.arco1:
+        if (poolReseteado) {
+          await _repositorio.resetearVariantesEntrenamiento();
+        }
+        await _repositorio.marcarVarianteEntrenamientoUsada(variante.id);
+      case ArcoConVariantes.arco2:
+        if (poolReseteado) {
+          await _repositorio.resetearVariantesPuentes();
+        }
+        await _repositorio.marcarVariantePuenteUsada(variante.id);
+      case ArcoConVariantes.arco3:
+        if (poolReseteado) {
+          await _repositorio.resetearVariantesMaquinas();
+        }
+        await _repositorio.marcarVarianteMaquinaUsada(variante.id);
     }
-    if (siguiente == null) return false;
-    await _repositorio.marcarVariantePuenteUsada(siguiente.id);
-    if (!mounted) return false;
-    setState(() {
-      _escenaPendiente = siguiente;
-      _fase = _FaseApp.cinematica;
-      _varianteYaDisparadaEnEstaTransicion = true;
-    });
-    return true;
-  }
-
-  Future<bool> _dispararVarianteMaquinas() async {
-    var usadas = await _repositorio.cargarVariantesMaquinasUsadas();
-    var siguiente = VariantesMaquinas.elegirSiguiente(usadas);
-    if (siguiente == null) {
-      await _repositorio.resetearVariantesMaquinas();
-      usadas = {};
-      siguiente = VariantesMaquinas.elegirSiguiente(usadas);
-    }
-    if (siguiente == null) return false;
-    await _repositorio.marcarVarianteMaquinaUsada(siguiente.id);
-    if (!mounted) return false;
-    setState(() {
-      _escenaPendiente = siguiente;
-      _fase = _FaseApp.cinematica;
-      _varianteYaDisparadaEnEstaTransicion = true;
-    });
-    return true;
   }
 
   Future<void> _alTerminarCombateKurz(ResultadoCombateKurz resultado) async {
@@ -417,13 +331,6 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     if (!mounted) return;
     _desafioKurzActivo = null;
     await _resolverCinematicaPendienteOMapa();
-  }
-
-  Future<bool> _todosLosFlagsActivos(Set<String> flags) async {
-    for (final flag in flags) {
-      if (!await _repositorio.flagNarrativoActivo(flag)) return false;
-    }
-    return true;
   }
 
   Future<void> _alTerminarCinematica() async {
