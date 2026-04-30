@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  flutter:
+    name: Flutter — analyze + test (uno-roto, las-versiones, el-cuaderno, packages)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Versions
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      - name: Static analysis (todos los paquetes)
+        run: melos run analyze
+
+      - name: Tests Flutter (todos los paquetes con test/)
+        run: melos run test
+
+  php:
+    name: PHP smoke tests (nuevo-ser-core plugin)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Run smoke tests
+        # Cada test_*.php es ejecutable directo: imprime "OK" y sale con
+        # 0 si todo verde, o lanza excepción y sale con código distinto
+        # de 0 si algo falla. No hay PHPUnit por diseño.
+        working-directory: wp-plugin/nuevo-ser-core
+        run: |
+          set -e
+          for archivo in tests/test_*.php; do
+            echo "=== Ejecutando $archivo ==="
+            php "$archivo"
+          done
