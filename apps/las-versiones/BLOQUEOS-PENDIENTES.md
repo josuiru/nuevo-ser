@@ -116,6 +116,33 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Mosaico Arco 1 con una sola Brecha implementada
+
+**Tracker doc 17**: el Mosaico es categoría no-atomizada (doc 15 §3) — los prompts actuales son provisionales y deberá revisarlos quien valide el material pedagógico cuando entren más Brechas al arco.
+
+**Estado actual (F8)**:
+- El catálogo del Arco 1 sólo tiene la Brecha 1.1 implementada. El guion (doc 07) prevé 1.1 + 1.2 + 1.3 + 1.4 antes del Mosaico de fin de arco.
+- Para no bloquear el flujo end-to-end, el orquestador activa `arco_1_completado` al cerrar la 1.1. La Cronista pasa por el Mosaico tras esa única Brecha.
+- Los tres prompts del Mosaico (`que_te_llevas`, `que_te_queda`, `que_cambiarias`) hablan en singular del "dolmen" — porque es lo único que ha vivido. Cuando entren las Brechas 1.2, 1.3, 1.4, el disparador se moverá al cierre de la 1.4 y los prompts se generalizarán a "este arco" en plural.
+
+**Razón**: producir el Mosaico de un arco completo sin haber cerrado el arco rompería la pedagogía. La solución provisional (mosaico tras 1 brecha) está claramente acotada y se documenta con comentario en `_alCompletarBrecha()` para que el cambio a "tras la 1.4" sea trivial cuando el arco crezca.
+
+---
+
+## Cinemáticas 1.A y 1.B aún sin implementar
+
+**Tracker doc 17**: pendiente.
+
+**Guion canónico (doc 07)**:
+- 1.A "Merienda con Eider" — cafetería del Casco Viejo, post-1.1. Diálogo natural sobre cómo le fue el dolmen. Eider es personaje ficticio del juego.
+- 1.B "El ático" — escena íntima familiar tras la primera Brecha. Detalles dependen del doc 07 §1.B que no se ha cargado en esta iteración.
+
+**Estado actual (F8)**: no implementadas. El esqueleto del juego ya cubre el flujo principal del MVP del Arco 1 (cinemáticas 1.0.1-1.0.3 + 1.1.1-1.1.2 + Brecha 1.1 + 1.1.7 + Mosaico). 1.A y 1.B son escenas opcionales/paralelas que se pueden añadir como otro slice cuando se cargue el doc 07 entero.
+
+**Razón**: escribir cinemáticas largas sin tener el guion canónico delante riesga producir contenido que no encaje con la voz del juego ni con los personajes ya establecidos. Se prefiere parar y apuntar.
+
+---
+
 ## Doc 11 — paleta visual del juego pendiente de cerrar
 
 `paleta_archivo.dart` es **provisional** — sepia/papel/tinta + ámbar

@@ -7,16 +7,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'datos/repositorio_cuaderno.dart';
 import 'datos/repositorio_estado_brecha.dart';
 import 'datos/repositorio_flags_narrativos.dart';
+import 'datos/repositorio_mosaico.dart';
 import 'dominio/brecha.dart';
 import 'dominio/catalogo_brechas.dart';
 import 'dominio/cuaderno.dart';
 import 'dominio/escenas_arco_1.dart';
+import 'dominio/mosaico_arco_1.dart';
 import 'nucleo/paleta_archivo.dart';
 import 'vista/pantalla_brecha.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno.dart';
 import 'vista/pantalla_esqueleto.dart';
+import 'vista/pantalla_mosaico_arco_1.dart';
 
 /// Clave global del idioma elegido por la Cronista en el primer
 /// arranque. Sigue el namespace `nuevoser.<juego>.*` que el CLAUDE.md
@@ -60,6 +63,7 @@ void main() async {
     repoFlags: const RepositorioFlagsNarrativos(),
     repoEstadoBrecha: const RepositorioEstadoBrecha(),
     repoCuaderno: const RepositorioCuaderno(),
+    repoMosaico: const RepositorioMosaico(),
   ));
 }
 
@@ -68,6 +72,7 @@ class AppLasVersiones extends StatelessWidget {
   final RepositorioFlagsNarrativos repoFlags;
   final RepositorioEstadoBrecha repoEstadoBrecha;
   final RepositorioCuaderno repoCuaderno;
+  final RepositorioMosaico repoMosaico;
 
   const AppLasVersiones({
     super.key,
@@ -75,6 +80,7 @@ class AppLasVersiones extends StatelessWidget {
     required this.repoFlags,
     required this.repoEstadoBrecha,
     required this.repoCuaderno,
+    required this.repoMosaico,
   });
 
   @override
@@ -117,6 +123,7 @@ class AppLasVersiones extends StatelessWidget {
             repoFlags: repoFlags,
             repoEstadoBrecha: repoEstadoBrecha,
             repoCuaderno: repoCuaderno,
+            repoMosaico: repoMosaico,
           ),
         );
       },
@@ -135,7 +142,7 @@ ThemeData _temaArchivo() {
   );
 }
 
-/// Orquestador del juego. Cuatro estados posibles, en orden:
+/// Orquestador del juego. Cinco estados posibles, en orden:
 ///
 /// 1. **Configuración inicial** si la Cronista nunca eligió idioma.
 /// 2. **Brecha** si una Brecha está abierta (su flag de disparo
@@ -145,13 +152,16 @@ ThemeData _temaArchivo() {
 /// 3. **Cinemática** si hay una escena pendiente cuyos
 ///    `flagsRequeridos` están todos activos y cuyo `flagDeSalida`
 ///    aún no lo está.
-/// 4. **Esqueleto** si todas las unidades narrativas implementadas
-///    están vistas.
+/// 4. **Mosaico de arco** si el flag del arco completado está
+///    activo y el flag de mosaico entregado aún no.
+/// 5. **Esqueleto** si todas las unidades narrativas implementadas
+///    están vistas y todos los mosaicos del arco están entregados.
 class Orquestador extends StatefulWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioFlagsNarrativos repoFlags;
   final RepositorioEstadoBrecha repoEstadoBrecha;
   final RepositorioCuaderno repoCuaderno;
+  final RepositorioMosaico repoMosaico;
 
   const Orquestador({
     super.key,
@@ -159,6 +169,7 @@ class Orquestador extends StatefulWidget {
     required this.repoFlags,
     required this.repoEstadoBrecha,
     required this.repoCuaderno,
+    required this.repoMosaico,
   });
 
   @override
@@ -310,13 +321,44 @@ class _OrquestadorState extends State<Orquestador> {
   Future<void> _alCompletarBrecha() async {
     final brecha = _brechaAbierta;
     if (brecha == null) return;
-    await widget.repoFlags.activar(brecha.flagDeCompletado);
+    final flagsACerrar = <String>{brecha.flagDeCompletado};
+    // MVP: el Arco 1 sólo tiene la Brecha 1.1 implementada — al
+    // cerrarla activamos `arco_1_completado` para disparar el
+    // Mosaico. Cuando entren 1.2-1.4 al catálogo, este disparador
+    // se moverá al cierre de la última (ver
+    // BLOQUEOS-PENDIENTES.md sección "Mosaico Arco 1 con una sola
+    // Brecha implementada").
+    if (brecha.id == '1.1') {
+      flagsACerrar.add(MosaicoArco1.flagDeArcoCompletado);
+    }
+    for (final flag in flagsACerrar) {
+      await widget.repoFlags.activar(flag);
+    }
     await widget.repoEstadoBrecha.borrar(brecha.id);
     if (!mounted) return;
-    _flagsActivos = {..._flagsActivos, brecha.flagDeCompletado};
+    _flagsActivos = {..._flagsActivos, ...flagsACerrar};
     setState(() {
       _brechaAbierta = null;
       _escenaEnReproduccion = _proximaEscenaPendiente();
+    });
+  }
+
+  /// `true` si la Cronista debe ver la pantalla del Mosaico ahora
+  /// — el arco está completado y el Mosaico aún no se ha entregado.
+  bool get _mosaicoArco1Pendiente {
+    if (!_idiomaElegido) return false;
+    return _flagsActivos.contains(MosaicoArco1.flagDeArcoCompletado) &&
+        !_flagsActivos.contains(MosaicoArco1.flagDeMosaicoEntregado);
+  }
+
+  Future<void> _alEntregarMosaicoArco1() async {
+    await widget.repoFlags.activar(MosaicoArco1.flagDeMosaicoEntregado);
+    if (!mounted) return;
+    setState(() {
+      _flagsActivos = {
+        ..._flagsActivos,
+        MosaicoArco1.flagDeMosaicoEntregado,
+      };
     });
   }
 
@@ -370,6 +412,12 @@ class _OrquestadorState extends State<Orquestador> {
         escena: escena,
         alEstablecerFlag: _alEstablecerFlag,
         alTerminar: () => _alTerminarEscena(escena),
+      );
+    }
+    if (_mosaicoArco1Pendiente) {
+      return PantallaMosaicoArco1(
+        alEntregar: _alEntregarMosaicoArco1,
+        repoMosaico: widget.repoMosaico,
       );
     }
     return PantallaEsqueleto(alAbrirCuaderno: _alAbrirCuaderno);

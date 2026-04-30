@@ -6,12 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:las_versiones/datos/repositorio_cuaderno.dart';
 import 'package:las_versiones/datos/repositorio_estado_brecha.dart';
 import 'package:las_versiones/datos/repositorio_flags_narrativos.dart';
+import 'package:las_versiones/datos/repositorio_mosaico.dart';
 import 'package:las_versiones/main.dart';
 import 'package:las_versiones/vista/pantalla_brecha.dart';
 import 'package:las_versiones/vista/pantalla_cinematica.dart';
 import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
 import 'package:las_versiones/vista/pantalla_cuaderno.dart';
 import 'package:las_versiones/vista/pantalla_esqueleto.dart';
+import 'package:las_versiones/vista/pantalla_mosaico_arco_1.dart';
 
 void main() {
   setUp(() {
@@ -38,12 +40,17 @@ void main() {
     return const RepositorioCuaderno();
   }
 
+  RepositorioMosaico crearRepoMosaico() {
+    return const RepositorioMosaico();
+  }
+
   AppLasVersiones crearApp() {
     return AppLasVersiones(
       repoIdioma: crearRepoIdioma(),
       repoFlags: crearRepoFlags(),
       repoEstadoBrecha: crearRepoEstadoBrecha(),
       repoCuaderno: crearRepoCuaderno(),
+      repoMosaico: crearRepoMosaico(),
     );
   }
 
@@ -169,6 +176,7 @@ void main() {
       repoFlags: crearRepoFlags(),
       repoEstadoBrecha: crearRepoEstadoBrecha(),
       repoCuaderno: crearRepoCuaderno(),
+      repoMosaico: crearRepoMosaico(),
     ));
     await tester.pumpAndSettle();
 
@@ -218,6 +226,82 @@ void main() {
 
     final ids = await repoCuaderno.idsRegistrados();
     expect(ids, contains('cuaderno.1.0.3'));
+  });
+
+  testWidgets(
+      'cerrar la Brecha 1.1 dispara el Mosaico del Arco 1 antes del esqueleto',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.brecha.1.1.fase': 'concilio',
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    // Cerrar la Brecha desde el Concilio.
+    await tester.tap(find.text('CERRAR LA BRECHA'));
+    await tester.pumpAndSettle();
+
+    // Como aún hay 1.1.7 pendiente, primero la cinemática.
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+    final repoFlags = crearRepoFlags();
+    expect(await repoFlags.estaActivo('arco_1_completado'), isTrue,
+        reason: 'al cerrar la 1.1, el flag de arco completado se activa');
+  });
+
+  testWidgets(
+      'arco completado y mosaico no entregado → muestra el Mosaico antes '
+      'del esqueleto', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      // mosaico_arco_1_entregado NO está
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaMosaicoArco1), findsOneWidget);
+    expect(find.byType(PantallaEsqueleto), findsNothing);
+  });
+
+  testWidgets(
+      'mosaico entregado y arco completado → salta directo al esqueleto',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaEsqueleto), findsOneWidget);
+    expect(find.byType(PantallaMosaicoArco1), findsNothing);
   });
 
   testWidgets(
