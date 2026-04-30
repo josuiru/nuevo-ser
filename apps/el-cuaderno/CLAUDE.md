@@ -109,7 +109,7 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 
 **S1 completo** — bootstrap del scaffolding cableado a Isar + dominio + UI.
 
-**S2 completo** — backend WP (`NS_El_Cuaderno`: observaciones, sit-spot, misterios) + cliente Dart con frontera de privacidad (`what_seen_hash`, no lat/lng) + cola de sync con reglas de recuperabilidad (4xx irrecuperable salvo 401/408/429, 5xx reintenta). M003 con tablas `ns_observations`, `ns_sit_spots`, `ns_mysteries_catalog`. Renombrado feature companion `cuaderno` → `bitacora` para evitar colisión.
+**S2 completo** — backend WP (`NS_El_Cuaderno`: observaciones, sit-spot, misterios) + cliente Dart con frontera de privacidad (`what_seen_hash`, no lat/lng) + cola de sync con reglas de recuperabilidad (4xx irrecuperable salvo 401/408/429, 5xx reintenta). M003 con tablas `ns_observations`, `ns_sit_spots`, `ns_mysteries_catalog`. Renombrado feature companion `cuaderno` → `bitacora` para evitar colisión. **Cola cableada en main**: `_OrquestadorJuego` instancia `ClienteElCuaderno` + `ColaSyncObservaciones`; cada observación nueva pasa por `marcarPendiente` y el bloque opt-in "Sincronizar mis observaciones" en Ajustes invoca `intentarEnviar` cuando el adulto pulsa. Sin auto-sync, sin push.
 
 **S3 completo** — Perfil P5 compuesto en `nuevo_ser_core` con paridad bit a bit Dart/PHP (12 casos en fixture compartida `packages/nuevo_ser_core/test/fixtures/perfil_p5.json`).
 
@@ -133,7 +133,7 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 - ítem 10: encargo a ilustradora botánica (NO IA generativa, biblia §8.1).
 - ítem 11: auth de profesor/cuidador.
 
-Tests: 153 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
+Tests: 159 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
 
 **S1 (referencia histórica)** — bootstrap del scaffolding según el prompt operativo del paquete documental:
 
