@@ -159,6 +159,12 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      // F2-11: la pantalla jugable del Mosaico M2 (audio-guía) ya
+      // existe. Marcamos `mosaico_arco_2_entregado` para que el
+      // orquestador no abra la pantalla M2 entre el cierre del Arco
+      // 2 y el esqueleto. La 2.4.8 ya NO activa este flag desde
+      // F2-11 (lo activa la pantalla M2 al entregar).
+      'nuevoser.lasversiones.flag.mosaico_arco_2_entregado': true,
       // Mosaico M2 entregado + cierre del Arco 2 cerrado — el
       // orquestador no tiene cinemáticas del Arco 3 implementadas,
       // así que cae al esqueleto.
@@ -481,6 +487,12 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      // F2-11: la pantalla jugable del Mosaico M2 (audio-guía) ya
+      // existe. Marcamos `mosaico_arco_2_entregado` para que el
+      // orquestador no abra la pantalla M2 entre el cierre del Arco
+      // 2 y el esqueleto. La 2.4.8 ya NO activa este flag desde
+      // F2-11 (lo activa la pantalla M2 al entregar).
+      'nuevoser.lasversiones.flag.mosaico_arco_2_entregado': true,
       // Mosaico M2 entregado + cierre del Arco 2 cerrado — el
       // orquestador no tiene cinemáticas del Arco 3 implementadas,
       // así que cae al esqueleto.
@@ -609,6 +621,12 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      // F2-11: la pantalla jugable del Mosaico M2 (audio-guía) ya
+      // existe. Marcamos `mosaico_arco_2_entregado` para que el
+      // orquestador no abra la pantalla M2 entre el cierre del Arco
+      // 2 y el esqueleto. La 2.4.8 ya NO activa este flag desde
+      // F2-11 (lo activa la pantalla M2 al entregar).
+      'nuevoser.lasversiones.flag.mosaico_arco_2_entregado': true,
       // Mosaico M2 entregado + cierre del Arco 2 cerrado — el
       // orquestador no tiene cinemáticas del Arco 3 implementadas,
       // así que cae al esqueleto.

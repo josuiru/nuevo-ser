@@ -623,13 +623,22 @@ void main() {
       expect(voces, {VozPersonaje.isaura, VozPersonaje.maren});
     });
 
-    test('2.4.8 activa hoy provisionalmente mosaico_arco_2_entregado '
-        'además de aprendiz_dos_alcanzado y arco_2_estacion_4_cerrada '
-        '— el flag se moverá al orquestador cuando entre la pantalla '
-        'jugable del Mosaico M2 (registrado en BLOQUEOS)', () {
+    test('2.4.8 activa aprendiz_dos_alcanzado y arco_2_estacion_4_cerrada '
+        'al cerrar — desde F2-11 ya NO activa `mosaico_arco_2_entregado` '
+        '(lo activa la pantalla jugable del Mosaico M2 al entregar, '
+        'mismo patrón que el M1 del Arco 1 con su `_alEntregarMosaicoArco2` '
+        'en main.dart). El flag `arco_2_estacion_4_cerrada` es lo que '
+        'dispara la pantalla M2 jugable', () {
       expect(
         EscenasArco2.flagsDeCierrePorEscena['escena_2_4_8_vista'],
-        contains('mosaico_arco_2_entregado'),
+        containsAll([
+          'aprendiz_dos_alcanzado',
+          'arco_2_estacion_4_cerrada',
+        ]),
+      );
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_4_8_vista'],
+        isNot(contains('mosaico_arco_2_entregado')),
       );
     });
 

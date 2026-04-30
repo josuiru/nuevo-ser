@@ -17,6 +17,7 @@ import 'dominio/cuaderno.dart';
 import 'dominio/escenas_arco_1.dart';
 import 'dominio/escenas_arco_2.dart';
 import 'dominio/mosaico_arco_1.dart';
+import 'dominio/mosaico_arco_2.dart';
 import 'nucleo/paleta_archivo.dart';
 import 'vista/pantalla_brecha.dart';
 import 'vista/pantalla_cinematica.dart';
@@ -24,6 +25,7 @@ import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno.dart';
 import 'vista/pantalla_esqueleto.dart';
 import 'vista/pantalla_mosaico_arco_1.dart';
+import 'vista/pantalla_mosaico_arco_2.dart';
 
 /// Clave global del idioma elegido por la Cronista en el primer
 /// arranque. Sigue el namespace `nuevoser.<juego>.*` que el CLAUDE.md
@@ -407,6 +409,15 @@ class _OrquestadorState extends State<Orquestador> {
         !_flagsActivos.contains(MosaicoArco1.flagDeMosaicoEntregado);
   }
 
+  /// `true` si la Cronista debe ver la pantalla del Mosaico del
+  /// Arco 2 ahora — el arco está completado (cierre de 2.4.8) y el
+  /// Mosaico aún no se ha entregado.
+  bool get _mosaicoArco2Pendiente {
+    if (!_idiomaElegido) return false;
+    return _flagsActivos.contains(MosaicoArco2.flagDeArcoCompletado) &&
+        !_flagsActivos.contains(MosaicoArco2.flagDeMosaicoEntregado);
+  }
+
   Future<void> _alEntregarMosaicoArco1() async {
     await widget.repoFlags.activar(MosaicoArco1.flagDeMosaicoEntregado);
     if (!mounted) return;
@@ -441,6 +452,26 @@ class _OrquestadorState extends State<Orquestador> {
           debugPrint('Mosaico Arco 1: error de sync — $razon');
       }
     }
+  }
+
+  Future<void> _alEntregarMosaicoArco2() async {
+    await widget.repoFlags.activar(MosaicoArco2.flagDeMosaicoEntregado);
+    if (!mounted) return;
+    _flagsActivos = {
+      ..._flagsActivos,
+      MosaicoArco2.flagDeMosaicoEntregado,
+    };
+    // Tras entregar, la cinemática `M2.entrega` (Andrés con
+    // auriculares en el ático) queda pendiente — su `flagsRequeridos`
+    // referencia `mosaico_arco_2_entregado`. Recalculamos la próxima
+    // escena para que el orquestador la dispare antes del esqueleto;
+    // luego encadenarán las dos cinemáticas del cierre del Arco 2
+    // (2.Z.1 con Antonio y 2.Z.2 La grabación). El cableado al
+    // companion (`POST /companion/mosaicos`) llegará en F2-12 con
+    // `format='audio_guia_arco_2'`.
+    setState(() {
+      _escenaEnReproduccion = _proximaEscenaPendiente();
+    });
   }
 
   /// Abre el Cuaderno como ruta superpuesta al estado actual del
@@ -498,6 +529,12 @@ class _OrquestadorState extends State<Orquestador> {
     if (_mosaicoArco1Pendiente) {
       return PantallaMosaicoArco1(
         alEntregar: _alEntregarMosaicoArco1,
+        repoMosaico: widget.repoMosaico,
+      );
+    }
+    if (_mosaicoArco2Pendiente) {
+      return PantallaMosaicoArco2(
+        alEntregar: _alEntregarMosaicoArco2,
         repoMosaico: widget.repoMosaico,
       );
     }

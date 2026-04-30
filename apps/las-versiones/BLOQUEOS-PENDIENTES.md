@@ -397,6 +397,30 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
+## Mosaico M2 audio-guía — pantalla jugable (F2-11)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: la pantalla jugable del Mosaico del Arco 2 (`PantallaMosaicoArco2` en `lib/vista/pantalla_mosaico_arco_2.dart`) está implementada y cableada al orquestador. Reemplaza el flag provisional `mosaico_arco_2_entregado` que F2-8 había puesto en el cierre de la cinemática 2.4.8 — ahora la 2.4.8 sólo activa `aprendiz_dos_alcanzado` + `arco_2_estacion_4_cerrada` (este último es el flag de arco completado del M2), la `PantallaMosaicoArco2` se muestra entre la 2.4.8 y la cinemática `M2.entrega`, y al pulsar ENTREGAR LA AUDIO-GUÍA el orquestador (`_alEntregarMosaicoArco2`) activa `mosaico_arco_2_entregado` y encadena con la cinemática `M2.entrega` (ático del Archivo, Andrés con auriculares).
+
+**Formato audio-guía** (doc 08 §M2): mientras el Mosaico del Arco 1 fue un *cómic mudo de 8 viñetas* con código de confianza visual por viñeta, el del Arco 2 cambia de soporte a una **audio-guía de aproximadamente 90 segundos**: 8 fragmentos pre-escritos de declaración leída en voz alta, cada uno marcado con código de confianza (Sólido / Probable / Disputado) por la Cronista. Los formatos son distintos a propósito: el M1 reconoce el oficio de **mirar**; el M2 reconoce el oficio de **decir** lo que se ha mirado. La audio-guía recoge la voz de Maren articulando declaraciones honestas, mezcladas, y Andrés (en `M2.entrega`) escucha y observa: *"has dicho 'no sabemos' tres veces. Y 'probablemente' cuatro" / "está perfecto"*. El reconocimiento del oficio bien hecho NO está en haber afirmado con certeza, sino en haber **declarado la incertidumbre con precisión**.
+
+**Catálogo de los 8 fragmentos**: 2 fragmentos por cada Estación del Arco 2 (2.1, 2.2, 2.3, 2.4), anclados a las afirmaciones canónicas o fuentes de la Brecha correspondiente. Los fragmentos clave del oficio del arco articulan los matices "Sólido (la ausencia)" y "Sólido como declaración metodológica":
+- 2.3 fragmento 2 (`domus_la_familia_que_no_aparece`): articula la afirmación 6 *Sólido (la ausencia)* sobre las personas esclavizadas no nombradas — *"Y este silencio no es accidente del registro: es estructura de la sociedad romana esclavista que producía las fuentes. Lo declaro sólido — sólido como ausencia."*.
+- 2.4 fragmento 2 (`wamba_el_silencio_y_el_techo`): articula la afirmación 7 *Sólido (la ausencia)* sobre la ausencia de fuentes producidas por los vascones del periodo y la afirmación 9 *Sólido como declaración metodológica* sobre el techo estructural de la reconstrucción — *"La reconstrucción del lado vascón tiene un techo metodológico estructural — y eso lo declaro sólido. Como declaración metodológica."*.
+
+**Mínimo de fragmentos para entregar**: 6 de 8 (mismo patrón que el M1). La Cronista puede dejar 2 fragmentos sin marcar (típicamente los de Estaciones que sintió menos suyas) y aún así entregar.
+
+**Reutilización del repositorio del M1**: `RepositorioMosaico` ya era genérico por `idArco` desde su origen — se reutiliza tal cual con `MosaicoArco2.idArco = 'arco_2'`, persistiendo bajo la clave `nuevoser.lasversiones.mosaico.arco_2` (separada de `nuevoser.lasversiones.mosaico.arco_1` del M1, evita pisar marcas).
+
+**Pendiente** (acoplado al cableado al companion en F2-12):
+- Sincronizar el Mosaico M2 con `POST /companion/mosaicos` con `format='audio_guia_arco_2'` (paralelo al `format='comic_8_vinetas_confianza'` del M1). El orquestador prepara el espacio para encadenarlo en segundo plano tras la entrega local — mismo patrón que `_alEntregarMosaicoArco1` con `_sincronizarMosaicoEnSegundoPlano`. El sincronizador concreto del M2 entra en F2-12.
+- La observación pedagógica de Andrés *"has dicho 'no sabemos' tres veces. Y 'probablemente' cuatro"* en la cinemática `M2.entrega` es texto fijo del doc 08 — no se computa dinámicamente contra las marcas reales de la Cronista. Si en el futuro se quisiera computar, habría que pasar el conteo de niveles del Mosaico al estado narrativo.
+
+**No requiere validación humana adicional**: el formato audio-guía y los 8 fragmentos son composición pedagógica del juego que reproduce conceptualmente lo que el doc 08 §M2 describe. Las declaraciones de los fragmentos derivan textualmente de las afirmaciones canónicas de las 4 Brechas del arco (ya validadas o en BLOQUEOS individualmente). No se introduce material histórico nuevo ni cita literal de fuentes que no estén ya en el catálogo de las Brechas.
+
+---
+
 ## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).

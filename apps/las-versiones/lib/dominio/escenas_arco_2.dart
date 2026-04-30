@@ -197,17 +197,13 @@ class EscenasArco2 {
     'escena_2_4_8_vista': {
       'aprendiz_dos_alcanzado',
       'arco_2_estacion_4_cerrada',
-      // Provisional (F2-8): hasta que la pantalla jugable del
-      // Mosaico M2 (audio-guía de 90s con anclajes obligatorios y
-      // declaración verbal de niveles de confianza) esté
-      // implementada, cerrar la 2.4.8 activa también el flag de
-      // entrega del Mosaico M2 — para que la cinemática
-      // 2.M2.entrega y, encadenadas, las dos del cierre del Arco 2
-      // (2.Z.1 y 2.Z.2) sean alcanzables hoy. Cuando entre la
-      // pantalla M2 jugable, este activador se mueve al
-      // `_alEntregarMosaicoArco2` del orquestador y la 2.4.8 deja
-      // de activarlo. Cambio trivial registrado en BLOQUEOS.
-      'mosaico_arco_2_entregado',
+      // Desde F2-11: ya NO se activa aquí `mosaico_arco_2_entregado`.
+      // El provisional de F2-8 era hasta que existiera la pantalla
+      // jugable del Mosaico M2 (audio-guía). Esa pantalla
+      // (`PantallaMosaicoArco2`) ya existe; al entregar, el
+      // orquestador (`_alEntregarMosaicoArco2` en main.dart) activa
+      // el flag de entregado y encadena con la cinemática
+      // `M2.entrega`.
     },
     'escena_m2_entrega_vista': {
       'mosaico_arco_2_archivado_por_andres',
