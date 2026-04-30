@@ -583,7 +583,16 @@ class _VistaEleccion extends StatelessWidget {
   @override
   Widget build(BuildContext contexto) {
     final nombre = plano.voz.nombreVisible;
-    final prompt = aplicarTokens(plano.textoPrompt ?? '', nombreJugador);
+    // El locale viaja por context — necesario para que prompt y opciones
+    // se traduzcan a eu/ca igual que el resto de líneas. Antes pasaba
+    // sólo por aplicarTokens y los textos de PlanoEleccion quedaban
+    // siempre en castellano aunque el niño tuviera el idioma cambiado.
+    final locale = Localizations.maybeLocaleOf(contexto);
+    final prompt = traducirYAplicarTokens(
+      plano.textoPrompt ?? '',
+      nombreJugador,
+      locale,
+    );
     final estaRevelandoPrompt = fase == _FaseReproduccion.revelando;
     final estaMostrandoOpciones = fase == _FaseReproduccion.mostrandoOpciones;
     final estaRevelandoRespuesta = fase == _FaseReproduccion.revelandoRespuesta;
@@ -596,9 +605,10 @@ class _VistaEleccion extends StatelessWidget {
 
     final indiceResp = indiceElegida;
     final respuesta = indiceResp != null
-        ? aplicarTokens(
+        ? traducirYAplicarTokens(
             plano.opciones[indiceResp].textoRespuesta ?? '',
             nombreJugador,
+            locale,
           )
         : '';
     final textoRespuestaRevelado = estaRevelandoRespuesta
@@ -634,9 +644,10 @@ class _VistaEleccion extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: _BotonOpcion(
-                      texto: aplicarTokens(
+                      texto: traducirYAplicarTokens(
                         plano.opciones[indice].textoJugador,
                         nombreJugador,
+                        locale,
                       ),
                       alPulsar: () => alElegir(indice),
                     ),

@@ -111,8 +111,16 @@ class ServicioSonoro {
     if (sonido == null) return;
     if (_idsAusentes.contains(identificador)) return;
     try {
+      // Cada efecto necesita su propio AudioPlayer para que efectos
+      // cortos y solapables (tap, acierto, fragmento_disuelto) no se
+      // pisen entre sí. Pero `ReleaseMode.release` sólo libera el
+      // recurso de audio nativo cuando termina la pista; el AudioPlayer
+      // dart-side queda vivo. Sin un dispose explícito al terminar, las
+      // instancias se acumulan en memoria — leak invisible en sesiones
+      // largas. Suscribimos al `onPlayerComplete` para desecharlo.
       final player = AudioPlayer(playerId: 'efecto_${DateTime.now().microsecondsSinceEpoch}')
         ..setReleaseMode(ReleaseMode.release);
+      _autoDesecharCuandoTermine(player);
       final volumen = _volumenEfectivoDe(sonido.capa);
       await player.setVolume(volumen);
       final fuente = await LocalizadorAudio.instancia.resolver(sonido.rutaAsset);
@@ -142,6 +150,7 @@ class ServicioSonoro {
       final player = AudioPlayer(
         playerId: 'voz_${DateTime.now().microsecondsSinceEpoch}',
       )..setReleaseMode(ReleaseMode.release);
+      _autoDesecharCuandoTermine(player);
       final volumen = _volumenEfectivoDe(CapaAudio.narrativos);
       await player.setVolume(volumen);
       final fuente = await LocalizadorAudio.instancia.resolver(rutaAsset);
@@ -153,6 +162,28 @@ class ServicioSonoro {
     } catch (_) {
       _idsAusentes.add(rutaAsset);
     }
+  }
+
+  /// Suscribe al `onPlayerComplete` del [player] para liberar la
+  /// instancia cuando termina la pista. Usado por `reproducirEfecto`
+  /// y `reproducirVoz`, que crean un AudioPlayer por llamada para
+  /// permitir efectos solapables. Sin esto, las instancias se
+  /// acumulan en memoria durante sesiones largas.
+  ///
+  /// El subscription `cancel()` se llama dentro del propio listener,
+  /// así no hace falta tracking externo. Si la suscripción ya estaba
+  /// cancelada, `dispose()` también es seguro de llamar dos veces.
+  void _autoDesecharCuandoTermine(AudioPlayer player) {
+    late final StreamSubscription<void> sub;
+    sub = player.onPlayerComplete.listen((_) async {
+      await sub.cancel();
+      try {
+        await player.dispose();
+      } catch (_) {
+        // En tests headless o tras un dispose previo, el plugin puede
+        // tirar — silenciamos para no estropear la sesión.
+      }
+    });
   }
 
   /// Reproduce un loop en la capa del sonido (ambient o música).
