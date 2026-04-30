@@ -100,12 +100,42 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 
 ## Estado actual
 
+**S0 → S8 completos**, S9 (piloto) bloqueado por validaciones humanas (memoria `project_el_cuaderno_decisiones_humanas_pendientes`).
+
 **S0 completo** (rama `feature/el-cuaderno-bootstrap`):
 - 15 docs del paquete documental copiados a `docs/el-cuaderno/` (renombrados sin prefijo `el-cuaderno-` para encajar con el patrón que el `prompt-claude-code.md` espera).
 - Esta `CLAUDE.md` redactada.
 - Sin entrada explícita en `melos.yaml` porque ya usa `apps/*` glob — basta con que exista `pubspec.yaml`.
 
-**S1 en marcha** — bootstrap del scaffolding según el prompt operativo del paquete documental:
+**S1 completo** — bootstrap del scaffolding cableado a Isar + dominio + UI.
+
+**S2 completo** — backend WP (`NS_El_Cuaderno`: observaciones, sit-spot, misterios) + cliente Dart con frontera de privacidad (`what_seen_hash`, no lat/lng) + cola de sync con reglas de recuperabilidad (4xx irrecuperable salvo 401/408/429, 5xx reintenta). M003 con tablas `ns_observations`, `ns_sit_spots`, `ns_mysteries_catalog`. Renombrado feature companion `cuaderno` → `bitacora` para evitar colisión.
+
+**S3 completo** — Perfil P5 compuesto en `nuevo_ser_core` con paridad bit a bit Dart/PHP (12 casos en fixture compartida `packages/nuevo_ser_core/test/fixtures/perfil_p5.json`).
+
+**S4 completo** — Tutor IA real cableado a Anthropic con prompt versionado server-side (`NS_Prompt_Cuaderno::VERSION = 'cuaderno-v1-2026-04-30'`), filtro lista negra del doc 04, regeneración con un retry, fallback canónico tras dos fallos, mensaje de cuota agotada. Cuota stub pendiente de M004.
+
+**S5 completo (alcance mínimo)** — `dominio/geolocalizacion_privacy_first.dart`: contrato `ServicioGeolocalizacion`, enum `PermisoGeo` con 4 estados, `distanciaMetros` Haversine con WGS-84, `estaEnSitSpot` con radio 50 m, `normalizarRegion` con bounding boxes piloto (ES-NA-PA, ES-NA, ES-BI, ES-MD, ES-BCN) y fallback `'ES'`. `ClienteElCuaderno` deriva `region_code` automáticamente. **Pendiente humano**: añadir plugin `geolocator` real + `flutter_map` + permisos Android/iOS (ítem 15-16 memoria) y MBTiles regional descargable bajo demanda.
+
+**S6 completo (alcance mínimo)** — `dominio/fenologia.dart` con cortes astronómicos del hemisferio norte (20 mar / 21 jun / 22 sep / 21 dic). `ClienteElCuaderno.listarMisteriosParaAhora` deriva `region` y `season` desde coords + fecha sin que las coords crucen red. **Pendiente humano**: calendario fenológico Iberia curado por ornitólogos/botánicos (ítem 12 memoria).
+
+**S7 completo (alcance acotado por bloqueante)** — `dominio/agregado_semanal.dart` calcula localmente `iso_week`, counts y reparto por misterio/confianza (sólo metadatos, nunca texto libre). `preguntaParaLaCenaOffline` genera la pregunta del cuidador con plantillas hardcoded en castellano (5 ramas) — fallback offline antes de que llegue el resumen del LLM vía `/companion/aggregates/weekly`. **Pendiente humano**: vista del aula k≥5 bloqueada por auth de profesor (ítem 11 memoria).
+
+**S8 completo (alcance acotado)** — `ExportadorCuaderno.aJson/deJson` round-trip versionado del cuaderno completo. `RepositorioLocal.borrarTodoLoLocal` orquesta el borrado completo en memoria e Isar con `ResultadoBorrado` para feedback honesto. **Pendiente humano**: paquete `pdf` + tipografía/paleta (ítem 13 memoria) y auditoría WCAG 2.1 AA sobre tema definitivo (ítem 14 memoria).
+
+**S9 (piloto)** — bloqueado por la lista completa de la memoria `project_el_cuaderno_decisiones_humanas_pendientes`. La urgencia más alta:
+- ítem 1: asesoría didáctica del mapa de habilidades.
+- ítem 2: asesoría psicológica del caso 1 doc 15 §8.
+- ítem 5: política LOPDGDD para menores (bloquea sync real).
+- ítem 6: verificación científica de los `[DATO A VERIFICAR]` del catálogo seminal.
+- ítem 7: traducciones eu/ca por hablantes nativos.
+- ítem 8: captación de 12-15 familias voluntarias.
+- ítem 10: encargo a ilustradora botánica (NO IA generativa, biblia §8.1).
+- ítem 11: auth de profesor/cuidador.
+
+Tests: 125 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
+
+**S1 (referencia histórica)** — bootstrap del scaffolding según el prompt operativo del paquete documental:
 
 ```
 apps/el-cuaderno/
@@ -150,8 +180,8 @@ apps/el-cuaderno/
 
 ## Cosas que NO hacer
 
-- No añadir librerías sin discutirlo. Las del bootstrap están listadas en el prompt §"PUBSPEC" y son cerradas: flutter, flutter_localizations, isar, isar_flutter_libs, uuid, path_provider. Dev: flutter_test, isar_generator, build_runner. NADA de firebase, sentry, http directo, dio.
-- No conectar con servicios externos en S1 (sin red, sin LLM real, sin geolocalización todavía — Tutor canned, sit spot por texto manual).
+- No añadir librerías sin discutirlo. Las del bootstrap original están listadas en el prompt §"PUBSPEC" y son cerradas: flutter, flutter_localizations, isar, isar_flutter_libs, uuid, path_provider. Dev: flutter_test, isar_generator, build_runner. NADA de firebase, sentry, dio. **Añadidas tras decisión explícita en S2-D**: `http`, `crypto`, `shared_preferences`, `nuevo_ser_core` (path).
+- No añadir librerías para PDF (`pdf`), mapa (`flutter_map`), geolocalización (`geolocator`) sin que cierre primero la decisión humana (memoria `project_el_cuaderno_decisiones_humanas_pendientes` ítems 13-16).
 - No tocar `apps/uno-roto/`, `apps/las-versiones/`, `packages/*`, `wp-plugin/*` desde aquí.
 - No reescribir los docs de `docs/el-cuaderno/`. Son copia desde el paquete documental fuente.
 - No introducir XP, niveles visibles, rachas, badges, fanfarria, animaciones de "¡bien hecho!". Si te sale espontáneamente, lo borras.
