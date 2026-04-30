@@ -1,0 +1,37 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    // Workaround para plugins antiguos que no declaran `namespace`
+    // en su build.gradle (obligatorio desde AGP 8). isar_flutter_libs
+    // 3.1.0+1 es uno de ellos: leemos el `package` del AndroidManifest
+    // y lo asignamos como namespace antes de la evaluación.
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            def androidExt = project.android
+            if (androidExt.namespace == null) {
+                def manifest = new File(project.projectDir, "src/main/AndroidManifest.xml")
+                if (manifest.exists()) {
+                    def parsed = new XmlSlurper().parse(manifest)
+                    def pkg = parsed."@package".text()
+                    if (pkg) {
+                        androidExt.namespace = pkg
+                    }
+                }
+            }
+        }
+    }
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
