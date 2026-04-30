@@ -119,7 +119,31 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Mosaico Arco 1 con una sola Brecha implementada
+## Mosaico Arco 1 v2 — pregunta abierta y formulación de las viñetas (F8.7)
+
+**Tracker doc 17**: pendiente de revisión humana.
+
+**Guion canónico (doc 07 §M1, v0.1)**: el doc fue escrito asumiendo que el Arco 1 era sólo Aralar, así que la pregunta abierta del Mosaico es "¿Cómo era de verdad un día cualquiera en Aralar hace 6.000 años?" y los **5 anclajes obligatorios** (al menos 3 de 5) son todos del dolmen: dataciones C14 + análisis de polen + cerámica campaniforme + herramientas líticas + paisaje. Formato: cómic mudo de **8 viñetas**, cada una con código de color por confianza (azul Sólido / ámbar Probable / rojo claro Disputado).
+
+**Estado**: implementado en F8.7 con generalización del v0.1 al arco ampliado del v0.2 (cuatro Estaciones).
+- **Pregunta abierta sustituida**: "¿Cómo era de verdad un día cualquiera en Aralar hace 6.000 años?" → "¿Cómo se hace el oficio del cronista — qué he aprendido en este primer arco?". La nueva formulación cubre las cuatro Brechas (no sólo Aralar) y mantiene la apertura del original. La pregunta pedagógica sigue siendo la misma — qué se aprende del oficio en el arco — pero sin atar al lugar concreto que era el único cuando se redactó el v0.1.
+- **8 viñetas pre-descritas**, 2 por Estación, cada una anclada a fuentes ya catalogadas en `CatalogoBrechas`:
+  - 1.1 — `aralar_dolmen_visita` (anclajes: huesos in situ, lítico, informe antiguo, informe moderno) + `aralar_paisaje_y_toponimo` (anclajes: informe moderno, topónimo local).
+  - 1.2 — `cromlech_banquete` (anclajes: cerámica fragmentaria, C14 única, lítico escaso) + `cromlech_dialogo_con_sira` (sin anclaje arqueológico — viñeta pedagógica de relación con un par).
+  - 1.3 — `cueva_grabados_parietales` (anclajes: grabados in situ, comparativa otras cuevas) + `cueva_covacho_habitacion` (anclajes: covacho con carbones, informe excavación).
+  - 1.4 — `irulegi_casa_y_enlosado` (anclajes: casa con escaleras, enlosado colapsado, cerámica mixta, armas) + `irulegi_la_mano` (anclajes: pieza, cartela museo dos lecturas, monográfico FLV 136).
+- **Mínimo de viñetas marcadas para entregar**: 6 de 8. Equivale a la regla del v0.1 ("3 de 5 anclajes obligatorios") aplicada al nuevo conjunto: la Cronista puede dejar 2 viñetas sin marcar (típicamente las de la Estación que sintió menos suya) y aún así entregar.
+- **Color de los códigos**: azul Sólido (`Color(0xFF7AAFD8)`), ámbar Probable (`PaletaArchivo.ambarLacre`), rojo claro Disputado (`Color(0xFFD08A82)`). Los tonos exactos quedan provisionales hasta cerrar la paleta del juego (doc 11) — anotados en la entrada existente DOC-11-PALETA.
+
+**Pendiente de revisión humana**:
+- ¿La sustitución de la pregunta abierta es aceptable? La nueva formulación es deliberadamente meta ("¿qué he aprendido del oficio?") en lugar de reconstructiva ("¿cómo era ese día?"). El guion v0.1 prefería la segunda — más imaginativa, más concreta. Posible alternativa: dejar que la Cronista elija una de las cuatro Estaciones como "el día" sobre el que reconstruye. Eso preservaría el espíritu del v0.1 dentro de un arco más amplio.
+- ¿Las dos viñetas por Estación son las acertadas? Otras combinaciones posibles: en la 1.2 podría entrar la voz del Cuaderno con la "C14 sola" en lugar del diálogo con Sira; en la 1.4 la Mano podría ir sola y la otra ser una viñeta del Concilio.
+- La viñeta `cromlech_dialogo_con_sira` no tiene anclaje arqueológico (es relacional). ¿Debe contar o no para el mínimo de marcadas? Hoy cuenta — la regla pide marcar 6 sin distinguir el tipo. Si el comité prefiere "al menos N de las que tienen anclaje", la regla cambia.
+- Color de los niveles de confianza — provisional hasta cerrar doc 11.
+
+---
+
+## Mosaico Arco 1 — disparador del flag (cerrado en F8.6 y F8.7)
 
 **Tracker doc 17**: el Mosaico es categoría no-atomizada (doc 15 §3) — los prompts actuales son provisionales y deberá revisarlos quien valide el material pedagógico cuando entren más Brechas al arco.
 

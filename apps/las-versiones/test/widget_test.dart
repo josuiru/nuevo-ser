@@ -86,6 +86,7 @@ void main() {
       'nuevoser.lasversiones.flag.escena_1_b_vista': true,
       'nuevoser.lasversiones.flag.arco_1_completado': true,
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -291,6 +292,37 @@ void main() {
   });
 
   testWidgets(
+      'tras entregar el Mosaico (mosaico_arco_1_entregado activo, '
+      'cinemática de entrega NO vista todavía) el orquestador despacha '
+      'la cinemática `entregaDelMosaico` antes del esqueleto', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      // escena_m1_entrega_vista NO está → la cinemática se dispara
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+    expect(find.byType(PantallaMosaicoArco1), findsNothing,
+        reason: 'el Mosaico ya está entregado — no vuelve a aparecer');
+    expect(find.byType(PantallaEsqueleto), findsNothing,
+        reason: 'la cinemática post-entrega va antes que el esqueleto');
+  });
+
+  testWidgets(
       'mosaico entregado y arco completado → salta directo al esqueleto',
       (tester) async {
     SharedPreferences.setMockInitialValues({
@@ -307,6 +339,7 @@ void main() {
       'nuevoser.lasversiones.flag.escena_1_b_vista': true,
       'nuevoser.lasversiones.flag.arco_1_completado': true,
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -333,6 +366,7 @@ void main() {
       'nuevoser.lasversiones.flag.escena_1_b_vista': true,
       'nuevoser.lasversiones.flag.arco_1_completado': true,
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

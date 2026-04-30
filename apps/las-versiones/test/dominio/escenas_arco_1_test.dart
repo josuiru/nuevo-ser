@@ -539,6 +539,37 @@ void main() {
     });
   });
 
+  group('EscenasArco1.entregaDelMosaico (M1.entrega)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.entregaDelMosaico.id, 'M1.entrega');
+      expect(
+        EscenasArco1.entregaDelMosaico.flagDeSalida,
+        'escena_m1_entrega_vista',
+      );
+      expect(
+        EscenasArco1.entregaDelMosaico.flagsRequeridos,
+        {'mosaico_arco_1_entregado'},
+        reason: 'la cinemática se dispara automáticamente cuando la '
+            'Cronista entrega el Mosaico (la pantalla activa el flag '
+            'vía callback del orquestador)',
+      );
+    });
+
+    test('viaja con ambiente ático del Archivo — donde Andrés archiva '
+        'el Mosaico', () {
+      expect(
+        EscenasArco1.entregaDelMosaico.ambiente,
+        same(AmbienteArchivo.aticoArchivo),
+      );
+    });
+
+    test('cierra como amable — al volver a casa termina la sesión, '
+        'no encadena con la 1.Z en la misma sesión', () {
+      final ultimoPlano = EscenasArco1.entregaDelMosaico.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('EscenasArco1.aprendizI (1.4.4)', () {
     test('id, flagDeSalida y precondición coherentes', () {
       expect(EscenasArco1.aprendizI.id, '1.4.4');
@@ -734,6 +765,11 @@ void main() {
       flagsProducibles.add('brecha_1_2_completada');
       flagsProducibles.add('brecha_1_3_completada');
       flagsProducibles.add('brecha_1_4_completada');
+      // El flag `mosaico_arco_1_entregado` lo activa el orquestador
+      // al recibir el callback `alEntregar` de la pantalla del
+      // Mosaico, no una escena. Lo añadimos al pool inicial para
+      // que la cinemática `entregaDelMosaico` pueda referenciarlo.
+      flagsProducibles.add('mosaico_arco_1_entregado');
 
       var primera = true;
       for (final escena in EscenasArco1.todas) {

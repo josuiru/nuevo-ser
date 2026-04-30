@@ -45,6 +45,7 @@ class EscenasArco1 {
     materialCongelado,
     granConcilio,
     aprendizI,
+    entregaDelMosaico,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -160,6 +161,16 @@ class EscenasArco1 {
       'rango_aprendiz_i',
       'arco_2_anunciado',
       'arco_1_completado',
+    },
+    // Cierre de la cinemática de entrega del Mosaico (Andrés +
+    // Marina). El flag `mosaico_arco_1_entregado` lo activa el
+    // orquestador al recibir el callback `alEntregar` de la
+    // pantalla del Mosaico — esa parte ocurre fuera del catálogo de
+    // cinemáticas. La precondición de esta cinemática es ese flag,
+    // y al cerrarla queda libre el camino para la 1.Z (cuando
+    // F8.8 la cablee).
+    'escena_m1_entrega_vista': {
+      'mosaico_recogido_por_archivo',
     },
   };
 
@@ -3258,6 +3269,101 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'CERRAR EL ARCO'),
+    ],
+  );
+
+  /// **M1.entrega — Entrega del Mosaico** (doc 07 §M1, F8.7).
+  ///
+  /// Maren lleva el Mosaico al Archivo y se lo entrega a Andrés.
+  /// Andrés lo archiva sin comentar — su silencio es respeto. Antes
+  /// de que se vaya, le hace una observación sobre la viñeta del
+  /// banquete marcada en rojo claro: "Bien hecho. La mayoría no se
+  /// atreve". Maren sale. En el pasillo, Marina la cruza y le dice
+  /// "Bienvenida al club".
+  ///
+  /// Pedagógicamente clave: los dos reconocimientos llegan en
+  /// gestos pequeños, no en ceremonia. Andrés valora **sostener
+  /// Disputado** sobre lo que tiene peso simbólico — la mayoría
+  /// no se atreve. Marina valora la pertenencia al oficio: "del
+  /// club" no es elitismo, es haber atravesado el primer arco con
+  /// honestidad.
+  ///
+  /// **Anclada a la entrega del Mosaico**: requiere
+  /// `mosaico_arco_1_entregado`. El orquestador la dispara en el
+  /// build siguiente al `setState` de `_alEntregarMosaicoArco1`,
+  /// antes de la pantalla del esqueleto. Tras cerrarla, la 1.Z
+  /// (F8.8) la encadena para cerrar el arco — cuando esté
+  /// implementada.
+  ///
+  /// **Sin sustituciones diegéticas**: el diálogo se reproduce
+  /// literalmente del doc 07 §M1. La viñeta a la que Andrés se
+  /// refiere ("la del banquete") corresponde a `cromlech_banquete`
+  /// del catálogo del Mosaico v2 — la afirmación canónica que el
+  /// arco más castigaba al declarar Sólida y que la Brecha 1.2
+  /// pedagógicamente articula como Probable o Disputada según el
+  /// peso que se le dé a la C14 única.
+  static const EscenaCinematica entregaDelMosaico = EscenaCinematica(
+    id: 'M1.entrega',
+    titulo: 'La entrega del Mosaico',
+    flagDeSalida: 'escena_m1_entrega_vista',
+    flagsRequeridos: {'mosaico_arco_1_entregado'},
+    ambiente: AmbienteArchivo.aticoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren sube al ático del Archivo con el Mosaico bajo el '
+            'brazo. Andrés está donde siempre, entre las cajas del '
+            'fondo. Sin levantar la vista, le tiende la mano. Maren '
+            'le entrega el cuaderno doblado.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Andrés lo abre. Pasa las viñetas despacio. No comenta. '
+            'Cierra el cuaderno con cuidado y lo coloca en el '
+            'estante de aspirantes que han cerrado el primer arco.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.andres, texto: 'Maren.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto:
+            'Una de las viñetas la has marcado roja claro. La del '
+            'banquete.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Andrés asiente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: 'Bien hecho. La mayoría no se atreve.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren asiente. Sale del ático. Baja las escaleras.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'En el pasillo del primer piso, Marina la cruza. Lleva '
+            'una pila de carpetas. Se detiene un segundo.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.marina, texto: '¿Lo has entregado?'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Marina sonríe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Bienvenida al club.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'IR A CASA'),
     ],
   );
 }

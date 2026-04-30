@@ -350,11 +350,16 @@ class _OrquestadorState extends State<Orquestador> {
   Future<void> _alEntregarMosaicoArco1() async {
     await widget.repoFlags.activar(MosaicoArco1.flagDeMosaicoEntregado);
     if (!mounted) return;
+    _flagsActivos = {
+      ..._flagsActivos,
+      MosaicoArco1.flagDeMosaicoEntregado,
+    };
+    // Tras entregar, la cinemática `entregaDelMosaico` (Andrés +
+    // Marina) queda pendiente — su `flagsRequeridos` referencia
+    // `mosaico_arco_1_entregado`. Recalculamos la próxima escena
+    // para que el orquestador la dispare antes del esqueleto.
     setState(() {
-      _flagsActivos = {
-        ..._flagsActivos,
-        MosaicoArco1.flagDeMosaicoEntregado,
-      };
+      _escenaEnReproduccion = _proximaEscenaPendiente();
     });
   }
 
