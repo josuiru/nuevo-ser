@@ -119,6 +119,26 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Arco 2 — esqueleto inicial con 2.0.1 implementada (P3)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: implementada **sólo** la cinemática de apertura 2.0.1 ("El primer día del arco", doc 08) en `EscenasArco2.primerDiaDelArco`. Las restantes 33 escenas del Arco 2 (2.1.1–2.1.6, 2.A.1–2.A.2, 2.2.1–2.2.6, 2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las cuatro Brechas 2.1–2.4 ni el Mosaico de fin de arco M2.
+
+El orquestador encadena Arco 1 → Arco 2 cruzando el flag `arco_1_cerrado_por_la_cronista` que la 1.Z activa al cerrar. Tras ver la 2.0.1, el orquestador cae al esqueleto porque no hay más cinemáticas en cola. El catálogo del Arco 2 (`EscenasArco2.todas`) crece añadiendo entradas como en el Arco 1.
+
+**Sustituciones diegéticas en 2.0.1**: ninguna por ahora. La cinemática de apertura es deliberadamente parca (Isaura saluda, advierte que llega el texto, bajan al sótano) — no introduce afirmaciones históricas concretas.
+
+**Pendiente para próximas iteraciones**:
+- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21, brecha22, brecha23, brecha24).
+- Las 33 cinemáticas restantes del doc 08 — incluidas las latentes 2.A, 2.B, 2.C ancladas a Brechas cerradas (mismo patrón que 1.A, 1.B, 1.B.1, 1.C en el Arco 1).
+- Nuevos personajes que entran en el Arco 2 — Karim (epigrafista), Sira y Aitor recurrentes, voces nuevas para Aprendiz I→II. Habrá que añadir entradas en `voz_personaje.dart`.
+- Nuevos ambientes para Pompaelo subterránea, foro romano, Calahorra/Calagurris, salón del Concilio (este último ya existe), domus de los mosaicos, biblioteca del Archivo. Añadirlos a `ambiente_archivo.dart` (nombre del archivo a renombrar a `ambiente_escena.dart` cuando convenga — ya cubre más que el Archivo).
+- Mosaico v2 del Arco 2 (M2, "audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
+- Validación humana del comité asesor sobre todo el contenido histórico concreto del Arco 2 (epigrafía romana, Quintiliano, crónicas visigodas, "el silencio vascón") — abrirá un nuevo lote de sustituciones diegéticas similar al del Arco 1.
+
+---
+
 ## Mosaico Arco 1 v2 — sincronización con `/companion/mosaicos` (P2)
 
 **Tracker doc 17**: no aplica (acoplamiento técnico, no contenido histórico).

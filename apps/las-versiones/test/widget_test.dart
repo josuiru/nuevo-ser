@@ -97,6 +97,11 @@ void main() {
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      // Arco 2 abierto — la 2.0.1 también está vista, así que el
+      // orquestador cae al esqueleto (no hay más escenas en cola).
+      'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_iniciado': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -352,6 +357,11 @@ void main() {
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      // Arco 2 abierto — la 2.0.1 también está vista, así que el
+      // orquestador cae al esqueleto (no hay más escenas en cola).
+      'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_iniciado': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -359,6 +369,39 @@ void main() {
 
     expect(find.byType(PantallaEsqueleto), findsOneWidget);
     expect(find.byType(PantallaMosaicoArco1), findsNothing);
+  });
+
+  testWidgets(
+      'arranque con Arco 1 cerrado pero 2.0.1 sin ver → orquestador '
+      'dispara la cinemática 2.0.1 antes que el esqueleto', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      // 2.0.1 todavía no vista — debería arrancar.
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCinematica), findsOneWidget,
+        reason: 'tras cerrar el Arco 1, 2.0.1 (apertura del Arco 2) entra');
+    expect(find.byType(PantallaEsqueleto), findsNothing,
+        reason: 'el esqueleto sólo aparece cuando no hay cinemáticas en cola');
+    expect(find.byKey(const ValueKey('2.0.1')), findsOneWidget);
   });
 
   testWidgets(
@@ -380,6 +423,11 @@ void main() {
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      // Arco 2 abierto — la 2.0.1 también está vista, así que el
+      // orquestador cae al esqueleto (no hay más escenas en cola).
+      'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_iniciado': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

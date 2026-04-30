@@ -15,6 +15,7 @@ import 'dominio/brecha.dart';
 import 'dominio/catalogo_brechas.dart';
 import 'dominio/cuaderno.dart';
 import 'dominio/escenas_arco_1.dart';
+import 'dominio/escenas_arco_2.dart';
 import 'dominio/mosaico_arco_1.dart';
 import 'nucleo/paleta_archivo.dart';
 import 'vista/pantalla_brecha.dart';
@@ -257,18 +258,27 @@ class _OrquestadorState extends State<Orquestador> {
     });
   }
 
-  /// Devuelve la primera escena del Arco 1 cuyos `flagsRequeridos`
+  /// Devuelve la primera escena pendiente cuyos `flagsRequeridos`
   /// están todos activos y cuyo `flagDeSalida` aún no lo está. `null`
   /// si no hay nada que reproducir ahora.
+  ///
+  /// Recorre los catálogos en orden de arco: Arco 1 → Arco 2. Esto
+  /// garantiza que las cinemáticas latentes del Arco 1 (`1.A`, `1.B`,
+  /// `1.B.1`, `1.C`) que se anclan a Brechas cerradas se disparen
+  /// antes que el Arco 2 — el cierre del Arco 1 (1.Z) activa
+  /// `arco_1_cerrado_por_la_cronista`, que es la única precondición
+  /// del Arco 2, así que el orden temporal queda correcto.
   EscenaCinematica? _proximaEscenaPendiente() {
     if (!_idiomaElegido) return null;
-    for (final escena in EscenasArco1.todas) {
-      final yaVista = _flagsActivos.contains(escena.flagDeSalida);
-      if (yaVista) continue;
-      final precondicionesOk = escena.flagsRequeridos.every(
-        _flagsActivos.contains,
-      );
-      if (precondicionesOk) return escena;
+    for (final catalogo in [EscenasArco1.todas, EscenasArco2.todas]) {
+      for (final escena in catalogo) {
+        final yaVista = _flagsActivos.contains(escena.flagDeSalida);
+        if (yaVista) continue;
+        final precondicionesOk = escena.flagsRequeridos.every(
+          _flagsActivos.contains,
+        );
+        if (precondicionesOk) return escena;
+      }
     }
     return null;
   }
@@ -319,10 +329,14 @@ class _OrquestadorState extends State<Orquestador> {
 
   Future<void> _alTerminarEscena(EscenaCinematica escena) async {
     // Cierre de escena: el flag de salida más los flags
-    // institucionales declarados por el catálogo del juego.
+    // institucionales declarados por los catálogos del juego.
+    // Se mira primero Arco 1 y luego Arco 2 — los `flagDeSalida` son
+    // únicos por escena, así que la unión es trivial: como mucho un
+    // catálogo aporta entradas para una escena dada.
     final flagsACerrar = <String>{
       escena.flagDeSalida,
       ...?EscenasArco1.flagsDeCierrePorEscena[escena.flagDeSalida],
+      ...?EscenasArco2.flagsDeCierrePorEscena[escena.flagDeSalida],
     };
     for (final flag in flagsACerrar) {
       await widget.repoFlags.activar(flag);

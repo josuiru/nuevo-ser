@@ -100,6 +100,7 @@ apps/las-versiones/
     │   ├── brecha.dart                # modelo Brecha + FaseBrecha
     │   ├── catalogo_brechas.dart      # 4 Brechas (1.1–1.4) con sus fuentes diegéticas + afirmaciones canónicas calibradas
     │   ├── escenas_arco_1.dart        # 23 cinemáticas (1.0.1 a 1.Z) cubriendo el arco entero
+    │   ├── escenas_arco_2.dart        # esqueleto Arco 2 — sólo apertura 2.0.1 implementada
     │   ├── cuaderno.dart              # catálogo de entradas
     │   ├── mosaico_arco_1.dart        # Mosaico v2: 8 viñetas pre-descritas + código de confianza por viñeta
     │   ├── evaluador_preguntas.dart   # criterio algorítmico PR.01/PR.02
@@ -130,9 +131,11 @@ apps/las-versiones/
         └── pantalla_esqueleto.dart              # post-MVP, "el Archivo abre pronto"
 ```
 
-236 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
+245 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
 
 **Cableado al companion (P2)**. `lib/datos/sincronizador_mosaico.dart` archiva el Mosaico v2 en `POST /companion/mosaicos` con `game_id='las-versiones'` (sembrado en `ns_games` por el plugin WP v0.9.0). El sincronizador es opt-in y silencioso: tras pulsar ENTREGAR, el orquestador (`_alEntregarMosaicoArco1`) llama al sincronizador en segundo plano sin bloquear la cinemática 1.M1.entrega. Sin token JWT → `SyncMosaicoSinToken` sin tocar red. Las cinco rutas (sin token, 201, 500, timeout, socket) están cubiertas por tests con `MockClient`. La URL base sigue provisional (`https://nuevoser.example.org`) hasta que cierre la decisión del dominio definitivo.
+
+**Esqueleto del Arco 2 (P3)**. `lib/dominio/escenas_arco_2.dart` con la cinemática de apertura 2.0.1 ("El primer día del arco", doc 08). Sólo esa — el catálogo crece arco a arco. El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (flag que la 1.Z activa al cerrar). `_proximaEscenaPendiente` recorre los catálogos en orden de arco, y `_alTerminarEscena` une los `flagsDeCierrePorEscena` de ambos. Las 33 cinemáticas restantes + las 4 Brechas + el Mosaico M2 quedan pendientes (registro completo en `BLOQUEOS-PENDIENTES.md`).
 
 **Validación de la plataforma extraída**: el juego usa `RepositorioIdiomaApp` del core con la clave `nuevoser.lasversiones.idioma_app`, y `EvaluadorCalibracion` del core (P4 Brier para AH.03 — corazón pedagógico) por path explícito (no via barrel, para no colisionar con el `NivelConfianza` distinto que define `apps/el-cuaderno`). Las extracciones de C5/C6/C8 funcionan: los repositorios son portables entre juegos sin tocar el código del core, y el motor de calibración tiene paridad Dart/PHP via fixture compartida.
 
@@ -140,7 +143,7 @@ apps/las-versiones/
 
 **Pendiente** (orden tentativo, sin compromiso de fechas):
 1. Validación humana del comité asesor sobre el contenido del Arco 1 — tracker entradas en `BLOQUEOS-PENDIENTES.md`. Las sustituciones diegéticas residuales (PIO-BELTRAN, EDIFICIO-ARCHIVO, ARALAR-DATACIONES, manos→grabados en 1.Z) se revierten cuando el comité valide.
-2. Arco 2 (Pompaelo, doc 08).
+2. Resto del Arco 2 (Pompaelo, doc 08): 33 cinemáticas pendientes, 4 Brechas, Mosaico M2 ("audio-guía"). Hoy sólo está la apertura 2.0.1.
 3. P2/P4 reales del motor adaptativo en `nuevo_ser_core` — pospuesto en F7 porque requiere extender `SessionPayload` con metadata por intento.
 4. Pantalla de login para alimentar `RepositorioCuentaBackend` con el token JWT real (mismo bloqueante que para el-cuaderno y uno-roto). Hasta entonces el sincronizador del Mosaico se queda en `SyncMosaicoSinToken`.
 5. Decidir si Las Versiones tiene multi-perfil desde el inicio (`GestorPerfiles`) o llega después.
