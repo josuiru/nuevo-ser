@@ -87,28 +87,63 @@ En `~/Projects/games/coleccion-nuevo-ser-paquete-documental-v0.2/coleccion-nuevo
 
 ## Estado actual
 
-**Fase 10 del roadmap, primer commit del esqueleto.** Cableado a la plataforma `nuevo_ser_core`:
+**MVP del Arco 1 jugable end-to-end.** El flujo completo arranca: configuración inicial → cinemáticas 1.0.1–1.0.3 → cinemáticas 1.1.1–1.1.2 → Brecha 1.1 con sus cinco fases jugables → cinemática 1.1.7 → Mosaico de fin de Arco 1 → pantalla esqueleto. Persistencia entre arranques en cada paso. Cableado a la plataforma `nuevo_ser_core` (idioma, calibración Brier).
 
 ```
 apps/las-versiones/
 ├── CLAUDE.md
-├── pubspec.yaml          # nuevo_ser_core por path + shared_preferences + intl
+├── BLOQUEOS-PENDIENTES.md   # registro de sustituciones diegéticas pendientes de validación
+├── pubspec.yaml             # nuevo_ser_core por path + shared_preferences + intl
 └── lib/
-    ├── main.dart         # arranque + Orquestador mínimo + selector de idioma cableado a RepositorioIdiomaApp
+    ├── main.dart            # arranque + Orquestador (5 estados: configuración, brecha, cinemática, mosaico, esqueleto)
+    ├── dominio/
+    │   ├── brecha.dart                # modelo Brecha + FaseBrecha
+    │   ├── catalogo_brechas.dart      # Brecha 1.1 + 5 fuentes diegéticas + 6 afirmaciones canónicas
+    │   ├── escenas_arco_1.dart        # cinemáticas 1.0.1–1.0.3 + 1.1.1–1.1.2 + 1.1.7
+    │   ├── cuaderno.dart              # catálogo de entradas
+    │   ├── mosaico_arco_1.dart        # 3 prompts del Mosaico de fin de arco
+    │   ├── evaluador_preguntas.dart   # criterio algorítmico PR.01/PR.02
+    │   ├── evaluacion_fuente.dart     # tipo (primaria/secundaria) + 5 sesgos
+    │   └── calibracion.dart           # thin wrapper hacia EvaluadorCalibracion del core
+    ├── datos/
+    │   ├── repositorio_cuaderno.dart            # bool por entrada
+    │   ├── repositorio_estado_brecha.dart       # fase activa por brecha
+    │   ├── repositorio_evaluacion_fuente.dart   # JSON por par (brecha, fuente)
+    │   ├── repositorio_flags_narrativos.dart    # bool por flag
+    │   ├── repositorio_mosaico.dart             # JSON blob por arco
+    │   ├── repositorio_preguntas_brecha.dart    # JSON list por brecha
+    │   ├── repositorio_recoleccion_fuentes.dart # bool por par (brecha, fuente)
+    │   └── repositorio_reconstruccion.dart      # JSON map idAfirmacion → nivel
     ├── nucleo/
-    │   └── paleta_archivo.dart      # paleta provisional sepia/tinta/ámbar — pendiente de cerrar contra doc 11
+    │   └── paleta_archivo.dart      # provisional sepia/tinta/ámbar — pendiente de cerrar contra doc 11
     └── vista/
         ├── pantalla_configuracion_inicial.dart  # selector trilingüe es/eu/ca
-        └── pantalla_esqueleto.dart  # provisional "el Archivo abre pronto"
+        ├── pantalla_cinematica.dart             # diapositivas con plano + texto + tap-para-avanzar
+        ├── pantalla_brecha.dart                 # header + indicador de fases + dispatcher al cuerpo
+        ├── fase_formulacion_preguntas.dart      # F6.1
+        ├── fase_recoleccion.dart                # F6.2
+        ├── fase_evaluacion.dart                 # F6.3
+        ├── fase_reconstruccion.dart             # F6.4 (calibración Brier)
+        ├── fase_concilio.dart                   # F6.5 (feedback)
+        ├── pantalla_mosaico_arco_1.dart         # F8 — entrega creativa de fin de arco
+        ├── pantalla_cuaderno.dart               # listado de entradas registradas
+        └── pantalla_esqueleto.dart              # post-MVP, "el Archivo abre pronto"
 ```
 
-**Validación de la plataforma extraída**: el primer commit del juego usa directamente `RepositorioIdiomaApp` del core con la clave `nuevoser.lasversiones.idioma_app`. La extracción de C5/C6 funciona como prometía — el repositorio es portable entre juegos sin tocar el código del core.
+153 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
+
+**Validación de la plataforma extraída**: el juego usa `RepositorioIdiomaApp` del core con la clave `nuevoser.lasversiones.idioma_app`, y `EvaluadorCalibracion` del core (P4 Brier para AH.03 — corazón pedagógico) por path explícito (no via barrel, para no colisionar con el `NivelConfianza` distinto que define `apps/el-cuaderno`). Las extracciones de C5/C6/C8 funcionan: los repositorios son portables entre juegos sin tocar el código del core, y el motor de calibración tiene paridad Dart/PHP via fixture compartida.
+
+**Sustituciones diegéticas activas**: todo el contenido histórico concreto del guion canónico (autoría de Pío Beltrán, dataciones C14, siglos del edificio del Archivo) está sustituido por formulación genérica que preserva la pedagogía sin afirmar lo no validado. Las 5 fuentes de la Brecha 1.1 son **explícitamente ficticias y diegéticas**. Registro completo en `BLOQUEOS-PENDIENTES.md` por si el comité asesor (doc 16) valida y permite revertir.
 
 **Pendiente** (orden tentativo, sin compromiso de fechas):
-1. Cablear `RepositorioCuentaBackend` cuando haya backend al que hablar.
-2. Decidir si Las Versiones tiene multi-perfil desde el inicio (`GestorPerfiles`) o llega después.
-3. Arrancar la primera Brecha del Arco 1 — necesita doc 07 leído y comité asesor consultado.
-4. Sistema de cinemáticas — probablemente extraerlo a `nuevo_ser_core/narrative/` cuando lo abordemos, ya que va a ser el primer caso de uso real para esa extracción (uno-roto lo tiene cableado a `voz_personaje` específica del juego, ver README de core §"Deuda de extracción pendiente").
+1. Cargar el doc 07 entero para implementar cinemáticas 1.A "Merienda con Eider" y 1.B "El ático" (apuntadas en BLOQUEOS).
+2. Implementar Brechas 1.2, 1.3, 1.4 del Arco 1 — al cerrar la 1.4 mover el disparador del Mosaico (hoy en 1.1 provisionalmente) y generalizar los prompts a "este arco" en plural.
+3. P2/P4 reales del motor adaptativo en `nuevo_ser_core` — pospuesto en F7 porque requiere extender `SessionPayload` con metadata por intento.
+4. Cablear `RepositorioCuentaBackend` cuando haya backend al que hablar.
+5. Decidir si Las Versiones tiene multi-perfil desde el inicio (`GestorPerfiles`) o llega después.
+6. Sistema de cinemáticas — probablemente extraerlo a `nuevo_ser_core/narrative/` cuando lo abordemos, ya que va a ser el primer caso de uso real para esa extracción (uno-roto lo tiene cableado a `voz_personaje` específica del juego, ver README de core §"Deuda de extracción pendiente").
+7. Cerrar paleta visual del juego contra doc 11 (apuntado en BLOQUEOS).
 
 ## Decisiones técnicas tomadas
 
