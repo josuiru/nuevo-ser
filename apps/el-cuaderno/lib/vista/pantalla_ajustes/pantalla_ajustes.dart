@@ -260,7 +260,10 @@ class PantallaAjustes extends StatelessWidget {
   ) async {
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
-        builder: (_) => PantallaSitSpotsJubilados(jubilados: jubilados),
+        builder: (_) => PantallaSitSpotsJubilados(
+          jubilados: jubilados,
+          repositorio: repositorio,
+        ),
       ),
     );
   }
