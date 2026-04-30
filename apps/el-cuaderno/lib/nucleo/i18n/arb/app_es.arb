@@ -188,6 +188,11 @@
   "ajustesIdiomaCambiar": "Cambiar idioma",
   "ajustesExportar": "Exportar mi cuaderno",
   "ajustesExportarDescripcion": "Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.",
+  "ajustesExportarPdf": "Exportar como PDF",
+  "@ajustesExportarPdf": {
+    "description": "Exporta el cuaderno como PDF para imprimir o compartir. La tipografía y la paleta del PDF son provisionales — la decisión final queda con la ilustradora botánica + WCAG (B4 + B9 del plan)."
+  },
+  "ajustesExportarPdfDescripcion": "Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.",
   "ajustesExportarDialogoTitulo": "Tu cuaderno como texto",
   "ajustesExportarDialogoCerrar": "Cerrar",
   "ajustesVistaCuidador": "Vista del cuidador",

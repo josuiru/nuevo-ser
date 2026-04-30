@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+import 'package:printing/printing.dart';
 
 import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
+import '../../dominio/exportador_cuaderno_pdf.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_cuidador/pantalla_cuidador.dart';
@@ -47,6 +49,7 @@ class PantallaAjustes extends StatelessWidget {
     this.sincronizadorAgregados,
     this.intentarSincronizarObservaciones,
     this.resolverMedioParaExport,
+    this.nombreParaTituloPdf,
   });
 
   final RepositorioLocal repositorio;
@@ -107,6 +110,11 @@ class PantallaAjustes extends StatelessWidget {
   /// distinguir presentes de huérfanos).
   final ResolverMedioExportado? resolverMedioParaExport;
 
+  /// Nombre del niño para encabezar el PDF exportado. Si es null, se
+  /// usa una fórmula genérica ("el cuaderno"). El nombre del perfil
+  /// activo lo proporciona el orquestador en `main.dart`.
+  final String? nombreParaTituloPdf;
+
   @override
   Widget build(BuildContext context) {
     final textos = TextosApp.of(context);
@@ -136,6 +144,13 @@ class PantallaAjustes extends StatelessWidget {
               titulo: textos.ajustesExportar,
               descripcion: textos.ajustesExportarDescripcion,
               alPulsar: () => _exportar(context),
+              esquema: esquema,
+            ),
+            const SizedBox(height: 16),
+            _BloqueAccion(
+              titulo: textos.ajustesExportarPdf,
+              descripcion: textos.ajustesExportarPdfDescripcion,
+              alPulsar: () => _exportarPdf(context),
               esquema: esquema,
             ),
             if (intentarSincronizarObservaciones != null) ...[
@@ -222,6 +237,26 @@ class PantallaAjustes extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _exportarPdf(BuildContext context) async {
+    final observaciones = await repositorio.obtenerObservaciones();
+    final sitSpot = await repositorio.obtenerSitSpot();
+    final misterios = await repositorio.obtenerMisteriosAbiertos();
+    final bytes = await ExportadorCuadernoPdf.aBytes(
+      tituloDelNino: nombreParaTituloPdf ?? 'el cuaderno',
+      observaciones: observaciones,
+      sitSpot: sitSpot,
+      misterios: misterios,
+    );
+    if (!context.mounted) return;
+    // Delegamos al sistema operativo: el SO ofrece imprimir, compartir,
+    // guardar en Drive, etc. La app no almacena el PDF en disco propio
+    // — sale del contexto del juego en cuanto el usuario decida.
+    await Printing.layoutPdf(
+      onLayout: (_) async => bytes,
+      name: 'cuaderno_${DateTime.now().millisecondsSinceEpoch}.pdf',
     );
   }
 

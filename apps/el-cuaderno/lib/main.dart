@@ -361,6 +361,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           selectorImagen: _selectorImagen,
           almacenadorMedios: _almacenadorMedios,
           resolverMedioParaExport: _resolverMedioParaExport,
+          nombreParaTituloPdf: nombrePerfilElCuaderno.value,
         );
       },
     );

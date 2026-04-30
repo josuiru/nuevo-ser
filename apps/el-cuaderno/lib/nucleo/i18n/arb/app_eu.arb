@@ -71,6 +71,8 @@
     "placeholders": {"idioma": {"type": "String"}}
   },
   "ajustesIdiomaCambiar": "TODO_EU · Cambiar idioma",
+  "ajustesExportarPdf": "TODO_EU · Exportar como PDF",
+  "ajustesExportarPdfDescripcion": "TODO_EU · Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.",
   "ajustesExportar": "TODO_EU · Exportar mi cuaderno",
   "ajustesExportarDescripcion": "TODO_EU · Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.",
   "ajustesExportarDialogoTitulo": "TODO_EU · Tu cuaderno como texto",

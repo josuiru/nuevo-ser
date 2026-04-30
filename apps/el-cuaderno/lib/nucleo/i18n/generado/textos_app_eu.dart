@@ -155,6 +155,12 @@ class TextosAppEu extends TextosApp {
   String get ajustesExportarDescripcion => 'TODO_EU · Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.';
 
   @override
+  String get ajustesExportarPdf => 'TODO_EU · Exportar como PDF';
+
+  @override
+  String get ajustesExportarPdfDescripcion => 'TODO_EU · Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.';
+
+  @override
   String get ajustesExportarDialogoTitulo => 'TODO_EU · Tu cuaderno como texto';
 
   @override

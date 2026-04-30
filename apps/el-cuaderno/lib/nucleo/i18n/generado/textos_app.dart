@@ -373,6 +373,18 @@ abstract class TextosApp {
   /// **'Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.'**
   String get ajustesExportarDescripcion;
 
+  /// Exporta el cuaderno como PDF para imprimir o compartir. La tipografía y la paleta del PDF son provisionales — la decisión final queda con la ilustradora botánica + WCAG (B4 + B9 del plan).
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar como PDF'**
+  String get ajustesExportarPdf;
+
+  /// No description provided for @ajustesExportarPdfDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.'**
+  String get ajustesExportarPdfDescripcion;
+
   /// No description provided for @ajustesExportarDialogoTitulo.
   ///
   /// In es, this message translates to:

@@ -86,6 +86,17 @@ dependencies:
   # `ACCESS_BACKGROUND_LOCATION` ni se suscribe a `getPositionStream`.
   geolocator: ^10.1.0
 
+  # Exportar el cuaderno como PDF legible (B9 del plan, fallback de
+  # experto). Es alternativa al export JSON ya existente — el JSON
+  # sigue para reimportar al juego (formato técnico) y el PDF es la
+  # copia "para llevarse el cuaderno", legible a ojo. La tipografía
+  # y la paleta del PDF son provisionales: la decisión final (familia
+  # serif para impresión, tono crema vs blanco) es trabajo de la
+  # ilustradora botánica + WCAG 2.1 AA (B4 + B9 del plan). Auditoría
+  # de accesibilidad PDF/UA sigue pendiente.
+  pdf: ^3.11.1
+  printing: ^5.13.0
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

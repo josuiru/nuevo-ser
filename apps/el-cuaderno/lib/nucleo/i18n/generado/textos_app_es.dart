@@ -155,6 +155,12 @@ class TextosAppEs extends TextosApp {
   String get ajustesExportarDescripcion => 'Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.';
 
   @override
+  String get ajustesExportarPdf => 'Exportar como PDF';
+
+  @override
+  String get ajustesExportarPdfDescripcion => 'Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.';
+
+  @override
   String get ajustesExportarDialogoTitulo => 'Tu cuaderno como texto';
 
   @override

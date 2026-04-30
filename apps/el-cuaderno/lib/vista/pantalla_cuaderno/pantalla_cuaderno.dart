@@ -43,6 +43,7 @@ class PantallaCuaderno extends StatefulWidget {
     this.selectorImagen,
     this.almacenadorMedios,
     this.resolverMedioParaExport,
+    this.nombreParaTituloPdf,
   });
 
   final RepositorioLocal repositorio;
@@ -120,6 +121,10 @@ class PantallaCuaderno extends StatefulWidget {
   /// cuaderno (export v2). Si es null, el export queda sin manifiesto
   /// — sigue siendo válido pero menos informativo.
   final ResolverMedioExportado? resolverMedioParaExport;
+
+  /// Nombre del niño para encabezar el PDF exportado. Lo provee el
+  /// orquestador desde el ValueNotifier global del perfil activo.
+  final String? nombreParaTituloPdf;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -250,6 +255,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           intentarSincronizarObservaciones:
               widget.intentarSincronizarObservaciones,
           resolverMedioParaExport: widget.resolverMedioParaExport,
+          nombreParaTituloPdf: widget.nombreParaTituloPdf,
         ),
       ),
     );
