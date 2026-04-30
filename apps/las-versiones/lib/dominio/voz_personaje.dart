@@ -186,6 +186,18 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.tintaTenue,
   );
 
+  /// **La arqueóloga de Calahorra** — voz del yacimiento de Calagurris
+  /// (Brecha 2.2). El doc 08 §2.2.2 la presenta como "una arqueóloga
+  /// del museo, mujer mayor con anorak rojo" y deliberadamente no le
+  /// asigna nombre en pantalla. Aquí se resuelve con una etiqueta
+  /// funcional `Arqueóloga` simétrica al `Arqueólogo` de Irulegi —
+  /// ambas voces locales del territorio, cada una con género
+  /// distinto, ninguna del Archivo. Tinta tenue.
+  static const VozPersonaje arqueologa = VozPersonaje._(
+    nombreVisible: 'Arqueóloga',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
   /// Voz sin atribución personal, reservada a **fragmentos de fuente
   /// histórica** que el player levanta del manuscrito sin ponerlos en
   /// boca de un personaje del elenco: una cita en latín, una línea

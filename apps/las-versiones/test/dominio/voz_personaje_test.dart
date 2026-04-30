@@ -106,6 +106,20 @@ void main() {
       expect(estilo.color, PaletaArchivo.textoPrincipal);
     });
 
+    test('arqueologa de Calahorra — etiqueta funcional sin nombre, '
+        'simétrica al arqueólogo de Irulegi (ambos voces de '
+        'territorio, no del Archivo, en tinta tenue)', () {
+      expect(VozPersonaje.arqueologa.nombreVisible, 'Arqueóloga');
+      expect(VozPersonaje.arqueologa.colorNombre, PaletaArchivo.tintaTenue);
+      expect(VozPersonaje.arqueologa.esEnfasis, isFalse);
+      expect(
+        VozPersonaje.arqueologa.colorNombre,
+        VozPersonaje.arqueologo.colorNombre,
+        reason: 'mismas convenciones de color para las dos voces de '
+            'territorio',
+      );
+    });
+
     test('las constantes static const son idénticas por identidad — '
         'soporta uso como clave de Map', () {
       const map = <VozPersonajeContrato, String>{

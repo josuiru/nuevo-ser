@@ -20,11 +20,12 @@ class EscenasArco2 {
 
   /// Lista ordenada de escenas del Arco 2 disponibles para el
   /// orquestador. Cubre 2.0.1 (apertura), la Estación 2.1 completa
-  /// (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6) y las dos cinemáticas
+  /// (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas
   /// latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y
-  /// 2.A.2 *Marina y los descansos*); las estaciones 2.2–2.4 +
-  /// cinemáticas latentes 2.B/2.C + Mosaico M2 + cierre 2.Z se
-  /// añadirán en commits posteriores.
+  /// 2.A.2 *Marina y los descansos*) y la Estación 2.2 completa
+  /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6); las
+  /// estaciones 2.3–2.4 + cinemáticas latentes 2.B/2.C + Mosaico
+  /// M2 + cierre 2.Z se añadirán en commits posteriores.
   ///
   /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
   /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa),
@@ -42,6 +43,12 @@ class EscenasArco2 {
     primerApunteDePompaelo,
     elLibroDeQuintiliano,
     marinaYLosDescansos,
+    caminoACalahorra,
+    calagurrisBajoCalahorra,
+    quintilianoSobreSiMismo,
+    loQueOmite,
+    elConcilioEnCalahorra,
+    loQueFueYDejoDeSer,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -78,6 +85,26 @@ class EscenasArco2 {
     },
     'escena_2_a_2_vista': {
       'aviso_marina_calahorra_recibido',
+    },
+    'escena_2_2_1_vista': {
+      'viaje_a_calahorra_iniciado',
+    },
+    'escena_2_2_2_vista': {
+      'calagurris_visitada',
+      'met_arqueologa_calahorra',
+    },
+    'escena_2_2_3_vista': {
+      'quintiliano_lectura_critica_hecha',
+    },
+    'escena_2_2_4_vista': {
+      'omisiones_quintiliano_estudiadas',
+    },
+    'escena_2_2_5_vista': {
+      'concilio_2_2_cerrado',
+      'brecha_2_2_completada',
+    },
+    'escena_2_2_6_vista': {
+      'arco_2_estacion_2_cerrada',
     },
   };
 
@@ -1039,6 +1066,670 @@ class EscenasArco2 {
             'el café que aún tiene caliente.',
       ),
       PlanoCierreAmable(textoBoton: 'TERMINAR EL CAFÉ'),
+    ],
+  );
+
+  /// 2.2.1 — *Camino a Calahorra*. Apertura de la Estación 2.2:
+  /// hora y media de coche con Isaura, ribera del Ebro, paisaje que
+  /// se abre hacia el sur. La escena introduce el primer dispositivo
+  /// pedagógico de la Estación: la diferencia entre saber un dato
+  /// histórico **con la cabeza** y **sentirlo** como vivido. Isaura
+  /// le suelta a Maren la fecha que va a articular el arco entero
+  /// de la Estación: Calagurris fue navarra hasta 1076. El cartel
+  /// de la frontera autonómica que Maren mira en silencio prepara
+  /// la conversación que volverá literal en la 2.2.6.
+  ///
+  /// Doc 08 §2.2.1.
+  static const EscenaCinematica caminoACalahorra = EscenaCinematica(
+    id: '2.2.1',
+    titulo: 'Camino a Calahorra',
+    flagDeSalida: 'escena_2_2_1_vista',
+    flagsRequeridos: {'escena_2_a_2_vista'},
+    ambiente: AmbienteArchivo.cocheIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Tres semanas tras el inicio del Arco 2. Coche de Isaura, '
+            'mañana clara. Carretera de Iruña a Calahorra, hora y '
+            'media. El paisaje cambia: del centro de Nafarroa al sur, '
+            'la ribera del Ebro. Se abre, se vuelve más seco, más '
+            'mediterráneo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Has leído a Quintiliano?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Algo. Mi padre me prestó dos volúmenes.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Qué te pareció?',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Habla de educación. Mucho. Le importa.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Y de él mismo?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Menos. Pero deja caer cosas.',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Bien.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pausa larga. Cruzan la frontera autonómica. Cartel: '
+            'COMUNIDAD AUTÓNOMA DE LA RIOJA. Maren lo mira. No '
+            'comenta. Quince minutos después.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Calagurris fue navarra hasta 1076.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Ya lo sé.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Lo sabes con la cabeza o lo sientes?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren no contesta inmediatamente. Mira por la ventana. '
+            'El paisaje del Ebro.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Con la cabeza.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hoy igual lo sientes.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoCierreAmable(textoBoton: 'LLEGAR A CALAHORRA'),
+    ],
+  );
+
+  /// 2.2.2 — *Calagurris bajo Calahorra*. Llegan a media mañana al
+  /// yacimiento. Una arqueóloga local del museo (mujer mayor,
+  /// anorak rojo, sin nombre en pantalla — decisión simétrica al
+  /// arqueólogo de Irulegi) recibe a las dos. Karim ya la había
+  /// avisado desde Iruña — primer cruce de redes profesionales
+  /// del Archivo con investigación local de territorio. La visita
+  /// guiada articula la lectura clave de la Estación: Calahorra
+  /// moderna sobre Calagurris romana en la misma estratigrafía
+  /// urbana que Iruña sobre Pompaelo. Maren responde a la pregunta
+  /// pivotal con la formulación pedagógica del oficio del Arco 2:
+  /// "qué dice de sí mismo y qué no dice."
+  ///
+  /// Doc 08 §2.2.2.
+  static const EscenaCinematica calagurrisBajoCalahorra = EscenaCinematica(
+    id: '2.2.2',
+    titulo: 'Calagurris bajo Calahorra',
+    flagDeSalida: 'escena_2_2_2_vista',
+    flagsRequeridos: {'escena_2_2_1_vista'},
+    ambiente: AmbienteArchivo.yacimientoCalahorra,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aparcan cerca del centro. Caminan por calles modernas '
+            'hasta el yacimiento. Una arqueóloga del museo, mujer '
+            'mayor con anorak rojo, las espera con un mapa enrollado '
+            'bajo el brazo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: 'Vosotras sois del Archivo de Iruña.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sí. Esta es Maren, Aprendiz I. Hace su Brecha sobre '
+            'Quintiliano.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto:
+            'Bienvenida a Calagurris. Mi colega allí en Iruña — '
+            'Karim — ya me adelantó.',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren saluda con un gesto. La arqueóloga las lleva por '
+            'el yacimiento. Foro romano parcialmente conservado, '
+            'restos de termas, cimientos. Calahorra moderna construida '
+            'encima en una estratigrafía que recuerda a Iruña sobre '
+            'Pompaelo: el presente apoyado en el pasado sin tapar '
+            'del todo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: '¿Qué quieres saber de Quintiliano?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Quiero entender qué dice de sí mismo y qué no dice.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: 'Vamos por buen camino.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'La arqueóloga las lleva al museo. En una sala dedicada '
+            'a Quintiliano hay una estatua moderna, una placa con '
+            'datos básicos y unos fragmentos cerámicos del barrio '
+            'donde se cree que vivió. Maren los mira con la atención '
+            'que ya conoce de Pompaelo.',
+      ),
+      PlanoCierreAmable(textoBoton: 'PASAR A LA SALA DE TRABAJO'),
+    ],
+  );
+
+  /// 2.2.3 — *Quintiliano sobre sí mismo*. Mesa de Trabajo en el
+  /// museo. La Cronista lee cuatro pasajes seleccionados de la
+  /// *Institutio Oratoria* donde Quintiliano habla (poco) de sí
+  /// mismo: I prooemium 6, II llegada a Roma, IV dedicatoria a
+  /// Vitorio Marcelo, VI lamento por la muerte del hijo. Habilidades
+  /// trabajadas: HF.05 (lectura crítica), HF.09 (sesgos del autor)
+  /// y especialmente **HF.10 — detección de omisiones** (nueva en
+  /// la Estación 2.2). La voz larga del Cuaderno articula la
+  /// pedagogía clave: separar lo que la fuente dice de lo que no
+  /// dice, sin tratar la omisión como evidencia de igual peso que
+  /// la afirmación.
+  ///
+  /// Doc 08 §2.2.3.
+  static const EscenaCinematica quintilianoSobreSiMismo = EscenaCinematica(
+    id: '2.2.3',
+    titulo: 'Quintiliano sobre sí mismo',
+    flagDeSalida: 'escena_2_2_3_vista',
+    flagsRequeridos: {'escena_2_2_2_vista'},
+    ambiente: AmbienteArchivo.salaTrabajoMuseoCalahorra,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Sala de trabajo del museo. Mesa amplia con luz cenital. '
+            'Maren se sienta. Lleva los dos volúmenes verdes que su '
+            'padre le prestó. La arqueóloga le ha dado además unas '
+            'fotocopias con pasajes traducidos al castellano. Isaura '
+            'se queda en un banco lateral, callada, atenta.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren empieza por los cuatro pasajes que la arqueóloga '
+            'ha marcado con clip. La interfaz activa la Mesa de '
+            'Trabajo sobre la mesa real — cada pasaje aparece como '
+            'objeto manipulable, con espacio para subrayar y anotar '
+            'al margen.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Pasaje A — Institutio Oratoria, libro I, prooemium 6: '
+            '"tras los años transcurridos en la enseñanza, después '
+            'de haberme retirado…" Quintiliano sitúa el momento '
+            'en que escribe.\n'
+            'Pasaje B — IO II: mención breve a su llegada a Roma.\n'
+            'Pasaje C — IO IV, prefacio: dedicatoria a su patrón '
+            'Vitorio Marcelo.\n'
+            'Pasaje D — IO VI, prefacio: lamento por la muerte de '
+            'su hijo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren lee. Toma notas. Subraya. La sala está en silencio. '
+            'Isaura no interrumpe. La arqueóloga ha salido a otra '
+            'sala. Una hora aproximadamente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Quintiliano habla de su retirada. Habla de su llegada a '
+            'Roma. Habla de su patrón. Habla de su hijo muerto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'No habla casi nada de Calagurris. No habla casi nada '
+            'de sus padres. No habla de cómo fue su infancia. No '
+            'habla de por qué se fue.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            '¿Eso significa que Calagurris no le importaba? ¿O '
+            'significa que estaba escribiendo para una élite romana '
+            'que no tenía interés en su origen provincial?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren detecta varias omisiones llamativas. Las anota '
+            'una por una en el margen, separadas con guiones. La '
+            'lección clave del oficio del Arco 2 — separar lo dicho '
+            'de lo no dicho — toma forma en el papel.',
+      ),
+      PlanoCierreAmable(textoBoton: 'LLAMAR A LA ARQUEÓLOGA'),
+    ],
+  );
+
+  /// 2.2.4 — *Lo que omite*. Diálogo con la arqueóloga sobre lo
+  /// que Maren ha visto. La Cronista articula tres hipótesis sobre
+  /// las omisiones (público romano que no quiere oír de provinciano,
+  /// auto-presentación romana frente a hispana, género literario
+  /// que no pide biografía). La arqueóloga aporta el cuarto factor
+  /// que Maren no podía ver desde dentro de la fuente: cuarenta
+  /// años después de irse, Quintiliano probablemente ya no se
+  /// sentía de Calagurris. Maren cierra con 7 afirmaciones para el
+  /// Concilio, marcando como **Probable** la identidad romana
+  /// adulta y como **Disputado** el peso real de Calagurris en su
+  /// formación.
+  ///
+  /// Doc 08 §2.2.4.
+  static const EscenaCinematica loQueOmite = EscenaCinematica(
+    id: '2.2.4',
+    titulo: 'Lo que omite',
+    flagDeSalida: 'escena_2_2_4_vista',
+    flagsRequeridos: {'escena_2_2_3_vista'},
+    ambiente: AmbienteArchivo.salaTrabajoMuseoCalahorra,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren ha terminado la lectura. Se queda con sus notas. '
+            'La arqueóloga vuelve, con un café de máquina en la mano.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: '¿Qué tienes?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tengo dos cosas. Lo que dice y lo que no dice.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: 'Empieza por lo segundo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No habla casi nada de Calagurris. Menciona que es de '
+            'aquí pero no describe el lugar. No habla de sus padres '
+            'por nombre. No habla de su infancia. No habla del '
+            'momento en que se fue ni de por qué.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto:
+            'Eso lo notas tú. La mayoría de la gente no lo nota. '
+            '¿Por qué crees que omite tanto?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tres hipótesis.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: 'Vale.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Una: que escribe para un público romano que no quiere '
+            'oír de provinciano. Dos: que él mismo prefiere ser '
+            'visto como romano y no como hispano de provincia. Tres: '
+            'que la Institutio no es un género que pida ese tipo '
+            'de información biográfica.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: '¿Cuál te convence más?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'La mezcla de las tres. Pero la dos me llama mucho.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: '¿Por qué?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque lo poco que dice de Calagurris suena como si '
+            'estuviera escribiendo desde fuera. No como alguien que '
+            'habla de su casa.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'La arqueóloga asiente despacio. Mira a Isaura. Isaura '
+            'asiente desde su banco.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: 'Hay algo más.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto:
+            'Cuando escribe la Institutio, ya no estaba aquí. '
+            'Llevaba cuarenta años en Roma. Es probable que cuando '
+            'escribe ya no se sintiera de aquí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Eso le pasa a la gente. Mi madre dice que su prima de '
+            'Cuba vuelve a Cuba y ya no le encaja del todo.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: 'Exacto. Eso pasa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Tu reconstrucción.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren se gira. Trabaja media hora más. Produce siete '
+            'afirmaciones. Las más sutiles tocan la identidad '
+            'cultural de Quintiliano. Marca como Probable que se '
+            'sentía romano más que hispano cuando escribió, y como '
+            'Disputado el peso real que Calagurris tuvo en su '
+            'formación temprana — la evidencia es indirecta, vía '
+            'omisiones, y las omisiones pesan menos que las '
+            'afirmaciones explícitas.',
+      ),
+      PlanoCierreAmable(textoBoton: 'PREPARAR EL CONCILIO'),
+    ],
+  );
+
+  /// 2.2.5 — *El Concilio en Calahorra*. Concilio especial — el
+  /// primero fuera del Archivo. La arqueóloga local actúa como
+  /// revisora externa y Aitor aparece por videollamada desde Iruña
+  /// (primera vez que un Concilio cruza el dispositivo de pantalla
+  /// + presencia, novedad pedagógica del Arco 2). Las preguntas se
+  /// centran en el peso interpretativo de las omisiones — Maren
+  /// articula que la evidencia indirecta requiere niveles de
+  /// confianza más bajos. Aitor sella la calificación Probable de
+  /// la identidad cultural con una observación clave: las
+  /// omisiones son evidencia más débil que las afirmaciones.
+  ///
+  /// Doc 08 §2.2.5.
+  static const EscenaCinematica elConcilioEnCalahorra = EscenaCinematica(
+    id: '2.2.5',
+    titulo: 'El Concilio en Calahorra',
+    flagDeSalida: 'escena_2_2_5_vista',
+    flagsRequeridos: {'escena_2_2_4_vista'},
+    ambiente: AmbienteArchivo.salaTrabajoMuseoCalahorra,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Tarde. Misma sala. La arqueóloga ha colocado una pantalla '
+            'pequeña sobre la mesa, conectada al Archivo. Aitor '
+            'aparece en plano corto, despacho de Iruña, una taza al '
+            'lado del teclado. Concilio reducido — la primera vez '
+            'que la Cronista presenta fuera del Archivo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Buenas. ¿Maren? ¿Me oyes?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Adelante.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren presenta. La presentación es más breve que las '
+            'anteriores — la Brecha es de fuente textual con material '
+            'arqueológico secundario. Las preguntas se centran en el '
+            'peso interpretativo de las omisiones.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto:
+            'Has marcado Probable que Quintiliano se sentía romano '
+            'más que hispano. ¿Qué te haría cambiarlo?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Si apareciera correspondencia personal o algún texto '
+            'donde se refiriera a Calagurris con afecto íntimo o '
+            'nostalgia explícita.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologa,
+        texto: '¿Y qué te haría declararlo Sólido?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Algún testimonio explícito de él mismo o de sus '
+            'contemporáneos sobre su identidad.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'La declaras Probable porque te basas en omisiones. Las '
+            'omisiones son evidencia más débil que las afirmaciones.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Bien. Sellada.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Concilio cierra. La arqueóloga felicita a Maren brevemente '
+            '— un gesto con la mano sobre el hombro y una sonrisa '
+            'de oficio. Aitor se despide por la pantalla y la imagen '
+            'se apaga.',
+      ),
+      PlanoCierreAmable(textoBoton: 'CERRAR EL CONCILIO'),
+    ],
+  );
+
+  /// 2.2.6 — *Lo que fue y dejó de ser*. Vuelta en coche. Maren
+  /// callada. La conversación con Isaura cierra la Estación con la
+  /// lección epistémica clave del oficio histórico aplicado a
+  /// territorios y a personas: las cosas son y dejan de ser, las
+  /// pertenencias sucesivas pueden ser todas verdaderas a su tiempo
+  /// sin contradicción. La frase final de Isaura ("a Quintiliano le
+  /// pasó parecido") une el tema territorial con el tema biográfico
+  /// que Maren ha estado leyendo durante el día. Voz breve del
+  /// Cuaderno esa noche redondeando la Estación.
+  ///
+  /// Doc 08 §2.2.6.
+  static const EscenaCinematica loQueFueYDejoDeSer = EscenaCinematica(
+    id: '2.2.6',
+    titulo: 'Lo que fue y dejó de ser',
+    flagDeSalida: 'escena_2_2_6_vista',
+    flagsRequeridos: {'escena_2_2_5_vista'},
+    ambiente: AmbienteArchivo.cocheIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Anocheciendo. Vuelven hacia Iruña. La carretera de '
+            'regreso se va llenando de luz naranja en el horizonte. '
+            'Maren está más callada de lo habitual.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hablas poco hoy.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Estoy pensando.',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿En qué?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Calahorra fue navarra. Hasta 1076.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Y ahora es Rioja.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'La gente que vive ahí no se siente navarra. La '
+            'arqueóloga no se sentía navarra.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'No.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y eso qué es?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa larga. Isaura conduce sin mirar a Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Eso es la historia. Las cosas son y dejan de ser. Lo '
+            'que fue navarro fue navarro de verdad. Lo que es '
+            'riojano hoy es riojano de verdad. Las dos cosas son '
+            'ciertas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿No son contradictorias?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'No. Son sucesivas.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'A Quintiliano le pasó parecido. Fue de Calagurris. Y '
+            'dejó de serlo. Las dos cosas eran verdad para él.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren asiente. Mira por la ventana. Cruzan otra vez la '
+            'frontera autonómica. Cartel: COMUNIDAD FORAL DE NAVARRA. '
+            'Maren lo mira pero esta vez sí lo nota.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Marina me dijo que Calahorra me iba a tocar.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Marina sabe.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Esa noche, en su mesa. Cuaderno abierto. La voz interna '
+            'cierra la Estación 2.2 con una entrada breve.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Calagurris era Calagurris. Después fue navarra. Después '
+            'dejó de serlo. Quintiliano fue de aquí. Después no.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Las cosas son y dejan de ser.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoCierreAmable(textoBoton: 'CERRAR EL CUADERNO'),
     ],
   );
 }

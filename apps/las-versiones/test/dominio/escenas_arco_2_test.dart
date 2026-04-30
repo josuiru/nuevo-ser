@@ -70,9 +70,10 @@ void main() {
 
   group('EscenasArco2.todas', () {
     test('catálogo cubre 2.0.1 (apertura) + Estación 2.1 completa '
-        '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) — '
-        '9 cinemáticas implementadas hoy', () {
-      expect(EscenasArco2.todas, hasLength(9));
+        '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) + '
+        'Estación 2.2 completa (2.2.1 a 2.2.6) — 15 cinemáticas '
+        'implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(15));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
         [
@@ -85,6 +86,12 @@ void main() {
           '2.1.6',
           '2.A.1',
           '2.A.2',
+          '2.2.1',
+          '2.2.2',
+          '2.2.3',
+          '2.2.4',
+          '2.2.5',
+          '2.2.6',
         ],
       );
     });
@@ -144,6 +151,80 @@ void main() {
         EscenasArco2.marinaYLosDescansos.ambiente,
         same(AmbienteArchivo.cocinaArchivo),
       );
+    });
+
+    test('Estación 2.2 arranca con 2.2.1 que requiere escena_2_a_2_vista '
+        '— el orquestador encadena las dos latentes 2.A antes del viaje '
+        'a Calahorra', () {
+      expect(
+        EscenasArco2.caminoACalahorra.flagsRequeridos,
+        {'escena_2_a_2_vista'},
+      );
+    });
+
+    test('Estación 2.2 cierra con 2.2.6 que activa '
+        'arco_2_estacion_2_cerrada — hito que la Estación 2.3 '
+        'requerirá como precondición', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_2_6_vista'],
+        contains('arco_2_estacion_2_cerrada'),
+      );
+    });
+
+    test('Concilio 2.2.5 activa brecha_2_2_completada al cerrar — '
+        'mismo patrón que 2.1.5 con la Brecha 2.1', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_2_5_vista'],
+        containsAll(['concilio_2_2_cerrado', 'brecha_2_2_completada']),
+      );
+    });
+
+    test('2.2.1 (camino a Calahorra) y 2.2.6 (regreso) viajan con '
+        'ambiente cocheIsaura — paréntesis simétrico de la Estación', () {
+      expect(
+        EscenasArco2.caminoACalahorra.ambiente,
+        same(AmbienteArchivo.cocheIsaura),
+      );
+      expect(
+        EscenasArco2.loQueFueYDejoDeSer.ambiente,
+        same(AmbienteArchivo.cocheIsaura),
+      );
+    });
+
+    test('2.2.3 a 2.2.5 viajan con la sala de trabajo del museo de '
+        'Calahorra — tres cinemáticas consecutivas en el mismo espacio',
+        () {
+      for (final escena in [
+        EscenasArco2.quintilianoSobreSiMismo,
+        EscenasArco2.loQueOmite,
+        EscenasArco2.elConcilioEnCalahorra,
+      ]) {
+        expect(
+          escena.ambiente,
+          same(AmbienteArchivo.salaTrabajoMuseoCalahorra),
+          reason: '${escena.id} debería usar salaTrabajoMuseoCalahorra',
+        );
+      }
+    });
+
+    test('la voz arqueologa de Calahorra (femenina, sin nombre en '
+        'pantalla) aparece en las cinemáticas 2.2.2 / 2.2.4 / 2.2.5 '
+        '— simétrica al arqueólogo de Irulegi', () {
+      for (final escena in [
+        EscenasArco2.calagurrisBajoCalahorra,
+        EscenasArco2.loQueOmite,
+        EscenasArco2.elConcilioEnCalahorra,
+      ]) {
+        final voces = escena.planos
+            .whereType<PlanoDialogo>()
+            .map((plano) => plano.voz)
+            .toSet();
+        expect(
+          voces,
+          contains(VozPersonaje.arqueologa),
+          reason: '${escena.id} debería incluir VozPersonaje.arqueologa',
+        );
+      }
     });
   });
 }

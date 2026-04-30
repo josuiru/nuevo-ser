@@ -119,17 +119,16 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — Estación 2.1 (Pompaelo bajo Iruña) implementada + latentes post-Estación 2.1 (F2-1, F2-2)
+## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 (Calagurris) implementadas (F2-1, F2-2, F2-3)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementadas las 9 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (2.1.1–2.1.6, doc 08) y las dos cinemáticas latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y 2.A.2 *Marina y los descansos*, doc 08 §2.A): bajada al sótano del Archivo, descubrimiento de la inscripción romana, Karim enseña convenciones epigráficas, debate sobre el sesgo del productor (HF.09 "una inscripción no es un documento neutral. Es propaganda"), Concilio narrativo con Begoña/Joana, primer apunte de Pompaelo en el Cuaderno, conversación con Antonio sobre Quintiliano antes de Calahorra, café con Marina sembrando "Calahorra te va a tocar". Las restantes 25+ escenas del Arco 2 (2.2.1–2.2.6, 2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.2/2.3/2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 15 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y 2.A.2 *Marina y los descansos*, doc 08 §2.A) y la Estación 2.2 entera (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6): camino a Calahorra con Isaura conversando sobre Quintiliano y la frontera autonómica, visita guiada al yacimiento por una arqueóloga local que Karim había avisado, lectura crítica de cuatro pasajes de la *Institutio Oratoria* en la sala de trabajo del museo (HF.05 + HF.09 + nuevo HF.10 detección de omisiones), articulación de tres hipótesis sobre lo que Quintiliano omite y por qué, Concilio especial fuera del Archivo con Aitor por videollamada, regreso en coche con la lección epistémica del oficio aplicada a territorios y a personas ("las cosas son y dejan de ser"). Las restantes 19+ escenas del Arco 2 (2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.3/2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 9 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.A.1 requiere `arco_2_estacion_1_cerrada` (que la 2.1.6 activa); la 2.A.2 requiere `escena_2_a_1_vista` para que las dos latentes se reproduzcan en el orden del doc 08 (padre antes que Marina). Tras cerrar la 2.A.2 (último plano "TERMINAR EL CAFÉ") el orquestador cae al esqueleto porque la 2.2.1 todavía no está implementada.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 15 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La Estación 2.2 arranca con 2.2.1 que requiere `escena_2_a_2_vista` y cierra con 2.2.6 que activa `arco_2_estacion_2_cerrada`. Tras cerrar la 2.2.6 el orquestador cae al esqueleto porque la 2.B.1 todavía no está implementada.
 
 **Pendiente para próximas iteraciones**:
-- Estación 2.2 (Calahorra/Calagurris, doc 08 §2.2 — 6 cinemáticas).
-- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 jugable + brecha22, brecha23, brecha24).
+- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 jugable + brecha22 jugable + brecha23, brecha24).
 - Cinemática latente 2.B.1 (post-Estación 2.2 — "El cuaderno de Isaura").
 - Estaciones 2.3 (domus de los mosaicos), 2.4 (Wamba contra los vascones).
 - Cinemática latente 2.C.1 (post-Estación 2.3 — "Eider y el cambio").
@@ -138,6 +137,26 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 - Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en sección siguiente.
 
 **Sin sustituciones diegéticas en 2.A.1 ni 2.A.2**: Quintiliano de Calagurris y la edición de Cousin (Jean Cousin, *Quintilien — Institution oratoire*, Les Belles Lettres) son referencias reales y trazables que pasan el filtro del comité sin revisión. Marina sólo nombra términos ya validados ("inscripción", "huesos", "polen", "Aralar", "Calahorra"). La frase pedagógica clave de Antonio ("habla menos de sí mismo de lo que parece") es comentario crítico genérico, no afirmación histórica.
+
+---
+
+## Estación 2.2 (Calagurris) — referencias trazables y datos pendientes de validación fina (F2-3)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: la Estación 2.2 se implementa preservando el contenido del doc 08 §2.2.1–2.2.6 sin sustituciones globales — la pedagogía sobre fuentes textuales, omisiones y peso interpretativo cabe en información histórica establecida sobre Quintiliano de Calagurris. La voz `VozPersonaje.arqueologa` (femenina, etiqueta funcional "Arqueóloga", tinta tenue) se añade simétrica al `arqueologo` masculino del yacimiento de Irulegi — el doc 08 decide explícitamente no nombrar a la arqueóloga local de Calahorra.
+
+**Datos preservados sin sustitución (verificables)**:
+- **Quintiliano de Calagurris** (Marco Fabio Quintiliano, ~35–~100 d.C.) — biografía histórica establecida.
+- **Calagurris fue navarra hasta 1076** — fecha histórica establecida (muerte de Sancho IV de Pamplona "el de Peñalén" tras la conjura de Peñalén; tras su asesinato Calahorra pasa a la Corona de Castilla bajo Alfonso VI). Pío Beltrán en su día y la historiografía riojana posterior fijan la fecha. Maren la repite con la cabeza y luego la siente — articula la pedagogía del oficio (saber un dato vs sentirlo).
+- **Pasajes A-D de la *Institutio Oratoria***: I prooemium 6, II llegada a Roma, IV prefacio (dedicatoria a Vitorio Marcelo), VI prefacio (lamento por la muerte del hijo). Los cuatro pasajes son reales y bien establecidos en la edición crítica. **Vitorio Marcelo** (Victorius Marcellus, dedicatario del Libro IV) es histórico.
+- **Estatua moderna en el museo de Calahorra** + sala dedicada — el museo de la Romanización en Calahorra existe; describir la sala como dedicada a Quintiliano con estatua moderna y placa es verosímil-aceptable sin afirmar contenido específico de la museografía.
+
+**Pendiente de revisión humana**:
+- ¿La fecha 1076 debe revertirse a "siglo XI" si el comité prefiere conservadurismo, o se mantiene? El doc 08 la usa como dispositivo pedagógico y la fecha está bien establecida; mantenerla sirve la pedagogía mejor. Si el comité aporta matiz historiográfico (por ejemplo, "1076 marca el cambio formal pero la transición de pertenencia identitaria fue más gradual"), se incorpora como matiz de la frase de Isaura sin tocar el dato.
+- Voz de la arqueóloga de Calahorra — primera aparición con material narrativo largo. ¿El tono de "voz de territorio" (cercana, técnica pero accesible, sin protocolo del Archivo) encaja con la Bíblia de Personajes?
+- Mecánica HF.10 (detección de omisiones) — debutará jugable cuando se aborde el refactor de `FaseBrecha` para Brecha 2.2 jugable (mismo bloqueo que Brecha 2.1: el modelo de 3 afirmaciones canónicas con calibración fija no encaja con 7 afirmaciones que mezclan evidencia directa e indirecta). Hoy la pedagogía se enseña narrativamente.
+- Frase de Isaura "lo que fue navarro fue navarro de verdad. Lo que es riojano hoy es riojano de verdad. Las dos cosas son ciertas" — la formulación es deliberadamente no-confrontativa con identidades territoriales actuales. ¿Encaja con la postura editorial de la Colección sobre identidades sucesivas? Probable Sí, pero merece confirmación humana.
 
 ---
 

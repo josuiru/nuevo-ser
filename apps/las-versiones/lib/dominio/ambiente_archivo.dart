@@ -189,4 +189,21 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// Maren o de la cocina.
   static const AmbienteArchivo estudioAntonio =
       AmbienteArchivo._('estudio_antonio');
+
+  /// Yacimiento romano de Calahorra — foro parcialmente conservado,
+  /// restos de termas, cimientos a vista, calles modernas alrededor.
+  /// Calahorra construida encima de Calagurris en una arqueología
+  /// que recuerda a Iruña sobre Pompaelo. Lugar de la 2.2.2 (visita
+  /// guiada por la arqueóloga local).
+  static const AmbienteArchivo yacimientoCalahorra =
+      AmbienteArchivo._('yacimiento_calahorra');
+
+  /// Sala de trabajo del museo de Calahorra — mesa amplia con
+  /// volúmenes y fotocopias, ventanas hacia el patio interior,
+  /// banco lateral donde se queda Isaura observando. Lugar de la
+  /// 2.2.3 (lectura crítica de los pasajes de Quintiliano), 2.2.4
+  /// (diálogo sobre las omisiones) y 2.2.5 (Concilio especial con
+  /// Aitor por videollamada).
+  static const AmbienteArchivo salaTrabajoMuseoCalahorra =
+      AmbienteArchivo._('sala_trabajo_museo_calahorra');
 }

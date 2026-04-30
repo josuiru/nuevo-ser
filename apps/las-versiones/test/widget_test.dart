@@ -110,6 +110,14 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+      // Estación 2.2 (Calagurris) entera cerrada para llegar al
+      // esqueleto — la 2.3.x todavía no está implementada.
+      'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -377,6 +385,14 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+      // Estación 2.2 (Calagurris) entera cerrada para llegar al
+      // esqueleto — la 2.3.x todavía no está implementada.
+      'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -450,6 +466,14 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+      // Estación 2.2 (Calagurris) entera cerrada para llegar al
+      // esqueleto — la 2.3.x todavía no está implementada.
+      'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });
