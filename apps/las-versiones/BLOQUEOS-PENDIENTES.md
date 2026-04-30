@@ -34,6 +34,9 @@ referencias y revertir la sustitución.
 **Pendiente** para fases jugables (F6):
 - En el catálogo de fuentes de la Brecha 1.1, el "Informe de 1973" + el "Informe de 2018" tendrán que aparecer como fuentes ficticias diegéticas — atribuidas a "un arqueólogo de los años 70" (anónimo) y "un equipo de revisión moderno" (anónimo). El sesgo diffusionista del primer informe se preserva como contenido pedagógico sin afirmar autoría.
 
+**Aplicado en F6.2** (catálogo `Brecha.fuentes` de la 1.1):
+- Las 5 fuentes son explícitamente ficticias y diegéticas. Sus `tipoVisible` y `descripcion` no afirman autoría real, ni dataciones C14 con desviaciones específicas (ver entrada ARALAR-DATACIONES), ni publicaciones identificables. La pedagogía (sesgo difusionista del informe antiguo, contraste con revisión moderna, fuente lingüística por topónimo, fuente material primaria) se preserva.
+
 **Razón**: Pío Beltrán es nombre real que requiere validación del comité asesor (cuál Beltrán, qué publicaciones, qué reputación historiográfica). Hasta que el comité valide, no se puede afirmar identidad histórica concreta.
 
 ---
