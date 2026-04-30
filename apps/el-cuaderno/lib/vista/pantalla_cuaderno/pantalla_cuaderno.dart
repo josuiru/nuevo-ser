@@ -12,6 +12,7 @@ import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
 import '../../dominio/geolocalizacion_privacy_first.dart';
+import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
@@ -24,6 +25,7 @@ import '../pantalla_tutor/pantalla_tutor.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'estado_cuaderno.dart';
+import 'pantalla_pagina_misterio.dart';
 import 'seccion_ultima_pagina.dart';
 import 'tarjeta_misterio.dart';
 import 'tarjeta_sit_spot.dart';
@@ -228,6 +230,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               alCrearSitSpot: _abrirCrearSitSpot,
               alJubilarSitSpot: _jubilarSitSpot,
               alAbrirListaObservaciones: _abrirListaObservaciones,
+              alAbrirMisterio: _abrirPaginaMisterio,
             ),
             _VistaProximamente(textos: textos),
             _VistaProximamente(textos: textos),
@@ -343,17 +346,35 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
     }
   }
 
-  Future<void> _abrirNuevaObservacion() async {
+  Future<void> _abrirNuevaObservacion() => _abrirObservacion(null);
+
+  Future<void> _abrirObservacion(String? misterioPreseleccionadoId) async {
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (_) => PantallaObservacion(
           repositorio: widget.repositorio,
           misteriosAbiertos: widget.estado.misteriosAbiertos,
           sitSpotActivo: widget.estado.sitSpot,
+          misterioPreseleccionadoId: misterioPreseleccionadoId,
           alGuardarObservacion: widget.alGuardarObservacion,
           selectorImagen: widget.selectorImagen,
           almacenadorMedios: widget.almacenadorMedios,
           servicioGeolocalizacion: widget.servicioGeolocalizacion,
+        ),
+      ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
+  Future<void> _abrirPaginaMisterio(Misterio misterio) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaPaginaMisterio(
+          repositorio: widget.repositorio,
+          misterio: misterio,
+          alAbrirNuevaObservacion: _abrirObservacion,
         ),
       ),
     );
@@ -414,6 +435,7 @@ class _VistaCuaderno extends StatelessWidget {
     required this.alCrearSitSpot,
     required this.alJubilarSitSpot,
     required this.alAbrirListaObservaciones,
+    required this.alAbrirMisterio,
   });
 
   final EstadoCuaderno estado;
@@ -422,6 +444,7 @@ class _VistaCuaderno extends StatelessWidget {
   final VoidCallback alCrearSitSpot;
   final VoidCallback alJubilarSitSpot;
   final VoidCallback alAbrirListaObservaciones;
+  final void Function(Misterio misterio) alAbrirMisterio;
 
   @override
   Widget build(BuildContext context) {
@@ -475,7 +498,10 @@ class _VistaCuaderno extends StatelessWidget {
               )
             else
               for (final misterio in misteriosAMostrar) ...[
-                TarjetaMisterio(misterio: misterio),
+                TarjetaMisterio(
+                  misterio: misterio,
+                  alPulsar: () => alAbrirMisterio(misterio),
+                ),
                 const SizedBox(height: 8),
               ],
             const SizedBox(height: 16),

@@ -189,4 +189,27 @@ void main() {
       expect(find.text('ver todas tus páginas'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'pulsar una tarjeta de Misterio abre PantallaPaginaMisterio',
+    (tester) async {
+      await bombearPantalla(tester);
+      // El home muestra los 3 primeros Misterios abiertos por orden
+      // alfabético. Pulsamos el de la lluvia (alfabéticamente entra).
+      final preguntaLluvia = find.text(
+        'Después de llover, ¿qué seres vivos aparecen?',
+      );
+      expect(preguntaLluvia, findsOneWidget);
+      await tester.tap(preguntaLluvia);
+      await tester.pumpAndSettle();
+
+      // En la página del Misterio aparece la cabecera "Misterio" del
+      // AppBar y el botón "anotar evidencia para este misterio".
+      expect(find.text('Misterio'), findsOneWidget);
+      expect(
+        find.text('anotar evidencia para este misterio'),
+        findsOneWidget,
+      );
+    },
+  );
 }
