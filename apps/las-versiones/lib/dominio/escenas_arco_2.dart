@@ -24,16 +24,19 @@ class EscenasArco2 {
   /// latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y
   /// 2.A.2 *Marina y los descansos*), la Estación 2.2 completa
   /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6), la cinemática
-  /// latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*) y la
+  /// latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*), la
   /// Estación 2.3 completa (La domus de los mosaicos, doc 08
-  /// §2.3.1–2.3.6); la Estación 2.4 + cinemática latente 2.C.1 +
-  /// Mosaico M2 + cierre 2.Z se añadirán en commits posteriores.
+  /// §2.3.1–2.3.6) y la cinemática latente post-Estación 2.3 (2.C.1
+  /// *Eider y el cambio*); la Estación 2.4 + Mosaico M2 + cierre
+  /// 2.Z se añadirán en commits posteriores.
   ///
   /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
   /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa).
   /// La latente 2.B.1 se ordena detrás de 2.2.6 porque requiere
   /// `arco_2_estacion_2_cerrada` (que la 2.2.6 activa). La Estación
-  /// 2.3 arranca con 2.3.1 que requiere `escena_2_b_1_vista`.
+  /// 2.3 arranca con 2.3.1 que requiere `escena_2_b_1_vista`. La
+  /// latente 2.C.1 se ordena detrás de 2.3.6 porque requiere
+  /// `arco_2_estacion_3_cerrada` (que la 2.3.6 activa).
   static const List<EscenaCinematica> todas = [
     primerDiaDelArco,
     bajarAlSotano,
@@ -57,6 +60,7 @@ class EscenasArco2 {
     comprenderSinJustificar,
     reconstruccionDeLaDomus,
     concilioDeLaDomus,
+    eiderYElCambio,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -136,6 +140,9 @@ class EscenasArco2 {
       'concilio_2_3_cerrado',
       'brecha_2_3_completada',
       'arco_2_estacion_3_cerrada',
+    },
+    'escena_2_c_1_vista': {
+      'relacion_con_eider_recalibrada',
     },
   };
 
@@ -2610,6 +2617,157 @@ class EscenasArco2 {
             'hoja con las 8 afirmaciones todavía en la mano.',
       ),
       PlanoCierreAmable(textoBoton: 'CERRAR LA ESTACIÓN'),
+    ],
+  );
+
+  /// 2.C.1 — *Eider y el cambio*. Latente post-Estación 2.3:
+  /// activa cuando `arco_2_estacion_3_cerrada` está alzada.
+  /// Lugar: terraza de café en la plaza del Castillo de Iruña,
+  /// mediados de febrero, frío. Personajes: Eider, Maren. Doc
+  /// 08 §2.C.1.
+  ///
+  /// La cinemática es deliberadamente breve y emocionalmente
+  /// directa. Eider — amiga del instituto, ajena al Archivo, ya
+  /// vista en 1.A — hace una pregunta directa que Maren no se
+  /// había planteado en pantalla todavía: "¿sigues siendo amiga
+  /// mía?". Maren articula un compromiso con la doble pertenencia
+  /// ("estoy aprendiendo a estar en muchos sitios a la vez. Pero
+  /// contigo estoy") que la obliga a explicitar lo que el oficio
+  /// le está haciendo: cambia, pero no abandona. La cinemática
+  /// cierra con un plan concreto al cine — la amistad sigue, el
+  /// cambio se acepta sin dramatismo.
+  ///
+  /// Pedagógicamente: el oficio del Cuaderno también modifica al
+  /// que lo practica, y la práctica honesta del oficio incluye
+  /// reconocerlo ante quien le importa. PH (perspectiva
+  /// histórica) en formato relacional, no atomizado.
+  ///
+  /// **Sin sustituciones diegéticas**: la cinemática no nombra
+  /// fechas, lugares, autores ni dataciones específicas — el
+  /// contenido del guion se preserva tal cual. La plaza del
+  /// Castillo es lugar real de Iruña, ya validable como ambiente
+  /// de la ciudad.
+  static const EscenaCinematica eiderYElCambio = EscenaCinematica(
+    id: '2.C.1',
+    titulo: 'Eider y el cambio',
+    flagDeSalida: 'escena_2_c_1_vista',
+    flagsRequeridos: {'arco_2_estacion_3_cerrada'},
+    ambiente: AmbienteArchivo.plazaCastilloIruna,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Mediados de febrero. Plaza del Castillo de Iruña. '
+            'Terraza de café al sol, frío seco, dos cafés con '
+            'leche en una mesa pequeña. Maren y Eider, las dos '
+            'con abrigos abiertos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Llevas dos meses raros.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Más rara que antes?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Distinto raro.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Eider mira la taza, la levanta, no bebe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'No es malo. Sólo distinto.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Estoy aprendiendo cosas.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Eso ya lo sé.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Eider deja la taza otra vez en la mesa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Tía. Pregunta directa.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: '¿Sigues siendo amiga mía?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren se queda quieta. La plaza alrededor sigue. '
+            'Treinta segundos. Eider espera sin presionar — sólo '
+            'la mira.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Eider. Sí.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto:
+            'Es que a veces tengo la sensación de que estás en '
+            'otro sitio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Estoy aprendiendo a estar en muchos sitios a la vez. '
+            'Pero contigo estoy.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Eider mira hacia otro lado. No por incomodidad — '
+            'porque está procesando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Pausa larga. Las dos miran cualquier cosa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: '¿Mañana al cine?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Mañana al cine.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Beben. La conversación importante ya pasó. Hablan de '
+            'cualquier cosa — la peli, lo que decía un profe, una '
+            'tontería del grupo. La amistad sigue.',
+      ),
+      PlanoCierreAmable(textoBoton: 'TERMINAR EL CAFÉ'),
     ],
   );
 }

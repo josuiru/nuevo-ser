@@ -119,23 +119,22 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 + Estación 2.3 implementadas (F2-1 a F2-5)
+## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 + Estación 2.3 + latente 2.C.1 implementadas (F2-1 a F2-6)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementadas las 22 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas latentes post-Estación 2.1 (2.A.1 + 2.A.2), la Estación 2.2 entera (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6), la cinemática latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*) y la Estación 2.3 entera (La domus de los mosaicos, doc 08 §2.3.1–2.3.6): visita a la domus subterránea con el suelo de mosaico parcial, Mesa de Trabajo sobre las 4 fuentes (inscripción del Cornelio, tablilla con cuentas, restos materiales, comparación con domus análogas) con voz larga del Cuaderno articulando la asimetría documental, crisis emocional de Maren en el patio del Archivo (rabia por reconstruir la casa sin poder nombrar a quienes la sostenían), conversación pedagógica clave en la cocina (PH.01 no presentismo + PH.08 comprender sin justificar; la dicotomía neutralidad/comprensión; "Tasio inventaría sus nombres si pudiera fundamentarlo a medias. Tú no inventas. Declaras la ausencia. La ausencia documentada es información"), reconstrucción reformulada con 8 afirmaciones canónicas (la afirmación 6 declarada como **Sólido (la ausencia)** — declaración de oficio sobre lo que no se sabe) y Concilio en el salón formal con Karim/Aitor/Isaura como mesa, donde Maren articula la reformulación clave del arco ("no sabemos quiénes eran porque la sociedad estaba estructurada para que no quedara registro de quiénes eran") y Karim la alcanza en el pasillo con "la afirmación 6 es de las que me hacen tener esperanza con esta institución". Las restantes 12+ escenas del Arco 2 (2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco la Brecha 2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 23 cinemáticas que cubren la apertura del Arco 2 (2.0.1), las tres primeras Estaciones enteras (2.1 Pompaelo, 2.2 Calagurris, 2.3 domus de los mosaicos) y las tres cinemáticas latentes post-Estación que cosen el arco emocionalmente (2.A.1 + 2.A.2 tras Pompaelo, 2.B.1 tras Calagurris, 2.C.1 tras la domus). 2.C.1 *Eider y el cambio* es deliberadamente breve y emocionalmente directa: terraza de café en la plaza del Castillo de Iruña, mediados de febrero, frío. Eider — amiga del instituto, ajena al Archivo, ya vista en 1.A — hace una pregunta directa que Maren no se había planteado en pantalla todavía ("¿sigues siendo amiga mía?"). Maren articula un compromiso con la doble pertenencia ("estoy aprendiendo a estar en muchos sitios a la vez. Pero contigo estoy") que la obliga a explicitar lo que el oficio le está haciendo: cambia, pero no abandona. Cierre con un plan al cine — la amistad sigue, el cambio se acepta sin dramatismo. Las restantes 11+ escenas del Arco 2 (2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco la Brecha 2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 22 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La Estación 2.3 arranca con 2.3.1 que requiere `escena_2_b_1_vista` y cierra con 2.3.6 que activa simultáneamente `concilio_2_3_cerrado`, `brecha_2_3_completada` y `arco_2_estacion_3_cerrada` — hito triple para que la futura cinemática latente 2.C.1 lo requiera. Tras cerrar la 2.3.6 el orquestador cae al esqueleto porque la 2.C.1 todavía no está implementada.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 23 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.C.1 requiere `arco_2_estacion_3_cerrada` (que la 2.3.6 activa). Tras cerrar la 2.C.1 el orquestador cae al esqueleto porque la 2.4.1 todavía no está implementada.
 
 **Pendiente para próximas iteraciones**:
 - Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 + brecha22 + brecha23 + brecha24 jugables).
-- Cinemática latente 2.C.1 (post-Estación 2.3 — "Eider y el cambio").
 - Estación 2.4 (Wamba contra los vascones).
 - Mosaico M2 ("audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
 - Cinemática de cierre del arco 2.Z.
 - Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en sección siguiente.
 
-**Sin sustituciones diegéticas en 2.B.1**: el cuaderno marrón de Isaura es ficticio del juego.
+**Sin sustituciones diegéticas en 2.B.1 ni 2.C.1**: el cuaderno marrón de Isaura es ficticio del juego; en 2.C.1 la plaza del Castillo es lugar real validable de Iruña y la cinemática no nombra fechas, dataciones ni personajes históricos. Eider sigue siendo personaje ficticio del juego (validación humana sobre su voz registrada en la entrada EIDER existente).
 
 ---
 

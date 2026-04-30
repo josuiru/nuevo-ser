@@ -72,9 +72,10 @@ void main() {
     test('catálogo cubre 2.0.1 (apertura) + Estación 2.1 completa '
         '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) + '
         'Estación 2.2 completa (2.2.1 a 2.2.6) + latente post-Estación '
-        '2.2 (2.B.1) + Estación 2.3 completa (2.3.1 a 2.3.6) — '
-        '22 cinemáticas implementadas hoy', () {
-      expect(EscenasArco2.todas, hasLength(22));
+        '2.2 (2.B.1) + Estación 2.3 completa (2.3.1 a 2.3.6) + latente '
+        'post-Estación 2.3 (2.C.1) — 23 cinemáticas implementadas hoy',
+        () {
+      expect(EscenasArco2.todas, hasLength(23));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
         [
@@ -100,6 +101,7 @@ void main() {
           '2.3.4',
           '2.3.5',
           '2.3.6',
+          '2.C.1',
         ],
       );
     });
@@ -378,6 +380,51 @@ void main() {
         contains('Sólido (la ausencia)'),
         reason: 'la afirmación 6 declara la ausencia documentada como '
             'información, calificada como Sólido',
+      );
+    });
+
+    test('2.C.1 (Eider y el cambio) requiere arco_2_estacion_3_cerrada '
+        '— es latente post-Estación 2.3', () {
+      expect(
+        EscenasArco2.eiderYElCambio.flagsRequeridos,
+        {'arco_2_estacion_3_cerrada'},
+      );
+    });
+
+    test('2.C.1 viaja con la plaza del Castillo de Iruña — segundo '
+        'encuentro con Eider tras la cafetería del Casco Viejo (1.A)',
+        () {
+      expect(
+        EscenasArco2.eiderYElCambio.ambiente,
+        same(AmbienteArchivo.plazaCastilloIruna),
+      );
+    });
+
+    test('2.C.1 sólo habla Eider y Maren — escena de amistad sin '
+        'terceros, simétrica a 2.B.1 con Isaura', () {
+      final voces = EscenasArco2.eiderYElCambio.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, {VozPersonaje.eider, VozPersonaje.maren});
+    });
+
+    test('2.C.1 contiene la pregunta directa de Eider y la respuesta '
+        'de doble pertenencia de Maren — corazón pedagógico de la '
+        'cinemática', () {
+      final dialogos = EscenasArco2.eiderYElCambio.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(dialogos, contains('¿Sigues siendo amiga mía?'));
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('muchos sitios a la vez') &&
+            texto.contains('contigo estoy')),
+        isTrue,
+        reason:
+            'Maren articula explícitamente el compromiso con la doble '
+            'pertenencia',
       );
     });
   });

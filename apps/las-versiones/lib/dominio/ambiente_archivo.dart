@@ -226,4 +226,13 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// fuentes documentadas y las personas que no aparecen en ellas).
   static const AmbienteArchivo domusMosaicosSubterranea =
       AmbienteArchivo._('domus_mosaicos_subterranea');
+
+  /// Plaza del Castillo de Iruña — terraza de café al sol con
+  /// mesas pequeñas, soportales al fondo, frío de febrero. Lugar
+  /// de la 2.C.1 (Eider y el cambio) — segundo encuentro con
+  /// Eider tras la cafetería del Casco Viejo (1.A) que la coloca
+  /// como amiga ajena al Archivo capaz de marcarle a Maren los
+  /// cambios que ella misma no ve.
+  static const AmbienteArchivo plazaCastilloIruna =
+      AmbienteArchivo._('plaza_castillo_iruna');
 }
