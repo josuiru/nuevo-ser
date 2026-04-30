@@ -25,7 +25,101 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/class-ns-tutor-cuaderno.php';
+
 class NS_El_Cuaderno {
+
+	/**
+	 * POST /el-cuaderno/tutor
+	 *
+	 * Body esperado:
+	 *   pregunta            string  — texto del niño (1..1000 chars).
+	 *   idioma              string  — 'es' | 'eu' | 'ca' (fallback 'es').
+	 *   contexto            object? — campos opcionales que el Tutor
+	 *                                 puede usar dentro del prompt
+	 *                                 (region_code, season, edad,
+	 *                                 skill_id, nivel_skill,
+	 *                                 observacion_adjunta).
+	 *
+	 * No hay historial conversacional — cada turno es independiente
+	 * (doc 04 §3.2: "no retiene memoria entre conversaciones"). El
+	 * cliente no manda turnos previos.
+	 *
+	 * Devuelve 200 con `{respuesta, prompt_version, filtro,
+	 * tiene_nombre_cientifico}`. La cuota está stubeada hasta que
+	 * llegue migración M004 — ver NS_Tutor_Cuaderno::verificar_cuota.
+	 */
+	public static function tutor_responder( WP_REST_Request $request ) {
+		$nino_id = (int) $request->get_param( '_nino_id' );
+		if ( $nino_id <= 0 ) {
+			return new WP_Error(
+				'ns_el_cuaderno_sin_nino',
+				'Falta el identificador del niño en el token.',
+				array( 'status' => 401 )
+			);
+		}
+
+		$body = $request->get_json_params();
+		if ( ! is_array( $body ) ) {
+			return self::error_validacion(
+				'body_no_es_objeto',
+				'El cuerpo de la petición debe ser un objeto JSON.'
+			);
+		}
+
+		$pregunta = isset( $body['pregunta'] ) ? trim( (string) $body['pregunta'] ) : '';
+		if ( '' === $pregunta ) {
+			return self::error_validacion(
+				'pregunta_requerida',
+				'La pregunta no puede estar vacía.'
+			);
+		}
+		if ( strlen( $pregunta ) > 1000 ) {
+			return self::error_validacion(
+				'pregunta_demasiado_larga',
+				'La pregunta excede los 1000 caracteres permitidos.'
+			);
+		}
+
+		$idioma   = isset( $body['idioma'] ) ? (string) $body['idioma'] : 'es';
+		$contexto = isset( $body['contexto'] ) && is_array( $body['contexto'] )
+			? $body['contexto']
+			: array();
+
+		$cuota = NS_Tutor_Cuaderno::verificar_cuota( $nino_id );
+		if ( ! $cuota['permitido'] ) {
+			return new WP_REST_Response(
+				array(
+					'mensaje_cuota'   => 'Hoy hemos hablado mucho. Volvemos mañana.',
+					'turnos_dia'      => $cuota['turnos_dia'],
+					'turnos_semana'   => $cuota['turnos_semana'],
+				),
+				429
+			);
+		}
+
+		try {
+			$resultado = NS_Tutor_Cuaderno::responder( $idioma, $pregunta, $contexto );
+		} catch ( RuntimeException $e ) {
+			return new WP_Error(
+				'ns_el_cuaderno_tutor_error',
+				$e->getMessage(),
+				array( 'status' => 502 )
+			);
+		} catch ( InvalidArgumentException $e ) {
+			return self::error_validacion( 'tutor_invalido', $e->getMessage() );
+		}
+
+		return new WP_REST_Response(
+			array(
+				'respuesta'                => $resultado['respuesta'],
+				'prompt_version'           => $resultado['prompt_version'],
+				'filtro'                   => $resultado['filtro'],
+				'tiene_nombre_cientifico'  => NS_Filtro_Cuaderno::tiene_nombre_cientifico( $resultado['respuesta'] ),
+			),
+			200
+		);
+	}
 
 	/** Confianzas válidas en una observación (doc 03 §3.1). */
 	private const CONFIANZAS_OBSERVACION = array(

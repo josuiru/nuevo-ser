@@ -164,6 +164,18 @@ class NS_Endpoints {
 				),
 			)
 		);
+
+		register_rest_route(
+			$namespace,
+			'/el-cuaderno/tutor',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_El_Cuaderno', 'tutor_responder' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
 	}
 
 	/**
