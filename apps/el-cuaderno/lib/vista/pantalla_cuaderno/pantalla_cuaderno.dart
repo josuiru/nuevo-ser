@@ -7,6 +7,7 @@ import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/selector_imagen.dart';
 import '../../datos/repositorio_historico_resumenes.dart';
+import '../../datos/repositorio_presentacion_sit_spot.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
@@ -16,6 +17,7 @@ import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
 import '../pantalla_observacion/pantalla_observacion.dart';
+import '../pantalla_observaciones/pantalla_lista_observaciones.dart';
 import '../pantalla_profesor/pantalla_login_profesor.dart';
 import '../pantalla_sit_spot/pantalla_crear_sit_spot.dart';
 import '../pantalla_tutor/pantalla_tutor.dart';
@@ -45,6 +47,8 @@ class PantallaCuaderno extends StatefulWidget {
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
     this.repoHistoricoResumenes,
+    this.repoPresentacionSitSpot,
+    this.alResetearPresentacionSitSpot,
     this.alGuardarObservacion,
     this.intentarSincronizarObservaciones,
     this.selectorImagen,
@@ -52,7 +56,7 @@ class PantallaCuaderno extends StatefulWidget {
     this.servicioGeolocalizacion,
     this.resolverMedioParaExport,
     this.cargarMedioParaPdf,
-    this.nombreParaTituloPdf,
+    this.nombrePerfilActivo,
     this.clienteAuthProfesor,
     this.clienteCompanionProfesor,
     this.repoCuentaProfesor,
@@ -116,6 +120,16 @@ class PantallaCuaderno extends StatefulWidget {
   /// cuaderno" para purgar el histórico junto con Isar.
   final RepositorioHistoricoResumenes? repoHistoricoResumenes;
 
+  /// Flag global de la presentación pedagógica del sit spot. Se
+  /// reenvía a `PantallaAjustes` para que el flujo "borrar mi cuaderno"
+  /// lo purge junto con el resto del cuaderno.
+  final RepositorioPresentacionSitSpot? repoPresentacionSitSpot;
+
+  /// Callback que el orquestador cabla a un reset del `ValueNotifier`
+  /// global de la presentación, para que la app vuelva a montarla
+  /// inmediatamente tras un "borrar todo" sin esperar a un reinicio.
+  final VoidCallback? alResetearPresentacionSitSpot;
+
   /// Cableado por el orquestador a `ColaSyncObservaciones.marcarPendiente`.
   /// Cada observación nueva queda apuntada para subir al backend cuando
   /// el adulto pulse "Sincronizar observaciones" en Ajustes (opt-in).
@@ -153,9 +167,11 @@ class PantallaCuaderno extends StatefulWidget {
   /// (modo degradado: el contenido textual sigue siendo legible).
   final CargarMedioPdf? cargarMedioParaPdf;
 
-  /// Nombre del niño para encabezar el PDF exportado. Lo provee el
-  /// orquestador desde el ValueNotifier global del perfil activo.
-  final String? nombreParaTituloPdf;
+  /// Nombre del niño dueño del cuaderno (perfil activo). Se usa en
+  /// el saludo del home ("Hola, {nombre}.") y como encabezado del PDF
+  /// exportado. Lo provee el orquestador desde el `ValueNotifier`
+  /// global. Si es null o vacío, el saludo cae al genérico ("Hola.").
+  final String? nombrePerfilActivo;
 
   /// Conjunto de dependencias del modo profesor (B7 — fallback de
   /// experto pendiente de policy escolar). Se reenvían a Ajustes para
@@ -207,9 +223,11 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           children: [
             _VistaCuaderno(
               estado: widget.estado,
+              nombrePerfilActivo: widget.nombrePerfilActivo,
               alAbrirNuevaObservacion: _abrirNuevaObservacion,
               alCrearSitSpot: _abrirCrearSitSpot,
               alJubilarSitSpot: _jubilarSitSpot,
+              alAbrirListaObservaciones: _abrirListaObservaciones,
             ),
             _VistaProximamente(textos: textos),
             _VistaProximamente(textos: textos),
@@ -256,6 +274,16 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
             label: textos.navTutor,
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _abrirListaObservaciones() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaListaObservaciones(
+          repositorio: widget.repositorio,
+        ),
       ),
     );
   }
@@ -352,12 +380,15 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           alCambiarTokenDebug: widget.alCambiarTokenDebug,
           sincronizadorAgregados: widget.sincronizadorAgregados,
           repoHistoricoResumenes: widget.repoHistoricoResumenes,
+          repoPresentacionSitSpot: widget.repoPresentacionSitSpot,
+          alResetearPresentacionSitSpot:
+              widget.alResetearPresentacionSitSpot,
           intentarSincronizarObservaciones:
               widget.intentarSincronizarObservaciones,
           resolverMedioParaExport: widget.resolverMedioParaExport,
           cargarMedioParaPdf: widget.cargarMedioParaPdf,
           almacenadorMedios: widget.almacenadorMedios,
-          nombreParaTituloPdf: widget.nombreParaTituloPdf,
+          nombrePerfilActivo: widget.nombrePerfilActivo,
           clienteAuthProfesor: widget.clienteAuthProfesor,
           clienteCompanionProfesor: widget.clienteCompanionProfesor,
           repoCuentaProfesor: widget.repoCuentaProfesor,
@@ -378,20 +409,28 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
 class _VistaCuaderno extends StatelessWidget {
   const _VistaCuaderno({
     required this.estado,
+    required this.nombrePerfilActivo,
     required this.alAbrirNuevaObservacion,
     required this.alCrearSitSpot,
     required this.alJubilarSitSpot,
+    required this.alAbrirListaObservaciones,
   });
 
   final EstadoCuaderno estado;
+  final String? nombrePerfilActivo;
   final VoidCallback alAbrirNuevaObservacion;
   final VoidCallback alCrearSitSpot;
   final VoidCallback alJubilarSitSpot;
+  final VoidCallback alAbrirListaObservaciones;
 
   @override
   Widget build(BuildContext context) {
     final textos = TextosApp.of(context);
     final esquema = Theme.of(context).colorScheme;
+    final nombre = nombrePerfilActivo?.trim() ?? '';
+    final saludo = nombre.isEmpty
+        ? textos.saludoSinNombre
+        : textos.saludoConNombre(nombre);
 
     return ListenableBuilder(
       listenable: estado,
@@ -407,7 +446,7 @@ class _VistaCuaderno extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
           children: [
             Text(
-              textos.saludoSinNombre,
+              saludo,
               style: TipografiaCuaderno.serif(
                 color: esquema.onSurface,
                 tamano: TipografiaCuaderno.tamano17,
@@ -443,6 +482,16 @@ class _VistaCuaderno extends StatelessWidget {
             _Cabecera(textos.seccionUltimaPagina),
             const SizedBox(height: 8),
             SeccionUltimaPagina(observacion: estado.ultimaObservacion),
+            if (estado.ultimasObservaciones.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: alAbrirListaObservaciones,
+                  child: const Text('ver todas tus páginas'),
+                ),
+              ),
+            ],
           ],
         );
       },

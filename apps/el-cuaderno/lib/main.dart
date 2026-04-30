@@ -256,10 +256,14 @@ class AppElCuaderno extends StatelessWidget {
       repoCuenta: repoCuenta,
       repoCuentaProfesor: repoCuentaProfesor,
       repoAulaProfesor: repoAulaProfesor,
+      repoPresentacionSitSpot: repoPresentacionSitSpot,
       locale: locale,
       alCambiarIdioma: () async {
         await repoIdioma.borrar();
         localeAppElCuaderno.value = null;
+      },
+      alResetearPresentacionSitSpot: () {
+        presentacionSitSpotVista.value = false;
       },
     );
   }
@@ -271,8 +275,10 @@ class _OrquestadorJuego extends StatefulWidget {
   final RepositorioCuentaBackend repoCuenta;
   final RepositorioCuentaBackend repoCuentaProfesor;
   final RepositorioAulaProfesor repoAulaProfesor;
+  final RepositorioPresentacionSitSpot repoPresentacionSitSpot;
   final Locale locale;
   final Future<void> Function() alCambiarIdioma;
+  final VoidCallback alResetearPresentacionSitSpot;
 
   const _OrquestadorJuego({
     required this.repositorio,
@@ -280,8 +286,10 @@ class _OrquestadorJuego extends StatefulWidget {
     required this.repoCuenta,
     required this.repoCuentaProfesor,
     required this.repoAulaProfesor,
+    required this.repoPresentacionSitSpot,
     required this.locale,
     required this.alCambiarIdioma,
+    required this.alResetearPresentacionSitSpot,
   });
 
   @override
@@ -457,6 +465,9 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           alCambiarTokenDebug: kDebugMode ? _refrescarTokenTutor : null,
           sincronizadorAgregados: _sincronizadorAgregados,
           repoHistoricoResumenes: _repoHistoricoResumenes,
+          repoPresentacionSitSpot: widget.repoPresentacionSitSpot,
+          alResetearPresentacionSitSpot:
+              widget.alResetearPresentacionSitSpot,
           alGuardarObservacion: _alGuardarObservacion,
           intentarSincronizarObservaciones: _intentarSincronizarObservaciones,
           selectorImagen: _selectorImagen,
@@ -464,7 +475,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           servicioGeolocalizacion: _servicioGeolocalizacion,
           resolverMedioParaExport: _resolverMedioParaExport,
           cargarMedioParaPdf: _cargarMedioParaPdf,
-          nombreParaTituloPdf: nombrePerfilElCuaderno.value,
+          nombrePerfilActivo: nombrePerfilElCuaderno.value,
           clienteAuthProfesor: _clienteAuthProfesor,
           clienteCompanionProfesor: _clienteCompanion,
           repoCuentaProfesor: widget.repoCuentaProfesor,

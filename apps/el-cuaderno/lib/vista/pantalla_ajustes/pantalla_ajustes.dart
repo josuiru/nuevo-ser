@@ -7,6 +7,7 @@ import '../../datos/almacenador_medios.dart';
 import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/repositorio_historico_resumenes.dart';
+import '../../datos/repositorio_presentacion_sit_spot.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
@@ -55,11 +56,13 @@ class PantallaAjustes extends StatelessWidget {
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
     this.repoHistoricoResumenes,
+    this.repoPresentacionSitSpot,
+    this.alResetearPresentacionSitSpot,
     this.intentarSincronizarObservaciones,
     this.resolverMedioParaExport,
     this.cargarMedioParaPdf,
     this.almacenadorMedios,
-    this.nombreParaTituloPdf,
+    this.nombrePerfilActivo,
     this.clienteAuthProfesor,
     this.clienteCompanionProfesor,
     this.repoCuentaProfesor,
@@ -117,6 +120,19 @@ class PantallaAjustes extends StatelessWidget {
   /// resúmenes huérfanos en disco.
   final RepositorioHistoricoResumenes? repoHistoricoResumenes;
 
+  /// Flag global "ya he visto la presentación pedagógica del sit spot".
+  /// Se purga junto con el resto del cuaderno tras "borrar todo" — el
+  /// niño que confirma doblemente el borrado debe ver la app como
+  /// recién instalada, incluida la pantalla de presentación que
+  /// volverá a aparecer en el siguiente arranque.
+  final RepositorioPresentacionSitSpot? repoPresentacionSitSpot;
+
+  /// Notifica al orquestador (`main.dart`) que el flag de presentación
+  /// se reseteó tras un "borrar todo", para que el `ValueNotifier`
+  /// global se actualice y la app vuelva a montar la presentación
+  /// pedagógica sin esperar a un reinicio.
+  final VoidCallback? alResetearPresentacionSitSpot;
+
   /// Closure opt-in para enviar las observaciones pendientes al
   /// servidor. Cableada por el orquestador a `ColaSyncObservaciones.
   /// intentarEnviar` con el `ClienteElCuaderno`. Si es null, el bloque
@@ -147,7 +163,7 @@ class PantallaAjustes extends StatelessWidget {
   /// Nombre del niño para encabezar el PDF exportado. Si es null, se
   /// usa una fórmula genérica ("el cuaderno"). El nombre del perfil
   /// activo lo proporciona el orquestador en `main.dart`.
-  final String? nombreParaTituloPdf;
+  final String? nombrePerfilActivo;
 
   /// Conjunto de dependencias para el modo profesor (B7 — fallback
   /// pendiente de policy escolar). Si los cuatro llegan no nulos, se
@@ -360,7 +376,7 @@ class PantallaAjustes extends StatelessWidget {
     final sitSpot = await repositorio.obtenerSitSpot();
     final misterios = await repositorio.obtenerMisteriosAbiertos();
     final bytes = await ExportadorCuadernoPdf.aBytes(
-      tituloDelNino: nombreParaTituloPdf ?? 'el cuaderno',
+      tituloDelNino: nombrePerfilActivo ?? 'el cuaderno',
       observaciones: observaciones,
       sitSpot: sitSpot,
       misterios: misterios,
@@ -427,6 +443,12 @@ class PantallaAjustes extends StatelessWidget {
     // Mismo razonamiento para el histórico de resúmenes del cuidador
     // — son derivados de las observaciones que se acaban de borrar.
     await repoHistoricoResumenes?.borrar();
+    // Y el flag de presentación pedagógica: tras "borrar todo" la app
+    // queda como recién instalada, incluida la pantalla de bienvenida
+    // del sit spot. El orquestador la mostrará de nuevo al volver al
+    // home tras notificar el reset.
+    await repoPresentacionSitSpot?.borrar();
+    alResetearPresentacionSitSpot?.call();
     if (!context.mounted) return;
     final mensaje = '${textos.ajustesBorradoCompleto} '
         '(${resultado.observacionesBorradas} · '

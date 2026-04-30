@@ -21,7 +21,10 @@ void main() {
     estado.dispose();
   });
 
-  Future<void> bombearPantalla(WidgetTester tester) async {
+  Future<void> bombearPantalla(
+    WidgetTester tester, {
+    String? nombrePerfilActivo,
+  }) async {
     // El ListView crece más allá del viewport por defecto del
     // tester (800x600). Damos un viewport amplio para que todas las
     // secciones se renderen sin necesidad de scroll en los `find`.
@@ -32,7 +35,11 @@ void main() {
         localizationsDelegates: TextosApp.localizationsDelegates,
         supportedLocales: TextosApp.supportedLocales,
         locale: const Locale('es'),
-        home: PantallaCuaderno(repositorio: repositorio, estado: estado),
+        home: PantallaCuaderno(
+          repositorio: repositorio,
+          estado: estado,
+          nombrePerfilActivo: nombrePerfilActivo,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -145,6 +152,41 @@ void main() {
       expect(despues!.id, antes!.id);
       expect(despues.retiradoEn, isNull);
       expect(find.text('El Roble Grande'), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'sin nombrePerfilActivo: el saludo cae al genérico "Hola."',
+    (tester) async {
+      await bombearPantalla(tester);
+      expect(find.text('Hola.'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'con nombrePerfilActivo: el saludo personaliza con el nombre',
+    (tester) async {
+      await bombearPantalla(tester, nombrePerfilActivo: 'Maren');
+      expect(find.text('Hola, Maren.'), findsOneWidget);
+      // El genérico ya no debe aparecer en el árbol.
+      expect(find.text('Hola.'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'nombrePerfilActivo con espacios en blanco se trata como vacío',
+    (tester) async {
+      await bombearPantalla(tester, nombrePerfilActivo: '   ');
+      expect(find.text('Hola.'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'enlace "ver todas tus páginas" aparece si hay observaciones',
+    (tester) async {
+      await bombearPantalla(tester);
+      // El seed siembra observaciones — el enlace está visible.
+      expect(find.text('ver todas tus páginas'), findsOneWidget);
     },
   );
 }

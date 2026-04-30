@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:el_cuaderno/datos/almacenador_medios.dart';
 import 'package:el_cuaderno/datos/cola_sync_observaciones.dart';
+import 'package:el_cuaderno/datos/repositorio_presentacion_sit_spot.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
@@ -40,6 +41,8 @@ void main() {
     Future<ResultadoSyncObservaciones?> Function()?
         intentarSincronizarObservaciones,
     AlmacenadorMedios? almacenadorMedios,
+    RepositorioPresentacionSitSpot? repoPresentacionSitSpot,
+    VoidCallback? alResetearPresentacionSitSpot,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
@@ -57,6 +60,8 @@ void main() {
           alCambiarTokenDebug: alCambiarTokenDebug,
           intentarSincronizarObservaciones: intentarSincronizarObservaciones,
           almacenadorMedios: almacenadorMedios,
+          repoPresentacionSitSpot: repoPresentacionSitSpot,
+          alResetearPresentacionSitSpot: alResetearPresentacionSitSpot,
         ),
       ),
     );
@@ -418,6 +423,35 @@ void main() {
         find.text('Estuvo activo del 15/01/2026 al 30/04/2026.'),
         findsOneWidget,
       );
+    },
+  );
+
+  testWidgets(
+    'borrar mi cuaderno también purga la presentación pedagógica del sit spot',
+    (tester) async {
+      final repoPresentacion = RepositorioPresentacionSitSpot(
+        prefs: SharedPreferences.getInstance,
+      );
+      await repoPresentacion.marcar();
+      var resetCalled = 0;
+
+      await bombear(
+        tester,
+        repoPresentacionSitSpot: repoPresentacion,
+        alResetearPresentacionSitSpot: () => resetCalled++,
+      );
+
+      await tester.tap(find.text('Borrar mi cuaderno'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Seguir'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'borrar');
+      await tester.pump();
+      await tester.tap(find.widgetWithText(TextButton, 'Borrar todo'));
+      await tester.pumpAndSettle();
+
+      expect(await repoPresentacion.cargar(), isFalse);
+      expect(resetCalled, 1);
     },
   );
 }
