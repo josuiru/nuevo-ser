@@ -214,6 +214,34 @@ void main() {
     });
   });
 
+  group('EscenasArco1.aprendizI (1.4.4)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.aprendizI.id, '1.4.4');
+      expect(EscenasArco1.aprendizI.flagDeSalida, 'escena_1_4_4_vista');
+      expect(
+        EscenasArco1.aprendizI.flagsRequeridos,
+        {'brecha_1_4_completada'},
+        reason: '1.4.4 requiere haber cerrado la Estación 4 (Irulegi) — '
+            'queda latente hasta que entre la Brecha 1.4 al catálogo',
+      );
+    });
+
+    test('viaja con ambiente patio del Archivo — el capitel y el brocal '
+        'del pozo', () {
+      expect(
+        EscenasArco1.aprendizI.ambiente,
+        same(AmbienteArchivo.patioArchivo),
+      );
+    });
+
+    test('cierra como amable — al "cerrar el arco" termina la sesión '
+        '(la cinemática 1.Z del cierre del arco aún no está catalogada)',
+        () {
+      final ultimoPlano = EscenasArco1.aprendizI.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('flagsDeCierrePorEscena', () {
     test('1.0.1 cierra con met_begona, met_isaura, evaluation_passed y '
         'accepted_aspirante', () {
@@ -248,6 +276,14 @@ void main() {
           EscenasArco1.flagsDeCierrePorEscena['escena_1_b_vista'];
       expect(flags, contains('arco_1_completado'));
       expect(flags, contains('visita_atico_andres'));
+    });
+
+    test('1.4.4 cierra activando rango_aprendiz_i y arco_2_anunciado — '
+        'Maren asciende a Aprendiz I y se abre la transición al Arco 2',
+        () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_4_4_vista'];
+      expect(flags, {'rango_aprendiz_i', 'arco_2_anunciado'});
     });
 
     test('todas las escenas catalogadas están en `todas` y todas las que '
@@ -300,6 +336,7 @@ void main() {
       flagsProducibles.add('brecha_1_1_completada');
       flagsProducibles.add('brecha_1_2_completada');
       flagsProducibles.add('brecha_1_3_completada');
+      flagsProducibles.add('brecha_1_4_completada');
 
       var primera = true;
       for (final escena in EscenasArco1.todas) {

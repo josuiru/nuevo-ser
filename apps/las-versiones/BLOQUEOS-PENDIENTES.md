@@ -132,6 +132,40 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Cinemática latente 1.4.4 "Aprendiz I" — sustituciones diegéticas y referencia a la Mano de Irulegi (F8.3)
+
+**Tracker doc 17**: pendiente de revisión humana.
+
+**Guion canónico (doc 07 §1.4.4)**: cierre del Arco 1 en el patio del Archivo. Maren e Isaura solas tras el gran Concilio de la Estación 4. Validación amable, mención de los gestos de Begoña, anuncio del Arco 2 (Pompaelo). Aparece flotante "APRENDIZ I" — Maren asciende de rango.
+
+**Estado**: implementada en `EscenasArco1.aprendizI` con `flagsRequeridos: {brecha_1_4_completada}`. Como la Brecha 1.4 (Irulegi) no está en el catálogo del juego todavía, **el orquestador no la dispara** — queda latente. Mismo patrón que 1.B.1 y 1.C.
+
+**Sustituciones diegéticas aplicadas**:
+- "El capitel del s. XII y el brocal del pozo" → "el capitel y el brocal del pozo" (entrada EDIFICIO-ARCHIVO, simétrica a la sustitución ya aplicada en 1.0.2).
+- "Reformularías sobre la violencia romana" → "ibas a reformular tu posición sobre lo que pasó cuando los romanos llegaron". La frase original carga una afirmación política sobre la conquista romana sin que el comité asesor la haya validado para edad 10-14. Se preserva la pedagogía (Begoña valora la disposición a reformular) sin tesis específica.
+- "Otra Brecha sin haber visto la Mano y haber tenido que defenderte sobre ella" → "Otra Brecha sin haber tenido que defender una pieza así". La Mano de Irulegi **está validada** en el header v0.2 del doc 07 como pieza central de la Estación 1.4, pero como la Brecha 1.4 no está implementada, una mención específica sería opaca para el jugador. La sustitución se revierte cuando la 1.4 entre al catálogo.
+
+**Pompaelo y la transición vascón → romano** se preservan en su forma canónica — Pompaelo está validada como entrada (ya aparece en 1.0.2) y la frase de Isaura ("lo que pudo haber sido un asentamiento vascón previo") declara explícitamente la incertidumbre, encajando con el oficio.
+
+**Pendiente de revisión humana**: confirmación de que la sustitución de "violencia romana" es aceptable y de que el patrón pedagógico de Begoña (sólo sonríe cuando el aprendiz reconoce sus límites) se mantiene legible sin la frase original.
+
+---
+
+## Cinemática 1.Z del cierre del arco — pendiente hasta cerrar formato del Mosaico
+
+**Tracker doc 17**: pendiente.
+
+**Guion canónico (doc 07 §1.Z)**: la noche de la entrega del Mosaico. Maren en su mesa con el cuaderno. Voz interna que cierra el arco: ha entregado el Mosaico, Andrés le ha dicho que la mayoría no se atreve a marcar roja la viñeta del banquete, Marina dice que ya es del club, ha aprendido cosas, mañana descansa, el lunes empieza el Arco 2.
+
+**Estado**: NO implementada. La cinemática hace referencias específicas a contenido que aún no encaja con lo implementado:
+- "La viñeta del banquete" implica un formato de Mosaico tipo cómic con viñetas marcables, distinto de los 3 prompts de texto del Mosaico actual (provisional).
+- "Manos pintadas hace catorce mil años" referencia la Estación 1.3 que el header v0.2 del doc 07 reescribe a fauna magdaleniense, no manos en negativo.
+- "Marina dice que ya soy del club" referencia interacción con Marina en el Concilio de la 1.4 que no está implementada.
+
+**Razón**: implementar 1.Z hoy obligaría a sustituir tantos elementos que la cinemática perdería identidad. Mejor esperar a que (a) el formato del Mosaico se cierre, (b) la Estación 1.3 esté implementada con su contenido validado v0.2, y (c) la Estación 1.4 esté implementada con el rol de Marina en el Concilio. Cuando esos tres frentes cierren, 1.Z se puede escribir sin sustituciones.
+
+---
+
 ## Cinemáticas latentes 1.B.1 y 1.C — ancladas a Brechas no implementadas (F8.2)
 
 **Tracker doc 17**: pendiente de revisión humana.

@@ -33,6 +33,7 @@ class EscenasArco1 {
     elAtico,
     conversacionConElPadre,
     naiaPregunta,
+    aprendizI,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -98,6 +99,13 @@ class EscenasArco1 {
     },
     'escena_1_c_vista': {
       'naia_humanizo_huesos',
+    },
+    // Cierre del Arco 1 — Maren asciende a Aprendiz I y se anuncia
+    // el Arco 2 (Pompaelo). La 1.4.4 queda latente hasta que entre
+    // la Brecha 1.4 al catálogo. Activa el rango oficial.
+    'escena_1_4_4_vista': {
+      'rango_aprendiz_i',
+      'arco_2_anunciado',
     },
   };
 
@@ -1397,6 +1405,180 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'TERMINAR LA CENA'),
+    ],
+  );
+
+  /// **1.4.4 — "Aprendiz I"** (doc 07 §1.4.4).
+  ///
+  /// Cierre del Arco 1. Maren sale al patio del Archivo después
+  /// del gran Concilio de la Estación 4 — necesita aire. Se sienta
+  /// junto al brocal del pozo. Isaura aparece a los cinco minutos
+  /// y se sienta a su lado. Silencio largo. Validación amable de
+  /// Isaura, mención de los gestos de Begoña que importaron, y
+  /// anuncio del Arco 2: bajan a Pompaelo. Maren da las gracias.
+  /// Aparece flotante "APRENDIZ I" — Maren asciende de rango.
+  ///
+  /// Pedagógicamente clave: el ascenso de rango llega como
+  /// reconocimiento institucional silencioso, no como ceremonia.
+  /// Isaura le entrega la lección final del arco: "tu peor sigue
+  /// siendo bueno", y le explicita el patrón de Begoña — sólo
+  /// sonríe cuando el aprendiz reconoce sus propios límites
+  /// ("probablemente sí lo estoy haciendo").
+  ///
+  /// **Anclada a la Estación 4**: requiere `brecha_1_4_completada`.
+  /// Como la Brecha 1.4 (Irulegi) no está en el catálogo todavía,
+  /// esta escena queda latente — el orquestador no la dispara.
+  /// Mismo patrón que 1.B.1, 1.C.
+  ///
+  /// **Sustituciones diegéticas activas**:
+  /// - El siglo concreto del capitel ("s. XII") se omite (entrada
+  ///   EDIFICIO-ARCHIVO de BLOQUEOS-PENDIENTES.md), igual que en 1.0.2.
+  /// - "Violencia romana" se sustituye por "lo que pasó cuando los
+  ///   romanos llegaron" — la frase original carga políticamente
+  ///   sin que el comité asesor la haya validado para 10-14 años.
+  ///   Se preserva la pedagogía (Begoña valora la disposición a
+  ///   reformular) sin afirmar tesis histórica concreta sobre la
+  ///   conquista romana.
+  /// - "La Mano" (Mano de Irulegi, **validada** en el header v0.2
+  ///   del doc 07 como pieza central de la Estación 1.4) se
+  ///   sustituye temporalmente por "una pieza así" porque la
+  ///   Brecha 1.4 no está implementada — un jugador que llegue
+  ///   a esta cinemática sin haberla jugado no sabría a qué se
+  ///   refiere. La sustitución se revierte cuando la 1.4 entre
+  ///   al catálogo. Anotado en BLOQUEOS-PENDIENTES.md.
+  static const EscenaCinematica aprendizI = EscenaCinematica(
+    id: '1.4.4',
+    titulo: '"Aprendiz I"',
+    flagDeSalida: 'escena_1_4_4_vista',
+    flagsRequeridos: {'brecha_1_4_completada'},
+    ambiente: AmbienteArchivo.patioArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren sale del salón del Concilio al patio del Archivo. '
+            'Necesita aire. El capitel y el brocal del pozo, callados. '
+            'Se sienta en un banco junto al brocal. Respira.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cinco minutos después aparece Isaura. Se sienta a su lado '
+            'sin decir nada. El bastón apoyado contra el banco. Dos '
+            'minutos enteros sin hablar.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Has estado bien.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Pensaba que iba a hacerlo peor.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Tu peor sigue siendo bueno.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Silencio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Begoña no sonríe nunca, ¿verdad?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'A su manera, sí. Hoy ha sonreído.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cuándo?'),
+
+      // Sustitución: "Cuando dijiste que reformularías sobre la
+      // violencia romana" → "Cuando dijiste que ibas a reformular
+      // tu posición sobre lo que pasó cuando los romanos llegaron".
+      // Preserva el patrón pedagógico —Begoña sonríe cuando el
+      // aprendiz reconoce que va a reformular— sin la afirmación
+      // política implícita en "violencia romana".
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Cuando dijiste "probablemente sí lo estoy haciendo". Y '
+            'también cuando dijiste que ibas a reformular tu posición '
+            'sobre lo que pasó cuando los romanos llegaron. Eso le '
+            'encanta.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Karim me pilló dos veces.'),
+      // Sustitución: "Otra Brecha sin haber visto la Mano y haber
+      // tenido que defenderte sobre ella" → "Otra Brecha sin
+      // haber tenido que defender una pieza así". Hasta que la
+      // Brecha 1.4 entre al catálogo, una mención específica a
+      // "la Mano" sería opaca para el jugador.
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Karim te pilla siempre. Es su trabajo. Pero te ha pillado '
+            'para ayudarte a crecer. Otra Brecha sin haber tenido que '
+            'defender una pieza así, no habrías estado preparada para '
+            'lo que viene.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué viene?'),
+
+      // Pompaelo + transición vascón → romano: ambos elementos
+      // están validados en el doc 17 / la propia worldbuilding del
+      // juego (sótano romano de Pompaelo ya nombrado en 1.0.2).
+      // La frase queda intacta.
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Pompaelo. Es el comienzo del Arco 2. Los romanos llegaron '
+            'y fundaron una ciudad sobre lo que pudo haber sido un '
+            'asentamiento vascón previo. La transición Irulegi → '
+            'Pompelo es la transición de tu próximo arco.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No lo sabía.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Ahora lo sabes.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren no responde. Mira el capitel. Tres segundos.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Isaura.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Sí?'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Gracias.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+
+      // Cierre. La cámara se aleja, aparece flotante "APRENDIZ I"
+      // — el ascenso de rango entra como reconocimiento silencioso,
+      // no como ceremonia. La regla del juego: los gestos pequeños.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Se quedan en el patio. Tres segundos sin que ninguna '
+            'hable.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'APRENDIZ I',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'CERRAR EL ARCO'),
     ],
   );
 }
