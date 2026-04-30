@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -13,6 +14,7 @@ import '../../dominio/sit_spot.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'lienzo_dibujo.dart';
 import 'selector_confianza.dart';
 import 'selector_misterio.dart';
 
@@ -29,6 +31,7 @@ class PantallaObservacion extends StatefulWidget {
     this.selectorImagen,
     this.almacenadorMedios,
     this.constructorMiniatura,
+    this.abrirLienzoDibujoOverride,
     DateTime Function()? proveedorAhora,
     String Function()? proveedorIds,
   })  : _proveedorAhora = proveedorAhora ?? DateTime.now,
@@ -60,6 +63,12 @@ class PantallaObservacion extends StatefulWidget {
   /// que cuelga el flutter tester con `Future.then` pendientes.
   final Widget Function(File fichero)? constructorMiniatura;
 
+  /// Para tests: closure que reemplaza la apertura real del lienzo
+  /// (`PantallaLienzoDibujo` vía `Navigator.push`). Devuelve los bytes
+  /// PNG simulados o null si el "niño" canceló. Producción siempre
+  /// pasa null y se usa el flujo real.
+  final Future<Uint8List?> Function(BuildContext)? abrirLienzoDibujoOverride;
+
   final DateTime Function() _proveedorAhora;
   final String Function() _proveedorIds;
 
@@ -81,6 +90,10 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
   /// **relativa** se persiste en `Observacion.fotoRutaLocal`.
   String? _rutaFotoTemporal;
   bool _seleccionandoFoto = false;
+
+  /// Ruta absoluta del PNG renderizado por el lienzo de dibujo. Misma
+  /// política que la foto: relativa al persistirla.
+  String? _rutaDibujoTemporal;
 
   /// Id estable de esta observación. Se genera al montar la pantalla
   /// para que el almacenador de medios pueda nombrar el fichero con
@@ -138,6 +151,7 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
                     textos: textos,
                     selectorImagen: widget.selectorImagen,
                     rutaFoto: _rutaFotoTemporal,
+                    rutaDibujo: _rutaDibujoTemporal,
                     cargando: _seleccionandoFoto,
                     alTomarFoto: widget.selectorImagen == null
                         ? null
@@ -148,6 +162,12 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
                     alQuitarFoto: _rutaFotoTemporal == null
                         ? null
                         : _quitarFoto,
+                    alHacerDibujo: widget.almacenadorMedios == null
+                        ? null
+                        : _capturarDibujo,
+                    alQuitarDibujo: _rutaDibujoTemporal == null
+                        ? null
+                        : _quitarDibujo,
                     constructorMiniatura: widget.constructorMiniatura,
                   ),
                   const SizedBox(height: 24),
@@ -262,6 +282,38 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
     }
   }
 
+  Future<void> _capturarDibujo() async {
+    final almacenador = widget.almacenadorMedios;
+    if (almacenador == null) return;
+
+    final bytes = await (widget.abrirLienzoDibujoOverride?.call(context) ??
+        Navigator.of(context).push<Uint8List?>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaLienzoDibujo(),
+          ),
+        ));
+    if (bytes == null) return;
+
+    final rutaRelativa = await almacenador.guardarBytes(
+      bytes: bytes,
+      observacionId: _idObservacion,
+      tipo: TipoMedio.dibujo,
+    );
+    final rutaAbsoluta = await almacenador.resolverAbsoluta(rutaRelativa);
+    if (!mounted) return;
+    setState(() => _rutaDibujoTemporal = rutaAbsoluta);
+  }
+
+  Future<void> _quitarDibujo() async {
+    final almacenador = widget.almacenadorMedios;
+    if (almacenador == null || _rutaDibujoTemporal == null) return;
+    setState(() => _rutaDibujoTemporal = null);
+    final rutaRelativa = '${AlmacenadorMedios.subdirectorioMedios}/'
+        '${_idObservacion}_${TipoMedio.dibujo.sufijo}'
+        '${TipoMedio.dibujo.extensionPredeterminada}';
+    await almacenador.borrar(rutaRelativa);
+  }
+
   Future<void> _quitarFoto() async {
     final almacenador = widget.almacenadorMedios;
     final rutaActual = _rutaFotoTemporal;
@@ -273,6 +325,25 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
         '${_idObservacion}_${TipoMedio.foto.sufijo}'
         '${_extraerExtensionDe(rutaActual)}';
     await almacenador.borrar(rutaRelativa);
+  }
+
+  /// Convierte una ruta absoluta (devuelta por
+  /// `AlmacenadorMedios.resolverAbsoluta`) en la ruta relativa que se
+  /// persiste en `Observacion.fotoRutaLocal` /
+  /// `Observacion.dibujoRutaLocal`. Si el almacenador es null o la
+  /// ruta absoluta no encaja con su directorio raíz, devuelve null —
+  /// equivalente a "no hay foto/dibujo".
+  Future<String?> _aRelativa(
+    String? rutaAbsoluta,
+    AlmacenadorMedios? almacenador,
+  ) async {
+    if (rutaAbsoluta == null || almacenador == null) return null;
+    final dirRaiz = await almacenador.resolverAbsoluta('');
+    final prefijo = dirRaiz.endsWith('/') ? dirRaiz : '$dirRaiz/';
+    if (rutaAbsoluta.startsWith(prefijo)) {
+      return rutaAbsoluta.substring(prefijo.length);
+    }
+    return null;
   }
 
   String _extraerExtensionDe(String ruta) {
@@ -288,22 +359,14 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
     final queViste = _controladorQueViste.text.trim();
     final creesQueEs = _controladorCreesQueEs.text.trim();
     final ahora = widget._proveedorAhora();
-
-    // La ruta persistida es **relativa** al directorio de documentos —
-    // sobrevive a cambios del sandbox UUID en Android y a un export/
-    // import del cuaderno (A5).
-    String? rutaFotoRelativa;
-    final rutaAbsoluta = _rutaFotoTemporal;
     final almacenador = widget.almacenadorMedios;
-    if (rutaAbsoluta != null && almacenador != null) {
-      final dirRaiz = await almacenador.resolverAbsoluta('');
-      // dirRaiz incluye trailing slash; recortamos para obtener la
-      // ruta relativa.
-      final prefijo = dirRaiz.endsWith('/') ? dirRaiz : '$dirRaiz/';
-      if (rutaAbsoluta.startsWith(prefijo)) {
-        rutaFotoRelativa = rutaAbsoluta.substring(prefijo.length);
-      }
-    }
+
+    // Las rutas persistidas son **relativas** al directorio de
+    // documentos — sobreviven a cambios del sandbox UUID en Android y
+    // a un export/import del cuaderno (A5).
+    final rutaFotoRelativa = await _aRelativa(_rutaFotoTemporal, almacenador);
+    final rutaDibujoRelativa =
+        await _aRelativa(_rutaDibujoTemporal, almacenador);
 
     final observacion = Observacion(
       id: _idObservacion,
@@ -321,6 +384,7 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
           : _confianza,
       misterioId: _misterioId,
       fotoRutaLocal: rutaFotoRelativa,
+      dibujoRutaLocal: rutaDibujoRelativa,
     );
 
     await widget.repositorio.guardarObservacion(observacion);
@@ -366,40 +430,47 @@ class _Cabecera extends StatelessWidget {
 
 /// Caja de foto/dibujo de la pantalla de Nueva Observación.
 ///
-/// Tres modos según el estado:
-/// 1. **Sin selector cableado**: muestra el placeholder informativo
-///    (modo S1, tests que no inyectan `SelectorImagen`).
-/// 2. **Cargando**: spinner mientras `_capturarFoto` se ejecuta.
-/// 3. **Con foto**: muestra la miniatura + un botón "quitar foto"
-///    discreto.
-/// 4. **Sin foto pero selector disponible**: dos botones lado a lado
-///    "tomar foto" y "elegir foto" + un placeholder corto debajo.
+/// Estados visibles:
+/// 1. **Sin selector ni almacenador cableado**: placeholder
+///    informativo (modo S1, tests que no inyectan dependencias).
+/// 2. **Cargando foto**: spinner mientras `_capturarFoto` se ejecuta.
+/// 3. **Foto y/o dibujo presentes**: miniatura(s) con botón discreto
+///    "quitar" sobre cada una.
+/// 4. **Sin medios todavía**: dos filas de botones — la de fotografía
+///    (cámara + galería) si hay `selectorImagen`, y la de dibujo
+///    ("hacer dibujo") si hay `almacenadorMedios`.
 class _CajaFotoDibujo extends StatelessWidget {
   const _CajaFotoDibujo({
     required this.textos,
     required this.selectorImagen,
     required this.rutaFoto,
+    required this.rutaDibujo,
     required this.cargando,
     required this.alTomarFoto,
     required this.alElegirFoto,
     required this.alQuitarFoto,
+    required this.alHacerDibujo,
+    required this.alQuitarDibujo,
     required this.constructorMiniatura,
   });
 
   final TextosApp textos;
   final SelectorImagen? selectorImagen;
   final String? rutaFoto;
+  final String? rutaDibujo;
   final bool cargando;
   final VoidCallback? alTomarFoto;
   final VoidCallback? alElegirFoto;
   final VoidCallback? alQuitarFoto;
+  final VoidCallback? alHacerDibujo;
+  final VoidCallback? alQuitarDibujo;
   final Widget Function(File fichero)? constructorMiniatura;
 
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
 
-    if (selectorImagen == null) {
+    if (selectorImagen == null && alHacerDibujo == null) {
       return _CajaInformativa(textos: textos);
     }
     if (cargando) {
@@ -412,18 +483,49 @@ class _CajaFotoDibujo extends StatelessWidget {
         child: const Center(child: CircularProgressIndicator.adaptive()),
       );
     }
-    if (rutaFoto != null) {
-      return _CajaConFoto(
-        rutaAbsoluta: rutaFoto!,
-        alQuitarFoto: alQuitarFoto,
-        textos: textos,
-        constructorMiniatura: constructorMiniatura,
+
+    final tieneFoto = rutaFoto != null;
+    final tieneDibujo = rutaDibujo != null;
+    if (tieneFoto || tieneDibujo) {
+      return Column(
+        children: [
+          if (tieneFoto)
+            _CajaConFoto(
+              rutaAbsoluta: rutaFoto!,
+              alQuitarFoto: alQuitarFoto,
+              textos: textos,
+              constructorMiniatura: constructorMiniatura,
+            ),
+          if (tieneFoto && tieneDibujo) const SizedBox(height: 8),
+          if (tieneDibujo)
+            _CajaConDibujo(
+              rutaAbsoluta: rutaDibujo!,
+              alQuitarDibujo: alQuitarDibujo,
+              textos: textos,
+              constructorMiniatura: constructorMiniatura,
+            ),
+          if (selectorImagen != null && !tieneFoto) ...[
+            const SizedBox(height: 8),
+            _BotonesFoto(
+              textos: textos,
+              alTomarFoto: alTomarFoto,
+              alElegirFoto: alElegirFoto,
+            ),
+          ],
+          if (alHacerDibujo != null && !tieneDibujo) ...[
+            const SizedBox(height: 8),
+            _BotonDibujo(textos: textos, alHacerDibujo: alHacerDibujo),
+          ],
+        ],
       );
     }
+
     return _CajaBotones(
       textos: textos,
       alTomarFoto: alTomarFoto,
       alElegirFoto: alElegirFoto,
+      alHacerDibujo: alHacerDibujo,
+      mostrarFoto: selectorImagen != null,
     );
   }
 }
@@ -464,11 +566,15 @@ class _CajaBotones extends StatelessWidget {
     required this.textos,
     required this.alTomarFoto,
     required this.alElegirFoto,
+    required this.alHacerDibujo,
+    required this.mostrarFoto,
   });
 
   final TextosApp textos;
   final VoidCallback? alTomarFoto;
   final VoidCallback? alElegirFoto;
+  final VoidCallback? alHacerDibujo;
+  final bool mostrarFoto;
 
   @override
   Widget build(BuildContext context) {
@@ -481,26 +587,39 @@ class _CajaBotones extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: alTomarFoto,
-                  icon: const Icon(Icons.photo_camera_outlined, size: 18),
-                  label: Text(textos.observacionFotoTomar),
+          if (mostrarFoto) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: alTomarFoto,
+                    icon: const Icon(Icons.photo_camera_outlined, size: 18),
+                    label: Text(textos.observacionFotoTomar),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: alElegirFoto,
-                  icon: const Icon(Icons.photo_library_outlined, size: 18),
-                  label: Text(textos.observacionFotoElegir),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: alElegirFoto,
+                    icon: const Icon(Icons.photo_library_outlined, size: 18),
+                    label: Text(textos.observacionFotoElegir),
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+          if (alHacerDibujo != null) ...[
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: alHacerDibujo,
+                icon: const Icon(Icons.brush_outlined, size: 18),
+                label: Text(textos.observacionDibujoComenzar),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
+            ),
+            const SizedBox(height: 8),
+          ],
           Text(
             textos.observacionCajaPlaceholder,
             textAlign: TextAlign.center,
@@ -511,6 +630,115 @@ class _CajaBotones extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _BotonesFoto extends StatelessWidget {
+  const _BotonesFoto({
+    required this.textos,
+    required this.alTomarFoto,
+    required this.alElegirFoto,
+  });
+
+  final TextosApp textos;
+  final VoidCallback? alTomarFoto;
+  final VoidCallback? alElegirFoto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: alTomarFoto,
+            icon: const Icon(Icons.photo_camera_outlined, size: 18),
+            label: Text(textos.observacionFotoTomar),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: alElegirFoto,
+            icon: const Icon(Icons.photo_library_outlined, size: 18),
+            label: Text(textos.observacionFotoElegir),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BotonDibujo extends StatelessWidget {
+  const _BotonDibujo({required this.textos, required this.alHacerDibujo});
+
+  final TextosApp textos;
+  final VoidCallback? alHacerDibujo;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: alHacerDibujo,
+        icon: const Icon(Icons.brush_outlined, size: 18),
+        label: Text(textos.observacionDibujoComenzar),
+      ),
+    );
+  }
+}
+
+class _CajaConDibujo extends StatelessWidget {
+  const _CajaConDibujo({
+    required this.rutaAbsoluta,
+    required this.alQuitarDibujo,
+    required this.textos,
+    required this.constructorMiniatura,
+  });
+
+  final String rutaAbsoluta;
+  final VoidCallback? alQuitarDibujo;
+  final TextosApp textos;
+  final Widget Function(File fichero)? constructorMiniatura;
+
+  @override
+  Widget build(BuildContext context) {
+    final fichero = File(rutaAbsoluta);
+    final miniatura = constructorMiniatura?.call(fichero) ??
+        Image.file(
+          fichero,
+          height: 200,
+          width: double.infinity,
+          fit: BoxFit.contain,
+        );
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: PaletaCuaderno.papelClaro,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: PaletaCuaderno.papelOscuro),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: miniatura,
+          ),
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: Material(
+            color: Colors.black54,
+            shape: const CircleBorder(),
+            child: IconButton(
+              tooltip: textos.observacionDibujoQuitar,
+              onPressed: alQuitarDibujo,
+              icon: const Icon(Icons.close, color: Colors.white, size: 20),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

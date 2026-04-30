@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:el_cuaderno/datos/almacenador_medios.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -119,6 +120,51 @@ void main() {
       () async {
     await almacenador.borrar('medios/inexistente.jpg');
     // sin assert: lo que verifica el test es que no lanza.
+  });
+
+  test('guardarBytes(dibujo) escribe los bytes a medios/<id>_dibujo.png',
+      () async {
+    final bytes = Uint8List.fromList([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A]);
+
+    final rutaRelativa = await almacenador.guardarBytes(
+      bytes: bytes,
+      observacionId: 'obs-bytes-001',
+      tipo: TipoMedio.dibujo,
+    );
+
+    expect(rutaRelativa, 'medios/obs-bytes-001_dibujo.png');
+    final destino = File('${dirRaiz.path}/$rutaRelativa');
+    expect(await destino.exists(), isTrue);
+    expect(await destino.readAsBytes(), bytes);
+  });
+
+  test('guardarBytes() crea el subdirectorio si no existe', () async {
+    final dirMedios = Directory('${dirRaiz.path}/medios');
+    expect(await dirMedios.exists(), isFalse);
+
+    await almacenador.guardarBytes(
+      bytes: Uint8List.fromList([1, 2, 3]),
+      observacionId: 'obs-bytes-002',
+      tipo: TipoMedio.dibujo,
+    );
+
+    expect(await dirMedios.exists(), isTrue);
+  });
+
+  test('guardarBytes() sobreescribe si ya había dibujo previo', () async {
+    await almacenador.guardarBytes(
+      bytes: Uint8List.fromList([0x01, 0x02]),
+      observacionId: 'obs-bytes-003',
+      tipo: TipoMedio.dibujo,
+    );
+    final rutaRelativa = await almacenador.guardarBytes(
+      bytes: Uint8List.fromList([0xFF, 0xEE, 0xDD]),
+      observacionId: 'obs-bytes-003',
+      tipo: TipoMedio.dibujo,
+    );
+
+    final destino = File('${dirRaiz.path}/$rutaRelativa');
+    expect(await destino.readAsBytes(), [0xFF, 0xEE, 0xDD]);
   });
 
   test('extensión del origen .JPG normalizada a minúsculas', () async {

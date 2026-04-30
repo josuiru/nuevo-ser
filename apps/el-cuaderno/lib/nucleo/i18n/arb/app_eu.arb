@@ -48,6 +48,8 @@
   "observacionFotoTomar": "TODO_EU · tomar foto",
   "observacionFotoElegir": "TODO_EU · elegir foto",
   "observacionFotoQuitar": "TODO_EU · quitar foto",
+  "observacionDibujoComenzar": "TODO_EU · hacer dibujo",
+  "observacionDibujoQuitar": "TODO_EU · quitar dibujo",
   "observacionEtiquetaQueViste": "TODO_EU · qué viste",
   "observacionPlaceholderQueViste": "TODO_EU · describe lo que has visto, sin nombrarlo si no estás segura",
   "observacionEtiquetaCreesQueEs": "TODO_EU · crees que es",

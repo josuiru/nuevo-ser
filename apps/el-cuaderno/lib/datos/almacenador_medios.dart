@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
 
@@ -69,6 +70,27 @@ class AlmacenadorMedios {
 
     await ficheroOrigen.copy(rutaAbsolutaDestino);
 
+    return '$subdirectorioMedios/$nombreFichero';
+  }
+
+  /// Variante de [guardar] para bytes ya en memoria — el caso típico
+  /// es el PNG renderizado por `RepaintBoundary.toImage()` del lienzo
+  /// de dibujo (A4). No hay fichero de origen, así que la extensión
+  /// se deriva siempre de `tipo.extensionPredeterminada`.
+  Future<String> guardarBytes({
+    required Uint8List bytes,
+    required String observacionId,
+    required TipoMedio tipo,
+  }) async {
+    final dirRaiz = await _proveedorDirRaiz();
+    final dirMedios = Directory('${dirRaiz.path}/$subdirectorioMedios');
+    if (!await dirMedios.exists()) {
+      await dirMedios.create(recursive: true);
+    }
+    final nombreFichero =
+        '${observacionId}_${tipo.sufijo}${tipo.extensionPredeterminada}';
+    final rutaAbsolutaDestino = '${dirMedios.path}/$nombreFichero';
+    await File(rutaAbsolutaDestino).writeAsBytes(bytes, flush: true);
     return '$subdirectorioMedios/$nombreFichero';
   }
 
