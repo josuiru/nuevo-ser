@@ -175,11 +175,27 @@ class NotasFenologicasIberia {
     return lista;
   }
 
-  /// Mapa hardcoded provisional. Cobertura mínima: tres regiones
-  /// piloto (Pamplona/Navarra, Bilbao/Vizcaya, Madrid) en estaciones
-  /// con eventos fenológicos especialmente reconocibles. El resto se
-  /// quedan vacíos a propósito — antes de inventar más notas sin
-  /// fuente, prefiero que la persona naturalista decida qué cubrir.
+  /// Mapa hardcoded provisional. **Toda esta tabla es un fallback de
+  /// experto pendiente de validación con ornitólogos/botánicos
+  /// locales (B11)** — la asesoría definitiva se documentará en
+  /// `docs/el-cuaderno/calendario-fenologico-validado.md` cuando
+  /// llegue.
+  ///
+  /// Dos capas conviven:
+  ///
+  /// 1. **NUTS-3 piloto con afirmaciones específicas** (Pamplona,
+  ///    Bilbao, Madrid). Mencionan especies y rangos temporales
+  ///    concretos — son las que necesitan más revisión humana porque
+  ///    una fecha mal puesta envejece mal y el niño la lee como
+  ///    autoridad.
+  ///
+  /// 2. **Autonómicas con afirmaciones genéricas** (Cataluña,
+  ///    Andalucía, Asturias, Canarias y otras). Sólo afirman
+  ///    geografía / climatología / biología obvia (esclerófilas
+  ///    aguantan calor, pinos perennes, alisios, etc.) — sin fechas
+  ///    concretas, sin especies-clave que requieran calendario
+  ///    territorial. Una asesoría local podría aún así pulirlas,
+  ///    pero no comprometen al juego con afirmaciones falsificables.
   ///
   /// **Convención de redacción** (mantener si se editan):
   /// - sentence case con punto final;
@@ -244,6 +260,113 @@ class NotasFenologicasIberia {
       Estacion.invierno: [
         'Los petirrojos bajan a los jardines cuando hiela.',
         'Los olmos siguen sin hojas hasta marzo.',
+      ],
+    },
+
+    // Cataluña — gradiente costa mediterránea ↔ Pirineo. Sin fechas
+    // concretas; sólo patrones espaciales obvios.
+    'ES-CT': {
+      Estacion.primavera: [
+        'Los almendros suelen ser de los primeros frutales en florecer.',
+        'En el Pirineo la primavera llega más tarde que en la costa.',
+      ],
+      Estacion.verano: [
+        'Los pinos resinosos sueltan aroma con el calor.',
+        'La encina aguanta el calor sin perder hoja.',
+      ],
+      Estacion.otono: [
+        'El paisaje del Pirineo cambia más deprisa que el de la costa.',
+        'Las primeras lluvias de otoño suelen ser fuertes.',
+      ],
+      Estacion.invierno: [
+        'El viento del norte (tramontana) puede ser intenso.',
+        'En la costa las heladas son raras; tierra adentro son habituales.',
+      ],
+    },
+
+    // Andalucía — mediterráneo cálido seco. Esclerófilas y olivos
+    // como anclas seguras.
+    'ES-AN': {
+      Estacion.primavera: [
+        'Las jaras y los olivos atraen muchos insectos al florecer.',
+        'El campo se llena de flores tras las lluvias de marzo.',
+      ],
+      Estacion.verano: [
+        'Las encinas y olivos resisten el calor sin perder hoja.',
+        'A mediodía muchas aves descansan a la sombra y cantan menos.',
+      ],
+      Estacion.otono: [
+        'Las primeras lluvias después del verano traen vida al campo.',
+        'Las hojas de las encinas se renuevan poco a poco, no de golpe.',
+      ],
+      Estacion.invierno: [
+        'Los inviernos son suaves; muchas plantas siguen verdes.',
+        'Las naranjas y mandarinas maduran en los árboles.',
+      ],
+    },
+
+    // Asturias — atlántico húmedo de montaña. Verde intenso y bosques
+    // caducifolios.
+    'ES-AS': {
+      Estacion.primavera: [
+        'El paisaje se vuelve verde intenso con las lluvias.',
+        'Los bosques de robles y hayas tardan en sacar la hoja nueva.',
+      ],
+      Estacion.verano: [
+        'La niebla baja del monte tras los días calurosos.',
+        'Los musgos están bien donde hay sombra y humedad.',
+      ],
+      Estacion.otono: [
+        'Las hayas y los robles tiñen los valles del cobre.',
+        'Las setas aparecen tras las lluvias largas.',
+      ],
+      Estacion.invierno: [
+        'La nieve cubre las cumbres aunque la costa esté templada.',
+        'Los acebos y laureles siguen verdes en pleno invierno.',
+      ],
+    },
+
+    // Galicia — atlántico húmedo costero. Patrón parecido a
+    // Asturias; lo separamos porque la costa gallega tiene rasgos
+    // propios (rías, vegetación litoral).
+    'ES-GA': {
+      Estacion.primavera: [
+        'Tras los inviernos lluviosos, los prados estallan en verde.',
+        'Las camelias florecen pronto en muchos jardines.',
+      ],
+      Estacion.verano: [
+        'Las nieblas de mañana se levantan despacio cerca del mar.',
+        'Los pinos y eucaliptos dominan grandes manchas de bosque.',
+      ],
+      Estacion.otono: [
+        'Las castañeras dan fruto al final del otoño.',
+        'Las setas son muy abundantes tras las lluvias.',
+      ],
+      Estacion.invierno: [
+        'Los inviernos son lluviosos y suaves cerca de la costa.',
+        'Muchas aves marinas se acercan a las rías cuando hay temporal.',
+      ],
+    },
+
+    // Canarias — clima subtropical, sin invierno marcado. Las
+    // estaciones del calendario peninsular encajan poco aquí — las
+    // notas lo dicen sin disimular.
+    'ES-CN': {
+      Estacion.primavera: [
+        'Aquí las estaciones se notan menos que en la península.',
+        'Muchas plantas florecen en cualquier época si llueve.',
+      ],
+      Estacion.verano: [
+        'Los alisios refrescan la tarde en muchas zonas costeras.',
+        'Por encima del mar de nubes el clima es seco y soleado.',
+      ],
+      Estacion.otono: [
+        'Octubre y noviembre suelen traer las lluvias más esperadas.',
+        'El laurisilva se mantiene siempre verde, pase la estación que pase.',
+      ],
+      Estacion.invierno: [
+        'Los pinos canarios mantienen hoja todo el año.',
+        'En la costa el invierno se siente como una primavera fresca.',
       ],
     },
 

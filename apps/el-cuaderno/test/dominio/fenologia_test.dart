@@ -149,13 +149,27 @@ void main() {
       );
     });
 
-    test('region sin notas finas cae al país (ES) como fallback', () {
+    test('NUTS-3 sin notas cae a la autonómica antes que al país', () {
+      // ES-CT-T (Tarragona) no tiene notas propias pero ES-CT sí.
       final notas = NotasFenologicasIberia.para(
         regionCode: 'ES-CT-T',
         estacion: Estacion.primavera,
       );
       expect(notas, isNotEmpty);
-      // El fallback ES tiene una nota genérica de cantos al amanecer.
+      expect(
+        notas.any((n) => n.toLowerCase().contains('almendro')),
+        isTrue,
+        reason: 'debería caer a ES-CT, no al fallback ES',
+      );
+    });
+
+    test('region peninsular sin autonómica cae al país (ES)', () {
+      // ES-AR (Aragón) no está en la tabla — debería caer al fallback.
+      final notas = NotasFenologicasIberia.para(
+        regionCode: 'ES-AR',
+        estacion: Estacion.primavera,
+      );
+      expect(notas, isNotEmpty);
       expect(
         notas.any((n) => n.toLowerCase().contains('cantos')),
         isTrue,
@@ -172,7 +186,18 @@ void main() {
 
     test('toda la matriz de regiones piloto × estaciones tiene contenido',
         () {
-      const piloto = ['ES-NA-PA', 'ES-BI', 'ES-MD'];
+      const piloto = [
+        // NUTS-3 con afirmaciones específicas (capa 1).
+        'ES-NA-PA',
+        'ES-BI',
+        'ES-MD',
+        // Autonómicas con afirmaciones genéricas (capa 2).
+        'ES-CT',
+        'ES-AN',
+        'ES-AS',
+        'ES-GA',
+        'ES-CN',
+      ];
       for (final region in piloto) {
         for (final estacion in Estacion.values) {
           final notas = NotasFenologicasIberia.para(
@@ -186,6 +211,26 @@ void main() {
           );
         }
       }
+    });
+
+    test('Canarias evita afirmar fechas concretas peninsulares', () {
+      // Canarias no tiene invierno marcado — la nota debe reflejarlo
+      // en lugar de afirmar fenómenos peninsulares fuera de contexto.
+      final invierno = NotasFenologicasIberia.para(
+        regionCode: 'ES-CN',
+        estacion: Estacion.invierno,
+      );
+      final primavera = NotasFenologicasIberia.para(
+        regionCode: 'ES-CN',
+        estacion: Estacion.primavera,
+      );
+      final concatenado =
+          [...invierno, ...primavera].join(' ').toLowerCase();
+      expect(
+        concatenado.contains('estaciones se notan menos'),
+        isTrue,
+        reason: 'la nota canaria debe rebajar la rigidez del calendario peninsular',
+      );
     });
 
     test('la lista devuelta es inmutable (no se puede mutar accidentalmente)',
