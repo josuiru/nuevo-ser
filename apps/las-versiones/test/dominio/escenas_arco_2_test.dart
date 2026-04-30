@@ -72,8 +72,9 @@ void main() {
     test('catálogo cubre 2.0.1 (apertura) + Estación 2.1 completa '
         '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) + '
         'Estación 2.2 completa (2.2.1 a 2.2.6) + latente post-Estación '
-        '2.2 (2.B.1) — 16 cinemáticas implementadas hoy', () {
-      expect(EscenasArco2.todas, hasLength(16));
+        '2.2 (2.B.1) + Estación 2.3 completa (2.3.1 a 2.3.6) — '
+        '22 cinemáticas implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(22));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
         [
@@ -93,6 +94,12 @@ void main() {
           '2.2.5',
           '2.2.6',
           '2.B.1',
+          '2.3.1',
+          '2.3.2',
+          '2.3.3',
+          '2.3.4',
+          '2.3.5',
+          '2.3.6',
         ],
       );
     });
@@ -262,6 +269,116 @@ void main() {
           .map((plano) => plano.voz)
           .toSet();
       expect(voces, {VozPersonaje.isaura, VozPersonaje.maren});
+    });
+
+    test('Estación 2.3 arranca con 2.3.1 que requiere escena_2_b_1_vista '
+        '— la latente 2.B.1 actúa como precondición', () {
+      expect(
+        EscenasArco2.laDomusDeLosMosaicos.flagsRequeridos,
+        {'escena_2_b_1_vista'},
+      );
+    });
+
+    test('Estación 2.3 cierra con 2.3.6 que activa al mismo tiempo el '
+        'concilio cerrado, la Brecha 2.3 completada y la Estación 2.3 '
+        'cerrada — hito triple para que la Estación 2.4 lo requiera', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_3_6_vista'],
+        containsAll([
+          'concilio_2_3_cerrado',
+          'brecha_2_3_completada',
+          'arco_2_estacion_3_cerrada',
+        ]),
+      );
+    });
+
+    test('2.3.1 y 2.3.2 viajan con la domus subterránea — el espacio '
+        'físico de la Brecha', () {
+      for (final escena in [
+        EscenasArco2.laDomusDeLosMosaicos,
+        EscenasArco2.lasPersonasQueVivieronAqui,
+      ]) {
+        expect(
+          escena.ambiente,
+          same(AmbienteArchivo.domusMosaicosSubterranea),
+          reason: '${escena.id} debería usar domusMosaicosSubterranea',
+        );
+      }
+    });
+
+    test('2.3.3 (la crisis) viaja con el patio del Archivo — Maren sale '
+        'a respirar al brocal del pozo', () {
+      expect(
+        EscenasArco2.laCrisis.ambiente,
+        same(AmbienteArchivo.patioArchivo),
+      );
+    });
+
+    test('2.3.4 (comprender sin justificar) viaja con la cocina del '
+        'Archivo — té con Isaura, lección epistémica clave', () {
+      expect(
+        EscenasArco2.comprenderSinJustificar.ambiente,
+        same(AmbienteArchivo.cocinaArchivo),
+      );
+    });
+
+    test('2.3.6 (Concilio) viaja con el salón del Concilio del Archivo '
+        '— mismo espacio formal que cierra la Estación 1.4 del Arco 1',
+        () {
+      expect(
+        EscenasArco2.concilioDeLaDomus.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test('2.3.6 (Concilio) lleva las cuatro voces del Archivo — Karim, '
+        'Aitor, Maren e Isaura — la mesa formal de revisores del Arco 2',
+        () {
+      final voces = EscenasArco2.concilioDeLaDomus.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, containsAll([
+        VozPersonaje.karim,
+        VozPersonaje.aitor,
+        VozPersonaje.maren,
+      ]));
+    });
+
+    test('2.3.4 contiene la dicotomía pedagógica clave del Arco 2 — '
+        'neutralidad vs comprensión, PH.01 vs PH.08', () {
+      final dialogos = EscenasArco2.comprenderSinJustificar.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('neutralidad') && texto.contains('comprensión')),
+        isTrue,
+        reason: 'al menos un diálogo debe contraponer las dos posturas',
+      );
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('PH.01') && texto.contains('PH.08')),
+        isTrue,
+        reason: 'Isaura nombra explícitamente las dos habilidades',
+      );
+    });
+
+    test('2.3.5 reproduce las ocho afirmaciones canónicas — incluida la '
+        'afirmación 6 declarada como Sólido (la ausencia)', () {
+      final textoCompleto = EscenasArco2.reconstruccionDeLaDomus.planos
+          .whereType<PlanoAmbiente>()
+          .map((plano) => plano.textoLectura)
+          .join(' ');
+      expect(textoCompleto, contains('1.'));
+      expect(textoCompleto, contains('8.'));
+      expect(
+        textoCompleto,
+        contains('Sólido (la ausencia)'),
+        reason: 'la afirmación 6 declara la ausencia documentada como '
+            'información, calificada como Sólido',
+      );
     });
   });
 }

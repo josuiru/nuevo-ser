@@ -215,4 +215,15 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// sólo").
   static const AmbienteArchivo despachoIsaura =
       AmbienteArchivo._('despacho_isaura');
+
+  /// Domus romana parcialmente conservada bajo el casco viejo de
+  /// Iruña — casa privada (no foro), accesible vía galería técnica
+  /// desde el sótano del Archivo. Suelo de mosaico parcial (teselas
+  /// blancas, negras, rojas, azules; diseños geométricos), restos
+  /// de muros pintados, un horno, una cisterna. Doscientos años
+  /// de habitación con capas dentro de la propia casa. Lugar de
+  /// la 2.3.1 (visita inicial) y 2.3.2 (Mesa de Trabajo sobre las
+  /// fuentes documentadas y las personas que no aparecen en ellas).
+  static const AmbienteArchivo domusMosaicosSubterranea =
+      AmbienteArchivo._('domus_mosaicos_subterranea');
 }

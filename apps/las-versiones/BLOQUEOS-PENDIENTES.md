@@ -119,23 +119,44 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 implementadas (F2-1, F2-2, F2-3, F2-4)
+## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 + Estación 2.3 implementadas (F2-1 a F2-5)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementadas las 16 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y 2.A.2 *Marina y los descansos*, doc 08 §2.A), la Estación 2.2 entera (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6) y la cinemática latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*, doc 08 §2.B.1). 2.B.1 es deliberadamente breve y elíptica: Maren entra al despacho de Isaura para una consulta técnica, descubre que la mentora tiene su propio cuaderno de la Cronista — treinta años, "preguntas, sólo" — y la cámara se queda con Isaura tras la salida confirmando al jugador que el oficio del Cuaderno es práctica vitalicia, no etapa de aprendiz. Las restantes 18+ escenas del Arco 2 (2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.3/2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 22 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas latentes post-Estación 2.1 (2.A.1 + 2.A.2), la Estación 2.2 entera (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6), la cinemática latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*) y la Estación 2.3 entera (La domus de los mosaicos, doc 08 §2.3.1–2.3.6): visita a la domus subterránea con el suelo de mosaico parcial, Mesa de Trabajo sobre las 4 fuentes (inscripción del Cornelio, tablilla con cuentas, restos materiales, comparación con domus análogas) con voz larga del Cuaderno articulando la asimetría documental, crisis emocional de Maren en el patio del Archivo (rabia por reconstruir la casa sin poder nombrar a quienes la sostenían), conversación pedagógica clave en la cocina (PH.01 no presentismo + PH.08 comprender sin justificar; la dicotomía neutralidad/comprensión; "Tasio inventaría sus nombres si pudiera fundamentarlo a medias. Tú no inventas. Declaras la ausencia. La ausencia documentada es información"), reconstrucción reformulada con 8 afirmaciones canónicas (la afirmación 6 declarada como **Sólido (la ausencia)** — declaración de oficio sobre lo que no se sabe) y Concilio en el salón formal con Karim/Aitor/Isaura como mesa, donde Maren articula la reformulación clave del arco ("no sabemos quiénes eran porque la sociedad estaba estructurada para que no quedara registro de quiénes eran") y Karim la alcanza en el pasillo con "la afirmación 6 es de las que me hacen tener esperanza con esta institución". Las restantes 12+ escenas del Arco 2 (2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco la Brecha 2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 16 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.B.1 requiere `arco_2_estacion_2_cerrada` (que la 2.2.6 activa). Tras cerrar la 2.B.1 el orquestador cae al esqueleto porque la 2.3.1 todavía no está implementada.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 22 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La Estación 2.3 arranca con 2.3.1 que requiere `escena_2_b_1_vista` y cierra con 2.3.6 que activa simultáneamente `concilio_2_3_cerrado`, `brecha_2_3_completada` y `arco_2_estacion_3_cerrada` — hito triple para que la futura cinemática latente 2.C.1 lo requiera. Tras cerrar la 2.3.6 el orquestador cae al esqueleto porque la 2.C.1 todavía no está implementada.
 
 **Pendiente para próximas iteraciones**:
-- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 jugable + brecha22 jugable + brecha23, brecha24).
-- Estaciones 2.3 (domus de los mosaicos), 2.4 (Wamba contra los vascones).
+- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 + brecha22 + brecha23 + brecha24 jugables).
 - Cinemática latente 2.C.1 (post-Estación 2.3 — "Eider y el cambio").
+- Estación 2.4 (Wamba contra los vascones).
 - Mosaico M2 ("audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
 - Cinemática de cierre del arco 2.Z.
 - Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en sección siguiente.
 
-**Sin sustituciones diegéticas en 2.B.1**: la cinemática no nombra fechas, lugares, autores ni dataciones específicas. El cuaderno marrón de Isaura es elemento ficticio del juego (no afirma una pieza histórica concreta) y los "treinta años" funcionan como dispositivo pedagógico (la mentora también es practicante del oficio), no como dato histórico verificable.
+**Sin sustituciones diegéticas en 2.B.1**: el cuaderno marrón de Isaura es ficticio del juego.
+
+---
+
+## Estación 2.3 (domus de los mosaicos) — material diegético + sustitución por edificio del Archivo (F2-5)
+
+**Tracker doc 17**: pendiente.
+
+**Material diegético de la Brecha 2.3** (registro):
+- **La domus subterránea** bajo el casco viejo de Iruña accesible vía galería técnica desde el sótano del Archivo es ficticia diegética del juego. Pamplona/Pompaelo tiene domus romanas documentadas en yacimientos urbanos parciales, pero la conexión galería ↔ Archivo es invención narrativa. El mosaico geométrico del s. II y la habitación durante doscientos años son verosímiles para domus hispanorromanas.
+- **La familia Cornelia** (un Cornelio magistrado local con praenomen perdido, esposa con nombre incompleto, hijos no documentados, dos personas esclavizadas mencionadas como número en las cuentas) es **explícitamente ficticia diegética**. Cornelius es gentilicio común romano usado deliberadamente como dispositivo pedagógico, no como afirmación histórica sobre una familia concreta de Pompaelo.
+- **Las 8 afirmaciones canónicas** reproducen la calibración del doc 08 §2.3.5 sin sustitución. La afirmación 6 (la ausencia documentada de las personas esclavizadas) calificada como **Sólido (la ausencia)** es el corazón pedagógico de la Estación.
+- **"Las grietas también hablan"** — frase del pasillo de los Reformistas, ficticia del juego. Funciona como dispositivo narrativo que articula la dicotomía Tasio/Karim sobre cómo se interpreta la frase.
+
+**Sustitución diegética aplicada**:
+- 2.3.3 (la crisis): "el capitel del s. XII" → "el capitel del patio" (sin afirmar siglo). Misma sustitución que se aplica en 1.0.2 y 1.4.4, registrada en la entrada EDIFICIO-ARCHIVO de este mismo documento. La pedagogía (Maren mira algo del patio mientras procesa la crisis) se preserva sin afirmar dato arquitectónico no validado.
+
+**Pendiente de revisión humana**:
+- ¿La caracterización de la domus como ficticia diegética accesible "vía galería técnica desde el Archivo" funciona, o el comité asesor prefiere anclar la Estación a una domus real documentada (con su yacimiento, su bibliografía y sus limitaciones)? La elección actual es deliberada porque permite controlar las fuentes catalogadas con propósito pedagógico (la asimetría entre el propietario y los esclavos es matemáticamente clara), pero pierde la trazabilidad arqueológica.
+- Tono de Maren en 2.3.3 (la crisis) — primera vez que la Cronista articula rabia explícita en pantalla. La frase "soy cómplice" es fuerte. ¿Encaja con la voz fijada en doc 04? Para el oficio del juego es importante que el aprendiz pueda sentir incomodidad ética en algunos casos sin que eso se trate como "fallo de profesionalidad".
+- Tono de la lección de Isaura en 2.3.4 — la dicotomía neutralidad/comprensión es el mensaje pedagógico más explícito que el juego hace hasta ahora. ¿La articulación es lo bastante cuidadosa para que un aprendiz de 11-12 años la lea sin malentendido (interpretarla como permiso para juzgar todo lo histórico desde el siglo XXI)? La condición "tu valoración está fuera, la de ellos está dentro" se incluye explícitamente para acotar.
+- Voz de Karim en 2.3.6 con la frase de pasillo — "la afirmación 6 es de las que me hacen tener esperanza con esta institución" es declaración política (crítica institucional desde dentro) que el juego pone en boca de un Cronista superior. ¿El comité valida esa formulación? Es coherente con el carácter Reformista de Karim (doc 04) pero merece confirmación.
 
 **Sin sustituciones diegéticas en 2.A.1 ni 2.A.2**: Quintiliano de Calagurris y la edición de Cousin (Jean Cousin, *Quintilien — Institution oratoire*, Les Belles Lettres) son referencias reales y trazables que pasan el filtro del comité sin revisión. Marina sólo nombra términos ya validados ("inscripción", "huesos", "polen", "Aralar", "Calahorra"). La frase pedagógica clave de Antonio ("habla menos de sí mismo de lo que parece") es comentario crítico genérico, no afirmación histórica.
 

@@ -23,15 +23,17 @@ class EscenasArco2 {
   /// (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas
   /// latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y
   /// 2.A.2 *Marina y los descansos*), la Estación 2.2 completa
-  /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6) y la
-  /// cinemática latente post-Estación 2.2 (2.B.1 *El cuaderno de
-  /// Isaura*); la Estación 2.3, 2.4 + cinemática latente 2.C.1 +
+  /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6), la cinemática
+  /// latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*) y la
+  /// Estación 2.3 completa (La domus de los mosaicos, doc 08
+  /// §2.3.1–2.3.6); la Estación 2.4 + cinemática latente 2.C.1 +
   /// Mosaico M2 + cierre 2.Z se añadirán en commits posteriores.
   ///
   /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
   /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa).
   /// La latente 2.B.1 se ordena detrás de 2.2.6 porque requiere
-  /// `arco_2_estacion_2_cerrada` (que la 2.2.6 activa).
+  /// `arco_2_estacion_2_cerrada` (que la 2.2.6 activa). La Estación
+  /// 2.3 arranca con 2.3.1 que requiere `escena_2_b_1_vista`.
   static const List<EscenaCinematica> todas = [
     primerDiaDelArco,
     bajarAlSotano,
@@ -49,6 +51,12 @@ class EscenasArco2 {
     elConcilioEnCalahorra,
     loQueFueYDejoDeSer,
     elCuadernoDeIsaura,
+    laDomusDeLosMosaicos,
+    lasPersonasQueVivieronAqui,
+    laCrisis,
+    comprenderSinJustificar,
+    reconstruccionDeLaDomus,
+    concilioDeLaDomus,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -108,6 +116,26 @@ class EscenasArco2 {
     },
     'escena_2_b_1_vista': {
       'cuaderno_de_isaura_visto',
+    },
+    'escena_2_3_1_vista': {
+      'domus_mosaicos_visitada',
+    },
+    'escena_2_3_2_vista': {
+      'fuentes_domus_estudiadas',
+    },
+    'escena_2_3_3_vista': {
+      'crisis_pedagogica_2_3_resuelta',
+    },
+    'escena_2_3_4_vista': {
+      'comprender_sin_justificar_aprendido',
+    },
+    'escena_2_3_5_vista': {
+      'reconstruccion_2_3_hecha',
+    },
+    'escena_2_3_6_vista': {
+      'concilio_2_3_cerrado',
+      'brecha_2_3_completada',
+      'arco_2_estacion_3_cerrada',
     },
   };
 
@@ -1865,6 +1893,723 @@ class EscenasArco2 {
             'vuelve a guardar. Vuelve a su trabajo.',
       ),
       PlanoCierreAmable(textoBoton: 'SALIR DEL DESPACHO'),
+    ],
+  );
+
+  /// 2.3.1 — *La domus de los mosaicos*. Apertura de la Estación
+  /// 2.3 a mediados de enero, ~6 semanas tras el inicio del Arco 2.
+  /// Maren e Isaura bajan otra vez al subsuelo de Iruña, esta vez
+  /// a una zona distinta — una casa privada, no el foro. La
+  /// estructura de la cinemática introduce el dispositivo
+  /// pedagógico de la Estación entera con dos preguntas: la que
+  /// Isaura propone ("¿cómo era la vida de las personas que
+  /// vivieron en esta casa?") y la que Maren formula desde dentro
+  /// del oficio ("¿y las personas que no eran propietarios?").
+  /// Isaura confirma con un gesto que ésa es la pregunta correcta —
+  /// pista pedagógica clave del arco para el jugador.
+  ///
+  /// Doc 08 §2.3.1.
+  static const EscenaCinematica laDomusDeLosMosaicos = EscenaCinematica(
+    id: '2.3.1',
+    titulo: 'La domus de los mosaicos',
+    flagDeSalida: 'escena_2_3_1_vista',
+    flagsRequeridos: {'escena_2_b_1_vista'},
+    ambiente: AmbienteArchivo.domusMosaicosSubterranea,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mediados de enero. Bajan otra vez al subsuelo de Iruña, '
+            'esta vez por una galería técnica distinta — sale del '
+            'sótano del Archivo y se hunde bajo el casco viejo en '
+            'dirección norte. La galería desemboca en un espacio '
+            'amplio: suelo de mosaico parcial con teselas blancas, '
+            'negras, rojas y azules en diseños geométricos; restos '
+            'de muros pintados; un horno; una cisterna en la esquina.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Esto es una casa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿De alguien concreto?',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sí. Sabemos algo de quién vivía aquí. No mucho.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren camina por el suelo de mosaico. Las teselas '
+            'gastadas en algunos puntos, intactas en otros. La '
+            'sensación de pisar algo doméstico. Una habitación que '
+            'fue habitación.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'El mosaico es del siglo II.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Toda la casa?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No. La casa fue habitada al menos doscientos años. '
+            'Tienes capas dentro de la propia casa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Maren se queda con la idea de las capas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Tu Brecha aquí es: ¿cómo era la vida de las personas '
+            'que vivieron en esta casa?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Pregunta abierta.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Hay fuentes?',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Tres documentadas. Una inscripción del propietario, '
+            'una tablilla con cuentas, restos materiales.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y las personas que no eran propietarios?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Isaura la mira un segundo. Asiente despacio, sin '
+            'sonrisa. Reconoce la pregunta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Esa es la pregunta correcta.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoCierreAmable(textoBoton: 'EMPEZAR LA BRECHA'),
+    ],
+  );
+
+  /// 2.3.2 — *Las personas que vivieron aquí*. Mesa de Trabajo
+  /// (varias sesiones condensadas). Maren examina las cuatro
+  /// fuentes catalogadas: inscripción de Cornelio (magistrado
+  /// local, mediados s. II), tablilla con cuentas (compra/venta,
+  /// gastos, mención de "siervos" sin nombrar), restos materiales
+  /// (cerámica de cocina, herramientas, fragmentos óseos animales,
+  /// restos del horno) y comparación con domus análogas
+  /// hispanorromanas. Mecánicas: PR.02-04 + HF.07-09 + PH.04
+  /// (voces silenciadas). La voz larga del Cuaderno articula la
+  /// asimetría de la documentación: el Cornelio aparece, los
+  /// siervos aparecen como número (dos) sin nombre — pero alguien
+  /// encendía el horno cada mañana, alguien cocinaba, alguien
+  /// limpiaba el mosaico durante doscientos años.
+  ///
+  /// Doc 08 §2.3.2.
+  static const EscenaCinematica lasPersonasQueVivieronAqui =
+      EscenaCinematica(
+    id: '2.3.2',
+    titulo: 'Las personas que vivieron aquí',
+    flagDeSalida: 'escena_2_3_2_vista',
+    flagsRequeridos: {'escena_2_3_1_vista'},
+    ambiente: AmbienteArchivo.domusMosaicosSubterranea,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Varias sesiones condensadas en el interfaz. Maren '
+            'visita la domus a primera hora, vuelve al Archivo a '
+            'la Mesa de Trabajo, repite. Isaura observa desde un '
+            'rincón sin intervenir.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Cuatro fuentes sobre la mesa.\n'
+            '1. Inscripción del propietario — un Cornelio, '
+            'magistrado local, mediados del siglo II.\n'
+            '2. Tablilla con cuentas — compras y ventas, gastos '
+            'domésticos, mención de "siervos" sin nombrar.\n'
+            '3. Restos materiales — cerámica de cocina, '
+            'herramientas, fragmentos óseos animales, restos en '
+            'el horno.\n'
+            '4. Comparación con domus análogas documentadas en '
+            'otras ciudades hispanorromanas.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren identifica al propietario y su estatus en la '
+            'primera sesión. La cuestión se complica cuando intenta '
+            'reconstruir a las personas esclavizadas que servían '
+            'en la casa. Las cuentas las mencionan: dos. Sin '
+            'nombre. Su existencia está documentada. Su vida '
+            'concreta no.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'El Cornelio aparece en todas las fuentes. Su esposa '
+            'aparece una vez. Sus hijos no aparecen. Los siervos '
+            'aparecen como números: dos.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Pero alguien encendió ese horno cada mañana. Alguien '
+            'cocinaba en esta cocina. Alguien limpiaba estos '
+            'mosaicos. La casa funcionaba todos los días, '
+            'doscientos años.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Los nombres de quienes la hacían funcionar no están.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoCierreAmable(textoBoton: 'SALIR A RESPIRAR'),
+    ],
+  );
+
+  /// 2.3.3 — *La crisis*. Patio del Archivo, banco junto al
+  /// brocal del pozo. Maren sale después de tres sesiones de
+  /// trabajo. Está sentada con el cuaderno cerrado en el regazo,
+  /// no escribe. Isaura la encuentra al cabo de quince minutos y
+  /// se sienta a su lado en silencio. Maren articula la rabia
+  /// epistémica de tener que reconstruir la casa de Cornelio sin
+  /// poder nombrar a quienes la sostenían — y el miedo a sonar
+  /// como Tasio (caer en presentismo) o a ser cómplice (callarse).
+  /// Isaura no resuelve en el sitio: invita a un té. La cinemática
+  /// queda abierta para 2.3.4 donde se trabaja la lección.
+  ///
+  /// Doc 08 §2.3.3.
+  ///
+  /// **Sustitución diegética activa**: el guion canónico nombra
+  /// "el capitel del s. XII" cuando Maren mira al patio. Aquí se
+  /// usa "el capitel del patio" sin afirmar siglo, alineado con
+  /// la entrada EDIFICIO-ARCHIVO de BLOQUEOS-PENDIENTES.md.
+  static const EscenaCinematica laCrisis = EscenaCinematica(
+    id: '2.3.3',
+    titulo: 'La crisis',
+    flagDeSalida: 'escena_2_3_3_vista',
+    flagsRequeridos: {'escena_2_3_2_vista'},
+    ambiente: AmbienteArchivo.patioArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Tras tres sesiones de trabajo Maren sale al patio del '
+            'Archivo. Se sienta en el banco junto al brocal del '
+            'pozo, cuaderno cerrado en el regazo. No escribe. Mira '
+            'al capitel del patio sin verlo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Quince minutos así. Isaura la encuentra. Se sienta a '
+            'su lado sin hablar. Dos minutos más en silencio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Qué pasa?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No quiero seguir esta Brecha.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Por qué?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Me da rabia.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Cuéntame.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Maren respira hondo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Me da rabia que el Cornelio tenga inscripción y los '
+            'siervos no tengan nada. Me da rabia que tengo que '
+            'reconstruir su casa y hablar de "su" mosaico cuando '
+            'el mosaico lo limpiaba alguien que no aparece. Me da '
+            'rabia que tengo que tratar al Cornelio como si fuera '
+            'el centro de la casa cuando él se sentaba mientras '
+            'los demás trabajaban.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Isaura escucha. No interrumpe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Y si declaro todo eso, suena como Tasio. Y si no lo '
+            'declaro, soy cómplice.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pausa larga. Isaura no contesta inmediatamente. Mira '
+            'al brocal del pozo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Quieres una pausa?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No. Quiero que me ayudes a entender cómo se hace esto '
+            'sin volverme loca.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Vamos a la cocina. Te invito un té.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoCierreAmable(textoBoton: 'IR A LA COCINA'),
+    ],
+  );
+
+  /// 2.3.4 — *Comprender sin justificar*. Cocina del Archivo. Té.
+  /// Las dos solas. Isaura articula la lección epistémica clave
+  /// del Arco 2: la diferencia entre **neutralidad** ("la
+  /// esclavitud era una práctica romana, punto") y **comprensión**
+  /// ("la esclavitud era estructura de la sociedad romana, esto
+  /// es lo que sabemos sobre cómo funcionaba en esta domus
+  /// concreta, esto es lo que NO sabemos sobre las personas
+  /// esclavizadas, y todo eso ocurrió en un sistema que hoy
+  /// reconocemos como atrocidad, aunque la mayoría de los romanos
+  /// no lo formularan así"). Habilidades: PH.01 (no presentismo)
+  /// + PH.08 (comprender sin justificar). Las dos a la vez —
+  /// "lo más difícil del oficio" según Isaura.
+  ///
+  /// La distinción Tasio/Reformista (Tasio inventaría nombres si
+  /// pudiera fundamentarlos a medias, la Cronista declara la
+  /// ausencia documentada como información) prepara directamente
+  /// la afirmación 6 que Maren producirá en 2.3.5 y defenderá en
+  /// el Concilio 2.3.6. Maren cita "las grietas también hablan"
+  /// del pasillo de los Reformistas — Isaura confirma con sorpresa
+  /// que la frase tiene dos interpretaciones (Tasio vs Karim) y
+  /// que la Cronista decide a cuál.
+  ///
+  /// Doc 08 §2.3.4.
+  static const EscenaCinematica comprenderSinJustificar = EscenaCinematica(
+    id: '2.3.4',
+    titulo: 'Comprender sin justificar',
+    flagDeSalida: 'escena_2_3_4_vista',
+    flagsRequeridos: {'escena_2_3_3_vista'},
+    ambiente: AmbienteArchivo.cocinaArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cocina del Archivo. Vacía a esa hora. Té caliente en '
+            'dos tazas. Las dos sentadas frente a frente, ventana '
+            'al patio del claustro detrás.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Lo primero. Lo que sientes es legítimo. La esclavitud '
+            'en Pompaelo fue una atrocidad humana. Hoy lo sabemos. '
+            'Entonces lo sabían también — no lo decían así, pero '
+            'lo sabían algunos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Entonces ¿por qué tengo que tratarla con neutralidad?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No tienes que tratarla con neutralidad. Tienes que '
+            'tratarla con comprensión. Es distinto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cuál es la diferencia?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Neutralidad sería: "la esclavitud era una práctica '
+            'romana". Punto. Sin valoración.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Comprensión es: "la esclavitud era estructura de la '
+            'sociedad romana, esto es lo que sabemos sobre cómo '
+            'funcionaba en esta domus concreta, esto es lo que NO '
+            'sabemos sobre las personas esclavizadas, y todo eso '
+            'ocurrió en un sistema que hoy reconocemos como '
+            'atrocidad, aunque la mayoría de los romanos no lo '
+            'formularan así."',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Maren bebe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'La comprensión incluye contexto histórico y dignidad '
+            'de las víctimas. Las dos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Pero entonces sí valoro.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sí. Pero no proyectas tu valoración sobre la mentalidad '
+            'de los romanos. Tu valoración está fuera, como cronista '
+            'del siglo XXI mirando. La de ellos está dentro, como '
+            'sujetos de su tiempo. Las dos cosas conviven en tu '
+            'Brecha.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Eso es difícil.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Es lo más difícil. Por eso PH.01 y PH.08 son '
+            'habilidades distintas y por eso las dos importan.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Y otra cosa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Sí?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Que los siervos no aparezcan con nombres no significa '
+            'que no los reconozcas en la Brecha. Puedes — debes — '
+            'declarar lo que se sabe y lo que no se sabe sobre ellos. '
+            'Eso no es Tasio. Es Reformista bien entendido.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿La diferencia con Tasio?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Tasio inventaría sus nombres si pudiera fundamentarlo '
+            'a medias. Tú no inventas. Declaras la ausencia. La '
+            'ausencia documentada es información.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Las grietas también hablan.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Isaura mira a Maren con sorpresa breve.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Lo has leído?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Está colgado en el pasillo de los Reformistas. Lo vi.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sí. Las grietas hablan. Tasio lleva esa frase a un '
+            'sitio. Karim la lleva a otro. Tú decide a cuál.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren asiente. Bebe el resto del té. Se queda pensando '
+            'en la frase. La taza tibia entre las dos manos.',
+      ),
+      PlanoCierreAmable(textoBoton: 'VOLVER A LA MESA DE TRABAJO'),
+    ],
+  );
+
+  /// 2.3.5 — *Reconstrucción*. Mesa de Trabajo del Archivo, días
+  /// después. Maren produce la reconstrucción reformulada con 8
+  /// afirmaciones canónicas — la afirmación 6 ("estas personas
+  /// no están nombradas en ninguna fuente que se conserve. Su
+  /// número exacto, sus nombres, sus vidas concretas, sus
+  /// orígenes culturales se desconocen") va calificada como
+  /// **Sólido (la ausencia)**, declaración de oficio que la
+  /// Cronista produce conscientemente y que defenderá en el
+  /// Concilio. Las otras 7 afirmaciones combinan Sólido (datos
+  /// del propietario, número de esclavos, cronología del mosaico),
+  /// Probable (esposa con nombre incompleto, vida cotidiana
+  /// inferida de domus análogas) y Disputado (existencia de
+  /// hijos por edad y posición).
+  ///
+  /// Doc 08 §2.3.5.
+  ///
+  /// **Sin sustituciones diegéticas en la reconstrucción**: la
+  /// familia Cornelia es ficticia diegética del juego, los
+  /// nombres incompletos son explícitamente fragmentarios, la
+  /// estructura de afirmaciones reproduce la calibración del doc.
+  static const EscenaCinematica reconstruccionDeLaDomus = EscenaCinematica(
+    id: '2.3.5',
+    titulo: 'Reconstrucción',
+    flagDeSalida: 'escena_2_3_5_vista',
+    flagsRequeridos: {'escena_2_3_4_vista'},
+    ambiente: AmbienteArchivo.mesaTrabajoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Días después. Mesa de Trabajo del Archivo. Maren ha '
+            'releído lo que le dijo Isaura. Tiene el cuaderno '
+            'abierto y la lista de fuentes a la izquierda. Empieza '
+            'la reconstrucción reformulada.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            '1. La domus fue residencia de la familia Cornelia desde '
+            'mediados del siglo II hasta finales del siglo III. '
+            'Sólido.\n'
+            '2. El propietario principal fue Cornelio (praenomen '
+            'perdido), magistrado local. Sólido.\n'
+            '3. Su esposa aparece en una sola fuente y se llamaba '
+            '(nombre incompleto). Probable.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            '4. Sus hijos no aparecen documentados directamente. '
+            'Disputado si los tuvo o no, aunque la edad y posición '
+            'social hacen Probable que sí.\n'
+            '5. La casa empleaba al menos dos personas esclavizadas, '
+            'según las cuentas domésticas. Sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            '6. Estas personas no están nombradas en ninguna fuente '
+            'que se conserve. Su número exacto, sus nombres, sus '
+            'vidas concretas, sus orígenes culturales se desconocen. '
+            'Sólido (la ausencia).',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            '7. La domus tuvo un mosaico geométrico añadido a fines '
+            'del siglo II. Sólido.\n'
+            '8. La vida cotidiana de la casa incluyó cocina, '
+            'comercio, recepción de clientes, vida familiar y '
+            'trabajo doméstico esclavizado en proporciones que se '
+            'infieren de domus análogas. Probable.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren relee. La afirmación 6 es la que más le importa. '
+            'La declara con cuidado — el "Sólido (la ausencia)" '
+            'lo escribe a mano, sin abreviar.',
+      ),
+      PlanoCierreAmable(textoBoton: 'PREPARAR EL CONCILIO'),
+    ],
+  );
+
+  /// 2.3.6 — *Concilio*. Salón del Concilio del Archivo. Karim,
+  /// Aitor e Isaura como mesa. Maren presenta. Karim hace la
+  /// pregunta que ata todo: la afirmación 6 declara una ausencia,
+  /// es inhabitual, ¿por qué la declaras? Maren articula la
+  /// reformulación clave del Arco 2 — "no sabemos quiénes eran
+  /// porque la sociedad estaba estructurada para que no quedara
+  /// registro de quiénes eran". Aitor reconoce que es Reformismo
+  /// aplicado pero fundamentado, y la sella. Karim alcanza a
+  /// Maren en el pasillo a la salida con una frase corta — "la
+  /// afirmación 6 es de las que me hacen tener esperanza con
+  /// esta institución" — que cierra la Estación.
+  ///
+  /// Doc 08 §2.3.6.
+  static const EscenaCinematica concilioDeLaDomus = EscenaCinematica(
+    id: '2.3.6',
+    titulo: 'Concilio de la domus',
+    flagDeSalida: 'escena_2_3_6_vista',
+    flagsRequeridos: {'escena_2_3_5_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Salón del Concilio. Mesa larga, tres sillones de orejas '
+            'en cabecera. Karim, Aitor e Isaura como revisores. '
+            'Maren presenta de pie, con sus 8 afirmaciones impresas '
+            'sobre la mesa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'La presentación dura quince minutos. Maren articula la '
+            'estructura, los niveles de confianza, los silencios '
+            'documentados. Cuando termina, Karim mira la hoja sobre '
+            'la mesa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Tu afirmación 6 declara una ausencia. Es inhabitual. '
+            '¿Por qué la declaras?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque la ausencia no es neutralidad de las fuentes. '
+            'Es estructura. Las personas esclavizadas no tenían '
+            'acceso a producir fuentes propias, y las fuentes '
+            'producidas por otros no las nombraron sistemáticamente. '
+            'Esa estructura es información sobre cómo funcionaba esa '
+            'sociedad.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa. Karim mira a Aitor un segundo. Vuelve a Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            '¿Estás reformulando "no sabemos quiénes eran" en algo '
+            'más fuerte?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Sí. Estoy diciendo "no sabemos quiénes eran porque la '
+            'sociedad estaba estructurada para que no quedara '
+            'registro de quiénes eran".',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Aitor interviene desde su sillón.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Eso es Reformismo aplicado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Lo sé. Pero está fundamentado.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Lo está.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Karim asiente despacio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Sellada. Bien hecho.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Concilio cierra. Maren sale del salón con la hoja en '
+            'la mano. Karim la alcanza en el pasillo unos pasos '
+            'después.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Sí?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'La afirmación 6 es de las que me hacen tener esperanza '
+            'con esta institución.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Karim sigue caminando. Maren se queda en el pasillo. '
+            'No sabe bien qué hacer con lo que acaba de oír. La '
+            'hoja con las 8 afirmaciones todavía en la mano.',
+      ),
+      PlanoCierreAmable(textoBoton: 'CERRAR LA ESTACIÓN'),
     ],
   );
 }

@@ -118,9 +118,16 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
-      // Latente 2.B.1 (cuaderno de Isaura) cerrada — la 2.3.x
-      // todavía no está implementada.
+      // Latente 2.B.1 (cuaderno de Isaura) cerrada.
       'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+      // Estación 2.3 (domus de los mosaicos) entera cerrada — la
+      // 2.C.1 / 2.4.x todavía no están implementadas.
+      'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -396,9 +403,16 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
-      // Latente 2.B.1 (cuaderno de Isaura) cerrada — la 2.3.x
-      // todavía no está implementada.
+      // Latente 2.B.1 (cuaderno de Isaura) cerrada.
       'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+      // Estación 2.3 (domus de los mosaicos) entera cerrada — la
+      // 2.C.1 / 2.4.x todavía no están implementadas.
+      'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -480,9 +494,16 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
-      // Latente 2.B.1 (cuaderno de Isaura) cerrada — la 2.3.x
-      // todavía no está implementada.
+      // Latente 2.B.1 (cuaderno de Isaura) cerrada.
       'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+      // Estación 2.3 (domus de los mosaicos) entera cerrada — la
+      // 2.C.1 / 2.4.x todavía no están implementadas.
+      'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });
