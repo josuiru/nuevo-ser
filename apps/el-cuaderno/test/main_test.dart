@@ -1,3 +1,4 @@
+import 'package:el_cuaderno/datos/repositorio_aula_profesor.dart';
 import 'package:el_cuaderno/datos/repositorio_perfil_cuaderno.dart';
 import 'package:el_cuaderno/datos_simulados/seed.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
@@ -43,12 +44,29 @@ void main() {
     );
   }
 
+  RepositorioCuentaBackend crearRepoCuentaProfesor() {
+    return RepositorioCuentaBackend(
+      prefs: SharedPreferences.getInstance,
+      claveToken: 'nuevoser.elcuaderno.token_profesor',
+      claveEmail: 'nuevoser.elcuaderno.email_profesor',
+    );
+  }
+
+  RepositorioAulaProfesor crearRepoAulaProfesor() {
+    return RepositorioAulaProfesor(
+      prefs: SharedPreferences.getInstance,
+      clave: 'nuevoser.elcuaderno.profesor.aula_activa',
+    );
+  }
+
   Future<AppElCuaderno> crearApp() async {
     return AppElCuaderno(
       repoIdioma: crearRepoIdioma(),
       repositorioCuaderno: await crearRepoCuaderno(),
       repoCuenta: crearRepoCuenta(),
       repoPerfil: RepositorioPerfilCuaderno(),
+      repoCuentaProfesor: crearRepoCuentaProfesor(),
+      repoAulaProfesor: crearRepoAulaProfesor(),
     );
   }
 

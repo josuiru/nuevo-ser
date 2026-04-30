@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:printing/printing.dart';
 
@@ -10,6 +11,8 @@ import '../../dominio/exportador_cuaderno_pdf.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_cuidador/pantalla_cuidador.dart';
+import '../pantalla_profesor/pantalla_aula_profesor.dart';
+import '../pantalla_profesor/pantalla_login_profesor.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'bloque_login_adulto.dart';
@@ -50,6 +53,10 @@ class PantallaAjustes extends StatelessWidget {
     this.intentarSincronizarObservaciones,
     this.resolverMedioParaExport,
     this.nombreParaTituloPdf,
+    this.clienteAuthProfesor,
+    this.clienteCompanionProfesor,
+    this.repoCuentaProfesor,
+    this.repoAulaProfesor,
   });
 
   final RepositorioLocal repositorio;
@@ -115,6 +122,16 @@ class PantallaAjustes extends StatelessWidget {
   /// activo lo proporciona el orquestador en `main.dart`.
   final String? nombreParaTituloPdf;
 
+  /// Conjunto de dependencias para el modo profesor (B7 — fallback
+  /// pendiente de policy escolar). Si los cuatro llegan no nulos, se
+  /// muestra el bloque "Acceder como profesor" que abre la pantalla
+  /// de login independiente. Si alguno es null, el bloque no se
+  /// monta — los tests del cuaderno-niño pueden ignorarlo.
+  final companion.ClienteAuthAdulto? clienteAuthProfesor;
+  final companion.ClienteCompanion? clienteCompanionProfesor;
+  final RepositorioCuentaBackend? repoCuentaProfesor;
+  final RepositorioAulaProfesorContrato? repoAulaProfesor;
+
   @override
   Widget build(BuildContext context) {
     final textos = TextosApp.of(context);
@@ -177,6 +194,18 @@ class PantallaAjustes extends StatelessWidget {
                 esquema: esquema,
               ),
             ],
+            if (clienteAuthProfesor != null &&
+                clienteCompanionProfesor != null &&
+                repoCuentaProfesor != null &&
+                repoAulaProfesor != null) ...[
+              const SizedBox(height: 24),
+              _BloqueAccion(
+                titulo: 'Acceder como profesor',
+                descripcion: 'Esta pantalla es para el adulto que acompaña a la clase. No se enseña al niño.',
+                alPulsar: () => _abrirLoginProfesor(context),
+                esquema: esquema,
+              ),
+            ],
             if (repoCuentaDebug != null) ...[
               const SizedBox(height: 24),
               _BloqueTutorDebug(
@@ -198,6 +227,29 @@ class PantallaAjustes extends StatelessWidget {
           repositorio: repositorio,
           sincronizador: sincronizadorAgregados,
         ),
+      ),
+    );
+  }
+
+  Future<void> _abrirLoginProfesor(BuildContext context) async {
+    // Si ya hay sesión, vamos directos al dashboard. Si no, login.
+    final repoCuenta = repoCuentaProfesor!;
+    final tokenExistente = await repoCuenta.cargarToken();
+    if (!context.mounted) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => tokenExistente != null && tokenExistente.isNotEmpty
+            ? PantallaAulaProfesor(
+                clienteCompanion: clienteCompanionProfesor!,
+                repoCuentaProfesor: repoCuenta,
+                repoAulaProfesor: repoAulaProfesor!,
+              )
+            : PantallaLoginProfesor(
+                clienteAuth: clienteAuthProfesor!,
+                clienteCompanion: clienteCompanionProfesor!,
+                repoCuentaProfesor: repoCuenta,
+                repoAulaProfesor: repoAulaProfesor!,
+              ),
       ),
     );
   }

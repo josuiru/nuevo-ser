@@ -11,6 +11,7 @@ import 'datos/cliente_auth_cuaderno.dart';
 import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
+import 'datos/repositorio_aula_profesor.dart';
 import 'datos/repositorio_perfil_cuaderno.dart';
 import 'datos/selector_imagen.dart';
 import 'datos/servicio_geolocalizacion_plugin.dart';
@@ -41,6 +42,20 @@ const _claveIdiomaApp = 'nuevoser.elcuaderno.idioma_app';
 /// el dispositivo, el token se reescribe.
 const _claveTokenBackend = 'nuevoser.elcuaderno.token_backend';
 const _claveEmailBackend = 'nuevoser.elcuaderno.email_backend';
+
+/// Claves del modo profesor (B7 — fallback de experto pendiente de
+/// policy escolar). Pareja paralela a las del adulto-cuidador, pero
+/// con sufijo `_profesor` para que coexistan sin pisarse — si el
+/// dispositivo lo usa la misma persona como adulto-cuidador y como
+/// profesor, los dos tokens viven juntos.
+const _claveTokenProfesor = 'nuevoser.elcuaderno.token_profesor';
+const _claveEmailProfesor = 'nuevoser.elcuaderno.email_profesor';
+
+/// Clave del aula activa del profesor — `int` con el `classroom_id`
+/// que el profesor ha seleccionado por última vez. Persiste para que
+/// al volver a la app caiga directamente al dashboard sin tener que
+/// re-seleccionar.
+const _claveAulaActivaProfesor = 'nuevoser.elcuaderno.profesor.aula_activa';
 
 /// URL base del backend `nuevo-ser-core`. Provisional — la decisión
 /// del dominio definitivo es humana (memoria
@@ -97,6 +112,20 @@ Future<void> main() async {
     claveEmail: _claveEmailBackend,
   );
 
+  // 3.b) Repositorios del modo profesor (B7). Tokens y aula activa
+  //      paralelos a los del niño, namespace `_profesor` para que
+  //      coexistan en el mismo dispositivo si la misma persona los
+  //      usa para los dos roles (poco probable, no imposible).
+  final repoCuentaProfesor = RepositorioCuentaBackend(
+    prefs: SharedPreferences.getInstance,
+    claveToken: _claveTokenProfesor,
+    claveEmail: _claveEmailProfesor,
+  );
+  final repoAulaProfesor = RepositorioAulaProfesor(
+    prefs: SharedPreferences.getInstance,
+    clave: _claveAulaActivaProfesor,
+  );
+
   // 4) Repositorio de perfiles del Cuaderno. El nombre del niño se
   //    persiste como nombre del perfil activo. Si ya existe, se
   //    precarga al ValueNotifier para que el primer build muestre
@@ -112,6 +141,8 @@ Future<void> main() async {
     repositorioCuaderno: repositorioCuaderno,
     repoCuenta: repoCuenta,
     repoPerfil: repoPerfil,
+    repoCuentaProfesor: repoCuentaProfesor,
+    repoAulaProfesor: repoAulaProfesor,
   ));
 }
 
@@ -120,6 +151,8 @@ class AppElCuaderno extends StatelessWidget {
   final RepositorioLocal repositorioCuaderno;
   final RepositorioCuentaBackend repoCuenta;
   final RepositorioPerfilCuaderno repoPerfil;
+  final RepositorioCuentaBackend repoCuentaProfesor;
+  final RepositorioAulaProfesor repoAulaProfesor;
 
   const AppElCuaderno({
     super.key,
@@ -127,6 +160,8 @@ class AppElCuaderno extends StatelessWidget {
     required this.repositorioCuaderno,
     required this.repoCuenta,
     required this.repoPerfil,
+    required this.repoCuentaProfesor,
+    required this.repoAulaProfesor,
   });
 
   @override
@@ -179,6 +214,8 @@ class AppElCuaderno extends StatelessWidget {
       repositorio: repositorioCuaderno,
       repoIdioma: repoIdioma,
       repoCuenta: repoCuenta,
+      repoCuentaProfesor: repoCuentaProfesor,
+      repoAulaProfesor: repoAulaProfesor,
       locale: locale,
       alCambiarIdioma: () async {
         await repoIdioma.borrar();
@@ -192,6 +229,8 @@ class _OrquestadorJuego extends StatefulWidget {
   final RepositorioLocal repositorio;
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioCuentaBackend repoCuenta;
+  final RepositorioCuentaBackend repoCuentaProfesor;
+  final RepositorioAulaProfesor repoAulaProfesor;
   final Locale locale;
   final Future<void> Function() alCambiarIdioma;
 
@@ -199,6 +238,8 @@ class _OrquestadorJuego extends StatefulWidget {
     required this.repositorio,
     required this.repoIdioma,
     required this.repoCuenta,
+    required this.repoCuentaProfesor,
+    required this.repoAulaProfesor,
     required this.locale,
     required this.alCambiarIdioma,
   });
@@ -214,6 +255,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final ClienteAuthCuaderno _clienteAuth;
   late final ColaSyncObservaciones _colaSyncObservaciones;
   late final companion.ClienteCompanion _clienteCompanion;
+  late final companion.ClienteAuthAdulto _clienteAuthProfesor;
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
   late final SelectorImagen _selectorImagen;
   late final AlmacenadorMedios _almacenadorMedios;
@@ -244,6 +286,8 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
       prefs: SharedPreferences.getInstance,
     );
     _clienteCompanion = companion.ClienteCompanion(urlBase: _urlBaseBackend);
+    _clienteAuthProfesor =
+        companion.ClienteAuthAdulto(urlBase: _urlBaseBackend);
     _sincronizadorAgregados = SincronizadorAgregadosCuaderno(
       repositorio: widget.repositorio,
       repoCuenta: widget.repoCuenta,
@@ -262,6 +306,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     _clienteCuaderno.cerrar();
     _clienteAuth.cerrar();
     _clienteCompanion.cerrar();
+    _clienteAuthProfesor.cerrar();
     super.dispose();
   }
 
@@ -362,6 +407,10 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           almacenadorMedios: _almacenadorMedios,
           resolverMedioParaExport: _resolverMedioParaExport,
           nombreParaTituloPdf: nombrePerfilElCuaderno.value,
+          clienteAuthProfesor: _clienteAuthProfesor,
+          clienteCompanionProfesor: _clienteCompanion,
+          repoCuentaProfesor: widget.repoCuentaProfesor,
+          repoAulaProfesor: widget.repoAulaProfesor,
         );
       },
     );

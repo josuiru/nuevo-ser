@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../../datos/almacenador_medios.dart';
@@ -12,6 +13,7 @@ import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
 import '../pantalla_observacion/pantalla_observacion.dart';
+import '../pantalla_profesor/pantalla_login_profesor.dart';
 import '../pantalla_tutor/pantalla_tutor.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
@@ -44,6 +46,10 @@ class PantallaCuaderno extends StatefulWidget {
     this.almacenadorMedios,
     this.resolverMedioParaExport,
     this.nombreParaTituloPdf,
+    this.clienteAuthProfesor,
+    this.clienteCompanionProfesor,
+    this.repoCuentaProfesor,
+    this.repoAulaProfesor,
   });
 
   final RepositorioLocal repositorio;
@@ -125,6 +131,16 @@ class PantallaCuaderno extends StatefulWidget {
   /// Nombre del niño para encabezar el PDF exportado. Lo provee el
   /// orquestador desde el ValueNotifier global del perfil activo.
   final String? nombreParaTituloPdf;
+
+  /// Conjunto de dependencias del modo profesor (B7 — fallback de
+  /// experto pendiente de policy escolar). Se reenvían a Ajustes para
+  /// que el bloque "Acceder como profesor" pueda construir las
+  /// pantallas de login/dashboard. Si alguno es null, el bloque no se
+  /// monta y los tests del cuaderno-niño pueden ignorarlo.
+  final companion.ClienteAuthAdulto? clienteAuthProfesor;
+  final companion.ClienteCompanion? clienteCompanionProfesor;
+  final RepositorioCuentaBackend? repoCuentaProfesor;
+  final RepositorioAulaProfesorContrato? repoAulaProfesor;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -256,6 +272,10 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               widget.intentarSincronizarObservaciones,
           resolverMedioParaExport: widget.resolverMedioParaExport,
           nombreParaTituloPdf: widget.nombreParaTituloPdf,
+          clienteAuthProfesor: widget.clienteAuthProfesor,
+          clienteCompanionProfesor: widget.clienteCompanionProfesor,
+          repoCuentaProfesor: widget.repoCuentaProfesor,
+          repoAulaProfesor: widget.repoAulaProfesor,
         ),
       ),
     );
