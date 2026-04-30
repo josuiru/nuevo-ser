@@ -66,6 +66,29 @@ void main() {
     expect(find.text('Castellano'), findsOneWidget);
     expect(find.text('Euskara'), findsOneWidget);
     expect(find.text('Català'), findsOneWidget);
+    expect(find.text('lee cómo se cuida tu cuaderno'), findsOneWidget);
+  });
+
+  testWidgets(
+      'el enlace "lee cómo se cuida tu cuaderno" abre un diálogo de privacidad',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    await tester.pumpWidget(await crearApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('lee cómo se cuida tu cuaderno'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('cómo se cuida tu cuaderno'), findsOneWidget);
+    expect(
+      find.textContaining('Tu cuaderno es tuyo'),
+      findsOneWidget,
+    );
+    // Sin haber elegido idioma todavía: sigue en la pantalla de
+    // configuración inicial tras cerrar el diálogo.
+    await tester.tap(find.text('Cerrar'));
+    await tester.pumpAndSettle();
+    expect(find.byType(PantallaConfiguracionInicial), findsOneWidget);
   });
 
   testWidgets(

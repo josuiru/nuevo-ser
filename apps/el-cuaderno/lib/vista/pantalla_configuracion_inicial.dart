@@ -14,6 +14,12 @@ import 'tema/colores.dart';
 /// Se persiste en `nuevoser.elcuaderno.idioma_app` vía
 /// `RepositorioIdiomaApp` y la app vuelve a arrancar con el locale
 /// elegido. Solo se muestra si esa clave no existe.
+///
+/// Incluye un enlace discreto a la política de privacidad: el adulto
+/// que acompaña al niño en el primer arranque puede leerla antes de
+/// continuar. El texto del diálogo es un BORRADOR — la versión
+/// definitiva la escribirá la asesoría legal LOPDGDD (ítem 5 de la
+/// memoria `project_el_cuaderno_decisiones_humanas_pendientes`).
 class PantallaConfiguracionInicial extends StatelessWidget {
   /// Llamado con el código del idioma elegido (`'es'`, `'eu'`, `'ca'`).
   final ValueChanged<String> alElegirIdioma;
@@ -70,10 +76,72 @@ class PantallaConfiguracionInicial extends StatelessWidget {
                 codigo: 'ca',
                 alPulsar: alElegirIdioma,
               ),
+              const SizedBox(height: 18),
+              _EnlacePolitica(),
               const Spacer(flex: 2),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EnlacePolitica extends StatelessWidget {
+  @override
+  Widget build(BuildContext contexto) {
+    return TextButton(
+      onPressed: () => _mostrarDialogoPolitica(contexto),
+      style: TextButton.styleFrom(
+        foregroundColor: PaletaCuaderno.tintaTenue,
+        textStyle: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w400,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+      child: const Text('lee cómo se cuida tu cuaderno'),
+    );
+  }
+
+  Future<void> _mostrarDialogoPolitica(BuildContext contexto) {
+    return showDialog<void>(
+      context: contexto,
+      builder: (contextoDialogo) => AlertDialog(
+        backgroundColor: PaletaCuaderno.papelClaro,
+        title: const Text('cómo se cuida tu cuaderno'),
+        content: const SingleChildScrollView(
+          child: Text(
+            'Tu cuaderno es tuyo. Lo que escribes, las fotos y los '
+            'dibujos que añades, viven solo en tu dispositivo. No '
+            'salen al servidor.\n\n'
+            'No hay anuncios. No se vende lo que escribes a nadie. '
+            'No hay rachas, niveles ni recompensas que te empujen a '
+            'volver: vuelve si quieres, cuando quieras.\n\n'
+            'Si una persona adulta quiere ayudarte a usar el Tutor '
+            'real, o quiere recibir un resumen para hablar contigo, '
+            'tiene que entrar a Ajustes y darle a un botón cada vez. '
+            'Nunca pasa solo. Nunca avisa a nadie sin que tú lo '
+            'sepas.\n\n'
+            'Cuando quieras, en Ajustes puedes exportar todo tu '
+            'cuaderno como un archivo y borrarlo del todo de este '
+            'dispositivo.\n\n'
+            'Esta es una versión provisional escrita por el equipo '
+            'que está haciendo el cuaderno. Antes de que lo use mucha '
+            'gente, una persona experta en leyes va a revisarla.',
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: PaletaCuaderno.tinta,
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contextoDialogo).pop(),
+            child: const Text('Cerrar'),
+          ),
+        ],
       ),
     );
   }
