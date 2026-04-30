@@ -50,12 +50,22 @@ class RepositorioMemoria implements RepositorioLocal {
   }
 
   @override
-  Future<SitSpot?> obtenerSitSpot() async => _sitSpotActivo;
+  Future<SitSpot?> obtenerSitSpot() async {
+    // Coherente con `RepositorioIsar.obtenerSitSpot`: sólo el activo
+    // (sin `retiradoEn`). Si el sit spot guardado está jubilado,
+    // devolvemos null para que el home muestre la tarjeta de
+    // invitación.
+    final activo = _sitSpotActivo;
+    if (activo == null || activo.retiradoEn != null) return null;
+    return activo;
+  }
 
   @override
   Future<void> establecerSitSpot(SitSpot sitSpot) async {
     final anterior = _sitSpotActivo;
-    if (anterior != null && anterior.id != sitSpot.id) {
+    if (anterior != null &&
+        anterior.id != sitSpot.id &&
+        anterior.retiradoEn == null) {
       _sitSpotsRetirados
           .add(anterior.copyWith(retiradoEn: DateTime.now()));
     }

@@ -90,4 +90,61 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'jubilar sit spot: confirma → marca retiradoEn → home vuelve a invitación',
+    (tester) async {
+      await bombearPantalla(tester);
+
+      // Estado inicial: el sit spot sembrado existe.
+      expect(find.text('El Roble Grande'), findsWidgets);
+      expect(await repositorio.obtenerSitSpot(), isNotNull);
+
+      // Abrir el menú de la tarjeta y pulsar "jubilar este sit spot".
+      await tester.tap(find.byTooltip('opciones del sit spot'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('jubilar este sit spot'));
+      await tester.pumpAndSettle();
+
+      // Confirmar el diálogo amable.
+      expect(find.text('Jubilar este sit spot'), findsOneWidget);
+      expect(
+        find.textContaining('La página seguirá guardada en el cuaderno'),
+        findsOneWidget,
+      );
+      await tester.tap(find.widgetWithText(FilledButton, 'jubilar'));
+      await tester.pumpAndSettle();
+
+      // El repo lo deja con retiradoEn poblado → obtenerSitSpot
+      // devuelve null → home muestra la tarjeta de invitación.
+      expect(await repositorio.obtenerSitSpot(), isNull);
+      expect(find.text('El Roble Grande'), findsNothing);
+      expect(
+        find.textContaining('puedes hacerlo tu sit spot'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'jubilar sit spot: cancelar → no toca el repositorio',
+    (tester) async {
+      await bombearPantalla(tester);
+      final antes = await repositorio.obtenerSitSpot();
+      expect(antes, isNotNull);
+
+      await tester.tap(find.byTooltip('opciones del sit spot'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('jubilar este sit spot'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(TextButton, 'cancelar'));
+      await tester.pumpAndSettle();
+
+      final despues = await repositorio.obtenerSitSpot();
+      expect(despues, isNotNull);
+      expect(despues!.id, antes!.id);
+      expect(despues.retiradoEn, isNull);
+      expect(find.text('El Roble Grande'), findsWidgets);
+    },
+  );
 }

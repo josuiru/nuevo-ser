@@ -192,6 +192,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               estado: widget.estado,
               alAbrirNuevaObservacion: _abrirNuevaObservacion,
               alCrearSitSpot: _abrirCrearSitSpot,
+              alJubilarSitSpot: _jubilarSitSpot,
             ),
             _VistaProximamente(textos: textos),
             _VistaProximamente(textos: textos),
@@ -252,6 +253,45 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           },
         ),
       ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
+  /// Confirma con el niño la jubilación del sit spot activo (doc 13
+  /// §2.6) y, tras aceptar, marca `retiradoEn`. La página del sit
+  /// spot sigue accesible en el cuaderno; sólo no se podrán registrar
+  /// nuevas observaciones contra él. Tras la jubilación, el home
+  /// muestra otra vez la tarjeta de invitación.
+  Future<void> _jubilarSitSpot() async {
+    final actual = widget.estado.sitSpot;
+    if (actual == null) return;
+    final navigator = Navigator.of(context);
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (dialogo) => AlertDialog(
+        title: const Text('Jubilar este sit spot'),
+        content: Text(
+          'Vas a jubilar "${actual.nombre}". La página seguirá guardada '
+          'en el cuaderno. No podrás añadir más observaciones a este '
+          'sit spot, pero sí crear otro nuevo cuando quieras.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => navigator.pop(false),
+            child: const Text('cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => navigator.pop(true),
+            child: const Text('jubilar'),
+          ),
+        ],
+      ),
+    );
+    if (confirmar != true || !mounted) return;
+    await widget.repositorio.establecerSitSpot(
+      actual.copyWith(retiradoEn: DateTime.now()),
     );
     if (mounted) {
       await widget.estado.cargar();
@@ -320,11 +360,13 @@ class _VistaCuaderno extends StatelessWidget {
     required this.estado,
     required this.alAbrirNuevaObservacion,
     required this.alCrearSitSpot,
+    required this.alJubilarSitSpot,
   });
 
   final EstadoCuaderno estado;
   final VoidCallback alAbrirNuevaObservacion;
   final VoidCallback alCrearSitSpot;
+  final VoidCallback alJubilarSitSpot;
 
   @override
   Widget build(BuildContext context) {
@@ -358,6 +400,7 @@ class _VistaCuaderno extends StatelessWidget {
             TarjetaSitSpot(
               sitSpot: estado.sitSpot,
               alPulsarInvitacion: estado.sitSpot == null ? alCrearSitSpot : null,
+              alJubilar: estado.sitSpot == null ? null : alJubilarSitSpot,
             ),
             const SizedBox(height: 24),
             _Cabecera(textos.seccionMisteriosAbiertos),
