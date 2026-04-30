@@ -228,16 +228,21 @@ class _PintorOrtoedro extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Proyección isométrica simple. Eje x→derecha, eje y→abajo, eje
-    // z (profundidad)→arriba-derecha en 30°.
+    // Proyección isométrica con los tres ejes proyectando la misma
+    // longitud: una unidad real ocupa el mismo número de píxeles en
+    // largo, ancho y alto. Eje x→derecha, eje y→abajo, eje z
+    // (profundidad)→arriba-derecha a 30°: una unidad de profundidad se
+    // proyecta como (cos 30°, -sin 30°) ≈ (0,866, -0,5).
+    const cos30 = 0.8660254037844387;
+    const sin30 = 0.5;
     final escala = math.min(
-      (size.width - 60) / (largo + ancho * 0.6),
-      (size.height - 60) / (alto + ancho * 0.6),
+      (size.width - 60) / (largo + ancho * cos30),
+      (size.height - 60) / (alto + ancho * sin30),
     );
     final dx = largo * escala;
     final dy = alto * escala;
-    final profX = ancho * escala * 0.6;
-    final profY = -ancho * escala * 0.4;
+    final profX = ancho * escala * cos30;
+    final profY = -ancho * escala * sin30;
 
     final origenX = (size.width - dx - profX) / 2;
     final origenY = (size.height + dy + profY) / 2 - 10;
