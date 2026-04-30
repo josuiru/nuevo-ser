@@ -77,6 +77,15 @@ dependencies:
   # `READ_MEDIA_IMAGES` declarados en `AndroidManifest.xml`.
   image_picker: ^1.1.2
 
+  # Geolocalización **puntual** (sin tracking continuo). Solo se llama
+  # cuando el niño explícitamente registra observación o configura el
+  # sit spot. Las coordenadas precisas NUNCA cruzan red — se usan en
+  # cliente para derivar `region_code` (NUTS aproximado) que sí viaja,
+  # y para el cálculo de "¿estás en tu sit spot?" en local. La biblia
+  # §2.1 prohíbe tracking en background; no usamos
+  # `ACCESS_BACKGROUND_LOCATION` ni se suscribe a `getPositionStream`.
+  geolocator: ^10.1.0
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

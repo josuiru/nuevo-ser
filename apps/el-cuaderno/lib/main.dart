@@ -13,7 +13,9 @@ import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
 import 'datos/repositorio_perfil_cuaderno.dart';
 import 'datos/selector_imagen.dart';
+import 'datos/servicio_geolocalizacion_plugin.dart';
 import 'datos/sincronizador_agregados.dart';
+import 'dominio/geolocalizacion_privacy_first.dart';
 import 'datos_simulados/seed.dart';
 import 'dominio/exportador_cuaderno.dart';
 import 'dominio/observacion.dart';
@@ -215,6 +217,14 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
   late final SelectorImagen _selectorImagen;
   late final AlmacenadorMedios _almacenadorMedios;
+  // Cableado para inyección futura. Las pantallas todavía no lo
+  // consumen — el copy de pre-permiso del niño es decisión humana
+  // pendiente (B5 del plan + voz adulta amable doc 04). Cuando
+  // llegue la asesoría del adulto, este servicio se inyecta a
+  // pantalla_observacion para que el niño pueda anclar coordenadas
+  // (que NO cruzan red) a la observación.
+  // ignore: unused_field
+  late final ServicioGeolocalizacion _servicioGeolocalizacion;
   late Future<EnviarPreguntaTutor?> _futureEnviarPregunta;
 
   @override
@@ -241,6 +251,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     );
     _selectorImagen = SelectorImagenImagePicker();
     _almacenadorMedios = AlmacenadorMedios();
+    _servicioGeolocalizacion = ServicioGeolocalizacionPlugin();
     _futureEnviarPregunta = _resolverEnviarPregunta();
   }
 

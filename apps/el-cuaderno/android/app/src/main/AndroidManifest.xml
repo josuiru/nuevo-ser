@@ -12,6 +12,16 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <!-- B5 (geolocator): permiso "solo en uso", nunca background. La
+         biblia §2.1 prohíbe tracking continuo. ACCESS_FINE_LOCATION da
+         GPS preciso (~5 m); ACCESS_COARSE_LOCATION es el fallback en
+         dispositivos sin GPS o cuando el niño elige precisión gruesa.
+         Las coordenadas NUNCA cruzan red — se usan localmente para
+         derivar `region_code` (NUTS aproximado) y "¿estás en tu sit
+         spot?". La pantalla de pre-permiso explica esto al niño. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:label="el_cuaderno"
         android:name="${applicationName}"
