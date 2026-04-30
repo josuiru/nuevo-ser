@@ -69,10 +69,36 @@ void main() {
   });
 
   group('EscenasArco2.todas', () {
-    test('catálogo arranca con 2.0.1 — única cinemática implementada hoy',
-        () {
-      expect(EscenasArco2.todas, hasLength(1));
-      expect(EscenasArco2.todas.first.id, '2.0.1');
+    test('catálogo cubre 2.0.1 (apertura) + Estación 2.1 completa '
+        '(2.1.1 a 2.1.6) — 7 cinemáticas implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(7));
+      expect(
+        EscenasArco2.todas.map((escena) => escena.id).toList(),
+        ['2.0.1', '2.1.1', '2.1.2', '2.1.3', '2.1.4', '2.1.5', '2.1.6'],
+      );
+    });
+
+    test('cada cinemática nueva del Arco 2 tiene su flag de cierre '
+        'registrado — el orquestador necesita el mapa para activar '
+        'flags institucionales al cerrar', () {
+      final flagsDeSalida =
+          EscenasArco2.todas.map((escena) => escena.flagDeSalida).toSet();
+      for (final flagSalida in flagsDeSalida) {
+        expect(
+          EscenasArco2.flagsDeCierrePorEscena.containsKey(flagSalida),
+          isTrue,
+          reason: 'falta entrada en flagsDeCierrePorEscena para $flagSalida',
+        );
+      }
+    });
+
+    test('la Estación 2.1 cierra con escena_2_1_6 que activa '
+        'arco_2_estacion_1_cerrada — hito que la Estación 2.2 '
+        'requerirá como precondición', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_1_6_vista'],
+        contains('arco_2_estacion_1_cerrada'),
+      );
     });
   });
 }

@@ -79,8 +79,8 @@ void main() {
   });
 
   testWidgets(
-      'arranque con idioma persistido y todas las unidades del Arco 1 '
-      'cerradas → salta directo al esqueleto', (tester) async {
+      'arranque con idioma persistido y todas las cinemáticas del Arco 1 '
+      'y Estación 2.1 cerradas → salta directo al esqueleto', (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.lasversiones.idioma_app': 'eu',
       'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
@@ -98,10 +98,16 @@ void main() {
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
       'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
-      // Arco 2 abierto — la 2.0.1 también está vista, así que el
-      // orquestador cae al esqueleto (no hay más escenas en cola).
+      // Arco 2 — Estación 2.1 entera (Pompaelo bajo Iruña) cerrada
+      // para que el orquestador no tenga cinemáticas pendientes.
       'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
       'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+      'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -339,8 +345,8 @@ void main() {
   });
 
   testWidgets(
-      'mosaico entregado y arco completado → salta directo al esqueleto',
-      (tester) async {
+      'mosaico entregado y Arco 1 + Estación 2.1 cerrados → salta directo '
+      'al esqueleto', (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.lasversiones.idioma_app': 'es',
       'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
@@ -358,10 +364,15 @@ void main() {
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
       'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
-      // Arco 2 abierto — la 2.0.1 también está vista, así que el
-      // orquestador cae al esqueleto (no hay más escenas en cola).
+      // Arco 2 — Estación 2.1 entera cerrada para llegar al esqueleto.
       'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
       'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+      'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -424,10 +435,15 @@ void main() {
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
       'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
-      // Arco 2 abierto — la 2.0.1 también está vista, así que el
-      // orquestador cae al esqueleto (no hay más escenas en cola).
+      // Arco 2 — Estación 2.1 entera cerrada para llegar al esqueleto.
       'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
       'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+      'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

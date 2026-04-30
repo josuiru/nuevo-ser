@@ -119,23 +119,70 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — esqueleto inicial con 2.0.1 implementada (P3)
+## Arco 2 — Estación 2.1 (Pompaelo bajo Iruña) implementada (F2-1)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementada **sólo** la cinemática de apertura 2.0.1 ("El primer día del arco", doc 08) en `EscenasArco2.primerDiaDelArco`. Las restantes 33 escenas del Arco 2 (2.1.1–2.1.6, 2.A.1–2.A.2, 2.2.1–2.2.6, 2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las cuatro Brechas 2.1–2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 7 cinemáticas que cubren la apertura del Arco 2 (2.0.1) y la Estación 2.1 entera (2.1.1–2.1.6, doc 08): bajada al sótano del Archivo, descubrimiento de la inscripción romana, Karim enseña convenciones epigráficas, debate sobre el sesgo del productor (HF.09 "una inscripción no es un documento neutral. Es propaganda"), Concilio narrativo con Begoña/Joana, primer apunte de Pompaelo en el Cuaderno. Las restantes 27+ escenas del Arco 2 (2.A.1–2.A.2, 2.2.1–2.2.6, 2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.2/2.3/2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando el flag `arco_1_cerrado_por_la_cronista` que la 1.Z activa al cerrar. Tras ver la 2.0.1, el orquestador cae al esqueleto porque no hay más cinemáticas en cola. El catálogo del Arco 2 (`EscenasArco2.todas`) crece añadiendo entradas como en el Arco 1.
-
-**Sustituciones diegéticas en 2.0.1**: ninguna por ahora. La cinemática de apertura es deliberadamente parca (Isaura saluda, advierte que llega el texto, bajan al sótano) — no introduce afirmaciones históricas concretas.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 7 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. Tras cerrar la 2.1.6 (apunte del Cuaderno) el orquestador cae al esqueleto porque la 2.A.1 todavía no está implementada.
 
 **Pendiente para próximas iteraciones**:
-- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21, brecha22, brecha23, brecha24).
-- Las 33 cinemáticas restantes del doc 08 — incluidas las latentes 2.A, 2.B, 2.C ancladas a Brechas cerradas (mismo patrón que 1.A, 1.B, 1.B.1, 1.C en el Arco 1).
-- Nuevos personajes que entran en el Arco 2 — Karim (epigrafista), Sira y Aitor recurrentes, voces nuevas para Aprendiz I→II. Habrá que añadir entradas en `voz_personaje.dart`.
-- Nuevos ambientes para Pompaelo subterránea, foro romano, Calahorra/Calagurris, salón del Concilio (este último ya existe), domus de los mosaicos, biblioteca del Archivo. Añadirlos a `ambiente_archivo.dart` (nombre del archivo a renombrar a `ambiente_escena.dart` cuando convenga — ya cubre más que el Archivo).
-- Mosaico v2 del Arco 2 (M2, "audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
-- Validación humana del comité asesor sobre todo el contenido histórico concreto del Arco 2 (epigrafía romana, Quintiliano, crónicas visigodas, "el silencio vascón") — abrirá un nuevo lote de sustituciones diegéticas similar al del Arco 1.
+- Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 jugable + brecha22, brecha23, brecha24).
+- Cinemáticas latentes 2.A.1, 2.A.2 (post Estación 2.1).
+- Estaciones 2.2 (Calahorra), 2.3 (domus de los mosaicos), 2.4.
+- Mosaico M2 ("audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
+- Cinemática de cierre del arco 2.Z.
+- Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en próxima sección.
+
+---
+
+## Estación 2.1 — sustituciones diegéticas e inscripción ficticia (F2-1)
+
+**Tracker doc 17**: pendiente.
+
+**Guion canónico (doc 08 §2.1)**: la primera Brecha del Arco 2 ocurre en una galería técnica bajo la calle Curia de Iruña — restos de Pompaelo romana parcialmente excavados, plataforma con luces dirigidas, una inscripción honorífica encontrada en superficie reutilizada como pavimento. Karim Belkacem (epigrafista del Archivo, doc 08 §2.1.2, 47 años) enseña a Maren las convenciones epigráficas (líneas en mayúsculas latinas, abreviaturas IMP/CAES/AVG, fórmulas honoríficas, dedicantes individuales vs colectivos, datación por nomenclatura imperial) y la postura epistémica clave: una inscripción NO es un documento neutral, es propaganda — el productor pagó para que se viera lo que se ve.
+
+**Estado**: implementada como cadena de 6 cinemáticas (2.1.1–2.1.6) que cubren narrativamente la pedagogía sin pantalla de Reconstrucción jugable. La Brecha 2.1 jugable real (con Mesa de Trabajo + declaración de afirmaciones con niveles de confianza sobre la inscripción) queda **pendiente** — requiere refactor del modelo `FaseBrecha` o variante específica para inscripciones (ver sección siguiente).
+
+**Sustituciones diegéticas aplicadas en el contenido**:
+- **Inscripción romana**: la inscripción que Karim enseña es **ficticia y diegética**. El bloque de texto en la cinemática 2.1.2 (`PlanoAmbiente` con la inscripción literal) es modelo literario verosímil basado en formularios honoríficos romanos genéricos, sin reproducir literalmente ninguna inscripción real catalogada en CIL II o en Hispania Epigraphica. Las abreviaturas (IMP CAES AVG, DD PP, dedicación a un princeps) son convenciones epigráficas estándar — pedagógicas, no afirmaciones de hallazgo histórico.
+- **Princeps homenajeado**: el guion canónico menciona "PRINCIPS-OPTIMVS-TRAJANO" como ejemplo de fórmula honorífica reconocible (Trajano fue el primer emperador conocido como *optimus princeps*). Sustituido por una formulación genérica que mantiene la convención sin afirmar que la inscripción ficticia honra a un emperador concreto. Si el comité valida la elección de Trajano (apropiada cronológicamente para Pompaelo en el siglo II), se revierte.
+- **Pompaelo bajo la calle Curia**: validado como entrada (ya aparece en 1.0.2). La galería técnica subterránea es ficticia pero arqueológicamente verosímil (Pamplona tiene yacimientos romanos parcialmente musealizados). No se afirma una visita pública concreta.
+- **Referencia bibliográfica PIR (Prosopographia Imperii Romani)**: Karim la cita por su nombre canónico — herramienta epigráfica real, pública y trazable. No se inventa entrada ni cita concreta dentro del PIR.
+
+**Pendiente de revisión humana**:
+- ¿La inscripción ficticia es lo bastante verosímil para sostener la pedagogía sin inducir a malentendido (un aprendiz creyendo que es real)? Posible mitigación: añadir voz del Cuaderno aclarando que es ejemplo de Karim, no inscripción real catalogada.
+- Tono de Karim — primera aparición con material narrativo largo. ¿La voz de Cronista revisor/mentor encaja con la Bíblia de Personajes (doc 04, hoy con entrada inicial para Karim como epigrafista)?
+- Decisión sobre el princeps homenajeado en la inscripción ficticia. Si se quiere fijar Trajano (canónicamente apropiado), revertir la sustitución; si se prefiere ambigüedad, mantener.
+
+**Cuando el comité valide**: se puede cambiar la inscripción ficticia por una real catalogada (con su CIL/HEp y bibliografía), o mantener la ficticia con etiqueta narrativa explícita.
+
+---
+
+## Karim Belkacem — color de voz pendiente de migrar a `tintaTenue`
+
+**Tracker doc 17**: no aplica (decisión visual del juego, no contenido histórico).
+
+**Estado**: la voz `VozPersonaje.karim` en `voz_personaje.dart` lleva hoy `colorNombre: PaletaArchivo.textoPrincipal`. Karim es **Cronista del Archivo** (epigrafista revisor, doc 08 §2.1.2), no aspirante — alinearlo con el resto de Cronistas no-mentores (Andrés `tintaTenue`) sería lo coherente con la convención de la paleta provisional: ámbar para mentores institucionales (Isaura, Begoña, Aitor, Joana), tinta tenue para Cronistas técnicos cercanos (Andrés, Karim cuando se migre), texto principal para los aspirantes (Maren, Tasio, Sira) y voces íntimas familiares (Iratxe, Antonio, Naia, Eider en `tintaTenue` por el otro motivo: entorno no-institucional).
+
+**Por qué no se cambia ahora**: el cambio rompería el test caracterización `los tres aspirantes (Maren, Tasio, Karim) llevan tinta principal` en `voz_personaje_test.dart`, que aún asume el modelo viejo donde Karim era aspirante. Hay que migrar en un slice dedicado: actualizar el test (sacar Karim del grupo de aspirantes, añadirlo a un nuevo grupo de Cronistas técnicos), cambiar el color, regenerar la entrada del Cuaderno si menciona el color.
+
+**Pendiente**: slice corto de migración, no urgente. Hasta entonces, la docstring de `karim` ya documenta la inconsistencia.
+
+---
+
+## Pantalla de Reconstrucción jugable para Arco 2 — refactor de `FaseBrecha` pendiente
+
+**Tracker doc 17**: no aplica (decisión técnica del motor de juego).
+
+**Estado**: la fase de Reconstrucción jugable de la Brecha 1.x del Arco 1 (`FaseBrecha.reconstruccion`, `pantalla_brecha.dart` + `fase_reconstruccion.dart`) asume **3 afirmaciones** declaradas por el jugador con nivel de confianza Sólido/Probable/Disputado, score Brier multiclass normalizado contra una calibración canónica predeclarada. El modelo encaja bien con afirmaciones sobre objetos arqueológicos (Brechas 1.1–1.4: dolmen, crómlech, cueva, yacimiento + Mano).
+
+La Brecha 2.1 (Pompaelo bajo Iruña) tiene una pedagogía distinta: el jugador debería declarar **6 afirmaciones** sobre la inscripción romana (autoría del productor, datación por nomenclatura, sesgo de propaganda, qué se omite, paralelos con otras inscripciones del mismo formulario, fiabilidad del vocabulario honorífico) con calibración canónica que requiere distinguir afirmaciones epigráficas (Sólidas si la convención es estándar) de afirmaciones interpretativas (Disputadas porque dependen del público objetivo del homenaje, que no se conserva).
+
+**Por qué no se implementa ahora**: el refactor del modelo `FaseBrecha` para admitir distintos números de afirmaciones por Brecha y distintos catálogos de niveles canónicos por afirmación (no sólo 3 niveles iguales para todas) es trabajo de motor que merece un slice dedicado. Hoy la Estación 2.1 enseña la pedagogía narrativamente en `quienPagoEsto` y `reconstruccionYConcilio` (Karim hace las preguntas, Maren responde con el grado de honestidad que corresponde, Begoña valida) — cubre el contenido pedagógico sin la mecánica jugable.
+
+**Pendiente**: cuando se aborde la Brecha 2.1 jugable, generalizar `FaseBrecha`/`fase_reconstruccion.dart` para que cada Brecha defina cuántas afirmaciones lleva y la calibración canónica de cada una. Posible API: `Brecha.afirmacionesACalibrar` (lista parametrizable) en lugar de las 3 de hoy.
 
 ---
 

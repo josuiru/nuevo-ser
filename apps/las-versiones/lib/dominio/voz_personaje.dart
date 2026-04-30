@@ -75,8 +75,13 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.ambarLacre,
   );
 
-  /// **Karim**, tercer aspirante. Background distinto de Maren y
-  /// Tasio — la diversidad de perspectivas es parte del oficio.
+  /// **Karim Belkacem**, 47 años, epigrafista del Archivo (doc 08
+  /// §2.1.2). Cronista revisor en los concilios del Arco 1 (1.3, 1.4)
+  /// y mentor pedagógico de la Estación 2.1 — enseña a Maren a leer
+  /// inscripciones romanas con honestidad sobre lo que falta. Es
+  /// Cronista, no aspirante; para alinearlo visualmente con los
+  /// otros Cronistas del Archivo (Andrés `tintaTenue`) habría que
+  /// cambiar su color, registrado en `BLOQUEOS-PENDIENTES.md`.
   static const VozPersonaje karim = VozPersonaje._(
     nombreVisible: 'Karim',
     colorNombre: PaletaArchivo.textoPrincipal,

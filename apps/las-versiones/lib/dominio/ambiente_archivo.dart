@@ -163,4 +163,21 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// vitrina, lectura inicial vs lectura corregida).
   static const AmbienteArchivo museoNavarra =
       AmbienteArchivo._('museo_navarra');
+
+  /// Pompaelo subterránea — galería técnica baja con bóveda romana
+  /// parcial, plataforma con luces dirigidas, restos de pavimento y
+  /// fragmentos de muro. Vive bajo la calle Curia del casco viejo
+  /// de Iruña; sólo accesible por puerta lateral del sótano del
+  /// Archivo. Lugar de la 2.1.1 y 2.1.2 (descubrimiento de la
+  /// inscripción romana).
+  static const AmbienteArchivo pompaeloSubterranea =
+      AmbienteArchivo._('pompaelo_subterranea');
+
+  /// Mesa de Trabajo del Archivo — escritorio amplio, lupa de
+  /// brazo, libretas, herramientas técnicas. Espacio donde Maren
+  /// trabaja inscripciones, fuentes textuales o cualquier
+  /// manipulación que requiera mesa firme. Lugar de la 2.1.3 y
+  /// 2.1.4 (Karim enseña epigrafía).
+  static const AmbienteArchivo mesaTrabajoArchivo =
+      AmbienteArchivo._('mesa_trabajo_archivo');
 }
