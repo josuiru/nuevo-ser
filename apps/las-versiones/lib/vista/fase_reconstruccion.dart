@@ -35,12 +35,6 @@ class FaseReconstruccion extends StatefulWidget {
 }
 
 class _FaseReconstruccionState extends State<FaseReconstruccion> {
-  /// Mínimo de afirmaciones declaradas para poder ir al Concilio.
-  /// El oficio pide "una versión": una sola afirmación no es una
-  /// versión; tres es lo mínimo razonable para ejercitar la
-  /// calibración con variedad.
-  static const int _minimoAfirmacionesDeclaradas = 3;
-
   Map<String, NivelConfianza> _declaraciones = const {};
   bool _cargando = true;
 
@@ -79,7 +73,8 @@ class _FaseReconstruccionState extends State<FaseReconstruccion> {
       return const SizedBox.expand();
     }
     final declaradas = _declaraciones.length;
-    final puedeAvanzar = declaradas >= _minimoAfirmacionesDeclaradas;
+    final minimoDeclaradas = widget.brecha.minimoAfirmacionesParaConcilio;
+    final puedeAvanzar = declaradas >= minimoDeclaradas;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -87,7 +82,7 @@ class _FaseReconstruccionState extends State<FaseReconstruccion> {
         const SizedBox(height: 6),
         _ContadorReconstruccion(
           declaradas: declaradas,
-          minimo: _minimoAfirmacionesDeclaradas,
+          minimo: minimoDeclaradas,
         ),
         const SizedBox(height: 14),
         Expanded(

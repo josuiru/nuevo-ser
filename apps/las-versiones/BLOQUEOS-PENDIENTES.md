@@ -271,17 +271,19 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
-## Pantalla de Reconstrucción jugable para Arco 2 — refactor de `FaseBrecha` pendiente
+## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).
 
-**Estado**: la fase de Reconstrucción jugable de la Brecha 1.x del Arco 1 (`FaseBrecha.reconstruccion`, `pantalla_brecha.dart` + `fase_reconstruccion.dart`) asume **3 afirmaciones** declaradas por el jugador con nivel de confianza Sólido/Probable/Disputado, score Brier multiclass normalizado contra una calibración canónica predeclarada. El modelo encaja bien con afirmaciones sobre objetos arqueológicos (Brechas 1.1–1.4: dolmen, crómlech, cueva, yacimiento + Mano).
+**Estado**: la pantalla `FaseReconstruccion` (`fase_reconstruccion.dart`) ya admite Brechas con cualquier número de afirmaciones canónicas — itera sobre `widget.brecha.afirmacionesCanonicas.length` y no hardcodea 3. El refactor F2-9 retira el `static const _minimoAfirmacionesDeclaradas = 3` interno y lo sustituye por `widget.brecha.minimoAfirmacionesParaConcilio` (campo nuevo del modelo `Brecha` con default 3). Cada Brecha decide su mínimo: las del Arco 1 (1.1–1.4, 4 afirmaciones canónicas cada una) usan el default 3; las del Arco 2 con catálogos más amplios podrán pedir 5+ (2.1: 6 afirmaciones; 2.2: 7; 2.3: 8; 2.4: 9). Test caracterización añadido: una Brecha con `minimoAfirmacionesParaConcilio=5` mantiene el CTA "AL CONCILIO" bloqueado hasta declarar 5 (no las 3 del default).
 
-La Brecha 2.1 (Pompaelo bajo Iruña) tiene una pedagogía distinta: el jugador debería declarar **6 afirmaciones** sobre la inscripción romana (autoría del productor, datación por nomenclatura, sesgo de propaganda, qué se omite, paralelos con otras inscripciones del mismo formulario, fiabilidad del vocabulario honorífico) con calibración canónica que requiere distinguir afirmaciones epigráficas (Sólidas si la convención es estándar) de afirmaciones interpretativas (Disputadas porque dependen del público objetivo del homenaje, que no se conserva).
+**Sobre los matices de Sólido del Arco 2**:
+- Las afirmaciones de la 2.3 ("Sólido (la ausencia)" para la afirmación 6 sobre las personas esclavizadas no nombradas) y de la 2.4 ("Sólido (la ausencia)" para la afirmación 7 + "Sólido como declaración metodológica" para la afirmación 9 sobre el techo de la reconstrucción) **no requieren niveles nuevos del enum** `NivelConfianza`. El matiz vive en el `texto` de la `AfirmacionCanonica` — el jugador declara `NivelConfianza.solido` que es la calibración correcta, y el matiz pedagógico ("la ausencia es información", "esto es declaración metodológica del techo") es contenido textual que la pantalla muestra sin que el motor Brier lo interprete. La calibración Brier sigue siendo 3-clase (Sólido/Probable/Disputado), preservando la paridad Dart/PHP del core.
 
-**Por qué no se implementa ahora**: el refactor del modelo `FaseBrecha` para admitir distintos números de afirmaciones por Brecha y distintos catálogos de niveles canónicos por afirmación (no sólo 3 niveles iguales para todas) es trabajo de motor que merece un slice dedicado. Hoy la Estación 2.1 enseña la pedagogía narrativamente en `quienPagoEsto` y `reconstruccionYConcilio` (Karim hace las preguntas, Maren responde con el grado de honestidad que corresponde, Begoña valida) — cubre el contenido pedagógico sin la mecánica jugable.
-
-**Pendiente**: cuando se aborde la Brecha 2.1 jugable, generalizar `FaseBrecha`/`fase_reconstruccion.dart` para que cada Brecha defina cuántas afirmaciones lleva y la calibración canónica de cada una. Posible API: `Brecha.afirmacionesACalibrar` (lista parametrizable) en lugar de las 3 de hoy.
+**Pendiente para Brechas jugables del Arco 2**:
+- Catálogos `brecha21`, `brecha22`, `brecha23`, `brecha24` en `CatalogoBrechas` con sus fuentes diegéticas + afirmaciones canónicas calibradas contra el doc 08 — sustituciones diegéticas explícitas para el material no validado por el comité.
+- Cada catálogo declarará su `minimoAfirmacionesParaConcilio` apropiado (probablemente 4 para 2.1 con 6 afirmaciones, 5 para 2.2 con 7, 5 para 2.3 con 8, 6 para 2.4 con 9).
+- Hoy la pedagogía de las cuatro Estaciones del Arco 2 se enseña narrativamente en sus cinemáticas — cubre el contenido sin la mecánica jugable.
 
 ---
 

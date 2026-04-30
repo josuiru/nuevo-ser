@@ -225,6 +225,18 @@ class Brecha {
   /// la cinemática 1.1.7 "El primer apunte".
   final String flagDeCompletado;
 
+  /// Mínimo de afirmaciones declaradas que la Cronista debe sostener
+  /// para poder ir al Concilio (Fase 4 → Fase 5). Por defecto **3** —
+  /// el oficio pide "una versión": una sola afirmación no es una
+  /// versión; tres es lo mínimo razonable para ejercitar la
+  /// calibración con variedad. Las Brechas del Arco 1 (1.1, 1.2, 1.3,
+  /// 1.4) usan el default porque cada una tiene 4 afirmaciones
+  /// canónicas y declarar 3 marca un mínimo significativo. Las
+  /// Brechas del Arco 2 con catálogos más amplios (2.1 con 6, 2.2
+  /// con 7, 2.3 con 8, 2.4 con 9) suben el mínimo: declarar sólo
+  /// 3 de 9 sería trivializar la mecánica.
+  final int minimoAfirmacionesParaConcilio;
+
   const Brecha({
     required this.id,
     required this.titulo,
@@ -233,5 +245,6 @@ class Brecha {
     required this.fuentes,
     required this.afirmacionesCanonicas,
     required this.flagDeCompletado,
+    this.minimoAfirmacionesParaConcilio = 3,
   });
 }

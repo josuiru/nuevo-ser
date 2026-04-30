@@ -145,4 +145,76 @@ void main() {
     expect(cta.onPressed, isNotNull);
     expect(find.textContaining('Sostienes 3'), findsOneWidget);
   });
+
+  testWidgets(
+      'Brecha con minimoAfirmacionesParaConcilio elevado (5) requiere '
+      'declarar 5 antes de poder ir al Concilio — soporte para Brechas '
+      'del Arco 2 con catálogos de afirmaciones más amplios', (tester) async {
+    final brechaConMinimoAlto = Brecha(
+      id: 'test.minimo.alto',
+      titulo: 'Brecha de prueba',
+      ubicacionVisible: 'TEST',
+      habilidadesEjercitadas: const ['AH.03'],
+      fuentes: const [],
+      flagDeCompletado: 'brecha_test_completada',
+      minimoAfirmacionesParaConcilio: 5,
+      afirmacionesCanonicas: List.generate(
+        7,
+        (i) => AfirmacionCanonica(
+          id: 'afirmacion_$i',
+          texto: 'Afirmación canónica número $i',
+          calibracionCorrecta: NivelConfianza.solido,
+        ),
+      ),
+    );
+
+    await bombearFase(
+      tester,
+      brecha: brechaConMinimoAlto,
+      alAvanzar: () {},
+    );
+
+    expect(
+      find.textContaining('faltan 5'),
+      findsOneWidget,
+      reason: 'el contador debe leer el mínimo de 5 del modelo Brecha',
+    );
+
+    for (int i = 0; i < 4; i++) {
+      final solidoFinder = find.text('Sólido').at(i);
+      await tester.scrollUntilVisible(solidoFinder, 80);
+      await tester.tap(solidoFinder);
+      await tester.pumpAndSettle();
+    }
+
+    final ctaConCuatro = tester.widget<TextButton>(
+      find.ancestor(
+        of: find.text('AL CONCILIO'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(
+      ctaConCuatro.onPressed,
+      isNull,
+      reason:
+          'declarar 4 sigue bloqueado: el mínimo es 5, no el default 3',
+    );
+
+    final solidoQuinto = find.text('Sólido').at(4);
+    await tester.scrollUntilVisible(solidoQuinto, 80);
+    await tester.tap(solidoQuinto);
+    await tester.pumpAndSettle();
+
+    final ctaConCinco = tester.widget<TextButton>(
+      find.ancestor(
+        of: find.text('AL CONCILIO'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(
+      ctaConCinco.onPressed,
+      isNotNull,
+      reason: 'al alcanzar el mínimo declarado el CTA se desbloquea',
+    );
+  });
 }
