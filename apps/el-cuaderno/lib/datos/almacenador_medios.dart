@@ -113,6 +113,24 @@ class AlmacenadorMedios {
     }
   }
 
+  /// Borra el subdirectorio entero de medios (fotos + dibujos). Lo
+  /// invoca el flujo "borrar mi cuaderno" tras `borrarTodoLoLocal` —
+  /// sin esto, las fotos y dibujos quedaban huérfanos en disco
+  /// aunque las observaciones que los apuntaban ya no existieran.
+  ///
+  /// Idempotente: si el directorio no existe (cuaderno virgen, ya
+  /// borrado antes), no es error. Devuelve el número de ficheros
+  /// borrados para feedback honesto en el snackbar.
+  Future<int> borrarTodo() async {
+    final dirRaiz = await _proveedorDirRaiz();
+    final dirMedios = Directory('${dirRaiz.path}/$subdirectorioMedios');
+    if (!await dirMedios.exists()) return 0;
+    final entradas = dirMedios.listSync();
+    final ficheros = entradas.whereType<File>().length;
+    await dirMedios.delete(recursive: true);
+    return ficheros;
+  }
+
   /// Extrae la extensión (con punto) del fichero de origen. Si no la
   /// tiene, cae al default razonable según el [tipo] (`.jpg` para foto,
   /// `.png` para dibujo).

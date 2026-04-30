@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:el_cuaderno/datos/almacenador_medios.dart';
 import 'package:el_cuaderno/datos/cola_sync_observaciones.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
@@ -35,6 +39,7 @@ void main() {
     VoidCallback? alCambiarTokenDebug,
     Future<ResultadoSyncObservaciones?> Function()?
         intentarSincronizarObservaciones,
+    AlmacenadorMedios? almacenadorMedios,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
@@ -51,6 +56,7 @@ void main() {
           repoCuentaDebug: repoCuentaDebug,
           alCambiarTokenDebug: alCambiarTokenDebug,
           intentarSincronizarObservaciones: intentarSincronizarObservaciones,
+          almacenadorMedios: almacenadorMedios,
         ),
       ),
     );
@@ -287,6 +293,77 @@ void main() {
     await tester.pump();
     expect(find.textContaining('No hay observaciones pendientes'), findsOneWidget);
   });
+
+  testWidgets(
+    'borrar mi cuaderno también purga el directorio de medios',
+    (tester) async {
+      late Directory dirRaiz;
+      late AlmacenadorMedios almacenador;
+      // Real I/O setup tiene que ocurrir fuera del fake-async del tester.
+      await tester.runAsync(() async {
+        dirRaiz = await Directory.systemTemp.createTemp(
+          'el_cuaderno_borrar_medios_test_',
+        );
+        almacenador = AlmacenadorMedios(
+          proveedorDirRaiz: () async => dirRaiz,
+        );
+        await almacenador.guardarBytes(
+          bytes: Uint8List.fromList([0xFF, 0xD8, 0xFF]),
+          observacionId: 'obs-con-foto',
+          tipo: TipoMedio.foto,
+        );
+        await almacenador.guardarBytes(
+          bytes: Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]),
+          observacionId: 'obs-con-foto',
+          tipo: TipoMedio.dibujo,
+        );
+      });
+      try {
+        await repositorio.guardarObservacion(Observacion(
+          id: 'obs-con-foto',
+          cuandoCreada: DateTime(2026, 4, 30),
+          cuandoOcurrio: DateTime(2026, 4, 30),
+          dondeNombre: 'parque',
+          queVio: 'pájaro',
+          confianza: NivelConfianza.hipotesisActiva,
+          fotoRutaLocal: 'medios/obs-con-foto_foto.jpg',
+        ));
+        final dirMedios = Directory('${dirRaiz.path}/medios');
+
+        await bombear(tester, almacenadorMedios: almacenador);
+        await tester.tap(find.text('Borrar mi cuaderno'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Seguir'));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField), 'borrar');
+        await tester.pump();
+        await tester.tap(find.widgetWithText(TextButton, 'Borrar todo'));
+        // Borrar implica I/O real de filesystem — pumpAndSettle en el
+        // fake-async no avanza el await del _borrar. runAsync devuelve
+        // control al loop de eventos real para que las awaits del flujo
+        // (borrarTodoLoLocal + borrarTodo + showSnackBar) se resuelvan.
+        await tester.runAsync(() async {
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+        });
+        await tester.pump();
+
+        // El subdirectorio de medios desaparece.
+        late bool existeMedios;
+        await tester.runAsync(() async {
+          existeMedios = await dirMedios.exists();
+        });
+        expect(existeMedios, isFalse);
+        // El repositorio queda vacío.
+        expect(await repositorio.obtenerObservaciones(), isEmpty);
+      } finally {
+        await tester.runAsync(() async {
+          if (await dirRaiz.exists()) {
+            await dirRaiz.delete(recursive: true);
+          }
+        });
+      }
+    },
+  );
 
   testWidgets('cancelar el primer dialog NO borra nada', (tester) async {
     await repositorio.guardarObservacion(Observacion(

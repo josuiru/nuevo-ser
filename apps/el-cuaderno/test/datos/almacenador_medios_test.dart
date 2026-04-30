@@ -178,4 +178,46 @@ void main() {
 
     expect(rutaRelativa.endsWith('.jpg'), isTrue);
   });
+
+  test('borrarTodo en directorio inexistente devuelve 0 sin error', () async {
+    expect(await almacenador.borrarTodo(), 0);
+  });
+
+  test('borrarTodo purga el subdirectorio y devuelve el count de ficheros',
+      () async {
+    // Sembramos tres ficheros (dos fotos + un dibujo).
+    await almacenador.guardar(
+      rutaOrigen: (await crearOrigen('a.jpg')).path,
+      observacionId: 'obs-1',
+      tipo: TipoMedio.foto,
+    );
+    await almacenador.guardar(
+      rutaOrigen: (await crearOrigen('b.jpg')).path,
+      observacionId: 'obs-2',
+      tipo: TipoMedio.foto,
+    );
+    await almacenador.guardarBytes(
+      bytes: Uint8List.fromList([1, 2, 3]),
+      observacionId: 'obs-3',
+      tipo: TipoMedio.dibujo,
+    );
+    final dirMedios = Directory('${dirRaiz.path}/medios');
+    expect(await dirMedios.exists(), isTrue);
+
+    final borrados = await almacenador.borrarTodo();
+
+    expect(borrados, 3);
+    expect(await dirMedios.exists(), isFalse);
+  });
+
+  test('borrarTodo es idempotente: dos llamadas seguidas no fallan',
+      () async {
+    await almacenador.guardarBytes(
+      bytes: Uint8List.fromList([0xAA]),
+      observacionId: 'obs-1',
+      tipo: TipoMedio.dibujo,
+    );
+    expect(await almacenador.borrarTodo(), 1);
+    expect(await almacenador.borrarTodo(), 0);
+  });
 }

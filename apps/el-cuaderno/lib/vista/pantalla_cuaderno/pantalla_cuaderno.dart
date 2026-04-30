@@ -337,6 +337,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           intentarSincronizarObservaciones:
               widget.intentarSincronizarObservaciones,
           resolverMedioParaExport: widget.resolverMedioParaExport,
+          almacenadorMedios: widget.almacenadorMedios,
           nombreParaTituloPdf: widget.nombreParaTituloPdf,
           clienteAuthProfesor: widget.clienteAuthProfesor,
           clienteCompanionProfesor: widget.clienteCompanionProfesor,

@@ -3,6 +3,7 @@ import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:printing/printing.dart';
 
+import '../../datos/almacenador_medios.dart';
 import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/sincronizador_agregados.dart';
@@ -54,6 +55,7 @@ class PantallaAjustes extends StatelessWidget {
     this.sincronizadorAgregados,
     this.intentarSincronizarObservaciones,
     this.resolverMedioParaExport,
+    this.almacenadorMedios,
     this.nombreParaTituloPdf,
     this.clienteAuthProfesor,
     this.clienteCompanionProfesor,
@@ -118,6 +120,12 @@ class PantallaAjustes extends StatelessWidget {
   /// manifiesto (lectura sigue siendo válida; el importador no podrá
   /// distinguir presentes de huérfanos).
   final ResolverMedioExportado? resolverMedioParaExport;
+
+  /// Si llega no nulo, el flujo "borrar mi cuaderno" también borra
+  /// el subdirectorio de medios (fotos + dibujos) tras vaciar Isar —
+  /// la promesa de "borrar todo" deja de tener residuo en disco.
+  /// Si es null, sólo se borra Isar (modo S1 / tests sin filesystem).
+  final AlmacenadorMedios? almacenadorMedios;
 
   /// Nombre del niño para encabezar el PDF exportado. Si es null, se
   /// usa una fórmula genérica ("el cuaderno"). El nombre del perfil
@@ -392,11 +400,17 @@ class PantallaAjustes extends StatelessWidget {
     );
     if (confirmado != true || !context.mounted) return;
     final resultado = await repositorio.borrarTodoLoLocal();
+    // Si hay almacenador inyectado, también purgamos el directorio
+    // de medios. Sin esto, las fotos y dibujos quedaban huérfanos
+    // en disco aunque las observaciones que los apuntaban hubieran
+    // desaparecido.
+    final mediosBorrados = await almacenadorMedios?.borrarTodo() ?? 0;
     if (!context.mounted) return;
     final mensaje = '${textos.ajustesBorradoCompleto} '
         '(${resultado.observacionesBorradas} · '
         '${resultado.misteriosBorrados} · '
-        '${resultado.sitSpotsBorrados})';
+        '${resultado.sitSpotsBorrados}'
+        '${mediosBorrados > 0 ? ' · $mediosBorrados medios' : ''})';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(mensaje)),
     );
