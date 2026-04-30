@@ -22,17 +22,16 @@ class EscenasArco2 {
   /// orquestador. Cubre 2.0.1 (apertura), la Estación 2.1 completa
   /// (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas
   /// latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y
-  /// 2.A.2 *Marina y los descansos*) y la Estación 2.2 completa
-  /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6); las
-  /// estaciones 2.3–2.4 + cinemáticas latentes 2.B/2.C + Mosaico
-  /// M2 + cierre 2.Z se añadirán en commits posteriores.
+  /// 2.A.2 *Marina y los descansos*), la Estación 2.2 completa
+  /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6) y la
+  /// cinemática latente post-Estación 2.2 (2.B.1 *El cuaderno de
+  /// Isaura*); la Estación 2.3, 2.4 + cinemática latente 2.C.1 +
+  /// Mosaico M2 + cierre 2.Z se añadirán en commits posteriores.
   ///
   /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
-  /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa),
-  /// pero el orquestador las despachará en cuanto sea su turno —
-  /// dependiendo de qué cinemática haya cerrado antes, podrían
-  /// dispararse antes de que la Estación 2.2 esté implementada y
-  /// disponible.
+  /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa).
+  /// La latente 2.B.1 se ordena detrás de 2.2.6 porque requiere
+  /// `arco_2_estacion_2_cerrada` (que la 2.2.6 activa).
   static const List<EscenaCinematica> todas = [
     primerDiaDelArco,
     bajarAlSotano,
@@ -49,6 +48,7 @@ class EscenasArco2 {
     loQueOmite,
     elConcilioEnCalahorra,
     loQueFueYDejoDeSer,
+    elCuadernoDeIsaura,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -105,6 +105,9 @@ class EscenasArco2 {
     },
     'escena_2_2_6_vista': {
       'arco_2_estacion_2_cerrada',
+    },
+    'escena_2_b_1_vista': {
+      'cuaderno_de_isaura_visto',
     },
   };
 
@@ -1730,6 +1733,138 @@ class EscenasArco2 {
         pausaPrevia: Duration(milliseconds: 800),
       ),
       PlanoCierreAmable(textoBoton: 'CERRAR EL CUADERNO'),
+    ],
+  );
+
+  /// 2.B.1 — *El cuaderno de Isaura*. Latente post-Estación 2.2:
+  /// activa ~10 días después del cierre de Calagurris, antes de
+  /// que arranque la Estación 2.3. Lugar: despacho de Isaura en la
+  /// primera planta del Archivo. Personajes: Isaura, Maren. Doc
+  /// 08 §2.B.1.
+  ///
+  /// La cinemática es deliberadamente breve y elíptica. Maren entra
+  /// para una consulta breve sobre la siguiente Brecha; mientras
+  /// se va, descubre que Isaura tiene su propio cuaderno de la
+  /// Cronista — treinta años, "preguntas, sólo". El plano final
+  /// se queda con Isaura tras la salida de Maren: abre el cajón,
+  /// mira una página antigua, cierra y guarda. La cámara confirma
+  /// al jugador que la mentora también está en el oficio, y que
+  /// el oficio no termina con el ascenso.
+  ///
+  /// Pedagógicamente: el cuaderno de la Cronista no es etapa de
+  /// aprendiz, es práctica vitalicia. AH (postura epistémica
+  /// continuada) en formato narrativo, no atomizado.
+  ///
+  /// **Sin sustituciones diegéticas**: la cinemática no nombra
+  /// fechas, lugares, autores ni dataciones específicas — el
+  /// contenido del guion se preserva tal cual.
+  static const EscenaCinematica elCuadernoDeIsaura = EscenaCinematica(
+    id: '2.B.1',
+    titulo: 'El cuaderno de Isaura',
+    flagDeSalida: 'escena_2_b_1_vista',
+    flagsRequeridos: {'arco_2_estacion_2_cerrada'},
+    ambiente: AmbienteArchivo.despachoIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Diez días después del Concilio de Calahorra. Despacho de '
+            'Isaura, primera planta del Archivo. Mesa de madera oscura, '
+            'una lámpara encendida, ventana al patio del claustro. '
+            'Maren entra para una consulta breve sobre la siguiente '
+            'Brecha.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Isaura está terminando de escribir algo en un cuaderno '
+            'marrón viejo, tapas gastadas. Lo cierra cuando ve a '
+            'Maren entrar. Lo guarda en un cajón de la mesa, sin '
+            'comentar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Dime.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren consulta lo que tiene que consultar. Cinco minutos '
+            'de cosas técnicas — fechas, materiales, una pregunta '
+            'concreta sobre el calendario. Isaura responde corto. '
+            'Al terminar, Maren se va a levantar. Pero se queda '
+            'mirando el cajón.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué cuaderno es ése?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Isaura la mira. Pausa. No se enfada, no se ríe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'El mío.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Como el mío?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Más viejo. Más feo.',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cuántos años tiene?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Treinta.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Maren se queda con el dato.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué hay dentro?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Preguntas.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Sólo?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Sólo.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren no insiste. Asiente. Sale del despacho con cuidado '
+            'al cerrar la puerta. La cámara se queda con Isaura.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Después de que Maren salga, Isaura abre el cajón. Saca '
+            'el cuaderno marrón. Lo abre por una página cualquiera, '
+            'antigua, con tinta desigual. Mira sin leer. Cierra. Lo '
+            'vuelve a guardar. Vuelve a su trabajo.',
+      ),
+      PlanoCierreAmable(textoBoton: 'SALIR DEL DESPACHO'),
     ],
   );
 }

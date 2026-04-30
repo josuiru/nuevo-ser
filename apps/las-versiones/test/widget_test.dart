@@ -118,6 +118,9 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+      // Latente 2.B.1 (cuaderno de Isaura) cerrada — la 2.3.x
+      // todavía no está implementada.
+      'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -393,6 +396,9 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+      // Latente 2.B.1 (cuaderno de Isaura) cerrada — la 2.3.x
+      // todavía no está implementada.
+      'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -474,6 +480,9 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+      // Latente 2.B.1 (cuaderno de Isaura) cerrada — la 2.3.x
+      // todavía no está implementada.
+      'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

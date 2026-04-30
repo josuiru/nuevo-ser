@@ -119,22 +119,23 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 (Calagurris) implementadas (F2-1, F2-2, F2-3)
+## Arco 2 — Estación 2.1 + latentes 2.A + Estación 2.2 + latente 2.B.1 implementadas (F2-1, F2-2, F2-3, F2-4)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementadas las 15 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y 2.A.2 *Marina y los descansos*, doc 08 §2.A) y la Estación 2.2 entera (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6): camino a Calahorra con Isaura conversando sobre Quintiliano y la frontera autonómica, visita guiada al yacimiento por una arqueóloga local que Karim había avisado, lectura crítica de cuatro pasajes de la *Institutio Oratoria* en la sala de trabajo del museo (HF.05 + HF.09 + nuevo HF.10 detección de omisiones), articulación de tres hipótesis sobre lo que Quintiliano omite y por qué, Concilio especial fuera del Archivo con Aitor por videollamada, regreso en coche con la lección epistémica del oficio aplicada a territorios y a personas ("las cosas son y dejan de ser"). Las restantes 19+ escenas del Arco 2 (2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.3/2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 16 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y 2.A.2 *Marina y los descansos*, doc 08 §2.A), la Estación 2.2 entera (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6) y la cinemática latente post-Estación 2.2 (2.B.1 *El cuaderno de Isaura*, doc 08 §2.B.1). 2.B.1 es deliberadamente breve y elíptica: Maren entra al despacho de Isaura para una consulta técnica, descubre que la mentora tiene su propio cuaderno de la Cronista — treinta años, "preguntas, sólo" — y la cámara se queda con Isaura tras la salida confirmando al jugador que el oficio del Cuaderno es práctica vitalicia, no etapa de aprendiz. Las restantes 18+ escenas del Arco 2 (2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.3/2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 15 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La Estación 2.2 arranca con 2.2.1 que requiere `escena_2_a_2_vista` y cierra con 2.2.6 que activa `arco_2_estacion_2_cerrada`. Tras cerrar la 2.2.6 el orquestador cae al esqueleto porque la 2.B.1 todavía no está implementada.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 16 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.B.1 requiere `arco_2_estacion_2_cerrada` (que la 2.2.6 activa). Tras cerrar la 2.B.1 el orquestador cae al esqueleto porque la 2.3.1 todavía no está implementada.
 
 **Pendiente para próximas iteraciones**:
 - Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 jugable + brecha22 jugable + brecha23, brecha24).
-- Cinemática latente 2.B.1 (post-Estación 2.2 — "El cuaderno de Isaura").
 - Estaciones 2.3 (domus de los mosaicos), 2.4 (Wamba contra los vascones).
 - Cinemática latente 2.C.1 (post-Estación 2.3 — "Eider y el cambio").
 - Mosaico M2 ("audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
 - Cinemática de cierre del arco 2.Z.
 - Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en sección siguiente.
+
+**Sin sustituciones diegéticas en 2.B.1**: la cinemática no nombra fechas, lugares, autores ni dataciones específicas. El cuaderno marrón de Isaura es elemento ficticio del juego (no afirma una pieza histórica concreta) y los "treinta años" funcionan como dispositivo pedagógico (la mentora también es practicante del oficio), no como dato histórico verificable.
 
 **Sin sustituciones diegéticas en 2.A.1 ni 2.A.2**: Quintiliano de Calagurris y la edición de Cousin (Jean Cousin, *Quintilien — Institution oratoire*, Les Belles Lettres) son referencias reales y trazables que pasan el filtro del comité sin revisión. Marina sólo nombra términos ya validados ("inscripción", "huesos", "polen", "Aralar", "Calahorra"). La frase pedagógica clave de Antonio ("habla menos de sí mismo de lo que parece") es comentario crítico genérico, no afirmación histórica.
 

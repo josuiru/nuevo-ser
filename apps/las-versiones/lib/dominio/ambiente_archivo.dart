@@ -206,4 +206,13 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// Aitor por videollamada).
   static const AmbienteArchivo salaTrabajoMuseoCalahorra =
       AmbienteArchivo._('sala_trabajo_museo_calahorra');
+
+  /// Despacho de Isaura — primera planta del Archivo, mesa de
+  /// madera oscura, ventana al patio del claustro, una estantería
+  /// con cuadernos viejos y un cajón cerrado del que la mentora
+  /// no habla. Lugar de la 2.B.1 (Maren descubre que Isaura tiene
+  /// su propio cuaderno de la Cronista — treinta años, "preguntas,
+  /// sólo").
+  static const AmbienteArchivo despachoIsaura =
+      AmbienteArchivo._('despacho_isaura');
 }

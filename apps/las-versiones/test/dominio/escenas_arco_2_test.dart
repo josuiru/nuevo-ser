@@ -71,9 +71,9 @@ void main() {
   group('EscenasArco2.todas', () {
     test('catálogo cubre 2.0.1 (apertura) + Estación 2.1 completa '
         '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) + '
-        'Estación 2.2 completa (2.2.1 a 2.2.6) — 15 cinemáticas '
-        'implementadas hoy', () {
-      expect(EscenasArco2.todas, hasLength(15));
+        'Estación 2.2 completa (2.2.1 a 2.2.6) + latente post-Estación '
+        '2.2 (2.B.1) — 16 cinemáticas implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(16));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
         [
@@ -92,6 +92,7 @@ void main() {
           '2.2.4',
           '2.2.5',
           '2.2.6',
+          '2.B.1',
         ],
       );
     });
@@ -225,6 +226,42 @@ void main() {
           reason: '${escena.id} debería incluir VozPersonaje.arqueologa',
         );
       }
+    });
+
+    test('2.B.1 (cuaderno de Isaura) requiere arco_2_estacion_2_cerrada '
+        '— es latente post-Estación 2.2', () {
+      expect(
+        EscenasArco2.elCuadernoDeIsaura.flagsRequeridos,
+        {'arco_2_estacion_2_cerrada'},
+      );
+    });
+
+    test('2.B.1 viaja con ambiente despacho de Isaura — primera '
+        'aparición de este sub-espacio del Archivo en el catálogo', () {
+      expect(
+        EscenasArco2.elCuadernoDeIsaura.ambiente,
+        same(AmbienteArchivo.despachoIsaura),
+      );
+    });
+
+    test('2.B.1 contiene la línea pedagógica clave — el cuaderno de '
+        'Isaura tiene "preguntas, sólo" y treinta años', () {
+      final dialogos = EscenasArco2.elCuadernoDeIsaura.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(dialogos, contains('Treinta.'));
+      expect(dialogos, contains('Preguntas.'));
+      expect(dialogos, contains('Sólo.'));
+    });
+
+    test('2.B.1 sólo habla Isaura y Maren — escena íntima sin terceros',
+        () {
+      final voces = EscenasArco2.elCuadernoDeIsaura.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, {VozPersonaje.isaura, VozPersonaje.maren});
     });
   });
 }
