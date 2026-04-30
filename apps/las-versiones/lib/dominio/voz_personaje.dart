@@ -140,6 +140,47 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.tintaTenue,
   );
 
+  /// **Sira Goizueta**, 15 años, Aprendiz II Constructora. Compañera
+  /// de Maren en la Brecha 1.2 (crómlech) — primera vez que Maren
+  /// trabaja en un equipo pequeño con otra aprendiza. Más rápida que
+  /// Maren, propone dataciones con menos cautela. La negociación
+  /// entre las dos es el corazón pedagógico de la Estación 2.
+  /// Texto principal porque es par de Maren (no autoridad).
+  static const VozPersonaje sira = VozPersonaje._(
+    nombreVisible: 'Sira',
+    colorNombre: PaletaArchivo.textoPrincipal,
+  );
+
+  /// **Joana Sasiain**, Anclada del Archivo. Revisora en el primer
+  /// Concilio formal de Maren (Brecha 1.3, cueva). Voz académica
+  /// rigurosa — pregunta por categorías, exige distinciones. Ámbar
+  /// lacre porque es autoridad institucional, igual que Begoña,
+  /// Isaura y Aitor.
+  static const VozPersonaje joana = VozPersonaje._(
+    nombreVisible: 'Joana',
+    colorNombre: PaletaArchivo.ambarLacre,
+  );
+
+  /// **Joxe**, custodio de la cueva del Pirineo (Brecha 1.3).
+  /// Hombre mayor del valle vinculado a la administración foral —
+  /// abre las verjas, controla el tiempo de visita. Voz funcional,
+  /// pocas líneas. Tinta tenue (figura del territorio, no del
+  /// Archivo).
+  static const VozPersonaje joxe = VozPersonaje._(
+    nombreVisible: 'Joxe',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
+  /// **El arqueólogo de Irulegi** — voz del yacimiento (Brecha 1.4).
+  /// El doc 07 no le da nombre completo en pantalla; aparece como
+  /// "el arqueólogo". Aquí se resuelve con una etiqueta funcional
+  /// `Arqueólogo` que respeta la decisión del guion canónico.
+  /// Tinta tenue — no pertenece al Archivo.
+  static const VozPersonaje arqueologo = VozPersonaje._(
+    nombreVisible: 'Arqueólogo',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
   /// Voz sin atribución personal, reservada a **fragmentos de fuente
   /// histórica** que el player levanta del manuscrito sin ponerlos en
   /// boca de un personaje del elenco: una cita en latín, una línea

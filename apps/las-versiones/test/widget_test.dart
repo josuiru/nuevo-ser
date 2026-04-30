@@ -406,6 +406,65 @@ void main() {
         reason: 'arco_1_completado se activa al cerrar 1.B, no al arrancarla');
   });
 
+  testWidgets(
+      'tras 1.B (que activa cromlech_aralar_alcanzado) el orquestador '
+      'dispara la Brecha 1.2 — no salta directo al Mosaico', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.cromlech_aralar_alcanzado': true,
+      // brecha_1_2_completada NO está → la 1.2 está abierta.
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaBrecha), findsOneWidget,
+        reason: 'tras la 1.B, el cierre activa cromlech_aralar_alcanzado '
+            'que dispara la Brecha 1.2');
+    expect(find.byType(PantallaMosaicoArco1), findsNothing);
+    expect(find.text('ARALAR — CRÓMLECH PRÓXIMO'), findsOneWidget);
+  });
+
+  testWidgets(
+      'tras cerrar la Brecha 1.2 el orquestador encadena con la cinemática '
+      '1.2.fin (caminata con Sira) y después con 1.B.1 (padre, antes '
+      'latente)', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.cromlech_aralar_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_2_completada': true,
+      // 1.2.fin todavía no vista → debería dispararse.
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+    expect(find.byKey(const ValueKey('1.2.fin')), findsOneWidget,
+        reason: 'la 1.2.fin requiere brecha_1_2_completada y se dispara '
+            'antes que 1.B.1 (que también la requiere)');
+  });
+
   test('clave de prefs del idioma sigue el namespace '
       'nuevoser.lasversiones.*', () async {
     SharedPreferences.setMockInitialValues({

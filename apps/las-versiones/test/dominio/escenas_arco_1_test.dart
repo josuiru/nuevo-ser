@@ -160,6 +160,36 @@ void main() {
     });
   });
 
+  group('EscenasArco1.cierreCromlechConSira (1.2.fin)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.cierreCromlechConSira.id, '1.2.fin');
+      expect(
+        EscenasArco1.cierreCromlechConSira.flagDeSalida,
+        'escena_1_2_fin_vista',
+      );
+      expect(
+        EscenasArco1.cierreCromlechConSira.flagsRequeridos,
+        {'brecha_1_2_completada'},
+        reason: 'la cinemática se dispara automáticamente cuando la '
+            'Brecha 1.2 se cierra',
+      );
+    });
+
+    test('viaja con ambiente del crómlech — la caminata de regreso '
+        'arranca en el sitio antes de subir al coche', () {
+      expect(
+        EscenasArco1.cierreCromlechConSira.ambiente,
+        same(AmbienteArchivo.cromlechAralar),
+      );
+    });
+
+    test('cierra como amable — la voz del Cuaderno cierra la sesión, '
+        'no encadena con la 1.B.1 en la misma sesión', () {
+      final ultimoPlano = EscenasArco1.cierreCromlechConSira.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('EscenasArco1.conversacionConElPadre (1.B.1)', () {
     test('id, flagDeSalida y precondición coherentes', () {
       expect(EscenasArco1.conversacionConElPadre.id, '1.B.1');
@@ -269,13 +299,27 @@ void main() {
       expect(flags, {'told_family_archive', 'naia_first_curiosity'});
     });
 
-    test('1.B cierra activando arco_1_completado — es el último flag del '
-        'recorrido del Arco 1 antes del Mosaico (provisional hasta que '
-        'entren las Estaciones 1.2-1.4 al catálogo)', () {
+    test('1.B cierra activando cromlech_aralar_alcanzado — encadena con '
+        'la Brecha 1.2 (en F8.4 el flag arco_1_completado se sacó de '
+        'aquí; entrará al cierre de 1.4.4 cuando exista la Brecha 1.4)',
+        () {
       final flags =
           EscenasArco1.flagsDeCierrePorEscena['escena_1_b_vista'];
-      expect(flags, contains('arco_1_completado'));
+      expect(flags, contains('cromlech_aralar_alcanzado'));
       expect(flags, contains('visita_atico_andres'));
+      expect(flags, isNot(contains('arco_1_completado')),
+          reason: 'arco_1_completado se mueve al cierre de 1.4.4 cuando '
+              'entren todas las Estaciones del arco');
+    });
+
+    test('1.2.fin cierra activando arco_1_estacion_2_cerrada y registra '
+        'el primer trabajo en equipo de Maren con un par', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_2_fin_vista'];
+      expect(flags, {
+        'arco_1_estacion_2_cerrada',
+        'primer_trabajo_en_equipo_completado',
+      });
     });
 
     test('1.4.4 cierra activando rango_aprendiz_i y arco_2_anunciado — '

@@ -132,6 +132,24 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Brecha 1.2 (crómlech) + cinemática 1.2.fin con Sira — fuentes diegéticas y cierre canónico (F8.4)
+
+**Tracker doc 17**: pendiente de revisión humana.
+
+**Guion canónico (doc 07 §1.2)**: Aralar segunda visita. Esta vez con **Sira Goizueta** (Aprendiz II Constructora, 15 años) en lugar de Isaura. Crómlech vecino, restos de banquete funerario sin enterramiento óseo claro, material muy fragmentado, una sola C14 disponible. Lección epistémica: cronología relativa sin datación absoluta sólida — **Probable** se vuelve protagonista. Conflicto entre Maren y Sira (Sira más rápida y menos cauta, Maren la frena). Concilio con Aitor como revisor — aprueba la versión cauta. Cierre: caminata de regreso con la línea "tenías razón / no siempre la tendré / ya, pero hoy sí" + voz del Cuaderno esa noche.
+
+**Estado**: implementada en `CatalogoBrechas.brecha12` (5 fuentes diegéticas + 6 afirmaciones canónicas) + cinemática `EscenasArco1.cierreCromlechConSira` (1.2.fin). El flujo del orquestador queda:
+- `1.B` ahora activa `cromlech_aralar_alcanzado` (antes activaba `arco_1_completado` directo, lo que adelantaba el Mosaico — corregido en F8.4).
+- La Brecha 1.2 se dispara automáticamente, recorre las 5 fases jugables, cierra con `brecha_1_2_completada`.
+- La 1.2.fin se reproduce como cinemática post-Brecha (mismo patrón que 1.1.7 tras la 1.1).
+- La 1.B.1 latente, anclada a `brecha_1_2_completada`, se dispara después automáticamente.
+
+**Sin sustituciones diegéticas en el contenido jugable**: las 5 fuentes catalogadas son explícitamente ficticias y diegéticas (cerámica fragmentaria, una sola C14, material lítico mínimo, informe comparativo, topónimo del círculo). No afirman C14 con cifra concreta, no atribuyen autoría real, no nombran publicaciones identificables.
+
+**Pendiente de revisión humana**: voz de Sira (la línea "ya, pero hoy sí" debe encajar con el tono adolescente fijado en doc 04 — Sira como par de Maren, no como autoridad), el equilibrio de las 6 afirmaciones canónicas (¿demasiadas Probables? ¿la Disputada del C14 absoluto está bien calibrada?), y la decisión de no implementar cinemática introductoria 1.2.0 (Maren conociendo a Sira en el coche o en el campo). El doc 07 no detalla esa entrada — la Brecha arranca directamente cuando el orquestador la abre.
+
+---
+
 ## Cinemática latente 1.4.4 "Aprendiz I" — sustituciones diegéticas y referencia a la Mano de Irulegi (F8.3)
 
 **Tracker doc 17**: pendiente de revisión humana.

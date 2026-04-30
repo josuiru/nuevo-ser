@@ -220,18 +220,235 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 1.2 — El crómlech vecino** (Aralar, segunda visita).
+  /// La protagonista trabaja con Sira Goizueta (Aprendiz II). La
+  /// lección epistémica del doc 07: cronología relativa sin
+  /// datación absoluta sólida. **Probable** se vuelve protagonista.
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-04 — formulación con un par.
+  /// - HF.01-04, HF.06-09 — análisis de fuentes.
+  /// - CC.04-05 — cronología relativa, comparación tipológica.
+  /// - AH.01-03 — argumentación con incertidumbre.
+  ///
+  /// **Las cinco fuentes son explícitamente ficticias y diegéticas**
+  /// — no afirman C14 reales con cifra concreta, no atribuyen
+  /// publicaciones identificables, no nombran arqueólogos
+  /// específicos. La pedagogía que se preserva: una sola C14
+  /// disponible, comparación con vecinos, tipología cerámica como
+  /// herramienta de cronología relativa, ausencia de restos óseos
+  /// que limita lo declarable. Ver `BLOQUEOS-PENDIENTES.md`.
+  static const Brecha brecha12 = Brecha(
+    id: '1.2',
+    titulo: 'El crómlech vecino',
+    ubicacionVisible: 'ARALAR — CRÓMLECH PRÓXIMO',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.06',
+      'HF.07',
+      'HF.08',
+      'HF.09',
+      'CC.04',
+      'CC.05',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha12,
+    afirmacionesCanonicas: _afirmacionesBrecha12,
+    flagDeCompletado: 'brecha_1_2_completada',
+  );
+
+  static const List<Fuente> _fuentesBrecha12 = [
+    Fuente(
+      id: 'ceramica_fragmentada_superficie',
+      tipoVisible: 'Cerámica fragmentaria en superficie',
+      descripcion: 'En el suelo del crómlech aparecen abundantes '
+          'fragmentos cerámicos de pequeño tamaño. Las paredes son '
+          'finas y la cocción dispar. El conjunto sugiere vasijas '
+          'rotas in situ, no traídas ya rotas — algunos fragmentos '
+          'remontan entre sí.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quienes celebraron la actividad que dejó estos restos',
+        fecha: 'Probablemente el momento del uso del lugar',
+        publico: 'Los participantes del propio acto',
+        intereses: 'Banquete o ritual — ningún interés historiográfico',
+        omisiones: 'Quiénes eran, cuántos, qué celebraban exactamente',
+        corroboraOContradice: 'Es la evidencia material principal del '
+            'tipo de actividad realizada en el sitio',
+      ),
+    ),
+    Fuente(
+      id: 'datacion_c14_unica',
+      tipoVisible: 'Una única datación de carbono 14',
+      descripcion: 'Documento técnico breve. Recoge una sola medición '
+          'C14 sobre un fragmento de carbón vegetal recuperado de un '
+          'hueco entre dos piedras del crómlech. La cifra cae en un '
+          'rango compatible con el Neolítico tardío. No hay otras '
+          'mediciones — el material orgánico recuperable era escaso.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Un laboratorio de datación contemporáneo',
+        fecha: 'Reciente — análisis publicado en los últimos años',
+        publico: 'Equipo de revisión arqueológica del sitio',
+        intereses: 'Acotar la cronología absoluta del crómlech',
+        omisiones: 'Una sola muestra; no hay control de coherencia '
+            'entre dataciones; el carbón pudo entrar al hueco después '
+            'del uso original',
+        corroboraOContradice: 'Aporta un único punto temporal; sin '
+            'paralelos internos del propio sitio',
+      ),
+    ),
+    Fuente(
+      id: 'material_litico_escaso',
+      tipoVisible: 'Material lítico escaso del entorno',
+      descripcion: 'En los alrededores del círculo aparecen unas pocas '
+          'lascas y una herramienta pulida. La cantidad es mucho '
+          'menor que en el dolmen vecino — no parece zona de trabajo '
+          'continuado. Los pocos restos sugieren actividad puntual.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quien talló o trajo las herramientas usadas en el sitio',
+        fecha: 'Cercana al uso del lugar',
+        publico: 'Nadie',
+        intereses: 'Trabajo asociado al acto que se celebró',
+        omisiones: 'Función exacta, intensidad real de la actividad',
+        corroboraOContradice: 'Refuerza la lectura de uso puntual y '
+            'no de habitación prolongada',
+      ),
+    ),
+    Fuente(
+      id: 'informe_comparativo_dolmenes_vecinos',
+      tipoVisible: 'Informe comparativo con dólmenes vecinos',
+      descripcion: 'Texto académico reciente que cataloga el conjunto '
+          'megalítico de la sierra. Compara la tipología cerámica del '
+          'crómlech con la de varios dólmenes y crómlechs catalogados '
+          'a pocos kilómetros. Concluye que la tipología es coherente '
+          'con un horizonte cultural y temporal compartido, aunque la '
+          'datación absoluta de cada sitio sigue siendo aproximada.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Un equipo académico actual',
+        fecha: 'Publicación reciente',
+        publico: 'Comunidad arqueológica especializada',
+        intereses: 'Inscribir cada sitio en una secuencia comparativa',
+        omisiones: 'Las dataciones absolutas siguen siendo escasas; la '
+            'tipología cerámica es herramienta probabilística',
+        corroboraOContradice: 'Permite cronología relativa donde la '
+            'absoluta no llega — pero no la sustituye',
+      ),
+    ),
+    Fuente(
+      id: 'toponimo_del_circulo',
+      tipoVisible: 'Topónimo del círculo en la sierra',
+      descripcion: 'Los pastores que conocen el lugar le dan un '
+          'nombre distinto al del dolmen vecino. Su raíz lingüística '
+          'no remite al enterramiento sino a la idea de reunión o '
+          'asamblea. La transmisión es oral, sin atestación escrita '
+          'antigua.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'La tradición oral de la sierra',
+        fecha: 'Indeterminada — el topónimo es antiguo, su uso '
+            'actual es contemporáneo',
+        publico: 'La comunidad pastoril que lo usa',
+        intereses: 'Práctico — el nombre orienta',
+        omisiones: 'Cuándo se acuñó; si tuvo otros nombres antes',
+        corroboraOContradice: 'Aporta una pista lingüística sobre la '
+            'función percibida del sitio',
+      ),
+    ),
+  ];
+
+  /// Afirmaciones canónicas de la Brecha 1.2. La distribución de
+  /// niveles refleja la lección epistémica de la Estación 2:
+  /// **Probable** es protagonista. Sólo dos Sólidas (las que cubre
+  /// la cerámica + la datación + la comparación), tres Probables,
+  /// una Disputada. Sin restos óseos no se puede afirmar
+  /// enterramiento concreto.
+  static const List<AfirmacionCanonica> _afirmacionesBrecha12 = [
+    AfirmacionCanonica(
+      id: 'hubo_actividad_humana_significativa',
+      texto: 'Hubo en este lugar actividad humana significativa, no '
+          'meramente pastoril ocasional.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'ceramica_fragmentada_superficie',
+        'material_litico_escaso',
+        'datacion_c14_unica',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'horizonte_neolitico_tardio',
+      texto: 'El uso del lugar se sitúa en un horizonte temporal '
+          'compatible con el Neolítico tardío.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'datacion_c14_unica',
+        'informe_comparativo_dolmenes_vecinos',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'datacion_absoluta_precisa',
+      texto: 'Se puede precisar la datación absoluta del crómlech con '
+          'la misma seguridad que la del dolmen vecino.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: ['datacion_c14_unica'],
+    ),
+    AfirmacionCanonica(
+      id: 'banquete_ritual',
+      texto: 'La fragmentación cerámica es consecuencia de un '
+          'banquete o acto ritual celebrado in situ.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'ceramica_fragmentada_superficie',
+        'toponimo_del_circulo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'coetaneo_dolmen_vecino',
+      texto: 'El crómlech es coetáneo del dolmen vecino — ambos '
+          'forman parte de un mismo paisaje funerario.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'informe_comparativo_dolmenes_vecinos',
+        'datacion_c14_unica',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'funcion_asamblearia',
+      texto: 'El sitio tuvo función de reunión o asamblea, además '
+          'de la posiblemente funeraria.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'toponimo_del_circulo',
+        'ceramica_fragmentada_superficie',
+      ],
+    ),
+  ];
+
   /// Lista ordenada de todas las Brechas catalogadas. El orquestador
   /// la consulta para resolver `brechaPendiente()` igual que
   /// `EscenasArco1.todas` resuelve la próxima cinemática.
-  static const List<Brecha> todas = [brecha11];
+  static const List<Brecha> todas = [brecha11, brecha12];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
-  /// la Brecha. La 1.1 se dispara cuando `aralar_dolmen_alcanzado`
-  /// está activo y `brecha_1_1_completada` aún no.
-  ///
-  /// Cuando llegue la 1.2, esta tabla crece con su flag de
-  /// disparo. Versión inicial: una sola entrada.
+  /// la Brecha:
+  /// - 1.1 se dispara con `aralar_dolmen_alcanzado` (cierre de 1.1.2).
+  /// - 1.2 se dispara con `cromlech_aralar_alcanzado` (cierre de 1.B,
+  ///   reordenado en F8.4 — antes 1.B activaba directamente
+  ///   `arco_1_completado` para llegar al Mosaico, ahora encadena
+  ///   con la siguiente Brecha del arco).
   static const Map<String, Brecha> brechaPorFlagDeDisparo = {
     'aralar_dolmen_alcanzado': brecha11,
+    'cromlech_aralar_alcanzado': brecha12,
   };
 }

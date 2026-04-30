@@ -122,4 +122,45 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// que quiera, sin protocolos.
   static const AmbienteArchivo cafeteriaCascoViejo =
       AmbienteArchivo._('cafeteria_casco_viejo');
+
+  /// Crómlech vecino del campo de dólmenes de Aralar — círculo de
+  /// pequeñas piedras hincadas, restos cerámicos en superficie,
+  /// hierba tupida alrededor. Lugar de la Brecha 1.2 (segunda
+  /// visita a Aralar, esta vez con Sira). Atmosférica simétrica al
+  /// dolmen pero con una densidad arqueológica más fragmentaria —
+  /// sin enterramiento óseo claro.
+  static const AmbienteArchivo cromlechAralar =
+      AmbienteArchivo._('cromlech_aralar');
+
+  /// Bosque de hayas en la entrada al sistema de cuevas del
+  /// Pirineo navarro — hojarasca, niebla baja, sendero de tierra
+  /// húmeda, una verja oxidada en la ladera. Lugar de la 1.3.2 (la
+  /// boca de la cueva).
+  static const AmbienteArchivo bosqueHayas =
+      AmbienteArchivo._('bosque_hayas');
+
+  /// Sala con grabados parietales — cueva profunda, sala de techos
+  /// altos, sin luz natural, sonido resonante, pared con bisonte,
+  /// ciervo y caballo grabados que sólo aparecen cuando la luz da
+  /// oblicua. Lugar de la 1.3.4 (la pared). El nombre interno se
+  /// mantiene `sala_grabados_parietales` (no `alkerdi_*`) porque
+  /// el contenido es modelo literario verosímil basado en lo real,
+  /// no afirmación arqueológica directa de Alkerdi I.
+  static const AmbienteArchivo salaGrabadosParietales =
+      AmbienteArchivo._('sala_grabados_parietales');
+
+  /// Yacimiento de Irulegi — monte sobre el valle de Aranguren,
+  /// estructuras de piedra del poblado fortificado parcialmente
+  /// excavadas, viviendas con paredes y peldaños conservados,
+  /// material de la última jornada congelado en su sitio. Lugar
+  /// de la 1.4.1 y parte de la 1.4.2.
+  static const AmbienteArchivo yacimientoIrulegi =
+      AmbienteArchivo._('yacimiento_irulegi');
+
+  /// Sala de Prehistoria del Museo de Navarra — vitrinas, cartelas
+  /// con transcripciones epigráficas, paneles de contexto. Lugar
+  /// de la segunda parte de la 1.4.2 (la Mano de Irulegi vista en
+  /// vitrina, lectura inicial vs lectura corregida).
+  static const AmbienteArchivo museoNavarra =
+      AmbienteArchivo._('museo_navarra');
 }

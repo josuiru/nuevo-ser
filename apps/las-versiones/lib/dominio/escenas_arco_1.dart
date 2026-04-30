@@ -31,6 +31,7 @@ class EscenasArco1 {
     elPrimerApunte,
     laMeriendaConEider,
     elAtico,
+    cierreCromlechConSira,
     conversacionConElPadre,
     naiaPregunta,
     aprendizI,
@@ -75,24 +76,25 @@ class EscenasArco1 {
     'escena_1_a_vista': {
       'merienda_con_eider_compartida',
     },
-    // Cierre de la 1.B activa el flag de arco completado — antes
-    // estaba en `_alCompletarBrecha` directamente al cerrar la
-    // Brecha 1.1, pero el guion canónico (doc 07) intercala 1.A y
-    // 1.B entre el cierre de la Estación 1 y el Mosaico de fin de
-    // arco. Activarlo aquí mantiene el orden narrativo correcto:
-    // 1.1 cerrada → 1.1.7 apunte → 1.A merienda → 1.B ático →
-    // Mosaico.
-    //
-    // **Provisional**: el guion canónico también prevé Estaciones
-    // 1.2/1.3/1.4 con sus propias intermitentes (1.B.1, 1.C). Hoy
-    // sólo está implementada la Estación 1, así que la 1.B cierra
-    // el arco directamente. Cuando entren las otras Estaciones,
-    // este flag se moverá al cierre de la última cinemática del
-    // arco (probablemente 1.4.4 según doc 07). Documentado en
-    // BLOQUEOS-PENDIENTES.md.
+    // Cierre de la 1.B encadena con la siguiente Estación. Hasta
+    // F8.4 esto activaba `arco_1_completado` directamente (única
+    // Brecha implementada era la 1.1, así que tras 1.B venía
+    // directamente el Mosaico). Con la Brecha 1.2 en el catálogo,
+    // 1.B activa el flag de disparo de la 1.2 y el orquestador
+    // abre esa Brecha. El flag de arco completado se mueve al
+    // cierre real del arco (1.4.4) cuando entre la Brecha 1.4.
     'escena_1_b_vista': {
       'visita_atico_andres',
-      'arco_1_completado',
+      'cromlech_aralar_alcanzado',
+    },
+    // Cierre de la 1.2.fin (caminata de regreso con Sira) — sólo
+    // marca el cierre narrativo de la Estación 2. La Brecha 1.2
+    // como tal ya cerró su flag (`brecha_1_2_completada`); la
+    // cinemática añade un flag institucional que registra el
+    // primer trabajo en equipo de Maren con un par.
+    'escena_1_2_fin_vista': {
+      'arco_1_estacion_2_cerrada',
+      'primer_trabajo_en_equipo_completado',
     },
     'escena_1_b1_vista': {
       'conversacion_con_padre_compartida',
@@ -1217,6 +1219,108 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'BAJAR'),
+    ],
+  );
+
+  /// **1.2.fin — Cierre del crómlech con Sira** (doc 07 §1.2,
+  /// "Cierre escena").
+  ///
+  /// Maren y Sira terminan el Concilio de la Estación 2 (Aitor como
+  /// revisor — aprueba la versión cauta, Sira encaja). Caminan
+  /// juntas hacia el coche de regreso por la pista forestal de
+  /// Aralar. Sira reconoce que Maren tenía razón al frenarla;
+  /// Maren responde que no siempre la tendrá. Sira sonríe y dice
+  /// "ya, pero hoy sí". Caminan sin más. La voz del Cuaderno
+  /// cierra la escena con la entrada de esa noche: "Sira es buena.
+  /// Va más rápida que yo. No sé si eso es bueno o malo. Hoy ha
+  /// sido bueno que yo fuera más despacio. Mañana puede ser al
+  /// revés."
+  ///
+  /// Pedagógicamente clave: la primera vez que Maren ejerce
+  /// autoridad de oficio aunque sea menor en rango — porque la
+  /// cautela está bien fundada. Sira, dos años mayor y un escalón
+  /// por encima en jerarquía, lo reconoce. La negociación entre
+  /// pares es el corazón pedagógico de la Estación 2 y queda
+  /// articulada aquí en una sola línea. La voz del Cuaderno
+  /// (segunda parte) explicita la lección sin convertirla en
+  /// regla rígida — mañana puede ser al revés.
+  ///
+  /// **Anclada al cierre de la Brecha 1.2**: requiere
+  /// `brecha_1_2_completada`. Como la Brecha 1.2 entra al catálogo
+  /// con esta misma F8.4, el orquestador la dispara
+  /// inmediatamente tras cerrar el Concilio de la 1.2.
+  ///
+  /// **Sin sustituciones diegéticas**: el doc 07 no nombra fechas,
+  /// laboratorios ni autores en esta cinemática.
+  static const EscenaCinematica cierreCromlechConSira = EscenaCinematica(
+    id: '1.2.fin',
+    titulo: 'Cierre del crómlech con Sira',
+    flagDeSalida: 'escena_1_2_fin_vista',
+    flagsRequeridos: {'brecha_1_2_completada'},
+    ambiente: AmbienteArchivo.cromlechAralar,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aitor ha cerrado el Concilio. Aprobada la versión '
+            'cauta. Sira encaja, sin dramatismo. Las dos salen del '
+            'salón y caminan hacia el coche por la pista forestal '
+            'de Aralar. Tarde alta, sol horizontal entre los '
+            'hayedos.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Caminan dos minutos sin hablar.',
+      ),
+
+      // El reconocimiento. Sira, mayor y un escalón por encima en
+      // jerarquía, valida que Maren tuvo razón al frenarla.
+      PlanoDialogo(voz: VozPersonaje.sira, texto: 'Tenías razón.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No siempre la tendré.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sira,
+        texto: 'Ya. Pero hoy sí.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Caminan. Sin más. Llegan al coche. Sira conduce de '
+            'vuelta — el viaje pasa en silencio cómodo.',
+      ),
+
+      // Voz del Cuaderno esa noche. El doc 07 la marca como bloque
+      // del cierre de la 1.2. Se renderiza como ambiente de
+      // lectura en cursiva (la voz interna se diferencia
+      // tipográficamente del diálogo). El sistema actual del
+      // Cuaderno se construye con entradas registradas al cerrar
+      // cinemáticas — la entrada concreta para esta noche se
+      // catalogará en `CatalogoCuaderno` aparte si se decide
+      // hacerla persistente.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Esa noche. Cuaderno abierto en la mesa. La luz de la '
+            'lámpara baja. Maren escribe.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Sira es buena. Va más rápida que yo. No sé si eso es '
+            'bueno o malo. Hoy ha sido bueno que yo fuera más '
+            'despacio.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Mañana puede ser al revés.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'CERRAR EL CUADERNO'),
     ],
   );
 
