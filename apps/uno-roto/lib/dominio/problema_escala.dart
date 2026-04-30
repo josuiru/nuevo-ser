@@ -84,8 +84,13 @@ class GeneradorEscala {
     anyadirSiNuevo((valorCm * escala) ~/ 1000);
     // 3. La escala literal como respuesta (típico despiste).
     anyadirSiNuevo(escala);
-    // 4. Solo el valor del plano sin aplicar escala.
-    anyadirSiNuevo(valorCm);
+    // 4. Solo el valor del plano sin aplicar escala. Cuando la
+    //    escala es 1:100 — caso "(100, valor)" — el resultado en m
+    //    coincide numéricamente con el valor en cm (porque
+    //    valor × 100 / 100 = valor) y este distractor colisiona;
+    //    sustituimos por valorCm × 10 (la trampa "factor de un cero
+    //    de más", típica al confundir escalas).
+    anyadirSiNuevo(valorCm == correcto ? valorCm * 10 : valorCm);
 
     var paso = 5;
     while (propuestos.length < 4) {

@@ -63,8 +63,11 @@ class GeneradorCirculo {
 
   GeneradorCirculo({int? semilla}) : _azar = math.Random(semilla);
 
-  /// Radios curados con π=3,14 que dan valores limpios.
-  static const List<int> radiosCurados = [2, 3, 4, 5, 6, 8, 10];
+  /// Radios curados con π=3,14 que dan valores limpios. Excluimos r=2
+  /// porque produce A = 12,56 = P numéricamente — el distractor
+  /// estrella "confundir área con perímetro" colisiona con el correcto
+  /// y se descarta, dejando el puzzle sin trampa pedagógica.
+  static const List<int> radiosCurados = [3, 4, 5, 6, 8, 10];
   static int get cantidadDeRadiosCurados => radiosCurados.length;
 
   ProblemaCirculo generar({int dificultad = 1}) {

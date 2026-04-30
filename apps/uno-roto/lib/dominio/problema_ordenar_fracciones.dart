@@ -70,12 +70,22 @@ class GeneradorOrdenarFracciones {
     // Distractores curados:
     // 1. Orden por numeradores (ignora denominadores) — error
     //    típico cuando el niño ve "más arriba = más grande".
+    //    Desempate por denominador para que el sort sea determinista
+    //    (Dart no garantiza estabilidad y dos ejecuciones con la
+    //    misma semilla podrían dar ordenamientos distintos).
     final porNumerador = List<Fraccion>.from(presentadas)
-      ..sort((a, b) => a.numerador.compareTo(b.numerador));
+      ..sort((a, b) {
+        final c = a.numerador.compareTo(b.numerador);
+        return c != 0 ? c : a.denominador.compareTo(b.denominador);
+      });
     // 2. Orden por denominadores en sentido natural (atajo erróneo:
     //    "más abajo = más pequeño", pero a más denominador menos vale).
+    //    Mismo desempate para determinismo.
     final porDenominador = List<Fraccion>.from(presentadas)
-      ..sort((a, b) => a.denominador.compareTo(b.denominador));
+      ..sort((a, b) {
+        final c = a.denominador.compareTo(b.denominador);
+        return c != 0 ? c : a.numerador.compareTo(b.numerador);
+      });
     // 3. Orden invertido del correcto (mayor a menor).
     final invertido = List<Fraccion>.from(ordenado.reversed);
 

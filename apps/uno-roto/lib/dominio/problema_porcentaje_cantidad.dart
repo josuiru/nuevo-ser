@@ -84,11 +84,25 @@ class GeneradorPorcentajeCantidad {
     anyadirSiNuevo(porcentaje);
     // 2. Multiplicar sin dividir entre 100 (% × cantidad).
     anyadirSiNuevo(porcentaje * cantidad);
-    // 3. Cantidad menos el correcto (cuando el niño confunde "el X %
-    //    de" con "X menos del total" — error de proceso).
-    anyadirSiNuevo(cantidad - correcto);
-    // 4. Cantidad dividida por porcentaje, redondeada hacia abajo.
-    if (porcentaje != 0) anyadirSiNuevo(cantidad ~/ porcentaje);
+    // 3. Cantidad menos el correcto (confundir "el X % de" con "X
+    //    menos del total"). Cuando porcentaje = 50, cantidad −
+    //    correcto = correcto y el distractor colisiona; sustituimos
+    //    por el doble del correcto (otro error plausible: olvidar
+    //    dividir entre 100 una vez).
+    final cantidadMenos = cantidad - correcto;
+    anyadirSiNuevo(cantidadMenos == correcto ? correcto * 2 : cantidadMenos);
+    // 4. Cantidad dividida por porcentaje. Cuando porcentaje = 10,
+    //    cantidad ~/ porcentaje == correcto (porque 10% de x = x/10);
+    //    en ese caso usamos cantidad / (porcentaje + 10) como
+    //    aproximación incorrecta del % siguiente.
+    if (porcentaje != 0) {
+      final cantidadEntrePorcentaje = cantidad ~/ porcentaje;
+      anyadirSiNuevo(
+        cantidadEntrePorcentaje == correcto
+            ? cantidad ~/ (porcentaje + 10)
+            : cantidadEntrePorcentaje,
+      );
+    }
 
     // Si tras las trampas no llegamos a 4 candidatos, completamos con
     // vecinos del correcto a una distancia razonable.
