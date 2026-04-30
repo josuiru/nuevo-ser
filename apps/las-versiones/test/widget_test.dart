@@ -106,6 +106,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      // F2-10a: la 2.1.4 activa `inscripcion_romana_estudiada`, que es
+      // el flag de disparo de la Brecha 2.1 jugable. Marcamos la
+      // brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+      'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
       'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
@@ -408,6 +413,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      // F2-10a: la 2.1.4 activa `inscripcion_romana_estudiada`, que es
+      // el flag de disparo de la Brecha 2.1 jugable. Marcamos la
+      // brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+      'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
       'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
@@ -516,6 +526,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      // F2-10a: la 2.1.4 activa `inscripcion_romana_estudiada`, que es
+      // el flag de disparo de la Brecha 2.1 jugable. Marcamos la
+      // brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+      'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
       'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,

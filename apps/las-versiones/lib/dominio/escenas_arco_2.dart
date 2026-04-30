@@ -821,11 +821,20 @@ class EscenasArco2 {
   /// presenta su reconstrucción mejorada con la búsqueda en la PIR.
   /// Aitor revisa técnico, Begoña hace la pregunta de fondo
   /// ("¿por qué Pompaelo y no Roma?"). Doc 08 §2.1.5.
+  ///
+  /// **Precondición desde F2-10a**: requiere `brecha_2_1_completada`
+  /// (en lugar del previo `escena_2_1_4_vista`). La Brecha 2.1
+  /// jugable (`CatalogoBrechas.brecha21`) se interpone entre 2.1.4
+  /// y esta 2.1.5: el jugador hace su Concilio interno con Karim en
+  /// la Mesa de Trabajo dentro de la Brecha jugable, y dos días
+  /// después esta cinemática reproduce el Concilio formal en el
+  /// salón con Begoña/Isaura/Karim/Aitor — son dos Concilios
+  /// distintos según el doc 08 §2.1.4 / §2.1.5.
   static const EscenaCinematica reconstruccionYConcilio = EscenaCinematica(
     id: '2.1.5',
     titulo: 'Reconstrucción y Concilio',
     flagDeSalida: 'escena_2_1_5_vista',
-    flagsRequeridos: {'escena_2_1_4_vista'},
+    flagsRequeridos: {'brecha_2_1_completada'},
     ambiente: AmbienteArchivo.salonConcilio,
     planos: [
       PlanoAmbiente(

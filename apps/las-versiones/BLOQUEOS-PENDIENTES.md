@@ -271,6 +271,35 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
+## Brecha 2.1 jugable — catálogo + cableado al orquestador (F2-10a)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: la primera Brecha jugable del Arco 2 está implementada en `CatalogoBrechas.brecha21` y cableada al orquestador. Se dispara con `inscripcion_romana_estudiada` (flag que la cinemática 2.1.4 *Quién pagó esto* activa al cerrar) y se interpone entre la 2.1.4 y la 2.1.5 *Reconstrucción y Concilio* — ahora la 2.1.5 requiere `brecha_2_1_completada` en lugar del previo `escena_2_1_4_vista`. Son dos Concilios narrativamente distintos según el doc 08 §2.1.4 / §2.1.5: el interno con Karim en la Mesa de Trabajo (jugable) y el formal en el salón con Begoña/Isaura/Karim/Aitor dos días después (cinemática).
+
+**Catálogo de la Brecha 2.1**:
+- 5 fuentes diegéticas: la inscripción in situ (primaria, sesgo oficialista), la línea de dedicación perdida (primaria, accidente de mutilación), un repertorio de paralelos epigráficos de Pompaelo (secundaria), la PIR (*Prosopographia Imperii Romani*, secundaria, herramienta), y paralelos de inscripciones de la capital (secundaria, sesgo invisibilizador por infrarrepresentación de dedicantes no élite).
+- 6 afirmaciones canónicas distribuidas pedagógicamente 2 Sólido + 2 Probable + 2 Disputado: la pedagogía de la Estación 2.1 es justamente que en una fuente textual con propaganda el oficio honesto declara muchas Disputado y Probable, no muchas Sólido. Las dos Sólidas son la naturaleza honorífica y la datación amplia s. I-III; las dos Disputadas son la identidad del dedicante y el vínculo del honrado con Pompaelo (las dos preguntas que la inscripción mutilada deja explícitamente sin respuesta según el doc 08 §2.1.4 + §2.1.5).
+- `minimoAfirmacionesParaConcilio: 4` — declarar sólo 3 de 6 sería trivializar la mecánica. El parámetro lo introduce F2-9.
+
+**Material trazable** (sin sustitución):
+- La PIR (*Prosopographia Imperii Romani*) se cita por su nombre canónico — herramienta epigráfica real, pública y trazable. No se inventa entrada concreta.
+- La *gens Licinia* es real y produjo cónsules a lo largo del Imperio (apellido común de la élite romana). No se afirma cónsul concreto.
+
+**Sustituciones diegéticas adicionales aplicadas en el catálogo**:
+- **Inscripción honorífica con dedicante mutilado**: el catálogo describe la inscripción como "bloque calizo rectangular" hallado en una galería técnica bajo la calle Curia, con cuarta línea "DEDICAVIT EX V[...]" mutilada por reutilización como pavimento. Es modelo literario verosímil basado en formularios honoríficos romanos genéricos — ninguna inscripción real catalogada en CIL II o Hispania Epigraphica.
+- **"Licinio cónsul"**: figura ficticia diegética. La gens Licinia es real, pero el cónsul concreto homenajeado en la inscripción ficticia no se identifica con un Licinio histórico. El nombre del catálogo (`La inscripción de Licinio`) preserva la verosimilitud sin afirmar identidad histórica.
+- **Repertorio de paralelos epigráficos de Pompaelo**: la fuente compilada por Karim para la Brecha es ficticia diegética. Pamplona/Pompaelo tiene yacimientos romanos parcialmente documentados, pero el dossier específico de cinco inscripciones que esta Brecha presenta no se reproduce de un repertorio real.
+
+**Pendiente de revisión humana**:
+- ¿La distribución 2 Sólido + 2 Probable + 2 Disputado encaja con cómo el doc 08 §2.1.4 detalla las "6 afirmaciones" de Maren ("una es Sólido, tres son Probable, dos son Disputado")? Hay divergencia: el doc tiene 1 Sólida + 3 Probables + 2 Disputadas; el catálogo simplifica a 2+2+2 para que la pedagogía sea más legible (cada nivel está bien representado). Posible ajuste si el comité prefiere fidelidad al doc.
+- ¿El "Licinio cónsul" ficticio es lo bastante claro como diegético? La cinemática 2.1.4 ya nombra "Licinio el cónsul" siguiendo el doc 08; el catálogo lo reusa sin afirmar identificación histórica. Posible mitigación: añadir voz del Cuaderno explicitando la naturaleza pedagógica del ejercicio.
+- Pedagogically, ¿es razonable que la Brecha cierre con Concilio interno (Karim solo) y dos días después la cinemática 2.1.5 reproduzca el Concilio formal? El doc 08 lo sostiene explícitamente. La pantalla `FaseConcilio` actual del juego representa el Concilio interno inmediato; la 2.1.5 representa el formal con la mesa entera.
+
+**Cuando el comité valide**: se puede sustituir la inscripción ficticia por una real catalogada (con CIL/HEp), nombrar al "Licinio cónsul" con un Licinio histórico documentable en la PIR de época trajanea, o mantener la ficción con etiqueta narrativa explícita.
+
+---
+
 ## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).

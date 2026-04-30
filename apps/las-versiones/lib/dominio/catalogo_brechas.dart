@@ -1045,7 +1045,288 @@ class CatalogoBrechas {
   /// Lista ordenada de todas las Brechas catalogadas. El orquestador
   /// la consulta para resolver `brechaPendiente()` igual que
   /// `EscenasArco1.todas` resuelve la próxima cinemática.
-  static const List<Brecha> todas = [brecha11, brecha12, brecha13, brecha14];
+  /// **Brecha 2.1 — Pompaelo bajo Iruña** (Arco 2, primera Estación).
+  /// Maren investiga una inscripción honorífica romana mutilada
+  /// hallada en una galería técnica bajo la calle Curia. La pedagogía
+  /// del oficio cambia respecto al Arco 1: ya no se trata de leer
+  /// objetos arqueológicos sin texto, sino de leer una fuente
+  /// **textual con propaganda**. Karim Belkacem (epigrafista del
+  /// Archivo) le enseña convenciones epigráficas (mayúsculas
+  /// latinas, abreviaturas IMP/CAES/AVG, fórmulas honoríficas,
+  /// dedicantes) y la postura epistémica clave del arco: una
+  /// inscripción NO es un documento neutral — es propaganda. El
+  /// productor pagó para que se viera lo que se ve. Lo que no le
+  /// interesaba al dedicante no aparece; lo que sí, aparece exagerado.
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01, PR.02 — formulación de preguntas críticas.
+  /// - HF.01-07 + HF.09 — análisis de fuente textual con sesgo del
+  ///   productor. (HF.08 corroboración cruzada no aplica: es una
+  ///   sola inscripción mutilada, no se cruza con otra del mismo
+  ///   evento — los paralelos son comparativos, no corroboradores
+  ///   directos.)
+  /// - CC.04 — cronología relativa por convenciones epigráficas
+  ///   (datación por nomenclatura imperial y formulario).
+  /// - AH.01-03 — argumentación + calibración Brier (P4 en AH.03).
+  ///
+  /// **Catálogo amplio**: 5 fuentes y **6 afirmaciones canónicas**
+  /// (vs. las 4 de las Brechas del Arco 1). Mínimo de afirmaciones
+  /// para ir al Concilio: 4 (parametrizable desde F2-9 con
+  /// `minimoAfirmacionesParaConcilio`). Las afirmaciones se
+  /// distribuyen 2 Sólidas + 2 Probables + 2 Disputadas — la
+  /// pedagogía de la Estación es justamente que en una fuente
+  /// textual con propaganda **el oficio honesto declara muchas
+  /// Disputado y Probable, no muchas Sólido**. Sostener tres
+  /// declaraciones de Sólido aquí sería sobreconfianza.
+  ///
+  /// **Las cinco fuentes son explícitamente ficticias y diegéticas**:
+  /// - La inscripción en sí es modelo literario verosímil basado en
+  ///   formularios honoríficos romanos genéricos, sin reproducir
+  ///   ninguna inscripción real catalogada en CIL II o Hispania
+  ///   Epigraphica.
+  /// - El "Licinio cónsul" honrado es figura ficticia diegética; la
+  ///   *gens Licinia* sí es real y produjo cónsules a lo largo del
+  ///   Imperio (la pedagogía sostiene la verosimilitud).
+  /// - La PIR (*Prosopographia Imperii Romani*) sí es herramienta
+  ///   real y trazable — se cita por su nombre canónico sin afirmar
+  ///   entradas concretas.
+  ///
+  /// Ver `BLOQUEOS-PENDIENTES.md` para el detalle de sustituciones.
+  static const Brecha brecha21 = Brecha(
+    id: '2.1',
+    titulo: 'La inscripción de Licinio',
+    ubicacionVisible: 'IRUÑA — POMPAELO SUBTERRÁNEA',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.05',
+      'HF.06',
+      'HF.07',
+      'HF.09',
+      'CC.04',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha21,
+    afirmacionesCanonicas: _afirmacionesBrecha21,
+    flagDeCompletado: 'brecha_2_1_completada',
+    minimoAfirmacionesParaConcilio: 4,
+  );
+
+  static const List<Fuente> _fuentesBrecha21 = [
+    Fuente(
+      id: 'inscripcion_in_situ',
+      tipoVisible: 'La inscripción honorífica completa, in situ',
+      descripcion:
+          'Bloque calizo rectangular reutilizado como pavimento en una '
+          'galería técnica bajo la calle Curia. Inscripción en cuatro '
+          'líneas en mayúsculas romanas. La superficie está pulida, '
+          'el grabado profundo, las letras de buena factura. La cuarta '
+          'línea está mutilada: queda DEDICAVIT EX V[...] y el resto '
+          'se perdió cuando el bloque fue cortado para cubrir el '
+          'acueducto.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'El dedicante anónimo (cuya identidad la línea perdida '
+            'borró)',
+        fecha: 'Probablemente s. I-III d.C. por convenciones '
+            'epigráficas; con detalle posible época trajanea por '
+            'nomenclatura imperial',
+        publico: 'Las personas que circulaban por el lugar público '
+            'de Pompaelo donde la inscripción estaba originalmente '
+            'expuesta',
+        intereses: 'Que el honrado quedara registrado en piedra ante '
+            'la comunidad',
+        omisiones: 'No dice quién pagó, no dice por qué se honra '
+            'aquí en Pompaelo, no dice qué relación tenía el '
+            'dedicante con el honrado',
+        corroboraOContradice: 'Es la fuente principal — todo lo demás '
+            'la interpreta',
+        sesgo: SesgoFuente.oficialista,
+      ),
+    ),
+    Fuente(
+      id: 'linea_dedicacion_perdida',
+      tipoVisible: 'La línea perdida: DEDICAVIT EX V[...]',
+      descripcion:
+          'La cuarta línea de la inscripción quedó cortada cuando el '
+          'bloque se reutilizó. Sólo se conservan las primeras '
+          'letras: DEDICAVIT EX V (luego se rompe). La fórmula '
+          'DEDICAVIT EX seguida de un sustantivo (VOTO, VIRIBUS, '
+          'VOLVNTATE) es estándar; el dedicante venía después, en '
+          'la línea perdida.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'El propio dedicante (la línea era suya por convención)',
+        fecha: 'Misma que la inscripción completa',
+        publico: 'Mismo',
+        intereses: 'El dedicante quería identificarse — la pérdida '
+            'es accidental, no intencional',
+        omisiones: 'Por la mutilación, la identidad del dedicante '
+            'queda borrada — no por silencio del productor sino por '
+            'azar histórico',
+        corroboraOContradice: 'No corrobora ni contradice por sí sola '
+            '— fija sólo que hubo dedicación voluntaria',
+      ),
+    ),
+    Fuente(
+      id: 'paralelos_epigraficos_pompaelo',
+      tipoVisible: 'Repertorio de inscripciones de Pompaelo del '
+          'mismo periodo',
+      descripcion:
+          'Karim ha compilado para esta Brecha un dossier con cinco '
+          'inscripciones honoríficas y funerarias halladas en el '
+          'área de Pompaelo, fechadas en el rango s. I-III d.C. Sirve '
+          'para comparar formularios, calidad del grabado y patrones '
+          'de uso del espacio público. Ninguna nombra al "Licinio '
+          'cónsul" ni al dedicante perdido.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Compilado por Karim Belkacem para la Brecha',
+        fecha: 'Compilación reciente; las inscripciones son del s. '
+            'I-III d.C.',
+        publico: 'Aprendices del Archivo trabajando en epigrafía',
+        intereses: 'Pedagógicos — proveer paralelos para que la '
+            'aprendiz contextualice',
+        omisiones: 'No incluye paralelos fuera de Pompaelo (lo cual '
+            'limita comparaciones de redes provinciales)',
+        corroboraOContradice: 'Corrobora que el formulario y la '
+            'calidad de la inscripción de Licinio encajan con la '
+            'práctica epigráfica local del periodo',
+      ),
+    ),
+    Fuente(
+      id: 'pir_repertorio',
+      tipoVisible: 'PIR — Prosopographia Imperii Romani',
+      descripcion:
+          'Repertorio canónico de personas conocidas del Imperio '
+          'Romano. Incluye todos los cónsules con su nomen, cognomen, '
+          'datación y referencias bibliográficas. Karim instruye a '
+          'Maren para buscar Licinios cónsules de época trajanea. '
+          'El repertorio devuelve dos candidatos posibles, uno más '
+          'compatible que otro con la mutilación de la inscripción.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Académicos de la prosopografía romana, varias '
+            'generaciones',
+        fecha: 'Compilación con actualizaciones desde el s. XIX',
+        publico: 'Especialistas en historia romana',
+        intereses: 'Construir un repertorio exhaustivo y trazable',
+        omisiones: 'No nombra personas que no llegaron al rango '
+            'consular ni dedicantes anónimos — herramienta para una '
+            'élite',
+        corroboraOContradice: 'Permite afinar la datación trajanea '
+            'de la inscripción al cruzar con candidatos consulares '
+            'documentados',
+      ),
+    ),
+    Fuente(
+      id: 'paralelos_inscripciones_capital',
+      tipoVisible: 'Inscripciones honoríficas similares conservadas '
+          'en Roma',
+      descripcion:
+          'Selección comparativa de tres inscripciones honoríficas '
+          'romanas dedicadas a senadores y cónsules en Roma misma. '
+          'Permite contrastar el formulario de Pompaelo con el del '
+          'centro del Imperio: en general las urbanas son más largas '
+          'y elaboradas; las provinciales como la de Pompaelo son '
+          'más concisas y reciclan fórmulas estándar.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Compilación académica',
+        fecha: 'Inscripciones del s. I-III d.C.',
+        publico: 'Investigadores de epigrafía romana',
+        intereses: 'Análisis comparativo del lenguaje honorífico',
+        omisiones: 'Por sesgo tradicional, los dedicantes no '
+            'élites están infrarepresentados (lo cual también '
+            'afecta a esta comparación con Pompaelo)',
+        corroboraOContradice: 'Sugiere que la inscripción de Pompaelo '
+            'sigue convención provincial pero no permite afirmar el '
+            'vínculo del honrado con la ciudad',
+        sesgo: SesgoFuente.invisibilizador,
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha21 = [
+    AfirmacionCanonica(
+      id: 'tipo_honorifica',
+      texto: 'La inscripción es honorífica — no funeraria, no votiva. '
+          'Honra a una persona viva (o recién fallecida sin contexto '
+          'funerario) en un lugar público.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'inscripcion_in_situ',
+        'paralelos_epigraficos_pompaelo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'siglo_inscripcion_amplio',
+      texto: 'La inscripción es datable, por sus características '
+          'epigráficas (forma de las letras, formulario, '
+          'abreviaturas), entre los siglos I y III d.C.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'inscripcion_in_situ',
+        'paralelos_epigraficos_pompaelo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'datacion_trajanea',
+      texto: 'La inscripción puede datarse, con mayor precisión, en '
+          'época trajanea (98-117 d.C.) por la nomenclatura imperial '
+          'y el cruce con candidatos en la PIR.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'inscripcion_in_situ',
+        'pir_repertorio',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'licinio_consul',
+      texto: 'El honrado fue un cónsul perteneciente a la gens '
+          'Licinia, identificable con uno o dos candidatos '
+          'compatibles en la PIR.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'inscripcion_in_situ',
+        'pir_repertorio',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'identidad_dedicante',
+      texto: 'Se puede determinar quién pagó la inscripción '
+          '— si fue la propia ciudad de Pompaelo a través de su '
+          'senado local, un cliente, un liberto, un colega, un '
+          'familiar.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: ['linea_dedicacion_perdida'],
+    ),
+    AfirmacionCanonica(
+      id: 'vinculo_pompaelo_honrado',
+      texto: 'Se puede determinar por qué esta inscripción está aquí '
+          'en Pompaelo y no en Roma — qué vínculo concreto tenía el '
+          'honrado con la ciudad.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'inscripcion_in_situ',
+        'paralelos_inscripciones_capital',
+      ],
+    ),
+  ];
+
+  static const List<Brecha> todas = [
+    brecha11,
+    brecha12,
+    brecha13,
+    brecha14,
+    brecha21,
+  ];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
   /// la Brecha:
@@ -1067,5 +1348,14 @@ class CatalogoBrechas {
     'cromlech_aralar_alcanzado': brecha12,
     'cueva_pirineo_visitada': brecha13,
     'material_irulegi_recogido': brecha14,
+    // 2.1 se dispara con `inscripcion_romana_estudiada` (cierre de
+    // la cinemática 2.1.4 "Quién pagó esto", que activa el flag
+    // tras la lectura crítica con Karim). La Brecha jugable se
+    // interpone entre 2.1.4 y la 2.1.5 "Reconstrucción y Concilio"
+    // narrativa (formal, dos días después en el salón del Concilio
+    // con Begoña) — F2-10a cambia la precondición de la 2.1.5 de
+    // `escena_2_1_4_vista` a `brecha_2_1_completada` para mantener
+    // la separación de los dos Concilios distintos del doc 08.
+    'inscripcion_romana_estudiada': brecha21,
   };
 }
