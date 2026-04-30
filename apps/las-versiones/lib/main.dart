@@ -323,11 +323,12 @@ class _OrquestadorState extends State<Orquestador> {
     if (brecha == null) return;
     // El cierre de la Brecha sólo activa su propio flag de
     // completado. El flag `arco_1_completado` que dispara el
-    // Mosaico se activa al cerrar la cinemática 1.B "El ático" —
-    // doc 07 intercala 1.1.7 + 1.A + 1.B entre la Estación y el
-    // Mosaico. Ver `EscenasArco1.flagsDeCierrePorEscena` y
-    // BLOQUEOS-PENDIENTES.md sección "Mosaico Arco 1 con una
-    // sola Brecha implementada".
+    // Mosaico se activa al cerrar la cinemática 1.4.4 ("Aprendiz
+    // I") tras la 1.4.3 (gran Concilio). Hasta F8.4 lo activaba
+    // 1.B (mosaico tras una sola Brecha); con las Brechas 1.2/1.3
+    // y luego 1.4 entrando al catálogo (F8.4/F8.5/F8.6), el flag
+    // se mueve a su sitio canónico — el Mosaico cierra el arco
+    // entero, no una sola Estación.
     await widget.repoFlags.activar(brecha.flagDeCompletado);
     await widget.repoEstadoBrecha.borrar(brecha.id);
     if (!mounted) return;

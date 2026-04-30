@@ -690,10 +690,362 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 1.4 — El yacimiento de Irulegi y la Mano**. Cierre del
+  /// Arco 1. Yacimiento celtibérico-vascónico tardío en el monte
+  /// Irulegi (Valle de Aranguren). Pieza central: la Mano de Irulegi,
+  /// lámina de bronce con inscripción en signario paleohispánico y
+  /// lengua vascónica. Lección epistémica del doc 07: cómo sostener
+  /// **disputada** la lectura epigráfica, cómo declarar **probable
+  /// pero no determinable con la evidencia disponible** la relación
+  /// lengua vascónica/euskera contemporáneo, y cómo separar
+  /// "contacto" de "romanización" sin caer en falsa simetría ni
+  /// minimización de la violencia. Gran Concilio con todos los
+  /// revisores (Begoña, Aitor, Joana, Karim) y Marina al fondo —
+  /// cierre del rango Aspirante y promoción a Aprendiz I.
+  ///
+  /// Habilidades ejercitadas según doc 02: ejercicio integrador del
+  /// Arco 1 — todos los dominios PR/HF/CC/GH/PH/AH excepto los
+  /// específicos del MVP de capas posteriores.
+  ///
+  /// **Yacimiento concreto validado** (header v0.2 del doc 07,
+  /// tracker doc 17): Irulegi (Aranguren) es el sitio. Datación de
+  /// abandono ~70 a.C. en el contexto de las guerras sertorianas.
+  /// La Mano de Irulegi es objeto histórico real, descubierto en
+  /// 2021 y publicado en 2022. La cartela del Museo de Navarra y
+  /// el monográfico de Fontes Linguae Vasconum 136 (2023) son
+  /// referencias **reales y trazables** — no se diegetizan porque
+  /// son información pública verificable. El nombre del arqueólogo
+  /// del yacimiento se mantiene oculto en pantalla ("el arqueólogo")
+  /// por decisión explícita del guion canónico.
+  static const Brecha brecha14 = Brecha(
+    id: '1.4',
+    titulo: 'El yacimiento de Irulegi y la Mano',
+    ubicacionVisible: 'IRULEGI — POBLADO FORTIFICADO + MUSEO DE NAVARRA',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'PR.05',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.06',
+      'HF.07',
+      'HF.08',
+      'HF.09',
+      'HF.10',
+      'HF.11',
+      'HF.12',
+      'CC.04',
+      'CC.05',
+      'CC.06',
+      'CC.07',
+      'GH.04',
+      'PH.01',
+      'PH.02',
+      'PH.03',
+      'PH.04',
+      'PH.05',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+      'AH.04',
+      'AH.05',
+      'CF.05',
+      'CF.06',
+    ],
+    fuentes: _fuentesBrecha14,
+    afirmacionesCanonicas: _afirmacionesBrecha14,
+    flagDeCompletado: 'brecha_1_4_completada',
+  );
+
+  static const List<Fuente> _fuentesBrecha14 = [
+    Fuente(
+      id: 'casa_con_escaleras_irulegi',
+      tipoVisible: 'La casa con las escaleras de piedra',
+      descripcion: 'En el sector excavado del poblado, una vivienda '
+          'con paredes de piedra y adobe conserva una escalera de '
+          'piedra de siete peldaños hasta el umbral. Es la primera '
+          'vivienda con escalera de piedra documentada en su entorno '
+          'temporal y geográfico — incorporación tardía de una '
+          'técnica constructiva no tradicional del Hierro local. La '
+          'casa, junto al resto del poblado, fue derrumbada en el '
+          'incendio que clausuró el sitio.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quienes la construyeron y la habitaron',
+        fecha: 'Última fase de uso del poblado — primer cuarto del '
+            's. I a.C., antes del incendio',
+        publico: 'Sus habitantes',
+        intereses: 'Vivir — comer, dormir, almacenar, recibir',
+        omisiones: 'Cuándo exactamente se incorporó la técnica de la '
+            'escalera; si la decisión fue cosmética o funcional',
+        corroboraOContradice: 'Es evidencia material directa del '
+            'proceso de adopción técnica vascónica tardía',
+      ),
+    ),
+    Fuente(
+      id: 'enlosado_cobertizo_colapsado',
+      tipoVisible: 'El enlosado del cobertizo, colapsado',
+      descripcion: 'En otra zona del poblado, el suelo de un '
+          'cobertizo conserva los restos derrumbados de un pavimento '
+          'de piedra plana imitando opus signinum — técnica '
+          'pavimental romana. La base de preparación bajo el '
+          'pavimento no estaba bien hecha y el suelo se hundió. Los '
+          'restos quedaron in situ tras el colapso.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quienes intentaron construirlo, sin la maestría '
+            'técnica completa',
+        fecha: 'Última fase de uso del poblado',
+        publico: 'Los habitantes del cobertizo',
+        intereses: 'Imitar una técnica vista — eficacia o prestigio',
+        omisiones: 'Quién intentó hacerlo; si fue el primer intento '
+            'o uno de varios; si hubo asesoramiento de algún romano',
+        corroboraOContradice: 'La adopción no era completa — el '
+            'aprendizaje era parcial, las técnicas se importaban con '
+            'lagunas',
+      ),
+    ),
+    Fuente(
+      id: 'ceramica_mixta_irulegi',
+      tipoVisible: 'Cerámica mezclada (indígena + romana)',
+      descripcion: 'En los niveles de uso de las viviendas aparecen '
+          'fragmentos de cerámica indígena del Hierro tardío — la '
+          'mayoría — junto con piezas de cerámica romana: paredes '
+          'finas, campaniense, fragmentos de ánfora. Los dos tipos '
+          'están en el mismo contexto deposicional, no en estratos '
+          'separados — uso simultáneo en la mesa cotidiana.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Talleres locales (la mayoría) e importaciones '
+            'romanas (una parte)',
+        fecha: 'Última fase de uso',
+        publico: 'Los habitantes de las casas',
+        intereses: 'Comer, beber, almacenar — práctico, no '
+            'identitario',
+        omisiones: 'Por qué canal llegaba lo romano (comercio, '
+            'regalo, botín)',
+        corroboraOContradice: 'Adopción cotidiana voluntaria, no '
+            'imposición desde fuera',
+      ),
+    ),
+    Fuente(
+      id: 'armas_ataque_romano',
+      tipoVisible: 'Armas del ataque romano sobre Irulegi',
+      descripcion: 'Por todo el poblado aparecen puntas de flecha '
+          'romanas, restos de espada, glandes (proyectiles de honda) '
+          'con marcas de fundidor romano. Material distribuido por '
+          'el sitio, asociado a los niveles de incendio. Es la '
+          'evidencia material directa del episodio bélico que cerró '
+          'el poblado.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Las tropas atacantes',
+        fecha: 'La noche o las jornadas del ataque — primer cuarto '
+            'del s. I a.C.',
+        publico: 'Nadie — material descartado en combate',
+        intereses: 'Tomar el sitio',
+        omisiones: 'Identificación específica del bando romano '
+            'concreto que atacó (las guerras sertorianas son '
+            'conflicto civil romano)',
+        corroboraOContradice: 'Demuestra el carácter bélico del '
+            'final del poblado y la implicación de tropas romanas',
+      ),
+    ),
+    Fuente(
+      id: 'mano_irulegi_pieza',
+      tipoVisible: 'La Mano de Irulegi (Museo de Navarra)',
+      descripcion: 'Lámina de bronce con forma de mano humana, '
+          'dedos apuntando hacia abajo. Decoración en relieve y '
+          'una inscripción grabada en signario paleohispánico, '
+          'variante específica. Probablemente colgaba en el dintel '
+          'de la puerta de la casa donde se encontró. Función '
+          'ritual, probablemente apotropaica (de protección).',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quienes la fabricaron y quien encargó la '
+            'inscripción — sin nombre',
+        fecha: 'Anterior al incendio — primera mitad del s. I a.C. '
+            'o algo antes',
+        publico: 'Quienes pasaban bajo el dintel donde estaba '
+            'colgada',
+        intereses: 'Proteger el umbral — función ritual',
+        omisiones: 'Lectura epigráfica concreta; relación lengua '
+            'vascónica/euskera contemporáneo',
+        corroboraOContradice: 'Es la pieza que ancla la Brecha — '
+            'todo lo demás la contextualiza',
+      ),
+    ),
+    Fuente(
+      id: 'cartela_museo_dos_lecturas',
+      tipoVisible: 'La cartela del museo, con dos transcripciones',
+      descripcion: 'La cartela junto a la vitrina recoge dos '
+          'lecturas epigráficas distintas. La primera, de la '
+          'publicación inicial de noviembre de 2022, fue la que '
+          'circuló por la prensa. La segunda, posterior, se hizo '
+          'tras una limpieza más fina de la pieza y propone una '
+          'lectura corregida. Las dos no dicen lo mismo. La '
+          'cartela las pone en paralelo sin ocultar la divergencia.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'El equipo del Museo de Navarra y los epigrafistas '
+            'que publicaron las dos lecturas',
+        fecha: '2022 (lectura inicial) y posterior (lectura '
+            'corregida tras limpieza)',
+        publico: 'Visitantes del museo y comunidad académica',
+        intereses: 'Transparencia ante el visitante — no esconder '
+            'la divergencia académica',
+        omisiones: 'Detalle de las objeciones técnicas a cada '
+            'lectura; lecturas alternativas posteriores publicadas '
+            'fuera del museo',
+        corroboraOContradice: 'Hace visible que la lectura está '
+            'disputada — no hay consenso establecido',
+      ),
+    ),
+    Fuente(
+      id: 'monografico_flv_136',
+      tipoVisible: 'Monográfico de Fontes Linguae Vasconum 136 (2023)',
+      descripcion: 'Número monográfico de la revista académica '
+          'dedicado íntegramente a la Mano de Irulegi. Recoge '
+          'propuestas de lectura epigráfica de varios equipos, '
+          'discute paralelos en otros signarios paleohispánicos y '
+          'plantea cautelas sobre la relación lengua vascónica / '
+          'euskera contemporáneo. Las propuestas divergen entre '
+          'sí. Publicaciones posteriores (2025) siguen proponiendo '
+          'lecturas alternativas. No hay consenso académico '
+          'actual.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Equipos académicos especializados en epigrafía '
+            'paleohispánica y vascología',
+        fecha: '2023, con publicaciones posteriores en 2025',
+        publico: 'Comunidad académica',
+        intereses: 'Avanzar en la lectura — sin acuerdo previo',
+        omisiones: 'Lo que las propuestas no abarcan; aspectos '
+            'arqueológicos del contexto de hallazgo',
+        corroboraOContradice: 'Confirma que el debate sigue abierto '
+            'y desplaza la afirmación clave a Disputada',
+      ),
+    ),
+  ];
+
+  /// Afirmaciones canónicas de la Brecha 1.4 — las 9 que Maren
+  /// presenta en el gran Concilio del doc 07 §1.4.3, calibradas
+  /// según el guion canónico:
+  /// - 4 Sólidas (1, 2, 3, 4 + 7 → 5 Sólidas en total).
+  /// - 2 Probables (5, 6).
+  /// - 2 Disputadas (8, 9).
+  ///
+  /// Distribución diseñada para que la calibración Brier penalice
+  /// tanto al que afirma de más (declarar Sólido lo que es Disputado)
+  /// como al que afirma de menos (declarar Disputado lo que es
+  /// Sólido). Las dos Disputadas concentran la lección epistémica
+  /// del Arco 1: sostener la incertidumbre sin caer en relativismo.
+  static const List<AfirmacionCanonica> _afirmacionesBrecha14 = [
+    AfirmacionCanonica(
+      id: 'irulegi_habitado_bronce_a_hierro_tardio',
+      texto: 'El poblado de Irulegi fue habitado desde el Bronce '
+          'Medio-Tardío hasta el primer tercio del siglo I a.C.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'casa_con_escaleras_irulegi',
+        'ceramica_mixta_irulegi',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'irulegi_final_belico_sertorianas',
+      texto: 'El final del poblado es producto de un episodio '
+          'bélico — incendio y abandono — en el contexto de las '
+          'guerras sertorianas (años 70 del siglo I a.C.).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'armas_ataque_romano',
+        'casa_con_escaleras_irulegi',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'sertorianas_conflicto_civil_romano',
+      texto: 'Las guerras sertorianas son conflicto civil romano. '
+          'La destrucción de Irulegi no es consecuencia de una '
+          'conquista exterior limpia sino de una guerra civil que '
+          'arrastró a los pobladores locales.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['armas_ataque_romano'],
+    ),
+    AfirmacionCanonica(
+      id: 'adopcion_tecnicas_romanas',
+      texto: 'Los pobladores de Irulegi en su última fase '
+          'adoptaban técnicas constructivas romanas (escaleras de '
+          'piedra, intentos de enlosado) e incorporaban cerámica '
+          'romana al uso cotidiano.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'casa_con_escaleras_irulegi',
+        'enlosado_cobertizo_colapsado',
+        'ceramica_mixta_irulegi',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'adopcion_no_completa_aprendizaje',
+      texto: 'La adopción no era completa ni perfecta. El enlosado '
+          'del cobertizo colapsó por mala preparación de la base. '
+          'Esto sugiere proceso de aprendizaje, no imposición.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: ['enlosado_cobertizo_colapsado'],
+    ),
+    AfirmacionCanonica(
+      id: 'mano_funcion_apotropaica',
+      texto: 'La Mano de Irulegi es objeto ritual y apotropaico, '
+          'probablemente colgado en el dintel de una puerta. La '
+          'función protectora se infiere por el contexto de '
+          'hallazgo y por paralelos en otras culturas '
+          'mediterráneas.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: ['mano_irulegi_pieza'],
+    ),
+    AfirmacionCanonica(
+      id: 'inscripcion_en_signario_paleohispanico_lengua_vasconica',
+      texto: 'La inscripción de la Mano está escrita en signario '
+          'paleohispánico (variante específica) y la lengua es '
+          'vascónica.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'mano_irulegi_pieza',
+        'cartela_museo_dos_lecturas',
+        'monografico_flv_136',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'lectura_epigrafica_disputada',
+      texto: 'La lectura epigráfica concreta del texto de la Mano '
+          'es un hecho establecido del que existe consenso '
+          'académico.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'cartela_museo_dos_lecturas',
+        'monografico_flv_136',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'relacion_vasconica_euskera_determinable',
+      texto: 'La relación entre la lengua vascónica documentada '
+          'en la Mano y el euskera contemporáneo se puede '
+          'determinar con la evidencia disponible.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'mano_irulegi_pieza',
+        'monografico_flv_136',
+      ],
+    ),
+  ];
+
   /// Lista ordenada de todas las Brechas catalogadas. El orquestador
   /// la consulta para resolver `brechaPendiente()` igual que
   /// `EscenasArco1.todas` resuelve la próxima cinemática.
-  static const List<Brecha> todas = [brecha11, brecha12, brecha13];
+  static const List<Brecha> todas = [brecha11, brecha12, brecha13, brecha14];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
   /// la Brecha:
@@ -706,9 +1058,14 @@ class CatalogoBrechas {
   ///   cinemática 1.3.5, "vuelta y silencio") — la cueva se visita
   ///   en cinco cinemáticas concatenadas antes de abrir la fase
   ///   jugable de la Brecha.
+  /// - 1.4 se dispara con `material_irulegi_recogido` (cierre de la
+  ///   cinemática 1.4.2, "material congelado") — el yacimiento se
+  ///   visita en 1.4.1, el material del sitio + Mano se observa en
+  ///   1.4.2, y entonces se abre la fase jugable de la Brecha 1.4.
   static const Map<String, Brecha> brechaPorFlagDeDisparo = {
     'aralar_dolmen_alcanzado': brecha11,
     'cromlech_aralar_alcanzado': brecha12,
     'cueva_pirineo_visitada': brecha13,
+    'material_irulegi_recogido': brecha14,
   };
 }

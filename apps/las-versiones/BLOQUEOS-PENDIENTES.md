@@ -123,12 +123,11 @@ autónomamente. Quedan documentadas para revisión:
 
 **Tracker doc 17**: el Mosaico es categoría no-atomizada (doc 15 §3) — los prompts actuales son provisionales y deberá revisarlos quien valide el material pedagógico cuando entren más Brechas al arco.
 
-**Estado actual (F8)**:
-- El catálogo del Arco 1 sólo tiene la Brecha 1.1 implementada. El guion (doc 07) prevé 1.1 + 1.2 + 1.3 + 1.4 antes del Mosaico de fin de arco.
-- Para no bloquear el flujo end-to-end, el orquestador activa `arco_1_completado` al cerrar la 1.1. La Cronista pasa por el Mosaico tras esa única Brecha.
-- Los tres prompts del Mosaico (`que_te_llevas`, `que_te_queda`, `que_cambiarias`) hablan en singular del "dolmen" — porque es lo único que ha vivido. Cuando entren las Brechas 1.2, 1.3, 1.4, el disparador se moverá al cierre de la 1.4 y los prompts se generalizarán a "este arco" en plural.
+**Estado actual (tras F8.6)**:
+- El catálogo del Arco 1 tiene las cuatro Brechas implementadas (1.1, 1.2, 1.3, 1.4). El disparador del Mosaico (`arco_1_completado`) se ha movido a su sitio canónico — se activa al cerrar la cinemática 1.4.4 ("Aprendiz I"), que es el cierre real del arco según el doc 07 §M1 ("Activa: tras 1.4, en los días siguientes").
+- Los tres prompts del Mosaico (`que_te_llevas`, `que_te_queda`, `que_cambiarias`) **siguen hablando en singular del "dolmen"** — esto es contenido pendiente de F8.7. El doc 07 v0.2 §M1 prescribe un formato distinto: 8 viñetas con código de confianza (Sólido/Probable/Disputado) más feedback escrito a piezas seleccionadas, sustituyendo los 3 prompts de texto. Hasta que F8.7 reescriba la pantalla del Mosaico, los prompts singulares del "dolmen" siguen activos.
 
-**Razón**: producir el Mosaico de un arco completo sin haber cerrado el arco rompería la pedagogía. La solución provisional (mosaico tras 1 brecha) está claramente acotada y se documenta con comentario en `_alCompletarBrecha()` para que el cambio a "tras la 1.4" sea trivial cuando el arco crezca.
+**Pendiente para F8.7**: reescritura completa de `pantalla_mosaico_arco_1.dart` al formato v0.2 — 8 viñetas con código de confianza por viñeta + feedback breve por viñeta seleccionada. Los `MosaicoArco1.flagDeArcoCompletado` y `flagDeMosaicoEntregado` se mantienen (sólo cambia el contenido visual y el repositorio de respuestas).
 
 ---
 
@@ -150,22 +149,51 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Cinemática latente 1.4.4 "Aprendiz I" — sustituciones diegéticas y referencia a la Mano de Irulegi (F8.3)
+## Cinemática 1.4.4 "Aprendiz I" — sustituciones revertidas en F8.6
 
 **Tracker doc 17**: pendiente de revisión humana.
 
 **Guion canónico (doc 07 §1.4.4)**: cierre del Arco 1 en el patio del Archivo. Maren e Isaura solas tras el gran Concilio de la Estación 4. Validación amable, mención de los gestos de Begoña, anuncio del Arco 2 (Pompaelo). Aparece flotante "APRENDIZ I" — Maren asciende de rango.
 
-**Estado**: implementada en `EscenasArco1.aprendizI` con `flagsRequeridos: {brecha_1_4_completada}`. Como la Brecha 1.4 (Irulegi) no está en el catálogo del juego todavía, **el orquestador no la dispara** — queda latente. Mismo patrón que 1.B.1 y 1.C.
+**Estado**: implementada en `EscenasArco1.aprendizI`. Tras F8.6, la precondición pasa de `{brecha_1_4_completada}` a `{escena_1_4_3_vista}` — la Brecha 1.4 cierra antes que la cinemática 1.4.3 (gran Concilio), y la 1.4.4 se encadena tras la 1.4.3.
 
-**Sustituciones diegéticas aplicadas**:
-- "El capitel del s. XII y el brocal del pozo" → "el capitel y el brocal del pozo" (entrada EDIFICIO-ARCHIVO, simétrica a la sustitución ya aplicada en 1.0.2).
-- "Reformularías sobre la violencia romana" → "ibas a reformular tu posición sobre lo que pasó cuando los romanos llegaron". La frase original carga una afirmación política sobre la conquista romana sin que el comité asesor la haya validado para edad 10-14. Se preserva la pedagogía (Begoña valora la disposición a reformular) sin tesis específica.
-- "Otra Brecha sin haber visto la Mano y haber tenido que defenderte sobre ella" → "Otra Brecha sin haber tenido que defender una pieza así". La Mano de Irulegi **está validada** en el header v0.2 del doc 07 como pieza central de la Estación 1.4, pero como la Brecha 1.4 no está implementada, una mención específica sería opaca para el jugador. La sustitución se revierte cuando la 1.4 entre al catálogo.
+**Sustituciones revertidas en F8.6** (Brecha 1.4 ya implementada):
+- "Reformularías sobre la violencia romana" — recupera su forma canónica. El doc 07 §1.4.3 (gran Concilio) articula explícitamente la matización (Karim pregunta a Maren si está minimizando la violencia romana, Maren reformula), así que la frase de Isaura tiene ahora su anclaje narrativo dentro del juego.
+- "Otra Brecha sin haber visto la Mano y haber tenido que defenderte sobre ella" — recupera su forma canónica. El jugador ha trabajado la Mano en la fase jugable de la Brecha 1.4 y la ha defendido en el Concilio.
+
+**Sustitución residual**:
+- "El capitel del s. XII y el brocal del pozo" → "el capitel y el brocal del pozo" (entrada EDIFICIO-ARCHIVO, simétrica a la sustitución ya aplicada en 1.0.2). Sigue activa hasta que el comité valide los siglos.
 
 **Pompaelo y la transición vascón → romano** se preservan en su forma canónica — Pompaelo está validada como entrada (ya aparece en 1.0.2) y la frase de Isaura ("lo que pudo haber sido un asentamiento vascón previo") declara explícitamente la incertidumbre, encajando con el oficio.
 
-**Pendiente de revisión humana**: confirmación de que la sustitución de "violencia romana" es aceptable y de que el patrón pedagógico de Begoña (sólo sonríe cuando el aprendiz reconoce sus límites) se mantiene legible sin la frase original.
+**Pendiente de revisión humana**: confirmación de que el patrón pedagógico de Begoña (sólo sonríe cuando el aprendiz reconoce sus límites o se compromete a reformular) se mantiene legible.
+
+---
+
+## Brecha 1.4 (yacimiento de Irulegi y la Mano) + 3 cinemáticas internas (F8.6)
+
+**Tracker doc 17**: pendiente de revisión humana. La capa Irulegi/Mano está validada explícitamente en el header v0.2 del doc 07 (entrada YACIMIENTO-CELTIBERICO/VASCON) como yacimiento principal de la Estación 1.4 — Irulegi (Aranguren), datación de abandono ~70 a.C. en el contexto de las guerras sertorianas, Mano de Irulegi como pieza central. La Custodia (Viana) queda como mención narrativa para futuras Brechas, no aparece aquí.
+
+**Guion canónico (doc 07 §1.4)**: 5-6 semanas tras inicio del juego. Maren visita el monte Irulegi con Isaura (1.4.1) — el arqueólogo del yacimiento la recibe, le explica las casas vascónicas tardías con escaleras de piedra, le anuncia el Concilio entero del día siguiente. Isaura le menciona la Mano (que verán por la tarde en el Museo de Navarra) y, con cuidado, la presencia de un perinatal cercano. La 1.4.2 cubre el día completo de trabajo: yacimiento por la mañana (casa con escaleras, enlosado romano colapsado, cerámica mixta, armas del ataque, huesos animales), Museo de Navarra por la tarde (la Mano + cartela con dos lecturas distintas + paneles de contexto). Voz larga del Cuaderno articulando la postura epistémica ante el debate académico abierto. Fase jugable de la Brecha 1.4 (recolección + evaluación + reconstrucción + concilio algorítmico). 1.4.3 reproduce el diálogo concreto del gran Concilio — preguntas de Aitor (afirmación 5), Joana (afirmaciones 8 y 9), Begoña (contacto vs romanización), Karim (sobrepeso simbólico de la Mano + violencia romana). Cierre con Begoña pronunciando "Aprendiz I". Marina aplaude sin protocolo. Maren sonríe.
+
+**Estado**: implementada en `CatalogoBrechas.brecha14` (7 fuentes diegéticas + 9 afirmaciones canónicas — 5 Sólidas + 2 Probables + 2 Disputadas) + 3 cinemáticas en `EscenasArco1` (`viajeAYacimientoIrulegi`, `materialCongelado`, `granConcilio`). El flujo del orquestador queda:
+- 1.4.1 se encadena con `escena_1_3_7_vista` (apunte largo del Cuaderno tras el primer Concilio formal de la 1.3).
+- 1.4.2 se encadena con 1.4.1 y al cerrarla activa `material_irulegi_recogido`, que el catálogo reconoce como disparador de la fase jugable de la Brecha 1.4.
+- Tras `brecha_1_4_completada`, el orquestador encadena 1.4.3 (gran Concilio narrativo) — la fase F6.5 jugable ya dio el feedback algorítmico; la 1.4.3 añade el contenido específico que el algoritmo no genera.
+- Tras `escena_1_4_3_vista`, el orquestador encadena 1.4.4 (patio del Archivo, "Aprendiz I"), que activa `arco_1_completado` y dispara el Mosaico de fin de arco.
+
+**Sin sustituciones diegéticas en el contenido jugable de la Brecha**: las 7 fuentes son ficticias y diegéticas en su descripción (no afirman C14 con cifra concreta ni autoría real para el material excavado), pero referencian la Mano de Irulegi por su nombre canónico — está validada en doc 17. La cartela del Museo de Navarra y el monográfico de **Fontes Linguae Vasconum 136 (2023)** son referencias **reales y trazables** — información pública verificable, no se diegetizan. Las 9 afirmaciones canónicas reproducen literalmente la calibración del doc 07 §1.4.3 (5 Sólidas + 2 Probables + 2 Disputadas).
+
+**Sin sustituciones en el diálogo de la 1.4.3**: el Concilio reproduce literalmente el guion canónico. La voz de Joana (Anclada — distingue Disputado de "no establecido") y la de Karim (Reformista — pilla a Maren dos veces, sobre la Mano y sobre la violencia romana) se fijan aquí por primera vez con material narrativo largo. La frase pedagógica clave de Maren sobre la relación lengua vascónica/euskera ("Yo declaro Probable la relación porque es plausible. Pero declaro Disputada como afirmación metodológica porque el oficio honesto no me permite afirmarla con la rotundidad que algunas voces dentro y fuera del debate quieren") se reproduce intacta — es el corazón pedagógico del Arco 1.
+
+**Decisión sobre el arqueólogo del yacimiento**: el guion canónico decide explícitamente no nombrar al arqueólogo en pantalla, sólo "el arqueólogo". La voz `VozPersonaje.arqueologo` lleva el `nombreVisible: 'Arqueólogo'` siguiendo la decisión.
+
+**Pendiente de revisión humana**:
+- Voces de Joana y Karim — primera aparición con material narrativo largo. ¿El tono encaja con la Bíblia de Personajes (doc 04, hoy aún sin entradas detalladas para ellos)?
+- ¿La calibración de la afirmación 6 (la Mano como objeto apotropaico colgado en dintel) está bien como Probable? El doc 07 v0.2 propone Probable porque la función protectora se infiere por contexto de hallazgo + paralelos mediterráneos; el comité podría argumentar Sólido si los paralelos son robustos, o Disputado si el comité prefiere reservar el juicio.
+- Tono de la voz del Cuaderno en la 1.4.2 — primera vez que el Cuaderno articula explícitamente la postura epistémica ("voy a tener que sostener la incertidumbre") en primera persona larga.
+- Presencia narrativa del perinatal en la 1.4.1 — Isaura lo menciona "para que sepas" y el guion canónico cierra con "la Brecha no se centra en él". ¿La forma como Maren "se queda quieta" un segundo y dice "Vale" es suficiente respeto pedagógico? ¿O necesita un tratamiento más extenso en alguna entrada del Cuaderno?
+- ¿La frase de Karim sobre el sobrepeso simbólico de la Mano ("ha sido mucho más que pieza arqueológica desde 2022") encaja con la prudencia del juego sobre afirmaciones políticas? El monográfico de Fontes Linguae Vasconum es público; el sobrepeso simbólico es observable.
 
 ---
 

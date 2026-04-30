@@ -450,15 +450,105 @@ void main() {
     });
   });
 
+  group('EscenasArco1.viajeAYacimientoIrulegi (1.4.1)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.viajeAYacimientoIrulegi.id, '1.4.1');
+      expect(
+        EscenasArco1.viajeAYacimientoIrulegi.flagDeSalida,
+        'escena_1_4_1_vista',
+      );
+      expect(
+        EscenasArco1.viajeAYacimientoIrulegi.flagsRequeridos,
+        {'escena_1_3_7_vista'},
+        reason: '1.4.1 se encadena tras la 1.3.7 (apunte largo del '
+            'Cuaderno tras el primer Concilio formal)',
+      );
+    });
+
+    test('viaja con ambiente yacimiento de Irulegi — el monte sobre '
+        'el valle de Aranguren', () {
+      expect(
+        EscenasArco1.viajeAYacimientoIrulegi.ambiente,
+        same(AmbienteArchivo.yacimientoIrulegi),
+      );
+    });
+
+    test('cierra como amable — Maren empieza la jornada de trabajo '
+        'en el sitio, no encadena con 1.4.2 en la misma sesión', () {
+      final ultimoPlano = EscenasArco1.viajeAYacimientoIrulegi.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.materialCongelado (1.4.2)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.materialCongelado.id, '1.4.2');
+      expect(
+        EscenasArco1.materialCongelado.flagDeSalida,
+        'escena_1_4_2_vista',
+      );
+      expect(
+        EscenasArco1.materialCongelado.flagsRequeridos,
+        {'escena_1_4_1_vista'},
+        reason: '1.4.2 se encadena directamente tras 1.4.1',
+      );
+    });
+
+    test('viaja con ambiente Museo de Navarra — donde está la Mano de '
+        'Irulegi y donde Maren articula la voz del Cuaderno', () {
+      expect(
+        EscenasArco1.materialCongelado.ambiente,
+        same(AmbienteArchivo.museoNavarra),
+      );
+    });
+
+    test('cierra como amable — al cerrar la voz del Cuaderno se abre '
+        'la fase jugable de la Brecha 1.4 (siguiente sesión)', () {
+      final ultimoPlano = EscenasArco1.materialCongelado.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.granConcilio (1.4.3)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.granConcilio.id, '1.4.3');
+      expect(
+        EscenasArco1.granConcilio.flagDeSalida,
+        'escena_1_4_3_vista',
+      );
+      expect(
+        EscenasArco1.granConcilio.flagsRequeridos,
+        {'brecha_1_4_completada'},
+        reason: '1.4.3 reproduce el diálogo del Concilio tras cerrar la '
+            'fase jugable de la Brecha 1.4',
+      );
+    });
+
+    test('viaja con ambiente sala del Concilio — donde Begoña preside '
+        'el Concilio entero', () {
+      expect(
+        EscenasArco1.granConcilio.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test('cierra como amable — tras la promoción a Aprendiz I la sesión '
+        'termina, no encadena con 1.4.4 en la misma sesión', () {
+      final ultimoPlano = EscenasArco1.granConcilio.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('EscenasArco1.aprendizI (1.4.4)', () {
     test('id, flagDeSalida y precondición coherentes', () {
       expect(EscenasArco1.aprendizI.id, '1.4.4');
       expect(EscenasArco1.aprendizI.flagDeSalida, 'escena_1_4_4_vista');
       expect(
         EscenasArco1.aprendizI.flagsRequeridos,
-        {'brecha_1_4_completada'},
-        reason: '1.4.4 requiere haber cerrado la Estación 4 (Irulegi) — '
-            'queda latente hasta que entre la Brecha 1.4 al catálogo',
+        {'escena_1_4_3_vista'},
+        reason: 'tras F8.6 la 1.4.4 se dispara al cerrar la 1.4.3 (gran '
+            'Concilio), no directamente al cerrar la Brecha — el orden '
+            'narrativo es Brecha 1.4 → 1.4.3 → 1.4.4',
       );
     });
 
@@ -528,12 +618,46 @@ void main() {
       });
     });
 
-    test('1.4.4 cierra activando rango_aprendiz_i y arco_2_anunciado — '
-        'Maren asciende a Aprendiz I y se abre la transición al Arco 2',
-        () {
+    test('1.4.4 cierra activando rango_aprendiz_i, arco_2_anunciado y '
+        'arco_1_completado — Maren asciende a Aprendiz I, se abre la '
+        'transición al Arco 2 y se dispara el Mosaico de fin de arco '
+        '(tras F8.6 el flag arco_1_completado se mueve aquí desde 1.B '
+        'porque la 1.4.4 es el cierre real del arco)', () {
       final flags =
           EscenasArco1.flagsDeCierrePorEscena['escena_1_4_4_vista'];
-      expect(flags, {'rango_aprendiz_i', 'arco_2_anunciado'});
+      expect(flags, {
+        'rango_aprendiz_i',
+        'arco_2_anunciado',
+        'arco_1_completado',
+      });
+    });
+
+    test('1.4.1 cierra activando visitado_yacimiento_irulegi y '
+        'avisada_concilio_entero — Maren llega al sitio y queda '
+        'enterada del Concilio entero del día siguiente', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_4_1_vista'];
+      expect(flags, {'visitado_yacimiento_irulegi', 'avisada_concilio_entero'});
+    });
+
+    test('1.4.2 cierra activando material_irulegi_recogido — el flag '
+        'que el catálogo de Brechas reconoce como disparador de la '
+        'fase jugable de la Brecha 1.4', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_4_2_vista'];
+      expect(flags, {'material_irulegi_recogido', 'mano_irulegi_observada'});
+    });
+
+    test('1.4.3 cierra activando gran_concilio_realizado — el Concilio '
+        'queda registrado pero NO activa arco_1_completado: ese flag '
+        'se mueve a 1.4.4 para preservar el orden narrativo del doc 07 '
+        '(§M1 "Activa: tras 1.4")', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_4_3_vista'];
+      expect(flags, {'gran_concilio_realizado'});
+      expect(flags, isNot(contains('arco_1_completado')),
+          reason: 'arco_1_completado se activa en 1.4.4 para que el '
+              'Mosaico llegue tras la promoción a Aprendiz I, no antes');
     });
 
     test('1.3.1 cierra activando traveling_pyrenees_first — la primera '

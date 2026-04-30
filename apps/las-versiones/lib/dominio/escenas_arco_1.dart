@@ -41,6 +41,9 @@ class EscenasArco1 {
     elPrimerConcilioFormal,
     elApunteLargo,
     naiaPregunta,
+    viajeAYacimientoIrulegi,
+    materialCongelado,
+    granConcilio,
     aprendizI,
   ];
 
@@ -126,12 +129,37 @@ class EscenasArco1 {
     'escena_1_c_vista': {
       'naia_humanizo_huesos',
     },
-    // Cierre del Arco 1 — Maren asciende a Aprendiz I y se anuncia
-    // el Arco 2 (Pompaelo). La 1.4.4 queda latente hasta que entre
-    // la Brecha 1.4 al catálogo. Activa el rango oficial.
+    // Cinemáticas de la Estación 4 (Irulegi + Mano). 1.4.1 abre la
+    // Estación con la visita al yacimiento; 1.4.2 (material
+    // congelado del sitio + Mano en el Museo) cierra con el flag
+    // `material_irulegi_recogido` que el catálogo reconoce como
+    // disparador de la fase jugable de la Brecha 1.4. La 1.4.3
+    // (gran Concilio) se reproduce tras cerrar la Brecha y precede
+    // a la 1.4.4 ("Aprendiz I"), que ahora encadena con
+    // `escena_1_4_3_vista` en lugar de `brecha_1_4_completada`
+    // directamente — la Brecha cierra antes de la 1.4.3 y la
+    // promoción de rango llega tras la 1.4.3.
+    'escena_1_4_1_vista': {
+      'visitado_yacimiento_irulegi',
+      'avisada_concilio_entero',
+    },
+    'escena_1_4_2_vista': {
+      'material_irulegi_recogido',
+      'mano_irulegi_observada',
+    },
+    'escena_1_4_3_vista': {
+      'gran_concilio_realizado',
+    },
+    // Cierre del Arco 1 — Maren asciende a Aprendiz I, se anuncia
+    // el Arco 2 (Pompaelo) y se activa `arco_1_completado` que
+    // dispara el Mosaico. Tras F8.6 esta cinemática se encadena
+    // tras la 1.4.3 (gran Concilio); el Mosaico se reproduce a
+    // continuación, conservando el orden narrativo del doc 07
+    // (§M1 "Activa: tras 1.4, en los días siguientes").
     'escena_1_4_4_vista': {
       'rango_aprendiz_i',
       'arco_2_anunciado',
+      'arco_1_completado',
     },
   };
 
@@ -2374,6 +2402,703 @@ class EscenasArco1 {
     ],
   );
 
+  /// **1.4.1 — El yacimiento** (doc 07 §1.4.1).
+  ///
+  /// ~5-6 semanas tras inicio del juego. Maren llega al monte
+  /// Irulegi (Valle de Aranguren) con Isaura. Los recibe el
+  /// arqueólogo del yacimiento — sin nombre completo en pantalla,
+  /// sólo "el arqueólogo", decisión explícita del guion canónico.
+  /// Las casas vascónicas tardías parcialmente excavadas, escaleras
+  /// de piedra que conservan siete peldaños. Isaura le anuncia que
+  /// mañana viene el Concilio entero (Begoña, Aitor, Joana, Karim,
+  /// más). Le explicita: hoy haces el trabajo, mañana lo defiendes.
+  /// Le menciona la Mano (que verán por la tarde en el Museo de
+  /// Navarra) y, con cuidado, la presencia de un perinatal cercano.
+  ///
+  /// Pedagógicamente clave: la Estación final del arco se anuncia
+  /// como expuesta — Aspirante presenta de pie ante Concilio entero
+  /// — pero también acompañada (Isaura: "no estás sola, pero estás
+  /// expuesta"). El arqueólogo le entrega el sitio con respeto.
+  ///
+  /// **Yacimiento concreto y datación validados** en el header v0.2
+  /// del doc 07 (entrada YACIMIENTO-CELTIBERICO/VASCON del tracker
+  /// doc 17). Sin sustituciones diegéticas en el contenido material
+  /// del sitio. El arqueólogo se nombra como "el arqueólogo" porque
+  /// el guion así lo decide (su nombre completo, "Mattin", queda
+  /// fuera de pantalla por decisión del guion canónico).
+  static const EscenaCinematica viajeAYacimientoIrulegi = EscenaCinematica(
+    id: '1.4.1',
+    titulo: 'El yacimiento',
+    flagDeSalida: 'escena_1_4_1_vista',
+    flagsRequeridos: {'escena_1_3_7_vista'},
+    ambiente: AmbienteArchivo.yacimientoIrulegi,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Cinco semanas dentro del oficio. El monte Irulegi se '
+            'eleva sobre el valle de Aranguren, a diez kilómetros de '
+            'Iruña. La caminata desde Ilundain ha sido de media hora '
+            'larga. En la cima, las estructuras de piedra del poblado '
+            'fortificado, parcialmente excavadas. Más arriba, los '
+            'restos de un castillo medieval — pero ese no es el sitio '
+            'de hoy.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Un arqueólogo joven, anorak de campo, las recibe en la '
+            'zona excavada. Está cerca de una vivienda con paredes '
+            'de piedra visibles, una calle de acceso, peldaños de '
+            'piedra conservados.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologo,
+        texto: 'Llegáis bien. Tenéis dos horas.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Gracias.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'A Maren:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologo,
+        texto:
+            'Tú eres la nueva. Empieza por la casa. Las escaleras '
+            'conservan siete peldaños — primera vivienda con '
+            'escaleras documentada en toda la Edad del Hierro del '
+            'Pirineo Occidental.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren se acerca. Mira las escaleras de piedra que llevan '
+            'hasta el umbral de una casa parcialmente derrumbada.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Esta es tu última Brecha de Aspirante.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Lo sé.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Mañana viene el Concilio entero.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Entero?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Begoña. Yo. Aitor. Joana. Karim. Algunos más.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Maren respira hondo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'No estás sola. Pero estás expuesta.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hoy haces el trabajo. Mañana lo defiendes.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Maren mira el conjunto del poblado.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Cuándo se abandonó.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Primer cuarto del siglo I a.C. Tropas romanas lo '
+            'incendiaron. Las paredes de las casas colapsaron y '
+            'sepultaron los objetos en su sitio. Lo que tienes hoy '
+            'es una fotografía congelada de una jornada de hace dos '
+            'mil años.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Maren mira las escaleras.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿En qué guerra?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Las guerras sertorianas. Conflicto civil romano. Nada '
+            'que ver con una conquista exterior limpia. Los romanos '
+            'peleaban entre ellos y arrastraron a las gentes locales.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hay otras dos cosas que debes saber antes de empezar.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Una. En esta casa de la izquierda — la que excavaron en '
+            '2021 — encontraron una pieza extraordinaria. La llaman '
+            'la Mano de Irulegi. Está hoy en el Museo de Navarra. '
+            'Volvemos por la tarde a verla. Tu Brecha trabajará la '
+            'pieza como pieza, y trabajará el sitio donde apareció.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Maren asiente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Dos. Aquí cerca, cuando excavaron, encontraron también '
+            'los restos de un bebé. Un perinatal. Murió poco antes '
+            'de nacer. Hace dos mil años.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren se queda quieta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Lo dejo dicho ahora para que sepas. La Brecha no se '
+            'centra en él. Pero conviene que conozcas que existió.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren asiente despacio. Se pone los guantes que el '
+            'arqueólogo le ha pasado. Comienza el trabajo en la casa '
+            'de las escaleras.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'EMPEZAR LA JORNADA'),
+    ],
+  );
+
+  /// **1.4.2 — Material congelado** (doc 07 §1.4.2).
+  ///
+  /// Día completo. Maren trabaja por la mañana en el sitio (dos
+  /// horas) inventariando el material congelado de la última
+  /// jornada del poblado: la casa con escaleras, el enlosado del
+  /// cobertizo colapsado por mala preparación de la base, cerámica
+  /// indígena mezclada con romana en el mismo nivel, armas del
+  /// ataque romano, huesos de la última cena. Por la tarde, viaje
+  /// al Museo de Navarra (Sala de Prehistoria) donde está la Mano
+  /// de Irulegi. Maren pasa una hora frente a la vitrina, media
+  /// hora con la cartela y los paneles. La cartela trae **dos
+  /// transcripciones distintas** — la lectura inicial de noviembre
+  /// 2022 y la corregida tras limpieza posterior. La voz del
+  /// Cuaderno cierra la jornada con una entrada larga sobre la
+  /// divergencia académica.
+  ///
+  /// Pedagógicamente clave: aprender a sostener la incertidumbre
+  /// cuando los expertos divergen entre sí. La voz del Cuaderno
+  /// articula explícitamente la postura epistémica: "Voy a tener
+  /// que sostener la incertidumbre. No me quiero precipitar".
+  ///
+  /// Al cerrar esta cinemática se activa `material_irulegi_recogido`,
+  /// que el catálogo reconoce como disparador de la fase jugable de
+  /// la Brecha 1.4.
+  ///
+  /// **Sin sustituciones diegéticas**: la cartela del Museo de
+  /// Navarra y el monográfico de Fontes Linguae Vasconum 136 (2023)
+  /// son referencias **reales y trazables** — información pública
+  /// verificable. La validación del comité asesor cuando llegue
+  /// confirmará el tono de la voz del Cuaderno y la formulación de
+  /// la divergencia académica.
+  static const EscenaCinematica materialCongelado = EscenaCinematica(
+    id: '1.4.2',
+    titulo: 'Material congelado',
+    flagDeSalida: 'escena_1_4_2_vista',
+    flagsRequeridos: {'escena_1_4_1_vista'},
+    ambiente: AmbienteArchivo.museoNavarra,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren trabaja dos horas en el yacimiento. Inventarío de '
+            'la casa con las escaleras: paredes de piedra y adobe, '
+            'siete peldaños conservados, fragmentos de cerámica en '
+            'el suelo de la última jornada. Después, otra zona: el '
+            'cobertizo con su enlosado derrumbado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologo,
+        texto:
+            'Aquí intentaron imitar un opus signinum. Pavimento de '
+            'piedra plana romana. Pero la base no estaba bien '
+            'preparada. Se les hundió.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Antes del incendio?'),
+      PlanoDialogo(
+        voz: VozPersonaje.arqueologo,
+        texto:
+            'Antes. Llevaban un tiempo con el cobertizo así, '
+            'inservible. La estaban incorporando, no dominando. '
+            'Aprendizaje incompleto.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'En el resto del sitio: cerámica indígena del Hierro '
+            'tardío — la mayoría — junto con piezas romanas en el '
+            'mismo nivel. Paredes finas, campaniense, fragmentos de '
+            'ánfora. Y por todas partes, las armas del ataque: '
+            'puntas de flecha, restos de espada, glandes de honda '
+            'con marcas de fundidor romano. Las casas colapsaron '
+            'sobre todo lo demás. Una fotografía congelada.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa para comer. Bocadillo con Isaura en el lateral. '
+            'Sin hablar mucho.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Por la tarde, viaje corto al Museo de Navarra. Iruña, '
+            'Sala de Prehistoria. Maren pasa una hora frente a la '
+            'vitrina de la Mano. Lámina de bronce, dedos hacia '
+            'abajo, decoración en relieve. Inscripción grabada — '
+            'signario paleohispánico, variante específica.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Después media hora con la cartela y los paneles de '
+            'contexto. Maren detecta algo. La cartela menciona '
+            '"lectura inicial 2022" y, debajo, "lectura corregida '
+            'tras limpieza posterior". Dos transcripciones distintas.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren toma notas. Vuelve al Archivo. Esa noche.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'La Mano de Irulegi. La he visto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La cartela del museo trae dos lecturas. La primera es '
+            'de noviembre de 2022, cuando se anunció el hallazgo. '
+            'La segunda es posterior, después de que limpiaran la '
+            'pieza.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Las dos no dicen lo mismo. La diferencia no es trivial.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Los expertos no se han puesto de acuerdo. Hay un número '
+            'entero de una revista — Fontes Linguae Vasconum 136, '
+            '2023 — con todos pronunciándose, y aún así no hay '
+            'consenso.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Algunos quieren leer la pieza como confirmación de que '
+            'el euskera ya estaba aquí hace dos mil años. Otros '
+            'dicen que es lengua vascónica, parecida pero no igual '
+            'al euskera. Otros piden cautela total — un solo texto, '
+            'dicen, no permite afirmar mucho.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Voy a tener que sostener la incertidumbre. No me '
+            'quiero precipitar.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+
+      PlanoCierreAmable(textoBoton: 'EMPEZAR LA BRECHA'),
+    ],
+  );
+
+  /// **1.4.3 — El gran Concilio** (doc 07 §1.4.3).
+  ///
+  /// Día siguiente, 10:00. Salón del Concilio del Archivo, mesa
+  /// larga. Begoña en cabecera. A los lados, Isaura, Aitor, Joana,
+  /// Karim. Marina al fondo como observadora. Maren en pie en el
+  /// extremo opuesto — los Aspirantes presentan de pie. Maren
+  /// despliega su reconstrucción (las 9 afirmaciones que ha
+  /// trabajado en la Brecha jugable). Después, las preguntas:
+  /// Aitor sobre la afirmación 5 (adopción incompleta), Joana
+  /// sobre las afirmaciones 8 y 9 (lectura epigráfica disputada
+  /// + relación lengua vascónica/euskera), Begoña sobre la
+  /// distinción contacto vs romanización, Karim sobre el sobrepeso
+  /// simbólico de la Mano y la formulación de la violencia romana.
+  /// Cierre: Begoña dice "Aprendiz I". Marina aplaude sin
+  /// protocolo, Begoña la mira. Sonrisas contenidas. Maren sonríe
+  /// — la primera sonrisa visible en mucho tiempo.
+  ///
+  /// Pedagógicamente clave: el Concilio entero como escena
+  /// expuesta. Karim **pilla a Maren dos veces** — patrón que el
+  /// doc 07 §1.4.4 articula explícitamente como cuidado, no como
+  /// trampa. Begoña sólo sonríe cuando el aprendiz reconoce sus
+  /// límites ("probablemente sí lo estoy haciendo"). Joana
+  /// distingue Disputado ("dos lecturas establecidas que no
+  /// concuerdan") de "no establecido" — distinción nuclear del
+  /// oficio.
+  ///
+  /// Anclada a `brecha_1_4_completada`. La cinemática reproduce el
+  /// diálogo concreto del Concilio como contenido narrativo extra
+  /// — la fase jugable F6.5 (Concilio) ya dio el feedback
+  /// algorítmico del juego; esta cinemática añade el contenido
+  /// específico que el algoritmo no puede generar.
+  ///
+  /// **Sin sustituciones diegéticas**: el Concilio reproduce
+  /// literalmente el diálogo del doc 07 v0.2. La voz de Joana y la
+  /// de Karim se fijan aquí por primera vez con material narrativo
+  /// largo. Pendiente de revisión humana — registrado en
+  /// BLOQUEOS-PENDIENTES.md.
+  static const EscenaCinematica granConcilio = EscenaCinematica(
+    id: '1.4.3',
+    titulo: 'El gran Concilio',
+    flagDeSalida: 'escena_1_4_3_vista',
+    flagsRequeridos: {'brecha_1_4_completada'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Día siguiente, diez de la mañana. Salón del Concilio '
+            'del Archivo. Mesa larga. Begoña en cabecera. A los '
+            'lados, Isaura, Aitor, Joana, Karim. Marina al fondo '
+            'como observadora. Maren entra. Saluda con la cabeza. '
+            'No se sienta — los Aspirantes presentan de pie.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto:
+            'Comenzamos. Maren Lozano, Aspirante. Brecha del '
+            'yacimiento de Irulegi y la Mano. Cuéntanos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren empieza a presentar. Despliega su reconstrucción. '
+            'Pasa cada afirmación con su anclaje y nivel de confianza. '
+            'Su voz tiembla los primeros dos minutos. Después se '
+            'estabiliza. Termina la presentación inicial. Las '
+            'preguntas.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Tu afirmación cinco — la adopción incompleta de '
+            'técnicas romanas. La declaras Probable. ¿Por qué no '
+            'Sólido?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque el enlosado colapsado puede explicarse por más '
+            'de una causa. La hipótesis más simple es mala '
+            'preparación de la base por falta de experiencia '
+            'técnica. Pero podría también ser sismo, hundimiento del '
+            'terreno, sabotaje deliberado durante el incendio, o '
+            'factores que no he considerado. La inferencia "proceso '
+            'de aprendizaje" es la más económica pero no la única '
+            'posible.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: '¿Qué te haría Sólido?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Análisis de otros casos similares en el yacimiento o en '
+            'yacimientos contemporáneos. Si hubiera tres o cuatro '
+            'intentos de imitación romana documentados como '
+            'técnicamente imperfectos, la inferencia se reforzaría. '
+            'Con uno solo, queda Probable.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Bien.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Joana toma el turno.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'Sobre la afirmación ocho. La declaras Disputada. ¿Por '
+            'qué no simplemente "lectura no establecida"?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque sí hay lecturas establecidas — al menos dos '
+            'versiones consensuadas en distintos momentos. La '
+            'cuestión no es ausencia de lectura. Es que las lecturas '
+            'disponibles no concuerdan entre sí y los expertos no se '
+            'ponen de acuerdo cuál prefiere. Eso es Disputado, no '
+            '"no establecido".',
+      ),
+      PlanoDialogo(voz: VozPersonaje.joana, texto: 'Distinción correcta.'),
+
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'Y la nueve. La relación lengua vascónica con el '
+            'euskera. La declaras Probable la relación, Disputada '
+            'como afirmación metodológica. ¿Puedes explicar?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Sí. Hay buenas razones para pensar que la lengua '
+            'vascónica de la Mano y el euskera contemporáneo tienen '
+            'alguna relación. La palabra "sorioneku" en la lectura '
+            'inicial recordaba al euskera "zorionekoa" — afortunado. '
+            'Pero hay otras razones para ser cauto: la lectura '
+            'inicial fue corregida, los signarios son distintos, dos '
+            'mil años separan los dos momentos, el euskera '
+            'reconstruido para el siglo I a.C. quizá no se parecía '
+            'mucho al euskera actual.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Yo declaro Probable la relación porque es plausible. '
+            'Pero declaro Disputada como afirmación metodológica '
+            'porque el oficio honesto no me permite afirmarla con '
+            'la rotundidad que algunas voces dentro y fuera del '
+            'debate quieren. Hay quien la usa para sostener que el '
+            'euskera ya estaba aquí hace dos mil años con esa '
+            'forma. Hay quien la usa para sostener lo contrario. '
+            'Yo no quiero que mi reconstrucción sirva a ninguno de '
+            'los dos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa larga.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'Eso es discusión metodológica importante. ¿La sostienes?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'La sostengo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.joana, texto: 'Bien.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Begoña ha estado en silencio. Habla ahora.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Tres preguntas más. Una mía, dos de Karim.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Begoña hace su pregunta. Es dura.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto:
+            'Pregunta sobre la diferencia entre "contacto romano" y '
+            '"romanización". ¿No estás confundiendo categorías '
+            'cuando dices que los pobladores adoptaban técnicas pero '
+            'no eran "romanizados completos"?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Maren tarda en responder. Pausa larga.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No lo había pensado así de claro. Probablemente sí lo '
+            'estoy haciendo. No sé bien cómo separar las dos '
+            'categorías. Quería decir "contacto" en el sentido de '
+            'adopción voluntaria de elementos sin pérdida de '
+            'identidad propia, "romanización" como proceso más '
+            'profundo de transformación cultural. Pero las dos '
+            'cosas pueden estar pasando a la vez. Y mi yacimiento '
+            'muestra los principios del proceso en marcha — no hay '
+            'un punto claro donde "contacto" se convierta en '
+            '"romanización".',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Bien que lo digas.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Karim toma sus dos preguntas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Has trabajado la Mano. Pero la Mano ha sido mucho más '
+            'que pieza arqueológica desde 2022. Tiene presencia en '
+            'actos populares, asociaciones, gente que se la tatúa. '
+            '¿Qué hace la Cronista con ese sobrepeso simbólico?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Maren piensa. Pausa más larga.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Lo respeta. Pero no lo refleja en la reconstrucción.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Explícate.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'La Mano es importante para mucha gente del territorio. '
+            'Eso es real. Esa importancia es información sobre el '
+            'presente, no sobre el siglo I a.C. Yo, como Cronista, '
+            'trabajo el siglo I a.C. Si dejo que la importancia '
+            'presente influya en mis afirmaciones sobre el pasado, '
+            'dejo de hacer el oficio.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Pero también: si dejo que el oficio se convierta en '
+            'frialdad académica que ignora la importancia presente, '
+            'traiciono otra parte del trabajo. La importancia '
+            'presente merece reconocimiento, aunque no en la '
+            'reconstrucción.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: '¿Dónde la reconoces?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'En el Cuaderno. En que sé que mucha gente ve la pieza '
+            'con sentimiento. En que cuento con eso cuando explico '
+            'la Brecha a quien no ha hecho el oficio.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Bien.'),
+
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Segunda. La afirmación tres. Las guerras sertorianas '
+            'como conflicto civil romano. ¿No estás minimizando la '
+            'violencia ejercida por los romanos al describirla como '
+            '"guerra civil de ellos que arrastró a los locales"?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Maren se queda. Esto la pilla.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Es posible.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No quería minimizar. Quería no hacerla una "conquista" '
+            'lineal que es lo que las versiones populares hacen. '
+            'Pero al separarla del marco de "conquista", quizá he '
+            'hecho que la violencia parezca menos brutal. '
+            'Probablemente reformularía. La guerra fue civil romana, '
+            'sí — y aún así, quien quemó Irulegi y abandonó a la '
+            'gente fue ejército. El que las tropas fueran de un '
+            'bando u otro no cambia la violencia recibida.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Bien que lo reformules.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'El Concilio cierra.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Deliberamos. Sal del salón.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren sale. Espera en el pasillo. Veinte minutos. '
+            'Vuelve. Begoña la mira.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.begona, texto: 'Aprendiz I.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.begona, texto: 'Bienvenida.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Isaura asiente desde su sitio. Aitor sonríe brevemente. '
+            'Karim hace una inclinación de cabeza. Marina al fondo '
+            'aplaude — sin protocolo. Begoña la mira con ceja '
+            'levantada. Marina baja las manos. Sonrisas contenidas.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.begona, texto: 'El protocolo, Marina.'),
+      PlanoDialogo(voz: VozPersonaje.marina, texto: 'Perdón.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pero Marina no se arrepiente del todo. Maren sonríe — '
+            'la primera sonrisa visible en mucho tiempo.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'SALIR DEL CONCILIO'),
+    ],
+  );
+
   /// **1.4.4 — "Aprendiz I"** (doc 07 §1.4.4).
   ///
   /// Cierre del Arco 1. Maren sale al patio del Archivo después
@@ -2391,32 +3116,32 @@ class EscenasArco1 {
   /// sonríe cuando el aprendiz reconoce sus propios límites
   /// ("probablemente sí lo estoy haciendo").
   ///
-  /// **Anclada a la Estación 4**: requiere `brecha_1_4_completada`.
-  /// Como la Brecha 1.4 (Irulegi) no está en el catálogo todavía,
-  /// esta escena queda latente — el orquestador no la dispara.
-  /// Mismo patrón que 1.B.1, 1.C.
+  /// **Anclada a la cinemática 1.4.3** (gran Concilio): requiere
+  /// `escena_1_4_3_vista`. La Brecha 1.4 ya cerró antes de la 1.4.3;
+  /// la 1.4.3 reproduce el diálogo concreto del Concilio (las
+  /// preguntas de Aitor, Joana, Begoña, Karim) y al cerrarla el
+  /// orquestador encadena con esta cinemática post-Concilio.
   ///
-  /// **Sustituciones diegéticas activas**:
+  /// **Sustituciones diegéticas activas (residuales)**:
   /// - El siglo concreto del capitel ("s. XII") se omite (entrada
-  ///   EDIFICIO-ARCHIVO de BLOQUEOS-PENDIENTES.md), igual que en 1.0.2.
-  /// - "Violencia romana" se sustituye por "lo que pasó cuando los
-  ///   romanos llegaron" — la frase original carga políticamente
-  ///   sin que el comité asesor la haya validado para 10-14 años.
-  ///   Se preserva la pedagogía (Begoña valora la disposición a
-  ///   reformular) sin afirmar tesis histórica concreta sobre la
-  ///   conquista romana.
-  /// - "La Mano" (Mano de Irulegi, **validada** en el header v0.2
-  ///   del doc 07 como pieza central de la Estación 1.4) se
-  ///   sustituye temporalmente por "una pieza así" porque la
-  ///   Brecha 1.4 no está implementada — un jugador que llegue
-  ///   a esta cinemática sin haberla jugado no sabría a qué se
-  ///   refiere. La sustitución se revierte cuando la 1.4 entre
-  ///   al catálogo. Anotado en BLOQUEOS-PENDIENTES.md.
+  ///   EDIFICIO-ARCHIVO de BLOQUEOS-PENDIENTES.md), igual que en
+  ///   1.0.2.
+  ///
+  /// **Sustituciones revertidas en F8.6**, ahora que la Brecha 1.4
+  /// y su Concilio están implementados:
+  /// - "Violencia romana" recupera su forma canónica — el doc 07
+  ///   §1.4.3 articula explícitamente la matización (guerras
+  ///   sertorianas como conflicto civil romano, Maren reformula
+  ///   tras la pregunta de Karim), así que la frase de Isaura
+  ///   ahora tiene su anclaje narrativo.
+  /// - "La Mano" recupera su forma canónica — la Brecha 1.4 ya
+  ///   trabajó la pieza, el jugador la ha visto y defendido en el
+  ///   Concilio; la mención es ahora legible.
   static const EscenaCinematica aprendizI = EscenaCinematica(
     id: '1.4.4',
     titulo: '"Aprendiz I"',
     flagDeSalida: 'escena_1_4_4_vista',
-    flagsRequeridos: {'brecha_1_4_completada'},
+    flagsRequeridos: {'escena_1_4_3_vista'},
     ambiente: AmbienteArchivo.patioArchivo,
     planos: [
       PlanoAmbiente(
@@ -2458,19 +3183,12 @@ class EscenasArco1 {
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cuándo?'),
 
-      // Sustitución: "Cuando dijiste que reformularías sobre la
-      // violencia romana" → "Cuando dijiste que ibas a reformular
-      // tu posición sobre lo que pasó cuando los romanos llegaron".
-      // Preserva el patrón pedagógico —Begoña sonríe cuando el
-      // aprendiz reconoce que va a reformular— sin la afirmación
-      // política implícita en "violencia romana".
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto:
             'Cuando dijiste "probablemente sí lo estoy haciendo". Y '
-            'también cuando dijiste que ibas a reformular tu posición '
-            'sobre lo que pasó cuando los romanos llegaron. Eso le '
-            'encanta.',
+            'también cuando dijiste que reformularías sobre la '
+            'violencia romana. Eso le encanta.',
       ),
 
       PlanoAmbiente(
@@ -2478,18 +3196,13 @@ class EscenasArco1 {
         textoLectura: 'Pausa.',
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Karim me pilló dos veces.'),
-      // Sustitución: "Otra Brecha sin haber visto la Mano y haber
-      // tenido que defenderte sobre ella" → "Otra Brecha sin
-      // haber tenido que defender una pieza así". Hasta que la
-      // Brecha 1.4 entre al catálogo, una mención específica a
-      // "la Mano" sería opaca para el jugador.
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto:
             'Karim te pilla siempre. Es su trabajo. Pero te ha pillado '
-            'para ayudarte a crecer. Otra Brecha sin haber tenido que '
-            'defender una pieza así, no habrías estado preparada para '
-            'lo que viene.',
+            'para ayudarte a crecer. Otra Brecha sin haber visto la '
+            'Mano y haber tenido que defenderte sobre ella, no '
+            'habrías estado preparada para lo que viene.',
         pausaPrevia: Duration(milliseconds: 600),
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué viene?'),
