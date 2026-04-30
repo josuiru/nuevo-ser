@@ -42,8 +42,42 @@ class GeneradorSimplificar {
       reducida.numerador * factor,
       reducida.denominador * factor,
     );
+    return _construir(reducida: reducida, objetivo: objetivo);
+  }
 
+  /// Genera un problema reusando una fracción concreta (p. ej. la que
+  /// trae el Fragmento del cazadero). Si la fracción no es reducible
+  /// con un factor entero ≥ 2, cae al pool aleatorio para no romper
+  /// la mecánica del puzzle (que exige una forma reducida única).
+  ProblemaSimplificar generarDesde({
+    required int numerador,
+    required int denominador,
+    int dificultad = 1,
+  }) {
+    final mcd = _mcd(numerador.abs(), denominador.abs());
+    if (mcd <= 1 || denominador <= 0 || numerador <= 0) {
+      return generar(dificultad: dificultad);
+    }
+    final reducida = Fraccion(numerador ~/ mcd, denominador ~/ mcd);
+    final objetivo = Fraccion(numerador, denominador);
+    return _construir(reducida: reducida, objetivo: objetivo);
+  }
+
+  int _mcd(int a, int b) {
+    while (b != 0) {
+      final t = b;
+      b = a % b;
+      a = t;
+    }
+    return a == 0 ? 1 : a;
+  }
+
+  ProblemaSimplificar _construir({
+    required Fraccion reducida,
+    required Fraccion objetivo,
+  }) {
     final correcto = reducida;
+    final factor = objetivo.denominador ~/ reducida.denominador;
 
     final distractores = <Fraccion>[];
 

@@ -44,6 +44,37 @@ class GeneradorAmplificar {
   ProblemaAmplificar generar({int dificultad = 1}) {
     final base = _elegirBase(dificultad);
     final factor = 2 + _azar.nextInt(dificultad >= 3 ? 5 : 3);
+    return _construir(base: base, factor: factor);
+  }
+
+  /// Construye el problema reusando la fracción base y el denominador
+  /// objetivo concretos del Fragmento. Si los datos no encajan
+  /// (factor no entero ≥ 2, denominador objetivo ≤ base) cae al
+  /// generador aleatorio.
+  ProblemaAmplificar generarDesde({
+    required int numeradorBase,
+    required int denominadorBase,
+    required int denominadorObjetivo,
+    int dificultad = 1,
+  }) {
+    if (denominadorBase <= 0 ||
+        numeradorBase <= 0 ||
+        denominadorObjetivo <= denominadorBase ||
+        denominadorObjetivo % denominadorBase != 0) {
+      return generar(dificultad: dificultad);
+    }
+    final factor = denominadorObjetivo ~/ denominadorBase;
+    if (factor < 2) return generar(dificultad: dificultad);
+    return _construir(
+      base: Fraccion(numeradorBase, denominadorBase),
+      factor: factor,
+    );
+  }
+
+  ProblemaAmplificar _construir({
+    required Fraccion base,
+    required int factor,
+  }) {
     final denominadorObjetivo = base.denominador * factor;
     final numeradorCorrecto = base.numerador * factor;
 

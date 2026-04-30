@@ -159,12 +159,15 @@ class GeneradorDual {
           a.denominador + b.denominador,
         );
       case OperadorAritmetico.resta:
-        return Fraccion(
-          a.numerador - b.numerador,
-          a.denominador - b.denominador == 0
-              ? 1
-              : a.denominador - b.denominador,
-        );
+        // El error clásico (restar num-con-num, den-con-den) puede
+        // producir denominador cero o negativo si a.den ≤ b.den. En
+        // ese caso devolvemos null y el bucle de perturbaciones
+        // rellena el cuarto candidato.
+        final denResta = a.denominador - b.denominador;
+        if (denResta <= 0) return null;
+        final numResta = a.numerador - b.numerador;
+        if (numResta <= 0) return null;
+        return Fraccion(numResta, denResta);
       case OperadorAritmetico.producto:
         // Hacer denominador común innecesario.
         final mcm = _mcm(a.denominador, b.denominador);
@@ -174,7 +177,10 @@ class GeneradorDual {
           mcm,
         ).reducida();
       case OperadorAritmetico.division:
-        // Invertir la primera en vez de la segunda.
+        // Invertir la primera en vez de la segunda. Si numerador de
+        // a es 0, el "denominador" de la trampa también, así que
+        // devolvemos null para que se descarte como distractor.
+        if (a.numerador == 0) return null;
         return Fraccion(
           a.denominador * b.numerador,
           a.numerador * b.denominador,

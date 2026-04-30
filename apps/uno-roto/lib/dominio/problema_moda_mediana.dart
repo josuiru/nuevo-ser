@@ -33,25 +33,40 @@ class ProblemaModaMediana {
   bool esCorrecta(int indiceElegido) => indiceElegido == indiceCorrecto;
 }
 
-int _calcularModa(List<int> datos) {
+/// Devuelve la moda como `int` si hay un único valor más frecuente,
+/// o `null` si todos aparecen con la misma frecuencia o hay empate
+/// entre dos modas (no son conjuntos pedagógicamente válidos para la
+/// mecánica del puzzle).
+int? _calcularModa(List<int> datos) {
   final cuentas = <int, int>{};
   for (final v in datos) {
     cuentas[v] = (cuentas[v] ?? 0) + 1;
   }
   var mejor = datos.first;
   var mejorCuenta = 0;
+  var hayEmpate = false;
   cuentas.forEach((valor, cuenta) {
     if (cuenta > mejorCuenta) {
       mejor = valor;
       mejorCuenta = cuenta;
+      hayEmpate = false;
+    } else if (cuenta == mejorCuenta && valor != mejor) {
+      hayEmpate = true;
     }
   });
+  if (hayEmpate || mejorCuenta <= 1) return null;
   return mejor;
 }
 
+/// Mediana redondeada a entero. Para longitud impar es el central.
+/// Para longitud par es el promedio de los dos centrales — antes el
+/// generador devolvía sólo `ordenados[length~/2]` (uno de los dos),
+/// que es matemáticamente incorrecto.
 int _calcularMediana(List<int> datos) {
   final ordenados = [...datos]..sort();
-  return ordenados[ordenados.length ~/ 2];
+  final medio = ordenados.length ~/ 2;
+  if (ordenados.length.isOdd) return ordenados[medio];
+  return ((ordenados[medio - 1] + ordenados[medio]) / 2).round();
 }
 
 /// Conjuntos curados con moda clara (un único valor más frecuente).
@@ -98,15 +113,18 @@ class GeneradorModaMediana {
 
   ProblemaModaMediana _construir(ModoEstadistico modo, List<int> datos) {
     final correcto = modo == ModoEstadistico.moda
-        ? _calcularModa(datos)
+        ? (_calcularModa(datos) ?? datos.first)
         : _calcularMediana(datos);
+    // En modo mediana, los conjuntos curados están elegidos para no
+    // tener moda — _calcularModa devuelve null y omitimos ese
+    // distractor. En modo moda, la mediana siempre existe.
     final otroValor = modo == ModoEstadistico.moda
         ? _calcularMediana(datos)
         : _calcularModa(datos);
 
     final propuestos = <int>[correcto];
-    void anyadirSiNuevo(int v) {
-      if (v <= 0) return;
+    void anyadirSiNuevo(int? v) {
+      if (v == null || v <= 0) return;
       if (!propuestos.contains(v)) propuestos.add(v);
     }
 

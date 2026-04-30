@@ -41,7 +41,11 @@ class _PantallaSimplificarState extends State<PantallaSimplificar>
     // Construimos el problema a partir de la fracción que el Fragmento
     // trae encima. Si por algún motivo el generador no sabe replicarla,
     // genera uno nuevo con dificultad moderada.
-    _problema = GeneradorSimplificar().generar(dificultad: 2);
+    _problema = GeneradorSimplificar().generarDesde(
+      numerador: widget.numerador,
+      denominador: widget.denominador,
+      dificultad: 2,
+    );
   }
 
   @override

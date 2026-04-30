@@ -60,7 +60,7 @@ class GeneradorLecturaDecimal {
     FormaLecturaDecimal(
       texto: 'cuarenta centésimas',
       etiquetaCorrecta: '0,4',
-      distractoresEtiqueta: ['0,04', '4,0', '0,40 décimas'],
+      distractoresEtiqueta: ['0,04', '4,0', '0,004'],
     ),
     FormaLecturaDecimal(
       texto: 'siete centésimas',
@@ -73,9 +73,13 @@ class GeneradorLecturaDecimal {
       distractoresEtiqueta: ['0,5', '0,05', '5,0'],
     ),
     FormaLecturaDecimal(
-      texto: 'doscientas treinta milésimas',
+      // Antes: "doscientas treinta milésimas" con correcto 0,23.
+      // Bug: 0,230 (distractor) es matemáticamente equivalente a 0,23,
+      // así que un niño que tradujera literal la lectura recibía error
+      // por una respuesta correcta. Reformulamos a centésimas.
+      texto: 'veintitrés centésimas',
       etiquetaCorrecta: '0,23',
-      distractoresEtiqueta: ['0,230', '0,023', '2,3'],
+      distractoresEtiqueta: ['0,023', '2,3', '0,0023'],
     ),
     FormaLecturaDecimal(
       texto: 'una unidad y dos décimas',

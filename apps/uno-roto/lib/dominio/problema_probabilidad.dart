@@ -76,22 +76,31 @@ class GeneradorProbabilidad {
     final correcto = _reducir(Fraccion(favorables, total));
 
     final propuestos = <Fraccion>[correcto];
-    bool yaEsta(Fraccion f) =>
+    // Comparamos por valor (cross-multiplication) para evitar que
+    // formas equivalentes al correcto se cuelen como distractores
+    // (p.ej. 4/10 frente al correcto 2/5). Dos candidatos con el
+    // mismo valor matemático romperían la validación: el niño que
+    // toca el equivalente recibiría error por una respuesta correcta.
+    bool yaEstaPorValor(Fraccion f) =>
         propuestos.any((p) =>
-            p.numerador == f.numerador && p.denominador == f.denominador);
+            p.numerador * f.denominador == f.numerador * p.denominador);
     void anyadirSiNuevo(Fraccion f) {
       if (f.numerador <= 0 || f.denominador <= 0) return;
-      if (!yaEsta(f)) propuestos.add(f);
+      if (!yaEstaPorValor(f)) propuestos.add(f);
     }
 
     // 1. Probabilidad del complementario (otros / total reducido).
     anyadirSiNuevo(_reducir(Fraccion(otros, total)));
     // 2. Cociente al revés (favorables / otros, sin total).
     anyadirSiNuevo(_reducir(Fraccion(favorables, otros)));
-    // 3. Forma sin reducir.
-    anyadirSiNuevo(Fraccion(favorables, total));
-    // 4. Off-by-one en el total (favorables / (total+1)).
+    // 3. Off-by-one en el total (favorables / (total+1)).
     anyadirSiNuevo(_reducir(Fraccion(favorables, total + 1)));
+    // 4. Off-by-one en el numerador.
+    anyadirSiNuevo(_reducir(Fraccion(favorables + 1, total)));
+    // 5. Vecino con denominador menor.
+    if (total - 1 > favorables) {
+      anyadirSiNuevo(_reducir(Fraccion(favorables, total - 1)));
+    }
 
     final cuatro = propuestos.take(4).toList()..shuffle(_azar);
     final indice = cuatro.indexWhere(

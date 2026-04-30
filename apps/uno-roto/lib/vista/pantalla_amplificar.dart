@@ -40,9 +40,15 @@ class _PantallaAmplificarState extends State<PantallaAmplificar>
       vsync: this,
       duration: const Duration(seconds: 16),
     )..repeat();
-    // Dificultad calibrada; el Fragmento solo trae la intención —
-    // denominadores concretos los decide el generador.
-    _problema = GeneradorAmplificar().generar(dificultad: 2);
+    // El Fragmento del cazadero trae la fracción concreta que se
+    // amplifica (numeradorBase/denominadorBase = ?/denominadorObjetivo).
+    // Si los datos no encajan, el generador cae al pool aleatorio.
+    _problema = GeneradorAmplificar().generarDesde(
+      numeradorBase: widget.numeradorBase,
+      denominadorBase: widget.denominadorBase,
+      denominadorObjetivo: widget.denominadorObjetivo,
+      dificultad: 2,
+    );
   }
 
   @override
