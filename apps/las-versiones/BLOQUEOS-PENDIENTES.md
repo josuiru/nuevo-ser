@@ -30,6 +30,7 @@ referencias y revertir la sustitución.
 - 1.0.1 (F2): "El del centro es Pío Beltrán, arqueólogo" → omitida; la foto se describe genéricamente sin afirmar identidad histórica concreta.
 - 1.0.3 (F3): "el libro de Beltrán" → "el libro de la sierra".
 - 1.1.2 (F4.1): "Una excavación de 1973" → "Una excavación de los años 70" (sin nombrar autor); "Una de 2018" → "Una más reciente" (sin nombrar autor).
+- 1.B (F8.1): "El informe de Beltrán de 1973" → "El informe antiguo del dolmen"; "¿Qué te parece Beltrán?" → "¿Qué te parece el informe?". La línea pedagógicamente clave de Maren ("tiene cosas raras, pero también tiene cosas que no las tendríamos sin él") se preserva intacta — articula la postura del oficio frente a fuentes con sesgo sin requerir que el "él" sea Beltrán.
 
 **Pendiente** para fases jugables (F6):
 - En el catálogo de fuentes de la Brecha 1.1, el "Informe de 1973" + el "Informe de 2018" tendrán que aparecer como fuentes ficticias diegéticas — atribuidas a "un arqueólogo de los años 70" (anónimo) y "un equipo de revisión moderno" (anónimo). El sesgo diffusionista del primer informe se preserva como contenido pedagógico sin afirmar autoría.
@@ -67,6 +68,8 @@ referencias y revertir la sustitución.
 
 **Razón**: las cifras concretas (incluido el ± de error) sugieren un análisis específico. Hasta que el comité valide qué laboratorio/qué publicación, mejor mantener cifras redondeadas y plausibles.
 
+**Aplicado en F8.1 (cinemática 1.A)**: el guion canónico dice en boca de Maren "las dos dataciones" al contarle a Eider lo del dolmen. Sustituido por "las dos fechas que no terminan de cuadrar" — léxico adolescente más natural que tampoco afirma laboratorio o autor del C14. La sensación de incertidumbre que la frase quiere transmitir se preserva.
+
 ---
 
 ## EIDER — amiga de Maren del instituto
@@ -75,7 +78,7 @@ referencias y revertir la sustitución.
 
 **Guion canónico (doc 07 §1.A)**: Eider aparece con Maren en una cafetería del Casco Viejo. Diálogo natural sobre cómo le fue el dolmen.
 
-**Estado**: no es bloqueo histórico. Cuando se implemente 1.A en F8 simplemente se añade `VozPersonaje.eider` al elenco. Apuntado aquí para no olvidarlo.
+**Estado**: implementada en F8.1 — `VozPersonaje.eider` añadida al elenco con tinta tenue (entorno íntimo no-institucional, igual que el resto de la familia). Cinemática 1.A "La merienda con Eider" en `EscenasArco1.laMeriendaConEider`. No es bloqueo histórico — Eider es ficticia y diegética.
 
 ---
 
@@ -129,17 +132,21 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Cinemáticas 1.A y 1.B aún sin implementar
+## Cinemáticas 1.A y 1.B — sustituciones diegéticas aplicadas (F8.1)
 
-**Tracker doc 17**: pendiente.
+**Tracker doc 17**: pendiente de revisión humana.
 
 **Guion canónico (doc 07)**:
-- 1.A "Merienda con Eider" — cafetería del Casco Viejo, post-1.1. Diálogo natural sobre cómo le fue el dolmen. Eider es personaje ficticio del juego.
-- 1.B "El ático" — escena íntima familiar tras la primera Brecha. Detalles dependen del doc 07 §1.B que no se ha cargado en esta iteración.
+- 1.A "La merienda con Eider" — cafetería del Casco Viejo, ~3 días después del cierre de la Estación 1. Diálogo natural sobre cómo le fue el dolmen. Eider es personaje ficticio del juego.
+- 1.B "El ático" — Maren sube al ático del Archivo a buscar un informe; Andrés le hace una pregunta clave sobre cómo trata fuentes con sesgo. Activa `arco_1_completado` al cerrar (se mueve a 1.4.4 cuando entren las Estaciones 1.2-1.4 al catálogo).
 
-**Estado actual (F8)**: no implementadas. El esqueleto del juego ya cubre el flujo principal del MVP del Arco 1 (cinemáticas 1.0.1-1.0.3 + 1.1.1-1.1.2 + Brecha 1.1 + 1.1.7 + Mosaico). 1.A y 1.B son escenas opcionales/paralelas que se pueden añadir como otro slice cuando se cargue el doc 07 entero.
+**Estado**: implementadas con sustituciones diegéticas que preservan la pedagogía sin afirmar contenido histórico no validado. Las dos cinemáticas se reproducen en orden tras la 1.1.7 y antes del Mosaico, siguiendo el flujo del doc 07.
 
-**Razón**: escribir cinemáticas largas sin tener el guion canónico delante riesga producir contenido que no encaje con la voz del juego ni con los personajes ya establecidos. Se prefiere parar y apuntar.
+**Sustituciones aplicadas (registradas también en las entradas PIO-BELTRAN y ARALAR-DATACIONES)**:
+- 1.A: "las dos dataciones" → "las dos fechas que no terminan de cuadrar" (no afirmar laboratorio o autor C14).
+- 1.B: "el informe de Beltrán de 1973" → "el informe antiguo del dolmen"; "¿qué te parece Beltrán?" → "¿qué te parece el informe?" (no afirmar autoría hasta validación del comité).
+
+**Pendiente de revisión humana**: voz de Eider (adolescente bilbaína-pamplonica del entorno de Maren — ¿el tono encaja con cómo se quiere retratar a esa generación en la Colección?), tono de Andrés en su pregunta a Maren (¿la pregunta debe sonar a "examen" o a "conversación entre colegas"?), y confirmación de que el reconocimiento mínimo de Andrés ("vas bien") encaja con la voz fijada en doc 04. Si el comité valida el apellido Beltrán + las dataciones, el contenido del 1.B + 1.A se puede revertir al canónico sin tocar la estructura.
 
 ---
 

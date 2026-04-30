@@ -321,22 +321,17 @@ class _OrquestadorState extends State<Orquestador> {
   Future<void> _alCompletarBrecha() async {
     final brecha = _brechaAbierta;
     if (brecha == null) return;
-    final flagsACerrar = <String>{brecha.flagDeCompletado};
-    // MVP: el Arco 1 sólo tiene la Brecha 1.1 implementada — al
-    // cerrarla activamos `arco_1_completado` para disparar el
-    // Mosaico. Cuando entren 1.2-1.4 al catálogo, este disparador
-    // se moverá al cierre de la última (ver
-    // BLOQUEOS-PENDIENTES.md sección "Mosaico Arco 1 con una sola
-    // Brecha implementada").
-    if (brecha.id == '1.1') {
-      flagsACerrar.add(MosaicoArco1.flagDeArcoCompletado);
-    }
-    for (final flag in flagsACerrar) {
-      await widget.repoFlags.activar(flag);
-    }
+    // El cierre de la Brecha sólo activa su propio flag de
+    // completado. El flag `arco_1_completado` que dispara el
+    // Mosaico se activa al cerrar la cinemática 1.B "El ático" —
+    // doc 07 intercala 1.1.7 + 1.A + 1.B entre la Estación y el
+    // Mosaico. Ver `EscenasArco1.flagsDeCierrePorEscena` y
+    // BLOQUEOS-PENDIENTES.md sección "Mosaico Arco 1 con una
+    // sola Brecha implementada".
+    await widget.repoFlags.activar(brecha.flagDeCompletado);
     await widget.repoEstadoBrecha.borrar(brecha.id);
     if (!mounted) return;
-    _flagsActivos = {..._flagsActivos, ...flagsACerrar};
+    _flagsActivos = {..._flagsActivos, brecha.flagDeCompletado};
     setState(() {
       _brechaAbierta = null;
       _escenaEnReproduccion = _proximaEscenaPendiente();

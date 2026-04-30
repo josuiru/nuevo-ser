@@ -113,4 +113,13 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// validados como entrada en el doc 17.
   static const AmbienteArchivo dolmenAralar =
       AmbienteArchivo._('dolmen_aralar');
+
+  /// Cafetería pequeña del Casco Viejo de Iruña — barra de
+  /// formica, taburetes altos, cruasanes en una vitrina, voces de
+  /// fondo, máquina de café que silba a ratos. Lugar de la
+  /// merienda con Eider (1.A). Es el primer espacio neutro fuera
+  /// de la órbita Archivo + casa familiar — Maren puede contar lo
+  /// que quiera, sin protocolos.
+  static const AmbienteArchivo cafeteriaCascoViejo =
+      AmbienteArchivo._('cafeteria_casco_viejo');
 }

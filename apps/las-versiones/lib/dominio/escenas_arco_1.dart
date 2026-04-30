@@ -29,6 +29,8 @@ class EscenasArco1 {
     caminoAAralar,
     elCampoDeDolmenes,
     elPrimerApunte,
+    laMeriendaConEider,
+    elAtico,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -66,6 +68,28 @@ class EscenasArco1 {
     },
     'escena_1_1_7_vista': {
       'arco_1_estacion_1_cerrada',
+    },
+    'escena_1_a_vista': {
+      'merienda_con_eider_compartida',
+    },
+    // Cierre de la 1.B activa el flag de arco completado — antes
+    // estaba en `_alCompletarBrecha` directamente al cerrar la
+    // Brecha 1.1, pero el guion canónico (doc 07) intercala 1.A y
+    // 1.B entre el cierre de la Estación 1 y el Mosaico de fin de
+    // arco. Activarlo aquí mantiene el orden narrativo correcto:
+    // 1.1 cerrada → 1.1.7 apunte → 1.A merienda → 1.B ático →
+    // Mosaico.
+    //
+    // **Provisional**: el guion canónico también prevé Estaciones
+    // 1.2/1.3/1.4 con sus propias intermitentes (1.B.1, 1.C). Hoy
+    // sólo está implementada la Estación 1, así que la 1.B cierra
+    // el arco directamente. Cuando entren las otras Estaciones,
+    // este flag se moverá al cierre de la última cinemática del
+    // arco (probablemente 1.4.4 según doc 07). Documentado en
+    // BLOQUEOS-PENDIENTES.md.
+    'escena_1_b_vista': {
+      'visita_atico_andres',
+      'arco_1_completado',
     },
   };
 
@@ -950,6 +974,233 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),
+    ],
+  );
+
+  /// **1.A — La merienda con Eider** (doc 07 §1.A).
+  ///
+  /// Día de Archivo, ~3 días después de cerrar la Estación 1.
+  /// Cafetería pequeña del Casco Viejo. Maren y Eider, su amiga
+  /// del instituto. Naia está en su clase de baloncesto. Eider
+  /// pregunta por el dolmen. Maren cuenta poco — pequeñas cosas:
+  /// las dos fechas que no terminan de cuadrar, la sensación de
+  /// no saber los nombres. Eider escucha. Cierra con un
+  /// reconocimiento amable: "tía, eres rara, pero vale".
+  ///
+  /// Pedagógicamente clave: el oficio histórico no se queda dentro
+  /// del Archivo. Maren tiene que poder contarlo a alguien que no
+  /// está en él, y reconocerse rara sin avergonzarse. El principio
+  /// narrativo 1.11 del doc 06 ("la adolescencia es real") vive
+  /// aquí: la conversación cierra cambiando de tema al instituto,
+  /// como cualquier merienda.
+  ///
+  /// **Sustitución diegética activa** (entrada ARALAR-DATACIONES de
+  /// BLOQUEOS-PENDIENTES.md): el guion canónico dice "las dos
+  /// dataciones" en boca de Maren. Aquí se sustituye por "las dos
+  /// fechas" — léxico adolescente más natural que tampoco afirma
+  /// laboratorio o autor concreto del C14.
+  static const EscenaCinematica laMeriendaConEider = EscenaCinematica(
+    id: '1.A',
+    titulo: 'La merienda con Eider',
+    flagDeSalida: 'escena_1_a_vista',
+    flagsRequeridos: {'escena_1_1_7_vista'},
+    ambiente: AmbienteArchivo.cafeteriaCascoViejo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cafetería pequeña del Casco Viejo. Tarde. Maren y Eider en '
+            'una mesa al fondo. Naia está en su clase de baloncesto. '
+            'Eider come un cruasán.',
+      ),
+
+      // Eider abre — directa, como siempre.
+      PlanoDialogo(voz: VozPersonaje.eider, texto: 'Bueno. Cuéntamelo.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué?'),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Lo del dolmen. Llevas tres días con cara rara.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No tengo cara rara.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto:
+            'Tienes la cara que pones cuando estás dándole vueltas a '
+            'algo. La conozco.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 1),
+        textoLectura: 'Maren bebe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Es difícil.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(voz: VozPersonaje.eider, texto: '¿Difícil de qué?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Difícil de saber qué es difícil.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Tía. Habla en cristiano.',
+      ),
+
+      // Resumen narrativo de lo que Maren cuenta. La frase del
+      // guion canónico "las dos dataciones" se sustituye por "las
+      // dos fechas" (entrada ARALAR-DATACIONES — no afirmar
+      // laboratorio o autor del C14). Eider escucha sin
+      // interrumpir, lo que pedagógicamente es lo que importa.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Pausa. Maren empieza a contar. Pequeñas cosas. Las dos '
+            'fechas que no terminan de cuadrar. La sensación de no '
+            'saber los nombres. La carpeta con tres informes. La hora '
+            'sola con el dolmen. Eider escucha sin interrumpir.',
+      ),
+
+      // El reconocimiento — la pregunta clave de la escena.
+      PlanoDialogo(voz: VozPersonaje.eider, texto: '¿Y eso te parece guay?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Vale. Eres rara, pero vale.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+
+      // La adolescencia es real — cierran cambiando de tema al
+      // instituto. Esto NO se desarrolla aquí; basta con la
+      // acotación.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Se ríen. Cambian de tema. Hablan del instituto: del de '
+            'mates que pone exámenes raros, de quién va al curso de '
+            'verano. Una merienda normal de tarde de jueves.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'PAGAR Y SALIR'),
+    ],
+  );
+
+  /// **1.B — El ático** (doc 07 §1.B).
+  ///
+  /// Día de Archivo, ~5-7 días después de cerrar la Estación 1.
+  /// Maren sube al ático del Archivo buscando un informe antiguo
+  /// del dolmen. Andrés está en su mesa, ordenando cerámica
+  /// fragmentaria. Le indica dónde está el informe sin levantarse,
+  /// y aprovecha para hacerle una pregunta que parece menor pero
+  /// no lo es.
+  ///
+  /// La línea pedagógicamente clave de la escena es la respuesta
+  /// de Maren: "tiene cosas raras, pero también tiene cosas que
+  /// no las tendríamos sin él". Es la primera vez que la Cronista
+  /// articula la postura del oficio frente a fuentes con sesgo —
+  /// reconocer las contribuciones sin tragarse los sesgos. Andrés
+  /// la valida con un "vas bien" mínimo.
+  ///
+  /// **Sustitución diegética activa** (entrada PIO-BELTRAN de
+  /// BLOQUEOS-PENDIENTES.md): el guion canónico nombra
+  /// explícitamente "Beltrán" tanto en el archivador físico ("el
+  /// informe de Beltrán de 1973") como en la pregunta de Andrés
+  /// ("¿qué te parece Beltrán?"). Aquí se sustituye por "el
+  /// informe antiguo del dolmen" y "¿qué te parece el informe?",
+  /// preservando la pedagogía sin afirmar autoría hasta que el
+  /// comité asesor (doc 16) valide.
+  static const EscenaCinematica elAtico = EscenaCinematica(
+    id: '1.B',
+    titulo: 'El ático',
+    flagDeSalida: 'escena_1_b_vista',
+    flagsRequeridos: {'escena_1_a_vista'},
+    ambiente: AmbienteArchivo.aticoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Ático del Archivo. Vitrinas con piezas. Andrés sentado a '
+            'su mesa, ordenando una caja con cerámica fragmentaria. '
+            'Maren sube las escaleras y aparece en la puerta.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: 'Ah, la nueva. ¿Qué buscas?',
+      ),
+
+      // Sustitución diegética: el informe canónico es "el de
+      // Beltrán de 1973" (entrada PIO-BELTRAN del doc 17). Aquí
+      // queda como "el informe antiguo del dolmen" — preserva la
+      // función dramática (Maren va a buscar un informe concreto
+      // tras el aprendizaje de la 1.1) sin afirmar autoría.
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'El informe antiguo del dolmen.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto:
+            'Estantería tres, cuarta balda, archivador beige. Cuidado '
+            'al cogerlo, está pegado al de al lado.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren va a buscarlo. Lo coge, despacio, despegándolo del '
+            'archivador vecino. Vuelve hacia la salida.',
+      ),
+
+      // La pregunta de Andrés. Esta es la línea pedagógica de la
+      // escena — el guion canónico dice "¿qué te parece Beltrán?",
+      // sustituido aquí por "¿qué te parece el informe?". La
+      // respuesta de Maren preserva la postura del oficio.
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: '¿Qué te parece el informe?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Maren se para.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tiene cosas raras.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: 'Mm.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Pero también tiene cosas que no las tendríamos sin él.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Andrés levanta la vista una vez. Sonríe pequeño.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: 'Vas bien.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren se va con el archivador bajo el brazo. Andrés vuelve '
+            'a su cerámica.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'BAJAR'),
     ],
   );
 }

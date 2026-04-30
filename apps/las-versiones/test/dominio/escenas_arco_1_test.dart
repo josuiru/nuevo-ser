@@ -105,6 +105,61 @@ void main() {
     });
   });
 
+  group('EscenasArco1.laMeriendaConEider (1.A)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.laMeriendaConEider.id, '1.A');
+      expect(
+        EscenasArco1.laMeriendaConEider.flagDeSalida,
+        'escena_1_a_vista',
+      );
+      expect(
+        EscenasArco1.laMeriendaConEider.flagsRequeridos,
+        {'escena_1_1_7_vista'},
+        reason: '1.A se dispara después de la 1.1.7, no antes',
+      );
+    });
+
+    test('viaja con ambiente cafetería del Casco Viejo — primer espacio '
+        'neutro fuera de Archivo y casa familiar', () {
+      expect(
+        EscenasArco1.laMeriendaConEider.ambiente,
+        same(AmbienteArchivo.cafeteriaCascoViejo),
+      );
+    });
+
+    test('cierra como amable — la sesión termina al pagar y salir, no '
+        'encadena con 1.B en la misma sesión', () {
+      final ultimoPlano = EscenasArco1.laMeriendaConEider.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.elAtico (1.B)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.elAtico.id, '1.B');
+      expect(EscenasArco1.elAtico.flagDeSalida, 'escena_1_b_vista');
+      expect(
+        EscenasArco1.elAtico.flagsRequeridos,
+        {'escena_1_a_vista'},
+        reason: '1.B se dispara después de 1.A',
+      );
+    });
+
+    test('viaja con ambiente ático del Archivo — donde está Andrés', () {
+      expect(
+        EscenasArco1.elAtico.ambiente,
+        same(AmbienteArchivo.aticoArchivo),
+      );
+    });
+
+    test('cierra como amable — al bajar del ático termina la sesión y el '
+        'orquestador ya tiene arco_1_completado activo para abrir el '
+        'Mosaico al siguiente arranque', () {
+      final ultimoPlano = EscenasArco1.elAtico.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('flagsDeCierrePorEscena', () {
     test('1.0.1 cierra con met_begona, met_isaura, evaluation_passed y '
         'accepted_aspirante', () {
@@ -130,6 +185,15 @@ void main() {
       final flags =
           EscenasArco1.flagsDeCierrePorEscena['escena_1_0_3_vista'];
       expect(flags, {'told_family_archive', 'naia_first_curiosity'});
+    });
+
+    test('1.B cierra activando arco_1_completado — es el último flag del '
+        'recorrido del Arco 1 antes del Mosaico (provisional hasta que '
+        'entren las Estaciones 1.2-1.4 al catálogo)', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_b_vista'];
+      expect(flags, contains('arco_1_completado'));
+      expect(flags, contains('visita_atico_andres'));
     });
 
     test('todas las escenas catalogadas están en `todas` y todas las que '

@@ -129,6 +129,17 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.tintaTenue,
   );
 
+  /// **Eider**, amiga del instituto de Maren. Voz adolescente
+  /// directa — la única persona ajena al Archivo con la que Maren
+  /// comparte lo que está aprendiendo. Pedagógicamente importante:
+  /// el oficio histórico no se queda dentro del Archivo, también se
+  /// mide en cómo se cuenta a alguien que no está en él. Tinta tenue
+  /// como el resto del entorno íntimo no-institucional.
+  static const VozPersonaje eider = VozPersonaje._(
+    nombreVisible: 'Eider',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
   /// Voz sin atribución personal, reservada a **fragmentos de fuente
   /// histórica** que el player levanta del manuscrito sin ponerlos en
   /// boca de un personaje del elenco: una cita en latín, una línea

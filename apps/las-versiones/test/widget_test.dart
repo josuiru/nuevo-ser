@@ -82,6 +82,10 @@ void main() {
       'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
       'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
       'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -229,8 +233,9 @@ void main() {
   });
 
   testWidgets(
-      'cerrar la Brecha 1.1 dispara el Mosaico del Arco 1 antes del esqueleto',
-      (tester) async {
+      'cerrar la Brecha 1.1 deja la cinemática 1.1.7 lista pero NO activa '
+      'todavía arco_1_completado — el flag de arco se activa al cerrar 1.B '
+      '(ático), siguiendo el doc 07', (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.lasversiones.idioma_app': 'es',
       'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
@@ -249,11 +254,14 @@ void main() {
     await tester.tap(find.text('CERRAR LA BRECHA'));
     await tester.pumpAndSettle();
 
-    // Como aún hay 1.1.7 pendiente, primero la cinemática.
+    // Tras el cierre arranca la cinemática 1.1.7 ("El primer
+    // apunte"). El arco aún NO está completado: faltan 1.A y 1.B.
     expect(find.byType(PantallaCinematica), findsOneWidget);
     final repoFlags = crearRepoFlags();
-    expect(await repoFlags.estaActivo('arco_1_completado'), isTrue,
-        reason: 'al cerrar la 1.1, el flag de arco completado se activa');
+    expect(await repoFlags.estaActivo('brecha_1_1_completada'), isTrue,
+        reason: 'al cerrar la 1.1, su flag propio se activa');
+    expect(await repoFlags.estaActivo('arco_1_completado'), isFalse,
+        reason: 'arco_1_completado lo activa el cierre de la 1.B, no la 1.1');
   });
 
   testWidgets(
@@ -269,6 +277,8 @@ void main() {
       'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
       'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
       'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
       'nuevoser.lasversiones.flag.arco_1_completado': true,
       // mosaico_arco_1_entregado NO está
     });
@@ -293,6 +303,8 @@ void main() {
       'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
       'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
       'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
       'nuevoser.lasversiones.flag.arco_1_completado': true,
       'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
     });
@@ -317,6 +329,10 @@ void main() {
       'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
       'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
       'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });
@@ -331,6 +347,63 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaCuaderno), findsOneWidget);
+  });
+
+  testWidgets(
+      'tras la 1.1.7 el orquestador despacha la cinemática 1.A '
+      '(merienda con Eider)', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      // 1.A todavía no vista — debería arrancar.
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCinematica), findsOneWidget,
+        reason: 'tras 1.1.7, la siguiente cinemática del Arco 1 es 1.A');
+    expect(find.byType(PantallaMosaicoArco1), findsNothing,
+        reason: 'el Mosaico no debe aparecer hasta cerrar 1.B');
+    // El orquestador identifica la escena por id via ValueKey.
+    expect(find.byKey(const ValueKey('1.A')), findsOneWidget);
+  });
+
+  testWidgets(
+      'tras la 1.A el orquestador despacha la cinemática 1.B (el ático) '
+      'y aún NO el Mosaico', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      // 1.B todavía no vista, arco_1_completado todavía NO.
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+    expect(find.byKey(const ValueKey('1.B')), findsOneWidget);
+    expect(find.byType(PantallaMosaicoArco1), findsNothing,
+        reason: 'el Mosaico no debe aparecer hasta cerrar 1.B');
+
+    final repoFlags = crearRepoFlags();
+    expect(await repoFlags.estaActivo('arco_1_completado'), isFalse,
+        reason: 'arco_1_completado se activa al cerrar 1.B, no al arrancarla');
   });
 
   test('clave de prefs del idioma sigue el namespace '
