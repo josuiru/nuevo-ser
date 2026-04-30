@@ -1582,6 +1582,288 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 2.3 — La domus de los mosaicos** (Iruña, domus
+  /// subterránea). Tercera Brecha jugable del Arco 2. Se interpone
+  /// entre la cinemática 2.3.4 *Comprender sin justificar* (que cierra
+  /// la lección epistémica de Isaura sobre la diferencia entre
+  /// neutralidad y comprensión) y la 2.3.5 *Reconstrucción* (que
+  /// reproduce narrativamente las 8 afirmaciones que Maren produce en
+  /// la mesa). La Brecha es donde Maren declara con calibración Brier;
+  /// la 2.3.5 cinemática es la puesta en limpio narrativa.
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-04 — formulación crítica de preguntas.
+  /// - HF.05/07/09/10 — análisis de fuentes oficialista/silencios
+  ///   y detección de omisiones (la afirmación 6 *"Sólido (la
+  ///   ausencia)"* es **HF.10 declarada explícitamente como
+  ///   conocimiento positivo**).
+  /// - PH.01 — no presentismo. PH.08 — comprender sin justificar
+  ///   (la lección clave de Isaura en 2.3.4 que la Brecha pone en
+  ///   ejercicio jugable).
+  /// - AH.01-03 — argumentación + calibración (incluida la AH.03
+  ///   particular de declarar Sólido (la ausencia) como afirmación
+  ///   positiva sobre el silencio documental).
+  ///
+  /// **Catálogo amplio (8 afirmaciones canónicas + 4 fuentes diegéticas)
+  /// con `minimoAfirmacionesParaConcilio: 6`**: la pedagogía pide al
+  /// menos 6 de 8 declaradas para que el jugador no pueda escapar
+  /// declarando sólo las 5 Sólido del catálogo (sin tocar la 6 *Sólido
+  /// (la ausencia)* — que es Sólido pero pedagógicamente la afirmación
+  /// central — ni las 2 Probable, ni la 1 Disputado).
+  ///
+  /// **Distribución pedagógica 5 Sólido + 2 Probable + 1 Disputado**:
+  /// la pedagogía de la Estación 2.3 es que cuando la fuente es rica
+  /// para la élite que la produce y silenciosa para las personas que
+  /// sostienen su mundo material, **la ausencia es información** —
+  /// declararla como Sólido (la ausencia) es la operación clave del
+  /// oficio. Las 5 Sólido cubren propiedad, propietario, número de
+  /// esclavizados, **el silencio sobre sus identidades**, y mosaico
+  /// fechado. Las 2 Probable cubren el nombre incompleto de la esposa
+  /// y la vida cotidiana inferida de domus análogas. La 1 Disputado
+  /// cubre la existencia de hijos no documentados directamente.
+  ///
+  /// **El matiz "Sólido (la ausencia)"**: vive en el `texto` de la
+  /// `AfirmacionCanonica` correspondiente, NO como nivel nuevo del
+  /// enum `NivelConfianza`. El jugador declara `NivelConfianza.solido`
+  /// que es la calibración correcta (la ausencia documentada **es**
+  /// Sólido); el matiz pedagógico ("la ausencia es información, no
+  /// olvido neutro") es contenido textual de la afirmación que la
+  /// pantalla muestra y el Concilio comenta — sin que el motor Brier
+  /// lo interprete. Preserva la paridad Dart/PHP del core.
+  ///
+  /// **Las 4 fuentes son explícitamente ficticias diegéticas**: la
+  /// familia Cornelia y el "Cornelio magistrado" son figuras
+  /// ficticias del juego (la *gens Cornelia* es real pero el
+  /// magistrado concreto no se identifica con un Cornelio histórico).
+  /// La domus subterránea bajo Iruña es modelo literario verosímil
+  /// basado en domus romanas conocidas en yacimientos hispanorromanos
+  /// (Mérida, Itálica, Empúries) — no una domus catalogada real.
+  /// Registro completo en BLOQUEOS-PENDIENTES.md.
+  static const Brecha brecha23 = Brecha(
+    id: '2.3',
+    titulo: 'La domus de los mosaicos',
+    ubicacionVisible: 'IRUÑA — DOMUS SUBTERRÁNEA',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'HF.05',
+      'HF.07',
+      'HF.09',
+      'HF.10',
+      'PH.01',
+      'PH.08',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha23,
+    afirmacionesCanonicas: _afirmacionesBrecha23,
+    flagDeCompletado: 'brecha_2_3_completada',
+    minimoAfirmacionesParaConcilio: 6,
+  );
+
+  static const List<Fuente> _fuentesBrecha23 = [
+    Fuente(
+      id: 'inscripcion_propietario_cornelio',
+      tipoVisible: 'Inscripción honorífica del propietario',
+      descripcion:
+          'Bloque tallado hallado en el atrio de la domus, parcialmente '
+          'reutilizado como peldaño. Honra a un Cornelio (praenomen '
+          'perdido en la mutilación), magistrado local, mediados del '
+          'siglo II d.C. Identifica al propietario y su estatus cívico, '
+          'pero no nombra a la familia entera ni a las personas que '
+          'sostenían la casa.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Cliente o asociación cívica que costeó el homenaje',
+        fecha: 'Mediados del siglo II d.C.',
+        publico: 'La élite cívica local — quienes leían inscripciones '
+            'honoríficas en el atrio de una domus visitable',
+        intereses: 'Reforzar el prestigio público del propietario y su '
+            'pertenencia a la red de magistrados locales',
+        omisiones: 'Familia, esposa, hijos y especialmente las personas '
+            'esclavizadas que sostenían la casa quedan fuera del registro '
+            'epigráfico — sólo aparece el cabeza de familia varón con '
+            'cargo público',
+        corroboraOContradice: 'Es la fuente más sólida sobre el '
+            'propietario y la datación de su residencia; nada dice de '
+            'quienes la hacían funcionar',
+        sesgo: SesgoFuente.oficialista,
+      ),
+    ),
+    Fuente(
+      id: 'tablilla_cuentas_domesticas',
+      tipoVisible: 'Tablilla con cuentas domésticas',
+      descripcion:
+          'Fragmento de tablilla recuperado en el archivo doméstico de '
+          'la domus. Compras y ventas, gastos de despensa, encargos al '
+          'mercado, asignaciones para el horno y el pozo. Las personas '
+          'esclavizadas aparecen como número en la columna de raciones: '
+          '"servis II" — dos siervos, sin nombre. Su existencia está '
+          'documentada de forma seca y administrativa; su vida concreta '
+          'no.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'El administrador doméstico de la familia Cornelia '
+            '(probablemente liberto)',
+        fecha: 'A lo largo de los siglos II-III d.C., posiblemente '
+            'varias manos sucesivas',
+        publico: 'Uso interno de la casa — registro económico para '
+            'el cabeza de familia',
+        intereses: 'Llevar las cuentas con eficiencia administrativa, '
+            'no preservar identidades',
+        omisiones: 'Los nombres de las personas esclavizadas. Las '
+            'cuentas las reducen a categoría laboral y unidad de '
+            'consumo. Esa omisión no es accidente: es la lógica del '
+            'documento',
+        corroboraOContradice: 'Documenta la existencia de al menos dos '
+            'personas esclavizadas y la rutina material de la casa; '
+            'silencia toda subjetividad de quienes la sostenían',
+        sesgo: SesgoFuente.invisibilizador,
+      ),
+    ),
+    Fuente(
+      id: 'restos_materiales_domus',
+      tipoVisible: 'Restos materiales del yacimiento',
+      descripcion:
+          'Cerámica de cocina, herramientas de hierro, fragmentos óseos '
+          'animales (residuos de comidas), pavimentos, restos de '
+          'combustión en el horno, mosaico geométrico añadido a fines '
+          'del siglo II. Evidencia material directa de cómo funcionaba '
+          'la casa — sin nombres asociados.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Las personas que vivieron, trabajaron y sostuvieron '
+            'la domus a lo largo de doscientos años',
+        fecha: 'Siglos II-III d.C.',
+        publico: 'En su origen: uso doméstico cotidiano. Hoy: la '
+            'arqueología contemporánea',
+        intereses: 'Cocinar, comer, calentar, decorar, vivir — sin '
+            'intención historiográfica',
+        omisiones: 'La materialidad no nombra a nadie. El horno '
+            'funcionó cada día, alguien lo encendió cada mañana; la '
+            'evidencia material es muda sobre identidades',
+        corroboraOContradice: 'Sólida para fechar el mosaico, '
+            'caracterizar la dieta y el equipamiento; muda sobre '
+            'identidades de quienes hacían funcionar la casa',
+      ),
+    ),
+    Fuente(
+      id: 'comparacion_domus_analogas',
+      tipoVisible: 'Comparación con domus análogas',
+      descripcion:
+          'Repertorio académico de domus hispanorromanas mejor '
+          'documentadas (paralelos en yacimientos peninsulares con '
+          'archivos domésticos más completos). Permite inferir '
+          'proporciones razonables de personal doméstico, distribución '
+          'de tareas, ritmo de la casa — siempre como referencia '
+          'comparativa, nunca como afirmación directa sobre la domus '
+          'concreta.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Tradición arqueológica académica de la segunda mitad '
+            'del s. XX',
+        fecha: 'Conocimiento construido en publicaciones de las '
+            'últimas décadas',
+        publico: 'Investigadores y aprendices del oficio',
+        intereses: 'Establecer marcos comparativos para reconstruir '
+            'lo que las fuentes locales no documentan',
+        omisiones: 'La comparación promedia patrones; las '
+            'particularidades de cada domus quedan diluidas. No '
+            'devuelve nombres a las personas no nombradas',
+        corroboraOContradice: 'Sostiene como Probable la vida '
+            'cotidiana inferida de patrones análogos, pero no permite '
+            'afirmaciones Sólido sobre la domus concreta',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha23 = [
+    AfirmacionCanonica(
+      id: 'residencia_familia_cornelia',
+      texto: 'La domus fue residencia de la familia Cornelia desde '
+          'mediados del siglo II hasta finales del siglo III d.C.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'inscripcion_propietario_cornelio',
+        'restos_materiales_domus',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'propietario_cornelio_magistrado',
+      texto: 'El propietario principal fue un Cornelio (praenomen '
+          'perdido en la mutilación de la inscripción), magistrado '
+          'local con cargo cívico documentado.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['inscripcion_propietario_cornelio'],
+    ),
+    AfirmacionCanonica(
+      id: 'esposa_nombre_incompleto',
+      texto: 'Su esposa aparece mencionada en una sola fuente con un '
+          'nombre del que sólo se conserva un fragmento (lectura '
+          'incompleta).',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: ['inscripcion_propietario_cornelio'],
+    ),
+    AfirmacionCanonica(
+      id: 'existencia_hijos',
+      texto: 'Los hijos del propietario no aparecen documentados '
+          'directamente en las fuentes conservadas. Disputado si los '
+          'tuvo o no, aunque la edad y posición social hacen Probable '
+          'que sí.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'inscripcion_propietario_cornelio',
+        'comparacion_domus_analogas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'al_menos_dos_personas_esclavizadas',
+      texto: 'La casa empleaba al menos dos personas esclavizadas, '
+          'documentadas como "servis II" en las cuentas domésticas '
+          'durante el período de la familia Cornelia.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['tablilla_cuentas_domesticas'],
+    ),
+    AfirmacionCanonica(
+      id: 'ausencia_nombrar_esclavizadas',
+      texto: 'Estas personas no están nombradas en ninguna fuente que '
+          'se conserve. Su número exacto, sus nombres, sus vidas '
+          'concretas, sus orígenes culturales se desconocen — y este '
+          'silencio no es accidente del registro: es estructura de la '
+          'sociedad romana esclavista que producía las fuentes. '
+          'Sólido (la ausencia).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'tablilla_cuentas_domesticas',
+        'inscripcion_propietario_cornelio',
+        'restos_materiales_domus',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'mosaico_geometrico_finales_s_ii',
+      texto: 'La domus tuvo un mosaico geométrico añadido a fines del '
+          'siglo II d.C., fechado por estilo y por contexto '
+          'estratigráfico.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['restos_materiales_domus'],
+    ),
+    AfirmacionCanonica(
+      id: 'vida_cotidiana_inferida_domus_analogas',
+      texto: 'La vida cotidiana de la casa incluyó cocina, comercio, '
+          'recepción de clientes, vida familiar y trabajo doméstico '
+          'esclavizado en proporciones que se infieren de domus '
+          'análogas mejor documentadas.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'restos_materiales_domus',
+        'comparacion_domus_analogas',
+      ],
+    ),
+  ];
+
   static const List<Brecha> todas = [
     brecha11,
     brecha12,
@@ -1589,6 +1871,7 @@ class CatalogoBrechas {
     brecha14,
     brecha21,
     brecha22,
+    brecha23,
   ];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
@@ -1628,5 +1911,16 @@ class CatalogoBrechas {
     // ahora `brecha_2_2_completada` en lugar del previo
     // `escena_2_2_4_vista`.
     'omisiones_quintiliano_estudiadas': brecha22,
+    // 2.3 se dispara con `comprender_sin_justificar_aprendido`
+    // (cierre de la cinemática 2.3.4 *Comprender sin justificar*) —
+    // la lección epistémica de Isaura sobre la diferencia entre
+    // neutralidad y comprensión queda aprendida en 2.3.4, y la Brecha
+    // jugable es donde Maren la aplica produciendo las 8 afirmaciones
+    // con calibración Brier (incluida la afirmación 6 *"Sólido (la
+    // ausencia)"* sobre las personas esclavizadas no nombradas). La
+    // 2.3.5 cinemática *Reconstrucción* (puesta en limpio narrativa)
+    // requiere ahora `brecha_2_3_completada` en lugar del previo
+    // `escena_2_3_4_vista`.
+    'comprender_sin_justificar_aprendido': brecha23,
   };
 }

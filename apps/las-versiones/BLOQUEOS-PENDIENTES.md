@@ -332,6 +332,41 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
+## Brecha 2.3 jugable — La domus de los mosaicos (F2-10c)
+
+**Tracker doc 17**: pendiente.
+
+**Estado**: la tercera Brecha jugable del Arco 2 está implementada en `CatalogoBrechas.brecha23` y cableada al orquestador. Se dispara con `comprender_sin_justificar_aprendido` (flag que la cinemática 2.3.4 *Comprender sin justificar* activa al cerrar — la lección epistémica de Isaura sobre la diferencia entre neutralidad y comprensión queda aprendida en 2.3.4) y se interpone entre la 2.3.4 y la 2.3.5 *Reconstrucción* (puesta en limpio narrativa) — ahora la 2.3.5 requiere `brecha_2_3_completada` en lugar del previo `escena_2_3_4_vista`. La Brecha jugable es donde Maren produce las 8 afirmaciones canónicas con calibración Brier (incluida la afirmación 6 *"Sólido (la ausencia)"* sobre las personas esclavizadas no nombradas — corazón pedagógico del Arco 2); la 2.3.5 cinemática reproduce narrativamente esas 8 afirmaciones como puesta en limpio dictada por Maren días después; la 2.3.6 *Concilio de la domus* (cinemática) cierra la Estación con la pregunta clave de Karim sobre por qué se declara una ausencia.
+
+**Catálogo de la Brecha 2.3**:
+- 4 fuentes diegéticas: la inscripción honorífica del propietario (primaria, sesgo oficialista — fuente epigráfica que registra al cabeza de familia varón con cargo cívico), la tablilla con cuentas domésticas (primaria, sesgo invisibilizador — registra a las personas esclavizadas como "servis II", número sin nombre), los restos materiales del yacimiento (primaria — cerámica, herramientas, fragmentos óseos animales, restos de combustión, mosaico geométrico), y la comparación con domus análogas hispanorromanas (secundaria, repertorio académico).
+- 8 afirmaciones canónicas distribuidas pedagógicamente 5 Sólido + 2 Probable + 1 Disputado: la pedagogía de la Estación 2.3 es que cuando la fuente es rica para la élite que la produce y silenciosa para las personas que sostienen su mundo material, **la ausencia es información** — declararla como Sólido (la ausencia) es la operación clave del oficio. Las 5 Sólido cubren propiedad, propietario, número de esclavizados, **el silencio sobre sus identidades** (afirmación 6 con texto especial "Sólido (la ausencia)"), y mosaico fechado. Las 2 Probable cubren el nombre incompleto de la esposa y la vida cotidiana inferida de domus análogas. La 1 Disputado cubre la existencia de hijos no documentados directamente.
+- `minimoAfirmacionesParaConcilio: 6` — declarar al menos 6 de 8 obliga a tocar al menos una afirmación no Sólido (las dos Probable o la Disputado), evitando que el jugador escape sólo con las cinco Sólido. Con 5 ya cubriría todo el "lado fácil" del catálogo y no se obligaría a entrar en las inferencias.
+
+**El matiz "Sólido (la ausencia)"** vive en el `texto` de la `AfirmacionCanonica` `ausencia_nombrar_esclavizadas` (concretamente: *"...y este silencio no es accidente del registro: es estructura de la sociedad romana esclavista que producía las fuentes. Sólido (la ausencia)."*), NO como nivel nuevo del enum `NivelConfianza`. El jugador declara `NivelConfianza.solido` que es la calibración correcta (la ausencia documentada **es** Sólido); el matiz pedagógico ("la ausencia es información, no olvido neutro") es contenido textual de la afirmación que la pantalla muestra y el Concilio comenta — sin que el motor Brier lo interprete. Preserva la paridad Dart/PHP del core. Esta decisión está documentada también en la entrada *Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)*.
+
+**Sustituciones diegéticas aplicadas en el catálogo** (no requiere validación adicional — la Estación 2.3 es ficción diegética declarada):
+- **Familia Cornelia**: figura ficticia diegética del juego. La *gens Cornelia* es real (era una de las grandes gentes patricias romanas que produjo cónsules a lo largo del Imperio), pero la familia concreta de la domus de los mosaicos no se identifica con una familia Cornelia histórica documentada. La elección del nomen *Cornelia* preserva verosimilitud onomástica romana sin afirmar identidad histórica concreta.
+- **"Cornelio magistrado, mediados del siglo II"**: figura ficticia diegética. El praenomen "perdido en la mutilación" de la inscripción es dispositivo narrativo deliberado para que el catálogo no afirme un nombre completo no validado.
+- **Domus subterránea bajo Iruña**: modelo literario verosímil basado en domus romanas conocidas en yacimientos hispanorromanos (Mérida, Itálica, Empúries, Bilbilis), no una domus catalogada real bajo Pamplona. La capa romana de Iruña/Pompaelo está parcialmente documentada arqueológicamente; la domus específica de la Brecha es composición pedagógica.
+- **"Servis II" en las cuentas domésticas**: formulación administrativa romana plausible (las tablillas latinas usan abreviaciones para inventarios y raciones), pero la tablilla concreta y su contenido específico son ficticios diegéticos.
+- **Repertorio de domus análogas hispanorromanas**: el dossier comparativo es composición pedagógica para el ejercicio. Existen estudios académicos sobre domus hispanorromanas, pero el dossier específico de la Brecha no se reproduce de un repertorio real publicado.
+
+**Material trazable preservado** (sin sustitución):
+- La *gens Cornelia* es real como onomástica romana; nombrarla preserva verosimilitud sin afirmar familia concreta.
+- La estructura general de una domus romana (atrio, cocina, archivo doméstico, mosaicos, personal esclavizado documentado en cuentas) está bien documentada arqueológica y filológicamente.
+- La práctica de inscripciones honoríficas reutilizadas como peldaño en construcciones tardías es fenómeno arqueológico real y frecuente.
+- La estructura social romana esclavista y la lógica administrativa que reduce a las personas esclavizadas a número es conocimiento histórico consolidado.
+
+**Pendiente de revisión humana**:
+- ¿La distribución 5 Sólido + 2 Probable + 1 Disputado encaja con cómo el doc 08 §2.3.5 detalla las "8 afirmaciones" de Maren? El doc canónico tiene exactamente esta distribución (1S+1S+1P+1D+1S+1S(la ausencia)+1S+1P para las 8 afirmaciones), que el catálogo reproduce fielmente.
+- ¿La afirmación 6 *"Sólido (la ausencia)"* es lo bastante clara textualmente para que el jugador entienda que no es un nivel nuevo del enum sino un matiz interpretativo de Sólido? El texto incluye la frase literal *"Sólido (la ausencia)"* al final, replicando la convención del doc 08 §2.3.5 ("el 'Sólido (la ausencia)' lo escribe a mano, sin abreviar"). Posible mitigación adicional: añadir una entrada del Cuaderno de la Cronista que explicite la convención antes de la Brecha.
+- ¿La distinción Concilio interno (jugable, mesa con Karim+Aitor+Isaura como revisores activos en la Brecha) y Concilio formal (cinemática 2.3.6 con la afirmación 6 articulada por Maren ante la pregunta de Karim) se preserva? La Brecha jugable cierra con la pantalla de Concilio actual del juego (feedback automatizado por rangos de score Brier); la 2.3.6 cinemática reproduce el diálogo canónico del doc 08 que sella la afirmación 6 explícitamente. Posible ajuste si el comité prefiere que el Concilio formal sea jugable en algún momento futuro.
+
+**Cuando el comité valide**: se puede sustituir la familia Cornelia ficticia por una familia romana concreta documentada en epigrafía hispanorromana (si el comité considera que es preferible y tiene caso real verosímil), o mantener la ficción declarada. La domus subterránea puede sustituirse por una real catalogada o mantener el modelo literario.
+
+---
+
 ## Pantalla de Reconstrucción jugable — preparada para Arco 2 (F2-9)
 
 **Tracker doc 17**: no aplica (decisión técnica del motor de juego).

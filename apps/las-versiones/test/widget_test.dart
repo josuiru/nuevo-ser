@@ -135,6 +135,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      // F2-10c: la 2.3.4 activa `comprender_sin_justificar_aprendido`,
+      // que es el flag de disparo de la Brecha 2.3 jugable. Marcamos
+      // la brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
       'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
       // Latente 2.C.1 (Eider y el cambio) cerrada.
@@ -447,6 +452,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      // F2-10c: la 2.3.4 activa `comprender_sin_justificar_aprendido`,
+      // que es el flag de disparo de la Brecha 2.3 jugable. Marcamos
+      // la brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
       'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
       // Latente 2.C.1 (Eider y el cambio) cerrada.
@@ -565,6 +575,11 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      // F2-10c: la 2.3.4 activa `comprender_sin_justificar_aprendido`,
+      // que es el flag de disparo de la Brecha 2.3 jugable. Marcamos
+      // la brecha como completada para que el orquestador no la abra.
+      'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
       'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
       // Latente 2.C.1 (Eider y el cambio) cerrada.

@@ -2509,11 +2509,20 @@ class EscenasArco2 {
   /// familia Cornelia es ficticia diegética del juego, los
   /// nombres incompletos son explícitamente fragmentarios, la
   /// estructura de afirmaciones reproduce la calibración del doc.
+  ///
+  /// **Precondición desde F2-10c**: requiere `brecha_2_3_completada`
+  /// (en lugar del previo `escena_2_3_4_vista`). La Brecha 2.3
+  /// jugable se interpone entre 2.3.4 y esta 2.3.5 — el jugador
+  /// produce las 8 afirmaciones con calibración Brier en la mesa
+  /// de trabajo, y la 2.3.5 cinemática es la puesta en limpio
+  /// narrativa de lo que ya declaró en la Brecha (incluida la
+  /// afirmación 6 *"Sólido (la ausencia)"* sobre las personas
+  /// esclavizadas no nombradas).
   static const EscenaCinematica reconstruccionDeLaDomus = EscenaCinematica(
     id: '2.3.5',
     titulo: 'Reconstrucción',
     flagDeSalida: 'escena_2_3_5_vista',
-    flagsRequeridos: {'escena_2_3_4_vista'},
+    flagsRequeridos: {'brecha_2_3_completada'},
     ambiente: AmbienteArchivo.mesaTrabajoArchivo,
     planos: [
       PlanoAmbiente(

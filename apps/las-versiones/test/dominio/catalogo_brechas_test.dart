@@ -4,13 +4,13 @@ import 'package:las_versiones/dominio/catalogo_brechas.dart';
 
 void main() {
   group('CatalogoBrechas.todas', () {
-    test('catálogo cubre las 4 Brechas del Arco 1 + Brechas 2.1 y 2.2 '
-        'del Arco 2 (6 Brechas implementadas) — las 2.3/2.4 todavía '
-        'no están en el catálogo', () {
-      expect(CatalogoBrechas.todas, hasLength(6));
+    test('catálogo cubre las 4 Brechas del Arco 1 + Brechas 2.1, 2.2 '
+        'y 2.3 del Arco 2 (7 Brechas implementadas) — la 2.4 '
+        'todavía no está en el catálogo', () {
+      expect(CatalogoBrechas.todas, hasLength(7));
       expect(
         CatalogoBrechas.todas.map((brecha) => brecha.id).toList(),
-        ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2'],
+        ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '2.3'],
       );
     });
 
@@ -237,6 +237,131 @@ void main() {
     });
   });
 
+  group('CatalogoBrechas.brecha23 — La domus de los mosaicos', () {
+    test('id, título, ubicación y flag de completado estables', () {
+      expect(CatalogoBrechas.brecha23.id, '2.3');
+      expect(
+        CatalogoBrechas.brecha23.titulo,
+        'La domus de los mosaicos',
+      );
+      expect(
+        CatalogoBrechas.brecha23.ubicacionVisible,
+        'IRUÑA — DOMUS SUBTERRÁNEA',
+      );
+      expect(
+        CatalogoBrechas.brecha23.flagDeCompletado,
+        'brecha_2_3_completada',
+      );
+    });
+
+    test('catálogo: 4 fuentes y 8 afirmaciones canónicas — la '
+        'asimetría documental de la domus pide más declaraciones '
+        'que las Brechas previas para que la afirmación 6 sobre la '
+        'ausencia se vea como una entre muchas, no como excepción', () {
+      expect(CatalogoBrechas.brecha23.fuentes, hasLength(4));
+      expect(CatalogoBrechas.brecha23.afirmacionesCanonicas, hasLength(8));
+    });
+
+    test('minimoAfirmacionesParaConcilio: 6 — declarar al menos 6 de '
+        '8 obliga a tocar al menos una afirmación no Sólido (las '
+        'dos Probable o la Disputado), evitando que el jugador '
+        'escape sólo con las cinco Sólido', () {
+      expect(
+        CatalogoBrechas.brecha23.minimoAfirmacionesParaConcilio,
+        6,
+      );
+    });
+
+    test('distribución pedagógica 5 Sólido + 2 Probable + 1 Disputado '
+        '— catálogo asimétrico que refleja una fuente epigráfica '
+        'oficialista (mucho Sólido sobre el propietario varón) y '
+        'una material muda (silencio sobre quienes sostenían la '
+        'casa, declarado como Sólido (la ausencia))', () {
+      final niveles = CatalogoBrechas.brecha23.afirmacionesCanonicas
+          .map((a) => a.calibracionCorrecta)
+          .toList();
+      expect(niveles.where((n) => n == NivelConfianza.solido), hasLength(5));
+      expect(niveles.where((n) => n == NivelConfianza.probable), hasLength(2));
+      expect(niveles.where((n) => n == NivelConfianza.disputado), hasLength(1));
+    });
+
+    test('la afirmación sobre la ausencia documentada de las personas '
+        'esclavizadas se calibra como Sólido (no Disputado), porque '
+        'el silencio es estructura social documentada — corazón '
+        'pedagógico de la Estación 2.3 según doc 08 §2.3.5', () {
+      final ausencia = CatalogoBrechas.brecha23.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'ausencia_nombrar_esclavizadas');
+      expect(ausencia.calibracionCorrecta, NivelConfianza.solido);
+      expect(ausencia.texto, contains('Sólido (la ausencia)'));
+      expect(ausencia.texto, contains('estructura'));
+    });
+
+    test('la afirmación Disputado única es la existencia de hijos no '
+        'documentados directamente — ni la inscripción ni las '
+        'cuentas los registran, aunque la edad y posición hacen '
+        'Probable que sí los tuviera', () {
+      final disputadas = CatalogoBrechas.brecha23.afirmacionesCanonicas
+          .where((a) => a.calibracionCorrecta == NivelConfianza.disputado)
+          .map((a) => a.id)
+          .toSet();
+      expect(disputadas, {'existencia_hijos'});
+    });
+
+    test('todas las afirmaciones citan al menos una fuente del '
+        'catálogo — anclaje a evidencia (P3) tiene a qué apuntar', () {
+      final idsFuentes =
+          CatalogoBrechas.brecha23.fuentes.map((f) => f.id).toSet();
+      for (final afirmacion in CatalogoBrechas.brecha23.afirmacionesCanonicas) {
+        expect(afirmacion.idsFuentesAnclaje, isNotEmpty);
+        for (final idFuente in afirmacion.idsFuentesAnclaje) {
+          expect(idsFuentes, contains(idFuente));
+        }
+      }
+    });
+
+    test('la inscripción honorífica del propietario lleva sesgo '
+        'oficialista — fuente epigráfica que registra al cabeza de '
+        'familia varón con cargo cívico y omite a quienes sostenían '
+        'la casa', () {
+      final inscripcion = CatalogoBrechas.brecha23.fuentes
+          .firstWhere((f) => f.id == 'inscripcion_propietario_cornelio');
+      expect(inscripcion.propiedadesCanonicas.tipo, TipoFuente.primaria);
+      expect(
+        inscripcion.propiedadesCanonicas.sesgo,
+        SesgoFuente.oficialista,
+      );
+    });
+
+    test('la tablilla con cuentas domésticas lleva sesgo '
+        'invisibilizador — registra a las personas esclavizadas '
+        'como número ("servis II") sin nombre, lógica '
+        'administrativa que disuelve las identidades', () {
+      final tablilla = CatalogoBrechas.brecha23.fuentes
+          .firstWhere((f) => f.id == 'tablilla_cuentas_domesticas');
+      expect(tablilla.propiedadesCanonicas.tipo, TipoFuente.primaria);
+      expect(
+        tablilla.propiedadesCanonicas.sesgo,
+        SesgoFuente.invisibilizador,
+      );
+    });
+
+    test('la afirmación sobre la ausencia se ancla en al menos las '
+        'tres fuentes que la documentan (la tablilla por número, '
+        'la inscripción por silencio, los restos materiales por '
+        'mudez sobre identidades)', () {
+      final ausencia = CatalogoBrechas.brecha23.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'ausencia_nombrar_esclavizadas');
+      expect(
+        ausencia.idsFuentesAnclaje.toSet(),
+        {
+          'tablilla_cuentas_domesticas',
+          'inscripcion_propietario_cornelio',
+          'restos_materiales_domus',
+        },
+      );
+    });
+  });
+
   group('CatalogoBrechas.brechaPorFlagDeDisparo', () {
     test('la Brecha 2.1 se dispara con `inscripcion_romana_estudiada` '
         '(flag que la cinemática 2.1.4 activa al cerrar)', () {
@@ -253,6 +378,18 @@ void main() {
         CatalogoBrechas
             .brechaPorFlagDeDisparo['omisiones_quintiliano_estudiadas'],
         same(CatalogoBrechas.brecha22),
+      );
+    });
+
+    test('la Brecha 2.3 se dispara con '
+        '`comprender_sin_justificar_aprendido` (flag que la '
+        'cinemática 2.3.4 *Comprender sin justificar* activa al '
+        'cerrar — Isaura ha enseñado la lección epistémica clave '
+        'y Maren la aplica jugando)', () {
+      expect(
+        CatalogoBrechas
+            .brechaPorFlagDeDisparo['comprender_sin_justificar_aprendido'],
+        same(CatalogoBrechas.brecha23),
       );
     });
 
