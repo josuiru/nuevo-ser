@@ -56,13 +56,29 @@ class GeneradorDivisibilidad {
     final maximo = dificultad >= 3 ? 300 : 200;
     const minimo = 10;
 
-    int candidato;
-    var intentos = 0;
-    do {
-      candidato = minimo + _azar.nextInt(maximo - minimo);
-      intentos++;
-    } while ((candidato % divisor == 0) != queremosDivisible &&
-        intentos < 30);
+    final int candidato;
+    if (queremosDivisible) {
+      // Construimos el múltiplo directamente para garantizar el
+      // resultado pedido: con divisor=9 y rango [10, 200) el método
+      // anterior fallaba ~2,5 % de las tiradas (densidad de múltiplos
+      // ~11 %, 30 intentos de rechazo). Aquí elegimos directamente
+      // un k tal que k·divisor caiga en [minimo, máximo).
+      final kMin = (minimo / divisor).ceil().clamp(1, 1 << 30);
+      final kMax = ((maximo - 1) ~/ divisor).clamp(kMin, 1 << 30);
+      final k = kMin + _azar.nextInt(kMax - kMin + 1);
+      candidato = k * divisor;
+    } else {
+      // Para no-divisibles, el rechazo uniforme es seguro: la
+      // densidad de no-múltiplos es ≥ (1 − 1/2) = 50 % en el peor
+      // caso y 30 intentos saturan probabilísticamente.
+      var c = minimo + _azar.nextInt(maximo - minimo);
+      var intentos = 0;
+      while (c % divisor == 0 && intentos < 30) {
+        c = minimo + _azar.nextInt(maximo - minimo);
+        intentos++;
+      }
+      candidato = c;
+    }
 
     return ProblemaDivisibilidad(numero: candidato, divisor: divisor);
   }

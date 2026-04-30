@@ -253,7 +253,7 @@ class DesafioKurz {
       PreguntaKurz(
         enunciado:
             'Ronda de precisión. ¿A qué porcentaje equivale 3/4?',
-        opciones: ['60%', '70%', '75%', '80%'],
+        opciones: ['60 %', '70 %', '75 %', '80 %'],
         indiceCorrecto: 2,
         fraseFalloKurz: 'No está mal. Pero sigue mal.',
       ),

@@ -13,17 +13,20 @@ class PorcentajeConocido {
 }
 
 const List<PorcentajeConocido> porcentajesConocidos = [
-  PorcentajeConocido('10%', Fraccion(1, 10)),
-  PorcentajeConocido('20%', Fraccion(1, 5)),
-  PorcentajeConocido('25%', Fraccion(1, 4)),
-  PorcentajeConocido('30%', Fraccion(3, 10)),
-  PorcentajeConocido('40%', Fraccion(2, 5)),
-  PorcentajeConocido('50%', Fraccion(1, 2)),
-  PorcentajeConocido('60%', Fraccion(3, 5)),
-  PorcentajeConocido('70%', Fraccion(7, 10)),
-  PorcentajeConocido('75%', Fraccion(3, 4)),
-  PorcentajeConocido('80%', Fraccion(4, 5)),
-  PorcentajeConocido('90%', Fraccion(9, 10)),
+  // Convención castellana: número + espacio fino + "%". Coherente
+  // con el resto de pantallas de la familia PROP que ya renderizan
+  // "$valor %" con espacio.
+  PorcentajeConocido('10 %', Fraccion(1, 10)),
+  PorcentajeConocido('20 %', Fraccion(1, 5)),
+  PorcentajeConocido('25 %', Fraccion(1, 4)),
+  PorcentajeConocido('30 %', Fraccion(3, 10)),
+  PorcentajeConocido('40 %', Fraccion(2, 5)),
+  PorcentajeConocido('50 %', Fraccion(1, 2)),
+  PorcentajeConocido('60 %', Fraccion(3, 5)),
+  PorcentajeConocido('70 %', Fraccion(7, 10)),
+  PorcentajeConocido('75 %', Fraccion(3, 4)),
+  PorcentajeConocido('80 %', Fraccion(4, 5)),
+  PorcentajeConocido('90 %', Fraccion(9, 10)),
 ];
 
 class ProblemaPorcentaje {

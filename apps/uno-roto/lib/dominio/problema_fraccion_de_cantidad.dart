@@ -78,8 +78,13 @@ class GeneradorFraccionDeCantidad {
     }
 
     // 1. Solo dividir cantidad entre el denominador (ignora numerador).
-    //    Distractor estrella en el caso n>1.
-    anyadirSiNuevo(c ~/ d);
+    //    Distractor estrella en el caso n>1. Cuando n=1 colisiona
+    //    con el correcto (porque correcto = 1·c/d = c/d), así que
+    //    sustituimos por c × d (multiplicar en lugar de dividir,
+    //    error opuesto típico del niño que no sabe qué operación
+    //    aplica el numerador/denominador).
+    final ignorarNumerador = c ~/ d;
+    anyadirSiNuevo(ignorarNumerador == correcto ? c * d : ignorarNumerador);
     // 2. Producto sin dividir entre denominador (n × c) — error
     //    pedagógico clásico: aplicar la operación a medias.
     anyadirSiNuevo(n * c);
@@ -87,8 +92,11 @@ class GeneradorFraccionDeCantidad {
     anyadirSiNuevo(n);
     // 4. Confundir con la suma de los términos.
     anyadirSiNuevo(n + d + c);
-    // 5. Cantidad − resultado (resta intuitiva).
-    anyadirSiNuevo(c - correcto);
+    // 5. Cantidad − resultado (resta intuitiva). Con d=2 el complementario
+    //    de la mitad es la otra mitad y coincide con el correcto;
+    //    sustituimos por c + correcto (sumar en lugar de restar).
+    final cantidadMenos = c - correcto;
+    anyadirSiNuevo(cantidadMenos == correcto ? c + correcto : cantidadMenos);
 
     var paso = 1;
     while (propuestos.length < 4) {

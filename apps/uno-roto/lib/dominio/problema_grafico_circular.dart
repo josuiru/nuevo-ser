@@ -105,8 +105,11 @@ class GeneradorGraficoCircular {
 
     // Distractor 1: el porcentaje de la porción contigua.
     anyadir(porcentajes[(indicePorcion + 1) % porcentajes.length]);
-    // Distractor 2: el complementario (100 − correcto).
-    anyadir(100 - correcto);
+    // Distractor 2: el complementario (100 − correcto). Cuando la
+    // porción es del 50%, complementario = correcto y el distractor
+    // colisiona; en ese caso usamos correcto − 10 como vecino.
+    final complementario = 100 - correcto;
+    anyadir(complementario == correcto ? correcto - 10 : complementario);
     // Distractor 3: el doble (si cabe en 100) o la mitad.
     anyadir(correcto * 2);
     anyadir(correcto ~/ 2);

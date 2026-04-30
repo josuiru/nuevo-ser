@@ -62,16 +62,23 @@ extension SimboloCapacidad on UnidadCapacidad {
 }
 
 /// Devuelve la unidad cuyo símbolo coincide. Lanza [ArgumentError] si
-/// no hay coincidencia para no enmascarar errores de empaquetado.
+/// no hay coincidencia para no enmascarar errores de empaquetado. La
+/// comparación se hace case-insensitive sobre el sufijo de la unidad
+/// (la "L" del litro o la "g" del gramo) para tolerar variantes como
+/// "ml" / "mL", "dag" / "daG" en cualquier sitio que serialice
+/// símbolos. La masa siempre lleva minúscula final ("g") y la
+/// capacidad siempre mayúscula final ("L"); para distinguirlas
+/// comprobamos el último carácter de forma case-insensitive.
 ({FamiliaMetrica familia, int posicion}) unidadDesdeSimboloMetrica(
     String simbolo) {
+  final normalizado = simbolo.trim();
   for (final unidad in UnidadMasa.values) {
-    if (unidad.simbolo == simbolo) {
+    if (unidad.simbolo.toLowerCase() == normalizado.toLowerCase()) {
       return (familia: FamiliaMetrica.masa, posicion: unidad.posicion);
     }
   }
   for (final unidad in UnidadCapacidad.values) {
-    if (unidad.simbolo == simbolo) {
+    if (unidad.simbolo.toLowerCase() == normalizado.toLowerCase()) {
       return (
         familia: FamiliaMetrica.capacidad,
         posicion: unidad.posicion,

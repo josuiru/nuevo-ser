@@ -66,10 +66,35 @@ class GeneradorPrimo {
 
     if (dificultad >= 3 && _azar.nextDouble() < 0.35) {
       // En tier alto, una de cada tres tiradas la generamos al vuelo
-      // hasta 100 — mezcla con los curados para ampliar el rango.
-      return ProblemaPrimo(numero: 2 + _azar.nextInt(99));
+      // hasta 100 — pero pre-equilibrada 50/50 sí-primo/no-primo.
+      // Antes se sacaba al azar uniforme en [2, 100], lo que
+      // sesgaba 25/75 hacia "no primo" y rompía el balance del
+      // resto del generador.
+      if (_azar.nextBool()) {
+        return ProblemaPrimo(numero: _primoAleatorio());
+      }
+      return ProblemaPrimo(numero: _noPrimoAleatorio());
     }
 
     return ProblemaPrimo(numero: pool[_azar.nextInt(pool.length)]);
+  }
+
+  /// Primo al azar en [2, 100]. Lista pre-calculada para no perder
+  /// tiempo en cribar.
+  static const _primosHasta100 = <int>[
+    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
+    61, 67, 71, 73, 79, 83, 89, 97,
+  ];
+
+  int _primoAleatorio() =>
+      _primosHasta100[_azar.nextInt(_primosHasta100.length)];
+
+  /// No-primo al azar en [4, 100], excluyendo 1 (que ya aparece como
+  /// caso especial) — devolvemos un compuesto.
+  int _noPrimoAleatorio() {
+    while (true) {
+      final candidato = 4 + _azar.nextInt(97);
+      if (!_primosHasta100.contains(candidato)) return candidato;
+    }
   }
 }
