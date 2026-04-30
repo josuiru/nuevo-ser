@@ -133,6 +133,42 @@ class NS_Endpoints {
 			)
 		);
 
+		// Cuidadores — POC marcado BORRADOR (NS_Caregivers cabecera de
+		// archivo). Pendiente LOPDGDD ítem 5 antes de producción.
+		register_rest_route(
+			$namespace,
+			'/caregivers/link/request',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Caregivers', 'solicitar_vinculo' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
+		register_rest_route(
+			$namespace,
+			'/caregivers/link/verify',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Caregivers', 'verificar_vinculo' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt_cuidador' ),
+				),
+			)
+		);
+		register_rest_route(
+			$namespace,
+			'/caregivers/(?P<caregiverId>\d+)/children/(?P<childId>\d+)/summary',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Caregivers', 'ver_resumen' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt_cuidador' ),
+				),
+			)
+		);
+
 		register_rest_route(
 			$namespace,
 			'/companion/aggregates/weekly',
@@ -954,17 +990,14 @@ class NS_Endpoints {
 	 * mismo tiempo, no antes.
 	 */
 	private static function endpoints_companion(): array {
-		return array(
-			// Cuaderno, mosaicos y agregados: ya implementados en
-			//   `registrar_companion_real` (NS_Companion_Cuaderno,
-			//   NS_Companion_Mosaicos, NS_Companion_Agregados).
-			// Aulas: `join`, `crear_aula` y `agregados_aula` ya están
-			// cableadas en `registrar_companion_real` (NS_Companion_Aulas).
-			// Vínculo cuidador-niño con consentimiento parental.
-			'/caregivers/link/request'                                    => 'POST',
-			'/caregivers/link/verify'                                     => 'POST',
-			'/caregivers/(?P<caregiver_id>\d+)/children/(?P<child_id>\d+)/summary' => 'GET',
-		);
+		// Todas las rutas reservadas en C7 ya tienen handler real
+		// (cuaderno + mosaicos + aulas + agregados + caregivers).
+		// El array queda vacío y se borrará en una pasada de
+		// limpieza junto con `companion_no_implementado` y
+		// `registrar_companion`. De momento dejamos la estructura
+		// para que el que añada un endpoint nuevo en el futuro lo
+		// reserve aquí primero.
+		return array();
 	}
 
 	/**

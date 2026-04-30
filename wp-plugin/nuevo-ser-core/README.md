@@ -116,6 +116,26 @@ Doble capa de seguridad: el cliente Flutter filtra antes de enviar y el plugin f
 - HTTPS obligatorio — configuración de hosting, no se valida en código.
 - Borrado GDPR completo vía `DELETE /account`.
 
+## BORRADOR pendiente de validación legal
+
+- **`NS_Caregivers` (`/caregivers/*`) es POC** marcado con
+  `consent_method = 'magic_link_borrador'` literal en cada fila
+  de `ns_caregiver_links`. Cualquier consumidor puede detectar el
+  modo POC por esa string.
+- **Antes de activar en producción se requiere**:
+  1. Asesoría LOPDGDD para menores. La AEPD aplica criterios
+     reforzados; magic link puede no bastar.
+  2. Texto humano del email de invitación (voz amable, sin
+     diminutivos, sin alarmar — test §2.3 doc 04 El Cuaderno).
+  3. Mecanismo real de envío de email — hoy el `request`
+     devuelve el token directamente en la respuesta para
+     test manual.
+  4. Decidir si el progenitor inicia el vínculo desde la app
+     del niño (con su JWT, como hoy) o desde una pantalla
+     dedicada con su propia cuenta WP.
+- Tracker: memoria personal del operador
+  `project_el_cuaderno_decisiones_humanas_pendientes` ítem 5.
+
 ## Licencia
 
 GPL-2.0-or-later (compatible con AGPL-3.0 del repo).

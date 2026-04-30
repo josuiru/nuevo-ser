@@ -246,10 +246,12 @@ class NS_Esquema {
 				consent_method VARCHAR(32) NOT NULL DEFAULT '',
 				consent_verified_at DATETIME NULL DEFAULT NULL,
 				consent_evidence LONGTEXT NULL DEFAULT NULL,
+				consent_token VARCHAR(64) NULL DEFAULT NULL,
 				active TINYINT(1) NOT NULL DEFAULT 1,
 				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				revoked_at DATETIME NULL DEFAULT NULL,
 				PRIMARY KEY  (caregiver_user_id, child_user_id),
+				UNIQUE KEY consent_token (consent_token),
 				KEY child_user_id (child_user_id)
 			) {$charset_collate};",
 
