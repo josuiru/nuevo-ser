@@ -259,13 +259,12 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
   late final SelectorImagen _selectorImagen;
   late final AlmacenadorMedios _almacenadorMedios;
-  // Cableado para inyección futura. Las pantallas todavía no lo
-  // consumen — el copy de pre-permiso del niño es decisión humana
-  // pendiente (B5 del plan + voz adulta amable doc 04). Cuando
-  // llegue la asesoría del adulto, este servicio se inyecta a
-  // pantalla_observacion para que el niño pueda anclar coordenadas
-  // (que NO cruzan red) a la observación.
-  // ignore: unused_field
+  /// Inyectado a `PantallaObservacion` para que el niño pueda anclar
+  /// coordenadas opt-in a la página. Las coords se persisten SÓLO en
+  /// `Observacion.dondeCoordenadas` (Isar local) y nunca cruzan red —
+  /// la frontera está en `cliente_el_cuaderno.dart`. Pre-permiso con
+  /// voz adulta amable provisional pendiente de asesoría psicológica
+  /// B8 (ítem 2 memoria `project_el_cuaderno_decisiones_humanas_pendientes`).
   late final ServicioGeolocalizacion _servicioGeolocalizacion;
   late Future<EnviarPreguntaTutor?> _futureEnviarPregunta;
 
@@ -405,6 +404,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           intentarSincronizarObservaciones: _intentarSincronizarObservaciones,
           selectorImagen: _selectorImagen,
           almacenadorMedios: _almacenadorMedios,
+          servicioGeolocalizacion: _servicioGeolocalizacion,
           resolverMedioParaExport: _resolverMedioParaExport,
           nombreParaTituloPdf: nombrePerfilElCuaderno.value,
           clienteAuthProfesor: _clienteAuthProfesor,

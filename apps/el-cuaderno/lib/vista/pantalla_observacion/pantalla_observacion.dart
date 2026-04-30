@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../datos/almacenador_medios.dart';
 import '../../datos/selector_imagen.dart';
+import '../../dominio/geolocalizacion_privacy_first.dart';
 import '../../dominio/misterio.dart';
 import '../../dominio/nivel_confianza.dart';
 import '../../dominio/observacion.dart';
@@ -30,8 +31,10 @@ class PantallaObservacion extends StatefulWidget {
     this.alGuardarObservacion,
     this.selectorImagen,
     this.almacenadorMedios,
+    this.servicioGeolocalizacion,
     this.constructorMiniatura,
     this.abrirLienzoDibujoOverride,
+    this.confirmarPrePermisoGeoOverride,
     DateTime Function()? proveedorAhora,
     String Function()? proveedorIds,
   })  : _proveedorAhora = proveedorAhora ?? DateTime.now,
@@ -58,6 +61,13 @@ class PantallaObservacion extends StatefulWidget {
   /// de la app. Requerido si [selectorImagen] no es null.
   final AlmacenadorMedios? almacenadorMedios;
 
+  /// Servicio de geolocalización para anclar coordenadas a la página
+  /// (B5). Si llega no nulo, la UI muestra el botón opt-in "anclar mi
+  /// posición a esta página"; las coords NUNCA cruzan red — se
+  /// persisten sólo en `Observacion.dondeCoordenadas` (Isar local). Si
+  /// es null (tests sin geo, modo S1), el botón no aparece.
+  final ServicioGeolocalizacion? servicioGeolocalizacion;
+
   /// Constructor de la miniatura. Por defecto `Image.file`. Tests
   /// pueden inyectar un `Container()` para evitar el decode async
   /// que cuelga el flutter tester con `Future.then` pendientes.
@@ -68,6 +78,12 @@ class PantallaObservacion extends StatefulWidget {
   /// PNG simulados o null si el "niño" canceló. Producción siempre
   /// pasa null y se usa el flujo real.
   final Future<Uint8List?> Function(BuildContext)? abrirLienzoDibujoOverride;
+
+  /// Para tests: closure que reemplaza el AlertDialog de pre-permiso
+  /// de geolocalización. Devuelve `true` si el "niño" pulsa "anclar"
+  /// y `false` si cancela. Producción siempre pasa null y se muestra
+  /// el diálogo real.
+  final Future<bool> Function(BuildContext)? confirmarPrePermisoGeoOverride;
 
   final DateTime Function() _proveedorAhora;
   final String Function() _proveedorIds;
@@ -102,6 +118,14 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
   /// directorio de medios — A5 (export v2) ya hace una verificación
   /// de "fichero apuntado existe".
   late final String _idObservacion;
+
+  /// Coordenadas ancladas a esta observación (opt-in, nunca cruzan
+  /// red — se persisten sólo en `Observacion.dondeCoordenadas`). Null
+  /// hasta que el niño explícitamente las pida con el botón "anclar
+  /// mi posición a esta página". Quitarlas vuelve a null.
+  Coordenadas? _coordenadasAncladas;
+  bool _solicitandoUbicacion = false;
+  String? _avisoUbicacion;
 
   @override
   void initState() {
@@ -226,6 +250,16 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
                       alCambiar: (nuevoNivel) =>
                           setState(() => _confianza = nuevoNivel),
                     ),
+                  if (widget.servicioGeolocalizacion != null) ...[
+                    const SizedBox(height: 24),
+                    _BloqueAnclarPosicion(
+                      coordenadasAncladas: _coordenadasAncladas,
+                      solicitando: _solicitandoUbicacion,
+                      aviso: _avisoUbicacion,
+                      alAnclar: _anclarPosicion,
+                      alQuitar: _quitarPosicion,
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   if (widget.misteriosAbiertos.isNotEmpty) ...[
                     const _Etiqueta('va con un Misterio'),
@@ -346,6 +380,99 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
     return null;
   }
 
+  Future<void> _anclarPosicion() async {
+    final servicio = widget.servicioGeolocalizacion;
+    if (servicio == null) return;
+
+    // Pre-permiso con la voz adulta amable (biblia §2.5 + doc 04 §1.2)
+    // antes del diálogo del sistema. VOZ-ADULTA-PROVISIONAL —
+    // pendiente de asesoría psicológica B8 (memoria
+    // `project_el_cuaderno_decisiones_humanas_pendientes`). Texto
+    // estable a propósito para que la asesoría tenga superficie
+    // concreta sobre la que opinar.
+    final override = widget.confirmarPrePermisoGeoOverride;
+    final continua = override != null
+        // El override sólo se usa en tests; el context se pasa al
+        // callback antes de cualquier await dentro del propio override.
+        // ignore: use_build_context_synchronously
+        ? await override(context)
+        : await _mostrarPrePermisoUbicacion();
+    if (continua != true) return;
+    if (!mounted) return;
+
+    setState(() {
+      _solicitandoUbicacion = true;
+      _avisoUbicacion = null;
+    });
+    try {
+      var permiso = await servicio.permiso();
+      if (permiso == PermisoGeo.noSolicitado || permiso == PermisoGeo.denegado) {
+        permiso = await servicio.pedirPermiso();
+      }
+      if (!mounted) return;
+      if (permiso != PermisoGeo.concedido) {
+        setState(() {
+          _solicitandoUbicacion = false;
+          _avisoUbicacion = permiso == PermisoGeo.denegadoPermanente
+              ? 'No se ha podido pedir permiso. Si quieres anclar la posición, '
+                  'cámbialo en los ajustes del teléfono.'
+              : 'Sin permiso de ubicación. Puedes seguir sin él.';
+        });
+        return;
+      }
+      final coords = await servicio.coordenadasActuales();
+      if (!mounted) return;
+      setState(() {
+        _solicitandoUbicacion = false;
+        if (coords == null) {
+          _avisoUbicacion = 'No se ha podido localizar la posición. '
+              'Puedes seguir sin ella.';
+        } else {
+          _coordenadasAncladas = coords;
+          _avisoUbicacion = null;
+        }
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _solicitandoUbicacion = false;
+        _avisoUbicacion = 'No se ha podido localizar la posición. '
+            'Puedes seguir sin ella.';
+      });
+    }
+  }
+
+  Future<bool> _mostrarPrePermisoUbicacion() async {
+    final continuar = await showDialog<bool>(
+      context: context,
+      builder: (dialogo) => AlertDialog(
+        title: const Text('Anclar la posición a esta página'),
+        content: const Text(
+          'La posición se queda en este cuaderno y no sale a internet. '
+          'No la ve el adulto. Es opcional — puedes guardar la página sin ella.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogo).pop(false),
+            child: const Text('cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogo).pop(true),
+            child: const Text('anclar'),
+          ),
+        ],
+      ),
+    );
+    return continuar ?? false;
+  }
+
+  void _quitarPosicion() {
+    setState(() {
+      _coordenadasAncladas = null;
+      _avisoUbicacion = null;
+    });
+  }
+
   String _extraerExtensionDe(String ruta) {
     final ultimoPunto = ruta.lastIndexOf('.');
     final ultimaBarra = ruta.lastIndexOf('/');
@@ -374,6 +501,7 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
       cuandoOcurrio: ahora,
       dondeNombre: widget.sitSpotActivo?.nombre ?? '',
       sitSpotId: widget.sitSpotActivo?.id,
+      dondeCoordenadas: _coordenadasAncladas,
       queVio: queViste,
       creesQueEs: creesQueEs.isEmpty ? null : creesQueEs,
       // Si el niño no escribió identificación, el nivel registrado
@@ -858,6 +986,100 @@ class _BotonGuardar extends StatelessWidget {
               ),
             ),
             child: Text(textos.observacionBotonGuardar),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bloque opt-in "anclar mi posición a esta página" (B5 — fallback de
+/// experto pendiente de asesoría psicológica B8 sobre el copy del
+/// pre-permiso). Las coordenadas se persisten sólo en
+/// `Observacion.dondeCoordenadas` (Isar local) y NUNCA cruzan red —
+/// la frontera está en `cliente_el_cuaderno.dart`.
+class _BloqueAnclarPosicion extends StatelessWidget {
+  const _BloqueAnclarPosicion({
+    required this.coordenadasAncladas,
+    required this.solicitando,
+    required this.aviso,
+    required this.alAnclar,
+    required this.alQuitar,
+  });
+
+  final Coordenadas? coordenadasAncladas;
+  final bool solicitando;
+  final String? aviso;
+  final VoidCallback alAnclar;
+  final VoidCallback alQuitar;
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: esquema.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: esquema.outline, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            coordenadasAncladas == null
+                ? 'Posición no anclada'
+                : 'Posición anclada a esta página',
+            style: TipografiaCuaderno.sans(
+              color: esquema.onSurface,
+              tamano: TipografiaCuaderno.tamano13,
+              peso: TipografiaCuaderno.pesoMedio,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'La posición se queda en este cuaderno y no sale a internet.',
+            style: TipografiaCuaderno.serif(
+              color: PaletaCuaderno.tintaTenue,
+              tamano: TipografiaCuaderno.tamano12,
+              altoLinea: 1.45,
+            ),
+          ),
+          if (aviso != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              aviso!,
+              style: TipografiaCuaderno.serif(
+                color: PaletaCuaderno.sienaTenue,
+                tamano: TipografiaCuaderno.tamano12,
+                altoLinea: 1.45,
+              ),
+            ),
+          ],
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              if (coordenadasAncladas == null)
+                TextButton(
+                  onPressed: solicitando ? null : alAnclar,
+                  child: Text(solicitando ? 'localizando…' : 'anclar mi posición'),
+                )
+              else ...[
+                TextButton(
+                  onPressed: alQuitar,
+                  child: const Text('quitar posición'),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${coordenadasAncladas!.lat.toStringAsFixed(5)}, '
+                  '${coordenadasAncladas!.lng.toStringAsFixed(5)}',
+                  style: TipografiaCuaderno.sans(
+                    color: PaletaCuaderno.tintaTenue,
+                    tamano: TipografiaCuaderno.tamano12,
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),

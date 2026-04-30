@@ -8,6 +8,7 @@ import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/selector_imagen.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
+import '../../dominio/geolocalizacion_privacy_first.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
@@ -44,6 +45,7 @@ class PantallaCuaderno extends StatefulWidget {
     this.intentarSincronizarObservaciones,
     this.selectorImagen,
     this.almacenadorMedios,
+    this.servicioGeolocalizacion,
     this.resolverMedioParaExport,
     this.nombreParaTituloPdf,
     this.clienteAuthProfesor,
@@ -122,6 +124,11 @@ class PantallaCuaderno extends StatefulWidget {
   /// Almacenador que mueve la foto seleccionada al directorio privado
   /// de la app. Requerido si [selectorImagen] no es null.
   final AlmacenadorMedios? almacenadorMedios;
+
+  /// Servicio de geolocalización para anclar coordenadas a las
+  /// observaciones (B5). Si llega no nulo, `PantallaObservacion`
+  /// muestra el bloque opt-in. Las coords se persisten sólo en local.
+  final ServicioGeolocalizacion? servicioGeolocalizacion;
 
   /// Resuelve presencia y tamaño de cada fichero medio al exportar el
   /// cuaderno (export v2). Si es null, el export queda sin manifiesto
@@ -243,6 +250,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           alGuardarObservacion: widget.alGuardarObservacion,
           selectorImagen: widget.selectorImagen,
           almacenadorMedios: widget.almacenadorMedios,
+          servicioGeolocalizacion: widget.servicioGeolocalizacion,
         ),
       ),
     );
