@@ -105,6 +105,20 @@ class NS_Endpoints {
 			)
 		);
 
+		// POST /classrooms — el profesor crea un aula. Requiere JWT
+		// con tipo='profesor' (emitido por POST /auth/login).
+		register_rest_route(
+			$namespace,
+			'/classrooms',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Companion_Aulas', 'crear_aula' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt_profesor' ),
+				),
+			)
+		);
+
 		register_rest_route(
 			$namespace,
 			'/companion/aggregates/weekly',
@@ -930,10 +944,9 @@ class NS_Endpoints {
 			// Cuaderno, mosaicos y agregados: ya implementados en
 			//   `registrar_companion_real` (NS_Companion_Cuaderno,
 			//   NS_Companion_Mosaicos, NS_Companion_Agregados).
-			// Aulas: el `join` ya está cableado en `registrar_companion_real`
-			// (NS_Companion_Aulas); la creación y los agregados esperan al
-			// mecanismo de auth del profesor.
-			'/classrooms'                                                 => 'POST',
+			// Aulas: `join` y `crear_aula` ya están cableadas en
+			// `registrar_companion_real` (NS_Companion_Aulas); los
+			// agregados de aula esperan a un slice posterior.
 			'/classrooms/(?P<id>\d+)/aggregates'                          => 'GET',
 			// Vínculo cuidador-niño con consentimiento parental.
 			'/caregivers/link/request'                                    => 'POST',
