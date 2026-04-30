@@ -9,39 +9,39 @@ class TextosAppEu extends TextosApp {
   TextosAppEu([String locale = 'eu']) : super(locale);
 
   @override
-  String get tituloApp => 'TODO_EU · El Cuaderno';
+  String get tituloApp => 'Koadernoa';
 
   @override
-  String get subtituloBienvenida => 'TODO_EU · Una herramienta para anotar lo que ves vivo cerca de ti.';
+  String get subtituloBienvenida => 'Zure inguruan ikusten duzun bizia idazteko tresna.';
 
   @override
-  String get saludoSinNombre => 'TODO_EU · Hola.';
+  String get saludoSinNombre => 'Kaixo.';
 
   @override
   String saludoConNombre(String nombre) {
-    return 'TODO_EU · Hola, $nombre.';
+    return 'Kaixo, $nombre.';
   }
 
   @override
-  String get navCuaderno => 'TODO_EU · cuaderno';
+  String get navCuaderno => 'koadernoa';
 
   @override
-  String get navMapa => 'TODO_EU · mapa';
+  String get navMapa => 'mapa';
 
   @override
-  String get navMisterios => 'TODO_EU · misterios';
+  String get navMisterios => 'misterioak';
 
   @override
-  String get navTutor => 'TODO_EU · tutor';
+  String get navTutor => 'tutorea';
 
   @override
-  String get seccionSitSpot => 'TODO_EU · Tu sit spot';
+  String get seccionSitSpot => 'Zure sit spot-a';
 
   @override
-  String get seccionMisteriosAbiertos => 'TODO_EU · Misterios abiertos';
+  String get seccionMisteriosAbiertos => 'Misterio irekiak';
 
   @override
-  String get seccionUltimaPagina => 'TODO_EU · Última página';
+  String get seccionUltimaPagina => 'Azken orria';
 
   @override
   String get sitSpotInvitacion => 'TODO_EU · Cuando estés en algún sitio al aire libre que te guste — un parque, un árbol, una esquina — puedes hacerlo tu sit spot. Toca aquí cuando estés.';
@@ -58,10 +58,10 @@ class TextosAppEu extends TextosApp {
   String get misteriosVacio => 'TODO_EU · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.';
 
   @override
-  String get navProximamente => 'TODO_EU · Próximamente.';
+  String get navProximamente => 'Laster etorriko da.';
 
   @override
-  String get observacionTitulo => 'TODO_EU · nueva observación';
+  String get observacionTitulo => 'behaketa berria';
 
   @override
   String observacionCabecera(String hora) {
@@ -93,52 +93,52 @@ class TextosAppEu extends TextosApp {
   String get observacionDibujoQuitar => 'TODO_EU · quitar dibujo';
 
   @override
-  String get observacionEtiquetaQueViste => 'TODO_EU · qué viste';
+  String get observacionEtiquetaQueViste => 'zer ikusi duzu';
 
   @override
-  String get observacionPlaceholderQueViste => 'TODO_EU · describe lo que has visto, sin nombrarlo si no estás segura';
+  String get observacionPlaceholderQueViste => 'deskribatu ikusi duzuna, izenik gabe ziur ez bazaude';
 
   @override
-  String get observacionEtiquetaCreesQueEs => 'TODO_EU · crees que es';
+  String get observacionEtiquetaCreesQueEs => 'zer dela uste duzu';
 
   @override
-  String get observacionPlaceholderCreesQueEs => 'TODO_EU · si quieres, propón un nombre';
+  String get observacionPlaceholderCreesQueEs => 'nahi baduzu, izen bat proposatu';
 
   @override
-  String get confianzaConsenso => 'TODO_EU · consenso';
+  String get confianzaConsenso => 'adostasuna';
 
   @override
-  String get confianzaHipotesisActiva => 'TODO_EU · hipótesis activa';
+  String get confianzaHipotesisActiva => 'hipotesi aktiboa';
 
   @override
-  String get confianzaNoSegura => 'TODO_EU · no estoy segura';
+  String get confianzaNoSegura => 'ez nago ziur';
 
   @override
-  String get confianzaConsensoTooltip => 'TODO_EU · lo has confirmado con una clave o con el Tutor';
+  String get confianzaConsensoTooltip => 'gida batekin edo Tutorearekin egiaztatu duzu';
 
   @override
-  String get confianzaNoSeguraTooltip => 'TODO_EU · no pasa nada, anótalo así';
+  String get confianzaNoSeguraTooltip => 'ez da ezer gertatzen, idatz ezazu horrela';
 
   @override
-  String get observacionAvisoFalta => 'TODO_EU · haz una nota antes de guardar';
+  String get observacionAvisoFalta => 'egin ohar bat gorde aurretik';
 
   @override
-  String get observacionBotonGuardar => 'TODO_EU · Guardar en el cuaderno';
+  String get observacionBotonGuardar => 'Koadernoan gorde';
 
   @override
-  String get tutorSaludoCanonico => 'TODO_EU · Soy el Tutor del Cuaderno. Pregúntame lo que necesites.';
+  String get tutorSaludoCanonico => 'Koadernoaren Tutorea naiz. Galdetu behar duzuna.';
 
   @override
-  String get tutorPlaceholderInput => 'TODO_EU · escribe tu pregunta';
+  String get tutorPlaceholderInput => 'idatzi zure galdera';
 
   @override
-  String get tutorBotonEnviar => 'TODO_EU · Enviar';
+  String get tutorBotonEnviar => 'Bidali';
 
   @override
-  String get tutorRespuestaCanned => 'TODO_EU · El Tutor todavía no está conectado. Vuelve en unas semanas.';
+  String get tutorRespuestaCanned => 'Tutorea oraindik ez dago konektatuta. Itzuli aste batzuetan.';
 
   @override
-  String get ajustesTitulo => 'TODO_EU · Ajustes';
+  String get ajustesTitulo => 'Ezarpenak';
 
   @override
   String ajustesIdiomaActual(String idioma) {
@@ -211,16 +211,16 @@ class TextosAppEu extends TextosApp {
   String get ajustesBorradoCompleto => 'TODO_EU · Listo. Tu cuaderno está vacío.';
 
   @override
-  String get bienvenidaTitulo => 'TODO_EU · ¿Cómo te llamas?';
+  String get bienvenidaTitulo => 'Nola duzu izena?';
 
   @override
-  String get bienvenidaCuerpo => 'TODO_EU · Tu nombre se queda en este cuaderno. No sale al servidor a menos que tú decidas vincularlo más tarde.';
+  String get bienvenidaCuerpo => 'Zure izena koaderno honetan geratzen da. Ez da zerbitzarira joaten zuk gero lotzea erabakitzen ez baduzu.';
 
   @override
-  String get bienvenidaPlaceholderNombre => 'TODO_EU · tu nombre';
+  String get bienvenidaPlaceholderNombre => 'zure izena';
 
   @override
-  String get bienvenidaBotonContinuar => 'TODO_EU · Continuar';
+  String get bienvenidaBotonContinuar => 'Jarraitu';
 
   @override
   String get ajustesSyncObsTitulo => 'TODO_EU · Sincronizar mis observaciones';

@@ -9,39 +9,39 @@ class TextosAppCa extends TextosApp {
   TextosAppCa([String locale = 'ca']) : super(locale);
 
   @override
-  String get tituloApp => 'TODO_CA · El Cuaderno';
+  String get tituloApp => 'El Quadern';
 
   @override
-  String get subtituloBienvenida => 'TODO_CA · Una herramienta para anotar lo que ves vivo cerca de ti.';
+  String get subtituloBienvenida => 'Una eina per anotar el que veus viu prop teu.';
 
   @override
-  String get saludoSinNombre => 'TODO_CA · Hola.';
+  String get saludoSinNombre => 'Hola.';
 
   @override
   String saludoConNombre(String nombre) {
-    return 'TODO_CA · Hola, $nombre.';
+    return 'Hola, $nombre.';
   }
 
   @override
-  String get navCuaderno => 'TODO_CA · cuaderno';
+  String get navCuaderno => 'quadern';
 
   @override
-  String get navMapa => 'TODO_CA · mapa';
+  String get navMapa => 'mapa';
 
   @override
-  String get navMisterios => 'TODO_CA · misterios';
+  String get navMisterios => 'misteris';
 
   @override
-  String get navTutor => 'TODO_CA · tutor';
+  String get navTutor => 'tutor';
 
   @override
-  String get seccionSitSpot => 'TODO_CA · Tu sit spot';
+  String get seccionSitSpot => 'El teu sit spot';
 
   @override
-  String get seccionMisteriosAbiertos => 'TODO_CA · Misterios abiertos';
+  String get seccionMisteriosAbiertos => 'Misteris oberts';
 
   @override
-  String get seccionUltimaPagina => 'TODO_CA · Última página';
+  String get seccionUltimaPagina => 'Última pàgina';
 
   @override
   String get sitSpotInvitacion => 'TODO_CA · Cuando estés en algún sitio al aire libre que te guste — un parque, un árbol, una esquina — puedes hacerlo tu sit spot. Toca aquí cuando estés.';
@@ -58,10 +58,10 @@ class TextosAppCa extends TextosApp {
   String get misteriosVacio => 'TODO_CA · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.';
 
   @override
-  String get navProximamente => 'TODO_CA · Próximamente.';
+  String get navProximamente => 'Aviat.';
 
   @override
-  String get observacionTitulo => 'TODO_CA · nueva observación';
+  String get observacionTitulo => 'observació nova';
 
   @override
   String observacionCabecera(String hora) {
@@ -93,52 +93,52 @@ class TextosAppCa extends TextosApp {
   String get observacionDibujoQuitar => 'TODO_CA · quitar dibujo';
 
   @override
-  String get observacionEtiquetaQueViste => 'TODO_CA · qué viste';
+  String get observacionEtiquetaQueViste => 'què has vist';
 
   @override
-  String get observacionPlaceholderQueViste => 'TODO_CA · describe lo que has visto, sin nombrarlo si no estás segura';
+  String get observacionPlaceholderQueViste => 'descriu el que has vist, sense posar-li nom si no n\'estàs segura';
 
   @override
-  String get observacionEtiquetaCreesQueEs => 'TODO_CA · crees que es';
+  String get observacionEtiquetaCreesQueEs => 'creus que és';
 
   @override
-  String get observacionPlaceholderCreesQueEs => 'TODO_CA · si quieres, propón un nombre';
+  String get observacionPlaceholderCreesQueEs => 'si vols, proposa un nom';
 
   @override
-  String get confianzaConsenso => 'TODO_CA · consenso';
+  String get confianzaConsenso => 'consens';
 
   @override
-  String get confianzaHipotesisActiva => 'TODO_CA · hipótesis activa';
+  String get confianzaHipotesisActiva => 'hipòtesi activa';
 
   @override
-  String get confianzaNoSegura => 'TODO_CA · no estoy segura';
+  String get confianzaNoSegura => 'no n\'estic segura';
 
   @override
-  String get confianzaConsensoTooltip => 'TODO_CA · lo has confirmado con una clave o con el Tutor';
+  String get confianzaConsensoTooltip => 'ho has confirmat amb una clau o amb el Tutor';
 
   @override
-  String get confianzaNoSeguraTooltip => 'TODO_CA · no pasa nada, anótalo así';
+  String get confianzaNoSeguraTooltip => 'no passa res, anota-ho així';
 
   @override
-  String get observacionAvisoFalta => 'TODO_CA · haz una nota antes de guardar';
+  String get observacionAvisoFalta => 'fes una nota abans de desar';
 
   @override
-  String get observacionBotonGuardar => 'TODO_CA · Guardar en el cuaderno';
+  String get observacionBotonGuardar => 'Desar al quadern';
 
   @override
-  String get tutorSaludoCanonico => 'TODO_CA · Soy el Tutor del Cuaderno. Pregúntame lo que necesites.';
+  String get tutorSaludoCanonico => 'Soc el Tutor del Quadern. Pregunta\'m el que necessitis.';
 
   @override
-  String get tutorPlaceholderInput => 'TODO_CA · escribe tu pregunta';
+  String get tutorPlaceholderInput => 'escriu la teva pregunta';
 
   @override
-  String get tutorBotonEnviar => 'TODO_CA · Enviar';
+  String get tutorBotonEnviar => 'Enviar';
 
   @override
-  String get tutorRespuestaCanned => 'TODO_CA · El Tutor todavía no está conectado. Vuelve en unas semanas.';
+  String get tutorRespuestaCanned => 'El Tutor encara no està connectat. Torna en unes setmanes.';
 
   @override
-  String get ajustesTitulo => 'TODO_CA · Ajustes';
+  String get ajustesTitulo => 'Configuració';
 
   @override
   String ajustesIdiomaActual(String idioma) {
@@ -211,16 +211,16 @@ class TextosAppCa extends TextosApp {
   String get ajustesBorradoCompleto => 'TODO_CA · Listo. Tu cuaderno está vacío.';
 
   @override
-  String get bienvenidaTitulo => 'TODO_CA · ¿Cómo te llamas?';
+  String get bienvenidaTitulo => 'Com et dius?';
 
   @override
-  String get bienvenidaCuerpo => 'TODO_CA · Tu nombre se queda en este cuaderno. No sale al servidor a menos que tú decidas vincularlo más tarde.';
+  String get bienvenidaCuerpo => 'El teu nom es queda en aquest quadern. No surt al servidor tret que decideixis vincular-lo més endavant.';
 
   @override
-  String get bienvenidaPlaceholderNombre => 'TODO_CA · tu nombre';
+  String get bienvenidaPlaceholderNombre => 'el teu nom';
 
   @override
-  String get bienvenidaBotonContinuar => 'TODO_CA · Continuar';
+  String get bienvenidaBotonContinuar => 'Continuar';
 
   @override
   String get ajustesSyncObsTitulo => 'TODO_CA · Sincronizar mis observaciones';
