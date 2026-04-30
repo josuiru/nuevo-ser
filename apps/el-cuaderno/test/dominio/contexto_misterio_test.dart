@@ -311,4 +311,86 @@ void main() {
       );
     });
   });
+
+  group('proximaEstacionDeAplicabilidad', () {
+    test('Misterio que aplica hoy → null (no hay nada que esperar)', () {
+      final golondrinas = crear(seasons: const ['verano', 'otono']);
+      expect(
+        proximaEstacionDeAplicabilidad(
+          golondrinas,
+          estacionActual: Estacion.verano,
+        ),
+        isNull,
+      );
+    });
+
+    test('Misterio atemporal → null (siempre aplica)', () {
+      final liquenes = crear();
+      expect(
+        proximaEstacionDeAplicabilidad(
+          liquenes,
+          estacionActual: Estacion.primavera,
+        ),
+        isNull,
+      );
+    });
+
+    test('lluvia (primavera+otono) en verano → otoño (siguiente del ciclo)',
+        () {
+      final lluvia = crear(seasons: const ['primavera', 'otono']);
+      expect(
+        proximaEstacionDeAplicabilidad(
+          lluvia,
+          estacionActual: Estacion.verano,
+        ),
+        Estacion.otono,
+      );
+    });
+
+    test('golondrinas (verano+otono) en primavera → verano', () {
+      final golondrinas = crear(seasons: const ['verano', 'otono']);
+      expect(
+        proximaEstacionDeAplicabilidad(
+          golondrinas,
+          estacionActual: Estacion.primavera,
+        ),
+        Estacion.verano,
+      );
+    });
+
+    test('petirrojo (otono+invierno) en primavera → otoño (saltando verano)',
+        () {
+      final petirrojo = crear(seasons: const ['otono', 'invierno']);
+      expect(
+        proximaEstacionDeAplicabilidad(
+          petirrojo,
+          estacionActual: Estacion.primavera,
+        ),
+        Estacion.otono,
+      );
+    });
+
+    test('primera-flor (invierno+primavera) en otoño → invierno', () {
+      final primeraFlor = crear(seasons: const ['invierno', 'primavera']);
+      expect(
+        proximaEstacionDeAplicabilidad(
+          primeraFlor,
+          estacionActual: Estacion.otono,
+        ),
+        Estacion.invierno,
+      );
+    });
+
+    test('cigarras (solo verano) en invierno → verano (saltando primavera)',
+        () {
+      final cigarras = crear(seasons: const ['verano']);
+      expect(
+        proximaEstacionDeAplicabilidad(
+          cigarras,
+          estacionActual: Estacion.invierno,
+        ),
+        Estacion.verano,
+      );
+    });
+  });
 }

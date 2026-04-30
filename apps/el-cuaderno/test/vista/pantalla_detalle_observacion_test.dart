@@ -46,7 +46,11 @@ void main() {
     repositorio = RepositorioMemoria();
   });
 
-  Future<void> bombear(WidgetTester tester, Observacion obs) async {
+  Future<void> bombear(
+    WidgetTester tester,
+    Observacion obs, {
+    DateTime Function()? proveedorAhora,
+  }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(MaterialApp(
       theme: TemaCuaderno.claro(),
@@ -56,6 +60,7 @@ void main() {
       home: PantallaDetalleObservacion(
         repositorio: repositorio,
         observacion: obs,
+        proveedorAhora: proveedorAhora,
       ),
     ));
     await tester.pumpAndSettle();
@@ -395,6 +400,88 @@ void main() {
 
       final guardada = await repositorio.obtenerObservacionPorId('obs-1');
       expect(guardada?.misterioId, isNull);
+    },
+  );
+
+  testWidgets(
+    'fuera de temporada: muestra "vuelve en otoño" bajo el misterio anclado',
+    (tester) async {
+      // Lluvia aplica en primavera+otoño. Hoy = 1 julio (verano).
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+        seasons: const ['primavera', 'otono'],
+      ));
+      await bombear(
+        tester,
+        crear(misterioId: 'seed-misterio-lluvia'),
+        proveedorAhora: () => DateTime(2026, 7, 1),
+      );
+      expect(find.text('vuelve en otoño'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'en temporada: el aviso "vuelve en X" no se muestra',
+    (tester) async {
+      // Lluvia aplica en primavera+otoño. Hoy = 15 abril (primavera).
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+        seasons: const ['primavera', 'otono'],
+      ));
+      await bombear(
+        tester,
+        crear(misterioId: 'seed-misterio-lluvia'),
+        proveedorAhora: () => DateTime(2026, 4, 15),
+      );
+      expect(find.textContaining('vuelve en'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'misterio atemporal: nunca muestra "vuelve en X"',
+    (tester) async {
+      // Líquenes aplican siempre (seasons vacía).
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-liquenes',
+        pregunta: '¿Cómo es el liquen de mi sit spot?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+      ));
+      await bombear(
+        tester,
+        crear(misterioId: 'seed-misterio-liquenes'),
+        proveedorAhora: () => DateTime(2026, 7, 1),
+      );
+      expect(find.textContaining('vuelve en'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'cigarras (solo verano) en invierno: muestra "vuelve en verano"',
+    (tester) async {
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-cigarras-fin',
+        pregunta: '¿Cuándo se callan las cigarras?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+        seasons: const ['verano'],
+      ));
+      await bombear(
+        tester,
+        crear(misterioId: 'seed-misterio-cigarras-fin'),
+        proveedorAhora: () => DateTime(2026, 1, 15),
+      );
+      expect(find.text('vuelve en verano'), findsOneWidget);
     },
   );
 

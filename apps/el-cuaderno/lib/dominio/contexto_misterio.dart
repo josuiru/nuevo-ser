@@ -84,6 +84,51 @@ List<Misterio> filtrarMisteriosAlContexto(
       .toList();
 }
 
+/// Devuelve la próxima estación en la que el [misterio] aplicará si
+/// hoy no aplica. Si aplica hoy o si es atemporal (`seasons` vacía),
+/// devuelve `null` — la pantalla que lo consume oculta el aviso
+/// "vuelve en X".
+///
+/// La búsqueda recorre el ciclo `estacionActual → siguiente →
+/// siguiente → siguiente`; devuelve la primera estación que aparezca
+/// en `misterio.seasons`. Por construcción, si la lista no está vacía,
+/// el método encuentra una respuesta dentro de las 4 estaciones del
+/// ciclo. Si todas las estaciones están en la lista (caso degenerado:
+/// equivalente a atemporal escrito largo), no se llega aquí porque
+/// `aplicaMisterioEnContexto` con la estación actual ya devolvería
+/// `true`.
+///
+/// **No considera región** — si el Misterio queda fuera por estar en
+/// otra región, `vuelve en X` no es la respuesta correcta (no va a
+/// aplicar nunca aquí, no es una cuestión de tiempo). En ese caso el
+/// aviso se omite.
+Estacion? proximaEstacionDeAplicabilidad(
+  Misterio misterio, {
+  required Estacion estacionActual,
+}) {
+  if (misterio.seasons.isEmpty) return null;
+  if (_aplicaEstacion(misterio.seasons, estacionActual)) return null;
+  var candidata = _siguienteEstacion(estacionActual);
+  for (var n = 0; n < 3; n++) {
+    if (_aplicaEstacion(misterio.seasons, candidata)) return candidata;
+    candidata = _siguienteEstacion(candidata);
+  }
+  return null;
+}
+
+Estacion _siguienteEstacion(Estacion estacion) {
+  switch (estacion) {
+    case Estacion.primavera:
+      return Estacion.verano;
+    case Estacion.verano:
+      return Estacion.otono;
+    case Estacion.otono:
+      return Estacion.invierno;
+    case Estacion.invierno:
+      return Estacion.primavera;
+  }
+}
+
 /// Si el Misterio acaba de entrar en su estación: aplica hoy pero
 /// no aplicaba en [estacionAnterior] (típicamente la de hace ~21
 /// días). Pedagógicamente útil para destacar tarjetas con un

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../datos/almacenador_medios.dart';
+import '../../dominio/contexto_misterio.dart';
+import '../../dominio/fenologia.dart';
 import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
@@ -37,6 +39,10 @@ typedef ConstructorMiniaturaDetalle = Widget Function(File fichero);
 /// resuelve la ruta absoluta y [constructorMiniatura] decide cómo
 /// pintar el fichero (default `Image.file`). Si [almacenadorMedios] es
 /// null, los bloques de imagen se omiten — modo S1 / tests aislados.
+///
+/// [proveedorAhora] permite a los tests congelar la fecha del aviso
+/// "vuelve en X" para Misterios fuera de temporada. En producción se
+/// queda como `DateTime.now`.
 class PantallaDetalleObservacion extends StatefulWidget {
   const PantallaDetalleObservacion({
     super.key,
@@ -44,12 +50,14 @@ class PantallaDetalleObservacion extends StatefulWidget {
     required this.observacion,
     this.almacenadorMedios,
     this.constructorMiniatura,
+    this.proveedorAhora,
   });
 
   final RepositorioLocal repositorio;
   final Observacion observacion;
   final AlmacenadorMedios? almacenadorMedios;
   final ConstructorMiniaturaDetalle? constructorMiniatura;
+  final DateTime Function()? proveedorAhora;
 
   @override
   State<PantallaDetalleObservacion> createState() =>
@@ -76,6 +84,12 @@ class _EstadoPantallaDetalleObservacion
   /// detalle. Se mantienen mientras la pantalla viva — al cerrar y
   /// volver, el sistema vuelve a intentar.
   final Set<String> _sugerenciasRechazadas = <String>{};
+
+  /// Próxima estación en la que el Misterio anclado volverá a aplicar
+  /// si hoy NO aplica (estación distinta). Null si aplica hoy, si es
+  /// atemporal o si el Misterio queda fuera por región (ahí "vuelve
+  /// en X" no es la respuesta — no va a aplicar nunca aquí).
+  Estacion? _proximaEstacionMisterio;
 
   @override
   void initState() {
@@ -199,6 +213,16 @@ class _EstadoPantallaDetalleObservacion
       );
     }
 
+    Estacion? proximaEstacion;
+    if (misterio != null) {
+      final ahora = (widget.proveedorAhora ?? DateTime.now)();
+      final estacionActual = estacionDeFecha(ahora);
+      proximaEstacion = proximaEstacionDeAplicabilidad(
+        misterio,
+        estacionActual: estacionActual,
+      );
+    }
+
     if (!mounted) return;
     setState(() {
       _misterio = misterio;
@@ -206,6 +230,7 @@ class _EstadoPantallaDetalleObservacion
       _rutaFotoAbsoluta = rutaFoto;
       _rutaDibujoAbsoluta = rutaDibujo;
       _sugerencia = sugerencia;
+      _proximaEstacionMisterio = proximaEstacion;
       _cargando = false;
     });
   }
@@ -334,6 +359,7 @@ class _EstadoPantallaDetalleObservacion
                   const SizedBox(height: 24),
                   _SeccionAnclajes(
                     misterio: _misterio,
+                    proximaEstacionMisterio: _proximaEstacionMisterio,
                     sitSpot: _sitSpot,
                     tieneCoordenadas: obs.dondeCoordenadas != null,
                     esquema: esquema,
@@ -402,12 +428,14 @@ class _BloqueImagen extends StatelessWidget {
 class _SeccionAnclajes extends StatelessWidget {
   const _SeccionAnclajes({
     required this.misterio,
+    required this.proximaEstacionMisterio,
     required this.sitSpot,
     required this.tieneCoordenadas,
     required this.esquema,
   });
 
   final Misterio? misterio;
+  final Estacion? proximaEstacionMisterio;
   final SitSpot? sitSpot;
   final bool tieneCoordenadas;
   final ColorScheme esquema;
@@ -420,6 +448,9 @@ class _SeccionAnclajes extends StatelessWidget {
         icono: Icons.help_outline,
         texto: 'anclada al misterio: ${misterio!.pregunta}',
         esquema: esquema,
+        subtexto: proximaEstacionMisterio != null
+            ? 'vuelve en ${_nombreEstacion(proximaEstacionMisterio!)}'
+            : null,
       ));
     }
     if (sitSpot != null) {
@@ -463,11 +494,13 @@ class _Fila extends StatelessWidget {
     required this.icono,
     required this.texto,
     required this.esquema,
+    this.subtexto,
   });
 
   final IconData icono;
   final String texto;
   final ColorScheme esquema;
+  final String? subtexto;
 
   @override
   Widget build(BuildContext context) {
@@ -477,16 +510,45 @@ class _Fila extends StatelessWidget {
         Icon(icono, size: 16, color: PaletaCuaderno.tintaTenue),
         const SizedBox(width: 8),
         Expanded(
-          child: Text(
-            texto,
-            style: TipografiaCuaderno.serif(
-              color: esquema.onSurface,
-              tamano: TipografiaCuaderno.tamano13,
-              altoLinea: 1.4,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                texto,
+                style: TipografiaCuaderno.serif(
+                  color: esquema.onSurface,
+                  tamano: TipografiaCuaderno.tamano13,
+                  altoLinea: 1.4,
+                ),
+              ),
+              if (subtexto != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  subtexto!,
+                  style: TipografiaCuaderno.serif(
+                    color: PaletaCuaderno.tintaTenue,
+                    tamano: TipografiaCuaderno.tamano12,
+                    altoLinea: 1.3,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ],
     );
+  }
+}
+
+String _nombreEstacion(Estacion estacion) {
+  switch (estacion) {
+    case Estacion.primavera:
+      return 'primavera';
+    case Estacion.verano:
+      return 'verano';
+    case Estacion.otono:
+      return 'otoño';
+    case Estacion.invierno:
+      return 'invierno';
   }
 }
