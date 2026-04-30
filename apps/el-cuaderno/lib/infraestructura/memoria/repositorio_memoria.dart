@@ -102,4 +102,20 @@ class RepositorioMemoria implements RepositorioLocal {
   Future<void> guardarMisterio(Misterio misterio) async {
     _misterios[misterio.id] = misterio;
   }
+
+  @override
+  Future<ResultadoBorrado> borrarTodoLoLocal() async {
+    final observacionesAntes = _observaciones.length;
+    final misteriosAntes = _misterios.length;
+    final sitSpotsAntes = _sitSpotsRetirados.length + (_sitSpotActivo == null ? 0 : 1);
+    _observaciones.clear();
+    _misterios.clear();
+    _sitSpotsRetirados.clear();
+    _sitSpotActivo = null;
+    return ResultadoBorrado(
+      observacionesBorradas: observacionesAntes,
+      misteriosBorrados: misteriosAntes,
+      sitSpotsBorrados: sitSpotsAntes,
+    );
+  }
 }

@@ -158,6 +158,23 @@ class RepositorioIsar implements RepositorioLocal {
     });
   }
 
+  @override
+  Future<ResultadoBorrado> borrarTodoLoLocal() async {
+    final observacionesAntes = await _isar.observacionIsars.count();
+    final misteriosAntes = await _isar.misterioIsars.count();
+    final sitSpotsAntes = await _isar.sitSpotIsars.count();
+    await _isar.writeTxn(() async {
+      await _isar.observacionIsars.clear();
+      await _isar.misterioIsars.clear();
+      await _isar.sitSpotIsars.clear();
+    });
+    return ResultadoBorrado(
+      observacionesBorradas: observacionesAntes,
+      misteriosBorrados: misteriosAntes,
+      sitSpotsBorrados: sitSpotsAntes,
+    );
+  }
+
   /// Persiste un Misterio del catálogo. No es parte de la interfaz del
   /// dominio porque el niño no debería poder crear Misterios — los
   /// trae el seed o, eventualmente, el catálogo del backend (Sprint

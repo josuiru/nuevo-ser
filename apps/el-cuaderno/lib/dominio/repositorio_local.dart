@@ -63,4 +63,33 @@ abstract class RepositorioLocal {
     String observacionId,
     String misterioId,
   );
+
+  /// Borra **todo** el contenido local del cuaderno: observaciones, sit
+  /// spot (activo y retirados), misterios. Operación destructiva e
+  /// irreversible — la pantalla Ajustes la envuelve en doble
+  /// confirmación (doc 13 §6.3).
+  ///
+  /// "El cuaderno es del niño" (biblia §2.1) — y por tanto debe poder
+  /// destruirlo cuando quiera. Devuelve la cuenta total de items
+  /// borrados para que la UI pueda mostrar feedback honesto ("borradas
+  /// 47 observaciones, 3 misterios y 1 sit spot").
+  Future<ResultadoBorrado> borrarTodoLoLocal();
+}
+
+/// Resumen del borrado para feedback en la UI. Sin emojis, sin
+/// celebración — el tono es informativo (la pérdida de un cuaderno no
+/// se celebra).
+class ResultadoBorrado {
+  const ResultadoBorrado({
+    required this.observacionesBorradas,
+    required this.misteriosBorrados,
+    required this.sitSpotsBorrados,
+  });
+
+  final int observacionesBorradas;
+  final int misteriosBorrados;
+  final int sitSpotsBorrados;
+
+  int get total =>
+      observacionesBorradas + misteriosBorrados + sitSpotsBorrados;
 }
