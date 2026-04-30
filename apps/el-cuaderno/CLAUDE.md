@@ -119,7 +119,7 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 
 **S6 completo (alcance mínimo)** — `dominio/fenologia.dart` con cortes astronómicos del hemisferio norte (20 mar / 21 jun / 22 sep / 21 dic). `ClienteElCuaderno.listarMisteriosParaAhora` deriva `region` y `season` desde coords + fecha sin que las coords crucen red. **Pendiente humano**: calendario fenológico Iberia curado por ornitólogos/botánicos (ítem 12 memoria).
 
-**S7 completo (alcance acotado por bloqueante)** — `dominio/agregado_semanal.dart` calcula localmente `iso_week`, counts y reparto por misterio/confianza (sólo metadatos, nunca texto libre). `preguntaParaLaCenaOffline` genera la pregunta del cuidador con plantillas hardcoded en castellano (5 ramas) — fallback offline antes de que llegue el resumen del LLM vía `/companion/aggregates/weekly`. **Pendiente humano**: vista del aula k≥5 bloqueada por auth de profesor (ítem 11 memoria).
+**S7 completo (alcance acotado por bloqueante)** — `dominio/agregado_semanal.dart` calcula localmente `iso_week`, counts y reparto por misterio/confianza (sólo metadatos, nunca texto libre). `preguntaParaLaCenaOffline` genera la pregunta del cuidador con plantillas hardcoded en castellano (5 ramas) — fallback offline antes de que llegue el resumen del LLM vía `/companion/aggregates/weekly`. **Sync con companion cableado**: `datos/sincronizador_agregados.dart` (SincronizadorAgregadosCuaderno con sealed `ResultadoSync` — `SyncSinToken`/`SyncExito`/`SyncError`) lee token, computa el agregado local y lo sube al endpoint. Botón opt-in "Compartir resumen con el adulto" en `PantallaCuidador`: lo dispara la persona adulta presente — sin push, sin sync automático en background. Cuando el LLM server-side genera `summaryText`/`conversationPrompt`, sustituyen al fallback offline; si fallan, el aviso lo dice y la pregunta offline sigue valiendo. **Pendiente humano**: vista del aula k≥5 bloqueada por auth de profesor (ítem 11 memoria).
 
 **S8 completo (alcance acotado)** — `ExportadorCuaderno.aJson/deJson` round-trip versionado del cuaderno completo. `RepositorioLocal.borrarTodoLoLocal` orquesta el borrado completo en memoria e Isar con `ResultadoBorrado` para feedback honesto. **Pendiente humano**: paquete `pdf` + tipografía/paleta (ítem 13 memoria) y auditoría WCAG 2.1 AA sobre tema definitivo (ítem 14 memoria).
 
@@ -133,7 +133,7 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 - ítem 10: encargo a ilustradora botánica (NO IA generativa, biblia §8.1).
 - ítem 11: auth de profesor/cuidador.
 
-Tests: 143 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
+Tests: 153 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
 
 **S1 (referencia histórica)** — bootstrap del scaffolding según el prompt operativo del paquete documental:
 
