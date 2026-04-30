@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
@@ -15,6 +16,25 @@ class CatalogoHabilidades {
     required this.reglasDecaimiento,
     required this.rangos,
   });
+
+  /// Constructor expuesto para tests — permite construir un catálogo
+  /// sintético sin tocar el asset bundle. Producción siempre debe usar
+  /// [cargar] (que es perezoso, idempotente y carga desde JSON).
+  @visibleForTesting
+  factory CatalogoHabilidades.paraTests({
+    String version = 'test',
+    Map<String, String> dominios = const {},
+    Map<String, Habilidad> habilidades = const {},
+    required ReglasDecaimiento reglasDecaimiento,
+    List<String> rangos = const [],
+  }) =>
+      CatalogoHabilidades._(
+        version: version,
+        dominios: dominios,
+        habilidades: habilidades,
+        reglasDecaimiento: reglasDecaimiento,
+        rangos: rangos,
+      );
 
   static CatalogoHabilidades? _instancia;
   static Future<CatalogoHabilidades>? _cargaEnCurso;

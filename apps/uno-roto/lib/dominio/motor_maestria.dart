@@ -120,12 +120,23 @@ class MotorMaestria {
     final dias = ahoraEfectivo.difference(estado.ultimaPractica).inDays;
     final reglas = catalogo.reglasDecaimiento;
 
+    // El decaimiento es escalonado: cada salto pide su propio gap de
+    // tiempo SOBRE el anterior. Si vienes de `maestria` y han pasado
+    // 21 días, caes a `competente`; necesitas otros 14 días (35 en
+    // total) para caer a `enDesarrollo`. Antes ambas condiciones
+    // miraban contra el mismo `dias` desde la última práctica, así
+    // que cruzar 21 días te dejaba en `enDesarrollo` directo (porque
+    // 21 > 14 también) — saltando el escalón intermedio.
     var nivel = estado.nivel;
     if (nivel == NivelMaestria.maestria &&
         dias > reglas.diasMaestriaACompetente) {
       nivel = NivelMaestria.competente;
-    }
-    if (nivel == NivelMaestria.competente &&
+      if (dias >
+          reglas.diasMaestriaACompetente +
+              reglas.diasCompetenteAEnDesarrollo) {
+        nivel = NivelMaestria.enDesarrollo;
+      }
+    } else if (nivel == NivelMaestria.competente &&
         dias > reglas.diasCompetenteAEnDesarrollo) {
       nivel = NivelMaestria.enDesarrollo;
     }

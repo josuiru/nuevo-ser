@@ -368,6 +368,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     final idHabilidad = idHabilidadPrincipal(fragmento);
     final precisionPrevia =
         (await _motorMaestria?.cargarEstado(idHabilidad))?.precision;
+    if (!mounted) return;
     _registrarResultadoMaestria(fragmento, capturado == true);
     // Registramos los fallos PREVIOS al resultado final (intentos-1)
     // para que el contador del tutor refleje cuánto le costó este
@@ -377,6 +378,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     for (var i = 1; i < intentos; i++) {
       await _registrarEnTutor(fragmento, false);
     }
+    if (!mounted) return;
     setState(() => _activos.remove(fragmento));
     // La oferta se evalúa con el contador en su pico (antes del
     // acierto final, que lo resetea). Vale tanto para captura
@@ -386,6 +388,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     if (!mounted) return;
     // Resultado final: acierto resetea contador; escape suma uno más.
     await _registrarEnTutor(fragmento, capturado == true);
+    if (!mounted) return;
     if (capturado == true) {
       final esquirlasBase = switch (fragmento.tipo) {
         TipoFragmentoEnTejado.espejo => 2,
@@ -470,6 +473,7 @@ class _PantallaCazaState extends State<PantallaCaza>
       });
       await widget.repositorio.guardarEsquirlas(_esquirlasTotal);
       await _verificarSubidaDeRango();
+      if (!mounted) return;
       if (bonusRemonte > 0) {
         _mostrarLineaAmbienteSora('Esta te costaba.');
       } else {
