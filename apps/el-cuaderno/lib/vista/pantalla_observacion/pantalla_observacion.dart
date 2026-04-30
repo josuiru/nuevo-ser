@@ -522,6 +522,16 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
         _misterioId!,
       );
     }
+    // Si la observación va contra el sit spot activo, registramos la
+    // visita: doc 13 §2.1 muestra "hace 4 días" como pista del ritmo
+    // de regreso. Sin esto, el campo se quedaba con el valor del seed
+    // y la tarjeta del home decía siempre lo mismo.
+    final sitSpotActivo = widget.sitSpotActivo;
+    if (sitSpotActivo != null && sitSpotActivo.id == observacion.sitSpotId) {
+      await widget.repositorio.establecerSitSpot(
+        sitSpotActivo.copyWith(ultimaVisita: ahora),
+      );
+    }
     await widget.alGuardarObservacion?.call(observacion);
     if (mounted) {
       Navigator.of(context).pop();

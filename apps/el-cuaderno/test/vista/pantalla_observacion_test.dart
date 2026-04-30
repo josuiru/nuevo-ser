@@ -145,4 +145,33 @@ void main() {
       expect(capturada!.queVio, 'Algo se ha movido en la rama de arriba.');
     },
   );
+
+  testWidgets(
+    'al guardar contra el sit spot activo: ultimaVisita se actualiza',
+    (tester) async {
+      // El seed del repositorio coloca el sit spot El Roble Grande
+      // con `ultimaVisita` hace 4 días. Tras guardar una observación
+      // contra él, debería pasar a la fecha del proveedorAhora.
+      final antes = await repositorio.obtenerSitSpot();
+      expect(antes, isNotNull);
+      expect(antes!.ultimaVisita, isNotNull);
+
+      await bombearPantalla(tester);
+      await tester.enterText(
+        find.byType(TextField).first,
+        'una hoja con borde rojizo',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Guardar en el cuaderno'));
+      await tester.pumpAndSettle();
+
+      final despues = await repositorio.obtenerSitSpot();
+      expect(despues, isNotNull);
+      expect(despues!.id, antes.id);
+      expect(despues.ultimaVisita, DateTime.utc(2026, 4, 30, 17, 48));
+      // El nombre y los demás campos no cambian.
+      expect(despues.nombre, antes.nombre);
+      expect(despues.creadoEn, antes.creadoEn);
+    },
+  );
 }
