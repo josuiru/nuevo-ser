@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../dominio/fenologia.dart';
 import '../dominio/geolocalizacion_privacy_first.dart';
 import '../dominio/nivel_confianza.dart';
 import '../dominio/observacion.dart';
@@ -180,6 +181,24 @@ class ClienteElCuaderno {
       uuid: json['uuid'] as String,
       idempotente: json['idempotent'] == true,
     );
+  }
+
+  /// Variante de [listarMisterios] que deriva `region` y `season` del
+  /// momento y lugar del niño con [normalizarRegion] (NUTS-3 piloto) y
+  /// [seasonParaListado] (estación astronómica). Las coordenadas se
+  /// usan **solo en cliente** — al servidor sólo viajan `region_code` y
+  /// `season` ya normalizados.
+  ///
+  /// Si [coordenadas] es null, se omite el filtro de región (el
+  /// servidor devolverá el catálogo global no recortado por NUTS).
+  Future<RespuestaCatalogoMisterios> listarMisteriosParaAhora({
+    Coordenadas? coordenadas,
+    DateTime? ahora,
+  }) {
+    final fecha = ahora ?? DateTime.now();
+    final region = coordenadas == null ? null : normalizarRegion(coordenadas);
+    final season = seasonParaListado(fecha, regionCode: region ?? 'ES');
+    return listarMisterios(region: region, season: season);
   }
 
   /// GET `/el-cuaderno/misterios`. Devuelve el catálogo filtrado por

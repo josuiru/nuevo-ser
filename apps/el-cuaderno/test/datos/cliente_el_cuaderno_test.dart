@@ -340,6 +340,44 @@ void main() {
       expect(respuesta.aplicanFiltros, 1);
     });
 
+    test('listarMisteriosParaAhora deriva region+season del lugar y fecha',
+        () async {
+      late http.Request capturada;
+      final mock = MockClient((peticion) async {
+        capturada = peticion;
+        return http.Response(
+          jsonEncode({'misterios': [], 'catalogo_total': 0, 'aplican_filtros': 0}),
+          200,
+        );
+      });
+      final cliente = crear(cliente: mock, token: 'TOKEN');
+      // Pamplona, 1 de noviembre → ES-NA-PA + otono.
+      await cliente.listarMisteriosParaAhora(
+        coordenadas: const Coordenadas(lat: 42.8125, lng: -1.6458),
+        ahora: DateTime(2026, 11, 1),
+      );
+      expect(capturada.url.queryParameters['region'], 'ES-NA-PA');
+      expect(capturada.url.queryParameters['season'], 'otono');
+    });
+
+    test('listarMisteriosParaAhora sin coordenadas omite region pero envía season',
+        () async {
+      late http.Request capturada;
+      final mock = MockClient((peticion) async {
+        capturada = peticion;
+        return http.Response(
+          jsonEncode({'misterios': [], 'catalogo_total': 0, 'aplican_filtros': 0}),
+          200,
+        );
+      });
+      final cliente = crear(cliente: mock, token: 'TOKEN');
+      await cliente.listarMisteriosParaAhora(
+        ahora: DateTime(2026, 7, 15), // verano
+      );
+      expect(capturada.url.queryParameters.containsKey('region'), isFalse);
+      expect(capturada.url.queryParameters['season'], 'verano');
+    });
+
     test('sin filtros omite los query params', () async {
       late http.Request capturada;
       final mock = MockClient((peticion) async {
