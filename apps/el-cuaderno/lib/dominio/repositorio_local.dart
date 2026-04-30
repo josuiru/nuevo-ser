@@ -52,6 +52,12 @@ abstract class RepositorioLocal {
   /// §2.6).
   Future<void> establecerSitSpot(SitSpot sitSpot);
 
+  /// Sit spots jubilados (con `retiradoEn != null`). Doc 13 §2.6 dice
+  /// que la página sigue guardada en el cuaderno; esta es la API que
+  /// la pantalla de "sit spots de antes" consume. Devuelve los más
+  /// recientemente jubilados primero.
+  Future<List<SitSpot>> obtenerSitSpotsJubilados();
+
   /// Misterios abiertos del niño (los que tiene activos para anclar
   /// observaciones). El sistema mantiene entre 3 y 5 (biblia §5.3).
   Future<List<Misterio>> obtenerMisteriosAbiertos();

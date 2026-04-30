@@ -109,6 +109,16 @@ class RepositorioIsar implements RepositorioLocal {
   }
 
   @override
+  Future<List<SitSpot>> obtenerSitSpotsJubilados() async {
+    final modelos = await _isar.sitSpotIsars
+        .filter()
+        .retiradoEnIsNotNull()
+        .sortByRetiradoEnDesc()
+        .findAll();
+    return [for (final modelo in modelos) modelo.aDominio()];
+  }
+
+  @override
   Future<List<Misterio>> obtenerMisteriosAbiertos() async {
     final modelos = await _isar.misterioIsars
         .filter()

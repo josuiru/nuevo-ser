@@ -63,6 +63,17 @@ class RepositorioMemoria implements RepositorioLocal {
   @override
   Future<void> establecerSitSpot(SitSpot sitSpot) async {
     final anterior = _sitSpotActivo;
+    // Caso jubilación in-place: llega el activo con `retiradoEn`
+    // poblado. Lo movemos a la lista de jubilados y dejamos el
+    // activo en null para que la tarjeta del home vuelva a la
+    // invitación. Coherente con el flujo de doc 13 §2.6.
+    if (sitSpot.retiradoEn != null) {
+      _sitSpotsRetirados.add(sitSpot);
+      if (anterior != null && anterior.id == sitSpot.id) {
+        _sitSpotActivo = null;
+      }
+      return;
+    }
     if (anterior != null &&
         anterior.id != sitSpot.id &&
         anterior.retiradoEn == null) {
@@ -70,6 +81,14 @@ class RepositorioMemoria implements RepositorioLocal {
           .add(anterior.copyWith(retiradoEn: DateTime.now()));
     }
     _sitSpotActivo = sitSpot;
+  }
+
+  @override
+  Future<List<SitSpot>> obtenerSitSpotsJubilados() async {
+    final lista = [..._sitSpotsRetirados];
+    lista.sort((a, b) => (b.retiradoEn ?? b.creadoEn)
+        .compareTo(a.retiradoEn ?? a.creadoEn));
+    return lista;
   }
 
   @override

@@ -2,9 +2,11 @@ import 'package:el_cuaderno/datos/cola_sync_observaciones.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
+import 'package:el_cuaderno/dominio/sit_spot.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
 import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_ajustes/pantalla_ajustes.dart';
+import 'package:el_cuaderno/vista/pantalla_sit_spot/pantalla_sit_spots_jubilados.dart';
 import 'package:el_cuaderno/vista/tema/tema.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -302,4 +304,43 @@ void main() {
     await tester.pumpAndSettle();
     expect(await repositorio.obtenerObservaciones(), hasLength(1));
   });
+
+  testWidgets(
+    'sin sit spots jubilados: el bloque "Sit spots de antes" no aparece',
+    (tester) async {
+      await bombear(tester);
+      expect(find.text('Sit spots de antes'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'con un sit spot jubilado: el bloque aparece y abre la pantalla',
+    (tester) async {
+      // Establecer un sit spot activo y luego jubilarlo (mismo flujo
+      // que en producción: copyWith con retiradoEn poblado).
+      final activo = SitSpot(
+        id: 'sit-old',
+        nombre: 'mi banco viejo',
+        dondeNombre: '',
+        creadoEn: DateTime.utc(2026, 1, 15),
+      );
+      await repositorio.establecerSitSpot(activo);
+      await repositorio.establecerSitSpot(
+        activo.copyWith(retiradoEn: DateTime.utc(2026, 4, 30)),
+      );
+
+      await bombear(tester);
+      expect(find.text('Sit spots de antes'), findsOneWidget);
+
+      await tester.tap(find.text('Sit spots de antes'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PantallaSitSpotsJubilados), findsOneWidget);
+      expect(find.text('mi banco viejo'), findsOneWidget);
+      expect(
+        find.text('Estuvo activo del 15/01/2026 al 30/04/2026.'),
+        findsOneWidget,
+      );
+    },
+  );
 }

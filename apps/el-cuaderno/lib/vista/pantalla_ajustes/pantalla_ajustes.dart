@@ -9,10 +9,12 @@ import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
 import '../../dominio/repositorio_local.dart';
+import '../../dominio/sit_spot.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_cuidador/pantalla_cuidador.dart';
 import '../pantalla_profesor/pantalla_aula_profesor.dart';
 import '../pantalla_profesor/pantalla_login_profesor.dart';
+import '../pantalla_sit_spot/pantalla_sit_spots_jubilados.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'bloque_login_adulto.dart';
@@ -177,6 +179,27 @@ class PantallaAjustes extends StatelessWidget {
                 intentar: intentarSincronizarObservaciones!,
               ),
             ],
+            // Bloque "Sit spots de antes" — sólo aparece si hay
+            // alguno jubilado. Doc 13 §2.6: la página sigue guardada
+            // y el niño debe poder volver a verla.
+            FutureBuilder<List<SitSpot>>(
+              future: repositorio.obtenerSitSpotsJubilados(),
+              builder: (_, snapshot) {
+                final jubilados = snapshot.data ?? const <SitSpot>[];
+                if (jubilados.isEmpty) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: _BloqueAccion(
+                    titulo: 'Sit spots de antes',
+                    descripcion:
+                        'Páginas de los sit spots que jubilaste. '
+                        'Siguen guardadas en el cuaderno con sus observaciones.',
+                    alPulsar: () => _abrirSitSpotsJubilados(context, jubilados),
+                    esquema: esquema,
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 16),
             _BloqueAccion(
               titulo: textos.ajustesBorrar,
@@ -227,6 +250,17 @@ class PantallaAjustes extends StatelessWidget {
           repositorio: repositorio,
           sincronizador: sincronizadorAgregados,
         ),
+      ),
+    );
+  }
+
+  Future<void> _abrirSitSpotsJubilados(
+    BuildContext context,
+    List<SitSpot> jubilados,
+  ) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaSitSpotsJubilados(jubilados: jubilados),
       ),
     );
   }
