@@ -180,4 +180,13 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// 2.1.4 (Karim enseña epigrafía).
   static const AmbienteArchivo mesaTrabajoArchivo =
       AmbienteArchivo._('mesa_trabajo_archivo');
+
+  /// Estudio de Antonio en la casa familiar — sillón de lectura,
+  /// estanterías de libros antiguos, lámpara de pie. Lugar de la
+  /// 2.A.1 (Maren pide a su padre algo de Quintiliano antes de ir
+  /// a Calahorra). Sub-ambiente íntimo de la casa que merece su
+  /// propia entrada porque visualmente es distinto del cuarto de
+  /// Maren o de la cocina.
+  static const AmbienteArchivo estudioAntonio =
+      AmbienteArchivo._('estudio_antonio');
 }

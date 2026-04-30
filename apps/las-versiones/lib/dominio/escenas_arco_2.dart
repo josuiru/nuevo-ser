@@ -19,10 +19,19 @@ class EscenasArco2 {
   EscenasArco2._();
 
   /// Lista ordenada de escenas del Arco 2 disponibles para el
-  /// orquestador. Por ahora cubre 2.0.1 (apertura) y la Estación 2.1
-  /// completa (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6); las
-  /// estaciones 2.2–2.4 + cinemáticas latentes 2.A/2.B/2.C + Mosaico
-  /// M2 + cierre 2.Z se añadirán en commits posteriores.
+  /// orquestador. Cubre 2.0.1 (apertura), la Estación 2.1 completa
+  /// (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6) y las dos cinemáticas
+  /// latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y
+  /// 2.A.2 *Marina y los descansos*); las estaciones 2.2–2.4 +
+  /// cinemáticas latentes 2.B/2.C + Mosaico M2 + cierre 2.Z se
+  /// añadirán en commits posteriores.
+  ///
+  /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
+  /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa),
+  /// pero el orquestador las despachará en cuanto sea su turno —
+  /// dependiendo de qué cinemática haya cerrado antes, podrían
+  /// dispararse antes de que la Estación 2.2 esté implementada y
+  /// disponible.
   static const List<EscenaCinematica> todas = [
     primerDiaDelArco,
     bajarAlSotano,
@@ -31,6 +40,8 @@ class EscenasArco2 {
     quienPagoEsto,
     reconstruccionYConcilio,
     primerApunteDePompaelo,
+    elLibroDeQuintiliano,
+    marinaYLosDescansos,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -61,6 +72,12 @@ class EscenasArco2 {
     },
     'escena_2_1_6_vista': {
       'arco_2_estacion_1_cerrada',
+    },
+    'escena_2_a_1_vista': {
+      'libro_quintiliano_recibido',
+    },
+    'escena_2_a_2_vista': {
+      'aviso_marina_calahorra_recibido',
     },
   };
 
@@ -775,6 +792,253 @@ class EscenasArco2 {
         pausaPrevia: Duration(milliseconds: 700),
       ),
       PlanoCierreAmable(textoBoton: 'CERRAR EL CUADERNO'),
+    ],
+  );
+
+  /// 2.A.1 — *El libro de Quintiliano*. Latente post-Estación 2.1:
+  /// activa cuando `arco_2_estacion_1_cerrada` está alzada. Lugar:
+  /// estudio de Antonio en la casa familiar. Personajes: Antonio,
+  /// Maren. Doc 08 §2.A.1 — pasan ~5-7 días tras el cierre de
+  /// Pompaelo y Maren va a buscar bibliografía a su padre antes de
+  /// la Estación 2.2 (Calagurris). Antonio le da la *Institutio
+  /// Oratoria* en la edición Cousin (latín/francés) y suelta un
+  /// comentario clave que Maren guardará: "Quintiliano habla menos
+  /// de sí mismo de lo que parece" — anticipo de la pedagogía
+  /// pendiente sobre fuentes textuales con autoría individual y
+  /// silencios significativos.
+  ///
+  /// **Sin sustituciones diegéticas**: Quintiliano de Calagurris es
+  /// histórico real bien establecido y la edición de Cousin existe
+  /// (Jean Cousin, *Quintilien — Institution oratoire*, Les Belles
+  /// Lettres, latín y francés enfrentados). Ambos pasan el filtro
+  /// del comité asesor sin necesidad de revisión.
+  static const EscenaCinematica elLibroDeQuintiliano = EscenaCinematica(
+    id: '2.A.1',
+    titulo: 'El libro de Quintiliano',
+    flagDeSalida: 'escena_2_a_1_vista',
+    flagsRequeridos: {'arco_2_estacion_1_cerrada'},
+    ambiente: AmbienteArchivo.estudioAntonio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Casa familiar. Cinco o siete días después del Concilio de '
+            'Pompaelo. Maren llama a la puerta del estudio de su padre. '
+            'Antonio está leyendo en un sillón, una lámpara baja sobre '
+            'el reposabrazos, dos estanterías hasta el techo a su '
+            'espalda.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Aita.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Dime.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tienes algo de Quintiliano?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Antonio levanta la vista. La mira un segundo. Sin hablar, '
+            'se levanta, va a la estantería de la izquierda, saca dos '
+            'volúmenes pequeños de tapas verdes y se los pasa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto:
+            'Institutio Oratoria. Edición de Cousin, en latín y francés '
+            'enfrentados.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿En francés?',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto:
+            'El castellano que tengo es peor. El francés se entiende.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale. Gracias.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Antonio vuelve al sillón. Antes de que Maren se vaya, '
+            'levanta la vista de nuevo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: '¿Vas a ir a Calahorra?',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto:
+            'Quintiliano es interesante. Habla mucho de educación. '
+            'Habla menos de sí mismo de lo que parece.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Ya. Eso es lo que quiero ver.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren se va con los dos tomos pequeños bajo el brazo. '
+            'Antonio vuelve a su libro.',
+      ),
+      PlanoCierreAmable(textoBoton: 'GUARDAR EL LIBRO'),
+    ],
+  );
+
+  /// 2.A.2 — *Marina y los descansos*. Latente post-Estación 2.1:
+  /// requiere `escena_2_a_1_vista` para que las dos latentes se
+  /// reproduzcan en el orden del doc 08 (primero la conversación
+  /// con el padre, luego el café con Marina). Lugar: cocina del
+  /// Archivo. Personajes: Marina, Maren. Doc 08 §2.A.2 — Marina
+  /// (Aprendiz III Reformista, ya cerrada visualmente desde 1.0.2)
+  /// pone una semilla pedagógica para Calahorra: "te va a tocar".
+  /// El "no sé explicarte hasta que la sientas" prepara al jugador
+  /// para una Estación 2.2 con peso emocional distinto al de
+  /// Pompaelo (técnica) — Calagurris incluirá la cuestión del
+  /// silencio del autor sobre sí mismo.
+  ///
+  /// **Sin sustituciones diegéticas**: Marina sólo menciona "una
+  /// inscripción", "huesos y polen", "Aralar", "Calahorra" — todos
+  /// términos ya validados. Calahorra/Calagurris está validada en
+  /// doc 17.
+  static const EscenaCinematica marinaYLosDescansos = EscenaCinematica(
+    id: '2.A.2',
+    titulo: 'Marina y los descansos',
+    flagDeSalida: 'escena_2_a_2_vista',
+    flagsRequeridos: {'escena_2_a_1_vista'},
+    ambiente: AmbienteArchivo.cocinaArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cocina del Archivo. Días después. Maren está preparándose '
+            'un café — la cafetera vieja, taza ancha, leche caliente. '
+            'Marina entra con su propia taza vacía.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Eh, Aprendiz I.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Hola.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: '¿Cómo va Pompaelo?',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Cerrada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Bien. ¿Sabes lo que más me gustó cuando hice mi primera '
+            'romana?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Que se podía leer. Después de un año leyendo huesos y '
+            'polen, una inscripción es un descanso.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No sé si yo lo viviría como descanso.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Eres rara.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Me lo dicen.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Aralar te ha gustado más, ¿verdad?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No sé. Aralar fue más limpio.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Eso es real. La prehistoria te exige menos cosas distintas '
+            'a la vez.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa. Beben café. La cocina huele a tostada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Calahorra. ¿Vas pronto?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'La semana que viene.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Calahorra te va a tocar.',
+        pausaPrevia: Duration(milliseconds: 500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Por qué?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Porque ahí pasa una cosa que no sé explicarte hasta que '
+            'la sientas.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Marina termina su café, deja la taza en el fregadero y '
+            'sale. Maren se queda con la frase en la cabeza, mirando '
+            'el café que aún tiene caliente.',
+      ),
+      PlanoCierreAmable(textoBoton: 'TERMINAR EL CAFÉ'),
     ],
   );
 }

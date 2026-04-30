@@ -108,6 +108,8 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -373,6 +375,8 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -444,6 +448,8 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
       'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

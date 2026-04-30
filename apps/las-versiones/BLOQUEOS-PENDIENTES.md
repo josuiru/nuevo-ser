@@ -119,21 +119,25 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Arco 2 — Estación 2.1 (Pompaelo bajo Iruña) implementada (F2-1)
+## Arco 2 — Estación 2.1 (Pompaelo bajo Iruña) implementada + latentes post-Estación 2.1 (F2-1, F2-2)
 
 **Tracker doc 17**: pendiente.
 
-**Estado**: implementadas las 7 cinemáticas que cubren la apertura del Arco 2 (2.0.1) y la Estación 2.1 entera (2.1.1–2.1.6, doc 08): bajada al sótano del Archivo, descubrimiento de la inscripción romana, Karim enseña convenciones epigráficas, debate sobre el sesgo del productor (HF.09 "una inscripción no es un documento neutral. Es propaganda"), Concilio narrativo con Begoña/Joana, primer apunte de Pompaelo en el Cuaderno. Las restantes 27+ escenas del Arco 2 (2.A.1–2.A.2, 2.2.1–2.2.6, 2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.2/2.3/2.4 ni el Mosaico de fin de arco M2.
+**Estado**: implementadas las 9 cinemáticas que cubren la apertura del Arco 2 (2.0.1), la Estación 2.1 entera (2.1.1–2.1.6, doc 08) y las dos cinemáticas latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y 2.A.2 *Marina y los descansos*, doc 08 §2.A): bajada al sótano del Archivo, descubrimiento de la inscripción romana, Karim enseña convenciones epigráficas, debate sobre el sesgo del productor (HF.09 "una inscripción no es un documento neutral. Es propaganda"), Concilio narrativo con Begoña/Joana, primer apunte de Pompaelo en el Cuaderno, conversación con Antonio sobre Quintiliano antes de Calahorra, café con Marina sembrando "Calahorra te va a tocar". Las restantes 25+ escenas del Arco 2 (2.2.1–2.2.6, 2.B.1, 2.3.1–2.3.6, 2.C.1, 2.4.1–2.4.8, M2, 2.Z.1–2.Z.2) **no están implementadas**. Tampoco las Brechas 2.2/2.3/2.4 ni el Mosaico de fin de arco M2.
 
-El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 7 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. Tras cerrar la 2.1.6 (apunte del Cuaderno) el orquestador cae al esqueleto porque la 2.A.1 todavía no está implementada.
+El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronista` (1.Z) y dentro del Arco 2 las 9 cinemáticas se encadenan por `flagsRequeridos`/`flagDeSalida`. La 2.A.1 requiere `arco_2_estacion_1_cerrada` (que la 2.1.6 activa); la 2.A.2 requiere `escena_2_a_1_vista` para que las dos latentes se reproduzcan en el orden del doc 08 (padre antes que Marina). Tras cerrar la 2.A.2 (último plano "TERMINAR EL CAFÉ") el orquestador cae al esqueleto porque la 2.2.1 todavía no está implementada.
 
 **Pendiente para próximas iteraciones**:
+- Estación 2.2 (Calahorra/Calagurris, doc 08 §2.2 — 6 cinemáticas).
 - Catálogo de Brechas del Arco 2 (`CatalogoBrechas` añade brecha21 jugable + brecha22, brecha23, brecha24).
-- Cinemáticas latentes 2.A.1, 2.A.2 (post Estación 2.1).
-- Estaciones 2.2 (Calahorra), 2.3 (domus de los mosaicos), 2.4.
+- Cinemática latente 2.B.1 (post-Estación 2.2 — "El cuaderno de Isaura").
+- Estaciones 2.3 (domus de los mosaicos), 2.4 (Wamba contra los vascones).
+- Cinemática latente 2.C.1 (post-Estación 2.3 — "Eider y el cambio").
 - Mosaico M2 ("audio-guía de Pompaelo") — formato distinto al M1 según doc 08 §M2 (audio en lugar de cómic). Posible refactor del modelo `Mosaico` a una abstracción que admita varios formatos.
 - Cinemática de cierre del arco 2.Z.
-- Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en próxima sección.
+- Validación humana del comité asesor sobre el contenido histórico concreto del Arco 2 — sustituciones diegéticas residuales en sección siguiente.
+
+**Sin sustituciones diegéticas en 2.A.1 ni 2.A.2**: Quintiliano de Calagurris y la edición de Cousin (Jean Cousin, *Quintilien — Institution oratoire*, Les Belles Lettres) son referencias reales y trazables que pasan el filtro del comité sin revisión. Marina sólo nombra términos ya validados ("inscripción", "huesos", "polen", "Aralar", "Calahorra"). La frase pedagógica clave de Antonio ("habla menos de sí mismo de lo que parece") es comentario crítico genérico, no afirmación histórica.
 
 ---
 

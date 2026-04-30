@@ -70,11 +70,22 @@ void main() {
 
   group('EscenasArco2.todas', () {
     test('catálogo cubre 2.0.1 (apertura) + Estación 2.1 completa '
-        '(2.1.1 a 2.1.6) — 7 cinemáticas implementadas hoy', () {
-      expect(EscenasArco2.todas, hasLength(7));
+        '(2.1.1 a 2.1.6) + latentes post-Estación 2.1 (2.A.1 y 2.A.2) — '
+        '9 cinemáticas implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(9));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
-        ['2.0.1', '2.1.1', '2.1.2', '2.1.3', '2.1.4', '2.1.5', '2.1.6'],
+        [
+          '2.0.1',
+          '2.1.1',
+          '2.1.2',
+          '2.1.3',
+          '2.1.4',
+          '2.1.5',
+          '2.1.6',
+          '2.A.1',
+          '2.A.2',
+        ],
       );
     });
 
@@ -98,6 +109,40 @@ void main() {
       expect(
         EscenasArco2.flagsDeCierrePorEscena['escena_2_1_6_vista'],
         contains('arco_2_estacion_1_cerrada'),
+      );
+    });
+
+    test('2.A.1 (libro de Quintiliano) requiere arco_2_estacion_1_cerrada '
+        '— es latente post-Estación 2.1', () {
+      expect(
+        EscenasArco2.elLibroDeQuintiliano.flagsRequeridos,
+        {'arco_2_estacion_1_cerrada'},
+      );
+    });
+
+    test('2.A.2 (Marina y los descansos) requiere escena_2_a_1_vista — '
+        'las dos latentes se reproducen en el orden del doc 08 (padre '
+        'antes que Marina)', () {
+      expect(
+        EscenasArco2.marinaYLosDescansos.flagsRequeridos,
+        {'escena_2_a_1_vista'},
+      );
+    });
+
+    test('2.A.1 viaja con ambiente estudio del padre — sub-ambiente '
+        'íntimo distinto del cuarto de Maren o de la cocina familiar',
+        () {
+      expect(
+        EscenasArco2.elLibroDeQuintiliano.ambiente,
+        same(AmbienteArchivo.estudioAntonio),
+      );
+    });
+
+    test('2.A.2 viaja con ambiente cocina del Archivo — Marina entra '
+        'mientras Maren se prepara un café', () {
+      expect(
+        EscenasArco2.marinaYLosDescansos.ambiente,
+        same(AmbienteArchivo.cocinaArchivo),
       );
     });
   });
