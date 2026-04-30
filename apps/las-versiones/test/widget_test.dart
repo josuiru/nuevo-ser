@@ -44,6 +44,14 @@ void main() {
     return const RepositorioMosaico();
   }
 
+  RepositorioCuentaBackend crearRepoCuenta() {
+    return RepositorioCuentaBackend(
+      prefs: SharedPreferences.getInstance,
+      claveToken: 'nuevoser.lasversiones.token_backend',
+      claveEmail: 'nuevoser.lasversiones.email_backend',
+    );
+  }
+
   AppLasVersiones crearApp() {
     return AppLasVersiones(
       repoIdioma: crearRepoIdioma(),
@@ -51,6 +59,7 @@ void main() {
       repoEstadoBrecha: crearRepoEstadoBrecha(),
       repoCuaderno: crearRepoCuaderno(),
       repoMosaico: crearRepoMosaico(),
+      repoCuenta: crearRepoCuenta(),
     );
   }
 
@@ -183,6 +192,7 @@ void main() {
       repoEstadoBrecha: crearRepoEstadoBrecha(),
       repoCuaderno: crearRepoCuaderno(),
       repoMosaico: crearRepoMosaico(),
+      repoCuenta: crearRepoCuenta(),
     ));
     await tester.pumpAndSettle();
 

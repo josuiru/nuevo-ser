@@ -33,6 +33,18 @@ dependencies:
   nuevo_ser_core:
     path: ../../packages/nuevo_ser_core
 
+  # Cliente HTTP de los endpoints de acompañamiento — sólo se usa en
+  # F8.7 para sincronizar el Mosaico v2 con `POST /companion/mosaicos`
+  # cuando hay token JWT. Sin token, el juego sigue siendo plenamente
+  # local; el sync es estrictamente opt-in por entrega.
+  nuevo_ser_companion:
+    path: ../../packages/nuevo_ser_companion
+
+  # Cliente HTTP genérico — el sincronizador del Mosaico distingue
+  # SocketException/TimeoutException de errores HTTP propios para
+  # reportar la causa al jugador con precisión.
+  http: ^1.1.0
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

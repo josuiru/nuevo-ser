@@ -382,6 +382,17 @@ class NS_Esquema {
 				'age_max'        => 13,
 				'schema_version' => '1.0',
 			),
+			// 'las-versiones' empieza a sincronizar en F8.7 — Mosaico
+			// del Arco 1 al endpoint /companion/mosaicos. El esquema
+			// del Mosaico v2 (8 viñetas con código de confianza) es
+			// estable; los Arcos 2-4 lo reusarán.
+			array(
+				'id'             => 'las-versiones',
+				'name'           => 'Las Versiones',
+				'age_min'        => 10,
+				'age_max'        => 14,
+				'schema_version' => '1.0',
+			),
 		);
 	}
 }

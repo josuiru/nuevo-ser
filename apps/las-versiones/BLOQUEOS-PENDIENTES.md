@@ -119,6 +119,26 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Mosaico Arco 1 v2 — sincronización con `/companion/mosaicos` (P2)
+
+**Tracker doc 17**: no aplica (acoplamiento técnico, no contenido histórico).
+
+**Estado**: cableado. `lib/datos/sincronizador_mosaico.dart` instancia el endpoint `POST /companion/mosaicos` del companion. El orquestador (`_alEntregarMosaicoArco1`) llama al sincronizador en segundo plano tras la entrega local — sin bloquear la cinemática 1.M1.entrega que entra justo después. Si no hay token JWT, devuelve `SyncMosaicoSinToken` sin tocar red; si hay token y el backend responde 201, devuelve `SyncMosaicoExito`; los errores HTTP/timeout/socket caen en `SyncMosaicoError`.
+
+El payload incluye:
+- `game_id = 'las-versiones'` (sembrado en `ns_games` por `class-ns-esquema.php` — plugin WP v0.9.0).
+- `arc_id = MosaicoArco1.idArco`.
+- `format = 'comic_8_vinetas_confianza'`.
+- `required_anchors`: ids de las 7 viñetas con anclaje obligatorio (todas excepto `cromlech_dialogo_con_sira` que es relacional).
+- `fulfilled_anchors`: ids de las viñetas marcadas, ordenados alfabéticamente.
+- `content_meta`: mapa `idVineta → 'solido'|'probable'|'disputado'`.
+
+**Pendiente humano**:
+- Cuando llegue la pantalla de login (memoria ítem 11 de El Cuaderno — auth de profesor/cuidador no decidida), las Versiones podrá guardar el token JWT y la sincronización deja de ser silenciosa. Hoy `_urlBaseBackend = 'https://nuevoser.example.org'` en `main.dart` es provisional — cambia con la decisión del dominio definitivo.
+- Tests cubren los caminos críticos (sin token, 201, 500, timeout, socket, payload vacío) pero no hay piloto end-to-end contra un Local WP — bloqueado por la auth.
+
+---
+
 ## Mosaico Arco 1 v2 — pregunta abierta y formulación de las viñetas (F8.7)
 
 **Tracker doc 17**: pendiente de revisión humana.

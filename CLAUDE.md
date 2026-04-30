@@ -73,6 +73,7 @@ Segundo juego del monorepo. Recorrido completo del MVP del Arco 1: configuració
 - **F8 Mosaico fin de Arco 1**. Tres prompts del doc 15 (qué te llevas, qué te queda, qué cambiarías) tras cerrar la Brecha 1.1 — entrega creativa integradora del arco. Provisional: hoy el disparador `arco_1_completado` salta al cerrar 1.1 y los prompts hablan en singular del "dolmen" porque las Brechas 1.2/1.3/1.4 aún no están implementadas. Cuando entren se mueve el disparador al cierre de la 1.4 y se generalizan los prompts (cambio trivial documentado en `_alCompletarBrecha` y en BLOQUEOS).
 - **Validación histórica**. Todo el contenido histórico concreto del guion canónico (autoría de Pío Beltrán, dataciones C14, siglos del edificio del Archivo) está sustituido por formulación genérica que preserva la pedagogía sin afirmar lo no validado. Las 5 fuentes de la Brecha 1.1 son **explícitamente ficticias y diegéticas**. Registro completo en `apps/las-versiones/BLOQUEOS-PENDIENTES.md` por si el comité asesor (doc 16) valida y permite revertir.
 - **Pendiente acoplado a doc 07**: cinemáticas opcionales 1.A "Merienda con Eider" y 1.B "El ático" — apuntadas en BLOQUEOS para no perderlas; se añaden cuando se cargue el doc 07 entero.
+- **Cableado del Mosaico al companion (P2)**: `apps/las-versiones/lib/datos/sincronizador_mosaico.dart` archiva el Mosaico v2 en `POST /companion/mosaicos` con `game_id='las-versiones'`. El orquestador llama al sincronizador en segundo plano tras la entrega local, sin bloquear la cinemática 1.M1.entrega. Sin token JWT cae en `SyncMosaicoSinToken` sin tocar red. Plugin WP bumpa a v0.9.0 al añadir `las-versiones` al seed de `ns_games`.
 
 ### Companion v0.1: primer endpoint real
 
@@ -89,7 +90,7 @@ Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se c
 - **Smoke PHP** `cuaderno.php` (27), `mosaicos.php` (38), `aulas.php` (13), `agregados.php` (28: validación + hash determinista + parsear_respuesta_llm con JSON estricto/markdown/anidado/inválido/vacío + generar_resumen con stub OK/PII rechazada/cliente que lanza).
 - **Pendientes acoplados a auth de profesor/cuidador** (no decidida): `POST /classrooms`, `GET /classrooms/{id}/aggregates` y los 3 de cuidadores. JWT actual sólo lleva `nino_id`.
 
-Plugin WP en v0.7.0. Tests: 325 (uno-roto) + 153 (las-versiones) + 134 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 8 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, paridad_calibracion, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
+Plugin WP en v0.9.0. Tests: 325 (uno-roto) + 236 (las-versiones) + 134 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 8 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, paridad_calibracion, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
 
 ## Decisiones cerradas
 

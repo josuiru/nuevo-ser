@@ -130,7 +130,9 @@ apps/las-versiones/
         └── pantalla_esqueleto.dart              # post-MVP, "el Archivo abre pronto"
 ```
 
-227 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
+236 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
+
+**Cableado al companion (P2)**. `lib/datos/sincronizador_mosaico.dart` archiva el Mosaico v2 en `POST /companion/mosaicos` con `game_id='las-versiones'` (sembrado en `ns_games` por el plugin WP v0.9.0). El sincronizador es opt-in y silencioso: tras pulsar ENTREGAR, el orquestador (`_alEntregarMosaicoArco1`) llama al sincronizador en segundo plano sin bloquear la cinemática 1.M1.entrega. Sin token JWT → `SyncMosaicoSinToken` sin tocar red. Las cinco rutas (sin token, 201, 500, timeout, socket) están cubiertas por tests con `MockClient`. La URL base sigue provisional (`https://nuevoser.example.org`) hasta que cierre la decisión del dominio definitivo.
 
 **Validación de la plataforma extraída**: el juego usa `RepositorioIdiomaApp` del core con la clave `nuevoser.lasversiones.idioma_app`, y `EvaluadorCalibracion` del core (P4 Brier para AH.03 — corazón pedagógico) por path explícito (no via barrel, para no colisionar con el `NivelConfianza` distinto que define `apps/el-cuaderno`). Las extracciones de C5/C6/C8 funcionan: los repositorios son portables entre juegos sin tocar el código del core, y el motor de calibración tiene paridad Dart/PHP via fixture compartida.
 
@@ -138,9 +140,9 @@ apps/las-versiones/
 
 **Pendiente** (orden tentativo, sin compromiso de fechas):
 1. Validación humana del comité asesor sobre el contenido del Arco 1 — tracker entradas en `BLOQUEOS-PENDIENTES.md`. Las sustituciones diegéticas residuales (PIO-BELTRAN, EDIFICIO-ARCHIVO, ARALAR-DATACIONES, manos→grabados en 1.Z) se revierten cuando el comité valide.
-2. Arco 2 (Pompaelo, doc 08). El cableado del Mosaico al endpoint companion `/companion/mosaicos` puede arrancar antes — el shape v2 (Map<String, NivelConfianza>) ya tiene su forma definitiva.
+2. Arco 2 (Pompaelo, doc 08).
 3. P2/P4 reales del motor adaptativo en `nuevo_ser_core` — pospuesto en F7 porque requiere extender `SessionPayload` con metadata por intento.
-4. Cablear `RepositorioCuentaBackend` cuando haya backend al que hablar.
+4. Pantalla de login para alimentar `RepositorioCuentaBackend` con el token JWT real (mismo bloqueante que para el-cuaderno y uno-roto). Hasta entonces el sincronizador del Mosaico se queda en `SyncMosaicoSinToken`.
 5. Decidir si Las Versiones tiene multi-perfil desde el inicio (`GestorPerfiles`) o llega después.
 6. Sistema de cinemáticas — probablemente extraerlo a `nuevo_ser_core/narrative/` cuando lo abordemos, ya que va a ser el primer caso de uso real para esa extracción (uno-roto lo tiene cableado a `voz_personaje` específica del juego, ver README de core §"Deuda de extracción pendiente").
 7. Cerrar paleta visual del juego contra doc 11 (apuntado en BLOQUEOS) — los tonos del código de confianza del Mosaico v2 (azul Sólido / ámbar Probable / rojo claro Disputado) son provisionales hasta este cierre.

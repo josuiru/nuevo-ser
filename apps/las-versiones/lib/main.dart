@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,6 +10,7 @@ import 'datos/repositorio_cuaderno.dart';
 import 'datos/repositorio_estado_brecha.dart';
 import 'datos/repositorio_flags_narrativos.dart';
 import 'datos/repositorio_mosaico.dart';
+import 'datos/sincronizador_mosaico.dart';
 import 'dominio/brecha.dart';
 import 'dominio/catalogo_brechas.dart';
 import 'dominio/cuaderno.dart';
@@ -27,6 +30,19 @@ import 'vista/pantalla_mosaico_arco_1.dart';
 /// backend, la versión de paquete sonoro, etc. seguirán el mismo
 /// patrón cuando lleguen.
 const _claveIdiomaApp = 'nuevoser.lasversiones.idioma_app';
+
+/// Claves globales de la cuenta del backend (token JWT + email del
+/// niño). El servidor codifica `nino_id` dentro del token, así que
+/// estas claves NO son por-perfil aunque más adelante el juego
+/// adopte multi-perfil local.
+const _claveTokenBackend = 'nuevoser.lasversiones.token_backend';
+const _claveEmailBackend = 'nuevoser.lasversiones.email_backend';
+
+/// URL base del backend `nuevo-ser-core`. Provisional — la decisión
+/// del dominio definitivo es humana (mismo bloqueante que para los
+/// otros juegos de la Colección). Cuando llegue el dominio real, se
+/// sustituye sin tocar el cliente.
+const _urlBaseBackend = 'https://nuevoser.example.org';
 
 /// Locale activo de la app. Es global para que `AppLasVersiones`
 /// pueda quedarse `StatelessWidget` y a la vez reaccionar al cambio
@@ -58,12 +74,22 @@ void main() async {
     localeAppLasVersiones.value = Locale(codigoIdiomaPersistido);
   }
 
+  // Cuenta del backend. Hoy (sin pantalla de login) sólo se rellena
+  // a mano via flujos debug; el sincronizador del Mosaico lo lee y,
+  // si no hay token, se queda en local sin tocar la red.
+  final repoCuenta = RepositorioCuentaBackend(
+    prefs: SharedPreferences.getInstance,
+    claveToken: _claveTokenBackend,
+    claveEmail: _claveEmailBackend,
+  );
+
   runApp(AppLasVersiones(
     repoIdioma: repoIdioma,
     repoFlags: const RepositorioFlagsNarrativos(),
     repoEstadoBrecha: const RepositorioEstadoBrecha(),
     repoCuaderno: const RepositorioCuaderno(),
     repoMosaico: const RepositorioMosaico(),
+    repoCuenta: repoCuenta,
   ));
 }
 
@@ -73,6 +99,7 @@ class AppLasVersiones extends StatelessWidget {
   final RepositorioEstadoBrecha repoEstadoBrecha;
   final RepositorioCuaderno repoCuaderno;
   final RepositorioMosaico repoMosaico;
+  final RepositorioCuentaBackend repoCuenta;
 
   const AppLasVersiones({
     super.key,
@@ -81,6 +108,7 @@ class AppLasVersiones extends StatelessWidget {
     required this.repoEstadoBrecha,
     required this.repoCuaderno,
     required this.repoMosaico,
+    required this.repoCuenta,
   });
 
   @override
@@ -124,6 +152,7 @@ class AppLasVersiones extends StatelessWidget {
             repoEstadoBrecha: repoEstadoBrecha,
             repoCuaderno: repoCuaderno,
             repoMosaico: repoMosaico,
+            repoCuenta: repoCuenta,
           ),
         );
       },
@@ -162,6 +191,7 @@ class Orquestador extends StatefulWidget {
   final RepositorioEstadoBrecha repoEstadoBrecha;
   final RepositorioCuaderno repoCuaderno;
   final RepositorioMosaico repoMosaico;
+  final RepositorioCuentaBackend repoCuenta;
 
   const Orquestador({
     super.key,
@@ -170,6 +200,7 @@ class Orquestador extends StatefulWidget {
     required this.repoEstadoBrecha,
     required this.repoCuaderno,
     required this.repoMosaico,
+    required this.repoCuenta,
   });
 
   @override
@@ -184,10 +215,25 @@ class _OrquestadorState extends State<Orquestador> {
   Brecha? _brechaAbierta;
   FaseBrecha _faseBrechaActiva = FaseBrecha.formulacionPreguntas;
 
+  late final companion.ClienteCompanion _clienteCompanion;
+  late final SincronizadorMosaicoArco1 _sincronizadorMosaico;
+
   @override
   void initState() {
     super.initState();
+    _clienteCompanion = companion.ClienteCompanion(urlBase: _urlBaseBackend);
+    _sincronizadorMosaico = SincronizadorMosaicoArco1(
+      repoCuenta: widget.repoCuenta,
+      repoMosaico: widget.repoMosaico,
+      clienteCompanion: _clienteCompanion,
+    );
     _cargarEstadoInicial();
+  }
+
+  @override
+  void dispose() {
+    _clienteCompanion.cerrar();
+    super.dispose();
   }
 
   Future<void> _cargarEstadoInicial() async {
@@ -361,6 +407,26 @@ class _OrquestadorState extends State<Orquestador> {
     setState(() {
       _escenaEnReproduccion = _proximaEscenaPendiente();
     });
+    // Sincronización opt-in: el Mosaico ya está en local (ese es el
+    // único compromiso). Si hay token, se intenta archivar en el
+    // backend. No bloquea ni avisa al jugador — un `SyncMosaicoError`
+    // o `SyncMosaicoSinToken` no debe interrumpir el flujo narrativo
+    // (cinemática 1.M1.entrega) que entra justo después.
+    _sincronizarMosaicoEnSegundoPlano();
+  }
+
+  Future<void> _sincronizarMosaicoEnSegundoPlano() async {
+    final resultado = await _sincronizadorMosaico.sincronizar();
+    if (kDebugMode) {
+      switch (resultado) {
+        case SyncMosaicoSinToken():
+          debugPrint('Mosaico Arco 1: sin token, queda local.');
+        case SyncMosaicoExito():
+          debugPrint('Mosaico Arco 1: archivado en backend.');
+        case SyncMosaicoError(:final razon):
+          debugPrint('Mosaico Arco 1: error de sync — $razon');
+      }
+    }
   }
 
   /// Abre el Cuaderno como ruta superpuesta al estado actual del
