@@ -4,6 +4,8 @@ import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dart:io';
+
 import 'datos/almacenador_medios.dart';
 import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
@@ -12,6 +14,7 @@ import 'datos/repositorio_perfil_cuaderno.dart';
 import 'datos/selector_imagen.dart';
 import 'datos/sincronizador_agregados.dart';
 import 'datos_simulados/seed.dart';
+import 'dominio/exportador_cuaderno.dart';
 import 'dominio/observacion.dart';
 import 'dominio/repositorio_local.dart';
 import 'infraestructura/isar/isar_setup.dart';
@@ -298,6 +301,28 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     );
   }
 
+  /// Resuelve, para una ruta relativa apuntada por una observación, el
+  /// estado del fichero medio en disco — alimenta el manifiesto del
+  /// export v2 (A5). Uso del `_almacenadorMedios.resolverAbsoluta` +
+  /// `dart:io` directo para sondear `existe` y `length` sin añadir
+  /// dependencias nuevas.
+  Future<InfoMedioExportado> _resolverMedioParaExport(
+    String rutaRelativa,
+  ) async {
+    final rutaAbsoluta =
+        await _almacenadorMedios.resolverAbsoluta(rutaRelativa);
+    final fichero = File(rutaAbsoluta);
+    if (!await fichero.exists()) {
+      return InfoMedioExportado(rutaRelativa: rutaRelativa, existe: false);
+    }
+    final tamano = await fichero.length();
+    return InfoMedioExportado(
+      rutaRelativa: rutaRelativa,
+      existe: true,
+      tamanoBytes: tamano,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<EnviarPreguntaTutor?>(
@@ -317,6 +342,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           intentarSincronizarObservaciones: _intentarSincronizarObservaciones,
           selectorImagen: _selectorImagen,
           almacenadorMedios: _almacenadorMedios,
+          resolverMedioParaExport: _resolverMedioParaExport,
         );
       },
     );

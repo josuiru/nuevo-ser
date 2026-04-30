@@ -217,11 +217,41 @@ abstract class TextosApp {
   /// **'dibujo'**
   String get observacionCajaDibujo;
 
-  /// Microcopia honesta para el placeholder gris de foto/dibujo en S1 — la cámara y el canvas táctil no están operativos todavía.
+  /// Microcopia opcional cuando no hay foto ni dibujo todavía. Sentence case, voz adulta amable (doc 04 §2).
   ///
   /// In es, this message translates to:
-  /// **'Cuando llegue Sprint 5, aquí podrás añadir foto o dibujo.'**
+  /// **'Si quieres, añade una foto o un dibujo.'**
   String get observacionCajaPlaceholder;
+
+  /// Botón que abre la cámara nativa para capturar una foto y anclarla a la observación.
+  ///
+  /// In es, this message translates to:
+  /// **'tomar foto'**
+  String get observacionFotoTomar;
+
+  /// Botón que abre la galería del dispositivo para elegir una foto ya hecha.
+  ///
+  /// In es, this message translates to:
+  /// **'elegir foto'**
+  String get observacionFotoElegir;
+
+  /// Botón que retira la foto seleccionada antes de guardar la observación. No borra la foto del dispositivo si vino de la galería.
+  ///
+  /// In es, this message translates to:
+  /// **'quitar foto'**
+  String get observacionFotoQuitar;
+
+  /// Botón que abre el lienzo espartano de dibujo (A4).
+  ///
+  /// In es, this message translates to:
+  /// **'hacer dibujo'**
+  String get observacionDibujoComenzar;
+
+  /// Botón que retira el dibujo guardado antes de cerrar la observación.
+  ///
+  /// In es, this message translates to:
+  /// **'quitar dibujo'**
+  String get observacionDibujoQuitar;
 
   /// Etiqueta del campo obligatorio (doc 13 §3.2).
   ///

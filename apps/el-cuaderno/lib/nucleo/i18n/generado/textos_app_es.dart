@@ -75,7 +75,22 @@ class TextosAppEs extends TextosApp {
   String get observacionCajaDibujo => 'dibujo';
 
   @override
-  String get observacionCajaPlaceholder => 'Cuando llegue Sprint 5, aquí podrás añadir foto o dibujo.';
+  String get observacionCajaPlaceholder => 'Si quieres, añade una foto o un dibujo.';
+
+  @override
+  String get observacionFotoTomar => 'tomar foto';
+
+  @override
+  String get observacionFotoElegir => 'elegir foto';
+
+  @override
+  String get observacionFotoQuitar => 'quitar foto';
+
+  @override
+  String get observacionDibujoComenzar => 'hacer dibujo';
+
+  @override
+  String get observacionDibujoQuitar => 'quitar dibujo';
 
   @override
   String get observacionEtiquetaQueViste => 'qué viste';

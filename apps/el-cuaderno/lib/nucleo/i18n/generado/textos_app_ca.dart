@@ -75,7 +75,22 @@ class TextosAppCa extends TextosApp {
   String get observacionCajaDibujo => 'TODO_CA · dibujo';
 
   @override
-  String get observacionCajaPlaceholder => 'TODO_CA · Cuando llegue Sprint 5, aquí podrás añadir foto o dibujo.';
+  String get observacionCajaPlaceholder => 'TODO_CA · Si quieres, añade una foto o un dibujo.';
+
+  @override
+  String get observacionFotoTomar => 'TODO_CA · tomar foto';
+
+  @override
+  String get observacionFotoElegir => 'TODO_CA · elegir foto';
+
+  @override
+  String get observacionFotoQuitar => 'TODO_CA · quitar foto';
+
+  @override
+  String get observacionDibujoComenzar => 'TODO_CA · hacer dibujo';
+
+  @override
+  String get observacionDibujoQuitar => 'TODO_CA · quitar dibujo';
 
   @override
   String get observacionEtiquetaQueViste => 'TODO_CA · qué viste';

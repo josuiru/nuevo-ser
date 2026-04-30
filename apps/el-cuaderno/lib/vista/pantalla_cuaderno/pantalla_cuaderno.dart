@@ -5,6 +5,7 @@ import '../../datos/almacenador_medios.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/selector_imagen.dart';
 import '../../datos/sincronizador_agregados.dart';
+import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
@@ -37,6 +38,7 @@ class PantallaCuaderno extends StatefulWidget {
     this.intentarSincronizarObservaciones,
     this.selectorImagen,
     this.almacenadorMedios,
+    this.resolverMedioParaExport,
   });
 
   final RepositorioLocal repositorio;
@@ -91,6 +93,11 @@ class PantallaCuaderno extends StatefulWidget {
   /// Almacenador que mueve la foto seleccionada al directorio privado
   /// de la app. Requerido si [selectorImagen] no es null.
   final AlmacenadorMedios? almacenadorMedios;
+
+  /// Resuelve presencia y tamaño de cada fichero medio al exportar el
+  /// cuaderno (export v2). Si es null, el export queda sin manifiesto
+  /// — sigue siendo válido pero menos informativo.
+  final ResolverMedioExportado? resolverMedioParaExport;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -217,6 +224,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           sincronizadorAgregados: widget.sincronizadorAgregados,
           intentarSincronizarObservaciones:
               widget.intentarSincronizarObservaciones,
+          resolverMedioParaExport: widget.resolverMedioParaExport,
         ),
       ),
     );

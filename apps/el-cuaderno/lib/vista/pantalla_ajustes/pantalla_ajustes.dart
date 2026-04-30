@@ -41,6 +41,7 @@ class PantallaAjustes extends StatelessWidget {
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
     this.intentarSincronizarObservaciones,
+    this.resolverMedioParaExport,
   });
 
   final RepositorioLocal repositorio;
@@ -71,6 +72,13 @@ class PantallaAjustes extends StatelessWidget {
   /// no se monta. Devuelve null cuando no hay token.
   final Future<ResultadoSyncObservaciones?> Function()?
       intentarSincronizarObservaciones;
+
+  /// Resuelve la presencia y el tamaño en disco de cada fichero de
+  /// medios apuntado por las observaciones — alimenta el manifiesto
+  /// `medios` del export v2. Si es null, el export se queda sin
+  /// manifiesto (lectura sigue siendo válida; el importador no podrá
+  /// distinguir presentes de huérfanos).
+  final ResolverMedioExportado? resolverMedioParaExport;
 
   @override
   Widget build(BuildContext context) {
@@ -147,12 +155,13 @@ class PantallaAjustes extends StatelessWidget {
     final observaciones = await repositorio.obtenerObservaciones();
     final sitSpot = await repositorio.obtenerSitSpot();
     final misterios = await repositorio.obtenerMisteriosAbiertos();
-    if (!context.mounted) return;
-    final json = ExportadorCuaderno.aJson(
+    final json = await ExportadorCuaderno.aJson(
       observaciones: observaciones,
       sitSpot: sitSpot,
       misterios: misterios,
+      resolverMedio: resolverMedioParaExport,
     );
+    if (!context.mounted) return;
     final textos = TextosApp.of(context);
     await showDialog<void>(
       context: context,
