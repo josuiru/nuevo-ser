@@ -233,7 +233,10 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               alAbrirMisterio: _abrirPaginaMisterio,
             ),
             _VistaProximamente(textos: textos),
-            _VistaProximamente(textos: textos),
+            _VistaMisterios(
+              estado: widget.estado,
+              alAbrirMisterio: _abrirPaginaMisterio,
+            ),
             PantallaTutor(
               repositorio: widget.repositorio,
               enviarPregunta: widget.enviarPreguntaTutor,
@@ -545,6 +548,63 @@ class _VistaProximamente extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Pestaña Misterios del bottom nav. El home muestra sólo `.take(3)`
+/// por orden alfabético; aquí el niño ve la lista entera de Misterios
+/// abiertos del catálogo. Cada tarjeta abre su [PantallaPaginaMisterio]
+/// reusando la misma navegación que el home.
+///
+/// Lectura pura — el sistema (no el niño) decide qué Misterios están
+/// abiertos en cada momento. Si todavía no hay ninguno, microcopia de
+/// estado vacío idéntica a la del home (`textos.misteriosVacio`).
+class _VistaMisterios extends StatelessWidget {
+  const _VistaMisterios({
+    required this.estado,
+    required this.alAbrirMisterio,
+  });
+
+  final EstadoCuaderno estado;
+  final void Function(Misterio misterio) alAbrirMisterio;
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = TextosApp.of(context);
+    return ListenableBuilder(
+      listenable: estado,
+      builder: (context, _) {
+        if (estado.cargando && estado.misteriosAbiertos.isEmpty) {
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        final misterios = estado.misteriosAbiertos;
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          children: [
+            _Cabecera(textos.seccionMisteriosAbiertos),
+            const SizedBox(height: 12),
+            if (misterios.isEmpty)
+              Text(
+                textos.misteriosVacio,
+                style: TipografiaCuaderno.serif(
+                  color: PaletaCuaderno.tintaTenue,
+                  tamano: TipografiaCuaderno.tamano13,
+                  altoLinea: 1.5,
+                ),
+              )
+            else
+              for (final misterio in misterios) ...[
+                TarjetaMisterio(
+                  misterio: misterio,
+                  alPulsar: () => alAbrirMisterio(misterio),
+                ),
+                const SizedBox(height: 8),
+              ],
+          ],
+        );
+      },
     );
   }
 }

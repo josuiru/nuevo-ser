@@ -58,20 +58,22 @@ void main() {
     await bombearPantalla(tester);
     // El home aplica `.take(3)` sobre el orden alfabético de las
     // preguntas; los tres primeros del seed seminal son lluvia,
-    // dos pájaros pequeños marrones y encina vieja.
+    // dos pájaros pequeños marrones y encina vieja. La pestaña
+    // Misterios del bottom nav (siempre montada en el `IndexedStack`)
+    // los repite, así que estos dos del top-3 aparecen dos veces.
     expect(
       find.text(
         'Después de llover, ¿qué seres vivos aparecen?',
         skipOffstage: false,
       ),
-      findsOneWidget,
+      findsNWidgets(2),
     );
     expect(
       find.text(
         'La encina vieja del parque: ¿de qué año es?',
         skipOffstage: false,
       ),
-      findsOneWidget,
+      findsNWidgets(2),
     );
   });
 
@@ -206,6 +208,64 @@ void main() {
       // En la página del Misterio aparece la cabecera "Misterio" del
       // AppBar y el botón "anotar evidencia para este misterio".
       expect(find.text('Misterio'), findsOneWidget);
+      expect(
+        find.text('anotar evidencia para este misterio'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'pestaña Misterios del bottom nav lista todos los Misterios abiertos',
+    (tester) async {
+      await bombearPantalla(tester);
+      // El seed deja 5 Misterios abiertos. El home muestra .take(3)
+      // por orden alfabético: los tres primeros (lluvia, dos pájaros,
+      // encina) caben; los dos últimos por código Unicode (los que
+      // empiezan por "¿") sólo se ven en la pestaña Misterios.
+      final misteriosAbiertos =
+          await repositorio.obtenerMisteriosAbiertos();
+      expect(misteriosAbiertos.length, 5);
+
+      await tester.tap(find.text('misterios'));
+      await tester.pumpAndSettle();
+
+      // Estas dos preguntas no caben en el .take(3) del home, así que
+      // la única razón por la que se vean es que la pestaña las pinta.
+      expect(
+        find.text(
+          '¿Cuándo se fueron las golondrinas de tu barrio?',
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          '¿Por qué hay líquenes en este lado del muro y no en el otro?',
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'pestaña Misterios: pulsar una tarjeta abre PantallaPaginaMisterio',
+    (tester) async {
+      await bombearPantalla(tester);
+      await tester.tap(find.text('misterios'));
+      await tester.pumpAndSettle();
+
+      // Las golondrinas no caben en el .take(3) del home, así que aquí
+      // es la única ocurrencia → no hay ambigüedad de tap entre dos
+      // hijos del `IndexedStack`.
+      final preguntaGolondrinas = find.text(
+        '¿Cuándo se fueron las golondrinas de tu barrio?',
+      );
+      expect(preguntaGolondrinas, findsOneWidget);
+      await tester.tap(preguntaGolondrinas);
+      await tester.pumpAndSettle();
+
       expect(
         find.text('anotar evidencia para este misterio'),
         findsOneWidget,
