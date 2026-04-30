@@ -28,6 +28,7 @@ class NS_Activacion {
 		self::aplicar_migracion_m001();
 		self::aplicar_esquema();
 		self::sembrar_games();
+		self::registrar_roles_adultos();
 		update_option( self::OPCION_VERSION, NS_CORE_VERSION );
 		self::programar_cron();
 	}
@@ -73,11 +74,42 @@ class NS_Activacion {
 		self::aplicar_migracion_m001();
 		self::aplicar_esquema();
 		self::sembrar_games();
+		self::registrar_roles_adultos();
 		update_option( self::OPCION_VERSION, NS_CORE_VERSION );
 		// Si el cron aún no estaba programado (sitio que se actualizó
 		// desde una versión antes de existir el cron), lo añadimos
 		// aquí — `programar_cron` es idempotente.
 		self::programar_cron();
+	}
+
+	/**
+	 * Registra los roles WP custom usados por NS_Auth_Adulto
+	 * (`nuevoser_profesor` y `nuevoser_cuidador`). Idempotente —
+	 * `add_role()` devuelve null si el rol ya existe, no falla.
+	 *
+	 * Capabilities mínimas: sólo `read`. Lo único que hace falta
+	 * para que `wp_authenticate` les funcione y los endpoints de
+	 * profesor/cuidador validen su rol con `user_has_role`.
+	 *
+	 * Los roles NO se borran al desactivar el plugin — borrarlos
+	 * sin avisar perdería el rol asignado a usuarios reales. La
+	 * limpieza definitiva se haría desde uninstall.php (tampoco
+	 * la hacemos hoy, igual que con las tablas: pérdida potencial
+	 * de datos, mejor que el operador humano lo decida).
+	 */
+	private static function registrar_roles_adultos(): void {
+		if ( function_exists( 'add_role' ) ) {
+			add_role(
+				NS_Auth_Adulto::ROL_WP_PROFESOR,
+				'Nuevo Ser — Profesor',
+				array( 'read' => true )
+			);
+			add_role(
+				NS_Auth_Adulto::ROL_WP_CUIDADOR,
+				'Nuevo Ser — Cuidador',
+				array( 'read' => true )
+			);
+		}
 	}
 
 	/**

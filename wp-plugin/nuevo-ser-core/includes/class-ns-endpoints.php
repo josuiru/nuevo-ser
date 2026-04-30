@@ -116,6 +116,21 @@ class NS_Endpoints {
 				),
 			)
 		);
+
+		// Login de adultos (profesor/cuidador). Público — este endpoint
+		// es el que **emite** el JWT, así que no puede pedirlo. Paralelo
+		// al `/login` del niño (que sigue tal cual en este mismo archivo).
+		register_rest_route(
+			$namespace,
+			'/auth/login',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Auth_Adulto', 'login' ),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
 	}
 
 	/**
