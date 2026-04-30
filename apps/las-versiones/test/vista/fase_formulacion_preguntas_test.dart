@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:las_versiones/datos/repositorio_preguntas_brecha.dart';
 import 'package:las_versiones/dominio/brecha.dart';
 import 'package:las_versiones/dominio/catalogo_brechas.dart';
 import 'package:las_versiones/vista/fase_formulacion_preguntas.dart';

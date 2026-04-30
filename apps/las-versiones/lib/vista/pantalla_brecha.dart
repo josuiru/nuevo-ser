@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../datos/repositorio_evaluacion_fuente.dart';
 import '../datos/repositorio_preguntas_brecha.dart';
 import '../datos/repositorio_recoleccion_fuentes.dart';
 import '../dominio/brecha.dart';
 import '../nucleo/paleta_archivo.dart';
+import 'fase_evaluacion.dart';
 import 'fase_formulacion_preguntas.dart';
 import 'fase_recoleccion.dart';
 
@@ -44,6 +46,10 @@ class PantallaBrecha extends StatelessWidget {
   /// Inyectable para tests.
   final RepositorioRecoleccionFuentes repoRecoleccion;
 
+  /// Repositorio de respuestas a la evaluación. Lo usa la Fase 3.
+  /// Inyectable para tests.
+  final RepositorioEvaluacionFuente repoEvaluacion;
+
   const PantallaBrecha({
     super.key,
     required this.brecha,
@@ -53,6 +59,7 @@ class PantallaBrecha extends StatelessWidget {
     this.alAbrirCuaderno,
     this.repoPreguntas = const RepositorioPreguntasBrecha(),
     this.repoRecoleccion = const RepositorioRecoleccionFuentes(),
+    this.repoEvaluacion = const RepositorioEvaluacionFuente(),
   });
 
   bool get _esFaseFinal => faseActiva == FaseBrecha.concilio;
@@ -62,7 +69,8 @@ class PantallaBrecha extends StatelessWidget {
   /// el botón global del pie no aparece.
   bool get _faseTienePantallaPropia =>
       faseActiva == FaseBrecha.formulacionPreguntas ||
-      faseActiva == FaseBrecha.recoleccion;
+      faseActiva == FaseBrecha.recoleccion ||
+      faseActiva == FaseBrecha.evaluacion;
 
   @override
   Widget build(BuildContext contexto) {
@@ -84,6 +92,7 @@ class PantallaBrecha extends StatelessWidget {
                       alAvanzarFase: alAvanzarFase,
                       repoPreguntas: repoPreguntas,
                       repoRecoleccion: repoRecoleccion,
+                      repoEvaluacion: repoEvaluacion,
                     ),
                   ),
                 ),
@@ -130,6 +139,7 @@ class _CuerpoDeFase extends StatelessWidget {
   final VoidCallback alAvanzarFase;
   final RepositorioPreguntasBrecha repoPreguntas;
   final RepositorioRecoleccionFuentes repoRecoleccion;
+  final RepositorioEvaluacionFuente repoEvaluacion;
 
   const _CuerpoDeFase({
     required this.brecha,
@@ -137,6 +147,7 @@ class _CuerpoDeFase extends StatelessWidget {
     required this.alAvanzarFase,
     required this.repoPreguntas,
     required this.repoRecoleccion,
+    required this.repoEvaluacion,
   });
 
   @override
@@ -155,6 +166,12 @@ class _CuerpoDeFase extends StatelessWidget {
           repoRecoleccion: repoRecoleccion,
         );
       case FaseBrecha.evaluacion:
+        return FaseEvaluacion(
+          brecha: brecha,
+          alAvanzarFase: alAvanzarFase,
+          repoRecoleccion: repoRecoleccion,
+          repoEvaluacion: repoEvaluacion,
+        );
       case FaseBrecha.reconstruccion:
       case FaseBrecha.concilio:
         return _PlaceholderFase(fase: faseActiva);
