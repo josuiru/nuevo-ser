@@ -439,6 +439,30 @@ abstract class TextosApp {
   /// **'Listo. Tu cuaderno está vacío.'**
   String get ajustesBorradoCompleto;
 
+  /// Pregunta del segundo paso del primer arranque (tras elegir idioma). El nombre se persiste como nombre del perfil del niño.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo te llamas?'**
+  String get bienvenidaTitulo;
+
+  /// No description provided for @bienvenidaCuerpo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu nombre se queda en este cuaderno. No sale al servidor a menos que tú decidas vincularlo más tarde.'**
+  String get bienvenidaCuerpo;
+
+  /// No description provided for @bienvenidaPlaceholderNombre.
+  ///
+  /// In es, this message translates to:
+  /// **'tu nombre'**
+  String get bienvenidaPlaceholderNombre;
+
+  /// No description provided for @bienvenidaBotonContinuar.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get bienvenidaBotonContinuar;
+
   /// Bloque opt-in que sube las observaciones pendientes al servidor. Lo dispara el adulto/niño explícitamente; sin sync automático.
   ///
   /// In es, this message translates to:

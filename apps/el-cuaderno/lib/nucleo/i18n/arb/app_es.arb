@@ -196,6 +196,14 @@
   "ajustesBorrarConfirmacionBoton": "Borrar todo",
   "ajustesBorradoCompleto": "Listo. Tu cuaderno está vacío.",
 
+  "bienvenidaTitulo": "¿Cómo te llamas?",
+  "@bienvenidaTitulo": {
+    "description": "Pregunta del segundo paso del primer arranque (tras elegir idioma). El nombre se persiste como nombre del perfil del niño."
+  },
+  "bienvenidaCuerpo": "Tu nombre se queda en este cuaderno. No sale al servidor a menos que tú decidas vincularlo más tarde.",
+  "bienvenidaPlaceholderNombre": "tu nombre",
+  "bienvenidaBotonContinuar": "Continuar",
+
   "ajustesSyncObsTitulo": "Sincronizar mis observaciones",
   "@ajustesSyncObsTitulo": {
     "description": "Bloque opt-in que sube las observaciones pendientes al servidor. Lo dispara el adulto/niño explícitamente; sin sync automático."

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
+import 'datos/repositorio_perfil_cuaderno.dart';
 import 'datos/sincronizador_agregados.dart';
 import 'datos_simulados/seed.dart';
 import 'dominio/observacion.dart';
@@ -14,6 +15,7 @@ import 'dominio/repositorio_local.dart';
 import 'infraestructura/isar/isar_setup.dart';
 import 'infraestructura/isar/repositorio_isar.dart';
 import 'nucleo/i18n/generado/textos_app.dart';
+import 'vista/pantalla_bienvenida_nombre.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno/estado_cuaderno.dart';
 import 'vista/pantalla_cuaderno/pantalla_cuaderno.dart';
@@ -42,6 +44,11 @@ const _urlBaseBackend = 'https://nuevoser.example.org';
 /// reaccionar al cambio sin tener que reconstruir todo el árbol
 /// manualmente.
 final ValueNotifier<Locale?> localeAppElCuaderno = ValueNotifier<Locale?>(null);
+
+/// Nombre del niño dueño del cuaderno. Null hasta que se complete la
+/// pantalla de bienvenida tras el primer arranque. Una vez completada,
+/// el orquestador muestra `PantallaCuaderno`.
+final ValueNotifier<String?> nombrePerfilElCuaderno = ValueNotifier<String?>(null);
 
 /// Arranque de El Cuaderno. Sprint 2-C: precarga el idioma elegido,
 /// abre Isar local, siembra datos en debug, y monta la app pasando
@@ -82,10 +89,21 @@ Future<void> main() async {
     claveEmail: _claveEmailBackend,
   );
 
+  // 4) Repositorio de perfiles del Cuaderno. El nombre del niño se
+  //    persiste como nombre del perfil activo. Si ya existe, se
+  //    precarga al ValueNotifier para que el primer build muestre
+  //    directo la pantalla principal sin flash de la bienvenida.
+  final repoPerfil = RepositorioPerfilCuaderno();
+  final nombreYaGuardado = await repoPerfil.nombrePerfilActivo();
+  if (nombreYaGuardado != null) {
+    nombrePerfilElCuaderno.value = nombreYaGuardado;
+  }
+
   runApp(AppElCuaderno(
     repoIdioma: repoIdioma,
     repositorioCuaderno: repositorioCuaderno,
     repoCuenta: repoCuenta,
+    repoPerfil: repoPerfil,
   ));
 }
 
@@ -93,12 +111,14 @@ class AppElCuaderno extends StatelessWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioLocal repositorioCuaderno;
   final RepositorioCuentaBackend repoCuenta;
+  final RepositorioPerfilCuaderno repoPerfil;
 
   const AppElCuaderno({
     super.key,
     required this.repoIdioma,
     required this.repositorioCuaderno,
     required this.repoCuenta,
+    required this.repoPerfil,
   });
 
   @override
@@ -106,33 +126,55 @@ class AppElCuaderno extends StatelessWidget {
     return ValueListenableBuilder<Locale?>(
       valueListenable: localeAppElCuaderno,
       builder: (_, locale, __) {
-        return MaterialApp(
-          onGenerateTitle: (context) => TextosApp.of(context).tituloApp,
-          theme: TemaCuaderno.claro(),
-          darkTheme: TemaCuaderno.oscuro(),
-          // Modo oscuro respetado del sistema (doc 13 §11.5).
-          themeMode: ThemeMode.system,
-          locale: locale,
-          localizationsDelegates: TextosApp.localizationsDelegates,
-          supportedLocales: TextosApp.supportedLocales,
-          home: locale == null
-              ? PantallaConfiguracionInicial(
-                  alElegirIdioma: (codigo) async {
-                    await repoIdioma.guardar(codigo);
-                    localeAppElCuaderno.value = Locale(codigo);
-                  },
-                )
-              : _OrquestadorJuego(
-                  repositorio: repositorioCuaderno,
-                  repoIdioma: repoIdioma,
-                  repoCuenta: repoCuenta,
-                  locale: locale,
-                  alCambiarIdioma: () async {
-                    await repoIdioma.borrar();
-                    localeAppElCuaderno.value = null;
-                  },
-                ),
+        return ValueListenableBuilder<String?>(
+          valueListenable: nombrePerfilElCuaderno,
+          builder: (_, nombrePerfil, __) {
+            return MaterialApp(
+              onGenerateTitle: (context) => TextosApp.of(context).tituloApp,
+              theme: TemaCuaderno.claro(),
+              darkTheme: TemaCuaderno.oscuro(),
+              // Modo oscuro respetado del sistema (doc 13 §11.5).
+              themeMode: ThemeMode.system,
+              locale: locale,
+              localizationsDelegates: TextosApp.localizationsDelegates,
+              supportedLocales: TextosApp.supportedLocales,
+              home: _decidirHome(locale, nombrePerfil),
+            );
+          },
         );
+      },
+    );
+  }
+
+  /// Tres caminos de arranque:
+  /// - sin idioma → selector trilingüe.
+  /// - con idioma sin perfil con nombre → pantalla bienvenida.
+  /// - con perfil → pantalla principal.
+  Widget _decidirHome(Locale? locale, String? nombrePerfil) {
+    if (locale == null) {
+      return PantallaConfiguracionInicial(
+        alElegirIdioma: (codigo) async {
+          await repoIdioma.guardar(codigo);
+          localeAppElCuaderno.value = Locale(codigo);
+        },
+      );
+    }
+    if (nombrePerfil == null) {
+      return PantallaBienvenidaNombre(
+        alConfirmarNombre: (nombre) async {
+          await repoPerfil.crearYActivarPerfil(nombre);
+          nombrePerfilElCuaderno.value = nombre;
+        },
+      );
+    }
+    return _OrquestadorJuego(
+      repositorio: repositorioCuaderno,
+      repoIdioma: repoIdioma,
+      repoCuenta: repoCuenta,
+      locale: locale,
+      alCambiarIdioma: () async {
+        await repoIdioma.borrar();
+        localeAppElCuaderno.value = null;
       },
     );
   }

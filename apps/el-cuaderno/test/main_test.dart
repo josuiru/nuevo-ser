@@ -1,6 +1,8 @@
+import 'package:el_cuaderno/datos/repositorio_perfil_cuaderno.dart';
 import 'package:el_cuaderno/datos_simulados/seed.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
 import 'package:el_cuaderno/main.dart';
+import 'package:el_cuaderno/vista/pantalla_bienvenida_nombre.dart';
 import 'package:el_cuaderno/vista/pantalla_configuracion_inicial.dart';
 import 'package:el_cuaderno/vista/pantalla_cuaderno/pantalla_cuaderno.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     localeAppElCuaderno.value = null;
+    nombrePerfilElCuaderno.value = null;
   });
 
   RepositorioIdiomaApp crearRepoIdioma() {
@@ -45,6 +48,7 @@ void main() {
       repoIdioma: crearRepoIdioma(),
       repositorioCuaderno: await crearRepoCuaderno(),
       repoCuenta: crearRepoCuenta(),
+      repoPerfil: RepositorioPerfilCuaderno(),
     );
   }
 
@@ -56,6 +60,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaConfiguracionInicial), findsOneWidget);
+    expect(find.byType(PantallaBienvenidaNombre), findsNothing);
     expect(find.byType(PantallaCuaderno), findsNothing);
     expect(find.text('el cuaderno'), findsOneWidget);
     expect(find.text('Castellano'), findsOneWidget);
@@ -64,7 +69,7 @@ void main() {
   });
 
   testWidgets(
-      'arranque con idioma persistido → salta directo a la pantalla principal',
+      'con idioma sin perfil → muestra PantallaBienvenidaNombre',
       (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.elcuaderno.idioma_app': 'es',
@@ -75,12 +80,37 @@ void main() {
     await tester.pumpWidget(await crearApp());
     await tester.pumpAndSettle();
 
-    expect(find.byType(PantallaCuaderno), findsOneWidget);
-    expect(find.byType(PantallaConfiguracionInicial), findsNothing);
+    expect(find.byType(PantallaBienvenidaNombre), findsOneWidget);
+    expect(find.byType(PantallaCuaderno), findsNothing);
+    expect(find.text('¿Cómo te llamas?'), findsOneWidget);
   });
 
   testWidgets(
-      'al elegir un idioma se persiste y el ValueNotifier global se actualiza',
+      'con idioma + perfil ya creado → salta directo a la pantalla principal',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.elcuaderno.idioma_app': 'es',
+      'nuevoser.elcuaderno.perfil_activo_id': 'maren',
+      'nuevoser.elcuaderno.perfiles_lista': '',
+    });
+    // Pre-poblar la lista de perfiles + el nombre del perfil activo.
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('nuevoser.elcuaderno.perfiles_lista', ['maren']);
+    await prefs.setString('nuevoser.elcuaderno.perfil.maren.nombre_jugador', 'Maren');
+    localeAppElCuaderno.value = const Locale('es');
+    nombrePerfilElCuaderno.value = 'Maren';
+
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    await tester.pumpWidget(await crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCuaderno), findsOneWidget);
+    expect(find.byType(PantallaConfiguracionInicial), findsNothing);
+    expect(find.byType(PantallaBienvenidaNombre), findsNothing);
+  });
+
+  testWidgets(
+      'al elegir un idioma se persiste y se muestra la pantalla de bienvenida',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     await tester.pumpWidget(await crearApp());
@@ -92,10 +122,43 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(localeAppElCuaderno.value, const Locale('eu'));
-    expect(find.byType(PantallaCuaderno), findsOneWidget);
+    // Tras elegir idioma, NO salta a PantallaCuaderno: queda en bienvenida.
+    expect(find.byType(PantallaBienvenidaNombre), findsOneWidget);
 
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getString('nuevoser.elcuaderno.idioma_app'), 'eu');
+  });
+
+  testWidgets(
+      'al confirmar nombre se crea el perfil y se muestra PantallaCuaderno',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.elcuaderno.idioma_app': 'es',
+    });
+    localeAppElCuaderno.value = const Locale('es');
+
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    await tester.pumpWidget(await crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaBienvenidaNombre), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Maren');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+
+    expect(nombrePerfilElCuaderno.value, 'Maren');
+    expect(find.byType(PantallaCuaderno), findsOneWidget);
+
+    final prefs = await SharedPreferences.getInstance();
+    final perfiles = prefs.getStringList('nuevoser.elcuaderno.perfiles_lista');
+    expect(perfiles, isNotNull);
+    expect(perfiles, contains('maren'));
+    expect(
+      prefs.getString('nuevoser.elcuaderno.perfil.maren.nombre_jugador'),
+      'Maren',
+    );
   });
 
   test(

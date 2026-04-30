@@ -190,6 +190,18 @@ class TextosAppCa extends TextosApp {
   String get ajustesBorradoCompleto => 'TODO_CA · Listo. Tu cuaderno está vacío.';
 
   @override
+  String get bienvenidaTitulo => 'TODO_CA · ¿Cómo te llamas?';
+
+  @override
+  String get bienvenidaCuerpo => 'TODO_CA · Tu nombre se queda en este cuaderno. No sale al servidor a menos que tú decidas vincularlo más tarde.';
+
+  @override
+  String get bienvenidaPlaceholderNombre => 'TODO_CA · tu nombre';
+
+  @override
+  String get bienvenidaBotonContinuar => 'TODO_CA · Continuar';
+
+  @override
   String get ajustesSyncObsTitulo => 'TODO_CA · Sincronizar mis observaciones';
 
   @override
