@@ -31,6 +31,8 @@ class EscenasArco1 {
     elPrimerApunte,
     laMeriendaConEider,
     elAtico,
+    conversacionConElPadre,
+    naiaPregunta,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -90,6 +92,12 @@ class EscenasArco1 {
     'escena_1_b_vista': {
       'visita_atico_andres',
       'arco_1_completado',
+    },
+    'escena_1_b1_vista': {
+      'conversacion_con_padre_compartida',
+    },
+    'escena_1_c_vista': {
+      'naia_humanizo_huesos',
     },
   };
 
@@ -1201,6 +1209,194 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'BAJAR'),
+    ],
+  );
+
+  /// **1.B.1 — Conversación con el padre** (doc 07 §1.B.1).
+  ///
+  /// Día de Archivo, ~10-12 días después de cerrar la Estación 2.
+  /// Antonio en la cocina, leyendo. Maren entra a por agua.
+  /// Antonio le devuelve a Maren la frase que ella misma había
+  /// dicho a Naia ("el oficio cuenta las cosas como pasaron") y
+  /// la corrige: no es como pasaron, es como pueden haber pasado,
+  /// con la mejor honestidad posible. Maren llega sola a esa
+  /// formulación. Antonio asiente y vuelve al libro.
+  ///
+  /// Pedagógicamente clave: la diferencia entre realismo ingenuo
+  /// ("contar cómo pasaron") y oficio histórico ("contar cómo
+  /// pueden haber pasado, con la mejor honestidad posible") la
+  /// articula la propia Cronista. Es la primera vez que Maren
+  /// pone palabras al núcleo epistémico del oficio. Antonio le
+  /// hace de espejo, no le da la respuesta.
+  ///
+  /// **Anclada a la Estación 2**: requiere `brecha_1_2_completada`.
+  /// Hoy esa Brecha no está implementada en el catálogo del juego,
+  /// así que esta escena queda latente — el orquestador no la
+  /// disparará hasta que entre la 1.2 al catálogo. Mismo patrón
+  /// que la 1.1.7 mantuvo durante la fase del esqueleto antes de
+  /// que existiera la Brecha 1.1 jugable.
+  ///
+  /// Sin contenido histórico que sustituir — el guion no nombra
+  /// fechas, lugares ni autores concretos.
+  static const EscenaCinematica conversacionConElPadre = EscenaCinematica(
+    id: '1.B.1',
+    titulo: 'Conversación con el padre',
+    flagDeSalida: 'escena_1_b1_vista',
+    flagsRequeridos: {'brecha_1_2_completada'},
+    ambiente: AmbienteArchivo.cocinaCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Día de Archivo, dos semanas después de la Estación 2. '
+            'Tarde tranquila. Antonio en la cocina, leyendo en la '
+            'mesa con un vaso de agua a un lado. Maren entra a por '
+            'agua de la nevera.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: '¿Cómo va?'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Bien.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 1),
+        textoLectura: 'Antonio no levanta la vista del libro.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'He estado pensando en lo que dijiste.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué dije?'),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Lo de que el oficio cuenta las cosas como pasaron.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 1),
+        textoLectura: 'Antonio cierra el libro.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'No es como pasaron.',
+      ),
+
+      // El silencio aquí es trabajo. Maren tiene que llegar sola.
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Ya. Ya lo sé.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: '¿Qué es entonces?',
+      ),
+
+      // Pausa larga. Maren articula la postura epistémica del oficio.
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Como pueden haber pasado, con la mejor honestidad posible.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Antonio asiente despacio.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: 'Mejor.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Vuelve a abrir el libro. Maren bebe el agua. Sale de la '
+            'cocina. La conversación cabe en un minuto.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'SALIR DE LA COCINA'),
+    ],
+  );
+
+  /// **1.C — Naia pregunta** (doc 07 §1.C).
+  ///
+  /// Días después de cerrar la Estación 3, antes de la 4. Cena
+  /// familiar — pochas. Naia, 8 años, le pregunta a Maren si los
+  /// huesos viejos le dan miedo. Maren contesta que no. Naia
+  /// pregunta por qué. Maren responde, tras una pausa larga,
+  /// "porque eran personas". Naia dice que a ella sí le darían
+  /// miedo. Maren contesta "está bien".
+  ///
+  /// Pedagógicamente clave: la humanización del objeto histórico.
+  /// Maren no le explica a Naia qué es el oficio — le devuelve la
+  /// pregunta a un nivel donde Naia puede entrar (los huesos eran
+  /// personas) y luego valida su miedo sin corregirlo. Es la
+  /// segunda vez en el arco que Maren ejerce algo parecido a una
+  /// pedagogía propia.
+  ///
+  /// **Anclada a la Estación 3**: requiere `brecha_1_3_completada`.
+  /// La Brecha 1.3 (cueva del Pirineo) no está implementada en el
+  /// catálogo del juego todavía, así que esta escena queda latente.
+  /// Mismo patrón que la 1.B.1.
+  ///
+  /// Sin contenido histórico concreto que sustituir.
+  static const EscenaCinematica naiaPregunta = EscenaCinematica(
+    id: '1.C',
+    titulo: 'Naia pregunta',
+    flagDeSalida: 'escena_1_c_vista',
+    flagsRequeridos: {'brecha_1_3_completada'},
+    ambiente: AmbienteArchivo.cocinaCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Casa. Cena familiar. Plato de pochas. Maren, Iratxe, '
+            'Antonio y Naia alrededor de la mesa. Han pasado unos '
+            'días desde la Estación 3 — la cueva.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.naia, texto: 'Maren.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué?'),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: '¿Tú has visto huesos viejos?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Te dan miedo?'),
+
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Por qué?'),
+
+      // Pausa más larga. Maren llega a la respuesta humanizadora.
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Porque eran personas.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Naia se queda quieta. Después come. Después:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: 'Yo creo que a mí sí me darían miedo.',
+      ),
+
+      // Maren valida sin corregir. Pedagogía propia.
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Está bien.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Iratxe y Antonio se miran un segundo. Antonio sonríe '
+            'pequeñísimo. Siguen comiendo.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'TERMINAR LA CENA'),
     ],
   );
 }

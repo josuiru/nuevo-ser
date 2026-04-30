@@ -160,6 +160,60 @@ void main() {
     });
   });
 
+  group('EscenasArco1.conversacionConElPadre (1.B.1)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.conversacionConElPadre.id, '1.B.1');
+      expect(
+        EscenasArco1.conversacionConElPadre.flagDeSalida,
+        'escena_1_b1_vista',
+      );
+      expect(
+        EscenasArco1.conversacionConElPadre.flagsRequeridos,
+        {'brecha_1_2_completada'},
+        reason: '1.B.1 requiere haber cerrado la Estación 2 — queda '
+            'latente hasta que entre la Brecha 1.2 al catálogo',
+      );
+    });
+
+    test('viaja con ambiente cocina de casa de Maren', () {
+      expect(
+        EscenasArco1.conversacionConElPadre.ambiente,
+        same(AmbienteArchivo.cocinaCasaMaren),
+      );
+    });
+
+    test('cierra como amable — al salir de la cocina termina la sesión',
+        () {
+      final ultimoPlano = EscenasArco1.conversacionConElPadre.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.naiaPregunta (1.C)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.naiaPregunta.id, '1.C');
+      expect(EscenasArco1.naiaPregunta.flagDeSalida, 'escena_1_c_vista');
+      expect(
+        EscenasArco1.naiaPregunta.flagsRequeridos,
+        {'brecha_1_3_completada'},
+        reason: '1.C requiere haber cerrado la Estación 3 (cueva) — '
+            'queda latente hasta que entre la Brecha 1.3 al catálogo',
+      );
+    });
+
+    test('viaja con ambiente cocina de casa de Maren — cena familiar', () {
+      expect(
+        EscenasArco1.naiaPregunta.ambiente,
+        same(AmbienteArchivo.cocinaCasaMaren),
+      );
+    });
+
+    test('cierra como amable — al terminar la cena termina la sesión', () {
+      final ultimoPlano = EscenasArco1.naiaPregunta.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('flagsDeCierrePorEscena', () {
     test('1.0.1 cierra con met_begona, met_isaura, evaluation_passed y '
         'accepted_aspirante', () {
@@ -238,8 +292,14 @@ void main() {
       final flagsProducibles = <String>{};
       // Las Brechas catalogadas también producen su flag de cierre.
       // Lo añadimos al pool inicial para que escenas posteriores a
-      // una Brecha puedan referenciarlo libremente.
+      // una Brecha puedan referenciarlo libremente. Hoy sólo está
+      // implementada la Brecha 1.1 en el catálogo, pero el doc 07
+      // prevé 1.2/1.3/1.4 — las cinemáticas posteriores (1.B.1, 1.C)
+      // las anclan ya, lo que las deja latentes hasta que las
+      // Brechas correspondientes entren al catálogo.
       flagsProducibles.add('brecha_1_1_completada');
+      flagsProducibles.add('brecha_1_2_completada');
+      flagsProducibles.add('brecha_1_3_completada');
 
       var primera = true;
       for (final escena in EscenasArco1.todas) {

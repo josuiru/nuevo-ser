@@ -132,6 +132,22 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Cinemáticas latentes 1.B.1 y 1.C — ancladas a Brechas no implementadas (F8.2)
+
+**Tracker doc 17**: pendiente de revisión humana.
+
+**Guion canónico (doc 07)**:
+- 1.B.1 "Conversación con el padre" — cocina familiar, ~10-12 días tras cerrar la Estación 2. Antonio le devuelve a Maren su propia frase ("el oficio cuenta las cosas como pasaron") corregida ("no es como pasaron"); Maren llega sola a "como pueden haber pasado, con la mejor honestidad posible".
+- 1.C "Naia pregunta" — cena familiar tras la Estación 3. Naia pregunta a Maren si los huesos viejos le dan miedo. Maren contesta "porque eran personas".
+
+**Estado**: implementadas en `EscenasArco1` con `flagsRequeridos: {brecha_1_2_completada}` y `{brecha_1_3_completada}` respectivamente. Como las Brechas 1.2 y 1.3 no están todavía en el catálogo del juego, **el orquestador no las disparará** — quedan latentes en el catálogo, listas para activarse automáticamente cuando entren las Brechas correspondientes. Mismo patrón que mantuvo la 1.1.7 mientras la Brecha 1.1 era esqueleto.
+
+**Sin sustituciones diegéticas aplicadas**: las dos cinemáticas no nombran fechas, lugares, autores ni dataciones específicas — el contenido del guion canónico se preserva tal cual.
+
+**Pendiente de revisión humana**: confirmación de que el tono de Maren articulando la postura epistémica del oficio en 1.B.1 ("como pueden haber pasado, con la mejor honestidad posible") encaja con la voz fijada en doc 04, y de que la respuesta humanizadora a Naia en 1.C ("eran personas") no entra en colisión con la prohibición de afirmaciones sobre vivencias o creencias de poblaciones prehistóricas — la frase humaniza al sujeto histórico sin afirmar nada sobre cómo se sentían respecto a su muerte.
+
+---
+
 ## Cinemáticas 1.A y 1.B — sustituciones diegéticas aplicadas (F8.1)
 
 **Tracker doc 17**: pendiente de revisión humana.
