@@ -157,6 +157,56 @@ void main() {
       expect(redLlamada, isFalse);
     });
 
+    test('sin regionCode explícito y con coordenadas: deriva NUTS-3', () async {
+      late http.Request capturada;
+      final mock = MockClient((peticion) async {
+        capturada = peticion;
+        return http.Response(
+          jsonEncode({
+            'id': 1,
+            'uuid': '7f3c0e26-94e8-4b3a-9a2b-d7c1d5e2f834',
+            'idempotent': false,
+          }),
+          201,
+        );
+      });
+      final cliente = crear(cliente: mock, token: 'TOKEN');
+      // Pamplona — debe normalizarse a ES-NA-PA sin que las coords
+      // crucen red.
+      final observacionConCoords = observacionEjemplo().copyWith(
+        dondeCoordenadas: const Coordenadas(lat: 42.8125, lng: -1.6458),
+      );
+      await cliente.crearObservacion(observacionConCoords);
+
+      final cuerpo = jsonDecode(capturada.body) as Map<String, dynamic>;
+      expect(cuerpo['region_code'], 'ES-NA-PA');
+      // Frontera de privacidad: lat/lng nunca cruzan red.
+      expect(cuerpo.containsKey('lat'), isFalse);
+      expect(cuerpo.containsKey('lng'), isFalse);
+      expect(cuerpo.containsKey('dondeCoordenadas'), isFalse);
+      expect(cuerpo.containsKey('coordenadas'), isFalse);
+    });
+
+    test('sin regionCode explícito y sin coordenadas: fallback ES (NUTS-0)',
+        () async {
+      late http.Request capturada;
+      final mock = MockClient((peticion) async {
+        capturada = peticion;
+        return http.Response(
+          jsonEncode({
+            'id': 1,
+            'uuid': '7f3c0e26-94e8-4b3a-9a2b-d7c1d5e2f834',
+            'idempotent': false,
+          }),
+          201,
+        );
+      });
+      final cliente = crear(cliente: mock, token: 'TOKEN');
+      await cliente.crearObservacion(observacionEjemplo());
+      final cuerpo = jsonDecode(capturada.body) as Map<String, dynamic>;
+      expect(cuerpo['region_code'], 'ES');
+    });
+
     test('400 del servidor se traduce a ExcepcionApi con mensaje', () async {
       final mock = MockClient((_) async => http.Response(
             jsonEncode({
@@ -217,6 +267,36 @@ void main() {
 
       expect(respuesta.id, 7);
       expect(respuesta.idempotente, isFalse);
+    });
+
+    test('deriva region_code desde sitSpot.coordenadas si no se pasa', () async {
+      late http.Request capturada;
+      final mock = MockClient((peticion) async {
+        capturada = peticion;
+        return http.Response(
+          jsonEncode({
+            'id': 7,
+            'uuid': '11112222-3333-4444-5555-666677778888',
+            'idempotent': false,
+          }),
+          201,
+        );
+      });
+      final cliente = crear(cliente: mock, token: 'TOKEN');
+      final sitSpotConCoords = SitSpot(
+        id: '11112222-3333-4444-5555-666677778888',
+        nombre: 'Mi banco del parque',
+        dondeNombre: 'Madrid centro',
+        creadoEn: DateTime.utc(2026, 4, 30),
+        // Madrid → ES-MD vía bounding box piloto.
+        coordenadas: const Coordenadas(lat: 40.4168, lng: -3.7038),
+      );
+      await cliente.establecerSitSpot(sitSpotConCoords);
+
+      final cuerpo = jsonDecode(capturada.body) as Map<String, dynamic>;
+      expect(cuerpo['region_code'], 'ES-MD');
+      expect(cuerpo.containsKey('lat'), isFalse);
+      expect(cuerpo.containsKey('lng'), isFalse);
     });
   });
 

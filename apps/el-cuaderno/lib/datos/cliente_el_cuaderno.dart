@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../dominio/geolocalizacion_privacy_first.dart';
 import '../dominio/nivel_confianza.dart';
 import '../dominio/observacion.dart';
 import '../dominio/sit_spot.dart';
@@ -97,15 +98,22 @@ class ClienteElCuaderno {
   /// observación junto al `what_seen_hash`. El servidor responde 201
   /// con id si era nueva, o 200 con id si el UUID ya existía
   /// (idempotente — la cola puede reintentar sin duplicar).
+  ///
+  /// Si [regionCode] no se pasa, se deriva privacy-first con
+  /// [normalizarRegion] desde `observacion.dondeCoordenadas` cuando
+  /// estén disponibles; las coords nunca cruzan red — solo el código
+  /// NUTS resultante. Sin coordenadas y sin region explícito, fallback
+  /// `'ES'` (NUTS-0 España).
   Future<RespuestaObservacion> crearObservacion(
     Observacion observacion, {
-    required String regionCode,
+    String? regionCode,
   }) async {
+    final regionEfectivo = regionCode ?? _derivarRegion(observacion.dondeCoordenadas);
     final cuerpo = <String, Object?>{
       'uuid': observacion.id,
       'occurred_at': observacion.cuandoOcurrio.toUtc().toIso8601String(),
       'place_name': observacion.dondeNombre,
-      'region_code': regionCode,
+      'region_code': regionEfectivo,
       'what_seen_hash': hashearWhatSeen(observacion.queVio),
       'proposed_id': observacion.creesQueEs ?? '',
       'confidence': _confianzaServidor(observacion.confianza),
@@ -146,10 +154,15 @@ class ClienteElCuaderno {
   /// POST `/el-cuaderno/sit-spot`. Idempotente por UUID. El servidor
   /// jubila automáticamente el sit spot anterior del niño cuando llega
   /// uno nuevo (doc 13 §2.6).
+  ///
+  /// Si [regionCode] no se pasa, se deriva privacy-first desde
+  /// `sitSpot.coordenadas` con [normalizarRegion]; sin coords, fallback
+  /// `'ES'`.
   Future<RespuestaSitSpot> establecerSitSpot(
     SitSpot sitSpot, {
-    required String regionCode,
+    String? regionCode,
   }) async {
+    final regionEfectivo = regionCode ?? _derivarRegion(sitSpot.coordenadas);
     final respuesta = await _cliente
         .post(
           _uri('/el-cuaderno/sit-spot'),
@@ -157,7 +170,7 @@ class ClienteElCuaderno {
           body: jsonEncode({
             'uuid': sitSpot.id,
             'name': sitSpot.nombre,
-            'region_code': regionCode,
+            'region_code': regionEfectivo,
           }),
         )
         .timeout(tiempoEspera);
@@ -215,6 +228,14 @@ class ClienteElCuaderno {
       // Cuerpo no parseable; mensaje genérico ya colocado.
     }
     throw ExcepcionApi(codigo: respuesta.statusCode, mensaje: mensaje);
+  }
+
+  /// Deriva el `region_code` NUTS desde coordenadas locales sin que
+  /// estas crucen la red. Si no hay coords, devuelve `'ES'` (NUTS-0)
+  /// para que el backend tenga al menos el granulado país.
+  static String _derivarRegion(Coordenadas? coordenadas) {
+    if (coordenadas == null) return 'ES';
+    return normalizarRegion(coordenadas);
   }
 
   static String _confianzaServidor(NivelConfianza confianza) {
