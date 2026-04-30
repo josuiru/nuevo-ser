@@ -237,6 +237,39 @@ void main() {
   );
 
   testWidgets(
+    'editar: abre PantallaEditarObservacion y refresca al volver',
+    (tester) async {
+      final obs = crear(id: 'obs-1', queVio: 'texto original');
+      await repositorio.guardarObservacion(obs);
+      await bombear(tester, obs);
+
+      expect(find.text('texto original'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('opciones de la página'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('editar este registro'));
+      await tester.pumpAndSettle();
+
+      // Estamos en PantallaEditarObservacion: AppBar dice "editar página".
+      expect(find.text('editar página'), findsOneWidget);
+
+      // Editamos queVio y guardamos.
+      await tester.enterText(
+        find.widgetWithText(TextField, 'texto original'),
+        'texto corregido',
+      );
+      await tester.pump();
+      await tester.tap(find.text('guardar cambios'));
+      await tester.pumpAndSettle();
+
+      // De vuelta al detalle: muestra el queVio actualizado.
+      expect(find.text('Página del cuaderno'), findsOneWidget);
+      expect(find.text('texto corregido'), findsOneWidget);
+      expect(find.text('texto original'), findsNothing);
+    },
+  );
+
+  testWidgets(
     'borrar: confirmar elimina la observación del repo y cierra la pantalla',
     (tester) async {
       final obs = crear(id: 'obs-1', queVio: 'esto se borra');

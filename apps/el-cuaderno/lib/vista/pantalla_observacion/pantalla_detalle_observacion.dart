@@ -10,6 +10,7 @@ import '../../dominio/sit_spot.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'pantalla_editar_observacion.dart';
 
 /// Constructor de la miniatura para foto/dibujo. Por defecto
 /// `Image.file`. Tests pueden inyectar un `Container()` para evitar el
@@ -55,6 +56,7 @@ class PantallaDetalleObservacion extends StatefulWidget {
 
 class _EstadoPantallaDetalleObservacion
     extends State<PantallaDetalleObservacion> {
+  late Observacion _observacion;
   Misterio? _misterio;
   SitSpot? _sitSpot;
   String? _rutaFotoAbsoluta;
@@ -64,7 +66,25 @@ class _EstadoPantallaDetalleObservacion
   @override
   void initState() {
     super.initState();
+    _observacion = widget.observacion;
     _resolverDependencias();
+  }
+
+  Future<void> _editar() async {
+    final actualizada = await Navigator.of(context).push<Observacion>(
+      MaterialPageRoute(
+        builder: (_) => PantallaEditarObservacion(
+          repositorio: widget.repositorio,
+          observacion: _observacion,
+        ),
+      ),
+    );
+    if (actualizada == null || !mounted) return;
+    setState(() {
+      _observacion = actualizada;
+      _cargando = true;
+    });
+    await _resolverDependencias();
   }
 
   Future<void> _confirmarBorrar() async {
@@ -90,9 +110,9 @@ class _EstadoPantallaDetalleObservacion
       ),
     );
     if (confirmar != true || !mounted) return;
-    await widget.repositorio.borrarObservacion(widget.observacion.id);
+    await widget.repositorio.borrarObservacion(_observacion.id);
     final almacenador = widget.almacenadorMedios;
-    final obs = widget.observacion;
+    final obs = _observacion;
     if (almacenador != null) {
       if (obs.fotoRutaLocal != null) {
         await almacenador.borrar(obs.fotoRutaLocal!);
@@ -106,7 +126,7 @@ class _EstadoPantallaDetalleObservacion
   }
 
   Future<void> _resolverDependencias() async {
-    final obs = widget.observacion;
+    final obs = _observacion;
     Misterio? misterio;
     SitSpot? sitSpot;
     String? rutaFoto;
@@ -167,7 +187,7 @@ class _EstadoPantallaDetalleObservacion
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
     final textos = TextosApp.of(context);
-    final obs = widget.observacion;
+    final obs = _observacion;
 
     return Scaffold(
       appBar: AppBar(
@@ -177,9 +197,14 @@ class _EstadoPantallaDetalleObservacion
             tooltip: 'opciones de la página',
             icon: const Icon(Icons.more_vert),
             onSelected: (valor) {
+              if (valor == 'editar') _editar();
               if (valor == 'borrar') _confirmarBorrar();
             },
             itemBuilder: (_) => const [
+              PopupMenuItem<String>(
+                value: 'editar',
+                child: Text('editar este registro'),
+              ),
               PopupMenuItem<String>(
                 value: 'borrar',
                 child: Text('borrar este registro'),
