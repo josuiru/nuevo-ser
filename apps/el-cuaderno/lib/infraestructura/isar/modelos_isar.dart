@@ -205,6 +205,17 @@ class MisterioIsar {
 
   DateTime? retiradoEn;
 
+  /// Estaciones aplicables — strings del wire. Lista vacía = todo el
+  /// año.
+  List<String> seasons = const <String>[];
+
+  /// Prefijos NUTS aplicables — null en Isar se mapea a lista vacía;
+  /// para distinguir "global" (regions=null) de "lista vacía no
+  /// significativa", el dominio interpreta lista vacía como null.
+  /// El catálogo seminal nunca usa lista no-vacía vacía; la
+  /// equivalencia es segura.
+  List<String> regions = const <String>[];
+
   static MisterioIsar desdeDominio(Misterio misterio) {
     return MisterioIsar()
       ..idDominio = misterio.id
@@ -213,7 +224,9 @@ class MisterioIsar {
       ..estado = NivelConfianzaIsar.desdeDominio(misterio.estado)
       ..abierto = misterio.abierto
       ..observacionesIds = List.of(misterio.observacionesIds)
-      ..retiradoEn = misterio.retiradoEn;
+      ..retiradoEn = misterio.retiradoEn
+      ..seasons = List.of(misterio.seasons)
+      ..regions = List.of(misterio.regions ?? const <String>[]);
   }
 
   Misterio aDominio() {
@@ -225,6 +238,8 @@ class MisterioIsar {
       abierto: abierto,
       observacionesIds: List.of(observacionesIds),
       retiradoEn: retiradoEn,
+      seasons: List.of(seasons),
+      regions: regions.isEmpty ? null : List.of(regions),
     );
   }
 }

@@ -21,6 +21,8 @@ class Misterio {
     required this.abierto,
     this.observacionesIds = const <String>[],
     this.retiradoEn,
+    this.seasons = const <String>[],
+    this.regions,
   }) {
     if (pregunta.isEmpty) {
       throw ArgumentError.value(
@@ -71,6 +73,20 @@ class Misterio {
   /// versión del catálogo).
   final DateTime? retiradoEn;
 
+  /// Estaciones en las que el Misterio aplica, como strings del wire
+  /// (`'primavera'`, `'verano'`, `'otono'`, `'invierno'`). Lista vacía
+  /// significa **todo el año** — Misterios atemporales (líquenes,
+  /// hormigas, encina vieja). Es **dato del catálogo**, no estado del
+  /// niño; el cliente sólo lo lee para filtrar qué Misterios se
+  /// muestran abiertos según el contexto fenológico actual.
+  final List<String> seasons;
+
+  /// Prefijos NUTS de las regiones donde el Misterio aplica. `null` o
+  /// lista vacía significa **global** (cualquier región). El shorthand
+  /// `'ES-*'` es sinónimo de `'ES'` (España entera). Es **dato del
+  /// catálogo**, no estado del niño.
+  final List<String>? regions;
+
   bool get estaVigente => retiradoEn == null;
 
   Misterio copyWith({
@@ -81,6 +97,8 @@ class Misterio {
     bool? abierto,
     List<String>? observacionesIds,
     DateTime? retiradoEn,
+    List<String>? seasons,
+    List<String>? regions,
   }) {
     return Misterio(
       id: id ?? this.id,
@@ -90,6 +108,8 @@ class Misterio {
       abierto: abierto ?? this.abierto,
       observacionesIds: observacionesIds ?? this.observacionesIds,
       retiradoEn: retiradoEn ?? this.retiradoEn,
+      seasons: seasons ?? this.seasons,
+      regions: regions ?? this.regions,
     );
   }
 
@@ -101,6 +121,8 @@ class Misterio {
         'abierto': abierto,
         'observacionesIds': observacionesIds,
         'retiradoEn': retiradoEn?.toIso8601String(),
+        'seasons': seasons,
+        if (regions != null) 'regions': regions,
       };
 
   static Misterio fromJson(Map<String, dynamic> json) {
@@ -115,6 +137,11 @@ class Misterio {
       retiradoEn: json['retiradoEn'] == null
           ? null
           : DateTime.parse(json['retiradoEn'] as String),
+      seasons: (json['seasons'] as List<dynamic>? ?? const [])
+          .cast<String>(),
+      regions: json['regions'] == null
+          ? null
+          : (json['regions'] as List<dynamic>).cast<String>(),
     );
   }
 
@@ -133,6 +160,17 @@ class Misterio {
         return false;
       }
     }
+    if (other.seasons.length != seasons.length) return false;
+    for (var indice = 0; indice < seasons.length; indice++) {
+      if (other.seasons[indice] != seasons[indice]) return false;
+    }
+    if ((other.regions == null) != (regions == null)) return false;
+    if (regions != null) {
+      if (other.regions!.length != regions!.length) return false;
+      for (var indice = 0; indice < regions!.length; indice++) {
+        if (other.regions![indice] != regions![indice]) return false;
+      }
+    }
     return true;
   }
 
@@ -145,5 +183,7 @@ class Misterio {
         abierto,
         Object.hashAll(observacionesIds),
         retiradoEn,
+        Object.hashAll(seasons),
+        regions == null ? null : Object.hashAll(regions!),
       );
 }

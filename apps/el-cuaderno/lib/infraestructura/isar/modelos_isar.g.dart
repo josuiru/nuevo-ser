@@ -4584,10 +4584,20 @@ const MisterioIsarSchema = CollectionSchema(
       name: r'pregunta',
       type: IsarType.string,
     ),
-    r'retiradoEn': PropertySchema(
+    r'regions': PropertySchema(
       id: 6,
+      name: r'regions',
+      type: IsarType.stringList,
+    ),
+    r'retiradoEn': PropertySchema(
+      id: 7,
       name: r'retiradoEn',
       type: IsarType.dateTime,
+    ),
+    r'seasons': PropertySchema(
+      id: 8,
+      name: r'seasons',
+      type: IsarType.stringList,
     )
   },
   estimateSize: _misterioIsarEstimateSize,
@@ -4648,6 +4658,20 @@ int _misterioIsarEstimateSize(
     }
   }
   bytesCount += 3 + object.pregunta.length * 3;
+  bytesCount += 3 + object.regions.length * 3;
+  {
+    for (var i = 0; i < object.regions.length; i++) {
+      final value = object.regions[i];
+      bytesCount += value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.seasons.length * 3;
+  {
+    for (var i = 0; i < object.seasons.length; i++) {
+      final value = object.seasons[i];
+      bytesCount += value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -4663,7 +4687,9 @@ void _misterioIsarSerialize(
   writer.writeString(offsets[3], object.idDominio);
   writer.writeStringList(offsets[4], object.observacionesIds);
   writer.writeString(offsets[5], object.pregunta);
-  writer.writeDateTime(offsets[6], object.retiradoEn);
+  writer.writeStringList(offsets[6], object.regions);
+  writer.writeDateTime(offsets[7], object.retiradoEn);
+  writer.writeStringList(offsets[8], object.seasons);
 }
 
 MisterioIsar _misterioIsarDeserialize(
@@ -4682,7 +4708,9 @@ MisterioIsar _misterioIsarDeserialize(
   object.isarId = id;
   object.observacionesIds = reader.readStringList(offsets[4]) ?? [];
   object.pregunta = reader.readString(offsets[5]);
-  object.retiradoEn = reader.readDateTimeOrNull(offsets[6]);
+  object.regions = reader.readStringList(offsets[6]) ?? [];
+  object.retiradoEn = reader.readDateTimeOrNull(offsets[7]);
+  object.seasons = reader.readStringList(offsets[8]) ?? [];
   return object;
 }
 
@@ -4708,7 +4736,11 @@ P _misterioIsarDeserializeProp<P>(
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 7:
       return (reader.readDateTimeOrNull(offset)) as P;
+    case 8:
+      return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -5812,6 +5844,231 @@ extension MisterioIsarQueryFilter
   }
 
   QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'regions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'regions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'regions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'regions',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'regions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'regions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'regions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'regions',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'regions',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'regions',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'regions',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'regions',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'regions',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'regions',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'regions',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      regionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'regions',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
       retiradoEnIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -5882,6 +6139,231 @@ extension MisterioIsarQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'seasons',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'seasons',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'seasons',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'seasons',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'seasons',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'seasons',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'seasons',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'seasons',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'seasons',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'seasons',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'seasons',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'seasons',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'seasons',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'seasons',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'seasons',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      seasonsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'seasons',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 }
@@ -6104,9 +6586,21 @@ extension MisterioIsarQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MisterioIsar, MisterioIsar, QDistinct> distinctByRegions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'regions');
+    });
+  }
+
   QueryBuilder<MisterioIsar, MisterioIsar, QDistinct> distinctByRetiradoEn() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'retiradoEn');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QDistinct> distinctBySeasons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'seasons');
     });
   }
 }
@@ -6158,9 +6652,21 @@ extension MisterioIsarQueryProperty
     });
   }
 
+  QueryBuilder<MisterioIsar, List<String>, QQueryOperations> regionsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'regions');
+    });
+  }
+
   QueryBuilder<MisterioIsar, DateTime?, QQueryOperations> retiradoEnProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'retiradoEn');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, List<String>, QQueryOperations> seasonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'seasons');
     });
   }
 }

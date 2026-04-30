@@ -11,10 +11,20 @@ void main() {
   late RepositorioMemoria repositorio;
   late EstadoCuaderno estado;
 
+  // Fecha por defecto: 2026-05-01 (primavera). Tests deterministas
+  // contra el filtrado fenológico que aplica `EstadoCuaderno`. Los
+  // tests que necesitan otra estación reconstruyen `estado` antes de
+  // bombear con un proveedor distinto (ver el bloque de "pestaña
+  // Misterios").
+  DateTime ahoraPrimavera() => DateTime(2026, 5, 1);
+
   setUp(() async {
     repositorio = RepositorioMemoria();
     await sembrarDatosDesarrollo(repositorio);
-    estado = EstadoCuaderno(repositorio: repositorio);
+    estado = EstadoCuaderno(
+      repositorio: repositorio,
+      proveedorAhora: ahoraPrimavera,
+    );
   });
 
   tearDown(() {
@@ -218,6 +228,16 @@ void main() {
   testWidgets(
     'pestaña Misterios del bottom nav lista todos los Misterios abiertos',
     (tester) async {
+      // Las golondrinas (seasons=[verano, otono]) son uno de los 5
+      // abiertos del seed; en primavera se filtrarían fuera. Para que
+      // este test compruebe el caso interesante (Misterios abiertos
+      // que NO caben en el top-3 del home) lo bombeamos con una fecha
+      // de otoño donde todos los abiertos del seed aplican.
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: () => DateTime(2026, 10, 15),
+      );
       await bombearPantalla(tester);
       // El seed deja 5 Misterios abiertos. El home muestra .take(3)
       // por orden alfabético: los tres primeros (lluvia, dos pájaros,
@@ -252,6 +272,13 @@ void main() {
   testWidgets(
     'pestaña Misterios: pulsar una tarjeta abre PantallaPaginaMisterio',
     (tester) async {
+      // Igual que el test anterior: forzamos otoño para que las
+      // golondrinas pasen el filtro fenológico.
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: () => DateTime(2026, 10, 15),
+      );
       await bombearPantalla(tester);
       await tester.tap(find.text('misterios'));
       await tester.pumpAndSettle();
@@ -329,6 +356,41 @@ void main() {
       expect(
         find.textContaining(
           'todavía no has anotado nada',
+          skipOffstage: false,
+        ),
+        findsAtLeastNWidgets(1),
+      );
+    },
+  );
+
+  testWidgets(
+    'filtrado fenológico: en primavera las golondrinas (verano+otoño) '
+    'no aparecen',
+    (tester) async {
+      // setUp ya construye `estado` con proveedor de primavera.
+      await bombearPantalla(tester);
+      expect(
+        find.text(
+          '¿Cuándo se fueron las golondrinas de tu barrio?',
+          skipOffstage: false,
+        ),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'filtrado fenológico: en otoño las golondrinas sí aparecen',
+    (tester) async {
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: () => DateTime(2026, 10, 15),
+      );
+      await bombearPantalla(tester);
+      expect(
+        find.text(
+          '¿Cuándo se fueron las golondrinas de tu barrio?',
           skipOffstage: false,
         ),
         findsAtLeastNWidgets(1),

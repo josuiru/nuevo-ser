@@ -140,6 +140,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'dejaste de verlas?',
       estado: NivelConfianza.hipotesisActiva,
       abierto: true,
+      seasons: const ['verano', 'otono'],
     ),
     Misterio(
       id: 'seed-misterio-primera-hoja',
@@ -152,6 +153,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'cuando empieza?',
       estado: NivelConfianza.consenso,
       abierto: false,
+      seasons: const ['otono'],
     ),
     Misterio(
       id: 'seed-misterio-primera-flor',
@@ -163,6 +165,7 @@ List<Misterio> _construirCatalogoSeminal() {
           '¿Cuál es la primera que ves florecer este año?',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['invierno', 'primavera'],
     ),
     Misterio(
       id: 'seed-misterio-cigarras-fin',
@@ -174,6 +177,18 @@ List<Misterio> _construirCatalogoSeminal() {
           'oíste, ¿sabes si en tu zona hay cigarras?',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['verano'],
+      regions: const [
+        'ES-AN',
+        'ES-EX',
+        'ES-MD',
+        'ES-CM',
+        'ES-CL',
+        'ES-CT',
+        'ES-VC',
+        'ES-MU',
+        'ES-AR',
+      ],
     ),
     Misterio(
       id: 'seed-misterio-petirrojo',
@@ -185,6 +200,7 @@ List<Misterio> _construirCatalogoSeminal() {
           '¿Cuándo viste el primero este año?',
       estado: NivelConfianza.consenso,
       abierto: false,
+      seasons: const ['otono', 'invierno'],
     ),
     Misterio(
       id: 'seed-misterio-polinizadores',
@@ -196,6 +212,7 @@ List<Misterio> _construirCatalogoSeminal() {
           '¿Quién viene? ¿Cuántos tipos distintos cuentas?',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['primavera', 'verano', 'otono'],
     ),
     Misterio(
       id: 'seed-misterio-liquenes',
@@ -219,6 +236,7 @@ List<Misterio> _construirCatalogoSeminal() {
           '¿Qué encuentras? ¿Por qué crees que salen ahora y no antes?',
       estado: NivelConfianza.consenso,
       abierto: true,
+      seasons: const ['primavera', 'otono'],
     ),
     Misterio(
       id: 'seed-misterio-hormigas-arbol',
@@ -231,6 +249,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'varios días. Propón hipótesis y vuelve a comprobar.',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['primavera', 'verano', 'otono'],
     ),
     Misterio(
       id: 'seed-misterio-aves-suelo-ramas',
@@ -267,6 +286,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'las identifiques rápido.',
       estado: NivelConfianza.consenso,
       abierto: false,
+      seasons: const ['primavera', 'verano'],
     ),
     Misterio(
       id: 'seed-misterio-platano',
@@ -292,6 +312,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'vez que pases por agua.',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['primavera', 'verano', 'otono'],
     ),
     Misterio(
       id: 'seed-misterio-flor-rara',
@@ -306,6 +327,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'respuesta única.',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['primavera', 'verano'],
     ),
     Misterio(
       id: 'seed-misterio-hormigas-sendero',
@@ -318,6 +340,17 @@ List<Misterio> _construirCatalogoSeminal() {
           'rodeas?',
       estado: NivelConfianza.consenso,
       abierto: false,
+      regions: const [
+        'ES-AN',
+        'ES-EX',
+        'ES-CL',
+        'ES-CM',
+        'ES-MD',
+        'ES-VC',
+        'ES-MU',
+        'ES-AR',
+        'ES-CT',
+      ],
     ),
     Misterio(
       id: 'seed-misterio-encina-vieja',
@@ -341,6 +374,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'oyes? ¿De dónde viene?',
       estado: NivelConfianza.consenso,
       abierto: false,
+      seasons: const ['otono', 'invierno'],
     ),
     Misterio(
       id: 'seed-misterio-polillas-farolas',
@@ -354,6 +388,7 @@ List<Misterio> _construirCatalogoSeminal() {
           'contarlas exactamente?',
       estado: NivelConfianza.hipotesisActiva,
       abierto: false,
+      seasons: const ['verano', 'otono'],
     ),
   ];
 }
