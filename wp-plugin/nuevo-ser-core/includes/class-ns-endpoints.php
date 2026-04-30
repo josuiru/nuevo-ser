@@ -366,7 +366,7 @@ class NS_Endpoints {
 			);
 		}
 		$carga = NS_JWT::validar( $token );
-		if ( ! $carga || ! isset( $carga['nino_id'] ) ) {
+		if ( ! $carga || 'nino' !== NS_JWT::tipo_de_carga( $carga ) || ! isset( $carga['nino_id'] ) ) {
 			return new WP_Error(
 				'uroto_token_invalido',
 				'Token no válido o expirado.',
@@ -374,6 +374,45 @@ class NS_Endpoints {
 			);
 		}
 		$request->set_param( '_nino_id', (int) $carga['nino_id'] );
+		return true;
+	}
+
+	/**
+	 * Permission callback para endpoints que requieren un JWT de
+	 * profesor (`tipo='profesor'`). Adjunta `_user_id` al request.
+	 */
+	public static function permiso_jwt_profesor( WP_REST_Request $request ) {
+		return self::permiso_jwt_adulto( $request, 'profesor' );
+	}
+
+	/**
+	 * Permission callback para endpoints que requieren un JWT de
+	 * cuidador (`tipo='cuidador'`). Adjunta `_user_id` al request.
+	 */
+	public static function permiso_jwt_cuidador( WP_REST_Request $request ) {
+		return self::permiso_jwt_adulto( $request, 'cuidador' );
+	}
+
+	private static function permiso_jwt_adulto( WP_REST_Request $request, string $tipo_esperado ) {
+		$token = NS_JWT::leer_token_de_request( $request );
+		if ( ! $token ) {
+			return new WP_Error(
+				'ns_sin_token',
+				'Falta el header Authorization: Bearer.',
+				array( 'status' => 401 )
+			);
+		}
+		$carga = NS_JWT::validar( $token );
+		if ( ! $carga
+			|| $tipo_esperado !== NS_JWT::tipo_de_carga( $carga )
+			|| ! isset( $carga['user_id'] ) ) {
+			return new WP_Error(
+				'ns_token_invalido',
+				'Token no válido para este endpoint.',
+				array( 'status' => 401 )
+			);
+		}
+		$request->set_param( '_user_id', (int) $carga['user_id'] );
 		return true;
 	}
 

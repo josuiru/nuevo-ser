@@ -2,12 +2,17 @@
 /**
  * Firma y validación de JWTs HS256 sin dependencias externas.
  *
- * Formato del payload:
- *   {
- *     "nino_id": 42,
- *     "iat": 1713...,
- *     "exp": 1713... (iat + 30 días por defecto)
- *   }
+ * Formato del payload (tres variantes):
+ *   - Niño (sin `tipo`, retro-compat con tokens existentes):
+ *       { "nino_id": 42, "iat": ..., "exp": ... }
+ *   - Profesor:
+ *       { "user_id": 7, "tipo": "profesor", "iat": ..., "exp": ... }
+ *   - Cuidador:
+ *       { "user_id": 19, "tipo": "cuidador", "iat": ..., "exp": ... }
+ *
+ * Helpers `tipo_de_carga` y `actor_de_carga` normalizan la lectura
+ * para que los endpoints no tengan que distinguir entre las tres
+ * formas a mano.
  *
  * El secret vive en NS_JWT_SECRET (wp-config.php). Si no está
  * definido, la firma usa un secret derivado de AUTH_KEY — funcional
@@ -74,6 +79,40 @@ class NS_JWT {
 			return null;
 		}
 		return $carga;
+	}
+
+	/**
+	 * Devuelve el `tipo` de la carga útil de un token. Por convención,
+	 * la ausencia del campo `tipo` significa que el token es del niño
+	 * (forma original, retro-compat con tokens emitidos antes de la
+	 * adición de profesor/cuidador). Cualquier valor inesperado de
+	 * `tipo` se devuelve tal cual — el endpoint que lo consuma decide
+	 * si lo acepta.
+	 *
+	 * Tipos canónicos:
+	 *   - 'nino'      (default si falta `tipo`)
+	 *   - 'profesor'
+	 *   - 'cuidador'
+	 */
+	public static function tipo_de_carga( array $carga ): string {
+		if ( ! isset( $carga['tipo'] ) || ! is_string( $carga['tipo'] ) ) {
+			return 'nino';
+		}
+		return $carga['tipo'];
+	}
+
+	/**
+	 * Identificador del actor del token: `nino_id` para tokens del
+	 * niño (sin `tipo` o con `tipo='nino'`); `user_id` para profesor
+	 * o cuidador. Devuelve null si la carga no encaja con ninguna
+	 * forma reconocida — el endpoint debe rechazar el token.
+	 */
+	public static function actor_de_carga( array $carga ): ?int {
+		$tipo = self::tipo_de_carga( $carga );
+		if ( 'nino' === $tipo ) {
+			return isset( $carga['nino_id'] ) ? (int) $carga['nino_id'] : null;
+		}
+		return isset( $carga['user_id'] ) ? (int) $carga['user_id'] : null;
 	}
 
 	/**
