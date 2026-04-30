@@ -106,6 +106,13 @@ class GeneradorDual {
   }) {
     final distractores = <Fraccion>{};
 
+    // Dos distractores con el mismo valor (p. ej. 4/8 y 2/4 ambos =
+    // 1/2) frustran al niño: si elige el equivalente "no oficial" se
+    // marca como fallo aunque matemáticamente acertara. Filtramos por
+    // valor, no por num/den exacto.
+    bool yaHayEquivalentePorValor(Fraccion candidato) =>
+        distractores.any((existente) => existente.esEquivalenteA(candidato));
+
     // Distractor clásico: el error común por operador.
     final trampaClasica = _trampaClasica(sumandoA, sumandoB, operador);
     if (trampaClasica != null &&
@@ -119,25 +126,42 @@ class GeneradorDual {
     if (alternativo != null &&
         !alternativo.esEquivalenteA(correcto) &&
         alternativo.denominador != 0 &&
-        !distractores.any((d) =>
-            d.numerador == alternativo.numerador &&
-            d.denominador == alternativo.denominador)) {
+        !yaHayEquivalentePorValor(alternativo)) {
       distractores.add(alternativo);
     }
 
-    // Completar con perturbaciones del correcto.
-    while (distractores.length < 3) {
+    // Completar con perturbaciones del correcto. Cuando el numerador
+    // del correcto es 1 (caso típico en producto: 1/2 × 1/3 = 1/6) la
+    // perturbación de numerador sola puede agotarse contra las trampas
+    // ya añadidas, así que tras un primer round con ±num cambiamos a
+    // perturbar también el denominador para garantizar progreso.
+    var intentos = 0;
+    while (distractores.length < 3 && intentos < 80) {
+      intentos++;
+      final perturbarNumerador = intentos < 40;
       final deltaNum = _azar.nextInt(4) - 2;
-      final candidato = Fraccion(
-        math.max(1, correcto.numerador + deltaNum),
-        correcto.denominador,
-      );
+      final deltaDen = _azar.nextInt(3) + 1;
+      final nuevoNumerador = perturbarNumerador
+          ? math.max(1, correcto.numerador + deltaNum)
+          : correcto.numerador + 1;
+      final nuevoDenominador = perturbarNumerador
+          ? correcto.denominador
+          : math.max(2, correcto.denominador + deltaDen);
+      final candidato = Fraccion(nuevoNumerador, nuevoDenominador);
       if (candidato.esEquivalenteA(correcto)) continue;
-      if (distractores.any((d) =>
-          d.numerador == candidato.numerador &&
-          d.denominador == candidato.denominador)) {
-        continue;
-      }
+      if (yaHayEquivalentePorValor(candidato)) continue;
+      distractores.add(candidato);
+    }
+
+    // Fallback ultra defensivo — nunca debería dispararse después del
+    // bloque anterior, pero garantiza que el caller siempre obtiene 3.
+    var k = 2;
+    while (distractores.length < 3 && k < 200) {
+      final candidato =
+          Fraccion(correcto.numerador + 1, correcto.denominador + k);
+      k++;
+      if (candidato.esEquivalenteA(correcto)) continue;
+      if (yaHayEquivalentePorValor(candidato)) continue;
       distractores.add(candidato);
     }
 
