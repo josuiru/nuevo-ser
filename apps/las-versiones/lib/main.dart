@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +27,7 @@ import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno.dart';
 import 'vista/pantalla_esqueleto.dart';
+import 'vista/pantalla_login.dart';
 import 'vista/pantalla_mosaico_arco_1.dart';
 import 'vista/pantalla_mosaico_arco_2.dart';
 
@@ -213,12 +217,14 @@ class Orquestador extends StatefulWidget {
 class _OrquestadorState extends State<Orquestador> {
   bool _cargando = true;
   bool _idiomaElegido = false;
+  bool _sesionIniciada = false;
   Set<String> _flagsActivos = const {};
   EscenaCinematica? _escenaEnReproduccion;
   Brecha? _brechaAbierta;
   FaseBrecha _faseBrechaActiva = FaseBrecha.formulacionPreguntas;
 
   late final companion.ClienteCompanion _clienteCompanion;
+  late final ClienteApi _clienteApi;
   late final SincronizadorMosaicoArco1 _sincronizadorMosaico;
   late final SincronizadorMosaicoArco2 _sincronizadorMosaicoArco2;
 
@@ -226,6 +232,7 @@ class _OrquestadorState extends State<Orquestador> {
   void initState() {
     super.initState();
     _clienteCompanion = companion.ClienteCompanion(urlBase: _urlBaseBackend);
+    _clienteApi = ClienteApi(urlBase: _urlBaseBackend);
     _sincronizadorMosaico = SincronizadorMosaicoArco1(
       repoCuenta: widget.repoCuenta,
       repoMosaico: widget.repoMosaico,
@@ -242,15 +249,18 @@ class _OrquestadorState extends State<Orquestador> {
   @override
   void dispose() {
     _clienteCompanion.cerrar();
+    _clienteApi.cerrar();
     super.dispose();
   }
 
   Future<void> _cargarEstadoInicial() async {
     final codigo = await widget.repoIdioma.cargar();
     final flags = await widget.repoFlags.activos();
+    final token = await widget.repoCuenta.cargarToken();
     if (!mounted) return;
     _flagsActivos = flags;
     _idiomaElegido = codigo != null;
+    _sesionIniciada = token != null && token.isNotEmpty;
     final brecha = _proximaBrechaPendiente();
     FaseBrecha faseInicial = FaseBrecha.formulacionPreguntas;
     if (brecha != null) {
@@ -516,6 +526,54 @@ class _OrquestadorState extends State<Orquestador> {
     );
   }
 
+  /// Abre la pantalla de inicio de sesión como ruta superpuesta. La
+  /// petición real al backend se hace en [_intentarLogin]; la pantalla
+  /// sólo orquesta el formulario y enseña el error si lo hay.
+  Future<void> _alAbrirSesion() async {
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaLogin(alIntentarLogin: _intentarLogin),
+      ),
+    );
+    // Tras volver de la pantalla, el token puede haber cambiado —
+    // recargamos la marca de sesión iniciada para refrescar el botón
+    // del esqueleto. No tocamos flags ni recalculamos la próxima
+    // escena: el login es opt-in y no afecta al curso narrativo.
+    final token = await widget.repoCuenta.cargarToken();
+    if (!mounted) return;
+    setState(() {
+      _sesionIniciada = token != null && token.isNotEmpty;
+    });
+  }
+
+  /// Llama al backend, persiste token y email en éxito, y devuelve
+  /// `null` o un mensaje de error en castellano para que la
+  /// `PantallaLogin` lo enseñe inline. La función NO toca el estado
+  /// del orquestador — el refresco del flag `_sesionIniciada` lo
+  /// hace [_alAbrirSesion] tras el `Navigator.pop` que dispara la
+  /// pantalla en éxito.
+  Future<String?> _intentarLogin(String email, String password) async {
+    try {
+      final respuesta = await _clienteApi.iniciarSesion(
+        email: email,
+        password: password,
+      );
+      await widget.repoCuenta.guardarToken(respuesta.token);
+      await widget.repoCuenta.guardarEmail(email);
+      return null;
+    } on ExcepcionApi catch (e) {
+      if (e.codigo == 401 || e.codigo == 403) {
+        return 'Email o contraseña incorrectos.';
+      }
+      return 'No se pudo iniciar sesión (${e.codigo}). Inténtalo de nuevo.';
+    } on TimeoutException {
+      return 'Tiempo de espera agotado. Comprueba la conexión.';
+    } on SocketException {
+      return 'Sin conexión. Comprueba la red.';
+    }
+  }
+
   @override
   Widget build(BuildContext contexto) {
     if (_cargando) {
@@ -563,6 +621,10 @@ class _OrquestadorState extends State<Orquestador> {
         repoMosaico: widget.repoMosaico,
       );
     }
-    return PantallaEsqueleto(alAbrirCuaderno: _alAbrirCuaderno);
+    return PantallaEsqueleto(
+      alAbrirCuaderno: _alAbrirCuaderno,
+      alAbrirSesion: _alAbrirSesion,
+      sesionIniciada: _sesionIniciada,
+    );
   }
 }

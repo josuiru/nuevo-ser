@@ -13,6 +13,7 @@ import 'package:las_versiones/vista/pantalla_cinematica.dart';
 import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
 import 'package:las_versiones/vista/pantalla_cuaderno.dart';
 import 'package:las_versiones/vista/pantalla_esqueleto.dart';
+import 'package:las_versiones/vista/pantalla_login.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_1.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_2.dart';
 
@@ -945,5 +946,115 @@ void main() {
     final repositorio2 = crearRepoIdioma();
     expect(await repositorio2.cargar(), isNull,
         reason: 'el repositorio sólo lee la clave canónica nuevoser.*');
+  });
+
+  /// Seed completo del estado "todo cerrado, va a esqueleto". Es la
+  /// misma lista de flags del primer test "salta al esqueleto" — la
+  /// duplicamos como helper para los tests del botón de sesión que
+  /// también necesitan llegar a la PantallaEsqueleto. El campo
+  /// `tokenBackend` es opcional: si se pasa, simula sesión iniciada.
+  Map<String, Object> seedEsqueletoCompleto({String? tokenBackend}) {
+    return {
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+      'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+      'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+      'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_2_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m2_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_2_vista': true,
+      if (tokenBackend != null)
+        'nuevoser.lasversiones.token_backend': tokenBackend,
+    };
+  }
+
+  testWidgets(
+      'esqueleto sin token persistido → botón "INICIAR SESIÓN" visible',
+      (tester) async {
+    SharedPreferences.setMockInitialValues(seedEsqueletoCompleto());
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaEsqueleto), findsOneWidget);
+    expect(find.text('INICIAR SESIÓN'), findsOneWidget);
+    expect(find.text('SESIÓN INICIADA'), findsNothing);
+  });
+
+  testWidgets(
+      'esqueleto con token persistido → botón "SESIÓN INICIADA" visible',
+      (tester) async {
+    SharedPreferences.setMockInitialValues(
+      seedEsqueletoCompleto(tokenBackend: 'token-jwt-de-prueba'),
+    );
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaEsqueleto), findsOneWidget);
+    expect(find.text('SESIÓN INICIADA'), findsOneWidget);
+    expect(find.text('INICIAR SESIÓN'), findsNothing);
+  });
+
+  testWidgets('tap en "INICIAR SESIÓN" abre la PantallaLogin', (tester) async {
+    SharedPreferences.setMockInitialValues(seedEsqueletoCompleto());
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('INICIAR SESIÓN'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaLogin), findsOneWidget);
+    expect(find.byType(PantallaEsqueleto), findsNothing);
   });
 }

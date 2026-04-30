@@ -18,7 +18,25 @@ class PantallaEsqueleto extends StatelessWidget {
   /// que leer ahí.
   final VoidCallback? alAbrirCuaderno;
 
-  const PantallaEsqueleto({super.key, this.alAbrirCuaderno});
+  /// Callback opcional para abrir la pantalla de inicio de sesión
+  /// del adulto acompañante. Si es `null` no se muestra el botón —
+  /// útil para superficies donde el botón aún no debería aparecer
+  /// (configuración inicial, cinemáticas).
+  final VoidCallback? alAbrirSesion;
+
+  /// `true` si ya hay una sesión iniciada (token JWT presente). El
+  /// botón cambia su etiqueta ("INICIAR SESIÓN" → "SESIÓN INICIADA")
+  /// para que el adulto acompañante sepa el estado sin tener que
+  /// abrir la pantalla. No mostramos el email en pantalla — es PII y
+  /// el dispositivo puede ser compartido con la Cronista.
+  final bool sesionIniciada;
+
+  const PantallaEsqueleto({
+    super.key,
+    this.alAbrirCuaderno,
+    this.alAbrirSesion,
+    this.sesionIniciada = false,
+  });
 
   @override
   Widget build(BuildContext contexto) {
@@ -84,6 +102,29 @@ class PantallaEsqueleto extends StatelessWidget {
                       color: PaletaArchivo.ambarLacre),
                   label: Text(
                     'CUADERNO',
+                    style: TextStyle(
+                      fontSize: 11,
+                      letterSpacing: 3,
+                      color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            if (alAbrirSesion != null)
+              Positioned(
+                top: 8,
+                left: 8,
+                child: TextButton.icon(
+                  onPressed: alAbrirSesion,
+                  icon: Icon(
+                    sesionIniciada
+                        ? Icons.lock_outlined
+                        : Icons.lock_open_outlined,
+                    color: PaletaArchivo.ambarLacre,
+                  ),
+                  label: Text(
+                    sesionIniciada ? 'SESIÓN INICIADA' : 'INICIAR SESIÓN',
                     style: TextStyle(
                       fontSize: 11,
                       letterSpacing: 3,
