@@ -397,4 +397,21 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'tip fenológico: el home muestra una nota del catálogo bajo el saludo',
+    (tester) async {
+      // Sit spot del seed no tiene coordenadas → regionActual = null
+      // → fallback país. En primavera 'ES' tiene una nota de
+      // fallback ("Hay más cantos al amanecer..."). Como la lista
+      // tiene solo 1 nota, el índice del día siempre cae en 0.
+      await bombearPantalla(tester);
+      expect(
+        find.text(
+          'Hay más cantos al amanecer que en cualquier otra estación.',
+        ),
+        findsOneWidget,
+      );
+    },
+  );
 }

@@ -164,6 +164,26 @@ class NotasFenologicasIberia {
     return const <String>[];
   }
 
+  /// Devuelve **una** nota fenológica del día — la elección rota cada
+  /// día sin ser aleatoria, así dos niños del mismo lugar y la misma
+  /// fecha leen la misma frase (estabilidad pedagógica) y un mismo
+  /// niño no ve siempre la misma. La rotación usa `mes*100 + día`
+  /// como semilla; al cabo de un año se completa el ciclo.
+  ///
+  /// Devuelve `null` si para la pareja `(region, estacion)` no hay
+  /// notas (la pantalla que la consume oculta el tip entero, no
+  /// muestra placeholder).
+  static String? notaDelDia({
+    required String regionCode,
+    required Estacion estacion,
+    required DateTime fecha,
+  }) {
+    final notas = para(regionCode: regionCode, estacion: estacion);
+    if (notas.isEmpty) return null;
+    final indice = (fecha.month * 100 + fecha.day) % notas.length;
+    return notas[indice];
+  }
+
   /// Versión NUTS-3 → NUTS-2 → NUTS-1 → 'ES' del code de búsqueda.
   /// Para `ES-NA-PA` devuelve `[ES-NA-PA, ES-NA, ES]`.
   static List<String> _candidatosJerarquicos(String regionCode) {

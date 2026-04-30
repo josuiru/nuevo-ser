@@ -44,6 +44,9 @@ class EstadoCuaderno extends ChangeNotifier {
   List<Misterio> _misteriosAbiertos = const [];
   List<Observacion> _ultimasObservaciones = const [];
   Map<String, int> _evidenciasPorMisterio = const {};
+  Estacion? _estacionActual;
+  String? _regionActual;
+  DateTime? _fechaContexto;
 
   bool get cargando => _cargando;
   SitSpot? get sitSpot => _sitSpot;
@@ -51,6 +54,22 @@ class EstadoCuaderno extends ChangeNotifier {
   List<Observacion> get ultimasObservaciones => _ultimasObservaciones;
   Observacion? get ultimaObservacion =>
       _ultimasObservaciones.isEmpty ? null : _ultimasObservaciones.first;
+
+  /// Estación astronómica calculada en la última carga. Null antes de
+  /// la primera. La pantalla la usa para el filtrado de Misterios y
+  /// para resolver el tip fenológico contextual.
+  Estacion? get estacionActual => _estacionActual;
+
+  /// Region NUTS aproximada del sit spot actual. Null si no hay sit
+  /// spot, no tiene coordenadas, o aún no se ha cargado nada. Las
+  /// pantallas que muestran texto fenológico tratan null como `'ES'`
+  /// (fallback país).
+  String? get regionActual => _regionActual;
+
+  /// Fecha usada en la última carga para calcular [estacionActual].
+  /// La pantalla la rota como semilla del tip del día — la nota
+  /// fenológica que se muestra cambia cada día sin ser aleatoria.
+  DateTime? get fechaContexto => _fechaContexto;
 
   /// Cuántas observaciones tiene el niño anotadas contra cada Misterio
   /// abierto (clave = `Misterio.id`). Se resuelve al cargar y alimenta
@@ -66,7 +85,8 @@ class EstadoCuaderno extends ChangeNotifier {
       final sitSpotResultado = await repositorio.obtenerSitSpot();
       final misteriosCrudo = await repositorio.obtenerMisteriosAbiertos();
       final ultimas = await repositorio.obtenerObservaciones(limite: 5);
-      final estacionActual = estacionDeFecha(_proveedorAhora());
+      final ahora = _proveedorAhora();
+      final estacionActual = estacionDeFecha(ahora);
       final regionActual = _proveedorRegion(sitSpotResultado);
       final misteriosFiltrados = filtrarMisteriosAlContexto(
         misteriosCrudo,
@@ -88,6 +108,9 @@ class EstadoCuaderno extends ChangeNotifier {
       _misteriosAbiertos = misteriosFiltrados;
       _ultimasObservaciones = ultimas;
       _evidenciasPorMisterio = evidencias;
+      _estacionActual = estacionActual;
+      _regionActual = regionActual;
+      _fechaContexto = ahora;
     } finally {
       _cargando = false;
       notifyListeners();

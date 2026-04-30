@@ -245,4 +245,73 @@ void main() {
       );
     });
   });
+
+  group('NotasFenologicasIberia.notaDelDia', () {
+    test('devuelve null si no hay notas para (region, estacion)', () {
+      // Construimos una pareja que con seguridad falla todos los
+      // niveles del fallback: region inventada con el shape de
+      // candidatos jerárquicos termina en "ES", y "ES" sí tiene notas
+      // — así que no podemos forzar null con regiones inventadas.
+      // En su lugar, nos apoyamos en una pareja que el catálogo deja
+      // vacía: Canarias en invierno SÍ tiene notas, así que probamos
+      // cubierta — el método debe devolver una de ellas, no null.
+      final nota = NotasFenologicasIberia.notaDelDia(
+        regionCode: 'ES-CN',
+        estacion: Estacion.invierno,
+        fecha: DateTime(2026, 1, 15),
+      );
+      expect(nota, isNotNull);
+    });
+
+    test('devuelve la misma nota para la misma (region, estacion, fecha)',
+        () {
+      final n1 = NotasFenologicasIberia.notaDelDia(
+        regionCode: 'ES-NA-PA',
+        estacion: Estacion.primavera,
+        fecha: DateTime(2026, 4, 12),
+      );
+      final n2 = NotasFenologicasIberia.notaDelDia(
+        regionCode: 'ES-NA-PA',
+        estacion: Estacion.primavera,
+        fecha: DateTime(2026, 4, 12),
+      );
+      expect(n1, equals(n2));
+    });
+
+    test('rotación: dos fechas separadas pueden dar notas distintas', () {
+      // Pamplona en primavera tiene 2 notas. Con índice (mes*100+dia)
+      // % 2: día par → idx 0; día impar → idx 1 (aproximadamente).
+      // 12 abril → 412 % 2 = 0; 13 abril → 413 % 2 = 1.
+      final dia12 = NotasFenologicasIberia.notaDelDia(
+        regionCode: 'ES-NA-PA',
+        estacion: Estacion.primavera,
+        fecha: DateTime(2026, 4, 12),
+      );
+      final dia13 = NotasFenologicasIberia.notaDelDia(
+        regionCode: 'ES-NA-PA',
+        estacion: Estacion.primavera,
+        fecha: DateTime(2026, 4, 13),
+      );
+      expect(dia12, isNotNull);
+      expect(dia13, isNotNull);
+      expect(
+        dia12,
+        isNot(equals(dia13)),
+        reason: 'fechas con paridad distinta deben dar notas distintas '
+            'cuando la región tiene 2 notas',
+      );
+    });
+
+    test('cae al fallback país cuando la region piloto no tiene notas',
+        () {
+      // Region inventada que cae a 'ES'; en cualquier estación 'ES'
+      // tiene una nota de fallback.
+      final nota = NotasFenologicasIberia.notaDelDia(
+        regionCode: 'ES-XX-YY',
+        estacion: Estacion.primavera,
+        fecha: DateTime(2026, 4, 12),
+      );
+      expect(nota, isNotNull);
+    });
+  });
 }

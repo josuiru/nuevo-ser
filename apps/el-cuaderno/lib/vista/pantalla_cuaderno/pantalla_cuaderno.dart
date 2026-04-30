@@ -11,6 +11,7 @@ import '../../datos/repositorio_presentacion_sit_spot.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
+import '../../dominio/fenologia.dart';
 import '../../dominio/geolocalizacion_privacy_first.dart';
 import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
@@ -521,6 +522,7 @@ class _VistaCuaderno extends StatelessWidget {
                 peso: TipografiaCuaderno.pesoMedio,
               ),
             ),
+            ..._tipFenologico(estado),
             const SizedBox(height: 24),
             _Cabecera(textos.seccionSitSpot),
             const SizedBox(height: 8),
@@ -574,6 +576,39 @@ class _VistaCuaderno extends StatelessWidget {
       },
     );
   }
+}
+
+/// Construye el bloque del tip fenológico del día — una sola línea
+/// en serif gris bajo el saludo, ata el cuaderno al lugar+estación
+/// reales del niño con coste cero (los datos ya cargados).
+///
+/// Devuelve lista vacía si:
+/// - el estado aún no ha hecho la primera carga (no hay
+///   `estacionActual` o `fechaContexto`);
+/// - para la pareja `(region, estacion)` no hay notas en el catálogo
+///   de [NotasFenologicasIberia] (algunas combinaciones quedan vacías
+///   a propósito hasta que entre la asesoría B11).
+List<Widget> _tipFenologico(EstadoCuaderno estado) {
+  final fecha = estado.fechaContexto;
+  final estacion = estado.estacionActual;
+  if (fecha == null || estacion == null) return const [];
+  final nota = NotasFenologicasIberia.notaDelDia(
+    regionCode: estado.regionActual ?? 'ES',
+    estacion: estacion,
+    fecha: fecha,
+  );
+  if (nota == null) return const [];
+  return [
+    const SizedBox(height: 4),
+    Text(
+      nota,
+      style: TipografiaCuaderno.serif(
+        color: PaletaCuaderno.tintaTenue,
+        tamano: TipografiaCuaderno.tamano13,
+        altoLinea: 1.45,
+      ),
+    ),
+  ];
 }
 
 class _VistaProximamente extends StatelessWidget {
