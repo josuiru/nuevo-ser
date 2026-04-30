@@ -87,6 +87,15 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.13
 
+  # Generación de iconos de launcher para Android (mipmaps + adaptive)
+  # y splash screen nativo a partir de los PNG de `assets/launcher/` y
+  # `assets/splash/`. Los assets actuales son **placeholders** marcados
+  # — la ilustradora botánica del encargo (B4 del plan A1-A10, biblia
+  # §8.1: ilustración hecha a mano, NUNCA IA generativa) los sustituye
+  # cuando esté.
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
+
 flutter:
   uses-material-design: true
 
@@ -94,3 +103,34 @@ flutter:
   # viven en lib/nucleo/i18n/arb/, la generación cae en
   # .dart_tool/flutter_gen/gen_l10n/.
   generate: true
+
+# ---------------------------------------------------------------------
+# Configuración de flutter_launcher_icons (A7).
+# Genera mipmaps Android (legacy + adaptive) desde el placeholder
+# monocromo de assets/launcher/. Sustituir por el icono final de la
+# ilustradora botánica (B4) cuando entre.
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/launcher/icon.png"
+  adaptive_icon_background: "#F5EFE2"
+  adaptive_icon_foreground: "assets/launcher/icon_foreground_adaptive.png"
+  min_sdk_android: 21
+
+# ---------------------------------------------------------------------
+# Configuración de flutter_native_splash (A7).
+# Splash con fondo crema y placeholder centrado — sin animación. La
+# ilustradora botánica (B4) entrega el icono final que sustituye el
+# image: aquí.
+flutter_native_splash:
+  color: "#F5EFE2"
+  color_dark: "#1F1E1A"
+  image: "assets/splash/splash.png"
+  image_dark: "assets/splash/splash.png"
+  android: true
+  ios: false
+  android_12:
+    color: "#F5EFE2"
+    color_dark: "#1F1E1A"
+    image: "assets/splash/splash.png"
+    image_dark: "assets/splash/splash.png"
