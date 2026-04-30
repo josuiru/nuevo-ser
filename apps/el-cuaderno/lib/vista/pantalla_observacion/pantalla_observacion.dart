@@ -16,6 +16,7 @@ import '../../dominio/sugeridor_misterio.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'chip_sugerencia_misterio.dart';
 import 'lienzo_dibujo.dart';
 import 'selector_confianza.dart';
 import 'selector_misterio.dart';
@@ -292,7 +293,7 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
                     const _Etiqueta('va con un Misterio'),
                     const SizedBox(height: 4),
                     if (_sugerido != null) ...[
-                      _ChipSugerencia(
+                      ChipSugerenciaMisterio(
                         misterioSugerido: _sugerido!,
                         alAnclar: () => setState(
                           () => _misterioId = _sugerido!.id,
@@ -981,75 +982,6 @@ class _Etiqueta extends StatelessWidget {
         color: esquema.tertiary,
         tamano: TipografiaCuaderno.tamano12,
         peso: TipografiaCuaderno.pesoMedio,
-      ),
-    );
-  }
-}
-
-/// Chip discreto sobre el SelectorMisterio que ofrece un Misterio
-/// candidato derivado de lo que el niño ha escrito en `queVio`. La
-/// sugerencia es **opcional**: dos botones explícitos sí/no, sin
-/// auto-aceptar. Pedagógicamente: invita a recordar que el Misterio
-/// existe, sin imponer; el niño aprende que su observación encaja
-/// con una pregunta abierta (biblia §3.4 hipotetizar y contrastar).
-class _ChipSugerencia extends StatelessWidget {
-  const _ChipSugerencia({
-    required this.misterioSugerido,
-    required this.alAnclar,
-    required this.alRechazar,
-  });
-
-  final Misterio misterioSugerido;
-  final VoidCallback alAnclar;
-  final VoidCallback alRechazar;
-
-  @override
-  Widget build(BuildContext context) {
-    final esquema = Theme.of(context).colorScheme;
-    return Material(
-      color: esquema.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: esquema.outline, width: 0.5),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'esto suena al Misterio:',
-              style: TipografiaCuaderno.sans(
-                color: PaletaCuaderno.tintaTenue,
-                tamano: TipografiaCuaderno.tamano11,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              misterioSugerido.pregunta,
-              style: TipografiaCuaderno.serif(
-                color: esquema.onSurface,
-                tamano: TipografiaCuaderno.tamano14,
-                peso: TipografiaCuaderno.pesoMedio,
-                altoLinea: 1.35,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                TextButton(
-                  onPressed: alRechazar,
-                  child: const Text('no'),
-                ),
-                const SizedBox(width: 8),
-                FilledButton.tonal(
-                  onPressed: alAnclar,
-                  child: const Text('anclar'),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

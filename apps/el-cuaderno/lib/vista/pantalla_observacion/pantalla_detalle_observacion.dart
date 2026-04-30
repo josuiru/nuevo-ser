@@ -7,9 +7,11 @@ import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../dominio/sit_spot.dart';
+import '../../dominio/sugeridor_misterio.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'chip_sugerencia_misterio.dart';
 import 'pantalla_editar_observacion.dart';
 
 /// Constructor de la miniatura para foto/dibujo. Por defecto
@@ -62,6 +64,18 @@ class _EstadoPantallaDetalleObservacion
   String? _rutaFotoAbsoluta;
   String? _rutaDibujoAbsoluta;
   bool _cargando = true;
+
+  /// Misterio sugerido para anclar a esta observación si todavía no
+  /// tiene `misterioId`. Se calcula con [sugerirMisterio] sobre el
+  /// `queVio` y los Misterios abiertos del repositorio. Null si la
+  /// observación ya está anclada, si la heurística no encuentra
+  /// match, o si el niño rechazó la sugerencia en esta sesión.
+  Misterio? _sugerencia;
+
+  /// Ids de sugerencias rechazadas en esta sesión de la pantalla
+  /// detalle. Se mantienen mientras la pantalla viva — al cerrar y
+  /// volver, el sistema vuelve a intentar.
+  final Set<String> _sugerenciasRechazadas = <String>{};
 
   @override
   void initState() {
@@ -173,13 +187,46 @@ class _EstadoPantallaDetalleObservacion
       }
     }
 
+    Misterio? sugerencia;
+    if (obs.misterioId == null && obs.queVio.isNotEmpty) {
+      final abiertos = await widget.repositorio.obtenerMisteriosAbiertos();
+      final candidatos = abiertos
+          .where((m) => !_sugerenciasRechazadas.contains(m.id))
+          .toList(growable: false);
+      sugerencia = sugerirMisterio(
+        queVio: obs.queVio,
+        candidatos: candidatos,
+      );
+    }
+
     if (!mounted) return;
     setState(() {
       _misterio = misterio;
       _sitSpot = sitSpot;
       _rutaFotoAbsoluta = rutaFoto;
       _rutaDibujoAbsoluta = rutaDibujo;
+      _sugerencia = sugerencia;
       _cargando = false;
+    });
+  }
+
+  Future<void> _anclarSugerido(Misterio sugerido) async {
+    await widget.repositorio.anclarObservacionAMisterio(
+      _observacion.id,
+      sugerido.id,
+    );
+    if (!mounted) return;
+    setState(() {
+      _observacion = _observacion.copyWith(misterioId: sugerido.id);
+      _sugerencia = null;
+    });
+    await _resolverDependencias();
+  }
+
+  void _rechazarSugerido(Misterio sugerido) {
+    setState(() {
+      _sugerenciasRechazadas.add(sugerido.id);
+      _sugerencia = null;
     });
   }
 
@@ -274,6 +321,14 @@ class _EstadoPantallaDetalleObservacion
                         color: esquema.tertiary,
                         tamano: TipografiaCuaderno.tamano12,
                       ),
+                    ),
+                  ],
+                  if (_sugerencia != null) ...[
+                    const SizedBox(height: 16),
+                    ChipSugerenciaMisterio(
+                      misterioSugerido: _sugerencia!,
+                      alAnclar: () => _anclarSugerido(_sugerencia!),
+                      alRechazar: () => _rechazarSugerido(_sugerencia!),
                     ),
                   ],
                   const SizedBox(height: 24),

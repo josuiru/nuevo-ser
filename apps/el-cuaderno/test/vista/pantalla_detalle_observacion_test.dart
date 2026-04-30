@@ -270,6 +270,135 @@ void main() {
   );
 
   testWidgets(
+    'sugerencia: si no hay misterioId y el texto encaja, aparece el chip',
+    (tester) async {
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+      ));
+      await bombear(
+        tester,
+        crear(queVio: 'tres caracoles tras la lluvia'),
+      );
+      expect(find.text('esto suena al Misterio:'), findsOneWidget);
+      expect(
+        find.text('Después de llover, ¿qué seres vivos aparecen?'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'sugerencia: sin texto que encaje, el chip no se monta',
+    (tester) async {
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+      ));
+      await bombear(
+        tester,
+        crear(queVio: 'una piedra rara junto al camino'),
+      );
+      expect(find.text('esto suena al Misterio:'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'sugerencia: si la observación ya tiene misterioId, no se sugiere nada',
+    (tester) async {
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+      ));
+      await bombear(
+        tester,
+        crear(
+          queVio: 'tres caracoles tras la lluvia',
+          misterioId: 'seed-misterio-lluvia',
+        ),
+      );
+      // El bloque del Misterio ya anclado aparece, pero el chip de
+      // sugerencia (cabecera "esto suena al Misterio:") no.
+      expect(find.text('esto suena al Misterio:'), findsNothing);
+      expect(
+        find.textContaining('anclada al misterio'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'sugerencia: anclar persiste el misterioId en el repo y oculta el chip',
+    (tester) async {
+      final obs = crear(
+        id: 'obs-1',
+        queVio: 'tres caracoles tras la lluvia',
+      );
+      await repositorio.guardarObservacion(obs);
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+      ));
+      await bombear(tester, obs);
+
+      expect(find.text('esto suena al Misterio:'), findsOneWidget);
+      await tester.tap(find.widgetWithText(FilledButton, 'anclar'));
+      await tester.pumpAndSettle();
+
+      // El chip desaparece tras anclar y aparece el bloque "anclada al
+      // misterio" en la sección de anclajes.
+      expect(find.text('esto suena al Misterio:'), findsNothing);
+      expect(
+        find.textContaining('anclada al misterio'),
+        findsOneWidget,
+      );
+
+      final guardada = await repositorio.obtenerObservacionPorId('obs-1');
+      expect(guardada?.misterioId, 'seed-misterio-lluvia');
+    },
+  );
+
+  testWidgets(
+    'sugerencia: rechazar oculta el chip y no toca el repo',
+    (tester) async {
+      final obs = crear(
+        id: 'obs-1',
+        queVio: 'tres caracoles tras la lluvia',
+      );
+      await repositorio.guardarObservacion(obs);
+      await repositorio.guardarMisterio(Misterio(
+        id: 'seed-misterio-lluvia',
+        pregunta: 'Después de llover, ¿qué seres vivos aparecen?',
+        descripcionCorta: 'pista corta',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+      ));
+      await bombear(tester, obs);
+
+      expect(find.text('esto suena al Misterio:'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'no'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('esto suena al Misterio:'), findsNothing);
+
+      final guardada = await repositorio.obtenerObservacionPorId('obs-1');
+      expect(guardada?.misterioId, isNull);
+    },
+  );
+
+  testWidgets(
     'borrar: confirmar elimina la observación del repo y cierra la pantalla',
     (tester) async {
       final obs = crear(id: 'obs-1', queVio: 'esto se borra');
