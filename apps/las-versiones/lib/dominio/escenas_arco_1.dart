@@ -33,6 +33,13 @@ class EscenasArco1 {
     elAtico,
     cierreCromlechConSira,
     conversacionConElPadre,
+    viajeAlPirineo,
+    laBocaDeLaCueva,
+    dentroDeLaCueva,
+    laPared,
+    vueltaYSilencio,
+    elPrimerConcilioFormal,
+    elApunteLargo,
     naiaPregunta,
     aprendizI,
   ];
@@ -95,6 +102,23 @@ class EscenasArco1 {
     'escena_1_2_fin_vista': {
       'arco_1_estacion_2_cerrada',
       'primer_trabajo_en_equipo_completado',
+    },
+    // Cinemáticas internas de la Estación 3 (cueva del Pirineo).
+    // Las 1.3.1 a 1.3.4 se encadenan por flagDeSalida (cada una
+    // requiere la anterior). La 1.3.5 cierra el bloque cinemático
+    // y activa `cueva_pirineo_visitada`, que el catálogo
+    // (`brechaPorFlagDeDisparo`) reconoce como disparador de la
+    // Brecha 1.3 jugable. La 1.3.6 (Concilio formal) y la 1.3.7
+    // (apunte largo del Cuaderno) se reproducen tras cerrar la
+    // Brecha jugable.
+    'escena_1_3_1_vista': {
+      'traveling_pyrenees_first',
+    },
+    'escena_1_3_5_vista': {
+      'cueva_pirineo_visitada',
+    },
+    'escena_1_3_6_vista': {
+      'first_formal_concilio',
     },
     'escena_1_b1_vista': {
       'conversacion_con_padre_compartida',
@@ -1423,6 +1447,844 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'SALIR DE LA COCINA'),
+    ],
+  );
+
+  /// **1.3.1 — Viaje al Pirineo** (doc 07 §1.3.1).
+  ///
+  /// ~3 semanas tras inicio del juego. Coche de Isaura camino de la
+  /// cueva en el Pirineo navarro. Niebla baja en los hayedos.
+  /// Isaura le anuncia que hoy NO formulan preguntas antes de
+  /// entrar — para algunas Brechas la primera lectura es del
+  /// cuerpo, no de la cabeza. Cuando salgan, formularán. Le da
+  /// permiso a Maren para decirle si se pone nerviosa dentro.
+  /// "Los grabados están allí desde hace trece mil años. Pueden
+  /// esperar otros diez minutos."
+  ///
+  /// Pedagógicamente clave: el oficio histórico no siempre
+  /// arranca con preguntas explícitas. A veces la primera lectura
+  /// es sensorial — entrar, mirar, dejar que el lugar hable, y
+  /// formular después. Maren aprende a respetar ese ritmo.
+  ///
+  /// Sin sustituciones diegéticas — el doc 07 no nombra
+  /// laboratorio ni publicación específica para los "trece mil
+  /// años"; la datación es coherente con el rango canónico
+  /// validado del Magdaleniense para el Pirineo navarro.
+  static const EscenaCinematica viajeAlPirineo = EscenaCinematica(
+    id: '1.3.1',
+    titulo: 'Viaje al Pirineo',
+    flagDeSalida: 'escena_1_3_1_vista',
+    flagsRequeridos: {'escena_1_b1_vista'},
+    ambiente: AmbienteArchivo.cocheIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Tres semanas dentro del oficio. Coche de Isaura. '
+            'Carretera al Pirineo navarro. Niebla baja en los '
+            'hayedos, sol que pega de lado. El coche sube despacio.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Hoy vamos a una cueva.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Lo sé.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Hay grabados. Hechos en la piedra. Bisontes, un ciervo, '
+            'un caballo.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Pintura?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Grabados. Líneas en la piedra hechas con herramienta. '
+            'Apenas se ven a primera vista. Tienes que mirar despacio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Los he visto en libros.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hoy los vas a ver con una linterna. Es distinto.',
+      ),
+
+      // La regla del día — la primera lectura es del cuerpo.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Hoy no formulamos preguntas antes. Hoy entramos primero.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Por qué?',
+        pausaPrevia: Duration(milliseconds: 400),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Porque para algunas Brechas, la primera lectura es del '
+            'cuerpo, no de la cabeza. Cuando salgamos, formularemos.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren mira por la ventana. No contesta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Si te pones nerviosa allí dentro, me lo dices.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No es ningún examen. Es una cueva. Los grabados están '
+            'allí desde hace trece mil años. Pueden esperar otros '
+            'diez minutos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren sonríe pequeñísimo. Llegan al aparcamiento.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'BAJAR DEL COCHE'),
+    ],
+  );
+
+  /// **1.3.2 — La boca de la cueva** (doc 07 §1.3.2).
+  ///
+  /// Bosque de hayas en la entrada al sistema de cuevas. Joxe, el
+  /// custodio del valle vinculado a la administración foral,
+  /// saluda con un asentimiento. "Cuarenta minutos máximo aquí.
+  /// Después os abro la otra." Isaura le pasa a Maren un casco
+  /// con linterna y le advierte: la linterna alcanza tres metros,
+  /// no se separe más de eso. Esta primera cueva es donde vivían
+  /// (covacho de habitación). La de los grabados está cerca pero
+  /// separada — la gente del Magdaleniense las usaba para distintas
+  /// cosas.
+  static const EscenaCinematica laBocaDeLaCueva = EscenaCinematica(
+    id: '1.3.2',
+    titulo: 'La boca de la cueva',
+    flagDeSalida: 'escena_1_3_2_vista',
+    flagsRequeridos: {'escena_1_3_1_vista'},
+    ambiente: AmbienteArchivo.bosqueHayas,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Aparcamiento pequeño en un bosque de hayas. Caminata de '
+            'quince minutos por sendero hasta una primera entrada en '
+            'la ladera, custodiada por una verja oxidada. Un hombre '
+            'mayor con cazadora — el custodio del valle — saluda con '
+            'un asentimiento.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.joxe,
+        texto: 'Cuarenta minutos máximo aquí. Después os abro la otra.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Gracias, Joxe.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura:
+            'Isaura le pasa un casco con linterna a Maren. Coge otro '
+            'para sí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Va a ser oscuro. La linterna alcanza tres metros. No te '
+            'separes de mí más de eso.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Esta primera es donde vivían. Comían, dormían, '
+            'encendían fuego. La de los grabados está cerca, '
+            'separada. La gente del Magdaleniense las usaba para '
+            'distintas cosas.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Lista?'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren asiente. Entran. La luz natural se acaba a los '
+            'cuatro metros.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'ENTRAR DESPACIO'),
+    ],
+  );
+
+  /// **1.3.3 — Dentro** (doc 07 §1.3.3).
+  ///
+  /// Covacho de habitación: amplio, embocadura grande, luz residual
+  /// los primeros metros, después oscuridad. Marcas de hoguera —
+  /// concentración de carbón vegetal antiguo, fragmentos óseos.
+  /// Isaura explica el inventario arqueológico (arpones,
+  /// herramientas líticas, fauna, hace algo más de trece mil años).
+  /// Maren pregunta si puede tocar; Isaura dice no. Salen y caminan
+  /// a la segunda entrada, más estrecha, que el custodio abre con
+  /// llave. Bajan hacia la sala con grabados. Pasan junto a dos
+  /// grandes losas que cierran parcialmente el paso, claramente
+  /// emplazadas en tiempos antiguos posteriores. "¿Para qué son?"
+  /// "No se sabe. Las pusieron mucho después de los grabados."
+  static const EscenaCinematica dentroDeLaCueva = EscenaCinematica(
+    id: '1.3.3',
+    titulo: 'Dentro',
+    flagDeSalida: 'escena_1_3_3_vista',
+    flagsRequeridos: {'escena_1_3_2_vista'},
+    ambiente: AmbienteArchivo.cuevaInterior,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Covacho de habitación. Embocadura amplia, luz que entra '
+            'del exterior los primeros metros, después oscuridad. '
+            'Sonido amortiguado, propio de cueva. Goteo lejano. '
+            'Caminan despacio, Isaura primero, Maren detrás.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Mira al suelo aquí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren ilumina el suelo. Concentración de carbón vegetal '
+            'antiguo, marcas de un fuego. Un fragmento blanco — hueso '
+            'o asta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Hoguera. Aquí han excavado durante décadas. Han '
+            'encontrado arpones, herramientas líticas, restos de '
+            'fauna. La cocina, el dormir, las herramientas — todo '
+            'aquí. Hace algo más de trece mil años.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Puedo tocar?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'No.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Isaura le hace una seña hacia una pared lateral.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Los que vivían aquí no grababan en estas paredes. Aquí '
+            'era para vivir. La pared para los grabados es otra.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Salen del covacho. La luz de fuera duele un segundo. '
+            'Joxe ha venido caminando con una llave grande. Caminan '
+            'unos doscientos metros por el sendero a una segunda '
+            'entrada — más estrecha, oculta entre la hojarasca. Joxe '
+            'abre.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joxe,
+        texto: 'Las losas siguen igual.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Ya las veré.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Entran. La cueva es distinta — más estrecha, más '
+            'profunda, sin luz natural más allá de los primeros '
+            'metros. Bajan despacio durante cinco minutos. Maren '
+            'respira más fuerte. Pasan junto a dos grandes losas que '
+            'cierran parcialmente el paso. Las losas están movidas '
+            'hacia un lado pero claramente fueron emplazadas allí '
+            'en tiempos antiguos para sellar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Para qué son?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No se sabe. Las pusieron mucho después de los grabados. '
+            'Posiblemente para cerrar la sala. Por qué exactamente — '
+            'lo decidirás tú si llegas a esa Brecha algún día.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pasan las losas. La cueva se ensancha en una sala de '
+            'techos altos. El sonido aquí es distinto — más resonante.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Aquí.'),
+
+      PlanoCierreAmable(textoBoton: 'ENCENDER LA LINTERNA'),
+    ],
+  );
+
+  /// **1.3.4 — La pared** (doc 07 §1.3.4).
+  ///
+  /// Sala con grabados parietales. La luz de la linterna se mueve
+  /// despacio. Al principio sólo piedra. Después, donde la luz pega
+  /// oblicua, las líneas aparecen: bisonte, ciervo, cabeza de uro,
+  /// caballo. Maren pregunta cómo y cuándo se hicieron. La pregunta
+  /// nuclear de la escena: "¿por qué grabar algo donde no lo va a
+  /// ver nadie a la luz del día?". Isaura responde "esa es la
+  /// pregunta". Maren mira la pared cuatro minutos en silencio. En
+  /// algún momento pone la mano abierta cerca del bisonte sin
+  /// tocarlo — compara su mano con la línea grabada.
+  ///
+  /// Esta cinemática es deliberadamente lenta. La pedagogía exige
+  /// silencios largos: el oficio empieza cuando el aprendiz se
+  /// queda con el lugar sin necesidad de explicarlo.
+  static const EscenaCinematica laPared = EscenaCinematica(
+    id: '1.3.4',
+    titulo: 'La pared',
+    flagDeSalida: 'escena_1_3_4_vista',
+    flagsRequeridos: {'escena_1_3_3_vista'},
+    ambiente: AmbienteArchivo.salaGrabadosParietales,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Sala con grabados. La luz de la linterna de Maren se '
+            'mueve despacio. Al principio no se ve nada — sólo piedra. '
+            'Maren mueve la linterna en distintos ángulos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Después, lentamente, las líneas aparecen. Donde la luz '
+            'pega oblicua, los grabados se hacen visibles. Un '
+            'bisonte — perfilado, perfectamente reconocible. Un '
+            'ciervo más arriba. Una cabeza de uro. Y, hacia un lado, '
+            'lo que parece la parte trasera de un caballo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren no dice nada durante mucho tiempo. La cara, '
+            'iluminada por debajo por la linterna que sostiene. '
+            'Ojos abiertos. Una expresión quieta — no asombro '
+            'espectacular, algo más recogido.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cómo lo hicieron?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Con una piedra afilada o un trozo de hueso. Marcaron la '
+            'línea, la repasaron, la profundizaron. La luz natural '
+            'no llega hasta aquí. Lo hicieron con luz de fuego — '
+            'antorcha o lámpara de grasa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cuánto tiempo lleva eso allí?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Trece mil años, aproximadamente. Magdaleniense '
+            'Inferior o Medio.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Silencio largo.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No se ven a la luz natural. Hay que entrar hasta aquí. '
+            'Con luz que se traen.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sí.'),
+
+      // La pregunta nuclear de la escena.
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            '¿Por qué grabar algo donde no lo va a ver nadie a la luz '
+            'del día?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Esa es la pregunta.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Sabemos la respuesta?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'No.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tenemos hipótesis?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Muchas. Ninguna confirmada.',
+      ),
+
+      // Silencio recogido. El haz de luz se mueve sobre la pared.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'La luz se queda en la pared. Maren no se mueve durante '
+            'un minuto entero. El bisonte aparece y desaparece del '
+            'haz de luz. La cabeza del uro. El caballo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Estás bien?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Te quedas un poco más?'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+
+      // El gesto de comparar la mano. La cámara no enfatiza.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Isaura se aparta dos pasos. Maren mira los grabados '
+            'cuatro minutos sin hablar. Sólo el sonido de la cueva. '
+            'En algún momento detiene la linterna. Pone la mano '
+            'abierta cerca del grabado del bisonte sin tocarlo. '
+            'Compara — su mano, la línea que alguien grabó. Un '
+            'segundo. Después retira la mano.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cuando salen, la luz del sol pega fuerte después de la '
+            'oscuridad. Maren parpadea. No habla durante diez '
+            'minutos.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'VOLVER AL COCHE'),
+    ],
+  );
+
+  /// **1.3.5 — Vuelta y silencio** (doc 07 §1.3.5).
+  ///
+  /// Coche de regreso. Cuarenta minutos sin hablar — Isaura
+  /// respeta el silencio. Cerca de Iruña, Maren empieza a hablar:
+  /// pregunta por la tercera cueva (lo que dijo Joxe sobre "la
+  /// otra"), e Isaura le explica que hay una cueva más profunda,
+  /// descubierta hace poco, con pinturas mucho más antiguas — pero
+  /// requiere espeleología. Isaura entró una vez. Maren pregunta
+  /// quién la encontró: "un equipo de espeleólogos y arqueólogos
+  /// del valle. Sigue en estudio." Cierra con la línea pedagógica
+  /// del oficio: "el oficio no se acaba — todo el tiempo aparecen
+  /// cosas". Isaura le ofrece hablar de lo del día; Maren dice
+  /// "no ahora". Isaura acepta sin presionar.
+  ///
+  /// Esta cinemática activa el flag `cueva_pirineo_visitada` que
+  /// el catálogo de Brechas reconoce como disparador de la Brecha
+  /// 1.3 jugable.
+  static const EscenaCinematica vueltaYSilencio = EscenaCinematica(
+    id: '1.3.5',
+    titulo: 'Vuelta y silencio',
+    flagDeSalida: 'escena_1_3_5_vista',
+    flagsRequeridos: {'escena_1_3_4_vista'},
+    ambiente: AmbienteArchivo.cocheIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Coche. Carretera de vuelta del Pirineo. Maren mira por '
+            'la ventana. No habla. Isaura no le pregunta. Cuarenta '
+            'minutos en silencio.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Cuando empiezan a acercarse a Iruña, Maren habla.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Vamos a sellar la Brecha hoy?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No. Esta noche escribes en el Cuaderno. Mañana o pasado '
+            'en el Archivo, formulamos las preguntas. Después '
+            'trabajamos.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 1),
+        textoLectura: 'Pausa.',
+      ),
+
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Isaura.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'El custodio dijo "después os abro la otra". Pero sólo '
+            'me llevaste a dos cuevas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Hay una tercera. Más profunda, descubierta hace poco. '
+            'Pinturas más antiguas todavía — más de veinte mil años. '
+            'Las primeras pinturas de Navarra. Pero está cerrada al '
+            'acceso normal. Tienes que entrar con cuerdas, gateras, '
+            'equipo de espeleología.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Has entrado tú?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Una vez. Hace cinco años. Casi no salgo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Quién la encontró?',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Un equipo de espeleólogos y arqueólogos del valle. Hace '
+            'pocos años. Sigue en estudio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Entonces todavía aparecen cosas.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Todo el tiempo. El oficio no se acaba.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Pausa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Necesitas hablar de lo de hoy?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No ahora.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Vale.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Llegan a Iruña. Isaura la deja en el portal. "Mañana a '
+            'las nueve." "Vale." Maren sube. Isaura se queda dos '
+            'segundos quieta en el coche. Después arranca.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'SUBIR A CASA'),
+    ],
+  );
+
+  /// **1.3.6 — El primer Concilio formal** (doc 07 §1.3.6).
+  ///
+  /// Dos días después del cierre de la Brecha jugable. Salón del
+  /// Concilio del Archivo. Aitor (revisor Constructor) pregunta
+  /// duro sobre la datación. Joana (revisora Anclada) pregunta
+  /// sobre el contexto cultural del Magdaleniense — qué tipo de
+  /// comunidad, qué relación con otras cuevas pirenaicas con arte
+  /// parietal. Maren admite que sabe lo justo y declara los
+  /// límites de su conocimiento. Aitor cierra: "sellada. Disputada
+  /// como debe ser." Karim, observador, hace su única intervención
+  /// — y es la línea pedagógica clave del arco. Cuando Maren había
+  /// dicho "no se puede determinar" sobre el significado del arte
+  /// parietal, le pide reformular. Maren reformula: "No podemos
+  /// determinarlo con la evidencia disponible." Karim asiente:
+  /// "Mejor. La diferencia importa."
+  ///
+  /// Pedagógicamente: la diferencia entre "no se puede determinar"
+  /// (afirmación absoluta sobre los límites del conocimiento) y
+  /// "no podemos determinar con la evidencia disponible" (declaración
+  /// honesta del oficio que reconoce que la evidencia podría
+  /// crecer) es la que distingue al oficio histórico de ambos
+  /// extremos: dogmatismo y relativismo. Karim, como Reformista,
+  /// es quien la marca.
+  ///
+  /// Esta cinemática se reproduce DESPUÉS de cerrar la Brecha 1.3
+  /// jugable — el Concilio jugable (Fase 5 del modelo Brecha) da
+  /// feedback automatizado por scores Brier, esta cinemática añade
+  /// la capa narrativa canónica del doc.
+  ///
+  /// **Sustituciones diegéticas**: el doc 07 nombra "Barandiarán"
+  /// como autor de informes que Maren cita; aquí queda como
+  /// "informes de varias campañas de excavación" sin autoría
+  /// específica. Las cuevas comparativas que Joana cita
+  /// ("Isturitz, Lezia, Lexotoa") quedan como "otras cuevas
+  /// pirenaicas con arte parietal del Magdaleniense" sin nombrar.
+  /// Anotado en BLOQUEOS-PENDIENTES.md.
+  static const EscenaCinematica elPrimerConcilioFormal = EscenaCinematica(
+    id: '1.3.6',
+    titulo: 'El primer Concilio formal',
+    flagDeSalida: 'escena_1_3_6_vista',
+    flagsRequeridos: {'brecha_1_3_completada'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Salón del Concilio. Mesa larga. Aitor y Joana en los '
+            'lados como revisores. Karim al fondo, observador. '
+            'Isaura presente, en silencio. Maren ha presentado su '
+            'reconstrucción y está respondiendo a preguntas.',
+      ),
+
+      // Aitor — datación.
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            '¿Cómo defiendes la datación de los grabados? El '
+            'Magdaleniense Inferior o Medio cubre un rango grande.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Por el covacho de habitación contiguo. Las dataciones C14 '
+            'sobre carbones del hogar sitúan la actividad humana en '
+            'torno a los trece mil años antes del presente. Los '
+            'informes de varias campañas de excavación coinciden en '
+            'el rango.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'El covacho data la habitación. ¿Cómo conectas covacho '
+            'con grabados?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No los conecto con seguridad. La declaro Disputada como '
+            'afirmación. La datación del covacho es Sólida. La '
+            'autoría compartida no.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Bien.'),
+
+      // Joana — contexto cultural.
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'Sobre el contexto cultural. ¿Qué tipo de comunidad? ¿Qué '
+            'relación con otras cuevas pirenaicas con arte parietal '
+            'del Magdaleniense?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Sé lo justo. La comparativa identifica continuidades '
+            'estilísticas y discontinuidades. Las semejanzas no '
+            'autorizan a afirmar identidad cultural completa entre '
+            'los grupos. Más allá de eso, declaro el límite de mi '
+            'conocimiento.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto: 'Bien que lo declares.',
+      ),
+
+      // Cierre.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Tras dos preguntas más sobre las losas selladoras y la '
+            'función ritual, Aitor cierra el Concilio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Bien. Sellada. Disputada como debe ser.',
+      ),
+
+      // Karim — intervención clave.
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Una observación.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Cuando declaraste Disputado el significado del arte '
+            'parietal, dijiste "no se puede determinar". ¿Quieres '
+            'reformular?',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren piensa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No podemos determinarlo con la evidencia disponible.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Mejor. La diferencia importa.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Karim mira a Isaura.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Aprende rápido.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+
+      PlanoCierreAmable(textoBoton: 'SALIR DEL SALÓN'),
+    ],
+  );
+
+  /// **1.3.7 — El apunte largo** (doc 07 §1.3.7).
+  ///
+  /// Esa noche. Maren en su habitación, cuaderno abierto. Voz
+  /// interna larga que cierra la Estación 3 — la entrada más
+  /// extensa del Cuaderno hasta ahora. Recorre lo visto en la
+  /// cueva, el contraste con los libros (en los libros el dibujo
+  /// es perfilado, en la cueva los grabados sólo aparecen al mover
+  /// la linterna), la corrección de Karim ("la diferencia importa"),
+  /// y la única afirmación que Maren se permite NO dejar en
+  /// Disputado: "alguien decidió grabar un bisonte donde nadie iba
+  /// a verlo. Eso requiere intención. No es accidente. Su mano se
+  /// parecía a la mía. Estuvo allí donde yo estuve hoy. Y se fue.
+  /// Nosotras lo vimos. Eso no es Disputado."
+  ///
+  /// Pedagógicamente: la voz íntima del Cuaderno puede sostener una
+  /// afirmación humana profunda (la intencionalidad del autor del
+  /// arte) sin contradecir la disputa epistémica sobre el
+  /// significado. La intención es Sólida; el significado es
+  /// Disputado. Distinción que el oficio honesto preserva.
+  static const EscenaCinematica elApunteLargo = EscenaCinematica(
+    id: '1.3.7',
+    titulo: 'El apunte largo',
+    flagDeSalida: 'escena_1_3_7_vista',
+    flagsRequeridos: {'escena_1_3_6_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Esa noche. Maren en su mesa. El cuaderno abierto. Luz '
+            'baja. Escribe durante mucho tiempo.',
+      ),
+
+      // Bloque 1.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'He visto los grabados hoy. No es como en los libros. En '
+            'los libros se ven con flash o con dibujo perfilado para '
+            'que la línea sea clara. En la cueva no se ven hasta que '
+            'mueves la linterna en el ángulo correcto. Después '
+            'aparecen. El bisonte. El ciervo. La cabeza del uro. El '
+            'caballo.',
+      ),
+
+      // Bloque 2.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Las hizo alguien con una herramienta de piedra hace '
+            'trece mil años. La luz natural no llega ahí. Tuvieron '
+            'que entrar con fuego, instalarse con cuidado, y trabajar '
+            'en silencio profundo durante quién sabe cuánto tiempo.',
+      ),
+
+      // Bloque 3 — la corrección de Karim.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Aitor me preguntó hoy qué sabemos sobre por qué lo '
+            'hicieron. Yo dije que no se sabe. Karim me corrigió: '
+            '"no se puede determinar con la evidencia disponible." '
+            'Tiene razón. No es lo mismo.',
+      ),
+
+      // Bloque 4 — la afirmación humana profunda.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Pero hay una cosa que sí sé. Alguien decidió grabar un '
+            'bisonte donde nadie iba a verlo a la luz del día. Eso '
+            'requiere intención. No es decoración. No es accidente. '
+            'Es algo más.',
+      ),
+
+      // Bloque 5 — el cierre.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'No sé qué es ese algo. Pero existió. Hace trece mil '
+            'años, alguien lo decidió. Su mano se parecía a la mía. '
+            'Estuvo allí donde yo estuve hoy. Y se fue.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura: 'Nosotras lo vimos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Eso no es Disputado.',
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren cierra el cuaderno. Apaga la luz. La habitación '
+            'queda oscura.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'HASTA MAÑANA'),
     ],
   );
 

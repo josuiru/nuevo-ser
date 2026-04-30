@@ -435,10 +435,265 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 1.3 — La cueva del Pirineo**. Cueva paleolítica con
+  /// grabados parietales magdalenienses (bisonte, ciervo, cabeza
+  /// de uro, caballo). Lección epistémica del doc 07: cómo declarar
+  /// **disputada** una afirmación clave —el significado del arte
+  /// parietal— sin caer en relativismo, y cómo distinguir "no se
+  /// sabe" de "no se puede determinar con la evidencia disponible".
+  /// Primer Concilio formal de Maren con revisores académicos.
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-05 — formulación tras la primera lectura del cuerpo.
+  /// - HF.01-12 — análisis de fuentes incluyendo testimonios
+  ///   especializados, dataciones de laboratorio, paralelismos.
+  /// - CC.04-07 — cronología paleolítica, calibrado, marcadores
+  ///   culturales.
+  /// - PH.01-05 — perspectiva histórica frente a sujetos del
+  ///   Paleolítico (antídoto al presentismo).
+  /// - AH.01-05 — argumentación, formulación de incertidumbre.
+  ///
+  /// **Las cinco fuentes son explícitamente ficticias y diegéticas**.
+  /// La cueva concreta NO se identifica con ningún yacimiento real
+  /// — el doc 07 v0.2 caracteriza el lugar como "Alkerdi I literaria,
+  /// modelo verosímil basado en lo real". Las dataciones por C14 se
+  /// mantienen en el rango canónico del Magdaleniense Inferior o
+  /// Medio (~13.000 años antes del presente, validado en doc 17 para
+  /// la capa Cueva-Pirineo) pero sin laboratorio ni publicación
+  /// concreta. Ver `BLOQUEOS-PENDIENTES.md`.
+  static const Brecha brecha13 = Brecha(
+    id: '1.3',
+    titulo: 'La cueva del Pirineo',
+    ubicacionVisible: 'PIRINEO — CUEVA CON GRABADOS PARIETALES',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'PR.05',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.06',
+      'HF.07',
+      'HF.08',
+      'HF.09',
+      'HF.11',
+      'HF.12',
+      'CC.04',
+      'CC.05',
+      'CC.06',
+      'CC.07',
+      'PH.01',
+      'PH.02',
+      'PH.03',
+      'PH.04',
+      'PH.05',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+      'AH.04',
+      'AH.05',
+    ],
+    fuentes: _fuentesBrecha13,
+    afirmacionesCanonicas: _afirmacionesBrecha13,
+    flagDeCompletado: 'brecha_1_3_completada',
+  );
+
+  static const List<Fuente> _fuentesBrecha13 = [
+    Fuente(
+      id: 'grabados_parietales_in_situ',
+      tipoVisible: 'Los grabados parietales en la pared',
+      descripcion: 'En una sala profunda de la cueva, donde no llega '
+          'la luz natural, hay líneas grabadas en la roca. Sólo '
+          'aparecen cuando la linterna pega oblicua. Se reconoce un '
+          'bisonte, una cabeza de uro, un ciervo y la parte trasera '
+          'de un caballo. Las líneas están profundizadas con varias '
+          'pasadas — no son arañazos.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quien o quienes grabaron las imágenes',
+        fecha: 'En el momento de la actividad — Magdaleniense '
+            'Inferior o Medio',
+        publico: 'Indeterminado — la luz natural no llega aquí, hizo '
+            'falta luz que se trajo',
+        intereses: 'No determinables con la evidencia disponible',
+        omisiones: 'Quiénes eran, por qué eligieron este lugar oculto, '
+            'qué representaba para ellos cada figura',
+        corroboraOContradice: 'Es la evidencia central — todo lo demás '
+            'la contextualiza',
+      ),
+    ),
+    Fuente(
+      id: 'covacho_habitacion_carbones',
+      tipoVisible: 'Carbones y huesos del covacho de habitación',
+      descripcion: 'En el covacho próximo, separado de la sala con '
+          'grabados, hay concentraciones de carbón vegetal asociadas '
+          'a fragmentos óseos de fauna y herramientas líticas. '
+          'Estructura típica de hogar paleolítico: cocina, dormir, '
+          'tallar herramientas. La datación C14 sobre los carbones '
+          'sitúa el uso del covacho en el Magdaleniense.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Las personas que habitaron el covacho',
+        fecha: 'Magdaleniense Inferior o Medio (~13.000 años antes '
+            'del presente)',
+        publico: 'Sus propios habitantes',
+        intereses: 'Vivir — comer, calentarse, protegerse',
+        omisiones: 'Si las mismas personas hacían los grabados, qué '
+            'relación había entre los dos espacios',
+        corroboraOContradice: 'Sitúa cronológicamente la actividad '
+            'humana en la zona; no demuestra autoría de los grabados',
+      ),
+    ),
+    Fuente(
+      id: 'informe_excavacion_decadas_pasadas',
+      tipoVisible: 'Informes de excavación de décadas pasadas',
+      descripcion: 'Conjunto de informes técnicos de campañas de '
+          'excavación realizadas en el covacho durante varias '
+          'décadas. Recogen estratigrafía, dataciones C14 sobre '
+          'distintos niveles, inventario de fauna y herramientas. '
+          'Algunos informes son antiguos y usan terminología hoy '
+          'revisada; otros son más recientes y han revisado las '
+          'atribuciones tipológicas.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Equipos académicos de varias generaciones',
+        fecha: 'Décadas de 1970 a 2000 (publicaciones escalonadas)',
+        publico: 'Comunidad académica especializada en Paleolítico '
+            'pirenaico',
+        intereses: 'Documentar el yacimiento; encajar el sitio en la '
+            'secuencia regional',
+        omisiones: 'Análisis isotópicos modernos no incluidos en los '
+            'informes antiguos; reinterpretaciones posibles a la luz '
+            'de campañas más recientes',
+        corroboraOContradice: 'Aportan dataciones y contexto; las '
+            'interpretaciones del arte no son competencia de estos '
+            'informes',
+      ),
+    ),
+    Fuente(
+      id: 'comparativa_otras_cuevas_pirenaicas',
+      tipoVisible: 'Comparativa con otras cuevas paleolíticas '
+          'pirenaicas',
+      descripcion: 'Estudio académico que coteja la cueva con otros '
+          'sitios paleolíticos del Pirineo con arte parietal. '
+          'Identifica continuidades estilísticas en la representación '
+          'animal y discontinuidades en otros aspectos. La conclusión '
+          'metodológica del estudio es prudente: las semejanzas '
+          'estilísticas no autorizan a afirmar identidad cultural '
+          'completa entre los grupos.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Un equipo académico de prehistoria',
+        fecha: 'Publicación contemporánea',
+        publico: 'Comunidad académica de prehistoria europea',
+        intereses: 'Inscribir la cueva en una red comparativa',
+        omisiones: 'Datos no publicados de cuevas en estudio activo',
+        corroboraOContradice: 'Refuerza la datación cultural; mantiene '
+            'abierta la cuestión de la función simbólica',
+      ),
+    ),
+    Fuente(
+      id: 'losas_selladoras_posteriores',
+      tipoVisible: 'Las losas que cierran parcialmente la sala',
+      descripcion: 'A la entrada de la sala con grabados, dos '
+          'grandes losas están movidas hacia un lado pero claramente '
+          'fueron emplazadas en algún momento para sellar el paso. '
+          'La técnica de colocación y el desgaste sugieren que se '
+          'pusieron mucho tiempo después de los grabados, en una '
+          'fase posterior y no determinada.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Quien las emplazó — desconocido',
+        fecha: 'Posterior a los grabados, fecha indeterminada',
+        publico: 'Desconocido',
+        intereses: 'Aparentemente sellar la sala — por qué, no se '
+            'puede determinar con la evidencia disponible',
+        omisiones: 'Cuándo, quién, por qué',
+        corroboraOContradice: 'Indica que el lugar siguió siendo '
+            'significativo para alguien mucho después de los grabados',
+      ),
+    ),
+  ];
+
+  /// Afirmaciones canónicas de la Brecha 1.3. La distribución
+  /// refleja la lección del doc 07: la afirmación clave es
+  /// **Disputada** —el significado del arte parietal— y la
+  /// formulación importa ("no podemos determinar con la evidencia
+  /// disponible" frente a "no se sabe").
+  static const List<AfirmacionCanonica> _afirmacionesBrecha13 = [
+    AfirmacionCanonica(
+      id: 'presencia_humana_magdaleniense',
+      texto: 'Hubo presencia humana magdaleniense en el covacho de '
+          'habitación contiguo a la cueva con grabados.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'covacho_habitacion_carbones',
+        'informe_excavacion_decadas_pasadas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'datacion_magdaleniense',
+      texto: 'La datación de la actividad humana asociada se sitúa '
+          'en torno al Magdaleniense Inferior o Medio.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'covacho_habitacion_carbones',
+        'informe_excavacion_decadas_pasadas',
+        'comparativa_otras_cuevas_pirenaicas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'representan_fauna_pleistocena',
+      texto: 'Los grabados representan fauna pleistocena (bisonte, '
+          'uro, ciervo, caballo).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: ['grabados_parietales_in_situ'],
+    ),
+    AfirmacionCanonica(
+      id: 'luz_artificial',
+      texto: 'Los grabados se hicieron con luz artificial — antorcha '
+          'o lámpara de grasa — porque la luz natural no llega a la '
+          'sala.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: ['grabados_parietales_in_situ'],
+    ),
+    AfirmacionCanonica(
+      id: 'significado_arte_parietal',
+      texto: 'Podemos determinar con la evidencia disponible el '
+          'significado del arte parietal magdaleniense en general y '
+          'de los grabados de esta cueva en particular.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'grabados_parietales_in_situ',
+        'comparativa_otras_cuevas_pirenaicas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'autores_grabados_y_covacho',
+      texto: 'Quienes grabaron las paredes son las mismas personas '
+          'que habitaron el covacho contiguo.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'covacho_habitacion_carbones',
+        'grabados_parietales_in_situ',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'losas_sellaron_posteriormente',
+      texto: 'Las losas que cierran parcialmente la sala fueron '
+          'emplazadas en un momento posterior a los grabados.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: ['losas_selladoras_posteriores'],
+    ),
+  ];
+
   /// Lista ordenada de todas las Brechas catalogadas. El orquestador
   /// la consulta para resolver `brechaPendiente()` igual que
   /// `EscenasArco1.todas` resuelve la próxima cinemática.
-  static const List<Brecha> todas = [brecha11, brecha12];
+  static const List<Brecha> todas = [brecha11, brecha12, brecha13];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
   /// la Brecha:
@@ -447,8 +702,13 @@ class CatalogoBrechas {
   ///   reordenado en F8.4 — antes 1.B activaba directamente
   ///   `arco_1_completado` para llegar al Mosaico, ahora encadena
   ///   con la siguiente Brecha del arco).
+  /// - 1.3 se dispara con `cueva_pirineo_visitada` (cierre de la
+  ///   cinemática 1.3.5, "vuelta y silencio") — la cueva se visita
+  ///   en cinco cinemáticas concatenadas antes de abrir la fase
+  ///   jugable de la Brecha.
   static const Map<String, Brecha> brechaPorFlagDeDisparo = {
     'aralar_dolmen_alcanzado': brecha11,
     'cromlech_aralar_alcanzado': brecha12,
+    'cueva_pirineo_visitada': brecha13,
   };
 }

@@ -169,6 +169,35 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
+## Brecha 1.3 (cueva del Pirineo) + 7 cinemáticas internas — sustituciones diegéticas (F8.5)
+
+**Tracker doc 17**: pendiente de revisión humana. La capa Cueva-Pirineo está validada como entrada general en el doc 17 (datación canónica ~13.000 años, Magdaleniense), pero los nombres concretos del doc 07 v0.2 NO lo están: Alkerdi I (literaria), Berroberria, Barandiarán, Isturitz, Lezia, Lexotoa.
+
+**Guion canónico (doc 07 §1.3)**: Maren visita una cueva paleolítica con Isaura tras tres semanas dentro del oficio. Cinco cinemáticas concatenadas (viaje al Pirineo → boca de la cueva → covacho de habitación → sala con grabados parietales → vuelta y silencio) que abren la fase jugable de la Brecha 1.3, seguidas de dos cinemáticas post-Brecha (primer Concilio formal con revisores académicos + apunte largo en el Cuaderno). Lección epistémica: cómo declarar **disputada** la afirmación clave (significado del arte parietal) sin caer en relativismo, y cómo formular "no podemos determinar con la evidencia disponible" frente a "no se sabe".
+
+**Estado**: implementada en `CatalogoBrechas.brecha13` (5 fuentes diegéticas + 7 afirmaciones canónicas) + 7 cinemáticas en `EscenasArco1` (`viajeAlPirineo`, `laBocaDeLaCueva`, `dentroDeLaCueva`, `laPared`, `vueltaYSilencio`, `elPrimerConcilioFormal`, `elApunteLargo`). El flujo del orquestador queda:
+- 1.B.1 (latente desde F8.2) ahora se dispara automáticamente al cerrar la Brecha 1.2 — su `flagDeSalida` (`escena_1_b1_vista`) actúa como precondición de 1.3.1.
+- 1.3.1-1.3.5 se encadenan por `flagDeSalida` y al cerrar 1.3.5 se activa `cueva_pirineo_visitada`, que el catálogo reconoce como disparador de la fase jugable de la Brecha 1.3.
+- Tras `brecha_1_3_completada`, el orquestador encadena 1.3.6 (Concilio formal) y 1.3.7 (apunte largo), y luego la 1.C (latente desde F8.2).
+
+**Sustituciones diegéticas aplicadas**:
+- **Yacimiento concreto**: el doc 07 v0.2 caracteriza la cueva como "Alkerdi I literaria, modelo verosímil basado en lo real". El código no nombra ningún yacimiento real — la cueva queda diegética. Los nombres del v0.2 (Alkerdi, Berroberria, Isturitz, Lezia, Lexotoa) no aparecen en código.
+- **Investigador**: "Barandiarán" (nombre real con peso historiográfico) sustituido por "equipos académicos de varias generaciones" / "un equipo académico de prehistoria". La pedagogía (informes con vocabulario hoy revisado, reinterpretación posible a la luz de campañas más recientes) se preserva.
+- **Datación C14 específica**: el guion 1.3 v0.2 menciona dataciones concretas. Sustituidas por "Magdaleniense Inferior o Medio (~13.000 años antes del presente)" — rango canónico ya validado en doc 17 para la capa, sin laboratorio ni publicación específica.
+- **Significado del arte parietal**: la afirmación canónica clave (`significado_arte_parietal`) se formula como **Disputada** con el texto "Podemos determinar con la evidencia disponible el significado del arte parietal magdaleniense" — formulación deliberadamente ambigua que el jugador debe rechazar ("no podemos") al asignarle nivel Disputado. Lección pedagógica del doc 07.
+
+**Sin afirmar contenido sobre vivencias o creencias** de las personas paleolíticas (prohibición del CLAUDE.md): la sala con grabados se describe en términos materiales (luz natural no llega, técnica de grabado, paralelismos estilísticos), las afirmaciones canónicas no asumen función simbólica concreta, y la afirmación `autores_grabados_y_covacho` (¿son las mismas personas que habitaron el covacho contiguo?) está calificada como **Disputada**, no afirmando identidad.
+
+**Pendiente de revisión humana**: 
+- ¿La afirmación `luz_artificial` debe ser **Probable** o **Sólida**? (Hoy es Probable porque inferimos la lámpara/antorcha por ausencia de luz natural; el comité puede argumentar que la inferencia es lo bastante directa para Sólido.)
+- ¿La afirmación `losas_sellaron_posteriormente` está bien calibrada como **Probable**? (Hoy lo es porque "técnica y desgaste" sugieren posterioridad sin confirmarla; ¿es suficiente o debería ser Disputada?)
+- Tono de Joana en la 1.3.6 — primera revisora académica de Maren, voz aún no fijada en doc 04 (apuntada en Bíblia de Personajes pero sin entrada propia).
+- ¿Aitor encaja como guía del Concilio formal en 1.3.6? El doc 07 v0.2 lo nombra; voz pendiente de fijar.
+
+**Cuando el comité valide los nombres**: revertir Barandiarán + nombrar el yacimiento concreto si se valida + opcionalmente añadir cifra de C14 con su laboratorio si el comité aporta referencia.
+
+---
+
 ## Cinemática 1.Z del cierre del arco — pendiente hasta cerrar formato del Mosaico
 
 **Tracker doc 17**: pendiente.

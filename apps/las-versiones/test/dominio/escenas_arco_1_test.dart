@@ -219,6 +219,212 @@ void main() {
     });
   });
 
+  group('EscenasArco1.viajeAlPirineo (1.3.1)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.viajeAlPirineo.id, '1.3.1');
+      expect(
+        EscenasArco1.viajeAlPirineo.flagDeSalida,
+        'escena_1_3_1_vista',
+      );
+      expect(
+        EscenasArco1.viajeAlPirineo.flagsRequeridos,
+        {'escena_1_b1_vista'},
+        reason: '1.3.1 se dispara después de la conversación con el padre '
+            '(1.B.1), que cerraba la transición entre Estaciones 2 y 3',
+      );
+    });
+
+    test('viaja con ambiente coche de Isaura — la carretera al Pirineo', () {
+      expect(
+        EscenasArco1.viajeAlPirineo.ambiente,
+        same(AmbienteArchivo.cocheIsaura),
+      );
+    });
+
+    test('cierra como amable — al llegar al inicio del bosque la sesión '
+        'puede pausarse antes de entrar a la cueva', () {
+      final ultimoPlano = EscenasArco1.viajeAlPirineo.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.laBocaDeLaCueva (1.3.2)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.laBocaDeLaCueva.id, '1.3.2');
+      expect(
+        EscenasArco1.laBocaDeLaCueva.flagDeSalida,
+        'escena_1_3_2_vista',
+      );
+      expect(
+        EscenasArco1.laBocaDeLaCueva.flagsRequeridos,
+        {'escena_1_3_1_vista'},
+        reason: '1.3.2 se encadena directamente tras 1.3.1',
+      );
+    });
+
+    test('viaja con ambiente bosque de hayas — la subida hasta la boca '
+        'de la cueva', () {
+      expect(
+        EscenasArco1.laBocaDeLaCueva.ambiente,
+        same(AmbienteArchivo.bosqueHayas),
+      );
+    });
+
+    test('cierra como amable — antes de entrar a la cueva la sesión '
+        'puede pausarse', () {
+      final ultimoPlano = EscenasArco1.laBocaDeLaCueva.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.dentroDeLaCueva (1.3.3)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.dentroDeLaCueva.id, '1.3.3');
+      expect(
+        EscenasArco1.dentroDeLaCueva.flagDeSalida,
+        'escena_1_3_3_vista',
+      );
+      expect(
+        EscenasArco1.dentroDeLaCueva.flagsRequeridos,
+        {'escena_1_3_2_vista'},
+        reason: '1.3.3 se encadena directamente tras 1.3.2',
+      );
+    });
+
+    test('viaja con ambiente interior de la cueva — el covacho de '
+        'habitación con carbones y herramientas', () {
+      expect(
+        EscenasArco1.dentroDeLaCueva.ambiente,
+        same(AmbienteArchivo.cuevaInterior),
+      );
+    });
+
+    test('cierra como amable — antes de la sala con grabados la sesión '
+        'puede pausarse', () {
+      final ultimoPlano = EscenasArco1.dentroDeLaCueva.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.laPared (1.3.4)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.laPared.id, '1.3.4');
+      expect(
+        EscenasArco1.laPared.flagDeSalida,
+        'escena_1_3_4_vista',
+      );
+      expect(
+        EscenasArco1.laPared.flagsRequeridos,
+        {'escena_1_3_3_vista'},
+        reason: '1.3.4 se encadena directamente tras 1.3.3',
+      );
+    });
+
+    test('viaja con ambiente sala con grabados parietales — el corazón '
+        'pedagógico de la Estación 3', () {
+      expect(
+        EscenasArco1.laPared.ambiente,
+        same(AmbienteArchivo.salaGrabadosParietales),
+      );
+    });
+
+    test('cierra como amable — los momentos largos sin diálogo terminan '
+        'cuando el jugador decide salir', () {
+      final ultimoPlano = EscenasArco1.laPared.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.vueltaYSilencio (1.3.5)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.vueltaYSilencio.id, '1.3.5');
+      expect(
+        EscenasArco1.vueltaYSilencio.flagDeSalida,
+        'escena_1_3_5_vista',
+      );
+      expect(
+        EscenasArco1.vueltaYSilencio.flagsRequeridos,
+        {'escena_1_3_4_vista'},
+        reason: '1.3.5 se encadena directamente tras 1.3.4 — el coche '
+            'de regreso',
+      );
+    });
+
+    test('viaja con ambiente coche de Isaura — la vuelta', () {
+      expect(
+        EscenasArco1.vueltaYSilencio.ambiente,
+        same(AmbienteArchivo.cocheIsaura),
+      );
+    });
+
+    test('cierra como amable — al llegar a Iruña termina la sesión, no '
+        'encadena con la fase jugable de la Brecha 1.3 en la misma '
+        'sesión', () {
+      final ultimoPlano = EscenasArco1.vueltaYSilencio.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.elPrimerConcilioFormal (1.3.6)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.elPrimerConcilioFormal.id, '1.3.6');
+      expect(
+        EscenasArco1.elPrimerConcilioFormal.flagDeSalida,
+        'escena_1_3_6_vista',
+      );
+      expect(
+        EscenasArco1.elPrimerConcilioFormal.flagsRequeridos,
+        {'brecha_1_3_completada'},
+        reason: '1.3.6 se dispara automáticamente al cerrar la fase '
+            'jugable de la Brecha 1.3',
+      );
+    });
+
+    test('viaja con ambiente sala del Concilio — Aitor, Joana y Karim '
+        'revisan la entrega de Maren', () {
+      expect(
+        EscenasArco1.elPrimerConcilioFormal.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test('cierra como amable — tras el Concilio formal Maren vuelve a '
+        'casa, no encadena con 1.3.7 en la misma sesión', () {
+      final ultimoPlano = EscenasArco1.elPrimerConcilioFormal.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
+  group('EscenasArco1.elApunteLargo (1.3.7)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.elApunteLargo.id, '1.3.7');
+      expect(
+        EscenasArco1.elApunteLargo.flagDeSalida,
+        'escena_1_3_7_vista',
+      );
+      expect(
+        EscenasArco1.elApunteLargo.flagsRequeridos,
+        {'escena_1_3_6_vista'},
+        reason: '1.3.7 se encadena directamente tras 1.3.6 — el apunte '
+            'largo en el Cuaderno tras el primer Concilio formal',
+      );
+    });
+
+    test('viaja con ambiente cuarto de Maren — donde escribe en su '
+        'Cuaderno', () {
+      expect(
+        EscenasArco1.elApunteLargo.ambiente,
+        same(AmbienteArchivo.cuartoCasaMaren),
+      );
+    });
+
+    test('cierra como amable — al cerrar el Cuaderno termina la sesión',
+        () {
+      final ultimoPlano = EscenasArco1.elApunteLargo.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+  });
+
   group('EscenasArco1.naiaPregunta (1.C)', () {
     test('id, flagDeSalida y precondición coherentes', () {
       expect(EscenasArco1.naiaPregunta.id, '1.C');
@@ -328,6 +534,29 @@ void main() {
       final flags =
           EscenasArco1.flagsDeCierrePorEscena['escena_1_4_4_vista'];
       expect(flags, {'rango_aprendiz_i', 'arco_2_anunciado'});
+    });
+
+    test('1.3.1 cierra activando traveling_pyrenees_first — la primera '
+        'salida con Isaura fuera de Iruña queda registrada en el estado '
+        'narrativo', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_3_1_vista'];
+      expect(flags, {'traveling_pyrenees_first'});
+    });
+
+    test('1.3.5 cierra activando cueva_pirineo_visitada — el flag que '
+        'el catálogo de Brechas reconoce como disparador de la fase '
+        'jugable de la Brecha 1.3', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_3_5_vista'];
+      expect(flags, {'cueva_pirineo_visitada'});
+    });
+
+    test('1.3.6 cierra activando first_formal_concilio — el primer '
+        'Concilio formal de Maren con revisores académicos', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_3_6_vista'];
+      expect(flags, {'first_formal_concilio'});
     });
 
     test('todas las escenas catalogadas están en `todas` y todas las que '
