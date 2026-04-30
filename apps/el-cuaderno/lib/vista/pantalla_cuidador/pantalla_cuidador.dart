@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 
+import '../../datos/repositorio_historico_resumenes.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/agregado_semanal.dart';
 import '../../dominio/repositorio_local.dart';
@@ -24,6 +25,8 @@ class PantallaCuidador extends StatefulWidget {
     required this.repositorio,
     this.semanaPivote,
     this.sincronizador,
+    this.repoHistorico,
+    this.proveedorAhora,
   });
 
   final RepositorioLocal repositorio;
@@ -39,6 +42,18 @@ class PantallaCuidador extends StatefulWidget {
   /// se monte en tests/demo sin red sin tener que mockear el cliente.
   final SincronizadorAgregadosCuaderno? sincronizador;
 
+  /// Persistencia del histórico de resúmenes anteriores. Si llega no
+  /// nulo, la pantalla carga las entradas archivadas y las muestra
+  /// bajo el resumen actual; cada sincronización exitosa nueva se
+  /// archiva. Si es null, el histórico no aparece — modo S1 / tests
+  /// que no quieren tocar prefs.
+  final RepositorioHistoricoResumenes? repoHistorico;
+
+  /// Reloj inyectable para etiquetar el `archivedAt` de las entradas
+  /// archivadas. En producción es `DateTime.now`. Tests con tiempo
+  /// fijo lo sobrescriben.
+  final DateTime Function()? proveedorAhora;
+
   @override
   State<PantallaCuidador> createState() => _EstadoPantallaCuidador();
 }
@@ -49,6 +64,7 @@ class _EstadoPantallaCuidador extends State<PantallaCuidador> {
   bool _sincronizando = false;
   companion.AgregadoSemanal? _agregadoBackend;
   String? _avisoSincronizacion;
+  List<EntradaHistoricoResumen> _historico = const [];
 
   @override
   void initState() {
@@ -58,12 +74,16 @@ class _EstadoPantallaCuidador extends State<PantallaCuidador> {
 
   Future<void> _cargar() async {
     final observaciones = await widget.repositorio.obtenerObservaciones();
+    final historico = widget.repoHistorico == null
+        ? const <EntradaHistoricoResumen>[]
+        : await widget.repoHistorico!.cargar();
     if (!mounted) return;
     setState(() {
       _agregado = computarAgregadoSemanal(
         observaciones,
         semanaPivote: widget.semanaPivote,
       );
+      _historico = historico;
       _cargando = false;
     });
   }
@@ -80,8 +100,25 @@ class _EstadoPantallaCuidador extends State<PantallaCuidador> {
       semanaPivote: widget.semanaPivote,
     );
     if (!mounted) return;
+    // Archivar (fuera del setState porque toca prefs).
+    List<EntradaHistoricoResumen> historicoNuevo = _historico;
+    if (resultado is SyncExito && resultado.agregadoBackend.summaryText.isNotEmpty) {
+      final repo = widget.repoHistorico;
+      if (repo != null) {
+        final ahora = (widget.proveedorAhora ?? DateTime.now)();
+        await repo.archivar(EntradaHistoricoResumen(
+          isoWeek: resultado.agregadoBackend.isoWeek,
+          summaryText: resultado.agregadoBackend.summaryText,
+          conversationPrompt: resultado.agregadoBackend.conversationPrompt,
+          archivedAt: ahora,
+        ));
+        historicoNuevo = await repo.cargar();
+      }
+    }
+    if (!mounted) return;
     setState(() {
       _sincronizando = false;
+      _historico = historicoNuevo;
       switch (resultado) {
         case SyncSinToken():
           _avisoSincronizacion = textos.cuidadorSincronizarSinToken;
@@ -113,6 +150,7 @@ class _EstadoPantallaCuidador extends State<PantallaCuidador> {
                 sincronizando: _sincronizando,
                 puedeSincronizar: widget.sincronizador != null,
                 alSincronizar: _sincronizar,
+                historico: _historico,
                 textos: textos,
                 esquema: esquema,
               ),
@@ -129,6 +167,7 @@ class _Contenido extends StatelessWidget {
     required this.sincronizando,
     required this.puedeSincronizar,
     required this.alSincronizar,
+    required this.historico,
     required this.textos,
     required this.esquema,
   });
@@ -139,6 +178,7 @@ class _Contenido extends StatelessWidget {
   final bool sincronizando;
   final bool puedeSincronizar;
   final VoidCallback alSincronizar;
+  final List<EntradaHistoricoResumen> historico;
   final TextosApp textos;
   final ColorScheme esquema;
 
@@ -146,6 +186,14 @@ class _Contenido extends StatelessWidget {
   Widget build(BuildContext context) {
     final summaryBackend = agregadoBackend?.summaryText ?? '';
     final promptBackend = agregadoBackend?.conversationPrompt ?? '';
+    // El histórico que se muestra es el de semanas anteriores — la
+    // semana del agregadoBackend actual ya se ve en _ResumenBackend,
+    // así que la filtramos aquí para no duplicar.
+    final historicoAnterior = agregadoBackend == null
+        ? historico
+        : historico
+            .where((e) => e.isoWeek != agregadoBackend!.isoWeek)
+            .toList();
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
       children: [
@@ -169,6 +217,13 @@ class _Contenido extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         _Metricas(textos: textos, agregado: agregado, esquema: esquema),
+        if (historicoAnterior.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          _BloqueHistorico(
+            entradas: historicoAnterior,
+            esquema: esquema,
+          ),
+        ],
         if (puedeSincronizar) ...[
           const SizedBox(height: 24),
           _BloqueSincronizar(
@@ -181,6 +236,89 @@ class _Contenido extends StatelessWidget {
         ],
       ],
     );
+  }
+}
+
+class _BloqueHistorico extends StatelessWidget {
+  const _BloqueHistorico({
+    required this.entradas,
+    required this.esquema,
+  });
+
+  final List<EntradaHistoricoResumen> entradas;
+  final ColorScheme esquema;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Resúmenes anteriores',
+          style: TipografiaCuaderno.sans(
+            color: esquema.tertiary,
+            tamano: TipografiaCuaderno.tamano12,
+            peso: TipografiaCuaderno.pesoMedio,
+          ),
+        ),
+        const SizedBox(height: 8),
+        for (final entrada in entradas)
+          _TarjetaHistorico(entrada: entrada, esquema: esquema),
+      ],
+    );
+  }
+}
+
+class _TarjetaHistorico extends StatelessWidget {
+  const _TarjetaHistorico({required this.entrada, required this.esquema});
+
+  final EntradaHistoricoResumen entrada;
+  final ColorScheme esquema;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: esquema.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _etiquetaSemana(entrada.isoWeek),
+              style: TipografiaCuaderno.sans(
+                color: esquema.tertiary,
+                tamano: TipografiaCuaderno.tamano11,
+                peso: TipografiaCuaderno.pesoMedio,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              entrada.summaryText,
+              style: TipografiaCuaderno.serif(
+                color: PaletaCuaderno.tinta,
+                tamano: TipografiaCuaderno.tamano13,
+                altoLinea: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Convierte `2026-W17` en `Semana 17 de 2026` — formato simple, sin
+  /// reglas de localización que requieran la fecha real del lunes (la
+  /// pantalla la lee el adulto, que se orienta bien con el número de
+  /// semana).
+  static String _etiquetaSemana(String isoWeek) {
+    final partes = isoWeek.split('-W');
+    if (partes.length != 2) return isoWeek;
+    return 'Semana ${partes[1]} de ${partes[0]}';
   }
 }
 

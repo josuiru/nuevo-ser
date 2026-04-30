@@ -73,6 +73,80 @@ void main() {
       expect(bytesPleno.length, greaterThan(bytesVacio.length));
     });
 
+    test(
+        'cargarMedio inyectado se invoca con cada ruta apuntada y null no rompe',
+        () async {
+      // Verificamos el comportamiento del callback (qué rutas pide, en
+      // qué orden, ignora observaciones sin medios). Devolvemos `null`
+      // como si los ficheros no existieran — el PDF se genera sin esas
+      // imágenes y el path "medio huérfano" del exportador queda
+      // ejercitado. La incrustación real requiere bytes JPEG/PNG
+      // decodificables y se cubre en el smoke manual del APK.
+      final rutasPedidas = <String>[];
+      final observaciones = [
+        Observacion(
+          id: 'obs-1',
+          cuandoCreada: DateTime.utc(2026, 4, 30),
+          cuandoOcurrio: DateTime.utc(2026, 4, 30),
+          dondeNombre: 'parque',
+          queVio: 'algo',
+          confianza: NivelConfianza.hipotesisActiva,
+          fotoRutaLocal: 'medios/obs-1_foto.jpg',
+          dibujoRutaLocal: 'medios/obs-1_dibujo.png',
+        ),
+        Observacion(
+          id: 'obs-2',
+          cuandoCreada: DateTime.utc(2026, 4, 30),
+          cuandoOcurrio: DateTime.utc(2026, 4, 30),
+          dondeNombre: 'parque',
+          queVio: 'otro',
+          confianza: NivelConfianza.hipotesisActiva,
+          // sin medios — no debe pedir nada al callback.
+        ),
+      ];
+      final bytes = await ExportadorCuadernoPdf.aBytes(
+        tituloDelNino: 'Lucía',
+        observaciones: observaciones,
+        misterios: const [],
+        exportadoEn: DateTime.utc(2026, 4, 30),
+        cargarMedio: (ruta) async {
+          rutasPedidas.add(ruta);
+          return null;
+        },
+      );
+      // Sólo se piden los medios de la observación que los tiene.
+      expect(rutasPedidas, [
+        'medios/obs-1_foto.jpg',
+        'medios/obs-1_dibujo.png',
+      ]);
+      // El PDF se genera; el null no rompe el documento.
+      expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
+    });
+
+    test('sin cargarMedio, no se intenta resolver ningún medio', () async {
+      // Caso degradado: no se inyecta cargarMedio. El PDF queda en
+      // formato sólo-texto (modo S1) y el `Future.wait` interno no
+      // se ejecuta.
+      final observaciones = [
+        Observacion(
+          id: 'obs-x',
+          cuandoCreada: DateTime.utc(2026, 4, 30),
+          cuandoOcurrio: DateTime.utc(2026, 4, 30),
+          dondeNombre: 'parque',
+          queVio: 'algo',
+          confianza: NivelConfianza.hipotesisActiva,
+          fotoRutaLocal: 'medios/obs-x_foto.jpg',
+        ),
+      ];
+      final bytes = await ExportadorCuadernoPdf.aBytes(
+        tituloDelNino: 'Lucía',
+        observaciones: observaciones,
+        misterios: const [],
+        exportadoEn: DateTime.utc(2026, 4, 30),
+      );
+      expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
+    });
+
     test('título con caracteres acentuados se preserva en la cabecera',
         () async {
       // No miramos el contenido binario del PDF (los strings van

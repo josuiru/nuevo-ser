@@ -12,6 +12,7 @@ import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
 import 'datos/repositorio_aula_profesor.dart';
+import 'datos/repositorio_historico_resumenes.dart';
 import 'datos/repositorio_perfil_cuaderno.dart';
 import 'datos/repositorio_presentacion_sit_spot.dart';
 import 'datos/selector_imagen.dart';
@@ -296,6 +297,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final companion.ClienteCompanion _clienteCompanion;
   late final companion.ClienteAuthAdulto _clienteAuthProfesor;
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
+  late final RepositorioHistoricoResumenes _repoHistoricoResumenes;
   late final SelectorImagen _selectorImagen;
   late final AlmacenadorMedios _almacenadorMedios;
   /// Inyectado a `PantallaObservacion` para que el niño pueda anclar
@@ -330,6 +332,9 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
       repositorio: widget.repositorio,
       repoCuenta: widget.repoCuenta,
       clienteCompanion: _clienteCompanion,
+    );
+    _repoHistoricoResumenes = RepositorioHistoricoResumenes(
+      prefs: SharedPreferences.getInstance,
     );
     _selectorImagen = SelectorImagenImagePicker();
     _almacenadorMedios = AlmacenadorMedios();
@@ -421,6 +426,18 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     );
   }
 
+  /// Lee los bytes en disco de un fichero medio para que el exportador
+  /// PDF lo incruste como `pw.MemoryImage`. Devuelve null si el fichero
+  /// no existe (medio borrado a mano, dispositivo migrado…) — el
+  /// exportador omite la imagen sin romper el resto del documento.
+  Future<Uint8List?> _cargarMedioParaPdf(String rutaRelativa) async {
+    final rutaAbsoluta =
+        await _almacenadorMedios.resolverAbsoluta(rutaRelativa);
+    final fichero = File(rutaAbsoluta);
+    if (!await fichero.exists()) return null;
+    return fichero.readAsBytes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<EnviarPreguntaTutor?>(
@@ -439,12 +456,14 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           repoCuentaDebug: kDebugMode ? widget.repoCuenta : null,
           alCambiarTokenDebug: kDebugMode ? _refrescarTokenTutor : null,
           sincronizadorAgregados: _sincronizadorAgregados,
+          repoHistoricoResumenes: _repoHistoricoResumenes,
           alGuardarObservacion: _alGuardarObservacion,
           intentarSincronizarObservaciones: _intentarSincronizarObservaciones,
           selectorImagen: _selectorImagen,
           almacenadorMedios: _almacenadorMedios,
           servicioGeolocalizacion: _servicioGeolocalizacion,
           resolverMedioParaExport: _resolverMedioParaExport,
+          cargarMedioParaPdf: _cargarMedioParaPdf,
           nombreParaTituloPdf: nombrePerfilElCuaderno.value,
           clienteAuthProfesor: _clienteAuthProfesor,
           clienteCompanionProfesor: _clienteCompanion,

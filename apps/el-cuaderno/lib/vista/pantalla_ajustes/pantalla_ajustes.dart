@@ -6,6 +6,7 @@ import 'package:printing/printing.dart';
 import '../../datos/almacenador_medios.dart';
 import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
+import '../../datos/repositorio_historico_resumenes.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
@@ -53,8 +54,10 @@ class PantallaAjustes extends StatelessWidget {
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
+    this.repoHistoricoResumenes,
     this.intentarSincronizarObservaciones,
     this.resolverMedioParaExport,
+    this.cargarMedioParaPdf,
     this.almacenadorMedios,
     this.nombreParaTituloPdf,
     this.clienteAuthProfesor,
@@ -107,6 +110,13 @@ class PantallaAjustes extends StatelessWidget {
   /// opt-in "Compartir resumen con el adulto".
   final SincronizadorAgregadosCuaderno? sincronizadorAgregados;
 
+  /// Histórico de los últimos resúmenes sincronizados — se reenvía a
+  /// `PantallaCuidador` para mostrar la sección "Resúmenes anteriores"
+  /// y para que cada sincronización exitosa archive el nuevo resumen.
+  /// El flujo "borrar mi cuaderno" también lo limpia para no dejar
+  /// resúmenes huérfanos en disco.
+  final RepositorioHistoricoResumenes? repoHistoricoResumenes;
+
   /// Closure opt-in para enviar las observaciones pendientes al
   /// servidor. Cableada por el orquestador a `ColaSyncObservaciones.
   /// intentarEnviar` con el `ClienteElCuaderno`. Si es null, el bloque
@@ -120,6 +130,13 @@ class PantallaAjustes extends StatelessWidget {
   /// manifiesto (lectura sigue siendo válida; el importador no podrá
   /// distinguir presentes de huérfanos).
   final ResolverMedioExportado? resolverMedioParaExport;
+
+  /// Lee los bytes de cada fichero de medios apuntado por las
+  /// observaciones — el exportador PDF los incrusta como
+  /// `pw.MemoryImage` para que el cuaderno impreso se parezca al
+  /// digital. Si es null, el PDF se queda en formato sólo-texto (modo
+  /// degradado: el contenido sigue siendo legible).
+  final CargarMedioPdf? cargarMedioParaPdf;
 
   /// Si llega no nulo, el flujo "borrar mi cuaderno" también borra
   /// el subdirectorio de medios (fotos + dibujos) tras vaciar Isar —
@@ -257,6 +274,7 @@ class PantallaAjustes extends StatelessWidget {
         builder: (_) => PantallaCuidador(
           repositorio: repositorio,
           sincronizador: sincronizadorAgregados,
+          repoHistorico: repoHistoricoResumenes,
         ),
       ),
     );
@@ -346,6 +364,7 @@ class PantallaAjustes extends StatelessWidget {
       observaciones: observaciones,
       sitSpot: sitSpot,
       misterios: misterios,
+      cargarMedio: cargarMedioParaPdf,
     );
     if (!context.mounted) return;
     // Delegamos al sistema operativo: el SO ofrece imprimir, compartir,
@@ -405,6 +424,9 @@ class PantallaAjustes extends StatelessWidget {
     // en disco aunque las observaciones que los apuntaban hubieran
     // desaparecido.
     final mediosBorrados = await almacenadorMedios?.borrarTodo() ?? 0;
+    // Mismo razonamiento para el histórico de resúmenes del cuidador
+    // — son derivados de las observaciones que se acaban de borrar.
+    await repoHistoricoResumenes?.borrar();
     if (!context.mounted) return;
     final mensaje = '${textos.ajustesBorradoCompleto} '
         '(${resultado.observacionesBorradas} · '

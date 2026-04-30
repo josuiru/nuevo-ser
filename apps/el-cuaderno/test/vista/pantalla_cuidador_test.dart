@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:el_cuaderno/datos/repositorio_historico_resumenes.dart';
 import 'package:el_cuaderno/datos/sincronizador_agregados.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
@@ -27,6 +28,8 @@ void main() {
     WidgetTester tester, {
     DateTime? semanaPivote,
     SincronizadorAgregadosCuaderno? sincronizador,
+    RepositorioHistoricoResumenes? repoHistorico,
+    DateTime Function()? proveedorAhora,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
@@ -39,6 +42,8 @@ void main() {
           repositorio: repositorio,
           semanaPivote: semanaPivote,
           sincronizador: sincronizador,
+          repoHistorico: repoHistorico,
+          proveedorAhora: proveedorAhora,
         ),
       ),
     );
@@ -223,4 +228,152 @@ void main() {
       expect(find.textContaining('descansó'), findsOneWidget);
     },
   );
+
+  group('histórico de resúmenes', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+    });
+
+    RepositorioHistoricoResumenes crearRepoHistorico() {
+      return RepositorioHistoricoResumenes(
+        prefs: SharedPreferences.getInstance,
+      );
+    }
+
+    testWidgets('sin entradas previas: bloque "Resúmenes anteriores" no aparece',
+        (tester) async {
+      await bombear(
+        tester,
+        semanaPivote: DateTime(2026, 4, 30),
+        repoHistorico: crearRepoHistorico(),
+      );
+      expect(find.text('Resúmenes anteriores'), findsNothing);
+    });
+
+    testWidgets('con entradas previas: bloque aparece con sus resúmenes',
+        (tester) async {
+      final repo = crearRepoHistorico();
+      await repo.archivar(EntradaHistoricoResumen(
+        isoWeek: '2026-W16',
+        summaryText: 'esa semana descansaste; vimos un mirlo dos veces',
+        conversationPrompt: '¿qué te llamó la atención del mirlo?',
+        archivedAt: DateTime.utc(2026, 4, 22),
+      ));
+      await repo.archivar(EntradaHistoricoResumen(
+        isoWeek: '2026-W17',
+        summaryText: 'tres observaciones de hoja seca; un Misterio abierto',
+        conversationPrompt: null,
+        archivedAt: DateTime.utc(2026, 4, 28),
+      ));
+
+      await bombear(
+        tester,
+        semanaPivote: DateTime(2026, 4, 30),
+        repoHistorico: repo,
+      );
+
+      expect(find.text('Resúmenes anteriores'), findsOneWidget);
+      expect(find.text('Semana 17 de 2026'), findsOneWidget);
+      expect(find.text('Semana 16 de 2026'), findsOneWidget);
+      expect(
+        find.textContaining('mirlo dos veces'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('hoja seca'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets(
+        'sincronización exitosa archiva el resumen y la siguiente apertura lo conserva',
+        (tester) async {
+      final repo = crearRepoHistorico();
+      final sincronizador = crearSincronizadorConRespuesta(
+        http.Response(
+          jsonEncode({
+            'game_id': 'el-cuaderno',
+            'iso_week': '2026-W18',
+            'aggregates_hash': 'hash-fake',
+            'summary_text': 'esta semana abriste un Misterio nuevo',
+            'conversation_prompt': '¿qué Misterio te ronda?',
+            'generated_at': '2026-04-30T20:00:00Z',
+          }),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        ),
+        token: 'jwt-niño',
+      );
+
+      await bombear(
+        tester,
+        semanaPivote: DateTime.utc(2026, 4, 30),
+        sincronizador: sincronizador,
+        repoHistorico: repo,
+        proveedorAhora: () => DateTime.utc(2026, 4, 30, 20),
+      );
+
+      await tester.tap(find.text('Compartir resumen con el adulto'));
+      await tester.pumpAndSettle();
+
+      // El resumen actual aparece como tal.
+      expect(
+        find.textContaining('Misterio nuevo'),
+        findsOneWidget,
+      );
+
+      // El histórico ya tiene la entrada archivada.
+      final cargadas = await repo.cargar();
+      expect(cargadas, hasLength(1));
+      expect(cargadas.first.isoWeek, '2026-W18');
+      expect(cargadas.first.archivedAt, DateTime.utc(2026, 4, 30, 20));
+    });
+
+    testWidgets(
+        'la entrada de la semana actual no se duplica en "Resúmenes anteriores"',
+        (tester) async {
+      final repo = crearRepoHistorico();
+      // Sembramos una entrada que coincide con la semana en curso —
+      // la pantalla la debería filtrar para no duplicarla con el
+      // bloque del resumen actual cuando llegue desde el backend.
+      await repo.archivar(EntradaHistoricoResumen(
+        isoWeek: '2026-W18',
+        summaryText: 'resumen viejo de la semana en curso',
+        conversationPrompt: null,
+        archivedAt: DateTime.utc(2026, 4, 28),
+      ));
+      final sincronizador = crearSincronizadorConRespuesta(
+        http.Response(
+          jsonEncode({
+            'game_id': 'el-cuaderno',
+            'iso_week': '2026-W18',
+            'aggregates_hash': 'hash-fake',
+            'summary_text': 'resumen NUEVO de la misma semana',
+            'conversation_prompt': null,
+            'generated_at': '2026-04-30T20:00:00Z',
+          }),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        ),
+        token: 'jwt-niño',
+      );
+
+      await bombear(
+        tester,
+        semanaPivote: DateTime.utc(2026, 4, 30),
+        sincronizador: sincronizador,
+        repoHistorico: repo,
+      );
+
+      await tester.tap(find.text('Compartir resumen con el adulto'));
+      await tester.pumpAndSettle();
+
+      // El resumen NUEVO se ve (sustituye al viejo).
+      expect(find.textContaining('resumen NUEVO'), findsOneWidget);
+      // El bloque "Resúmenes anteriores" no aparece — la única
+      // entrada coincide con la semana del resumen actual y se filtra.
+      expect(find.text('Resúmenes anteriores'), findsNothing);
+      expect(find.textContaining('resumen viejo'), findsNothing);
+    });
+  });
 }

@@ -31,15 +31,29 @@ import 'sit_spot.dart';
 /// El call site (PantallaAjustes en su botón "Exportar como PDF")
 /// decide qué hacer con ellos: pasarlos a `printing.Printing.layoutPdf`
 /// para que el SO ofrezca compartir/imprimir/guardar.
+/// Función que devuelve los bytes de un fichero medio (foto o dibujo)
+/// apuntado por una ruta relativa. Devuelve `null` si el fichero no
+/// existe (no es error: el medio puede haber sido borrado a mano, el
+/// dispositivo cambió, etc.).
+typedef CargarMedioPdf = Future<Uint8List?> Function(String rutaRelativa);
+
 class ExportadorCuadernoPdf {
   const ExportadorCuadernoPdf._();
 
+  /// Genera los bytes del PDF.
+  ///
+  /// Si llega [cargarMedio], el exportador resuelve cada
+  /// `Observacion.fotoRutaLocal` y `dibujoRutaLocal` antes de construir
+  /// el documento para incrustar las imágenes con `pw.MemoryImage`.
+  /// Sin [cargarMedio] el PDF queda como antes (sólo texto) — los
+  /// tests de dominio siguen ejecutándose sin filesystem.
   static Future<Uint8List> aBytes({
     required String tituloDelNino,
     required List<Observacion> observaciones,
     SitSpot? sitSpot,
     required List<Misterio> misterios,
     DateTime? exportadoEn,
+    CargarMedioPdf? cargarMedio,
   }) async {
     final fecha = exportadoEn ?? DateTime.now();
     final documento = pw.Document(
@@ -47,6 +61,9 @@ class ExportadorCuadernoPdf {
       author: tituloDelNino,
       creator: 'El Cuaderno (Colección Nuevo Ser Kids)',
     );
+
+    final mediosPorObservacion =
+        await _resolverMedios(observaciones, cargarMedio);
 
     documento.addPage(
       pw.MultiPage(
@@ -63,12 +80,38 @@ class ExportadorCuadernoPdf {
             _seccionMisterios(misterios),
             pw.SizedBox(height: 24),
           ],
-          _seccionObservaciones(observaciones),
+          _seccionObservaciones(observaciones, mediosPorObservacion),
         ],
       ),
     );
 
     return documento.save();
+  }
+
+  /// Pre-carga las imágenes en paralelo (foto + dibujo de cada
+  /// observación) y devuelve un mapa por id. Si no hay [cargarMedio]
+  /// inyectado, devuelve mapa vacío y `_seccionObservaciones` cae al
+  /// formato sólo-texto.
+  static Future<Map<String, _MediosObservacion>> _resolverMedios(
+    List<Observacion> observaciones,
+    CargarMedioPdf? cargarMedio,
+  ) async {
+    if (cargarMedio == null) return const {};
+    final resultado = <String, _MediosObservacion>{};
+    for (final observacion in observaciones) {
+      final foto = observacion.fotoRutaLocal;
+      final dibujo = observacion.dibujoRutaLocal;
+      if (foto == null && dibujo == null) continue;
+      final fotoFuture = foto != null ? cargarMedio(foto) : Future.value(null);
+      final dibujoFuture =
+          dibujo != null ? cargarMedio(dibujo) : Future.value(null);
+      final resueltos = await Future.wait([fotoFuture, dibujoFuture]);
+      resultado[observacion.id] = _MediosObservacion(
+        foto: resueltos[0],
+        dibujo: resueltos[1],
+      );
+    }
+    return resultado;
   }
 
   static pw.Widget _portada(String nombre, DateTime fecha) {
@@ -126,7 +169,10 @@ class ExportadorCuadernoPdf {
     );
   }
 
-  static pw.Widget _seccionObservaciones(List<Observacion> observaciones) {
+  static pw.Widget _seccionObservaciones(
+    List<Observacion> observaciones,
+    Map<String, _MediosObservacion> medios,
+  ) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -142,12 +188,25 @@ class ExportadorCuadernoPdf {
             ),
           )
         else
-          for (final observacion in observaciones) _entradaObservacion(observacion),
+          for (final observacion in observaciones)
+            _entradaObservacion(observacion, medios[observacion.id]),
       ],
     );
   }
 
-  static pw.Widget _entradaObservacion(Observacion observacion) {
+  static pw.Widget _entradaObservacion(
+    Observacion observacion,
+    _MediosObservacion? medios,
+  ) {
+    final imagenes = <pw.Widget>[];
+    final foto = medios?.foto;
+    if (foto != null) {
+      imagenes.add(_imagenContenida(foto, etiqueta: 'foto'));
+    }
+    final dibujo = medios?.dibujo;
+    if (dibujo != null) {
+      imagenes.add(_imagenContenida(dibujo, etiqueta: 'dibujo'));
+    }
     return pw.Padding(
       padding: const pw.EdgeInsets.only(bottom: 16),
       child: pw.Column(
@@ -176,8 +235,48 @@ class ExportadorCuadernoPdf {
             'confianza: ${_etiquetaConfianza(observacion.confianza)}',
             style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
           ),
+          if (imagenes.isNotEmpty) ...[
+            pw.SizedBox(height: 8),
+            pw.Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              children: imagenes,
+            ),
+          ],
         ],
       ),
+    );
+  }
+
+  /// Encierra la imagen en una caja de tamaño contenido. El ancho
+  /// máximo es 220 pt (≈30% del ancho útil de A4 con márgenes 48 pt) y
+  /// la altura escala manteniendo proporción gracias a `fit:
+  /// BoxFit.contain`. Por debajo, la etiqueta breve dice qué es.
+  static pw.Widget _imagenContenida(
+    Uint8List bytes, {
+    required String etiqueta,
+  }) {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      mainAxisSize: pw.MainAxisSize.min,
+      children: [
+        pw.Container(
+          width: 220,
+          height: 165,
+          decoration: pw.BoxDecoration(
+            border: pw.Border.all(color: PdfColors.grey400, width: 0.5),
+          ),
+          child: pw.Image(
+            pw.MemoryImage(bytes),
+            fit: pw.BoxFit.contain,
+          ),
+        ),
+        pw.SizedBox(height: 2),
+        pw.Text(
+          etiqueta,
+          style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
+        ),
+      ],
     );
   }
 
@@ -228,4 +327,13 @@ class ExportadorCuadernoPdf {
         return str;
     }
   }
+}
+
+/// Bytes ya en memoria de los medios de una observación. Se cachea
+/// antes del build del PDF para no mezclar I/O con widgets.
+class _MediosObservacion {
+  const _MediosObservacion({this.foto, this.dibujo});
+
+  final Uint8List? foto;
+  final Uint8List? dibujo;
 }

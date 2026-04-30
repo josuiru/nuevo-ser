@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dominio/sit_spot.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
+import '../pantalla_sit_spot/pantalla_presentacion_sit_spot.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
@@ -65,26 +66,77 @@ class _TarjetaInvitacion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
-    final contenido = Container(
-      padding: const EdgeInsets.all(16),
+    final invitacion = Text(
+      textos.sitSpotInvitacion,
+      style: TipografiaCuaderno.serif(
+        color: esquema.onSurface,
+        tamano: TipografiaCuaderno.tamano14,
+        altoLinea: 1.45,
+      ),
+    );
+    final superficiePulsable = alPulsar == null
+        ? Padding(padding: const EdgeInsets.all(16), child: invitacion)
+        : InkWell(
+            onTap: alPulsar,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: invitacion,
+            ),
+          );
+    return Container(
       decoration: BoxDecoration(
         color: esquema.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        textos.sitSpotInvitacion,
-        style: TipografiaCuaderno.serif(
-          color: esquema.onSurface,
-          tamano: TipografiaCuaderno.tamano14,
-          altoLinea: 1.45,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          superficiePulsable,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: () => _mostrarExplicacion(context),
+                style: TextButton.styleFrom(
+                  foregroundColor: esquema.tertiary,
+                  textStyle: TipografiaCuaderno.sans(
+                    color: esquema.tertiary,
+                    tamano: TipografiaCuaderno.tamano12,
+                    peso: TipografiaCuaderno.pesoMedio,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Text('qué es un sit spot'),
+              ),
+            ),
+          ),
+        ],
       ),
     );
-    if (alPulsar == null) return contenido;
-    return InkWell(
-      onTap: alPulsar,
-      borderRadius: BorderRadius.circular(8),
-      child: contenido,
+  }
+
+  Future<void> _mostrarExplicacion(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (contextoDialogo) => AlertDialog(
+        title: const Text(tituloPresentacionSitSpot),
+        content: const SingleChildScrollView(
+          child: ExplicacionSitSpot(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contextoDialogo).pop(),
+            child: const Text('Cerrar'),
+          ),
+        ],
+      ),
     );
   }
 }

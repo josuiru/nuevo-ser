@@ -56,7 +56,7 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
             children: [
               const Spacer(),
               const Text(
-                'Un sitio que conoces',
+                tituloPresentacionSitSpot,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
@@ -65,23 +65,7 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const _Parrafo(
-                'En este cuaderno hay un sitio especial. Lo eliges tú: '
-                'un banco del parque, una piedra junto al río, un rincón '
-                'del jardín, una ventana.',
-              ),
-              const SizedBox(height: 14),
-              const _Parrafo(
-                'Lo importante no es que sea bonito. Es que puedas '
-                'volver. Si vuelves muchas veces, lo verás cambiar — '
-                'las hojas, los pájaros, la luz, los bichos. El '
-                'cuaderno se llenará de lo que pase allí.',
-              ),
-              const SizedBox(height: 14),
-              const _Parrafo(
-                'Cuando lo encuentres, le pones nombre. No tiene que ser '
-                'un nombre serio.',
-              ),
+              const ExplicacionSitSpot(),
               const Spacer(flex: 2),
               _Boton(
                 etiqueta: 'ya pienso en uno',
@@ -99,6 +83,47 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Título de la presentación pedagógica. Expuesto como const para que
+/// la tarjeta-invitación del home lo reuse en su diálogo sin duplicar
+/// el string.
+const String tituloPresentacionSitSpot = 'Un sitio que conoces';
+
+/// Tres párrafos pedagógicos que explican qué es un sit spot. Se
+/// muestran en `PantallaPresentacionSitSpot` (primer arranque) y en
+/// el diálogo "qué es un sit spot" accesible desde la tarjeta-
+/// invitación del home (cuando el niño pulsó "todavía no" en su día y
+/// quiere releerlo). Mismo texto en los dos sitios — refactorizado a
+/// widget público para que un cambio de copy sólo toque un fichero.
+class ExplicacionSitSpot extends StatelessWidget {
+  const ExplicacionSitSpot({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _Parrafo(
+          'En este cuaderno hay un sitio especial. Lo eliges tú: '
+          'un banco del parque, una piedra junto al río, un rincón '
+          'del jardín, una ventana.',
+        ),
+        SizedBox(height: 14),
+        _Parrafo(
+          'Lo importante no es que sea bonito. Es que puedas '
+          'volver. Si vuelves muchas veces, lo verás cambiar — '
+          'las hojas, los pájaros, la luz, los bichos. El '
+          'cuaderno se llenará de lo que pase allí.',
+        ),
+        SizedBox(height: 14),
+        _Parrafo(
+          'Cuando lo encuentres, le pones nombre. No tiene que ser '
+          'un nombre serio.',
+        ),
+      ],
     );
   }
 }

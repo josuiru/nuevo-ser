@@ -6,8 +6,10 @@ import '../../datos/almacenador_medios.dart';
 import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/selector_imagen.dart';
+import '../../datos/repositorio_historico_resumenes.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
+import '../../dominio/exportador_cuaderno_pdf.dart';
 import '../../dominio/geolocalizacion_privacy_first.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
@@ -42,12 +44,14 @@ class PantallaCuaderno extends StatefulWidget {
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
+    this.repoHistoricoResumenes,
     this.alGuardarObservacion,
     this.intentarSincronizarObservaciones,
     this.selectorImagen,
     this.almacenadorMedios,
     this.servicioGeolocalizacion,
     this.resolverMedioParaExport,
+    this.cargarMedioParaPdf,
     this.nombreParaTituloPdf,
     this.clienteAuthProfesor,
     this.clienteCompanionProfesor,
@@ -104,6 +108,14 @@ class PantallaCuaderno extends StatefulWidget {
   /// el adulto" — opt-in, lo dispara la persona adulta.
   final SincronizadorAgregadosCuaderno? sincronizadorAgregados;
 
+  /// Persistencia local de los últimos resúmenes archivados (default
+  /// 3) — se reenvía a `PantallaCuidador` para que muestre el bloque
+  /// "Resúmenes anteriores" y archive cada nueva sincronización
+  /// exitosa. Si es null, el bloque no aparece — modo S1 / tests sin
+  /// `SharedPreferences`. También lo reusa el flujo "borrar mi
+  /// cuaderno" para purgar el histórico junto con Isar.
+  final RepositorioHistoricoResumenes? repoHistoricoResumenes;
+
   /// Cableado por el orquestador a `ColaSyncObservaciones.marcarPendiente`.
   /// Cada observación nueva queda apuntada para subir al backend cuando
   /// el adulto pulse "Sincronizar observaciones" en Ajustes (opt-in).
@@ -135,6 +147,11 @@ class PantallaCuaderno extends StatefulWidget {
   /// cuaderno (export v2). Si es null, el export queda sin manifiesto
   /// — sigue siendo válido pero menos informativo.
   final ResolverMedioExportado? resolverMedioParaExport;
+
+  /// Lee bytes de cada fichero medio para incrustarlo como imagen en
+  /// el PDF exportado. Si es null, el PDF se queda sin imágenes
+  /// (modo degradado: el contenido textual sigue siendo legible).
+  final CargarMedioPdf? cargarMedioParaPdf;
 
   /// Nombre del niño para encabezar el PDF exportado. Lo provee el
   /// orquestador desde el ValueNotifier global del perfil activo.
@@ -334,9 +351,11 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           repoCuentaDebug: widget.repoCuentaDebug,
           alCambiarTokenDebug: widget.alCambiarTokenDebug,
           sincronizadorAgregados: widget.sincronizadorAgregados,
+          repoHistoricoResumenes: widget.repoHistoricoResumenes,
           intentarSincronizarObservaciones:
               widget.intentarSincronizarObservaciones,
           resolverMedioParaExport: widget.resolverMedioParaExport,
+          cargarMedioParaPdf: widget.cargarMedioParaPdf,
           almacenadorMedios: widget.almacenadorMedios,
           nombreParaTituloPdf: widget.nombreParaTituloPdf,
           clienteAuthProfesor: widget.clienteAuthProfesor,
