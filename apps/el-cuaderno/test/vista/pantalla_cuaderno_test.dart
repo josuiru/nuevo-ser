@@ -46,18 +46,22 @@ void main() {
     },
   );
 
-  testWidgets('muestra los dos Misterios sembrados', (tester) async {
+  testWidgets('muestra Misterios abiertos del catálogo seminal',
+      (tester) async {
     await bombearPantalla(tester);
+    // El home aplica `.take(3)` sobre el orden alfabético de las
+    // preguntas; los tres primeros del seed seminal son lluvia,
+    // dos pájaros pequeños marrones y encina vieja.
     expect(
       find.text(
-        '¿Cuándo se van las golondrinas de tu barrio?',
+        'Después de llover, ¿qué seres vivos aparecen?',
         skipOffstage: false,
       ),
       findsOneWidget,
     );
     expect(
       find.text(
-        'Después de llover, ¿qué seres vivos aparecen que no estaban antes?',
+        'La encina vieja del parque: ¿de qué año es?',
         skipOffstage: false,
       ),
       findsOneWidget,
