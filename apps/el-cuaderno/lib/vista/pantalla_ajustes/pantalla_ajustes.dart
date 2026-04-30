@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/repositorio_local.dart';
@@ -39,6 +40,7 @@ class PantallaAjustes extends StatelessWidget {
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
+    this.intentarSincronizarObservaciones,
   });
 
   final RepositorioLocal repositorio;
@@ -62,6 +64,13 @@ class PantallaAjustes extends StatelessWidget {
   /// Si llega, se reenvía a la vista del cuidador para activar el botón
   /// opt-in "Compartir resumen con el adulto".
   final SincronizadorAgregadosCuaderno? sincronizadorAgregados;
+
+  /// Closure opt-in para enviar las observaciones pendientes al
+  /// servidor. Cableada por el orquestador a `ColaSyncObservaciones.
+  /// intentarEnviar` con el `ClienteElCuaderno`. Si es null, el bloque
+  /// no se monta. Devuelve null cuando no hay token.
+  final Future<ResultadoSyncObservaciones?> Function()?
+      intentarSincronizarObservaciones;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +103,13 @@ class PantallaAjustes extends StatelessWidget {
               alPulsar: () => _exportar(context),
               esquema: esquema,
             ),
+            if (intentarSincronizarObservaciones != null) ...[
+              const SizedBox(height: 16),
+              _BloqueSincronizarObservaciones(
+                esquema: esquema,
+                intentar: intentarSincronizarObservaciones!,
+              ),
+            ],
             const SizedBox(height: 16),
             _BloqueAccion(
               titulo: textos.ajustesBorrar,
@@ -323,6 +339,125 @@ class _BloqueAccion extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Bloque opt-in para empujar las observaciones pendientes a
+/// `POST /el-cuaderno/observaciones`. Sólo aparece si el orquestador
+/// inyecta la closure (`intentarSincronizarObservaciones`). El niño y la
+/// persona adulta deciden cuándo subir — sin sync automático en
+/// background, sin push (biblia §2.1, principio 1 + principio 9).
+class _BloqueSincronizarObservaciones extends StatefulWidget {
+  const _BloqueSincronizarObservaciones({
+    required this.esquema,
+    required this.intentar,
+  });
+
+  final ColorScheme esquema;
+  final Future<ResultadoSyncObservaciones?> Function() intentar;
+
+  @override
+  State<_BloqueSincronizarObservaciones> createState() =>
+      _EstadoBloqueSincronizarObservaciones();
+}
+
+class _EstadoBloqueSincronizarObservaciones
+    extends State<_BloqueSincronizarObservaciones> {
+  bool _enVuelo = false;
+  String? _aviso;
+
+  Future<void> _pulsar() async {
+    if (_enVuelo) return;
+    final textos = TextosApp.of(context);
+    setState(() {
+      _enVuelo = true;
+      _aviso = null;
+    });
+    final resultado = await widget.intentar();
+    if (!mounted) return;
+    setState(() {
+      _enVuelo = false;
+      if (resultado == null) {
+        _aviso = textos.ajustesSyncObsSinToken;
+      } else if (resultado.dejadasParaReintento.isNotEmpty) {
+        _aviso = textos.ajustesSyncObsParcial(
+          resultado.enviadas.length,
+          resultado.dejadasParaReintento.length,
+        );
+      } else if (resultado.rechazadas.isNotEmpty) {
+        _aviso = textos.ajustesSyncObsRechazadas(
+          resultado.enviadas.length,
+          resultado.rechazadas.length,
+        );
+      } else if (resultado.enviadas.isEmpty) {
+        _aviso = textos.ajustesSyncObsNadaPendiente;
+      } else {
+        _aviso =
+            textos.ajustesSyncObsTodasEnviadas(resultado.enviadas.length);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = TextosApp.of(context);
+    return Card(
+      color: widget.esquema.surfaceContainerHighest,
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              textos.ajustesSyncObsTitulo,
+              style: TipografiaCuaderno.serif(
+                color: widget.esquema.onSurface,
+                tamano: TipografiaCuaderno.tamano16,
+                peso: TipografiaCuaderno.pesoMedio,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              textos.ajustesSyncObsDescripcion,
+              style: TipografiaCuaderno.serif(
+                color: PaletaCuaderno.tintaTenue,
+                tamano: TipografiaCuaderno.tamano13,
+                altoLinea: 1.45,
+              ),
+            ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: _enVuelo ? null : _pulsar,
+              icon: _enVuelo
+                  ? const SizedBox(
+                      height: 16,
+                      width: 16,
+                      child:
+                          CircularProgressIndicator.adaptive(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.cloud_upload_outlined),
+              label: Text(
+                _enVuelo
+                    ? textos.ajustesSyncObsEnVuelo
+                    : textos.ajustesSyncObsBoton,
+              ),
+            ),
+            if (_aviso != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _aviso!,
+                style: TipografiaCuaderno.serif(
+                  color: PaletaCuaderno.tintaTenue,
+                  tamano: TipografiaCuaderno.tamano13,
+                  altoLinea: 1.4,
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

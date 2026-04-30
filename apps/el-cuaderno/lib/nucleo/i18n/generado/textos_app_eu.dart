@@ -190,6 +190,45 @@ class TextosAppEu extends TextosApp {
   String get ajustesBorradoCompleto => 'TODO_EU · Listo. Tu cuaderno está vacío.';
 
   @override
+  String get ajustesSyncObsTitulo => 'TODO_EU · Sincronizar mis observaciones';
+
+  @override
+  String get ajustesSyncObsDescripcion => 'TODO_EU · Sube las observaciones nuevas a tu cuenta del servidor para no perderlas si cambias de dispositivo.';
+
+  @override
+  String get ajustesSyncObsBoton => 'TODO_EU · Subir ahora';
+
+  @override
+  String get ajustesSyncObsEnVuelo => 'TODO_EU · Subiendo…';
+
+  @override
+  String get ajustesSyncObsSinToken => 'TODO_EU · Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón subirá tus observaciones.';
+
+  @override
+  String get ajustesSyncObsNadaPendiente => 'TODO_EU · No hay observaciones pendientes — todo subido.';
+
+  @override
+  String ajustesSyncObsTodasEnviadas(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'TODO_EU · Se han subido $count observaciones.',
+      one: 'TODO_EU · Se ha subido una observación.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ajustesSyncObsParcial(int enviadas, int pendientes) {
+    return 'TODO_EU · Subidas $enviadas, quedan $pendientes para el siguiente intento.';
+  }
+
+  @override
+  String ajustesSyncObsRechazadas(int enviadas, int rechazadas) {
+    return 'TODO_EU · Subidas $enviadas, el servidor ha rechazado $rechazadas. Vuelve a abrirlas para revisarlas.';
+  }
+
+  @override
   String get ajustesTutorDebugTitulo => 'TODO_EU · Tutor (debug)';
 
   @override

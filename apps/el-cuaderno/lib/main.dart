@@ -4,9 +4,12 @@ import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
+import 'datos/cola_sync_observaciones.dart';
 import 'datos/sincronizador_agregados.dart';
 import 'datos_simulados/seed.dart';
+import 'dominio/observacion.dart';
 import 'dominio/repositorio_local.dart';
 import 'infraestructura/isar/isar_setup.dart';
 import 'infraestructura/isar/repositorio_isar.dart';
@@ -157,6 +160,8 @@ class _OrquestadorJuego extends StatefulWidget {
 class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final EstadoCuaderno _estado;
   late final ClienteTutorCuaderno _clienteTutor;
+  late final ClienteElCuaderno _clienteCuaderno;
+  late final ColaSyncObservaciones _colaSyncObservaciones;
   late final companion.ClienteCompanion _clienteCompanion;
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
   late Future<EnviarPreguntaTutor?> _futureEnviarPregunta;
@@ -168,6 +173,13 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     _clienteTutor = ClienteTutorCuaderno(
       urlBase: _urlBaseBackend,
       obtenerToken: widget.repoCuenta.cargarToken,
+    );
+    _clienteCuaderno = ClienteElCuaderno(
+      urlBase: _urlBaseBackend,
+      obtenerToken: widget.repoCuenta.cargarToken,
+    );
+    _colaSyncObservaciones = ColaSyncObservaciones(
+      prefs: SharedPreferences.getInstance,
     );
     _clienteCompanion = companion.ClienteCompanion(urlBase: _urlBaseBackend);
     _sincronizadorAgregados = SincronizadorAgregadosCuaderno(
@@ -182,6 +194,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   void dispose() {
     _estado.dispose();
     _clienteTutor.cerrar();
+    _clienteCuaderno.cerrar();
     _clienteCompanion.cerrar();
     super.dispose();
   }
@@ -215,6 +228,28 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     });
   }
 
+  /// Llamado por la pantalla de nueva observación cuando el niño guarda.
+  /// Apunta el UUID en la cola para que el adulto pueda subirlas más
+  /// tarde desde Ajustes (opt-in). No hace red — sólo persistencia
+  /// clave-valor local.
+  Future<void> _alGuardarObservacion(Observacion observacion) async {
+    await _colaSyncObservaciones.marcarPendiente(observacion.id);
+  }
+
+  /// Llamado por el bloque "Sincronizar mis observaciones" de Ajustes.
+  /// Devuelve null si no hay token (la UI muestra el aviso de cuenta no
+  /// vinculada). Si hay token, llama a la cola con el cliente real y
+  /// devuelve el resumen del intento.
+  Future<ResultadoSyncObservaciones?> _intentarSincronizarObservaciones() async {
+    final token = await widget.repoCuenta.cargarToken();
+    if (token == null || token.isEmpty) return null;
+    return _colaSyncObservaciones.intentarEnviar(
+      repositorio: widget.repositorio,
+      cliente: _clienteCuaderno,
+      regionCode: 'ES',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<EnviarPreguntaTutor?>(
@@ -230,6 +265,8 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           repoCuentaDebug: kDebugMode ? widget.repoCuenta : null,
           alCambiarTokenDebug: kDebugMode ? _refrescarTokenTutor : null,
           sincronizadorAgregados: _sincronizadorAgregados,
+          alGuardarObservacion: _alGuardarObservacion,
+          intentarSincronizarObservaciones: _intentarSincronizarObservaciones,
         );
       },
     );

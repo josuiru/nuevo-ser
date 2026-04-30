@@ -196,6 +196,34 @@
   "ajustesBorrarConfirmacionBoton": "Borrar todo",
   "ajustesBorradoCompleto": "Listo. Tu cuaderno está vacío.",
 
+  "ajustesSyncObsTitulo": "Sincronizar mis observaciones",
+  "@ajustesSyncObsTitulo": {
+    "description": "Bloque opt-in que sube las observaciones pendientes al servidor. Lo dispara el adulto/niño explícitamente; sin sync automático."
+  },
+  "ajustesSyncObsDescripcion": "Sube las observaciones nuevas a tu cuenta del servidor para no perderlas si cambias de dispositivo.",
+  "ajustesSyncObsBoton": "Subir ahora",
+  "ajustesSyncObsEnVuelo": "Subiendo…",
+  "ajustesSyncObsSinToken": "Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón subirá tus observaciones.",
+  "ajustesSyncObsNadaPendiente": "No hay observaciones pendientes — todo subido.",
+  "ajustesSyncObsTodasEnviadas": "{count, plural, =1{Se ha subido una observación.} other{Se han subido {count} observaciones.}}",
+  "@ajustesSyncObsTodasEnviadas": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "ajustesSyncObsParcial": "Subidas {enviadas}, quedan {pendientes} para el siguiente intento.",
+  "@ajustesSyncObsParcial": {
+    "placeholders": {
+      "enviadas": {"type": "int"},
+      "pendientes": {"type": "int"}
+    }
+  },
+  "ajustesSyncObsRechazadas": "Subidas {enviadas}, el servidor ha rechazado {rechazadas}. Vuelve a abrirlas para revisarlas.",
+  "@ajustesSyncObsRechazadas": {
+    "placeholders": {
+      "enviadas": {"type": "int"},
+      "rechazadas": {"type": "int"}
+    }
+  },
+
   "ajustesTutorDebugTitulo": "Tutor (debug)",
   "@ajustesTutorDebugTitulo": {
     "description": "Bloque visible sólo en builds de debug. Permite pegar un JWT del backend para probar el Tutor real end-to-end sin pantalla de login."

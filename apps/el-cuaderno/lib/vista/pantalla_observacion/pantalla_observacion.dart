@@ -21,6 +21,7 @@ class PantallaObservacion extends StatefulWidget {
     required this.misteriosAbiertos,
     required this.sitSpotActivo,
     this.misterioPreseleccionadoId,
+    this.alGuardarObservacion,
     DateTime Function()? proveedorAhora,
     String Function()? proveedorIds,
   })  : _proveedorAhora = proveedorAhora ?? DateTime.now,
@@ -30,6 +31,14 @@ class PantallaObservacion extends StatefulWidget {
   final List<Misterio> misteriosAbiertos;
   final SitSpot? sitSpotActivo;
   final String? misterioPreseleccionadoId;
+
+  /// Invocado tras persistir la observación en el repositorio. El
+  /// orquestador lo cablea a la cola de sync para que la observación
+  /// recién creada quede como pendiente de subir al backend (cuando
+  /// haya token y el adulto pulse "Sincronizar"). Si es null, la
+  /// observación se guarda sólo en local (modo S1, tests, demo).
+  final Future<void> Function(Observacion observacion)? alGuardarObservacion;
+
   final DateTime Function() _proveedorAhora;
   final String Function() _proveedorIds;
 
@@ -196,6 +205,7 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
         _misterioId!,
       );
     }
+    await widget.alGuardarObservacion?.call(observacion);
     if (mounted) {
       Navigator.of(context).pop();
     }

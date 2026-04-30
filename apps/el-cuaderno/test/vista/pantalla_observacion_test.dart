@@ -1,4 +1,5 @@
 import 'package:el_cuaderno/datos_simulados/seed.dart';
+import 'package:el_cuaderno/dominio/observacion.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
 import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_observacion/pantalla_observacion.dart';
@@ -14,7 +15,10 @@ void main() {
     await sembrarDatosDesarrollo(repositorio);
   });
 
-  Future<void> bombearPantalla(WidgetTester tester) async {
+  Future<void> bombearPantalla(
+    WidgetTester tester, {
+    Future<void> Function(Observacion)? alGuardarObservacion,
+  }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     final misteriosAbiertos = await repositorio.obtenerMisteriosAbiertos();
     final sitSpot = await repositorio.obtenerSitSpot();
@@ -29,6 +33,7 @@ void main() {
           repositorio: repositorio,
           misteriosAbiertos: misteriosAbiertos,
           sitSpotActivo: sitSpot,
+          alGuardarObservacion: alGuardarObservacion,
           proveedorAhora: () => DateTime.utc(2026, 4, 30, 17, 48),
           proveedorIds: () => 'obs-test-id',
         ),
@@ -115,6 +120,29 @@ void main() {
     (tester) async {
       await bombearPantalla(tester);
       expect(find.text('haz una nota antes de guardar'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'al guardar, el callback alGuardarObservacion se invoca con la observación',
+    (tester) async {
+      Observacion? capturada;
+      await bombearPantalla(
+        tester,
+        alGuardarObservacion: (observacion) async {
+          capturada = observacion;
+        },
+      );
+      await tester.enterText(
+        find.byType(TextField).first,
+        'Algo se ha movido en la rama de arriba.',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Guardar en el cuaderno'));
+      await tester.pumpAndSettle();
+      expect(capturada, isNotNull);
+      expect(capturada!.id, 'obs-test-id');
+      expect(capturada!.queVio, 'Algo se ha movido en la rama de arriba.');
     },
   );
 }

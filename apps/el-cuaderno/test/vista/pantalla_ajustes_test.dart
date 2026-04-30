@@ -1,3 +1,4 @@
+import 'package:el_cuaderno/datos/cola_sync_observaciones.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
@@ -30,6 +31,8 @@ void main() {
     Future<void> Function()? alCambiarIdioma,
     RepositorioCuentaBackend? repoCuentaDebug,
     VoidCallback? alCambiarTokenDebug,
+    Future<ResultadoSyncObservaciones?> Function()?
+        intentarSincronizarObservaciones,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
@@ -45,6 +48,7 @@ void main() {
           alCambiarIdioma: alCambiarIdioma ?? () async {},
           repoCuentaDebug: repoCuentaDebug,
           alCambiarTokenDebug: alCambiarTokenDebug,
+          intentarSincronizarObservaciones: intentarSincronizarObservaciones,
         ),
       ),
     );
@@ -198,6 +202,88 @@ void main() {
       find.text('Token borrado. El Tutor vuelve a la respuesta canónica.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets(
+      'sin closure de sync: el bloque "Sincronizar mis observaciones" no aparece',
+      (tester) async {
+    await bombear(tester);
+    expect(find.text('Sincronizar mis observaciones'), findsNothing);
+    expect(find.text('Subir ahora'), findsNothing);
+  });
+
+  testWidgets(
+      'sync sin token: aviso "cuenta no vinculada" tras pulsar Subir ahora',
+      (tester) async {
+    var llamadas = 0;
+    await bombear(
+      tester,
+      intentarSincronizarObservaciones: () async {
+        llamadas++;
+        return null; // null ↔ sin token desde la closure del orquestador.
+      },
+    );
+    expect(find.text('Sincronizar mis observaciones'), findsOneWidget);
+    await tester.tap(find.text('Subir ahora'));
+    await tester.pump();
+    await tester.pump();
+    expect(llamadas, 1);
+    expect(
+      find.textContaining('Aún no hay cuenta vinculada'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+      'sync exitoso con todas enviadas: muestra plural ICU del count',
+      (tester) async {
+    await bombear(
+      tester,
+      intentarSincronizarObservaciones: () async => const ResultadoSyncObservaciones(
+        enviadas: ['o-1', 'o-2', 'o-3'],
+        rechazadas: [],
+        dejadasParaReintento: [],
+      ),
+    );
+    await tester.tap(find.text('Subir ahora'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Se han subido 3 observaciones.'), findsOneWidget);
+  });
+
+  testWidgets(
+      'sync con dejadas para reintento: aviso "Subidas X, quedan Y"',
+      (tester) async {
+    await bombear(
+      tester,
+      intentarSincronizarObservaciones: () async => const ResultadoSyncObservaciones(
+        enviadas: ['o-1'],
+        rechazadas: [],
+        dejadasParaReintento: ['o-2', 'o-3'],
+      ),
+    );
+    await tester.tap(find.text('Subir ahora'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.textContaining('Subidas 1'), findsOneWidget);
+    expect(find.textContaining('quedan 2'), findsOneWidget);
+  });
+
+  testWidgets(
+      'sync sin pendientes: aviso "todo subido"',
+      (tester) async {
+    await bombear(
+      tester,
+      intentarSincronizarObservaciones: () async => const ResultadoSyncObservaciones(
+        enviadas: [],
+        rechazadas: [],
+        dejadasParaReintento: [],
+      ),
+    );
+    await tester.tap(find.text('Subir ahora'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.textContaining('No hay observaciones pendientes'), findsOneWidget);
   });
 
   testWidgets('cancelar el primer dialog NO borra nada', (tester) async {

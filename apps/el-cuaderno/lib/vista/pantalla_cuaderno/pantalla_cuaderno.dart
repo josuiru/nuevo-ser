@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/sincronizador_agregados.dart';
+import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
@@ -29,6 +31,8 @@ class PantallaCuaderno extends StatefulWidget {
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
+    this.alGuardarObservacion,
+    this.intentarSincronizarObservaciones,
   });
 
   final RepositorioLocal repositorio;
@@ -61,6 +65,18 @@ class PantallaCuaderno extends StatefulWidget {
   /// a `PantallaCuidador` para activar el botón "Compartir resumen con
   /// el adulto" — opt-in, lo dispara la persona adulta.
   final SincronizadorAgregadosCuaderno? sincronizadorAgregados;
+
+  /// Cableado por el orquestador a `ColaSyncObservaciones.marcarPendiente`.
+  /// Cada observación nueva queda apuntada para subir al backend cuando
+  /// el adulto pulse "Sincronizar observaciones" en Ajustes (opt-in).
+  /// Si es null, el cuaderno funciona sólo en local.
+  final Future<void> Function(Observacion observacion)? alGuardarObservacion;
+
+  /// Closure que el orquestador cablea a `ColaSyncObservaciones.intentarEnviar`
+  /// con el `ClienteElCuaderno` ya construido. Si es null, el botón de
+  /// sincronizar no aparece. Devuelve null si no hay token guardado.
+  final Future<ResultadoSyncObservaciones?> Function()?
+      intentarSincronizarObservaciones;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -160,6 +176,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           repositorio: widget.repositorio,
           misteriosAbiertos: widget.estado.misteriosAbiertos,
           sitSpotActivo: widget.estado.sitSpot,
+          alGuardarObservacion: widget.alGuardarObservacion,
         ),
       ),
     );
@@ -182,6 +199,8 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           repoCuentaDebug: widget.repoCuentaDebug,
           alCambiarTokenDebug: widget.alCambiarTokenDebug,
           sincronizadorAgregados: widget.sincronizadorAgregados,
+          intentarSincronizarObservaciones:
+              widget.intentarSincronizarObservaciones,
         ),
       ),
     );

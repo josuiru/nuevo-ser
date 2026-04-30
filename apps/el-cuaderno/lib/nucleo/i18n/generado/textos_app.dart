@@ -439,6 +439,60 @@ abstract class TextosApp {
   /// **'Listo. Tu cuaderno está vacío.'**
   String get ajustesBorradoCompleto;
 
+  /// Bloque opt-in que sube las observaciones pendientes al servidor. Lo dispara el adulto/niño explícitamente; sin sync automático.
+  ///
+  /// In es, this message translates to:
+  /// **'Sincronizar mis observaciones'**
+  String get ajustesSyncObsTitulo;
+
+  /// No description provided for @ajustesSyncObsDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Sube las observaciones nuevas a tu cuenta del servidor para no perderlas si cambias de dispositivo.'**
+  String get ajustesSyncObsDescripcion;
+
+  /// No description provided for @ajustesSyncObsBoton.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir ahora'**
+  String get ajustesSyncObsBoton;
+
+  /// No description provided for @ajustesSyncObsEnVuelo.
+  ///
+  /// In es, this message translates to:
+  /// **'Subiendo…'**
+  String get ajustesSyncObsEnVuelo;
+
+  /// No description provided for @ajustesSyncObsSinToken.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón subirá tus observaciones.'**
+  String get ajustesSyncObsSinToken;
+
+  /// No description provided for @ajustesSyncObsNadaPendiente.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay observaciones pendientes — todo subido.'**
+  String get ajustesSyncObsNadaPendiente;
+
+  /// No description provided for @ajustesSyncObsTodasEnviadas.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{Se ha subido una observación.} other{Se han subido {count} observaciones.}}'**
+  String ajustesSyncObsTodasEnviadas(int count);
+
+  /// No description provided for @ajustesSyncObsParcial.
+  ///
+  /// In es, this message translates to:
+  /// **'Subidas {enviadas}, quedan {pendientes} para el siguiente intento.'**
+  String ajustesSyncObsParcial(int enviadas, int pendientes);
+
+  /// No description provided for @ajustesSyncObsRechazadas.
+  ///
+  /// In es, this message translates to:
+  /// **'Subidas {enviadas}, el servidor ha rechazado {rechazadas}. Vuelve a abrirlas para revisarlas.'**
+  String ajustesSyncObsRechazadas(int enviadas, int rechazadas);
+
   /// Bloque visible sólo en builds de debug. Permite pegar un JWT del backend para probar el Tutor real end-to-end sin pantalla de login.
   ///
   /// In es, this message translates to:

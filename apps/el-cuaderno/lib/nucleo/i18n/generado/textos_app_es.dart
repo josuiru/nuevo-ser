@@ -190,6 +190,45 @@ class TextosAppEs extends TextosApp {
   String get ajustesBorradoCompleto => 'Listo. Tu cuaderno está vacío.';
 
   @override
+  String get ajustesSyncObsTitulo => 'Sincronizar mis observaciones';
+
+  @override
+  String get ajustesSyncObsDescripcion => 'Sube las observaciones nuevas a tu cuenta del servidor para no perderlas si cambias de dispositivo.';
+
+  @override
+  String get ajustesSyncObsBoton => 'Subir ahora';
+
+  @override
+  String get ajustesSyncObsEnVuelo => 'Subiendo…';
+
+  @override
+  String get ajustesSyncObsSinToken => 'Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón subirá tus observaciones.';
+
+  @override
+  String get ajustesSyncObsNadaPendiente => 'No hay observaciones pendientes — todo subido.';
+
+  @override
+  String ajustesSyncObsTodasEnviadas(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Se han subido $count observaciones.',
+      one: 'Se ha subido una observación.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ajustesSyncObsParcial(int enviadas, int pendientes) {
+    return 'Subidas $enviadas, quedan $pendientes para el siguiente intento.';
+  }
+
+  @override
+  String ajustesSyncObsRechazadas(int enviadas, int rechazadas) {
+    return 'Subidas $enviadas, el servidor ha rechazado $rechazadas. Vuelve a abrirlas para revisarlas.';
+  }
+
+  @override
   String get ajustesTutorDebugTitulo => 'Tutor (debug)';
 
   @override
