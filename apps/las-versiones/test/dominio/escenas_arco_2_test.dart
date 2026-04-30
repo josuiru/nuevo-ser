@@ -74,9 +74,9 @@ void main() {
         'Estación 2.2 completa (2.2.1 a 2.2.6) + latente post-Estación '
         '2.2 (2.B.1) + Estación 2.3 completa (2.3.1 a 2.3.6) + latente '
         'post-Estación 2.3 (2.C.1) + Estación 2.4 completa (2.4.1 a '
-        '2.4.8, incluido el cierre Aprendiz II en 2.4.8) — 31 '
-        'cinemáticas implementadas hoy', () {
-      expect(EscenasArco2.todas, hasLength(31));
+        '2.4.8) + entrega Mosaico M2 + cierre del Arco 2 (2.Z.1 + '
+        '2.Z.2) — 34 cinemáticas implementadas hoy', () {
+      expect(EscenasArco2.todas, hasLength(34));
       expect(
         EscenasArco2.todas.map((escena) => escena.id).toList(),
         [
@@ -111,6 +111,9 @@ void main() {
           '2.4.6',
           '2.4.7',
           '2.4.8',
+          'M2.entrega',
+          '2.Z.1',
+          '2.Z.2',
         ],
       );
     });
@@ -611,6 +614,216 @@ void main() {
           .map((plano) => plano.voz)
           .toSet();
       expect(voces, {VozPersonaje.isaura, VozPersonaje.maren});
+    });
+
+    test('2.4.8 activa hoy provisionalmente mosaico_arco_2_entregado '
+        'además de aprendiz_dos_alcanzado y arco_2_estacion_4_cerrada '
+        '— el flag se moverá al orquestador cuando entre la pantalla '
+        'jugable del Mosaico M2 (registrado en BLOQUEOS)', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_4_8_vista'],
+        contains('mosaico_arco_2_entregado'),
+      );
+    });
+
+    test('M2.entrega requiere mosaico_arco_2_entregado — patrón '
+        'simétrico al M1.entrega del Arco 1', () {
+      expect(
+        EscenasArco2.entregaDelMosaicoM2.flagsRequeridos,
+        {'mosaico_arco_2_entregado'},
+      );
+    });
+
+    test('M2.entrega viaja con el ático del Archivo — mismo lugar '
+        'donde Maren entregó el Mosaico M1 a Andrés', () {
+      expect(
+        EscenasArco2.entregaDelMosaicoM2.ambiente,
+        same(AmbienteArchivo.aticoArchivo),
+      );
+    });
+
+    test('M2.entrega sólo habla Andrés y Maren — gesto pequeño de '
+        'reconocimiento sin terceros, igual que 1.M1.entrega', () {
+      final voces = EscenasArco2.entregaDelMosaicoM2.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, {VozPersonaje.andres, VozPersonaje.maren});
+    });
+
+    test('M2.entrega contiene la observación pedagógica clave de '
+        'Andrés — "no sabemos" tres veces y "probablemente" cuatro, '
+        'cerrado con "está perfecto"', () {
+      final dialogos = EscenasArco2.entregaDelMosaicoM2.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('no sabemos') &&
+            texto.contains('tres veces') &&
+            texto.contains('probablemente')),
+        isTrue,
+        reason:
+            'Andrés debe enumerar las dos marcas de honestidad '
+            'epistémica que oyó en la audio-guía',
+      );
+      expect(dialogos, contains('Está perfecto.'));
+    });
+
+    test('2.Z.1 (Antonio y Wamba) requiere escena_m2_entrega_vista — '
+        'la entrega del Mosaico M2 actúa como precondición del '
+        'cierre del arco', () {
+      expect(
+        EscenasArco2.antonioYWamba.flagsRequeridos,
+        {'escena_m2_entrega_vista'},
+      );
+    });
+
+    test('2.Z.1 viaja con la cocina de casa de Maren — mismo espacio '
+        'íntimo familiar de la 1.B.1, marca el cambio de escala '
+        'narrativa al cerrar el arco', () {
+      expect(
+        EscenasArco2.antonioYWamba.ambiente,
+        same(AmbienteArchivo.cocinaCasaMaren),
+      );
+    });
+
+    test('2.Z.1 sólo habla Antonio y Maren — escena de cierre '
+        'íntima, sin Iratxe ni Naia (que están en un cumpleaños)', () {
+      final voces = EscenasArco2.antonioYWamba.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, {VozPersonaje.antonio, VozPersonaje.maren});
+    });
+
+    test('2.Z.1 contiene las dos frases pedagógicas clave del '
+        'padre — el paralelo con los moriscos en El Quijote y el '
+        'aforismo "los oficios que tienes claros desde el principio "'
+        '"suelen ser los que se acaban antes"', () {
+      final dialogos = EscenasArco2.antonioYWamba.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('Quijote') &&
+            texto.contains('moriscos') &&
+            texto.contains('escribiendo')),
+        isTrue,
+        reason: 'Antonio debe articular el paralelo entre los '
+            'moriscos del Quijote y el silencio vascón',
+      );
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('oficios') &&
+            texto.contains('claros') &&
+            texto.contains('acaban antes')),
+        isTrue,
+        reason: 'Antonio debe articular el aforismo de cierre',
+      );
+    });
+
+    test('2.Z.1 contiene el silencio final de Antonio que la 2.Z.2 '
+        'va a interrogar — "Maren / Mmm. Olvídalo"', () {
+      final dialogos = EscenasArco2.antonioYWamba.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(
+        dialogos.any((texto) =>
+            texto.contains('Olvídalo') && texto.contains('cocinando')),
+        isTrue,
+        reason:
+            'Antonio debe abrir y cerrar la frase truncada que la '
+            '2.Z.2 va a apuntar como pregunta abierta',
+      );
+    });
+
+    test('2.Z.2 (La grabación) requiere escena_2_z_1_vista — '
+        'continúa la misma noche, después de la cocina', () {
+      expect(
+        EscenasArco2.laGrabacion.flagsRequeridos,
+        {'escena_2_z_1_vista'},
+      );
+    });
+
+    test('2.Z.2 viaja con el cuarto de casa de Maren — sub-espacio '
+        'íntimo distinto de la cocina, primera aparición en este '
+        'arco', () {
+      expect(
+        EscenasArco2.laGrabacion.ambiente,
+        same(AmbienteArchivo.cuartoCasaMaren),
+      );
+    });
+
+    test('2.Z.2 cierra el Arco 2 activando '
+        'arco_2_cerrado_por_la_cronista — hito que el Arco 3 '
+        'requerirá como precondición, simétrico con la 1.Z del '
+        'Arco 1', () {
+      expect(
+        EscenasArco2.flagsDeCierrePorEscena['escena_2_z_2_vista'],
+        contains('arco_2_cerrado_por_la_cronista'),
+      );
+    });
+
+    test('2.Z.2 sólo articula la voz íntima del Cuaderno (vozDeFuente) '
+        '— Maren está sola en su cuarto, no hay diálogo con nadie', () {
+      final voces = EscenasArco2.laGrabacion.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.voz)
+          .toSet();
+      expect(voces, {VozPersonaje.vozDeFuente});
+    });
+
+    test('2.Z.2 reproduce los cuatro pensamientos clave del Cuaderno '
+        '— grabar al padre sin permiso (declarado para mañana), '
+        'oírse hablando como par, recordar la frase del oficio, '
+        'apuntar el silencio como pregunta abierta como Isaura', () {
+      final pensamientos = EscenasArco2.laGrabacion.planos
+          .whereType<PlanoDialogo>()
+          .map((plano) => plano.texto)
+          .toList();
+      expect(
+        pensamientos.any((texto) =>
+            texto.contains('grabado a mi padre') &&
+            texto.contains('Mañana se lo cuento')),
+        isTrue,
+        reason: 'declaración de honestidad: mañana se lo cuenta',
+      );
+      expect(
+        pensamientos.any((texto) =>
+            texto.contains('hablando con') && texto.contains('par')),
+        isTrue,
+        reason: 'reconocimiento del cambio de escala con el padre',
+      );
+      expect(
+        pensamientos.any((texto) =>
+            texto.contains('oficios') && texto.contains('frase')),
+        isTrue,
+        reason: 'archivo del aforismo del padre',
+      );
+      expect(
+        pensamientos.any((texto) =>
+            texto.contains('pregunta abierta') &&
+            texto.contains('Isaura')),
+        isTrue,
+        reason:
+            'el silencio del padre se apunta usando explícitamente '
+            'el modelo metodológico de Isaura',
+      );
+    });
+
+    test('2.Z.2 contiene el cierre formal del arco — ARCO 2 — '
+        'CERRADO + anuncio del Arco 3 con su título canónico '
+        '"La forja del reino"', () {
+      final textoLectura = EscenasArco2.laGrabacion.planos
+          .whereType<PlanoAmbiente>()
+          .map((plano) => plano.textoLectura)
+          .join(' ');
+      expect(textoLectura, contains('ARCO 2 — CERRADO'));
+      expect(textoLectura, contains('La forja del reino'));
     });
   });
 }

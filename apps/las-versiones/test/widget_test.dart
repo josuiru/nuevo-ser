@@ -130,9 +130,7 @@ void main() {
       // Latente 2.C.1 (Eider y el cambio) cerrada.
       'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
       // Estación 2.4 completa (Wamba contra los vascones, doc 08
-      // §2.4.1–2.4.8) cerrada con Aprendiz II — el orquestador no
-      // tiene cinemáticas posteriores implementadas, así que cae
-      // al esqueleto.
+      // §2.4.1–2.4.8) cerrada con Aprendiz II.
       'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
@@ -141,6 +139,12 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      // Mosaico M2 entregado + cierre del Arco 2 cerrado — el
+      // orquestador no tiene cinemáticas del Arco 3 implementadas,
+      // así que cae al esqueleto.
+      'nuevoser.lasversiones.flag.escena_m2_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_2_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -428,9 +432,7 @@ void main() {
       // Latente 2.C.1 (Eider y el cambio) cerrada.
       'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
       // Estación 2.4 completa (Wamba contra los vascones, doc 08
-      // §2.4.1–2.4.8) cerrada con Aprendiz II — el orquestador no
-      // tiene cinemáticas posteriores implementadas, así que cae
-      // al esqueleto.
+      // §2.4.1–2.4.8) cerrada con Aprendiz II.
       'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
@@ -439,6 +441,12 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      // Mosaico M2 entregado + cierre del Arco 2 cerrado — el
+      // orquestador no tiene cinemáticas del Arco 3 implementadas,
+      // así que cae al esqueleto.
+      'nuevoser.lasversiones.flag.escena_m2_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_2_vista': true,
     });
 
     await tester.pumpWidget(crearApp());
@@ -532,9 +540,7 @@ void main() {
       // Latente 2.C.1 (Eider y el cambio) cerrada.
       'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
       // Estación 2.4 completa (Wamba contra los vascones, doc 08
-      // §2.4.1–2.4.8) cerrada con Aprendiz II — el orquestador no
-      // tiene cinemáticas posteriores implementadas, así que cae
-      // al esqueleto.
+      // §2.4.1–2.4.8) cerrada con Aprendiz II.
       'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
@@ -543,6 +549,12 @@ void main() {
       'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
       'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      // Mosaico M2 entregado + cierre del Arco 2 cerrado — el
+      // orquestador no tiene cinemáticas del Arco 3 implementadas,
+      // así que cae al esqueleto.
+      'nuevoser.lasversiones.flag.escena_m2_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_z_2_vista': true,
       // Una entrada ya registrada para que el cuaderno no esté vacío.
       'nuevoser.lasversiones.cuaderno.entrada.cuaderno.1.0.3': true,
     });

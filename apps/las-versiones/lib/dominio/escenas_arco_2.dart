@@ -28,8 +28,14 @@ class EscenasArco2 {
   /// Estación 2.3 completa (La domus de los mosaicos, doc 08
   /// §2.3.1–2.3.6), la cinemática latente post-Estación 2.3 (2.C.1
   /// *Eider y el cambio*) y la Estación 2.4 completa (Wamba contra
-  /// los vascones, doc 08 §2.4.1–2.4.8); el Mosaico M2 + cierre 2.Z
-  /// se añadirán en commits posteriores.
+  /// los vascones, doc 08 §2.4.1–2.4.8), la cinemática de entrega
+  /// del Mosaico M2 (M2.entrega, doc 08 §M2) y las dos cinemáticas
+  /// del cierre del Arco 2 (2.Z.1 *Antonio y Wamba* + 2.Z.2 *La
+  /// grabación*, doc 08 §2.Z.1–2.Z.2). La pantalla jugable del
+  /// Mosaico M2 (audio-guía de 90s) todavía no está implementada;
+  /// el flag `mosaico_arco_2_entregado` se activa provisionalmente
+  /// al cerrar la 2.4.8 (registro en BLOQUEOS) para que la
+  /// 2.M2.entrega y el cierre 2.Z sean alcanzables hoy.
   ///
   /// Las latentes 2.A.x se ordenan **detrás** de 2.1.6 porque ambas
   /// requieren `arco_2_estacion_1_cerrada` (que la 2.1.6 activa).
@@ -39,9 +45,12 @@ class EscenasArco2 {
   /// latente 2.C.1 se ordena detrás de 2.3.6 porque requiere
   /// `arco_2_estacion_3_cerrada` (que la 2.3.6 activa). La Estación
   /// 2.4 arranca con 2.4.1 que requiere `escena_2_c_1_vista` y
-  /// cierra con 2.4.8 que activa el ascenso a Aprendiz II y el
-  /// hito `arco_2_estacion_4_cerrada` (precondición para el
-  /// Mosaico M2 cuando se implemente).
+  /// cierra con 2.4.8 que activa el ascenso a Aprendiz II, el hito
+  /// `arco_2_estacion_4_cerrada` y (provisional) el flag de
+  /// entrega del Mosaico M2. La 2.M2.entrega encadena con la 2.Z.1
+  /// (cocina con el padre) y ésta con la 2.Z.2 (grabación, cierre
+  /// de arco). La 2.Z.2 activa `arco_2_cerrado_por_la_cronista` —
+  /// hito que el Arco 3 requerirá como precondición.
   static const List<EscenaCinematica> todas = [
     primerDiaDelArco,
     bajarAlSotano,
@@ -74,6 +83,9 @@ class EscenasArco2 {
     reconstruccionHonesta,
     elConcilioDividido,
     aprendizDosLogrado,
+    entregaDelMosaicoM2,
+    antonioYWamba,
+    laGrabacion,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -182,6 +194,26 @@ class EscenasArco2 {
     'escena_2_4_8_vista': {
       'aprendiz_dos_alcanzado',
       'arco_2_estacion_4_cerrada',
+      // Provisional (F2-8): hasta que la pantalla jugable del
+      // Mosaico M2 (audio-guía de 90s con anclajes obligatorios y
+      // declaración verbal de niveles de confianza) esté
+      // implementada, cerrar la 2.4.8 activa también el flag de
+      // entrega del Mosaico M2 — para que la cinemática
+      // 2.M2.entrega y, encadenadas, las dos del cierre del Arco 2
+      // (2.Z.1 y 2.Z.2) sean alcanzables hoy. Cuando entre la
+      // pantalla M2 jugable, este activador se mueve al
+      // `_alEntregarMosaicoArco2` del orquestador y la 2.4.8 deja
+      // de activarlo. Cambio trivial registrado en BLOQUEOS.
+      'mosaico_arco_2_entregado',
+    },
+    'escena_m2_entrega_vista': {
+      'mosaico_arco_2_archivado_por_andres',
+    },
+    'escena_2_z_1_vista': {
+      'conversacion_padre_silencio_vascon_cerrada',
+    },
+    'escena_2_z_2_vista': {
+      'arco_2_cerrado_por_la_cronista',
     },
   };
 
@@ -3740,6 +3772,390 @@ class EscenasArco2 {
             'APRENDIZ II.',
       ),
       PlanoCierreAmable(textoBoton: 'CERRAR LA ESTACIÓN'),
+    ],
+  );
+
+  /// **M2.entrega — La entrega del Mosaico M2** (doc 08 §M2, F2-8).
+  ///
+  /// Maren sube al ático del Archivo con la audio-guía de Pompaelo
+  /// terminada en el móvil. Andrés está donde siempre, entre las
+  /// cajas del fondo. Maren le entrega el archivo. Andrés se pone
+  /// los auriculares y escucha los noventa segundos en silencio.
+  /// Cuando termina, le hace una sola observación sobre la
+  /// frecuencia con la que Maren ha dicho "no sabemos" y
+  /// "probablemente". Reconocimiento por gesto pequeño, igual que
+  /// la 1.M1.entrega del Arco 1: pertenecer al oficio se mide en
+  /// los silencios del aprendiz.
+  ///
+  /// **Anclada provisionalmente al cierre de la Estación 2.4**.
+  /// Como la pantalla jugable del Mosaico M2 (audio-guía de 90s
+  /// con anclajes obligatorios y declaración verbal de niveles de
+  /// confianza) todavía no está implementada, el flag
+  /// `mosaico_arco_2_entregado` lo activa hoy la 2.4.8 al cerrar.
+  /// Cuando entre la pantalla M2, este disparador se mueve al
+  /// `_alEntregarMosaicoArco2` del orquestador y la 2.4.8 deja de
+  /// activarlo. Cambio trivial, registrado en BLOQUEOS.
+  ///
+  /// **Sin sustituciones diegéticas**: el diálogo se reproduce
+  /// literalmente del doc 08 §M2.
+  static const EscenaCinematica entregaDelMosaicoM2 = EscenaCinematica(
+    id: 'M2.entrega',
+    titulo: 'La entrega del Mosaico M2',
+    flagDeSalida: 'escena_m2_entrega_vista',
+    flagsRequeridos: {'mosaico_arco_2_entregado'},
+    ambiente: AmbienteArchivo.aticoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren sube al ático del Archivo con el móvil en la '
+            'mano. Andrés está donde siempre, entre las cajas del '
+            'fondo. Sin levantar la vista, le tiende la palma. '
+            'Maren le pasa el archivo de audio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: '¿Audio-guía?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Andrés coge el archivo. Lo carga en su portátil. Se '
+            'pone los auriculares. Le da al play.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Tres minutos en silencio mientras Andrés escucha los '
+            'noventa segundos enteros. Maren espera, incómoda, '
+            'mirando una caja de carpetas con etiquetas amarillas. '
+            'No le pregunta nada.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Andrés se quita los auriculares. La mira un segundo. '
+            'Tiene esa expresión suya que no es ni de aprobación '
+            'ni de rechazo, sólo de cuenta hecha.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto:
+            'Has dicho "no sabemos" tres veces. Y "probablemente" '
+            'cuatro.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Está mal?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Andrés sonríe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto: 'Está perfecto.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Andrés guarda el archivo en una carpeta del Archivo '
+            'que Maren no ve. Le devuelve el móvil. Se da la '
+            'vuelta hacia las cajas del fondo. La conversación se '
+            'acabó.',
+      ),
+      PlanoCierreAmable(textoBoton: 'BAJAR DEL ÁTICO'),
+    ],
+  );
+
+  /// **2.Z.1 — Antonio y Wamba** (doc 08 §2.Z.1, F2-8).
+  ///
+  /// La noche tras la entrega del Mosaico M2, una semana después
+  /// del Concilio dividido. Cocina de casa. Maren y Antonio cenan
+  /// solos — Iratxe ha llevado a Naia a un cumpleaños. Cocinan
+  /// juntos pasta sencilla. Antonio pregunta como si tal cosa por
+  /// la Brecha de Wamba. Maren articula la asimetría documental
+  /// del Arco 2 con palabras propias. Antonio le devuelve un
+  /// recuerdo: cuando leyó *El Quijote* de adolescente, notó que
+  /// los moriscos no aparecen escribiendo, y supo que algo
+  /// faltaba en la novela. La frase pedagógica del padre cierra
+  /// la cinemática: "los oficios que tienes claros desde el
+  /// principio suelen ser los que se acaban antes". Antonio
+  /// empieza a decir algo más después y se calla — "Olvídalo.
+  /// Sigamos cocinando".
+  ///
+  /// **Sin sustituciones diegéticas**: el diálogo se reproduce
+  /// literalmente del doc 08 §2.Z.1, incluido el silencio final
+  /// de Antonio que la 2.Z.2 va a interrogar como pregunta
+  /// abierta.
+  static const EscenaCinematica antonioYWamba = EscenaCinematica(
+    id: '2.Z.1',
+    titulo: 'Antonio y Wamba',
+    flagDeSalida: 'escena_2_z_1_vista',
+    flagsRequeridos: {'escena_m2_entrega_vista'},
+    ambiente: AmbienteArchivo.cocinaCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Cocina de casa. Maren y Antonio cocinando juntos. '
+            'Pasta sencilla. Iratxe ha llevado a Naia a un '
+            'cumpleaños — la casa está más callada de lo normal.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: '¿Te dejaron el Wamba?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: '¿Qué tal?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Difícil.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: '¿Cómo?'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa. Maren parte una cebolla. Tres golpes secos '
+            'sobre la tabla.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Las fuentes son todas de un lado. Visigodos hablando '
+            'de vascones. Los vascones no escriben.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Antonio remueve la salsa.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: 'Mm.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Karim me dijo que el silencio es un dato.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tú lo habías pensado así alguna vez?',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Antonio se gira. La mira. Tres segundos enteros sin '
+            'decir nada.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Sí. Pero no con esas palabras.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cuándo?'),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto:
+            'Cuando leí El Quijote de adolescente. Cervantes habla '
+            'mucho de moriscos. Pero los moriscos no aparecen '
+            'escribiendo. Pensé entonces que algo faltaba en la '
+            'novela. No sabía cómo llamarlo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Es lo mismo.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Es lo mismo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren se queda quieta. La cebolla cortada. El '
+            'cuchillo en la mano.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Aita.'),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No tengo claro qué tipo de oficio he elegido.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Pausa muy larga. Antonio termina de remover la '
+            'salsa. Apaga el fuego. Se gira hacia Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Eso es buena señal.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Por qué?'),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto:
+            'Porque los oficios que tienes claros desde el '
+            'principio suelen ser los que se acaban antes.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Antonio sigue removiendo. Maren sigue cortando. La '
+            'salsa va espesando.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Maren.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Sí?'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Antonio abre la boca. La cierra. La abre otra vez.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.antonio,
+        texto: 'Mmm. Olvídalo. Sigamos cocinando.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren no insiste. Cenan. Conversación normal después. '
+            'Algo de Naia, algo del trabajo de él, nada importante.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pero antes de que Antonio dijera "olvídalo", Maren ha '
+            'hecho algo que él no ha visto.',
+      ),
+      PlanoCierreAmable(textoBoton: 'SUBIR AL CUARTO'),
+    ],
+  );
+
+  /// **2.Z.2 — La grabación. Cierre del Arco 2** (doc 08 §2.Z.2,
+  /// F2-8).
+  ///
+  /// Continúa la misma noche. Cuarto de Maren. El móvil enchufado,
+  /// auriculares puestos, la interfaz del Cuaderno abierta. Maren
+  /// le da al play y se oye su voz y la de su padre con audio
+  /// limpio: ha grabado la conversación entera con el móvil en el
+  /// bolsillo del delantal de cocina, sin decirle a su padre,
+  /// hace una hora y media. Escucha completa la grabación.
+  /// Cuando termina, escribe en el Cuaderno tres pensamientos
+  /// que la cinemática reproduce literales: que mañana se lo
+  /// cuenta, que ha oído su voz hablando con su padre como con un
+  /// par por primera vez, que quiere recordar la frase de los
+  /// oficios que se acaban antes, y que el "olvídalo" lo apunta
+  /// como pregunta abierta — *como Isaura*. Cierra el cuaderno,
+  /// apaga la luz. Aparece flotante: ARCO 2 — CERRADO. Música
+  /// breve. Una línea de texto: *Continuará en Arco 3 — La forja
+  /// del reino*.
+  ///
+  /// Pedagógicamente clave para cerrar el Arco 2: la Cronista
+  /// genera, sin pedirle a nadie, un acto de oficio sobre su
+  /// propia vida — graba a su padre como fuente, decide
+  /// guardarla con honestidad declarada (mañana se lo cuenta),
+  /// y apunta el silencio del padre como pregunta abierta usando
+  /// el modelo de Isaura. Tres movimientos del oficio aplicados
+  /// por iniciativa propia. Cierre simétrico con la 1.Z donde la
+  /// Cronista narraba el arco; aquí la Cronista *practica* el
+  /// arco sobre material vivo.
+  ///
+  /// **Sin sustituciones diegéticas**: el diálogo se reproduce
+  /// literalmente del doc 08 §2.Z.2.
+  static const EscenaCinematica laGrabacion = EscenaCinematica(
+    id: '2.Z.2',
+    titulo: 'La grabación',
+    flagDeSalida: 'escena_2_z_2_vista',
+    flagsRequeridos: {'escena_2_z_1_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Cuarto de Maren. El móvil enchufado en la mesa. '
+            'Auriculares puestos. La interfaz del Cuaderno abierta '
+            'en el portátil.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren le da al play. Se oye su voz y la de su padre. '
+            'Audio limpio.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren grabó la conversación entera con el móvil en '
+            'el bolsillo del delantal de cocina, sin decirle a su '
+            'padre, hace una hora y media.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Escucha completa la conversación. No interrumpe. No '
+            'rebobina. Está sentada con las manos en el regazo y '
+            'los ojos cerrados.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Cuando termina, abre los ojos. Se quita los '
+            'auriculares. Empieza a escribir en el Cuaderno.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'He grabado a mi padre sin decírselo. No es bonito '
+            'hacerlo. Mañana se lo cuento. No puedo borrarla — la '
+            'quiero para mí.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La he escuchado entera. He oído mi voz hablando con '
+            'mi padre como con un par. Eso no había pasado antes. '
+            'O igual sí, pero no lo había notado.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Mi padre dijo "los oficios que tienes claros desde el '
+            'principio se acaban antes". No sé si tiene razón. '
+            'Pero quiero recordar la frase.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Y dijo "Maren" y después "olvídalo". Eso es lo que '
+            'más me ha llamado la atención. ¿Qué iba a decirme y '
+            'se calló?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Eso lo apunto como pregunta abierta. Como Isaura.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren cierra el cuaderno. Apaga la luz. Negro.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Aparece flotante: ARCO 2 — CERRADO.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Música breve. Negro extendido. Sólo una línea de '
+            'texto: Continuará en Arco 3 — La forja del reino.',
+      ),
+      PlanoCierreAmable(textoBoton: 'CERRAR EL ARCO'),
     ],
   );
 }
