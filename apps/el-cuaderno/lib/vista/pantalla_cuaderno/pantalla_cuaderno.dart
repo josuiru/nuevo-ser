@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../datos/almacenador_medios.dart';
 import '../../datos/cola_sync_observaciones.dart';
+import '../../datos/selector_imagen.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
@@ -33,6 +35,8 @@ class PantallaCuaderno extends StatefulWidget {
     this.sincronizadorAgregados,
     this.alGuardarObservacion,
     this.intentarSincronizarObservaciones,
+    this.selectorImagen,
+    this.almacenadorMedios,
   });
 
   final RepositorioLocal repositorio;
@@ -77,6 +81,16 @@ class PantallaCuaderno extends StatefulWidget {
   /// sincronizar no aparece. Devuelve null si no hay token guardado.
   final Future<ResultadoSyncObservaciones?> Function()?
       intentarSincronizarObservaciones;
+
+  /// Selector de imagen (cámara + galería) que `PantallaObservacion`
+  /// usa para anclar una foto. Si es null, los botones de foto no
+  /// aparecen — modo S1, builds de test que no quieren simular el
+  /// flujo nativo.
+  final SelectorImagen? selectorImagen;
+
+  /// Almacenador que mueve la foto seleccionada al directorio privado
+  /// de la app. Requerido si [selectorImagen] no es null.
+  final AlmacenadorMedios? almacenadorMedios;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -177,6 +191,8 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           misteriosAbiertos: widget.estado.misteriosAbiertos,
           sitSpotActivo: widget.estado.sitSpot,
           alGuardarObservacion: widget.alGuardarObservacion,
+          selectorImagen: widget.selectorImagen,
+          almacenadorMedios: widget.almacenadorMedios,
         ),
       ),
     );

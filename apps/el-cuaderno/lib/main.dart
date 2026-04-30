@@ -4,10 +4,12 @@ import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'datos/almacenador_medios.dart';
 import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
 import 'datos/repositorio_perfil_cuaderno.dart';
+import 'datos/selector_imagen.dart';
 import 'datos/sincronizador_agregados.dart';
 import 'datos_simulados/seed.dart';
 import 'dominio/observacion.dart';
@@ -206,6 +208,8 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final ColaSyncObservaciones _colaSyncObservaciones;
   late final companion.ClienteCompanion _clienteCompanion;
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
+  late final SelectorImagen _selectorImagen;
+  late final AlmacenadorMedios _almacenadorMedios;
   late Future<EnviarPreguntaTutor?> _futureEnviarPregunta;
 
   @override
@@ -229,6 +233,8 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
       repoCuenta: widget.repoCuenta,
       clienteCompanion: _clienteCompanion,
     );
+    _selectorImagen = SelectorImagenImagePicker();
+    _almacenadorMedios = AlmacenadorMedios();
     _futureEnviarPregunta = _resolverEnviarPregunta();
   }
 
@@ -309,6 +315,8 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           sincronizadorAgregados: _sincronizadorAgregados,
           alGuardarObservacion: _alGuardarObservacion,
           intentarSincronizarObservaciones: _intentarSincronizarObservaciones,
+          selectorImagen: _selectorImagen,
+          almacenadorMedios: _almacenadorMedios,
         );
       },
     );

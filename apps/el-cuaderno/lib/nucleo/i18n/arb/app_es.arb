@@ -99,9 +99,21 @@
 
   "observacionCajaFoto": "foto",
   "observacionCajaDibujo": "dibujo",
-  "observacionCajaPlaceholder": "Cuando llegue Sprint 5, aquí podrás añadir foto o dibujo.",
+  "observacionCajaPlaceholder": "Si quieres, añade una foto o un dibujo.",
   "@observacionCajaPlaceholder": {
-    "description": "Microcopia honesta para el placeholder gris de foto/dibujo en S1 — la cámara y el canvas táctil no están operativos todavía."
+    "description": "Microcopia opcional cuando no hay foto ni dibujo todavía. Sentence case, voz adulta amable (doc 04 §2)."
+  },
+  "observacionFotoTomar": "tomar foto",
+  "@observacionFotoTomar": {
+    "description": "Botón que abre la cámara nativa para capturar una foto y anclarla a la observación."
+  },
+  "observacionFotoElegir": "elegir foto",
+  "@observacionFotoElegir": {
+    "description": "Botón que abre la galería del dispositivo para elegir una foto ya hecha."
+  },
+  "observacionFotoQuitar": "quitar foto",
+  "@observacionFotoQuitar": {
+    "description": "Botón que retira la foto seleccionada antes de guardar la observación. No borra la foto del dispositivo si vino de la galería."
   },
 
   "observacionEtiquetaQueViste": "qué viste",

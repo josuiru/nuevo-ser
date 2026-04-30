@@ -69,6 +69,14 @@ dependencies:
   # llegue al servidor — solo viaja el digest.
   crypto: ^3.0.5
 
+  # Captura de foto desde la cámara o desde la galería del dispositivo
+  # para anclarla a una observación (biblia §3.2). Las imágenes se
+  # mueven al directorio de documentos privado de la app y solo se
+  # persiste su ruta relativa en `Observacion.fotoRutaLocal` —
+  # nunca cruzan red. En Android requiere los permisos `CAMERA` y
+  # `READ_MEDIA_IMAGES` declarados en `AndroidManifest.xml`.
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

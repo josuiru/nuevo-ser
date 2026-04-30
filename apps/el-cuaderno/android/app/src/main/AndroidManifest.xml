@@ -1,4 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- A3 (foto vía image_picker): la cámara es necesaria para que el
+         niño pueda anclar una foto a su observación (biblia §3.2).
+         READ_MEDIA_IMAGES habilita seleccionar de la galería en Android
+         13+ (API 33+). En Android 12 y anteriores image_picker usa
+         READ_EXTERNAL_STORAGE bajo capó, pero no la declaramos
+         explícitamente porque solo Android 13+ es nuestro target del
+         piloto. La foto seleccionada se mueve al directorio privado de
+         la app (`getApplicationDocumentsDirectory()`) y nunca cruza
+         red salvo opt-in del adulto (frontera de privacidad estructural,
+         política §2). -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
     <application
         android:label="el_cuaderno"
         android:name="${applicationName}"
