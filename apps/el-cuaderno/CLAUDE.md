@@ -113,7 +113,7 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 
 **S3 completo** — Perfil P5 compuesto en `nuevo_ser_core` con paridad bit a bit Dart/PHP (12 casos en fixture compartida `packages/nuevo_ser_core/test/fixtures/perfil_p5.json`).
 
-**S4 completo** — Tutor IA real cableado a Anthropic con prompt versionado server-side (`NS_Prompt_Cuaderno::VERSION = 'cuaderno-v1-2026-04-30'`), filtro lista negra del doc 04, regeneración con un retry, fallback canónico tras dos fallos, mensaje de cuota agotada. Cuota stub pendiente de M004.
+**S4 completo** — Tutor IA real cableado a Anthropic con prompt versionado server-side (`NS_Prompt_Cuaderno::VERSION = 'cuaderno-v1-2026-04-30'`), filtro lista negra del doc 04, regeneración con un retry, fallback canónico tras dos fallos, mensaje de cuota agotada. Cuota stub pendiente de M004. UI cableada: `PantallaTutor` recibe `EnviarPreguntaTutor?` opcional desde `main.dart`; sin token cae al canned response del S1, con token llama al cliente real y atrapa `CuotaTutorAgotada`. Bloque debug-only en Ajustes (`_BloqueTutorDebug`) permite pegar/borrar JWT a mano para probar end-to-end mientras no haya pantalla de login (memoria ítem 11) — visible sólo si `kDebugMode` desde `main.dart`.
 
 **S5 completo (alcance mínimo)** — `dominio/geolocalizacion_privacy_first.dart`: contrato `ServicioGeolocalizacion`, enum `PermisoGeo` con 4 estados, `distanciaMetros` Haversine con WGS-84, `estaEnSitSpot` con radio 50 m, `normalizarRegion` con bounding boxes piloto (ES-NA-PA, ES-NA, ES-BI, ES-MD, ES-BCN) y fallback `'ES'`. `ClienteElCuaderno` deriva `region_code` automáticamente. **Pendiente humano**: añadir plugin `geolocator` real + `flutter_map` + permisos Android/iOS (ítem 15-16 memoria) y MBTiles regional descargable bajo demanda.
 
@@ -133,7 +133,7 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 - ítem 10: encargo a ilustradora botánica (NO IA generativa, biblia §8.1).
 - ítem 11: auth de profesor/cuidador.
 
-Tests: 125 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
+Tests: 143 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
 
 **S1 (referencia histórica)** — bootstrap del scaffolding según el prompt operativo del paquete documental:
 
