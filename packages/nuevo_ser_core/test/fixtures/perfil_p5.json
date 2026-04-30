@@ -1,0 +1,174 @@
+{
+  "_doc": "Fixtures de paridad Dart/PHP del perfil P5 compuesto. Cada caso declara las mediciones brutas, los pesos por componente y el resultado esperado (nivel + score compuesto + scores normalizados). Las claves de componentes son las del enum: precision/rubrica/cobertura/proxy. Score compuesto se compara con tolerancia eps=1e-6. Niveles: 0=inexplorada, 1=introducida, 2=enDesarrollo, 3=competente, 4=maestria. Doc 03 §4.4 (El Cuaderno).",
+  "casos": [
+    {
+      "nombre": "solo precisión, peso 1.0 — 0.85 → en desarrollo (sesiones 7, semanas 2)",
+      "mediciones": {
+        "precision": 0.85,
+        "historico": {"sesiones": 7, "semanas_distintas": 2, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"precision": 1.0},
+      "esperado": {
+        "nivel": 2,
+        "score_compuesto": 0.85,
+        "scores": {"precision": 0.85}
+      }
+    },
+    {
+      "nombre": "score 0.4 con sesiones=2 → inexplorada (no llega ni a introducida)",
+      "mediciones": {
+        "precision": 0.4,
+        "historico": {"sesiones": 2, "semanas_distintas": 1, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"precision": 1.0},
+      "esperado": {
+        "nivel": 0,
+        "score_compuesto": 0.4,
+        "scores": {"precision": 0.4}
+      }
+    },
+    {
+      "nombre": "score 0.40 con sesiones=3 → introducida",
+      "mediciones": {
+        "precision": 0.4,
+        "historico": {"sesiones": 3, "semanas_distintas": 1, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"precision": 1.0},
+      "esperado": {
+        "nivel": 1,
+        "score_compuesto": 0.4,
+        "scores": {"precision": 0.4}
+      }
+    },
+    {
+      "nombre": "rubrica 2/3 normaliza a 0.6666... y la mezcla con precisión 50/50 da 0.7333...",
+      "mediciones": {
+        "precision": 0.8,
+        "rubrica_media": 2.0,
+        "historico": {"sesiones": 7, "semanas_distintas": 2, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"precision": 0.5, "rubrica": 0.5},
+      "esperado": {
+        "nivel": 2,
+        "score_compuesto": 0.7333333333333333,
+        "scores": {"precision": 0.8, "rubrica": 0.6666666666666666}
+      }
+    },
+    {
+      "nombre": "cobertura 6/10 + precisión 0.9 con pesos 0.6/0.4 → 0.72 → en desarrollo",
+      "mediciones": {
+        "precision": 0.9,
+        "cobertura_vistos": 6,
+        "cobertura_esperados": 10,
+        "historico": {"sesiones": 7, "semanas_distintas": 2, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"precision": 0.4, "cobertura": 0.6},
+      "esperado": {
+        "nivel": 2,
+        "score_compuesto": 0.72,
+        "scores": {"precision": 0.9, "cobertura": 0.6}
+      }
+    },
+    {
+      "nombre": "score 0.92 con 1 estación → competente (le falta retención para maestría)",
+      "mediciones": {
+        "precision": 0.92,
+        "historico": {"sesiones": 12, "semanas_distintas": 4, "estaciones": 1, "transferencia": true}
+      },
+      "pesos": {"precision": 1.0},
+      "esperado": {
+        "nivel": 3,
+        "score_compuesto": 0.92,
+        "scores": {"precision": 0.92}
+      }
+    },
+    {
+      "nombre": "score 0.92 con 2 estaciones SIN transferencia → competente, no maestría",
+      "mediciones": {
+        "precision": 0.92,
+        "historico": {"sesiones": 12, "semanas_distintas": 4, "estaciones": 2, "transferencia": false}
+      },
+      "pesos": {"precision": 1.0},
+      "esperado": {
+        "nivel": 3,
+        "score_compuesto": 0.92,
+        "scores": {"precision": 0.92}
+      }
+    },
+    {
+      "nombre": "score 0.92 con 2 estaciones + transferencia → maestría",
+      "mediciones": {
+        "precision": 0.92,
+        "historico": {"sesiones": 12, "semanas_distintas": 4, "estaciones": 2, "transferencia": true}
+      },
+      "pesos": {"precision": 1.0},
+      "esperado": {
+        "nivel": 4,
+        "score_compuesto": 0.92,
+        "scores": {"precision": 0.92}
+      }
+    },
+    {
+      "nombre": "cuatro componentes con pesos 0.4/0.3/0.2/0.1 — score = 0.36+0.24+0.16+0.05 = 0.81",
+      "mediciones": {
+        "precision": 0.9,
+        "rubrica_media": 2.4,
+        "cobertura_vistos": 8,
+        "cobertura_esperados": 10,
+        "proxy": 0.5,
+        "historico": {"sesiones": 12, "semanas_distintas": 4, "estaciones": 1, "transferencia": true}
+      },
+      "pesos": {"precision": 0.4, "rubrica": 0.3, "cobertura": 0.2, "proxy": 0.1},
+      "esperado": {
+        "nivel": 3,
+        "score_compuesto": 0.81,
+        "scores": {
+          "precision": 0.9,
+          "rubrica": 0.8,
+          "cobertura": 0.8,
+          "proxy": 0.5
+        }
+      }
+    },
+    {
+      "nombre": "componente declarado en pesos pero ausente en mediciones cuenta como 0",
+      "mediciones": {
+        "precision": 1.0,
+        "historico": {"sesiones": 7, "semanas_distintas": 2, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"precision": 0.7, "rubrica": 0.3},
+      "esperado": {
+        "nivel": 2,
+        "score_compuesto": 0.7,
+        "scores": {"precision": 1.0, "rubrica": 0.0}
+      }
+    },
+    {
+      "nombre": "rúbrica fuera de rango (3.5) clampa a 1.0 al normalizar",
+      "mediciones": {
+        "rubrica_media": 3.5,
+        "historico": {"sesiones": 7, "semanas_distintas": 2, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"rubrica": 1.0},
+      "esperado": {
+        "nivel": 2,
+        "score_compuesto": 1.0,
+        "scores": {"rubrica": 1.0}
+      }
+    },
+    {
+      "nombre": "cobertura con esperados=0 normaliza a 0 sin dividir",
+      "mediciones": {
+        "cobertura_vistos": 5,
+        "cobertura_esperados": 0,
+        "historico": {"sesiones": 3, "semanas_distintas": 1, "estaciones": 0, "transferencia": false}
+      },
+      "pesos": {"cobertura": 1.0},
+      "esperado": {
+        "nivel": 0,
+        "score_compuesto": 0.0,
+        "scores": {"cobertura": 0.0}
+      }
+    }
+  ]
+}
