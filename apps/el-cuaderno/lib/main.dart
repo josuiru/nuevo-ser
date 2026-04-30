@@ -92,7 +92,15 @@ class AppElCuaderno extends StatelessWidget {
                     localeAppElCuaderno.value = Locale(codigo);
                   },
                 )
-              : _OrquestadorJuego(repositorio: repositorioCuaderno),
+              : _OrquestadorJuego(
+                  repositorio: repositorioCuaderno,
+                  repoIdioma: repoIdioma,
+                  locale: locale,
+                  alCambiarIdioma: () async {
+                    await repoIdioma.borrar();
+                    localeAppElCuaderno.value = null;
+                  },
+                ),
         );
       },
     );
@@ -101,8 +109,16 @@ class AppElCuaderno extends StatelessWidget {
 
 class _OrquestadorJuego extends StatefulWidget {
   final RepositorioLocal repositorio;
+  final RepositorioIdiomaApp repoIdioma;
+  final Locale locale;
+  final Future<void> Function() alCambiarIdioma;
 
-  const _OrquestadorJuego({required this.repositorio});
+  const _OrquestadorJuego({
+    required this.repositorio,
+    required this.repoIdioma,
+    required this.locale,
+    required this.alCambiarIdioma,
+  });
 
   @override
   State<_OrquestadorJuego> createState() => _EstadoOrquestadorJuego();
@@ -128,6 +144,9 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     return PantallaCuaderno(
       repositorio: widget.repositorio,
       estado: _estado,
+      repoIdioma: widget.repoIdioma,
+      locale: widget.locale,
+      alCambiarIdioma: widget.alCambiarIdioma,
     );
   }
 }

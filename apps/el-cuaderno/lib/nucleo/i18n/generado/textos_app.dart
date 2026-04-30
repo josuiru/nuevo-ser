@@ -312,6 +312,180 @@ abstract class TextosApp {
   /// In es, this message translates to:
   /// **'El Tutor todavía no está conectado. Vuelve en unas semanas.'**
   String get tutorRespuestaCanned;
+
+  /// Título de la pantalla de Ajustes.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes'**
+  String get ajustesTitulo;
+
+  /// Texto que muestra el idioma activo en Ajustes.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma del cuaderno: {idioma}'**
+  String ajustesIdiomaActual(String idioma);
+
+  /// No description provided for @ajustesIdiomaCambiar.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar idioma'**
+  String get ajustesIdiomaCambiar;
+
+  /// No description provided for @ajustesExportar.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar mi cuaderno'**
+  String get ajustesExportar;
+
+  /// No description provided for @ajustesExportarDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.'**
+  String get ajustesExportarDescripcion;
+
+  /// No description provided for @ajustesExportarDialogoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cuaderno como texto'**
+  String get ajustesExportarDialogoTitulo;
+
+  /// No description provided for @ajustesExportarDialogoCerrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get ajustesExportarDialogoCerrar;
+
+  /// No description provided for @ajustesVistaCuidador.
+  ///
+  /// In es, this message translates to:
+  /// **'Vista del cuidador'**
+  String get ajustesVistaCuidador;
+
+  /// No description provided for @ajustesVistaCuidadorDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Una página discreta para una persona adulta que te acompaña.'**
+  String get ajustesVistaCuidadorDescripcion;
+
+  /// No description provided for @ajustesBorrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar mi cuaderno'**
+  String get ajustesBorrar;
+
+  /// No description provided for @ajustesBorrarDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.'**
+  String get ajustesBorrarDescripcion;
+
+  /// No description provided for @ajustesBorrarDialogoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Borrar todo?'**
+  String get ajustesBorrarDialogoTitulo;
+
+  /// Cuerpo del primer diálogo de borrado, con el reparto.
+  ///
+  /// In es, this message translates to:
+  /// **'Si continúas, se borrarán {observaciones} observaciones, {misterios} Misterios y {sitSpots} sit spot. No se puede deshacer.'**
+  String ajustesBorrarDialogoCuerpo(int observaciones, int misterios, int sitSpots);
+
+  /// No description provided for @ajustesBorrarDialogoSeguir.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguir'**
+  String get ajustesBorrarDialogoSeguir;
+
+  /// No description provided for @ajustesBorrarDialogoCancelar.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get ajustesBorrarDialogoCancelar;
+
+  /// No description provided for @ajustesBorrarConfirmacionTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Estás segura?'**
+  String get ajustesBorrarConfirmacionTitulo;
+
+  /// No description provided for @ajustesBorrarConfirmacionCuerpo.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe «borrar» abajo para confirmar.'**
+  String get ajustesBorrarConfirmacionCuerpo;
+
+  /// Palabra exacta que el niño debe escribir para confirmar el borrado. Equivalente i18n del 'DELETE' de muchas apps adultas.
+  ///
+  /// In es, this message translates to:
+  /// **'borrar'**
+  String get ajustesBorrarConfirmacionPalabra;
+
+  /// No description provided for @ajustesBorrarConfirmacionPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'escribe la palabra'**
+  String get ajustesBorrarConfirmacionPlaceholder;
+
+  /// No description provided for @ajustesBorrarConfirmacionBoton.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar todo'**
+  String get ajustesBorrarConfirmacionBoton;
+
+  /// No description provided for @ajustesBorradoCompleto.
+  ///
+  /// In es, this message translates to:
+  /// **'Listo. Tu cuaderno está vacío.'**
+  String get ajustesBorradoCompleto;
+
+  /// Título de la pantalla del cuidador.
+  ///
+  /// In es, this message translates to:
+  /// **'Página del cuidador'**
+  String get cuidadorTitulo;
+
+  /// Microcopia que aclara la frontera de privacidad para el adulto que abra esta pantalla con el niño (doc 15 §1).
+  ///
+  /// In es, this message translates to:
+  /// **'Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.'**
+  String get cuidadorAviso;
+
+  /// No description provided for @cuidadorSemanaActual.
+  ///
+  /// In es, this message translates to:
+  /// **'Semana {isoWeek}'**
+  String cuidadorSemanaActual(String isoWeek);
+
+  /// No description provided for @cuidadorPreguntaCabecera.
+  ///
+  /// In es, this message translates to:
+  /// **'Una pregunta para la cena'**
+  String get cuidadorPreguntaCabecera;
+
+  /// No description provided for @cuidadorMetricasCabecera.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta semana'**
+  String get cuidadorMetricasCabecera;
+
+  /// No description provided for @cuidadorMetricaObservaciones.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =0{Sin observaciones} =1{Una observación} other{{count} observaciones}}'**
+  String cuidadorMetricaObservaciones(int count);
+
+  /// No description provided for @cuidadorMetricaMisterios.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =0{Sin Misterios anclados} =1{Un Misterio} other{{count} Misterios}}'**
+  String cuidadorMetricaMisterios(int count);
+
+  /// No description provided for @cuidadorMetricaSitSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =0{Sin visitas al sit spot} =1{Una visita al sit spot} other{{count} visitas al sit spot}}'**
+  String cuidadorMetricaSitSpot(int count);
 }
 
 class _TextosAppDelegate extends LocalizationsDelegate<TextosApp> {

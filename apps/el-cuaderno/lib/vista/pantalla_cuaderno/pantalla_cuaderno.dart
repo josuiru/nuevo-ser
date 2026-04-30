@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
+import '../pantalla_ajustes/pantalla_ajustes.dart';
 import '../pantalla_observacion/pantalla_observacion.dart';
 import '../pantalla_tutor/pantalla_tutor.dart';
 import '../tema/colores.dart';
@@ -19,10 +21,20 @@ class PantallaCuaderno extends StatefulWidget {
     super.key,
     required this.repositorio,
     required this.estado,
+    this.repoIdioma,
+    this.locale,
+    this.alCambiarIdioma,
   });
 
   final RepositorioLocal repositorio;
   final EstadoCuaderno estado;
+
+  /// Inyectados por `main.dart`. Opcionales para que los tests de
+  /// widget puedan instanciar la pantalla sin tocar `SharedPreferences`.
+  /// Si llegan, el AppBar muestra el botón de Ajustes; si no, lo oculta.
+  final RepositorioIdiomaApp? repoIdioma;
+  final Locale? locale;
+  final Future<void> Function()? alCambiarIdioma;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -42,8 +54,22 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
     final esquema = Theme.of(context).colorScheme;
     final textos = TextosApp.of(context);
 
+    final puedeAbrirAjustes = widget.repoIdioma != null &&
+        widget.locale != null &&
+        widget.alCambiarIdioma != null;
+
     return Scaffold(
-      appBar: AppBar(title: Text(textos.tituloApp)),
+      appBar: AppBar(
+        title: Text(textos.tituloApp),
+        actions: [
+          if (puedeAbrirAjustes)
+            IconButton(
+              icon: const Icon(Icons.settings_outlined),
+              tooltip: textos.ajustesTitulo,
+              onPressed: _abrirAjustes,
+            ),
+        ],
+      ),
       body: SafeArea(
         child: IndexedStack(
           index: _indicePestana,
@@ -109,6 +135,26 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
       ),
     );
     if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
+  Future<void> _abrirAjustes() async {
+    final repoIdioma = widget.repoIdioma!;
+    final locale = widget.locale!;
+    final alCambiarIdioma = widget.alCambiarIdioma!;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaAjustes(
+          repositorio: widget.repositorio,
+          repoIdioma: repoIdioma,
+          locale: locale,
+          alCambiarIdioma: alCambiarIdioma,
+        ),
+      ),
+    );
+    if (mounted) {
+      // Tras el borrado el estado puede haber cambiado.
       await widget.estado.cargar();
     }
   }

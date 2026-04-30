@@ -59,5 +59,56 @@
   "tutorSaludoCanonico": "TODO_CA · Soy el Tutor del Cuaderno. Pregúntame lo que necesites.",
   "tutorPlaceholderInput": "TODO_CA · escribe tu pregunta",
   "tutorBotonEnviar": "TODO_CA · Enviar",
-  "tutorRespuestaCanned": "TODO_CA · El Tutor todavía no está conectado. Vuelve en unas semanas."
+  "tutorRespuestaCanned": "TODO_CA · El Tutor todavía no está conectado. Vuelve en unas semanas.",
+  "ajustesTitulo": "TODO_CA · Ajustes",
+  "ajustesIdiomaActual": "TODO_CA · Idioma del cuaderno: {idioma}",
+  "@ajustesIdiomaActual": {
+    "placeholders": {"idioma": {"type": "String"}}
+  },
+  "ajustesIdiomaCambiar": "TODO_CA · Cambiar idioma",
+  "ajustesExportar": "TODO_CA · Exportar mi cuaderno",
+  "ajustesExportarDescripcion": "TODO_CA · Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.",
+  "ajustesExportarDialogoTitulo": "TODO_CA · Tu cuaderno como texto",
+  "ajustesExportarDialogoCerrar": "TODO_CA · Cerrar",
+  "ajustesVistaCuidador": "TODO_CA · Vista del cuidador",
+  "ajustesVistaCuidadorDescripcion": "TODO_CA · Una página discreta para una persona adulta que te acompaña.",
+  "ajustesBorrar": "TODO_CA · Borrar mi cuaderno",
+  "ajustesBorrarDescripcion": "TODO_CA · Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.",
+  "ajustesBorrarDialogoTitulo": "TODO_CA · ¿Borrar todo?",
+  "ajustesBorrarDialogoCuerpo": "TODO_CA · Si continúas, se borrarán {observaciones} observaciones, {misterios} Misterios y {sitSpots} sit spot. No se puede deshacer.",
+  "@ajustesBorrarDialogoCuerpo": {
+    "placeholders": {
+      "observaciones": {"type": "int"},
+      "misterios": {"type": "int"},
+      "sitSpots": {"type": "int"}
+    }
+  },
+  "ajustesBorrarDialogoSeguir": "TODO_CA · Seguir",
+  "ajustesBorrarDialogoCancelar": "TODO_CA · Cancelar",
+  "ajustesBorrarConfirmacionTitulo": "TODO_CA · ¿Estás segura?",
+  "ajustesBorrarConfirmacionCuerpo": "TODO_CA · Escribe «borrar» abajo para confirmar.",
+  "ajustesBorrarConfirmacionPalabra": "TODO_CA · borrar",
+  "ajustesBorrarConfirmacionPlaceholder": "TODO_CA · escribe la palabra",
+  "ajustesBorrarConfirmacionBoton": "TODO_CA · Borrar todo",
+  "ajustesBorradoCompleto": "TODO_CA · Listo. Tu cuaderno está vacío.",
+  "cuidadorTitulo": "TODO_CA · Página del cuidador",
+  "cuidadorAviso": "TODO_CA · Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.",
+  "cuidadorSemanaActual": "TODO_CA · Semana {isoWeek}",
+  "@cuidadorSemanaActual": {
+    "placeholders": {"isoWeek": {"type": "String"}}
+  },
+  "cuidadorPreguntaCabecera": "TODO_CA · Una pregunta para la cena",
+  "cuidadorMetricasCabecera": "TODO_CA · Esta semana",
+  "cuidadorMetricaObservaciones": "{count, plural, =0{TODO_CA · Sin observaciones} =1{TODO_CA · Una observación} other{TODO_CA · {count} observaciones}}",
+  "@cuidadorMetricaObservaciones": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "cuidadorMetricaMisterios": "{count, plural, =0{TODO_CA · Sin Misterios anclados} =1{TODO_CA · Un Misterio} other{TODO_CA · {count} Misterios}}",
+  "@cuidadorMetricaMisterios": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "cuidadorMetricaSitSpot": "{count, plural, =0{TODO_CA · Sin visitas al sit spot} =1{TODO_CA · Una visita al sit spot} other{TODO_CA · {count} visitas al sit spot}}",
+  "@cuidadorMetricaSitSpot": {
+    "placeholders": {"count": {"type": "int"}}
+  }
 }

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart' as intl;
+
 import 'textos_app.dart';
 
 // ignore_for_file: type=lint
@@ -119,4 +121,124 @@ class TextosAppEs extends TextosApp {
 
   @override
   String get tutorRespuestaCanned => 'El Tutor todavía no está conectado. Vuelve en unas semanas.';
+
+  @override
+  String get ajustesTitulo => 'Ajustes';
+
+  @override
+  String ajustesIdiomaActual(String idioma) {
+    return 'Idioma del cuaderno: $idioma';
+  }
+
+  @override
+  String get ajustesIdiomaCambiar => 'Cambiar idioma';
+
+  @override
+  String get ajustesExportar => 'Exportar mi cuaderno';
+
+  @override
+  String get ajustesExportarDescripcion => 'Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.';
+
+  @override
+  String get ajustesExportarDialogoTitulo => 'Tu cuaderno como texto';
+
+  @override
+  String get ajustesExportarDialogoCerrar => 'Cerrar';
+
+  @override
+  String get ajustesVistaCuidador => 'Vista del cuidador';
+
+  @override
+  String get ajustesVistaCuidadorDescripcion => 'Una página discreta para una persona adulta que te acompaña.';
+
+  @override
+  String get ajustesBorrar => 'Borrar mi cuaderno';
+
+  @override
+  String get ajustesBorrarDescripcion => 'Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.';
+
+  @override
+  String get ajustesBorrarDialogoTitulo => '¿Borrar todo?';
+
+  @override
+  String ajustesBorrarDialogoCuerpo(int observaciones, int misterios, int sitSpots) {
+    return 'Si continúas, se borrarán $observaciones observaciones, $misterios Misterios y $sitSpots sit spot. No se puede deshacer.';
+  }
+
+  @override
+  String get ajustesBorrarDialogoSeguir => 'Seguir';
+
+  @override
+  String get ajustesBorrarDialogoCancelar => 'Cancelar';
+
+  @override
+  String get ajustesBorrarConfirmacionTitulo => '¿Estás segura?';
+
+  @override
+  String get ajustesBorrarConfirmacionCuerpo => 'Escribe «borrar» abajo para confirmar.';
+
+  @override
+  String get ajustesBorrarConfirmacionPalabra => 'borrar';
+
+  @override
+  String get ajustesBorrarConfirmacionPlaceholder => 'escribe la palabra';
+
+  @override
+  String get ajustesBorrarConfirmacionBoton => 'Borrar todo';
+
+  @override
+  String get ajustesBorradoCompleto => 'Listo. Tu cuaderno está vacío.';
+
+  @override
+  String get cuidadorTitulo => 'Página del cuidador';
+
+  @override
+  String get cuidadorAviso => 'Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.';
+
+  @override
+  String cuidadorSemanaActual(String isoWeek) {
+    return 'Semana $isoWeek';
+  }
+
+  @override
+  String get cuidadorPreguntaCabecera => 'Una pregunta para la cena';
+
+  @override
+  String get cuidadorMetricasCabecera => 'Esta semana';
+
+  @override
+  String cuidadorMetricaObservaciones(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count observaciones',
+      one: 'Una observación',
+      zero: 'Sin observaciones',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cuidadorMetricaMisterios(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Misterios',
+      one: 'Un Misterio',
+      zero: 'Sin Misterios anclados',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cuidadorMetricaSitSpot(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count visitas al sit spot',
+      one: 'Una visita al sit spot',
+      zero: 'Sin visitas al sit spot',
+    );
+    return '$_temp0';
+  }
 }

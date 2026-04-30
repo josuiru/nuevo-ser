@@ -149,5 +149,85 @@
   "tutorRespuestaCanned": "El Tutor todavía no está conectado. Vuelve en unas semanas.",
   "@tutorRespuestaCanned": {
     "description": "Respuesta única del Tutor en S1. La conexión real con Claude API entra en Sprint 4 — esta microcopia es deliberada, no un placeholder técnico (README documenta el motivo)."
+  },
+
+  "ajustesTitulo": "Ajustes",
+  "@ajustesTitulo": {
+    "description": "Título de la pantalla de Ajustes."
+  },
+  "ajustesIdiomaActual": "Idioma del cuaderno: {idioma}",
+  "@ajustesIdiomaActual": {
+    "description": "Texto que muestra el idioma activo en Ajustes.",
+    "placeholders": {
+      "idioma": {
+        "type": "String",
+        "example": "castellano"
+      }
+    }
+  },
+  "ajustesIdiomaCambiar": "Cambiar idioma",
+  "ajustesExportar": "Exportar mi cuaderno",
+  "ajustesExportarDescripcion": "Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.",
+  "ajustesExportarDialogoTitulo": "Tu cuaderno como texto",
+  "ajustesExportarDialogoCerrar": "Cerrar",
+  "ajustesVistaCuidador": "Vista del cuidador",
+  "ajustesVistaCuidadorDescripcion": "Una página discreta para una persona adulta que te acompaña.",
+  "ajustesBorrar": "Borrar mi cuaderno",
+  "ajustesBorrarDescripcion": "Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.",
+  "ajustesBorrarDialogoTitulo": "¿Borrar todo?",
+  "ajustesBorrarDialogoCuerpo": "Si continúas, se borrarán {observaciones} observaciones, {misterios} Misterios y {sitSpots} sit spot. No se puede deshacer.",
+  "@ajustesBorrarDialogoCuerpo": {
+    "description": "Cuerpo del primer diálogo de borrado, con el reparto.",
+    "placeholders": {
+      "observaciones": {"type": "int"},
+      "misterios": {"type": "int"},
+      "sitSpots": {"type": "int"}
+    }
+  },
+  "ajustesBorrarDialogoSeguir": "Seguir",
+  "ajustesBorrarDialogoCancelar": "Cancelar",
+  "ajustesBorrarConfirmacionTitulo": "¿Estás segura?",
+  "ajustesBorrarConfirmacionCuerpo": "Escribe «borrar» abajo para confirmar.",
+  "ajustesBorrarConfirmacionPalabra": "borrar",
+  "@ajustesBorrarConfirmacionPalabra": {
+    "description": "Palabra exacta que el niño debe escribir para confirmar el borrado. Equivalente i18n del 'DELETE' de muchas apps adultas."
+  },
+  "ajustesBorrarConfirmacionPlaceholder": "escribe la palabra",
+  "ajustesBorrarConfirmacionBoton": "Borrar todo",
+  "ajustesBorradoCompleto": "Listo. Tu cuaderno está vacío.",
+
+  "cuidadorTitulo": "Página del cuidador",
+  "@cuidadorTitulo": {
+    "description": "Título de la pantalla del cuidador."
+  },
+  "cuidadorAviso": "Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.",
+  "@cuidadorAviso": {
+    "description": "Microcopia que aclara la frontera de privacidad para el adulto que abra esta pantalla con el niño (doc 15 §1)."
+  },
+  "cuidadorSemanaActual": "Semana {isoWeek}",
+  "@cuidadorSemanaActual": {
+    "placeholders": {
+      "isoWeek": {"type": "String", "example": "2026-W18"}
+    }
+  },
+  "cuidadorPreguntaCabecera": "Una pregunta para la cena",
+  "cuidadorMetricasCabecera": "Esta semana",
+  "cuidadorMetricaObservaciones": "{count, plural, =0{Sin observaciones} =1{Una observación} other{{count} observaciones}}",
+  "@cuidadorMetricaObservaciones": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cuidadorMetricaMisterios": "{count, plural, =0{Sin Misterios anclados} =1{Un Misterio} other{{count} Misterios}}",
+  "@cuidadorMetricaMisterios": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cuidadorMetricaSitSpot": "{count, plural, =0{Sin visitas al sit spot} =1{Una visita al sit spot} other{{count} visitas al sit spot}}",
+  "@cuidadorMetricaSitSpot": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
   }
 }

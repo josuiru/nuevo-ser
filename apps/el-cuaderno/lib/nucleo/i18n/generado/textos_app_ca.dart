@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart' as intl;
+
 import 'textos_app.dart';
 
 // ignore_for_file: type=lint
@@ -119,4 +121,124 @@ class TextosAppCa extends TextosApp {
 
   @override
   String get tutorRespuestaCanned => 'TODO_CA · El Tutor todavía no está conectado. Vuelve en unas semanas.';
+
+  @override
+  String get ajustesTitulo => 'TODO_CA · Ajustes';
+
+  @override
+  String ajustesIdiomaActual(String idioma) {
+    return 'TODO_CA · Idioma del cuaderno: $idioma';
+  }
+
+  @override
+  String get ajustesIdiomaCambiar => 'TODO_CA · Cambiar idioma';
+
+  @override
+  String get ajustesExportar => 'TODO_CA · Exportar mi cuaderno';
+
+  @override
+  String get ajustesExportarDescripcion => 'TODO_CA · Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.';
+
+  @override
+  String get ajustesExportarDialogoTitulo => 'TODO_CA · Tu cuaderno como texto';
+
+  @override
+  String get ajustesExportarDialogoCerrar => 'TODO_CA · Cerrar';
+
+  @override
+  String get ajustesVistaCuidador => 'TODO_CA · Vista del cuidador';
+
+  @override
+  String get ajustesVistaCuidadorDescripcion => 'TODO_CA · Una página discreta para una persona adulta que te acompaña.';
+
+  @override
+  String get ajustesBorrar => 'TODO_CA · Borrar mi cuaderno';
+
+  @override
+  String get ajustesBorrarDescripcion => 'TODO_CA · Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.';
+
+  @override
+  String get ajustesBorrarDialogoTitulo => 'TODO_CA · ¿Borrar todo?';
+
+  @override
+  String ajustesBorrarDialogoCuerpo(int observaciones, int misterios, int sitSpots) {
+    return 'TODO_CA · Si continúas, se borrarán $observaciones observaciones, $misterios Misterios y $sitSpots sit spot. No se puede deshacer.';
+  }
+
+  @override
+  String get ajustesBorrarDialogoSeguir => 'TODO_CA · Seguir';
+
+  @override
+  String get ajustesBorrarDialogoCancelar => 'TODO_CA · Cancelar';
+
+  @override
+  String get ajustesBorrarConfirmacionTitulo => 'TODO_CA · ¿Estás segura?';
+
+  @override
+  String get ajustesBorrarConfirmacionCuerpo => 'TODO_CA · Escribe «borrar» abajo para confirmar.';
+
+  @override
+  String get ajustesBorrarConfirmacionPalabra => 'TODO_CA · borrar';
+
+  @override
+  String get ajustesBorrarConfirmacionPlaceholder => 'TODO_CA · escribe la palabra';
+
+  @override
+  String get ajustesBorrarConfirmacionBoton => 'TODO_CA · Borrar todo';
+
+  @override
+  String get ajustesBorradoCompleto => 'TODO_CA · Listo. Tu cuaderno está vacío.';
+
+  @override
+  String get cuidadorTitulo => 'TODO_CA · Página del cuidador';
+
+  @override
+  String get cuidadorAviso => 'TODO_CA · Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.';
+
+  @override
+  String cuidadorSemanaActual(String isoWeek) {
+    return 'TODO_CA · Semana $isoWeek';
+  }
+
+  @override
+  String get cuidadorPreguntaCabecera => 'TODO_CA · Una pregunta para la cena';
+
+  @override
+  String get cuidadorMetricasCabecera => 'TODO_CA · Esta semana';
+
+  @override
+  String cuidadorMetricaObservaciones(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'TODO_CA · $count observaciones',
+      one: 'TODO_CA · Una observación',
+      zero: 'TODO_CA · Sin observaciones',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cuidadorMetricaMisterios(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'TODO_CA · $count Misterios',
+      one: 'TODO_CA · Un Misterio',
+      zero: 'TODO_CA · Sin Misterios anclados',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cuidadorMetricaSitSpot(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'TODO_CA · $count visitas al sit spot',
+      one: 'TODO_CA · Una visita al sit spot',
+      zero: 'TODO_CA · Sin visitas al sit spot',
+    );
+    return '$_temp0';
+  }
 }
