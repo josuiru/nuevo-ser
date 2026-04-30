@@ -22,6 +22,7 @@ class EstadoCuaderno extends ChangeNotifier {
   SitSpot? _sitSpot;
   List<Misterio> _misteriosAbiertos = const [];
   List<Observacion> _ultimasObservaciones = const [];
+  Map<String, int> _evidenciasPorMisterio = const {};
 
   bool get cargando => _cargando;
   SitSpot? get sitSpot => _sitSpot;
@@ -30,6 +31,13 @@ class EstadoCuaderno extends ChangeNotifier {
   Observacion? get ultimaObservacion =>
       _ultimasObservaciones.isEmpty ? null : _ultimasObservaciones.first;
 
+  /// Cuántas observaciones tiene el niño anotadas contra cada Misterio
+  /// abierto (clave = `Misterio.id`). Se resuelve al cargar y alimenta
+  /// el contador "N evidencias anotadas" de la `TarjetaMisterio`. Si
+  /// un Misterio no aparece como clave es que no tiene evidencias —
+  /// las pantallas tratan ausencia y `0` como equivalentes.
+  Map<String, int> get evidenciasPorMisterio => _evidenciasPorMisterio;
+
   Future<void> cargar() async {
     _cargando = true;
     notifyListeners();
@@ -37,9 +45,21 @@ class EstadoCuaderno extends ChangeNotifier {
       final sitSpotResultado = await repositorio.obtenerSitSpot();
       final misteriosResultado = await repositorio.obtenerMisteriosAbiertos();
       final ultimas = await repositorio.obtenerObservaciones(limite: 5);
+      // Conteo por Misterio: una observación por cada id abierto. La
+      // alternativa sería leer `misterio.observacionesIds.length`, pero
+      // el query es la fuente de verdad — observacionesIds del modelo
+      // puede arrastrar drift si en el futuro alguien guarda una
+      // observación bypass del helper de anclar.
+      final evidencias = <String, int>{};
+      for (final misterio in misteriosResultado) {
+        final lista =
+            await repositorio.obtenerObservaciones(misterioId: misterio.id);
+        evidencias[misterio.id] = lista.length;
+      }
       _sitSpot = sitSpotResultado;
       _misteriosAbiertos = misteriosResultado;
       _ultimasObservaciones = ultimas;
+      _evidenciasPorMisterio = evidencias;
     } finally {
       _cargando = false;
       notifyListeners();

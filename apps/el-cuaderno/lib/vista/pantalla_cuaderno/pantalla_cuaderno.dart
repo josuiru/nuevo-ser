@@ -547,6 +547,7 @@ class _VistaCuaderno extends StatelessWidget {
               for (final misterio in misteriosAMostrar) ...[
                 TarjetaMisterio(
                   misterio: misterio,
+                  evidencias: estado.evidenciasPorMisterio[misterio.id],
                   alPulsar: () => alAbrirMisterio(misterio),
                 ),
                 const SizedBox(height: 8),
@@ -645,6 +646,7 @@ class _VistaMisterios extends StatelessWidget {
               for (final misterio in misterios) ...[
                 TarjetaMisterio(
                   misterio: misterio,
+                  evidencias: estado.evidenciasPorMisterio[misterio.id],
                   alPulsar: () => alAbrirMisterio(misterio),
                 ),
                 const SizedBox(height: 8),

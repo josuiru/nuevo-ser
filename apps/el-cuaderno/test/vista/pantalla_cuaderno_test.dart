@@ -306,4 +306,33 @@ void main() {
       expect(find.text('Página del cuaderno'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'tarjeta del Misterio muestra el contador de evidencias del repo',
+    (tester) async {
+      await bombearPantalla(tester);
+      // El seed siembra una observación contra el Misterio "lluvia"
+      // (seed-misterio-lluvia) — la tarjeta de ese misterio en el
+      // home debe contar 1 evidencia. La cabecera completa es
+      // "hipótesis activa · 1 evidencia anotada" porque el seed
+      // marca lluvia como hipotesisActiva.
+      // El IndexedStack mantiene el home + la pestaña Misterios; el
+      // mismo Misterio aparece en ambos.
+      expect(
+        find.text(
+          'consenso · 1 evidencia anotada',
+          skipOffstage: false,
+        ),
+        findsAtLeastNWidgets(1),
+      );
+      // Otros Misterios sin evidencias muestran "todavía no...".
+      expect(
+        find.textContaining(
+          'todavía no has anotado nada',
+          skipOffstage: false,
+        ),
+        findsAtLeastNWidgets(1),
+      );
+    },
+  );
 }
