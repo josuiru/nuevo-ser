@@ -106,7 +106,10 @@ void main() {
     expect(find.byType(PantallaBrecha), findsOneWidget);
     expect(find.byType(PantallaCinematica), findsNothing);
     expect(find.text('ARALAR — DOLMEN DE AROZTEGI'), findsOneWidget);
-    expect(find.textContaining('FASE 1'), findsOneWidget);
+    // La Fase 1 ahora tiene pantalla jugable propia: el CTA es
+    // "IR A LA RECOLECCIÓN" (gestionado por la propia fase, no por
+    // el botón global del pie de pantalla).
+    expect(find.text('IR A LA RECOLECCIÓN'), findsOneWidget);
   });
 
   testWidgets(

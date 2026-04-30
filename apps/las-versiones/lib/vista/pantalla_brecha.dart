@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../datos/repositorio_preguntas_brecha.dart';
 import '../dominio/brecha.dart';
 import '../nucleo/paleta_archivo.dart';
+import 'fase_formulacion_preguntas.dart';
 
 /// Pantalla principal de una Brecha. Recorre las cinco fases
 /// pedagógicas con un header común que indica dónde está la
@@ -32,6 +34,10 @@ class PantallaBrecha extends StatelessWidget {
   /// en cualquier momento.
   final VoidCallback? alAbrirCuaderno;
 
+  /// Repositorio de preguntas inyectable. Lo usa la Fase 1 jugable
+  /// para persistir lo que la Cronista escribe. Inyectable para tests.
+  final RepositorioPreguntasBrecha repoPreguntas;
+
   const PantallaBrecha({
     super.key,
     required this.brecha,
@@ -39,9 +45,16 @@ class PantallaBrecha extends StatelessWidget {
     required this.alAvanzarFase,
     required this.alCompletarBrecha,
     this.alAbrirCuaderno,
+    this.repoPreguntas = const RepositorioPreguntasBrecha(),
   });
 
   bool get _esFaseFinal => faseActiva == FaseBrecha.concilio;
+
+  /// `true` si la fase activa tiene una pantalla jugable propia
+  /// que ya gestiona su CTA de avance internamente. En ese caso
+  /// el botón global del pie no aparece.
+  bool get _faseTienePantallaPropia =>
+      faseActiva == FaseBrecha.formulacionPreguntas;
 
   @override
   Widget build(BuildContext contexto) {
@@ -56,19 +69,27 @@ class PantallaBrecha extends StatelessWidget {
                 const SizedBox(height: 16),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _PlaceholderFase(fase: faseActiva),
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    child: _CuerpoDeFase(
+                      brecha: brecha,
+                      faseActiva: faseActiva,
+                      alAvanzarFase: alAvanzarFase,
+                      repoPreguntas: repoPreguntas,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-                  child: _BotonSiguienteFase(
-                    fase: faseActiva,
-                    esFaseFinal: _esFaseFinal,
-                    alAvanzar: alAvanzarFase,
-                    alCompletar: alCompletarBrecha,
-                  ),
-                ),
+                if (!_faseTienePantallaPropia)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                    child: _BotonSiguienteFase(
+                      fase: faseActiva,
+                      esFaseFinal: _esFaseFinal,
+                      alAvanzar: alAvanzarFase,
+                      alCompletar: alCompletarBrecha,
+                    ),
+                  )
+                else
+                  const SizedBox(height: 16),
               ],
             ),
             if (alAbrirCuaderno != null)
@@ -86,6 +107,42 @@ class PantallaBrecha extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Despacho entre fase jugable real y placeholder. A medida que cada
+/// F6.x sustituya el placeholder por la pantalla jugable, esta clase
+/// crece con un `case` más. Mantenerla aquí (en lugar de en main)
+/// preserva que el orquestador no sepa nada del **interior** de las
+/// fases — sólo de su transición.
+class _CuerpoDeFase extends StatelessWidget {
+  final Brecha brecha;
+  final FaseBrecha faseActiva;
+  final VoidCallback alAvanzarFase;
+  final RepositorioPreguntasBrecha repoPreguntas;
+
+  const _CuerpoDeFase({
+    required this.brecha,
+    required this.faseActiva,
+    required this.alAvanzarFase,
+    required this.repoPreguntas,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    switch (faseActiva) {
+      case FaseBrecha.formulacionPreguntas:
+        return FaseFormulacionPreguntas(
+          brecha: brecha,
+          alAvanzarFase: alAvanzarFase,
+          repoPreguntas: repoPreguntas,
+        );
+      case FaseBrecha.recoleccion:
+      case FaseBrecha.evaluacion:
+      case FaseBrecha.reconstruccion:
+      case FaseBrecha.concilio:
+        return _PlaceholderFase(fase: faseActiva);
+    }
   }
 }
 
