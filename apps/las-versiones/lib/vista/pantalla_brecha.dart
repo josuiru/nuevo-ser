@@ -6,6 +6,7 @@ import '../datos/repositorio_recoleccion_fuentes.dart';
 import '../datos/repositorio_reconstruccion.dart';
 import '../dominio/brecha.dart';
 import '../nucleo/paleta_archivo.dart';
+import 'fase_concilio.dart';
 import 'fase_evaluacion.dart';
 import 'fase_formulacion_preguntas.dart';
 import 'fase_recoleccion.dart';
@@ -191,7 +192,10 @@ class _CuerpoDeFase extends StatelessWidget {
           repoReconstruccion: repoReconstruccion,
         );
       case FaseBrecha.concilio:
-        return _PlaceholderFase(fase: faseActiva);
+        return FaseConcilio(
+          brecha: brecha,
+          repoReconstruccion: repoReconstruccion,
+        );
     }
   }
 }
@@ -286,85 +290,6 @@ class _SegmentoFase extends StatelessWidget {
         borderRadius: BorderRadius.circular(2),
       ),
     );
-  }
-}
-
-class _PlaceholderFase extends StatelessWidget {
-  final FaseBrecha fase;
-
-  const _PlaceholderFase({required this.fase});
-
-  @override
-  Widget build(BuildContext contexto) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            _nombreVisible(fase).toUpperCase(),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 11,
-              letterSpacing: 5,
-              color: PaletaArchivo.tintaTenue,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Text(
-            _glosaPedagogica(fase),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
-              height: 1.55,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _nombreVisible(FaseBrecha fase) {
-    switch (fase) {
-      case FaseBrecha.formulacionPreguntas:
-        return 'Fase 1 — Formulación';
-      case FaseBrecha.recoleccion:
-        return 'Fase 2 — Recolección';
-      case FaseBrecha.evaluacion:
-        return 'Fase 3 — Evaluación';
-      case FaseBrecha.reconstruccion:
-        return 'Fase 4 — Reconstrucción';
-      case FaseBrecha.concilio:
-        return 'Fase 5 — Concilio';
-    }
-  }
-
-  /// Glosa breve de cada fase — recordatorio pedagógico mientras la
-  /// pantalla jugable real está en construcción. Cuando F6 sustituya
-  /// cada placeholder, esta glosa se mueve al header de cada
-  /// pantalla de fase como recordatorio del oficio.
-  String _glosaPedagogica(FaseBrecha fase) {
-    switch (fase) {
-      case FaseBrecha.formulacionPreguntas:
-        return 'Antes de tocar nada, formula tus preguntas. ¿Qué quieres '
-            'saber? ¿Qué se puede saber? ¿Qué no se puede?';
-      case FaseBrecha.recoleccion:
-        return 'Recoge las fuentes que tienes a mano. Cada una llegará '
-            'sola a la Mesa de Trabajo.';
-      case FaseBrecha.evaluacion:
-        return 'Por cada fuente, las seis preguntas del oficio: ¿quién?, '
-            '¿cuándo?, ¿para qué público?, ¿qué intereses?, ¿qué se '
-            'omite?, ¿corrobora o contradice?';
-      case FaseBrecha.reconstruccion:
-        return 'Construye tu versión. Ancla cada afirmación a evidencia. '
-            'Declara confianza: Sólido, Probable, Disputado.';
-      case FaseBrecha.concilio:
-        return 'Presenta tu trabajo. No premia tener razón. Premia haber '
-            'juzgado bien con lo disponible.';
-    }
   }
 }
 
