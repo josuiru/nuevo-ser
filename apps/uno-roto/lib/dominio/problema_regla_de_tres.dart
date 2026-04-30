@@ -24,12 +24,14 @@ class ProblemaReglaDeTres {
   bool esCorrecta(int indiceElegido) => indiceElegido == indiceCorrecto;
 }
 
-/// Triplas (a, b, c) con resultado entero garantizado y c ≠ a (para
-/// que el puzzle no sea trivial). Repartidas por dificultad.
+/// Triplas (a, b, c) con resultado entero garantizado, c ≠ a (para
+/// que el puzzle no sea trivial) y a+b+c ≠ b·c/a (para que el
+/// distractor pedagógico "sumar todo" no colisione con el correcto).
+/// Repartidas por dificultad.
 const _triplasFaciles = <(int, int, int)>[
-  (2, 6, 4),    // 2:6 = 4:12
-  (3, 9, 6),    // 3:9 = 6:18
-  (4, 12, 8),   // 4:12 = 8:24
+  (2, 6, 5),    // 2:6 = 5:15  (antes 2,6,4 — suma colisionaba)
+  (3, 9, 7),    // 3:9 = 7:21  (antes 3,9,6 — suma colisionaba)
+  (4, 12, 7),   // 4:12 = 7:21 (antes 4,12,8 — suma colisionaba)
   (5, 10, 7),   // 5:10 = 7:14
   (2, 8, 5),    // 2:8 = 5:20
   (3, 6, 4),    // 3:6 = 4:8

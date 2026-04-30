@@ -67,17 +67,18 @@ const _casosFaciles = <(int, int, int, OperadorAritmetico, OperadorAritmetico)>[
   // Suma con división a la derecha.
   (3, 8, 4, OperadorAritmetico.suma, OperadorAritmetico.division),    // 5 vs (3+8)/4=2
 ];
+// Casos de dificultad media: misma estructura que los fáciles
+// (op1 no prioritario + op2 prioritario) pero con operandos mayores.
+// Esto preserva la trampa pedagógica del distractor "izquierda a
+// derecha", que en los antiguos _casosMedios coincidía con el correcto
+// porque op1 era prioritario.
 const _casosMedios = <(int, int, int, OperadorAritmetico, OperadorAritmetico)>[
-  // Producto a la izquierda + suma/resta a la derecha (no engañan al
-  // que respeta prioridad pero sí al que va de izquierda a derecha si
-  // confunde el orden).
-  (3, 4, 2, OperadorAritmetico.producto, OperadorAritmetico.suma),    // 14
-  (5, 3, 4, OperadorAritmetico.producto, OperadorAritmetico.resta),   // 11
-  (12, 3, 5, OperadorAritmetico.division, OperadorAritmetico.suma),   // 9
-  (20, 4, 3, OperadorAritmetico.division, OperadorAritmetico.resta),  // 2
-  // Dos prioritarios: queda como izquierda-a-derecha.
-  (12, 3, 2, OperadorAritmetico.division, OperadorAritmetico.producto), // 8
-  (4, 5, 2, OperadorAritmetico.producto, OperadorAritmetico.division),  // 10
+  (4, 6, 3, OperadorAritmetico.suma, OperadorAritmetico.producto),     // 22 vs 30
+  (10, 4, 5, OperadorAritmetico.suma, OperadorAritmetico.producto),    // 30 vs 70
+  (7, 9, 3, OperadorAritmetico.suma, OperadorAritmetico.division),     // 10 vs (16/3=5)
+  (18, 6, 2, OperadorAritmetico.resta, OperadorAritmetico.division),   // 15 vs 6
+  (25, 4, 5, OperadorAritmetico.resta, OperadorAritmetico.producto),   // 5 vs 105
+  (16, 9, 3, OperadorAritmetico.resta, OperadorAritmetico.division),   // 13 vs 2
 ];
 
 /// Evalúa la expresión respetando la prioridad de × y ÷.
@@ -143,11 +144,17 @@ class GeneradorJerarquia {
 
     final propuestos = <int>[correcto];
     void anyadirSiNuevo(int valor) {
+      // Filtramos negativos: en este nivel el niño no trabaja
+      // enteros relativos, un candidato negativo se descarta
+      // visualmente pero rompe la legibilidad de la pantalla.
+      if (valor < 0) return;
       if (!propuestos.contains(valor)) propuestos.add(valor);
     }
 
-    // Trampa estrella: izquierda a derecha sin prioridad.
-    anyadirSiNuevo(izqDer);
+    // Trampa estrella: izquierda a derecha sin prioridad. Sólo añade
+    // si difiere del correcto; en casos donde op1 es prioritario
+    // ambos coinciden y el distractor se rellenaría con vecinos.
+    if (izqDer != correcto) anyadirSiNuevo(izqDer);
     // Aplicar el otro operador equivocado (op1 sustituido por op2 o
     // similar) — añade un distractor más sutil.
     anyadirSiNuevo(_aplicar(a, op2, _aplicar(b, op1, c)));

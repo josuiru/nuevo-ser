@@ -232,8 +232,15 @@ class _PintorAngulo extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final origen = Offset(size.width / 2, size.height - 12);
-    final radio = math.min(size.width, size.height) - 30;
+    // Origen apoyado a la izquierda del canvas para que el lado
+    // horizontal de referencia (de origen hacia la derecha) quepa
+    // entero. El radio es como mucho la anchura disponible − margen.
+    const margenLateral = 20.0;
+    final origen = Offset(margenLateral, size.height - 12);
+    final radio = math.min(
+      size.width - margenLateral * 2,
+      size.height - 30,
+    );
     final pinturaTrazo = Paint()
       ..color = PaletaNeon.azulNeon
       ..strokeWidth = 2.4

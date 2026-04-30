@@ -72,11 +72,17 @@ class GeneradorMcmMcd {
     required ModoMcmMcd modo,
     int dificultad = 1,
   }) {
-    final pool = <(int, int)>[
+    final base = <(int, int)>[
       ..._paresFaciles,
       if (dificultad >= 2) ..._paresMedios,
       if (dificultad >= 3) ..._paresDificiles,
     ];
+    // En modo MCD descartamos pares coprimos (mcd = 1) — son
+    // pedagógicamente vacíos: el niño que apuesta siempre por "1"
+    // acertaría sin trabajar el cálculo.
+    final pool = modo == ModoMcmMcd.mcd
+        ? base.where((p) => _mcd(p.$1, p.$2) > 1).toList()
+        : base;
     final (a, b) = pool[_azar.nextInt(pool.length)];
     return _construirDesdePar(a: a, b: b, modo: modo);
   }
@@ -111,12 +117,27 @@ class GeneradorMcmMcd {
     // 1. El contrario (confusión MCM↔MCD).
     anyadirSiNuevo(contrario);
     // 2. Producto de los dos (típico para MCM exagerado o MCD nulo).
-    anyadirSiNuevo(a * b);
+    //    Cuando a y b son coprimos, a*b == mcm — el distractor
+    //    coincide con el correcto en modo MCM y queda inerte. En ese
+    //    caso usamos a*b/2 (otro error plausible: dividir el producto
+    //    por la mitad pensando que "la mitad del producto" debe ser
+    //    el MCM).
+    final producto = a * b;
+    anyadirSiNuevo(producto == correcto ? producto ~/ 2 : producto);
     // 3. Suma de los dos (intento simple cuando no se sabe).
     anyadirSiNuevo(a + b);
-    // 4. Uno de los dos números (en MCD a veces el niño cree que es
-    //    el menor, en MCM cree que es el mayor).
-    anyadirSiNuevo(modo == ModoMcmMcd.mcd ? math.min(a, b) : math.max(a, b));
+    // 4. Uno de los dos números. Cuando uno divide al otro, el menor
+    //    es el MCD y el mayor es el MCM exactamente — el distractor
+    //    coincidiría con el correcto. En ese caso usamos
+    //    correcto + math.min(a,b) (un error plausible: "sumar el
+    //    pequeño" en lugar de identificar la divisibilidad).
+    final candidatoExtremo =
+        modo == ModoMcmMcd.mcd ? math.min(a, b) : math.max(a, b);
+    anyadirSiNuevo(
+      candidatoExtremo == correcto
+          ? correcto + math.min(a, b)
+          : candidatoExtremo,
+    );
     // 5. El otro número, si todavía hay hueco.
     anyadirSiNuevo(modo == ModoMcmMcd.mcd ? math.max(a, b) : math.min(a, b));
 
