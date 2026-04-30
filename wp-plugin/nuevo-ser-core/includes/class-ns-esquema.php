@@ -54,6 +54,14 @@ class NS_Esquema {
 		'cuaderno_entries'   => 'ns_cuaderno_entries',
 		'mosaicos'           => 'ns_mosaicos',
 		'weekly_summaries'   => 'ns_weekly_summaries',
+		// Tablas específicas del juego El Cuaderno (doc 03 §3.2). La
+		// frontera de privacidad del juego cae en estos campos: nada de
+		// texto libre del niño ni coordenadas precisas vive aquí — solo
+		// metadatos derivados (hash de la observación, region_code
+		// NUTS-3). El nombre del sit spot sí entra (lo elige el niño,
+		// no es PII estructural — "El Roble Grande", "Mi banco").
+		'el_cuaderno_observaciones' => 'ns_el_cuaderno_observaciones',
+		'el_cuaderno_sit_spots'     => 'ns_el_cuaderno_sit_spots',
 	);
 
 	/** Mapeo del prefijo viejo al nuevo. Lo usa la migración M001. */
@@ -105,6 +113,8 @@ class NS_Esquema {
 		$cuaderno_entries = self::nombre_tabla( 'cuaderno_entries' );
 		$mosaicos         = self::nombre_tabla( 'mosaicos' );
 		$weekly_summaries = self::nombre_tabla( 'weekly_summaries' );
+		$el_cuaderno_observaciones = self::nombre_tabla( 'el_cuaderno_observaciones' );
+		$el_cuaderno_sit_spots     = self::nombre_tabla( 'el_cuaderno_sit_spots' );
 
 		return array(
 			"CREATE TABLE {$games} (
@@ -290,6 +300,60 @@ class NS_Esquema {
 				PRIMARY KEY  (user_id, game_id, iso_week),
 				KEY aggregates_hash (aggregates_hash)
 			) {$charset_collate};",
+
+			// ---------------------------------------------------------
+			// Tablas específicas del juego El Cuaderno (doc 03 §3.2).
+			//
+			// El texto libre `queVio` del niño NUNCA se almacena aquí
+			// — viaja como `what_seen_hash` (sha256). La capa de sync
+			// del cliente Dart calcula el hash antes de subir.
+			// Coordenadas precisas tampoco — solo `region_code` NUTS-3.
+			// Las fotos y dibujos se referencian por `photo_blob_id` /
+			// `drawing_blob_id` cuando la niña explícitamente comparte
+			// (Sprint 5+ con R2); en S2 ambos campos quedan a NULL.
+			// ---------------------------------------------------------
+
+			"CREATE TABLE {$el_cuaderno_observaciones} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				uuid CHAR(36) NOT NULL,
+				user_id BIGINT UNSIGNED NOT NULL,
+				game_id VARCHAR(64) NOT NULL DEFAULT 'el-cuaderno',
+				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				occurred_at DATETIME NOT NULL,
+				place_name VARCHAR(255) NOT NULL DEFAULT '',
+				region_code VARCHAR(16) NOT NULL DEFAULT '',
+				weather_json LONGTEXT NULL DEFAULT NULL,
+				what_seen_hash CHAR(64) NOT NULL,
+				proposed_id VARCHAR(255) NOT NULL DEFAULT '',
+				confidence VARCHAR(24) NOT NULL,
+				has_photo TINYINT(1) NOT NULL DEFAULT 0,
+				has_drawing TINYINT(1) NOT NULL DEFAULT 0,
+				photo_blob_id VARCHAR(64) NOT NULL DEFAULT '',
+				drawing_blob_id VARCHAR(64) NOT NULL DEFAULT '',
+				misterio_id VARCHAR(64) NOT NULL DEFAULT '',
+				sit_spot_id CHAR(36) NOT NULL DEFAULT '',
+				shared_with LONGTEXT NULL DEFAULT NULL,
+				soft_deleted_at DATETIME NULL DEFAULT NULL,
+				PRIMARY KEY  (id),
+				UNIQUE KEY uuid (uuid),
+				KEY user_game_time (user_id, game_id, occurred_at),
+				KEY region_misterio (region_code, misterio_id)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$el_cuaderno_sit_spots} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				uuid CHAR(36) NOT NULL,
+				user_id BIGINT UNSIGNED NOT NULL,
+				game_id VARCHAR(64) NOT NULL DEFAULT 'el-cuaderno',
+				name VARCHAR(255) NOT NULL,
+				region_code VARCHAR(16) NOT NULL DEFAULT '',
+				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				last_visit_at DATETIME NULL DEFAULT NULL,
+				retired_at DATETIME NULL DEFAULT NULL,
+				PRIMARY KEY  (id),
+				UNIQUE KEY uuid (uuid),
+				KEY user_game (user_id, game_id)
+			) {$charset_collate};",
 		);
 	}
 
@@ -307,6 +371,15 @@ class NS_Esquema {
 				'name'           => 'Uno Roto',
 				'age_min'        => 9,
 				'age_max'        => 12,
+				'schema_version' => '1.0',
+			),
+			// 'el-cuaderno' arranca su sincronización en S2. El nombre
+			// es provisional (biblia §10.1).
+			array(
+				'id'             => 'el-cuaderno',
+				'name'           => 'El Cuaderno',
+				'age_min'        => 9,
+				'age_max'        => 13,
 				'schema_version' => '1.0',
 			),
 		);

@@ -47,6 +47,9 @@ class NS_Endpoints {
 		// solapamiento accidental.
 		self::registrar_companion_real( self::NAMESPACE_CANONICO );
 		self::registrar_companion( self::NAMESPACE_CANONICO );
+		// Endpoints específicos del juego El Cuaderno. Solo en canónico —
+		// el alias `uno-roto/v1` no debería llevar deuda nueva.
+		self::registrar_el_cuaderno_real( self::NAMESPACE_CANONICO );
 		add_filter( 'rest_post_dispatch', array( __CLASS__, 'marcar_alias_deprecado' ), 10, 3 );
 	}
 
@@ -109,6 +112,54 @@ class NS_Endpoints {
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( 'NS_Companion_Agregados', 'archivar' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Endpoints específicos del juego El Cuaderno (doc 03 §5.3).
+	 *
+	 *   POST /el-cuaderno/observaciones  — registra metadatos de una
+	 *                                       observación (sin texto libre,
+	 *                                       solo what_seen_hash).
+	 *   POST /el-cuaderno/sit-spot       — establece o jubila el sit spot.
+	 *   GET  /el-cuaderno/misterios      — devuelve el catálogo filtrado
+	 *                                       por region_code y season.
+	 */
+	private static function registrar_el_cuaderno_real( string $namespace ): void {
+		register_rest_route(
+			$namespace,
+			'/el-cuaderno/observaciones',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_El_Cuaderno', 'crear_observacion' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/el-cuaderno/sit-spot',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_El_Cuaderno', 'establecer_sit_spot' ),
+					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/el-cuaderno/misterios',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_El_Cuaderno', 'listar_misterios' ),
 					'permission_callback' => array( __CLASS__, 'permiso_jwt' ),
 				),
 			)
