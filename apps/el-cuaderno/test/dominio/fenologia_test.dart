@@ -87,4 +87,117 @@ void main() {
       );
     });
   });
+
+  group('estacionesEnTransicion — ventana de ±15 días', () {
+    test('15 julio → solo [verano] (lejos de cortes)', () {
+      // A 24 días del solsticio de verano, fuera del margen de 15.
+      expect(
+        estacionesEnTransicion(DateTime(2026, 7, 15)),
+        [Estacion.verano],
+      );
+    });
+
+    test('18 sep → [verano, otono] (4 días antes del equinoccio)', () {
+      expect(
+        estacionesEnTransicion(DateTime(2026, 9, 18)),
+        [Estacion.verano, Estacion.otono],
+      );
+    });
+
+    test('27 sep → [otono, verano] (5 días después del equinoccio)', () {
+      expect(
+        estacionesEnTransicion(DateTime(2026, 9, 27)),
+        [Estacion.otono, Estacion.verano],
+      );
+    });
+
+    test('5 mar → [invierno, primavera] (15 días antes del equinoccio)', () {
+      expect(
+        estacionesEnTransicion(DateTime(2026, 3, 5)),
+        [Estacion.invierno, Estacion.primavera],
+      );
+    });
+
+    test('20 dic → [otono, invierno] (un día antes del solsticio)', () {
+      expect(
+        estacionesEnTransicion(DateTime(2026, 12, 20)),
+        [Estacion.otono, Estacion.invierno],
+      );
+    });
+
+    test('diasMargen=0 anula la transición', () {
+      // Con margen cero, el 18 sep está plenamente en verano y no
+      // arrastra a otoño aunque esté próximo al corte.
+      expect(
+        estacionesEnTransicion(DateTime(2026, 9, 18), diasMargen: 0),
+        [Estacion.verano],
+      );
+    });
+  });
+
+  group('NotasFenologicasIberia.para — fallback de experto', () {
+    test('ES-NA-PA primavera devuelve notas hardcoded de Pamplona', () {
+      final notas = NotasFenologicasIberia.para(
+        regionCode: 'ES-NA-PA',
+        estacion: Estacion.primavera,
+      );
+      expect(notas, isNotEmpty);
+      expect(
+        notas.any((n) => n.contains('golondrinas')),
+        isTrue,
+        reason: 'la primavera de Pamplona menciona la llegada de golondrinas',
+      );
+    });
+
+    test('region sin notas finas cae al país (ES) como fallback', () {
+      final notas = NotasFenologicasIberia.para(
+        regionCode: 'ES-CT-T',
+        estacion: Estacion.primavera,
+      );
+      expect(notas, isNotEmpty);
+      // El fallback ES tiene una nota genérica de cantos al amanecer.
+      expect(
+        notas.any((n) => n.toLowerCase().contains('cantos')),
+        isTrue,
+      );
+    });
+
+    test('region completamente desconocida devuelve lista vacía', () {
+      final notas = NotasFenologicasIberia.para(
+        regionCode: 'FR-IDF',
+        estacion: Estacion.invierno,
+      );
+      expect(notas, isEmpty);
+    });
+
+    test('toda la matriz de regiones piloto × estaciones tiene contenido',
+        () {
+      const piloto = ['ES-NA-PA', 'ES-BI', 'ES-MD'];
+      for (final region in piloto) {
+        for (final estacion in Estacion.values) {
+          final notas = NotasFenologicasIberia.para(
+            regionCode: region,
+            estacion: estacion,
+          );
+          expect(
+            notas,
+            isNotEmpty,
+            reason: '$region en $estacion debería tener al menos una nota',
+          );
+        }
+      }
+    });
+
+    test('la lista devuelta es inmutable (no se puede mutar accidentalmente)',
+        () {
+      final notas = NotasFenologicasIberia.para(
+        regionCode: 'ES-NA-PA',
+        estacion: Estacion.verano,
+      );
+      expect(
+        () => notas.add('nota inyectada'),
+        throwsUnsupportedError,
+      );
+    });
+  });
 }
