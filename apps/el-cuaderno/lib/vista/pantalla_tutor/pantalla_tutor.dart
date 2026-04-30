@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
 
+import '../../datos/cliente_tutor_cuaderno.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
-/// Pantalla del Tutor — versión Sprint 1, **canned response**. La
-/// conexión real con Claude API en modo Zero Data Retention entra en
-/// Sprint 4 con prompts versionados, lista negra de patrones y cuota
-/// por niño.
+/// Función que la pantalla del Tutor invoca cuando el niño manda una
+/// pregunta. Permite tres caminos:
 ///
-/// El saludo canónico (doc 04 §3.1, doc 13 §6.2) es idéntico siempre:
-/// *"Soy el Tutor del Cuaderno. Pregúntame lo que necesites."*. La
-/// respuesta única en S1 documenta honestamente al niño que el Tutor
-/// no está conectado todavía — coherente con el principio del doc 04
-/// §3.2 *"No inventa hechos biológicos. Si no sabe, dice 'No lo
-/// sé'"*.
+/// - **Canned response** (S1, sin red): la implementación devuelve un
+///   string fijo y la pantalla lo muestra como turno del Tutor.
+/// - **Cliente real** (`ClienteTutorCuaderno.preguntar`): se cablea en
+///   `main.dart` cuando hay token JWT. Las excepciones tipadas se
+///   manejan abajo.
+/// - **Mock en tests**: cualquier función que devuelva un string.
+typedef EnviarPreguntaTutor = Future<String> Function(String pregunta);
+
+/// Pantalla del Tutor del Cuaderno. Saludo canónico (doc 04 §3.1)
+/// arriba y conversación en burbujas debajo.
 ///
-/// El parámetro `repositorio` no se usa hoy pero se acepta por
-/// constructor para que la pantalla esté preparada para Sprint 4
-/// (cuando el Tutor podrá adjuntar una observación del cuaderno como
-/// contexto).
+/// **Sin historial conversacional** entre llamadas (doc 04 §3.2): cada
+/// pregunta es independiente; el cliente real no manda turnos previos
+/// al servidor. La conversación visible aquí es local — solo decora la
+/// vista para el niño.
 class PantallaTutor extends StatefulWidget {
-  const PantallaTutor({super.key, required this.repositorio});
+  const PantallaTutor({
+    super.key,
+    required this.repositorio,
+    this.enviarPregunta,
+  });
 
   // ignore: unused_element
   final RepositorioLocal repositorio;
+
+  /// Si null, se muestra la canned response del S1 ("El Tutor todavía
+  /// no está conectado"). Si llega, la pantalla la usa para enviar al
+  /// backend real (`ClienteTutorCuaderno`) o para mockear en tests.
+  final EnviarPreguntaTutor? enviarPregunta;
 
   @override
   State<PantallaTutor> createState() => _EstadoPantallaTutor();
@@ -34,6 +46,7 @@ class PantallaTutor extends StatefulWidget {
 class _EstadoPantallaTutor extends State<PantallaTutor> {
   late final TextEditingController _controlador;
   final List<_Turno> _conversacion = [];
+  bool _esperando = false;
 
   @override
   void initState() {
@@ -69,8 +82,11 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: _conversacion.length,
+              itemCount: _conversacion.length + (_esperando ? 1 : 0),
               itemBuilder: (context, indice) {
+                if (_esperando && indice == _conversacion.length) {
+                  return const _BurbujaPensando();
+                }
                 final turno = _conversacion[indice];
                 return _BurbujaTurno(turno: turno);
               },
@@ -81,6 +97,7 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
               Expanded(
                 child: TextField(
                   controller: _controlador,
+                  enabled: !_esperando,
                   decoration: InputDecoration(
                     hintText: textos.tutorPlaceholderInput,
                     hintStyle: TipografiaCuaderno.serif(
@@ -103,7 +120,7 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
               ),
               const SizedBox(width: 8),
               FilledButton(
-                onPressed: () => _enviar(textos),
+                onPressed: _esperando ? null : () => _enviar(textos),
                 style: FilledButton.styleFrom(
                   backgroundColor: esquema.primary,
                   foregroundColor: esquema.onPrimary,
@@ -120,14 +137,33 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
     );
   }
 
-  void _enviar(TextosApp textos) {
+  Future<void> _enviar(TextosApp textos) async {
     final pregunta = _controlador.text.trim();
     if (pregunta.isEmpty) return;
     setState(() {
-      _conversacion
-        ..add(_Turno.deNino(pregunta))
-        ..add(_Turno.deTutor(textos.tutorRespuestaCanned));
+      _conversacion.add(_Turno.deNino(pregunta));
       _controlador.clear();
+    });
+    final canalPregunta = widget.enviarPregunta;
+    if (canalPregunta == null) {
+      setState(() {
+        _conversacion.add(_Turno.deTutor(textos.tutorRespuestaCanned));
+      });
+      return;
+    }
+    setState(() => _esperando = true);
+    String respuesta;
+    try {
+      respuesta = await canalPregunta(pregunta);
+    } on CuotaTutorAgotada catch (excepcion) {
+      respuesta = excepcion.mensaje;
+    } catch (_) {
+      respuesta = textos.tutorRespuestaCanned;
+    }
+    if (!mounted) return;
+    setState(() {
+      _conversacion.add(_Turno.deTutor(respuesta));
+      _esperando = false;
     });
   }
 }
@@ -173,6 +209,31 @@ class _BurbujaTurno extends StatelessWidget {
             color: esquema.onSurface,
             tamano: TipografiaCuaderno.tamano14,
             altoLinea: 1.5,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Burbuja con tres puntos discretos mientras la respuesta del Tutor
+/// está en vuelo (uno-roto usa el mismo patrón). Sin animación
+/// elaborada — un punto fijo de "pensando…" en serif tenue.
+class _BurbujaPensando extends StatelessWidget {
+  const _BurbujaPensando();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Text(
+          '· · ·',
+          style: TipografiaCuaderno.serif(
+            color: PaletaCuaderno.tintaTenue,
+            tamano: TipografiaCuaderno.tamano14,
           ),
         ),
       ),

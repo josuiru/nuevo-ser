@@ -24,6 +24,7 @@ class PantallaCuaderno extends StatefulWidget {
     this.repoIdioma,
     this.locale,
     this.alCambiarIdioma,
+    this.enviarPreguntaTutor,
   });
 
   final RepositorioLocal repositorio;
@@ -35,6 +36,12 @@ class PantallaCuaderno extends StatefulWidget {
   final RepositorioIdiomaApp? repoIdioma;
   final Locale? locale;
   final Future<void> Function()? alCambiarIdioma;
+
+  /// Closure que la pantalla del Tutor consume al recibir una pregunta.
+  /// `null` cuando no hay token guardado — la pantalla cae al canned
+  /// response. La construcción de la closure (cliente HTTP + lectura
+  /// de token) vive en `main.dart`.
+  final EnviarPreguntaTutor? enviarPreguntaTutor;
 
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
@@ -80,7 +87,10 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
             ),
             _VistaProximamente(textos: textos),
             _VistaProximamente(textos: textos),
-            PantallaTutor(repositorio: widget.repositorio),
+            PantallaTutor(
+              repositorio: widget.repositorio,
+              enviarPregunta: widget.enviarPreguntaTutor,
+            ),
           ],
         ),
       ),

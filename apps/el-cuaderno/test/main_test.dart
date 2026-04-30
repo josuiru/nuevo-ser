@@ -32,10 +32,19 @@ void main() {
     return repositorio;
   }
 
+  RepositorioCuentaBackend crearRepoCuenta() {
+    return RepositorioCuentaBackend(
+      prefs: SharedPreferences.getInstance,
+      claveToken: 'nuevoser.elcuaderno.token_backend',
+      claveEmail: 'nuevoser.elcuaderno.email_backend',
+    );
+  }
+
   Future<AppElCuaderno> crearApp() async {
     return AppElCuaderno(
       repoIdioma: crearRepoIdioma(),
       repositorioCuaderno: await crearRepoCuaderno(),
+      repoCuenta: crearRepoCuenta(),
     );
   }
 

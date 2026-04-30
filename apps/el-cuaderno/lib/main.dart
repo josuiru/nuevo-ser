@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos_simulados/seed.dart';
 import 'dominio/repositorio_local.dart';
 import 'infraestructura/isar/isar_setup.dart';
@@ -11,14 +12,26 @@ import 'nucleo/i18n/generado/textos_app.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno/estado_cuaderno.dart';
 import 'vista/pantalla_cuaderno/pantalla_cuaderno.dart';
+import 'vista/pantalla_tutor/pantalla_tutor.dart';
 import 'vista/tema/tema.dart';
 
 /// Clave global del idioma elegido por el niño en el primer arranque.
 /// Sigue el namespace `nuevoser.<juego>.*` que el CLAUDE.md raíz
-/// prescribe para juegos nuevos. Otras claves globales del juego
-/// (token JWT del backend, versión de paquete sonoro…) seguirán el
-/// mismo patrón cuando lleguen.
+/// prescribe para juegos nuevos.
 const _claveIdiomaApp = 'nuevoser.elcuaderno.idioma_app';
+
+/// Claves globales del backend. El token JWT no es por-perfil: el
+/// servidor codifica el `nino_id` dentro del propio token (ver
+/// `RepositorioCuentaBackend`). Si en el futuro se cambia de niño en
+/// el dispositivo, el token se reescribe.
+const _claveTokenBackend = 'nuevoser.elcuaderno.token_backend';
+const _claveEmailBackend = 'nuevoser.elcuaderno.email_backend';
+
+/// URL base del backend `nuevo-ser-core`. Provisional — la decisión
+/// del dominio definitivo es humana (memoria
+/// `project_el_cuaderno_decisiones_humanas_pendientes`). Cuando llegue
+/// el dominio real, se sustituye sin tocar el cliente.
+const _urlBaseBackend = 'https://nuevoser.example.org';
 
 /// Locale activo de la app. Es global para que `AppElCuaderno` pueda
 /// reaccionar al cambio sin tener que reconstruir todo el árbol
@@ -55,20 +68,32 @@ Future<void> main() async {
     await sembrarDatosDesarrollo(repositorioCuaderno);
   }
 
+  // 3) Repositorio de la cuenta del backend (token JWT + email del
+  //    niño). Compartido por todas las llamadas REST que requieran
+  //    autenticación: Tutor, sync de observaciones, sit-spot, …
+  final repoCuenta = RepositorioCuentaBackend(
+    prefs: SharedPreferences.getInstance,
+    claveToken: _claveTokenBackend,
+    claveEmail: _claveEmailBackend,
+  );
+
   runApp(AppElCuaderno(
     repoIdioma: repoIdioma,
     repositorioCuaderno: repositorioCuaderno,
+    repoCuenta: repoCuenta,
   ));
 }
 
 class AppElCuaderno extends StatelessWidget {
   final RepositorioIdiomaApp repoIdioma;
   final RepositorioLocal repositorioCuaderno;
+  final RepositorioCuentaBackend repoCuenta;
 
   const AppElCuaderno({
     super.key,
     required this.repoIdioma,
     required this.repositorioCuaderno,
+    required this.repoCuenta,
   });
 
   @override
@@ -95,6 +120,7 @@ class AppElCuaderno extends StatelessWidget {
               : _OrquestadorJuego(
                   repositorio: repositorioCuaderno,
                   repoIdioma: repoIdioma,
+                  repoCuenta: repoCuenta,
                   locale: locale,
                   alCambiarIdioma: () async {
                     await repoIdioma.borrar();
@@ -110,12 +136,14 @@ class AppElCuaderno extends StatelessWidget {
 class _OrquestadorJuego extends StatefulWidget {
   final RepositorioLocal repositorio;
   final RepositorioIdiomaApp repoIdioma;
+  final RepositorioCuentaBackend repoCuenta;
   final Locale locale;
   final Future<void> Function() alCambiarIdioma;
 
   const _OrquestadorJuego({
     required this.repositorio,
     required this.repoIdioma,
+    required this.repoCuenta,
     required this.locale,
     required this.alCambiarIdioma,
   });
@@ -126,27 +154,58 @@ class _OrquestadorJuego extends StatefulWidget {
 
 class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final EstadoCuaderno _estado;
+  late final ClienteTutorCuaderno _clienteTutor;
 
   @override
   void initState() {
     super.initState();
     _estado = EstadoCuaderno(repositorio: widget.repositorio);
+    _clienteTutor = ClienteTutorCuaderno(
+      urlBase: _urlBaseBackend,
+      obtenerToken: widget.repoCuenta.cargarToken,
+    );
   }
 
   @override
   void dispose() {
     _estado.dispose();
+    _clienteTutor.cerrar();
     super.dispose();
+  }
+
+  /// Closure que la pantalla del Tutor invoca con la pregunta del
+  /// niño. Lee el token cada vez (puede haber cambiado entre
+  /// llamadas); si no hay, devuelve null para que la pantalla caiga al
+  /// canned response. Si hay, llama al cliente real y devuelve el
+  /// `respuesta` ya filtrado server-side.
+  ///
+  /// Las excepciones tipadas (`CuotaTutorAgotada`, `ExcepcionApi`) las
+  /// propaga sin envolverlas — la pantalla decide cómo presentarlas.
+  Future<String> _enviarPreguntaTutor(String pregunta) async {
+    final r = await _clienteTutor.preguntar(pregunta: pregunta);
+    return r.respuesta;
+  }
+
+  Future<EnviarPreguntaTutor?> _resolverEnviarPregunta() async {
+    final token = await widget.repoCuenta.cargarToken();
+    if (token == null || token.isEmpty) return null;
+    return _enviarPreguntaTutor;
   }
 
   @override
   Widget build(BuildContext context) {
-    return PantallaCuaderno(
-      repositorio: widget.repositorio,
-      estado: _estado,
-      repoIdioma: widget.repoIdioma,
-      locale: widget.locale,
-      alCambiarIdioma: widget.alCambiarIdioma,
+    return FutureBuilder<EnviarPreguntaTutor?>(
+      future: _resolverEnviarPregunta(),
+      builder: (context, snapshot) {
+        return PantallaCuaderno(
+          repositorio: widget.repositorio,
+          estado: _estado,
+          repoIdioma: widget.repoIdioma,
+          locale: widget.locale,
+          alCambiarIdioma: widget.alCambiarIdioma,
+          enviarPreguntaTutor: snapshot.data,
+        );
+      },
     );
   }
 }
