@@ -139,4 +139,77 @@ void main() {
     final campoPassword = tester.widget<TextField>(find.byType(TextField).at(1));
     expect(campoPassword.obscureText, isTrue);
   });
+
+  group('modo cuenta (sesión activa)', () {
+    testWidgets(
+        'con emailActual y alCerrarSesion: muestra header SESIÓN INICIADA, '
+        'email y botón CERRAR SESIÓN', (tester) async {
+      await tester.pumpWidget(envolverEnApp(
+        PantallaLogin(
+          alIntentarLogin: (_, __) async => null,
+          emailActual: 'adulto@example.com',
+          alCerrarSesion: () async {},
+        ),
+      ));
+      expect(find.text('SESIÓN INICIADA'), findsOneWidget);
+      expect(find.text('adulto@example.com'), findsOneWidget);
+      expect(find.text('CERRAR SESIÓN'), findsOneWidget);
+      expect(find.text('ENTRAR'), findsNothing,
+          reason: 'el formulario de login NO debe aparecer');
+      expect(find.byType(TextField), findsNothing);
+    });
+
+    testWidgets('tap en CERRAR SESIÓN llama callback y cierra la pantalla',
+        (tester) async {
+      var llamadasCerrar = 0;
+      final navegador = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(MaterialApp(
+        navigatorKey: navegador,
+        home: Builder(builder: (ctx) {
+          return ElevatedButton(
+            onPressed: () => Navigator.of(ctx).push(
+              MaterialPageRoute(
+                builder: (_) => PantallaLogin(
+                  alIntentarLogin: (_, __) async => null,
+                  emailActual: 'adulto@example.com',
+                  alCerrarSesion: () async {
+                    llamadasCerrar++;
+                  },
+                ),
+              ),
+            ),
+            child: const Text('Abrir cuenta'),
+          );
+        }),
+      ));
+      await tester.tap(find.text('Abrir cuenta'));
+      await tester.pumpAndSettle();
+      expect(find.byType(PantallaLogin), findsOneWidget);
+
+      await tester.tap(find.text('CERRAR SESIÓN'));
+      await tester.pumpAndSettle();
+
+      expect(llamadasCerrar, 1);
+      expect(find.byType(PantallaLogin), findsNothing,
+          reason: 'tras cerrar sesión vuelve a la pantalla anterior');
+    });
+
+    testWidgets('emailActual sin alCerrarSesion → cae al modo login',
+        (tester) async {
+      // El modo cuenta requiere ambos parámetros — si falta el callback
+      // de cerrar, la pantalla se comporta como login normal. Es la
+      // contraparte defensiva: la pantalla nunca muestra "SESIÓN
+      // INICIADA" sin saber cómo cerrar.
+      await tester.pumpWidget(envolverEnApp(
+        PantallaLogin(
+          alIntentarLogin: (_, __) async => null,
+          emailActual: 'adulto@example.com',
+        ),
+      ));
+      expect(find.text('INICIAR SESIÓN'), findsOneWidget);
+      expect(find.text('SESIÓN INICIADA'), findsNothing);
+      expect(find.text('CERRAR SESIÓN'), findsNothing);
+      expect(find.byType(TextField), findsNWidgets(2));
+    });
+  });
 }

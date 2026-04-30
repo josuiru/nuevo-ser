@@ -526,14 +526,23 @@ class _OrquestadorState extends State<Orquestador> {
     );
   }
 
-  /// Abre la pantalla de inicio de sesión como ruta superpuesta. La
-  /// petición real al backend se hace en [_intentarLogin]; la pantalla
-  /// sólo orquesta el formulario y enseña el error si lo hay.
+  /// Abre la pantalla de cuenta/login como ruta superpuesta. La
+  /// pantalla decide su modo según haya o no sesión iniciada — si la
+  /// hay, muestra el email actual y el botón "CERRAR SESIÓN"; si no,
+  /// el formulario de login. La petición real al backend la hace
+  /// [_intentarLogin]; el cierre de sesión, [_cerrarSesion].
   Future<void> _alAbrirSesion() async {
+    if (!mounted) return;
+    final emailActual =
+        _sesionIniciada ? await widget.repoCuenta.cargarEmail() : null;
     if (!mounted) return;
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PantallaLogin(alIntentarLogin: _intentarLogin),
+        builder: (_) => PantallaLogin(
+          alIntentarLogin: _intentarLogin,
+          emailActual: emailActual,
+          alCerrarSesion: _sesionIniciada ? _cerrarSesion : null,
+        ),
       ),
     );
     // Tras volver de la pantalla, el token puede haber cambiado —
@@ -545,6 +554,13 @@ class _OrquestadorState extends State<Orquestador> {
     setState(() {
       _sesionIniciada = token != null && token.isNotEmpty;
     });
+  }
+
+  /// Cierra la sesión del adulto borrando token y email persistidos.
+  /// El progreso, los Mosaicos y el Cuaderno NO se tocan — viven en
+  /// claves separadas y siguen disponibles para el próximo arranque.
+  Future<void> _cerrarSesion() async {
+    await widget.repoCuenta.cerrarSesion();
   }
 
   /// Llama al backend, persiste token y email en éxito, y devuelve

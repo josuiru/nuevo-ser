@@ -1057,4 +1057,48 @@ void main() {
     expect(find.byType(PantallaLogin), findsOneWidget);
     expect(find.byType(PantallaEsqueleto), findsNothing);
   });
+
+  testWidgets(
+      'tap en "SESIÓN INICIADA" abre la pantalla en modo cuenta con email',
+      (tester) async {
+    final seed = seedEsqueletoCompleto(tokenBackend: 'jwt-de-prueba');
+    seed['nuevoser.lasversiones.email_backend'] = 'adulto@example.com';
+    SharedPreferences.setMockInitialValues(seed);
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('SESIÓN INICIADA'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaLogin), findsOneWidget);
+    expect(find.text('adulto@example.com'), findsOneWidget);
+    expect(find.text('CERRAR SESIÓN'), findsOneWidget);
+  });
+
+  testWidgets(
+      'cerrar sesión desde la pantalla de cuenta borra token y devuelve el '
+      'esqueleto a su estado sin sesión', (tester) async {
+    final seed = seedEsqueletoCompleto(tokenBackend: 'jwt-de-prueba');
+    seed['nuevoser.lasversiones.email_backend'] = 'adulto@example.com';
+    SharedPreferences.setMockInitialValues(seed);
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text('SESIÓN INICIADA'), findsOneWidget);
+
+    await tester.tap(find.text('SESIÓN INICIADA'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('CERRAR SESIÓN'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaEsqueleto), findsOneWidget,
+        reason: 'tras cerrar sesión la pantalla se cierra y volvemos al '
+            'esqueleto');
+    expect(find.text('INICIAR SESIÓN'), findsOneWidget);
+    expect(find.text('SESIÓN INICIADA'), findsNothing);
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('nuevoser.lasversiones.token_backend'), isNull);
+    expect(prefs.getString('nuevoser.lasversiones.email_backend'), isNull);
+  });
 }
