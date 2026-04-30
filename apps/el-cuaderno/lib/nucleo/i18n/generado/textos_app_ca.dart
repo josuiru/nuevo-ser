@@ -58,6 +58,9 @@ class TextosAppCa extends TextosApp {
   String get misteriosVacio => 'TODO_CA · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.';
 
   @override
+  String get misteriosFueraDeContexto => 'TODO_CA · Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.';
+
+  @override
   String get navProximamente => 'Aviat.';
 
   @override

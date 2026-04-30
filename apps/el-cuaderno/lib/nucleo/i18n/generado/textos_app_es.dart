@@ -58,6 +58,9 @@ class TextosAppEs extends TextosApp {
   String get misteriosVacio => 'Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.';
 
   @override
+  String get misteriosFueraDeContexto => 'Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.';
+
+  @override
   String get navProximamente => 'Próximamente.';
 
   @override

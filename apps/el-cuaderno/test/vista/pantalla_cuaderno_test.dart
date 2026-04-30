@@ -1,4 +1,6 @@
 import 'package:el_cuaderno/datos_simulados/seed.dart';
+import 'package:el_cuaderno/dominio/misterio.dart';
+import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
 import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_cuaderno/estado_cuaderno.dart';
@@ -394,6 +396,66 @@ void main() {
           skipOffstage: false,
         ),
         findsAtLeastNWidgets(1),
+      );
+    },
+  );
+
+  testWidgets(
+    'pestaña Misterios: catálogo abierto vacío → microcopia "aún no tienes"',
+    (tester) async {
+      // Repositorio vacío (sin sembrar) → no hay Misterios abiertos.
+      // setUp lo siembra, así que rehacemos `repositorio` y `estado`.
+      repositorio = RepositorioMemoria();
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: ahoraPrimavera,
+      );
+      await bombearPantalla(tester);
+      await tester.tap(find.text('misterios'));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('Aún no tienes Misterios abiertos'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Hoy no hay Misterios para tu lugar'),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'pestaña Misterios: catálogo abierto pero todo filtrado fuera → '
+    'microcopia "vuelve a mirar al cambiar el tiempo"',
+    (tester) async {
+      // Repo limpio + un único Misterio abierto que sólo aplica en
+      // verano. El estado va con proveedor de invierno → el filtro
+      // fenológico lo deja fuera, pero el catálogo NO está vacío.
+      repositorio = RepositorioMemoria();
+      await repositorio.guardarMisterio(Misterio(
+        id: 'm-cigarras',
+        pregunta: '¿Cuándo se callan las cigarras?',
+        descripcionCorta: 'pista',
+        estado: NivelConfianza.consenso,
+        abierto: true,
+        seasons: const ['verano'],
+      ));
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: () => DateTime(2026, 1, 15),
+      );
+      await bombearPantalla(tester);
+      await tester.tap(find.text('misterios'));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('Hoy no hay Misterios para tu lugar'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Aún no tienes Misterios abiertos'),
+        findsNothing,
       );
     },
   );

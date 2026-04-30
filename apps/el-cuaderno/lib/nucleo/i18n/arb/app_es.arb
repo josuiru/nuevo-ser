@@ -76,6 +76,11 @@
     "description": "Estado vacío de la sección de Misterios."
   },
 
+  "misteriosFueraDeContexto": "Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.",
+  "@misteriosFueraDeContexto": {
+    "description": "Estado vacío de la pestaña Misterios cuando el catálogo abierto NO está vacío pero todos los Misterios quedan fuera del filtro fenológico/regional. Mensaje pedagógico que invita a volver al cambiar la estación (biblia §5.3)."
+  },
+
   "navProximamente": "Próximamente.",
   "@navProximamente": {
     "description": "Placeholder de las pestañas Mapa y Misterios en S1 — el bottom nav está, pero solo Cuaderno y Tutor llevan a algo."

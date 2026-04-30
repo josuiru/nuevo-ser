@@ -32,6 +32,7 @@
   },
   "ultimaPaginaVacia": "TODO_CA · Aún no has anotado nada. Cuando lo hagas, aparecerá aquí.",
   "misteriosVacio": "TODO_CA · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.",
+  "misteriosFueraDeContexto": "TODO_CA · Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.",
   "navProximamente": "Aviat.",
   "observacionTitulo": "observació nova",
   "observacionCabecera": "TODO_CA · Hoy · {hora}",

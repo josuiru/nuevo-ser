@@ -665,14 +665,24 @@ class _VistaMisterios extends StatelessWidget {
         }
 
         final misterios = estado.misteriosAbiertos;
+        // Distinguimos dos estados vacíos: catálogo vacío (no hay
+        // Misterios abiertos en el repo) vs todos filtrados fuera por
+        // contexto fenológico/regional. El segundo caso pide microcopia
+        // pedagógica distinta — el catálogo existe, sólo está dormido
+        // hasta que cambie la estación.
+        final mensajeVacio = misterios.isEmpty
+            ? (estado.totalMisteriosAbiertosSinFiltro > 0
+                ? textos.misteriosFueraDeContexto
+                : textos.misteriosVacio)
+            : null;
         return ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
           children: [
             _Cabecera(textos.seccionMisteriosAbiertos),
             const SizedBox(height: 12),
-            if (misterios.isEmpty)
+            if (mensajeVacio != null)
               Text(
-                textos.misteriosVacio,
+                mensajeVacio,
                 style: TipografiaCuaderno.serif(
                   color: PaletaCuaderno.tintaTenue,
                   tamano: TipografiaCuaderno.tamano13,

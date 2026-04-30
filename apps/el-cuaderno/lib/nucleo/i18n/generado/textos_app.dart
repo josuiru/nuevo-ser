@@ -187,6 +187,12 @@ abstract class TextosApp {
   /// **'Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.'**
   String get misteriosVacio;
 
+  /// Estado vacío de la pestaña Misterios cuando el catálogo abierto NO está vacío pero todos los Misterios quedan fuera del filtro fenológico/regional. Mensaje pedagógico que invita a volver al cambiar la estación (biblia §5.3).
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.'**
+  String get misteriosFueraDeContexto;
+
   /// Placeholder de las pestañas Mapa y Misterios en S1 — el bottom nav está, pero solo Cuaderno y Tutor llevan a algo.
   ///
   /// In es, this message translates to:

@@ -42,6 +42,7 @@ class EstadoCuaderno extends ChangeNotifier {
   bool _cargando = false;
   SitSpot? _sitSpot;
   List<Misterio> _misteriosAbiertos = const [];
+  int _totalMisteriosAbiertosSinFiltro = 0;
   List<Observacion> _ultimasObservaciones = const [];
   Map<String, int> _evidenciasPorMisterio = const {};
   Set<String> _misteriosEnVentanaCaliente = const {};
@@ -52,6 +53,14 @@ class EstadoCuaderno extends ChangeNotifier {
   bool get cargando => _cargando;
   SitSpot? get sitSpot => _sitSpot;
   List<Misterio> get misteriosAbiertos => _misteriosAbiertos;
+
+  /// Cuántos Misterios abiertos había en el repo **antes** del filtro
+  /// fenológico/regional. Permite a la pestaña Misterios distinguir
+  /// dos estados vacíos pedagógicamente distintos: catálogo vacío
+  /// ("aún no tienes Misterios abiertos") vs todos filtrados fuera del
+  /// contexto del niño ("hoy no hay Misterios para tu lugar y
+  /// estación, vuelve a mirar al cambiar el tiempo").
+  int get totalMisteriosAbiertosSinFiltro => _totalMisteriosAbiertosSinFiltro;
   List<Observacion> get ultimasObservaciones => _ultimasObservaciones;
   Observacion? get ultimaObservacion =>
       _ultimasObservaciones.isEmpty ? null : _ultimasObservaciones.first;
@@ -128,6 +137,7 @@ class EstadoCuaderno extends ChangeNotifier {
       }
       _sitSpot = sitSpotResultado;
       _misteriosAbiertos = misteriosFiltrados;
+      _totalMisteriosAbiertosSinFiltro = misteriosCrudo.length;
       _ultimasObservaciones = ultimas;
       _evidenciasPorMisterio = evidencias;
       _misteriosEnVentanaCaliente = calientes;
