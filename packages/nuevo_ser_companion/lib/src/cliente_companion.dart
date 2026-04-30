@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import 'agregados/agregado_semanal.dart';
+import 'aulas/agregados_aula.dart';
+import 'aulas/aula_creada.dart';
 import 'aulas/membresia_aula.dart';
 import 'cuaderno/entrada_cuaderno.dart';
 import 'cuaderno/listado_entradas_cuaderno.dart';
@@ -238,6 +240,79 @@ class ClienteCompanion {
         .timeout(tiempoEspera);
     final cuerpo = _decodificar(r);
     return MembresiaAula.desdeJson(cuerpo);
+  }
+
+  /// POST /classrooms (con JWT del profesor)
+  ///
+  /// El profesor crea un aula nueva. El servidor genera el [code] de
+  /// invitación y lo devuelve en la respuesta — el profesor lo reparte
+  /// a su clase.
+  ///
+  /// - [name]: 1..120 caracteres, no vacío.
+  /// - [gameIds]: lista no vacía de juegos catalogados en `ns_games`
+  ///   (`'el-cuaderno'`, `'uno-roto'`, `'las-versiones'`). El servidor
+  ///   responde 422 con `invalid_fields.game_ids` si alguno no existe.
+  /// - [language]: ISO 639-1 minúsculas; default `'es'`.
+  ///
+  /// Lanza [ExcepcionApi] con código 401 si el token no es válido o
+  /// no es de tipo `profesor`; 422 si el body no pasa validación;
+  /// 503 si tras varios intentos el servidor no consigue un `code`
+  /// único; 5xx en otros fallos.
+  Future<AulaCreada> crearAula({
+    required String token,
+    required String name,
+    required List<String> gameIds,
+    String language = 'es',
+  }) async {
+    final r = await _cliente
+        .post(
+          _uri('/classrooms'),
+          headers: _cabeceras(token: token),
+          body: jsonEncode({
+            'name': name,
+            'language': language,
+            'game_ids': gameIds,
+          }),
+        )
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return AulaCreada.desdeJson(cuerpo);
+  }
+
+  /// GET /classrooms/{id}/aggregates (con JWT del profesor)
+  ///
+  /// Devuelve los counts agregados del aula. **k mínimo = 5**: si el
+  /// aula tiene menos de 5 miembros activos (o menos de 5 con datos
+  /// para la semana solicitada), el servidor responde 403 con
+  /// `k_minimo_no_alcanzado`.
+  ///
+  /// - [classroomId]: identificador devuelto por [crearAula].
+  /// - [gameId]: opcional. Si se pasa, filtra por juego.
+  /// - [isoWeek]: opcional. Si se pasa, filtra por semana
+  ///   (formato `YYYY-Www`); si no, el servidor usa la última con
+  ///   datos.
+  ///
+  /// Lanza [ExcepcionApi] con código 401 si el token no es válido o
+  /// no es de tipo `profesor`; 403 si el aula no es del profesor o si
+  /// no se alcanza el k mínimo; 404 si el aula no existe; 5xx en
+  /// otros fallos.
+  Future<AgregadosAula> obtenerAgregadosAula({
+    required String token,
+    required int classroomId,
+    String? gameId,
+    String? isoWeek,
+  }) async {
+    final parametros = <String, String>{
+      if (gameId != null && gameId.isNotEmpty) 'game_id': gameId,
+      if (isoWeek != null && isoWeek.isNotEmpty) 'iso_week': isoWeek,
+    };
+    final url = _uri('/classrooms/$classroomId/aggregates')
+        .replace(queryParameters: parametros.isEmpty ? null : parametros);
+    final r = await _cliente
+        .get(url, headers: _cabeceras(token: token))
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return AgregadosAula.desdeJson(cuerpo);
   }
 
   Map<String, dynamic> _decodificar(http.Response respuesta) {

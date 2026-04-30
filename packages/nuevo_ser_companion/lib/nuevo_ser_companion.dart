@@ -11,7 +11,13 @@
 /// - Cuaderno: `listarEntradasCuaderno` cubre `GET /companion/cuaderno/entries`.
 /// - Mosaicos: `crearMosaico` cubre `POST /companion/mosaicos`.
 /// - Mosaicos: `listarMosaicos` cubre `GET /companion/mosaicos`.
-/// - Aulas: `unirseAula` cubre `POST /classrooms/{code}/join`.
+/// - Aulas (niño): `unirseAula` cubre `POST /classrooms/{code}/join`.
+/// - Aulas (profesor): `crearAula` cubre `POST /classrooms`;
+///   `obtenerAgregadosAula` cubre `GET /classrooms/{id}/aggregates`
+///   con k mínimo = 5 (B7 — fallback de experto, pendiente de policy
+///   escolar y de UI del profesor en cliente).
+/// - Auth adulto: [ClienteAuthAdulto] cubre `POST /auth/login` con
+///   shape `{email, password, rol}` para profesor o cuidador.
 /// - Agregados: `archivarAgregadosSemanales` cubre
 ///   `POST /companion/aggregates/weekly`. El servidor llama al tutor IA
 ///   (Claude Haiku) cuando los agregados cambian, aplica el filtro de
@@ -19,15 +25,15 @@
 ///   el cliente reintenta más tarde.
 ///
 /// Pendiente (siguen 501 en el servidor):
-/// - `POST /companion/aggregates/weekly`
-/// - `POST /classrooms`, `POST /classrooms/{code}/join`,
-///   `GET /classrooms/{id}/aggregates`
 /// - `POST /caregivers/link/{request,verify}`,
 ///   `GET /caregivers/{caregiverId}/children/{childId}/summary`
 library nuevo_ser_companion;
 
 export 'src/agregados/agregado_semanal.dart';
+export 'src/aulas/agregados_aula.dart';
+export 'src/aulas/aula_creada.dart';
 export 'src/aulas/membresia_aula.dart';
+export 'src/auth/cliente_auth_adulto.dart';
 export 'src/cliente_companion.dart';
 export 'src/cuaderno/entrada_cuaderno.dart';
 export 'src/cuaderno/listado_entradas_cuaderno.dart';
