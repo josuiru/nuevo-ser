@@ -256,6 +256,47 @@ class TextosAppEs extends TextosApp {
   }
 
   @override
+  String get ajustesCuentaTitulo => 'Cuenta del adulto';
+
+  @override
+  String get ajustesCuentaDescripcion => 'Si tienes una cuenta de Nuevo Ser, puedes vincularla aquí. Sirve para subir tus observaciones, recibir el resumen escrito del cuidador y conectar el Tutor real.';
+
+  @override
+  String get ajustesCuentaPlaceholderEmail => 'correo del adulto';
+
+  @override
+  String get ajustesCuentaPlaceholderPassword => 'contraseña';
+
+  @override
+  String get ajustesCuentaBotonEntrar => 'Iniciar sesión';
+
+  @override
+  String get ajustesCuentaEntrando => 'Entrando…';
+
+  @override
+  String ajustesCuentaSesionIniciada(String email) {
+    return 'Sesión iniciada como $email.';
+  }
+
+  @override
+  String get ajustesCuentaSesionIniciadaSinEmail => 'Sesión iniciada.';
+
+  @override
+  String get ajustesCuentaCerrarSesion => 'Cerrar sesión';
+
+  @override
+  String get ajustesCuentaErrorCredenciales => 'El correo o la contraseña no coinciden con ninguna cuenta.';
+
+  @override
+  String get ajustesCuentaErrorSinPerfil => 'La cuenta del adulto no tiene ningún niño asociado todavía.';
+
+  @override
+  String get ajustesCuentaErrorRed => 'No se ha podido conectar con el servidor. Inténtalo en un momento.';
+
+  @override
+  String get ajustesCuentaErrorVacio => 'Escribe el correo y la contraseña antes de continuar.';
+
+  @override
   String get ajustesTutorDebugTitulo => 'Tutor (debug)';
 
   @override

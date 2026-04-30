@@ -65,6 +65,45 @@ O por paquete:
 ( cd apps/el-cuaderno && flutter run -d linux )
 ```
 
+### Construir APK debug para Android
+
+Java 17 forzado en `gradle.properties` (mismo patrón que `apps/uno-roto/`). Plataformas Android + Linux generadas en A1; los iconos y splash placeholder vienen de A7.
+
+```bash
+( cd apps/el-cuaderno && flutter build apk --debug )
+# El APK queda en apps/el-cuaderno/build/app/outputs/flutter-apk/app-debug.apk
+```
+
+Para instalar en un dispositivo Android conectado por USB con depuración activada:
+
+```bash
+flutter install -d <id-del-dispositivo>
+# o, sin Flutter en medio:
+adb install build/app/outputs/flutter-apk/app-debug.apk
+```
+
+### Smoke manual del flujo completo
+
+Recorrido típico para verificar a ojo en linux o APK debug:
+
+1. **Onboarding** — al primer arranque se muestra el selector trilingüe; tras elegir idioma, la pantalla de bienvenida pide el nombre del niño. Tocar "lee la política" abre la política de privacidad y los términos en castellano (BORRADOR — pendiente de revisión legal LOPDGDD, B3 del plan).
+2. **Pantalla principal** — saludo, sit spot ("El Roble Grande"), Misterios abiertos (5 sembrados), última página.
+3. **Nueva observación** — desde el FAB con icono lápiz: foto desde cámara o galería (A3, requiere permisos `CAMERA` y `READ_MEDIA_IMAGES`), dibujo en lienzo espartano (A4, una sola tinta gruesa, gesto pan, "borrar y empezar otra vez"), tres campos (qué viste / crees que es / nivel de confianza), botón Guardar.
+4. **Ajustes** (icono engranaje en AppBar) — bloque "Cuenta del adulto" para iniciar sesión contra el backend (A6); botón "Compartir resumen con el adulto" para subir el agregado semanal (S7); botón "Sincronizar mis observaciones" para subir las pendientes (opt-in); botón "Exportar mi cuaderno" que muestra el JSON v2 con manifiesto de medios (A5); botón "Borrar mi cuaderno" con doble confirmación.
+5. **Tutor** (cuarta pestaña) — saludo canónico. Sin token guardado, responde el canned response. Con token (puesto desde "Cuenta del adulto" o desde el bloque debug), llama a Claude vía el plugin WP.
+
+### Smoke contra WordPress local
+
+Las llamadas al backend (`/login`, `/companion/aggregates/weekly`, `/el-cuaderno/observaciones`, …) viajan a `_urlBaseBackend` definido en `lib/main.dart`. Para apuntar a un Local WP corriendo en `127.0.0.1:10063` con dominio virtual `nuevo-ser.local`:
+
+```dart
+// apps/el-cuaderno/lib/main.dart — sólo para smoke local, no commitear
+const _urlBaseBackend = 'http://127.0.0.1:10063';
+// y pasar hostOverride: 'nuevo-ser.local' a los clientes (ya soportan el parámetro).
+```
+
+Sin WordPress de pruebas, los tests con `MockClient` validan los caminos felices y de error sin tocar red.
+
 ## Cómo correr los tests
 
 ```bash

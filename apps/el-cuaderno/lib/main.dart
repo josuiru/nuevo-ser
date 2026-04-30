@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
 import 'datos/almacenador_medios.dart';
+import 'datos/cliente_auth_cuaderno.dart';
 import 'datos/cliente_el_cuaderno.dart';
 import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
@@ -208,6 +209,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
   late final EstadoCuaderno _estado;
   late final ClienteTutorCuaderno _clienteTutor;
   late final ClienteElCuaderno _clienteCuaderno;
+  late final ClienteAuthCuaderno _clienteAuth;
   late final ColaSyncObservaciones _colaSyncObservaciones;
   late final companion.ClienteCompanion _clienteCompanion;
   late final SincronizadorAgregadosCuaderno _sincronizadorAgregados;
@@ -227,6 +229,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
       urlBase: _urlBaseBackend,
       obtenerToken: widget.repoCuenta.cargarToken,
     );
+    _clienteAuth = ClienteAuthCuaderno(urlBase: _urlBaseBackend);
     _colaSyncObservaciones = ColaSyncObservaciones(
       prefs: SharedPreferences.getInstance,
     );
@@ -246,6 +249,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
     _estado.dispose();
     _clienteTutor.cerrar();
     _clienteCuaderno.cerrar();
+    _clienteAuth.cerrar();
     _clienteCompanion.cerrar();
     super.dispose();
   }
@@ -335,6 +339,9 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           locale: widget.locale,
           alCambiarIdioma: widget.alCambiarIdioma,
           enviarPreguntaTutor: snapshot.data,
+          repoCuenta: widget.repoCuenta,
+          iniciarSesionAdulto: _clienteAuth.iniciarSesion,
+          alCambiarToken: _refrescarTokenTutor,
           repoCuentaDebug: kDebugMode ? widget.repoCuenta : null,
           alCambiarTokenDebug: kDebugMode ? _refrescarTokenTutor : null,
           sincronizadorAgregados: _sincronizadorAgregados,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../../datos/almacenador_medios.dart';
+import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/selector_imagen.dart';
 import '../../datos/sincronizador_agregados.dart';
@@ -31,6 +32,9 @@ class PantallaCuaderno extends StatefulWidget {
     this.locale,
     this.alCambiarIdioma,
     this.enviarPreguntaTutor,
+    this.repoCuenta,
+    this.iniciarSesionAdulto,
+    this.alCambiarToken,
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
@@ -56,6 +60,24 @@ class PantallaCuaderno extends StatefulWidget {
   /// response. La construcción de la closure (cliente HTTP + lectura
   /// de token) vive en `main.dart`.
   final EnviarPreguntaTutor? enviarPreguntaTutor;
+
+  /// Repositorio de la cuenta del backend. Si llega no nulo, Ajustes
+  /// muestra el bloque "Cuenta del adulto" para iniciar/cerrar sesión
+  /// real contra `POST /login`. Tests que no tocan login pueden dejarlo
+  /// null para instanciar la pantalla aislada.
+  final RepositorioCuentaBackend? repoCuenta;
+
+  /// Closure que invoca `ClienteAuthCuaderno.iniciarSesion`. Se inyecta
+  /// como callback (en lugar de pasar el cliente entero) para que los
+  /// tests puedan ejercitar el flujo con un stub.
+  final Future<ResultadoLogin> Function({
+    required String email,
+    required String password,
+  })? iniciarSesionAdulto;
+
+  /// Notifica al orquestador (`main.dart`) que el token cambió tras
+  /// iniciar/cerrar sesión, para que recompute la closure del Tutor.
+  final VoidCallback? alCambiarToken;
 
   /// Inyectado solo en builds de debug. Se reenvía a `PantallaAjustes`
   /// para activar el bloque de pegado de JWT. En release siempre llega
@@ -219,6 +241,9 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           repoIdioma: repoIdioma,
           locale: locale,
           alCambiarIdioma: alCambiarIdioma,
+          repoCuenta: widget.repoCuenta,
+          iniciarSesionAdulto: widget.iniciarSesionAdulto,
+          alCambiarToken: widget.alCambiarToken,
           repoCuentaDebug: widget.repoCuentaDebug,
           alCambiarTokenDebug: widget.alCambiarTokenDebug,
           sincronizadorAgregados: widget.sincronizadorAgregados,

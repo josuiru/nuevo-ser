@@ -252,6 +252,28 @@
     }
   },
 
+  "ajustesCuentaTitulo": "Cuenta del adulto",
+  "@ajustesCuentaTitulo": {
+    "description": "Bloque visible siempre en Ajustes. Punto de entrada para vincular la cuenta del adulto contra el backend (POST /login). El registro NO se hace in-app — el adulto crea la cuenta primero por web (memoria project_el_cuaderno_decisiones_humanas_pendientes ítem 5)."
+  },
+  "ajustesCuentaDescripcion": "Si tienes una cuenta de Nuevo Ser, puedes vincularla aquí. Sirve para subir tus observaciones, recibir el resumen escrito del cuidador y conectar el Tutor real.",
+  "ajustesCuentaPlaceholderEmail": "correo del adulto",
+  "ajustesCuentaPlaceholderPassword": "contraseña",
+  "ajustesCuentaBotonEntrar": "Iniciar sesión",
+  "ajustesCuentaEntrando": "Entrando…",
+  "ajustesCuentaSesionIniciada": "Sesión iniciada como {email}.",
+  "@ajustesCuentaSesionIniciada": {
+    "placeholders": {
+      "email": {"type": "String", "example": "adulto@ejemplo.org"}
+    }
+  },
+  "ajustesCuentaSesionIniciadaSinEmail": "Sesión iniciada.",
+  "ajustesCuentaCerrarSesion": "Cerrar sesión",
+  "ajustesCuentaErrorCredenciales": "El correo o la contraseña no coinciden con ninguna cuenta.",
+  "ajustesCuentaErrorSinPerfil": "La cuenta del adulto no tiene ningún niño asociado todavía.",
+  "ajustesCuentaErrorRed": "No se ha podido conectar con el servidor. Inténtalo en un momento.",
+  "ajustesCuentaErrorVacio": "Escribe el correo y la contraseña antes de continuar.",
+
   "ajustesTutorDebugTitulo": "Tutor (debug)",
   "@ajustesTutorDebugTitulo": {
     "description": "Bloque visible sólo en builds de debug. Permite pegar un JWT del backend para probar el Tutor real end-to-end sin pantalla de login."

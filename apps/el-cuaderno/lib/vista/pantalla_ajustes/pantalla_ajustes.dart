@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
@@ -9,6 +10,7 @@ import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_cuidador/pantalla_cuidador.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'bloque_login_adulto.dart';
 
 /// Pantalla de Ajustes — punto de control del niño sobre **su**
 /// cuaderno. Tres acciones nucleares:
@@ -37,6 +39,9 @@ class PantallaAjustes extends StatelessWidget {
     required this.repoIdioma,
     required this.locale,
     required this.alCambiarIdioma,
+    this.repoCuenta,
+    this.iniciarSesionAdulto,
+    this.alCambiarToken,
     this.repoCuentaDebug,
     this.alCambiarTokenDebug,
     this.sincronizadorAgregados,
@@ -53,9 +58,31 @@ class PantallaAjustes extends StatelessWidget {
   /// global; la app reconstruye y muestra `PantallaConfiguracionInicial`.
   final Future<void> Function() alCambiarIdioma;
 
+  /// Repositorio de la cuenta del backend (token + email del adulto).
+  /// Se monta el bloque "Cuenta del adulto" si los tres parámetros
+  /// (`repoCuenta`, `iniciarSesionAdulto`, `alCambiarToken`) llegan no
+  /// nulos — `main.dart` los cabla siempre, los tests pueden omitirlos
+  /// para instanciar la pantalla aislada.
+  final RepositorioCuentaBackend? repoCuenta;
+
+  /// Closure que invoca `ClienteAuthCuaderno.iniciarSesion`. Se inyecta
+  /// como callback (en lugar de pasar el cliente entero) para que los
+  /// tests puedan ejercitar el flujo con un stub que no toca red.
+  final Future<ResultadoLogin> Function({
+    required String email,
+    required String password,
+  })? iniciarSesionAdulto;
+
+  /// Notifica al orquestador (`main.dart`) que el token cambió tras
+  /// iniciar/cerrar sesión, para que recompute la closure del Tutor sin
+  /// reiniciar la app.
+  final VoidCallback? alCambiarToken;
+
   /// Inyectado solo en builds de debug. Si llega, se muestra el bloque
   /// para pegar/borrar JWT del backend. En release siempre llega null y
-  /// el bloque no se monta.
+  /// el bloque no se monta. Convive con el bloque de login real: el
+  /// debug es para casos en los que el adulto no tiene cuenta todavía
+  /// pero quien desarrolla quiere probar el Tutor con un token a pelo.
   final RepositorioCuentaBackend? repoCuentaDebug;
 
   /// Notifica al orquestador (`main.dart`) que el token cambió, para
@@ -126,6 +153,15 @@ class PantallaAjustes extends StatelessWidget {
               esquema: esquema,
               destacado: true,
             ),
+            if (repoCuenta != null && iniciarSesionAdulto != null) ...[
+              const SizedBox(height: 24),
+              BloqueLoginAdulto(
+                repoCuenta: repoCuenta!,
+                iniciarSesion: iniciarSesionAdulto!,
+                alCambiarToken: alCambiarToken,
+                esquema: esquema,
+              ),
+            ],
             if (repoCuentaDebug != null) ...[
               const SizedBox(height: 24),
               _BloqueTutorDebug(

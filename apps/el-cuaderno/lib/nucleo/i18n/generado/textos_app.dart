@@ -547,6 +547,84 @@ abstract class TextosApp {
   /// **'Subidas {enviadas}, el servidor ha rechazado {rechazadas}. Vuelve a abrirlas para revisarlas.'**
   String ajustesSyncObsRechazadas(int enviadas, int rechazadas);
 
+  /// Bloque visible siempre en Ajustes. Punto de entrada para vincular la cuenta del adulto contra el backend (POST /login). El registro NO se hace in-app — el adulto crea la cuenta primero por web (memoria project_el_cuaderno_decisiones_humanas_pendientes ítem 5).
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta del adulto'**
+  String get ajustesCuentaTitulo;
+
+  /// No description provided for @ajustesCuentaDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'Si tienes una cuenta de Nuevo Ser, puedes vincularla aquí. Sirve para subir tus observaciones, recibir el resumen escrito del cuidador y conectar el Tutor real.'**
+  String get ajustesCuentaDescripcion;
+
+  /// No description provided for @ajustesCuentaPlaceholderEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'correo del adulto'**
+  String get ajustesCuentaPlaceholderEmail;
+
+  /// No description provided for @ajustesCuentaPlaceholderPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'contraseña'**
+  String get ajustesCuentaPlaceholderPassword;
+
+  /// No description provided for @ajustesCuentaBotonEntrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión'**
+  String get ajustesCuentaBotonEntrar;
+
+  /// No description provided for @ajustesCuentaEntrando.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrando…'**
+  String get ajustesCuentaEntrando;
+
+  /// No description provided for @ajustesCuentaSesionIniciada.
+  ///
+  /// In es, this message translates to:
+  /// **'Sesión iniciada como {email}.'**
+  String ajustesCuentaSesionIniciada(String email);
+
+  /// No description provided for @ajustesCuentaSesionIniciadaSinEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Sesión iniciada.'**
+  String get ajustesCuentaSesionIniciadaSinEmail;
+
+  /// No description provided for @ajustesCuentaCerrarSesion.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar sesión'**
+  String get ajustesCuentaCerrarSesion;
+
+  /// No description provided for @ajustesCuentaErrorCredenciales.
+  ///
+  /// In es, this message translates to:
+  /// **'El correo o la contraseña no coinciden con ninguna cuenta.'**
+  String get ajustesCuentaErrorCredenciales;
+
+  /// No description provided for @ajustesCuentaErrorSinPerfil.
+  ///
+  /// In es, this message translates to:
+  /// **'La cuenta del adulto no tiene ningún niño asociado todavía.'**
+  String get ajustesCuentaErrorSinPerfil;
+
+  /// No description provided for @ajustesCuentaErrorRed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se ha podido conectar con el servidor. Inténtalo en un momento.'**
+  String get ajustesCuentaErrorRed;
+
+  /// No description provided for @ajustesCuentaErrorVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el correo y la contraseña antes de continuar.'**
+  String get ajustesCuentaErrorVacio;
+
   /// Bloque visible sólo en builds de debug. Permite pegar un JWT del backend para probar el Tutor real end-to-end sin pantalla de login.
   ///
   /// In es, this message translates to:

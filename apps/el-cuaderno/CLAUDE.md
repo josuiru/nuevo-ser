@@ -100,7 +100,25 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 
 ## Estado actual
 
-**S0 → S8 completos**, S9 (piloto) bloqueado por validaciones humanas (memoria `project_el_cuaderno_decisiones_humanas_pendientes`).
+**S0 → S8 + Bloque A (A1-A10) completos**, S9 (piloto) bloqueado por validaciones humanas (memoria `project_el_cuaderno_decisiones_humanas_pendientes`).
+
+**Bloque A — del "código completo" al "instalable y probable"** (plan `~/.claude/plans/bubbly-gathering-pretzel.md`):
+
+- **A1** — plataformas Android (Java 17, Gradle 8.5, AGP 8.1.0, Kotlin 1.9.20, compileSdk 35) + Linux generadas con `flutter create --platforms=android,linux`. Patrón heredado de `apps/uno-roto/`. APK debug compila.
+- **A2** — onboarding multi-perfil: tras elegir idioma, segundo paso "¿cómo te llamas?" persiste el nombre como nombre del perfil activo en `GestorPerfiles` con namespace `nuevoser.elcuaderno.perfil.*`. `RepositorioPerfilCuaderno` fino sobre el gestor del core.
+- **A3** — foto vía `image_picker ^1.1.2`. `SelectorImagen` (abstract) + `SelectorImagenImagePicker` con cámara y galería; `AlmacenadorMedios` con `proveedorDirRaiz` inyectable mueve el `XFile` a `medios/<obs-id>_<tipo>.<ext>` bajo el directorio de documentos privado de la app. `Observacion.fotoRutaLocal` guarda la ruta relativa, nunca cruza red. Permisos `CAMERA` + `READ_MEDIA_IMAGES` en `AndroidManifest.xml`.
+- **A4** — lienzo de dibujo espartano (`PantallaLienzoDibujo` con `CustomPainter` y `RepaintBoundary.toImage(pixelRatio: 2)`): una sola tinta negra gruesa (PaletaCuaderno.tinta), gesto pan, "borrar y empezar otra vez" + "guardar". Sin paleta, sin presión, sin deshacer multi-paso. UX rica queda para B6 (decisión de la ilustradora).
+- **A5** — `ExportadorCuaderno.version = 2` con manifiesto opcional de medios (`InfoMedioExportado: {ruta_relativa, existe, tamano_bytes}`) por cada ruta única apuntada por las observaciones; `aJson` async con `resolverMedio?` opcional; `deJson` lee v1 (compat sin manifiesto) y v2; `versionesSoportadas = [1, 2]`. `main.dart` cabla `_resolverMedioParaExport` con `AlmacenadorMedios.resolverAbsoluta` + `dart:io` para sondear `existe` y `length`. Las rutas siguen siendo relativas al directorio de documentos del perfil — no base64; portar el cuaderno a otro dispositivo es un export-zip futuro.
+- **A6** — pantalla de login del adulto. `ClienteAuthCuaderno` fino (POST /wp-json/nuevo-ser/v1/login) devuelve `ResultadoLogin` sealed (`LoginExito` / `LoginCredencialesIncorrectas` / `LoginSinPerfilDeNino` / `LoginErrorRed`). `BloqueLoginAdulto` en Ajustes (visible siempre, no debug-only) con email+password+autofill, persiste token+email en `RepositorioCuentaBackend` y notifica `alCambiarToken` para que el `FutureBuilder` del Tutor recompute. **Registro NO se hace in-app** — el adulto crea la cuenta primero por web (LOPDGDD ítem 5 memoria); aquí sólo se vincula. `_BloqueTutorDebug` se conserva tras `kDebugMode` para casos sin cuenta real.
+- **A7** — iconos launcher + splash placeholder con paleta del cuaderno (hoja monocroma verde bosque #49583B sobre crema #F5EFE2). `flutter_launcher_icons ^0.14.1` + `flutter_native_splash ^2.4.1` cableados desde `pubspec.yaml` con assets en `assets/launcher/` y `assets/splash/`. **Sustituir por icono final de la ilustradora botánica (B4 del plan, biblia §8.1: hecho a mano, NUNCA IA generativa).**
+- **A8** — catálogo de Misterios completo: el seed pasa de 7 a **19 misterios** literales del `docs/el-cuaderno/catalogo-seminal-misterios.md` (5 marcados `abierto: true`). El comité científico (B1) los puede modificar luego sin tocar el cliente.
+- **A9** — README con instrucciones para construir APK debug, instalar en dispositivo, smoke manual del flujo completo y smoke contra WordPress local. Cierre del Bloque A.
+- **A10** — política de privacidad y términos en `docs/el-cuaderno/legal/` marcados como **BORRADOR pendiente de revisión legal LOPDGDD (B3)**. Enlazados desde `pantalla_configuracion_inicial.dart` con un `_EnlacePolitica` discreto + AlertDialog.
+
+Tests: 199 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12. APK debug compila.
+
+**Bloque B — pendiente de decisiones humanas**, no bloquea piloto interno (familias del operador) pero sí piloto público:
+B1 validación científica catálogo · B2 traducciones eu/ca · B3 LOPDGDD + política privacidad real · B4 ilustradora botánica · B5 `geolocator` + `flutter_map` + MBTiles · B6 UX rica del dibujo · B7 auth profesor + vista aula · B8 asesoría psicológica caso 1 doc 15 · B9 WCAG 2.1 AA + paquete `pdf` · B10 captación 12-15 familias · B11 calendario fenológico curado · B12 firma release Android + canal distribución.
 
 **S0 completo** (rama `feature/el-cuaderno-bootstrap`):
 - 15 docs del paquete documental copiados a `docs/el-cuaderno/` (renombrados sin prefijo `el-cuaderno-` para encajar con el patrón que el `prompt-claude-code.md` espera).
@@ -132,8 +150,6 @@ En `docs/el-cuaderno/` del repo. Al empezar tarea → solo los relevantes:
 - ítem 8: captación de 12-15 familias voluntarias.
 - ítem 10: encargo a ilustradora botánica (NO IA generativa, biblia §8.1).
 - ítem 11: auth de profesor/cuidador.
-
-Tests: 159 verde en el-cuaderno (Dart) + smoke PHP `test_el_cuaderno.php` y `test_tutor_cuaderno.php` verde + paridad P5 12/12.
 
 **S1 (referencia histórica)** — bootstrap del scaffolding según el prompt operativo del paquete documental:
 

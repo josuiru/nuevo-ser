@@ -256,6 +256,47 @@ class TextosAppEu extends TextosApp {
   }
 
   @override
+  String get ajustesCuentaTitulo => 'TODO_EU · Cuenta del adulto';
+
+  @override
+  String get ajustesCuentaDescripcion => 'TODO_EU · Si tienes una cuenta de Nuevo Ser, puedes vincularla aquí. Sirve para subir tus observaciones, recibir el resumen escrito del cuidador y conectar el Tutor real.';
+
+  @override
+  String get ajustesCuentaPlaceholderEmail => 'TODO_EU · correo del adulto';
+
+  @override
+  String get ajustesCuentaPlaceholderPassword => 'TODO_EU · contraseña';
+
+  @override
+  String get ajustesCuentaBotonEntrar => 'TODO_EU · Iniciar sesión';
+
+  @override
+  String get ajustesCuentaEntrando => 'TODO_EU · Entrando…';
+
+  @override
+  String ajustesCuentaSesionIniciada(String email) {
+    return 'TODO_EU · Sesión iniciada como $email.';
+  }
+
+  @override
+  String get ajustesCuentaSesionIniciadaSinEmail => 'TODO_EU · Sesión iniciada.';
+
+  @override
+  String get ajustesCuentaCerrarSesion => 'TODO_EU · Cerrar sesión';
+
+  @override
+  String get ajustesCuentaErrorCredenciales => 'TODO_EU · El correo o la contraseña no coinciden con ninguna cuenta.';
+
+  @override
+  String get ajustesCuentaErrorSinPerfil => 'TODO_EU · La cuenta del adulto no tiene ningún niño asociado todavía.';
+
+  @override
+  String get ajustesCuentaErrorRed => 'TODO_EU · No se ha podido conectar con el servidor. Inténtalo en un momento.';
+
+  @override
+  String get ajustesCuentaErrorVacio => 'TODO_EU · Escribe el correo y la contraseña antes de continuar.';
+
+  @override
   String get ajustesTutorDebugTitulo => 'TODO_EU · Tutor (debug)';
 
   @override
