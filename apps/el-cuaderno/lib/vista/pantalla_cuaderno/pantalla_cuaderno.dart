@@ -15,6 +15,7 @@ import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
 import '../pantalla_observacion/pantalla_observacion.dart';
 import '../pantalla_profesor/pantalla_login_profesor.dart';
+import '../pantalla_sit_spot/pantalla_crear_sit_spot.dart';
 import '../pantalla_tutor/pantalla_tutor.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
@@ -190,6 +191,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
             _VistaCuaderno(
               estado: widget.estado,
               alAbrirNuevaObservacion: _abrirNuevaObservacion,
+              alCrearSitSpot: _abrirCrearSitSpot,
             ),
             _VistaProximamente(textos: textos),
             _VistaProximamente(textos: textos),
@@ -238,6 +240,22 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
         ],
       ),
     );
+  }
+
+  Future<void> _abrirCrearSitSpot() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaCrearSitSpot(
+          servicioGeolocalizacion: widget.servicioGeolocalizacion,
+          alConfirmar: (sitSpot) async {
+            await widget.repositorio.establecerSitSpot(sitSpot);
+          },
+        ),
+      ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
   }
 
   Future<void> _abrirNuevaObservacion() async {
@@ -301,10 +319,12 @@ class _VistaCuaderno extends StatelessWidget {
   const _VistaCuaderno({
     required this.estado,
     required this.alAbrirNuevaObservacion,
+    required this.alCrearSitSpot,
   });
 
   final EstadoCuaderno estado;
   final VoidCallback alAbrirNuevaObservacion;
+  final VoidCallback alCrearSitSpot;
 
   @override
   Widget build(BuildContext context) {
@@ -335,7 +355,10 @@ class _VistaCuaderno extends StatelessWidget {
             const SizedBox(height: 24),
             _Cabecera(textos.seccionSitSpot),
             const SizedBox(height: 8),
-            TarjetaSitSpot(sitSpot: estado.sitSpot),
+            TarjetaSitSpot(
+              sitSpot: estado.sitSpot,
+              alPulsarInvitacion: estado.sitSpot == null ? alCrearSitSpot : null,
+            ),
             const SizedBox(height: 24),
             _Cabecera(textos.seccionMisteriosAbiertos),
             const SizedBox(height: 8),

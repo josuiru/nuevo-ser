@@ -16,9 +16,18 @@ import '../tema/tipografia.dart';
 ///
 /// Widget puro — recibe los datos por parámetros, no toca repositorio.
 class TarjetaSitSpot extends StatelessWidget {
-  const TarjetaSitSpot({super.key, required this.sitSpot});
+  const TarjetaSitSpot({
+    super.key,
+    required this.sitSpot,
+    this.alPulsarInvitacion,
+  });
 
   final SitSpot? sitSpot;
+
+  /// Callback que el home cabla al flujo de creación. Si es null y el
+  /// niño todavía no tiene sit spot, la tarjeta se muestra estática
+  /// (modo S1, tests que no quieren disparar navegación).
+  final VoidCallback? alPulsarInvitacion;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +35,10 @@ class TarjetaSitSpot extends StatelessWidget {
     final textos = TextosApp.of(context);
 
     if (sitSpot == null) {
-      return _TarjetaInvitacion(textos: textos);
+      return _TarjetaInvitacion(
+        textos: textos,
+        alPulsar: alPulsarInvitacion,
+      );
     }
 
     return _TarjetaActiva(sitSpot: sitSpot!, textos: textos, esquema: esquema);
@@ -34,14 +46,15 @@ class TarjetaSitSpot extends StatelessWidget {
 }
 
 class _TarjetaInvitacion extends StatelessWidget {
-  const _TarjetaInvitacion({required this.textos});
+  const _TarjetaInvitacion({required this.textos, this.alPulsar});
 
   final TextosApp textos;
+  final VoidCallback? alPulsar;
 
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
-    return Container(
+    final contenido = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: esquema.surfaceContainerHighest,
@@ -55,6 +68,12 @@ class _TarjetaInvitacion extends StatelessWidget {
           altoLinea: 1.45,
         ),
       ),
+    );
+    if (alPulsar == null) return contenido;
+    return InkWell(
+      onTap: alPulsar,
+      borderRadius: BorderRadius.circular(8),
+      child: contenido,
     );
   }
 }
