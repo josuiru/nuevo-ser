@@ -13,6 +13,7 @@ import 'datos/cliente_tutor_cuaderno.dart';
 import 'datos/cola_sync_observaciones.dart';
 import 'datos/repositorio_aula_profesor.dart';
 import 'datos/repositorio_perfil_cuaderno.dart';
+import 'datos/repositorio_presentacion_sit_spot.dart';
 import 'datos/selector_imagen.dart';
 import 'datos/servicio_geolocalizacion_plugin.dart';
 import 'datos/sincronizador_agregados.dart';
@@ -28,6 +29,7 @@ import 'vista/pantalla_bienvenida_nombre.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno/estado_cuaderno.dart';
 import 'vista/pantalla_cuaderno/pantalla_cuaderno.dart';
+import 'vista/pantalla_sit_spot/pantalla_presentacion_sit_spot.dart';
 import 'vista/pantalla_tutor/pantalla_tutor.dart';
 import 'vista/tema/tema.dart';
 
@@ -72,6 +74,12 @@ final ValueNotifier<Locale?> localeAppElCuaderno = ValueNotifier<Locale?>(null);
 /// pantalla de bienvenida tras el primer arranque. Una vez completada,
 /// el orquestador muestra `PantallaCuaderno`.
 final ValueNotifier<String?> nombrePerfilElCuaderno = ValueNotifier<String?>(null);
+
+/// Bool global "ya he visto la presentación pedagógica del sit spot".
+/// Inicializado en main() leyendo la clave persistida; cambia a `true`
+/// cuando el niño completa la pantalla de presentación. La pantalla
+/// principal sólo se muestra cuando este valor es `true`.
+final ValueNotifier<bool> presentacionSitSpotVista = ValueNotifier<bool>(false);
 
 /// Arranque de El Cuaderno. Sprint 2-C: precarga el idioma elegido,
 /// abre Isar local, siembra datos en debug, y monta la app pasando
@@ -136,6 +144,14 @@ Future<void> main() async {
     nombrePerfilElCuaderno.value = nombreYaGuardado;
   }
 
+  // 5) Bool global de la presentación pedagógica del sit spot. Si ya
+  //    se vio en arranques anteriores, el orquestador salta la
+  //    pantalla y va directo al home.
+  final repoPresentacionSitSpot = RepositorioPresentacionSitSpot(
+    prefs: SharedPreferences.getInstance,
+  );
+  presentacionSitSpotVista.value = await repoPresentacionSitSpot.cargar();
+
   runApp(AppElCuaderno(
     repoIdioma: repoIdioma,
     repositorioCuaderno: repositorioCuaderno,
@@ -143,6 +159,7 @@ Future<void> main() async {
     repoPerfil: repoPerfil,
     repoCuentaProfesor: repoCuentaProfesor,
     repoAulaProfesor: repoAulaProfesor,
+    repoPresentacionSitSpot: repoPresentacionSitSpot,
   ));
 }
 
@@ -153,6 +170,7 @@ class AppElCuaderno extends StatelessWidget {
   final RepositorioPerfilCuaderno repoPerfil;
   final RepositorioCuentaBackend repoCuentaProfesor;
   final RepositorioAulaProfesor repoAulaProfesor;
+  final RepositorioPresentacionSitSpot repoPresentacionSitSpot;
 
   const AppElCuaderno({
     super.key,
@@ -162,6 +180,7 @@ class AppElCuaderno extends StatelessWidget {
     required this.repoPerfil,
     required this.repoCuentaProfesor,
     required this.repoAulaProfesor,
+    required this.repoPresentacionSitSpot,
   });
 
   @override
@@ -172,16 +191,22 @@ class AppElCuaderno extends StatelessWidget {
         return ValueListenableBuilder<String?>(
           valueListenable: nombrePerfilElCuaderno,
           builder: (_, nombrePerfil, __) {
-            return MaterialApp(
-              onGenerateTitle: (context) => TextosApp.of(context).tituloApp,
-              theme: TemaCuaderno.claro(),
-              darkTheme: TemaCuaderno.oscuro(),
-              // Modo oscuro respetado del sistema (doc 13 §11.5).
-              themeMode: ThemeMode.system,
-              locale: locale,
-              localizationsDelegates: TextosApp.localizationsDelegates,
-              supportedLocales: TextosApp.supportedLocales,
-              home: _decidirHome(locale, nombrePerfil),
+            return ValueListenableBuilder<bool>(
+              valueListenable: presentacionSitSpotVista,
+              builder: (_, presentacionVista, __) {
+                return MaterialApp(
+                  onGenerateTitle: (context) =>
+                      TextosApp.of(context).tituloApp,
+                  theme: TemaCuaderno.claro(),
+                  darkTheme: TemaCuaderno.oscuro(),
+                  // Modo oscuro respetado del sistema (doc 13 §11.5).
+                  themeMode: ThemeMode.system,
+                  locale: locale,
+                  localizationsDelegates: TextosApp.localizationsDelegates,
+                  supportedLocales: TextosApp.supportedLocales,
+                  home: _decidirHome(locale, nombrePerfil, presentacionVista),
+                );
+              },
             );
           },
         );
@@ -189,11 +214,17 @@ class AppElCuaderno extends StatelessWidget {
     );
   }
 
-  /// Tres caminos de arranque:
+  /// Cuatro caminos de arranque:
   /// - sin idioma → selector trilingüe.
   /// - con idioma sin perfil con nombre → pantalla bienvenida.
-  /// - con perfil → pantalla principal.
-  Widget _decidirHome(Locale? locale, String? nombrePerfil) {
+  /// - con perfil sin presentación del sit spot vista → pantalla
+  ///   pedagógica del sit spot.
+  /// - con todo cerrado → pantalla principal.
+  Widget _decidirHome(
+    Locale? locale,
+    String? nombrePerfil,
+    bool presentacionVista,
+  ) {
     if (locale == null) {
       return PantallaConfiguracionInicial(
         alElegirIdioma: (codigo) async {
@@ -207,6 +238,14 @@ class AppElCuaderno extends StatelessWidget {
         alConfirmarNombre: (nombre) async {
           await repoPerfil.crearYActivarPerfil(nombre);
           nombrePerfilElCuaderno.value = nombre;
+        },
+      );
+    }
+    if (!presentacionVista) {
+      return PantallaPresentacionSitSpot(
+        alContinuar: ({required tieneUnSitioPensado}) async {
+          await repoPresentacionSitSpot.marcar();
+          presentacionSitSpotVista.value = true;
         },
       );
     }

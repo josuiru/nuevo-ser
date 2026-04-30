@@ -1,11 +1,13 @@
 import 'package:el_cuaderno/datos/repositorio_aula_profesor.dart';
 import 'package:el_cuaderno/datos/repositorio_perfil_cuaderno.dart';
+import 'package:el_cuaderno/datos/repositorio_presentacion_sit_spot.dart';
 import 'package:el_cuaderno/datos_simulados/seed.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
 import 'package:el_cuaderno/main.dart';
 import 'package:el_cuaderno/vista/pantalla_bienvenida_nombre.dart';
 import 'package:el_cuaderno/vista/pantalla_configuracion_inicial.dart';
 import 'package:el_cuaderno/vista/pantalla_cuaderno/pantalla_cuaderno.dart';
+import 'package:el_cuaderno/vista/pantalla_sit_spot/pantalla_presentacion_sit_spot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
@@ -21,6 +23,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     localeAppElCuaderno.value = null;
     nombrePerfilElCuaderno.value = null;
+    presentacionSitSpotVista.value = false;
   });
 
   RepositorioIdiomaApp crearRepoIdioma() {
@@ -59,6 +62,12 @@ void main() {
     );
   }
 
+  RepositorioPresentacionSitSpot crearRepoPresentacionSitSpot() {
+    return RepositorioPresentacionSitSpot(
+      prefs: SharedPreferences.getInstance,
+    );
+  }
+
   Future<AppElCuaderno> crearApp() async {
     return AppElCuaderno(
       repoIdioma: crearRepoIdioma(),
@@ -67,6 +76,7 @@ void main() {
       repoPerfil: RepositorioPerfilCuaderno(),
       repoCuentaProfesor: crearRepoCuentaProfesor(),
       repoAulaProfesor: crearRepoAulaProfesor(),
+      repoPresentacionSitSpot: crearRepoPresentacionSitSpot(),
     );
   }
 
@@ -127,12 +137,13 @@ void main() {
   });
 
   testWidgets(
-      'con idioma + perfil ya creado → salta directo a la pantalla principal',
+      'con idioma + perfil ya creado + presentación vista → salta directo a la pantalla principal',
       (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.elcuaderno.idioma_app': 'es',
       'nuevoser.elcuaderno.perfil_activo_id': 'maren',
       'nuevoser.elcuaderno.perfiles_lista': '',
+      'nuevoser.elcuaderno.presentacion_sit_spot.vista': true,
     });
     // Pre-poblar la lista de perfiles + el nombre del perfil activo.
     final prefs = await SharedPreferences.getInstance();
@@ -140,6 +151,7 @@ void main() {
     await prefs.setString('nuevoser.elcuaderno.perfil.maren.nombre_jugador', 'Maren');
     localeAppElCuaderno.value = const Locale('es');
     nombrePerfilElCuaderno.value = 'Maren';
+    presentacionSitSpotVista.value = true;
 
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     await tester.pumpWidget(await crearApp());
@@ -148,6 +160,7 @@ void main() {
     expect(find.byType(PantallaCuaderno), findsOneWidget);
     expect(find.byType(PantallaConfiguracionInicial), findsNothing);
     expect(find.byType(PantallaBienvenidaNombre), findsNothing);
+    expect(find.byType(PantallaPresentacionSitSpot), findsNothing);
   });
 
   testWidgets(
@@ -171,7 +184,7 @@ void main() {
   });
 
   testWidgets(
-      'al confirmar nombre se crea el perfil y se muestra PantallaCuaderno',
+      'al confirmar nombre se crea el perfil y se muestra la presentación del sit spot',
       (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.elcuaderno.idioma_app': 'es',
@@ -189,8 +202,11 @@ void main() {
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
 
+    // Tras confirmar el nombre, NO salta a la pantalla principal:
+    // queda en la presentación pedagógica del sit spot.
     expect(nombrePerfilElCuaderno.value, 'Maren');
-    expect(find.byType(PantallaCuaderno), findsOneWidget);
+    expect(find.byType(PantallaPresentacionSitSpot), findsOneWidget);
+    expect(find.byType(PantallaCuaderno), findsNothing);
 
     final prefs = await SharedPreferences.getInstance();
     final perfiles = prefs.getStringList('nuevoser.elcuaderno.perfiles_lista');
@@ -199,6 +215,74 @@ void main() {
     expect(
       prefs.getString('nuevoser.elcuaderno.perfil.maren.nombre_jugador'),
       'Maren',
+    );
+  });
+
+  testWidgets(
+      'tras la bienvenida + presentación pulsando "ya pienso en uno" → PantallaCuaderno + flag persistido',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.elcuaderno.idioma_app': 'es',
+      'nuevoser.elcuaderno.perfil_activo_id': 'maren',
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('nuevoser.elcuaderno.perfiles_lista', ['maren']);
+    await prefs.setString(
+      'nuevoser.elcuaderno.perfil.maren.nombre_jugador',
+      'Maren',
+    );
+    localeAppElCuaderno.value = const Locale('es');
+    nombrePerfilElCuaderno.value = 'Maren';
+    // presentacionSitSpotVista queda en false (default del setUp).
+
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    await tester.pumpWidget(await crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaPresentacionSitSpot), findsOneWidget);
+    expect(find.byType(PantallaCuaderno), findsNothing);
+
+    await tester.tap(find.text('ya pienso en uno'));
+    await tester.pumpAndSettle();
+
+    expect(presentacionSitSpotVista.value, isTrue);
+    expect(find.byType(PantallaCuaderno), findsOneWidget);
+    expect(
+      prefs.getBool('nuevoser.elcuaderno.presentacion_sit_spot.vista'),
+      isTrue,
+    );
+  });
+
+  testWidgets(
+      'pulsando "todavía no" en la presentación también marca vista y va a PantallaCuaderno',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.elcuaderno.idioma_app': 'es',
+      'nuevoser.elcuaderno.perfil_activo_id': 'maren',
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('nuevoser.elcuaderno.perfiles_lista', ['maren']);
+    await prefs.setString(
+      'nuevoser.elcuaderno.perfil.maren.nombre_jugador',
+      'Maren',
+    );
+    localeAppElCuaderno.value = const Locale('es');
+    nombrePerfilElCuaderno.value = 'Maren';
+
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    await tester.pumpWidget(await crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaPresentacionSitSpot), findsOneWidget);
+
+    await tester.tap(find.text('todavía no'));
+    await tester.pumpAndSettle();
+
+    expect(presentacionSitSpotVista.value, isTrue);
+    expect(find.byType(PantallaCuaderno), findsOneWidget);
+    expect(
+      prefs.getBool('nuevoser.elcuaderno.presentacion_sit_spot.vista'),
+      isTrue,
     );
   });
 
