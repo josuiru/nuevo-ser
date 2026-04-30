@@ -46,6 +46,7 @@ class EscenasArco1 {
     granConcilio,
     aprendizI,
     entregaDelMosaico,
+    cierreDelArco,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -171,6 +172,15 @@ class EscenasArco1 {
     // F8.8 la cablee).
     'escena_m1_entrega_vista': {
       'mosaico_recogido_por_archivo',
+    },
+    // Cierre formal del Arco 1. La cinemática 1.Z reproduce la voz
+    // interna del Cuaderno la noche de la entrega del Mosaico, y al
+    // cerrarla activa el flag canónico que marca el arco como
+    // narrado por la propia Cronista. Cuando entre el Arco 2, su
+    // primera cinemática (1.0.0 / 2.0.1) podrá usar este flag como
+    // precondición para arrancar.
+    'escena_1_z_vista': {
+      'arco_1_cerrado_por_la_cronista',
     },
   };
 
@@ -3364,6 +3374,129 @@ class EscenasArco1 {
       ),
 
       PlanoCierreAmable(textoBoton: 'IR A CASA'),
+    ],
+  );
+
+  /// **1.Z — Cierre del arco** (doc 07 §1.Z, F8.8).
+  ///
+  /// La noche de la entrega del Mosaico. Maren en su mesa, cuaderno
+  /// abierto. Por la ventana, el castaño del patio con hojas
+  /// amarillas — ha pasado el otoño, es noviembre. Voz interna del
+  /// Cuaderno repasando el arco entero: lo que entregó hoy, lo que
+  /// le dijo Andrés sobre la viñeta del banquete, lo que le dijo
+  /// Marina ("ya soy del club"), las cosas que ha aprendido que no
+  /// sabía que se podían aprender, la cara rara de la que le habló
+  /// Eider, el anuncio del Arco 2 (Pompaelo, debajo de la calle
+  /// Curia, foro romano). Cierra con "no sé qué voy a encontrar
+  /// pero tengo ganas". Maren cierra el cuaderno, apaga la luz.
+  /// Aparece flotante "ARCO 1 — CERRADO". Continuará en Arco 2.
+  ///
+  /// Pedagógicamente clave: la Cronista narra su propio arco. La
+  /// pregunta abierta del Mosaico ("¿qué he aprendido?") no se
+  /// responde en la pantalla del Mosaico — se responde aquí, en la
+  /// voz íntima del Cuaderno, sin evaluación, sin público.
+  ///
+  /// **Sustitución diegética aplicada**: el guion v0.1 dice "He
+  /// visto manos pintadas hace catorce mil años", coherente con
+  /// una versión de la Estación 1.3 con manos en negativo del
+  /// Auriñaciense. El v0.2 reescribe la 1.3 a fauna magdaleniense
+  /// grabada (~13.000 años): bisontes, ciervo, cabeza de uro,
+  /// caballo. Sustitución: "manos pintadas hace catorce mil años"
+  /// → "grabados en la roca de hace trece mil años — bisontes, un
+  /// ciervo, un caballo". Lo demás del monólogo se preserva
+  /// literalmente del guion canónico v0.1 — todas sus referencias
+  /// son coherentes con el arco implementado.
+  ///
+  /// **Anclada a la entrega del Mosaico**: requiere
+  /// `escena_m1_entrega_vista`. Se dispara automáticamente tras la
+  /// cinemática de entrega y cierra el arco.
+  static const EscenaCinematica cierreDelArco = EscenaCinematica(
+    id: '1.Z',
+    titulo: 'Cierre del arco',
+    flagDeSalida: 'escena_1_z_vista',
+    flagsRequeridos: {'escena_m1_entrega_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Es de noche. Maren en su mesa, cuaderno abierto. Por la '
+            'ventana, el castaño del patio con las hojas ya '
+            'amarillas — ha pasado el otoño. Es noviembre.',
+      ),
+
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Hoy he entregado el Mosaico. Andrés me ha dicho que la '
+            'mayoría no se atreve a marcar roja la viñeta del '
+            'banquete. Yo no sé si fue valentía o pereza — no sabía '
+            'cómo dibujar lo que no sabemos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Marina dice que ya soy del club.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      // Sustitución: "He visto manos pintadas hace catorce mil
+      // años" → "He visto grabados en la roca de hace trece mil
+      // años — bisontes, un ciervo, un caballo". El v0.2 reescribe
+      // la 1.3 a fauna magdaleniense grabada; las manos pintadas
+      // del Auriñaciense (~14.000 años) no son lo que Maren ha
+      // visto en el juego.
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'He aprendido cosas que no sabía que se podían aprender. '
+            'He visto huesos de personas. He visto grabados en la '
+            'roca de hace trece mil años — bisontes, un ciervo, un '
+            'caballo. He hablado con Begoña y Begoña no se rió de mí '
+            'cuando dije "probablemente sí lo estoy haciendo".',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Eider me dijo que tengo cara rara últimamente. No es '
+            'cara rara. Es la cara que se me queda cuando algo me '
+            'ocurre que no entiendo del todo.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Mañana descanso. El lunes empieza el Arco 2. Isaura '
+            'dijo que vamos a Pompaelo. Bajamos. Debajo de la calle '
+            'Curia. Donde el foro romano.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'No sé qué voy a encontrar.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Pero tengo ganas.',
+        pausaPrevia: Duration(milliseconds: 600),
+      ),
+
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren cierra el cuaderno. Apaga la luz. La habitación '
+            'queda a oscuras.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura: 'ARCO 1 — CERRADO',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Continuará en Arco 2 — La llegada de las palabras.',
+      ),
+
+      PlanoCierreAmable(textoBoton: 'CERRAR EL CUADERNO'),
     ],
   );
 }

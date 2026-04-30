@@ -250,18 +250,22 @@ autónomamente. Quedan documentadas para revisión:
 
 ---
 
-## Cinemática 1.Z del cierre del arco — pendiente hasta cerrar formato del Mosaico
+## Cinemática 1.Z del cierre del arco — implementada en F8.8
 
-**Tracker doc 17**: pendiente.
+**Tracker doc 17**: pendiente de revisión humana.
 
-**Guion canónico (doc 07 §1.Z)**: la noche de la entrega del Mosaico. Maren en su mesa con el cuaderno. Voz interna que cierra el arco: ha entregado el Mosaico, Andrés le ha dicho que la mayoría no se atreve a marcar roja la viñeta del banquete, Marina dice que ya es del club, ha aprendido cosas, mañana descansa, el lunes empieza el Arco 2.
+**Guion canónico (doc 07 §1.Z)**: la noche de la entrega del Mosaico. Maren en su mesa con el cuaderno, ventana al castaño con hojas amarillas (noviembre). Voz interna que cierra el arco: ha entregado el Mosaico, Andrés le ha dicho que la mayoría no se atreve a marcar roja la viñeta del banquete, Marina dice que ya es del club, ha aprendido cosas, Eider le dijo que tiene cara rara últimamente, el lunes empieza el Arco 2 (Pompaelo, debajo de la calle Curia, foro romano). "No sé qué voy a encontrar. Pero tengo ganas." Maren cierra el cuaderno, apaga la luz. Aparece "ARCO 1 — CERRADO". Continuará en Arco 2.
 
-**Estado**: NO implementada. La cinemática hace referencias específicas a contenido que aún no encaja con lo implementado:
-- "La viñeta del banquete" implica un formato de Mosaico tipo cómic con viñetas marcables, distinto de los 3 prompts de texto del Mosaico actual (provisional).
-- "Manos pintadas hace catorce mil años" referencia la Estación 1.3 que el header v0.2 del doc 07 reescribe a fauna magdaleniense, no manos en negativo.
-- "Marina dice que ya soy del club" referencia interacción con Marina en el Concilio de la 1.4 que no está implementada.
+**Estado**: implementada en `EscenasArco1.cierreDelArco`. Se dispara automáticamente tras la cinemática 1.M1.entrega (Andrés + Marina). Al cerrarla activa `arco_1_cerrado_por_la_cronista`.
 
-**Razón**: implementar 1.Z hoy obligaría a sustituir tantos elementos que la cinemática perdería identidad. Mejor esperar a que (a) el formato del Mosaico se cierre, (b) la Estación 1.3 esté implementada con su contenido validado v0.2, y (c) la Estación 1.4 esté implementada con el rol de Marina en el Concilio. Cuando esos tres frentes cierren, 1.Z se puede escribir sin sustituciones.
+**Sustitución diegética aplicada (única)**:
+- "He visto manos pintadas hace catorce mil años" → "He visto grabados en la roca de hace trece mil años — bisontes, un ciervo, un caballo". El v0.1 del guion asumía una Estación 1.3 con manos en negativo del Auriñaciense; el v0.2 reescribe la 1.3 a fauna magdaleniense grabada (~13.000 años, validado en doc 17 para la capa Cueva-Pirineo). La sustitución alinea la voz del Cuaderno con lo que Maren ha visto en el juego implementado.
+
+**Sin más sustituciones**: las referencias a la viñeta del banquete (la del crómlech vecino, calibrada como Probable o Disputada en la Brecha 1.2 — la afirmación 4 `banquete_ritual` está calificada como Disputada en el catálogo, encajando con el "no se atreve" de Andrés), a Marina ("ya soy del club" — coherente con el aplauso fuera de protocolo en la 1.4.3), a Pompaelo bajo la calle Curia (validado en 1.0.2), y a Eider (personaje ficticio del entorno cotidiano, doc 04) se preservan literalmente.
+
+**Pendiente de revisión humana**:
+- Tono de la voz íntima del Cuaderno cerrando el arco — primera vez que el Cuaderno articula explícitamente la postura "no sé qué voy a encontrar pero tengo ganas". ¿Encaja con el oficio que el juego enseña? Funciona en clave pedagógica (curiosidad sin certeza), pero el comité podría leerlo como demasiado ligero.
+- Línea final "Continuará en Arco 2 — La llegada de las palabras" — reproduce el subtítulo del Arco 2 del doc 07 v0.1, pendiente de confirmar con doc 08 cuando se aborde.
 
 ---
 

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:las_versiones/dominio/ambiente_archivo.dart';
 import 'package:las_versiones/dominio/escenas_arco_1.dart';
+import 'package:las_versiones/dominio/voz_personaje.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 void main() {
@@ -599,6 +600,49 @@ void main() {
     });
   });
 
+  group('EscenasArco1.cierreDelArco (1.Z)', () {
+    test('id, flagDeSalida y precondición coherentes', () {
+      expect(EscenasArco1.cierreDelArco.id, '1.Z');
+      expect(
+        EscenasArco1.cierreDelArco.flagDeSalida,
+        'escena_1_z_vista',
+      );
+      expect(
+        EscenasArco1.cierreDelArco.flagsRequeridos,
+        {'escena_m1_entrega_vista'},
+        reason: '1.Z se dispara la noche de la entrega del Mosaico — '
+            'tras la cinemática de entrega (Andrés + Marina)',
+      );
+    });
+
+    test('viaja con ambiente cuarto de Maren — donde escribe en su '
+        'Cuaderno la noche del cierre', () {
+      expect(
+        EscenasArco1.cierreDelArco.ambiente,
+        same(AmbienteArchivo.cuartoCasaMaren),
+      );
+    });
+
+    test('cierra como amable — al cerrar el Cuaderno termina la '
+        'sesión y se queda activo `arco_1_cerrado_por_la_cronista`',
+        () {
+      final ultimoPlano = EscenasArco1.cierreDelArco.planos.last;
+      expect(ultimoPlano, isA<PlanoCierreAmable>());
+    });
+
+    test('la voz interna del Cuaderno usa VozPersonaje.vozDeFuente — '
+        'monólogo en cursiva sin atribución personal, característico '
+        'de la voz íntima del Cuaderno en el resto del arco', () {
+      final dialogos = EscenasArco1.cierreDelArco.planos
+          .whereType<PlanoDialogo>()
+          .toList();
+      expect(dialogos, isNotEmpty);
+      for (final plano in dialogos) {
+        expect(plano.voz, same(VozPersonaje.vozDeFuente));
+      }
+    });
+  });
+
   group('flagsDeCierrePorEscena', () {
     test('1.0.1 cierra con met_begona, met_isaura, evaluation_passed y '
         'accepted_aspirante', () {
@@ -689,6 +733,14 @@ void main() {
       expect(flags, isNot(contains('arco_1_completado')),
           reason: 'arco_1_completado se activa en 1.4.4 para que el '
               'Mosaico llegue tras la promoción a Aprendiz I, no antes');
+    });
+
+    test('1.Z cierra activando arco_1_cerrado_por_la_cronista — el '
+        'flag canónico del cierre del arco narrado por Maren (no por '
+        'el sistema)', () {
+      final flags =
+          EscenasArco1.flagsDeCierrePorEscena['escena_1_z_vista'];
+      expect(flags, {'arco_1_cerrado_por_la_cronista'});
     });
 
     test('1.3.1 cierra activando traveling_pyrenees_first — la primera '

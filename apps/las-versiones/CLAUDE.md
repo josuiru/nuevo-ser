@@ -87,7 +87,7 @@ En `~/Projects/games/coleccion-nuevo-ser-paquete-documental-v0.2/coleccion-nuevo
 
 ## Estado actual
 
-**MVP del Arco 1 jugable end-to-end.** El flujo completo arranca: configuración inicial → cinemáticas 1.0.1–1.0.3 → cinemáticas 1.1.1–1.1.2 → Brecha 1.1 con sus cinco fases jugables → cinemática 1.1.7 → Mosaico de fin de Arco 1 → pantalla esqueleto. Persistencia entre arranques en cada paso. Cableado a la plataforma `nuevo_ser_core` (idioma, calibración Brier).
+**Arco 1 completo y cerrado** (tras F8.4–F8.8). El flujo end-to-end del arco entero está implementado: configuración inicial → cinemáticas 1.0.1–1.0.3 → 1.1.1–1.1.2 → Brecha 1.1 (5 fases) → 1.1.7 → 1.A → 1.B → Brecha 1.2 → 1.2.fin → 1.B.1 → 1.3.1–1.3.5 → Brecha 1.3 → 1.3.6–1.3.7 → 1.C → 1.4.1–1.4.2 → Brecha 1.4 → 1.4.3 (gran Concilio) → 1.4.4 (Aprendiz I) → Mosaico v2 (8 viñetas con código de confianza) → 1.M1.entrega (Andrés + Marina) → 1.Z (cierre del arco) → pantalla esqueleto. Persistencia entre arranques en cada paso. Las cuatro Brechas con sus catálogos de fuentes diegéticas y afirmaciones canónicas calibradas según doc 07 v0.2. Cableado a la plataforma `nuevo_ser_core` (idioma, calibración Brier).
 
 ```
 apps/las-versiones/
@@ -98,10 +98,10 @@ apps/las-versiones/
     ├── main.dart            # arranque + Orquestador (5 estados: configuración, brecha, cinemática, mosaico, esqueleto)
     ├── dominio/
     │   ├── brecha.dart                # modelo Brecha + FaseBrecha
-    │   ├── catalogo_brechas.dart      # Brecha 1.1 + 5 fuentes diegéticas + 6 afirmaciones canónicas
-    │   ├── escenas_arco_1.dart        # cinemáticas 1.0.1–1.0.3 + 1.1.1–1.1.2 + 1.1.7
+    │   ├── catalogo_brechas.dart      # 4 Brechas (1.1–1.4) con sus fuentes diegéticas + afirmaciones canónicas calibradas
+    │   ├── escenas_arco_1.dart        # 23 cinemáticas (1.0.1 a 1.Z) cubriendo el arco entero
     │   ├── cuaderno.dart              # catálogo de entradas
-    │   ├── mosaico_arco_1.dart        # 3 prompts del Mosaico de fin de arco
+    │   ├── mosaico_arco_1.dart        # Mosaico v2: 8 viñetas pre-descritas + código de confianza por viñeta
     │   ├── evaluador_preguntas.dart   # criterio algorítmico PR.01/PR.02
     │   ├── evaluacion_fuente.dart     # tipo (primaria/secundaria) + 5 sesgos
     │   └── calibracion.dart           # thin wrapper hacia EvaluadorCalibracion del core
@@ -130,20 +130,20 @@ apps/las-versiones/
         └── pantalla_esqueleto.dart              # post-MVP, "el Archivo abre pronto"
 ```
 
-153 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
+227 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
 
 **Validación de la plataforma extraída**: el juego usa `RepositorioIdiomaApp` del core con la clave `nuevoser.lasversiones.idioma_app`, y `EvaluadorCalibracion` del core (P4 Brier para AH.03 — corazón pedagógico) por path explícito (no via barrel, para no colisionar con el `NivelConfianza` distinto que define `apps/el-cuaderno`). Las extracciones de C5/C6/C8 funcionan: los repositorios son portables entre juegos sin tocar el código del core, y el motor de calibración tiene paridad Dart/PHP via fixture compartida.
 
 **Sustituciones diegéticas activas**: todo el contenido histórico concreto del guion canónico (autoría de Pío Beltrán, dataciones C14, siglos del edificio del Archivo) está sustituido por formulación genérica que preserva la pedagogía sin afirmar lo no validado. Las 5 fuentes de la Brecha 1.1 son **explícitamente ficticias y diegéticas**. Registro completo en `BLOQUEOS-PENDIENTES.md` por si el comité asesor (doc 16) valida y permite revertir.
 
 **Pendiente** (orden tentativo, sin compromiso de fechas):
-1. Cargar el doc 07 entero para implementar cinemáticas 1.A "Merienda con Eider" y 1.B "El ático" (apuntadas en BLOQUEOS).
-2. Implementar Brechas 1.2, 1.3, 1.4 del Arco 1 — al cerrar la 1.4 mover el disparador del Mosaico (hoy en 1.1 provisionalmente) y generalizar los prompts a "este arco" en plural.
+1. Validación humana del comité asesor sobre el contenido del Arco 1 — tracker entradas en `BLOQUEOS-PENDIENTES.md`. Las sustituciones diegéticas residuales (PIO-BELTRAN, EDIFICIO-ARCHIVO, ARALAR-DATACIONES, manos→grabados en 1.Z) se revierten cuando el comité valide.
+2. Arco 2 (Pompaelo, doc 08). El cableado del Mosaico al endpoint companion `/companion/mosaicos` puede arrancar antes — el shape v2 (Map<String, NivelConfianza>) ya tiene su forma definitiva.
 3. P2/P4 reales del motor adaptativo en `nuevo_ser_core` — pospuesto en F7 porque requiere extender `SessionPayload` con metadata por intento.
 4. Cablear `RepositorioCuentaBackend` cuando haya backend al que hablar.
 5. Decidir si Las Versiones tiene multi-perfil desde el inicio (`GestorPerfiles`) o llega después.
 6. Sistema de cinemáticas — probablemente extraerlo a `nuevo_ser_core/narrative/` cuando lo abordemos, ya que va a ser el primer caso de uso real para esa extracción (uno-roto lo tiene cableado a `voz_personaje` específica del juego, ver README de core §"Deuda de extracción pendiente").
-7. Cerrar paleta visual del juego contra doc 11 (apuntado en BLOQUEOS).
+7. Cerrar paleta visual del juego contra doc 11 (apuntado en BLOQUEOS) — los tonos del código de confianza del Mosaico v2 (azul Sólido / ámbar Probable / rojo claro Disputado) son provisionales hasta este cierre.
 
 ## Decisiones técnicas tomadas
 
