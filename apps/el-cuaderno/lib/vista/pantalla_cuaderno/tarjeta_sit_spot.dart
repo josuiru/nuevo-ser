@@ -21,6 +21,7 @@ class TarjetaSitSpot extends StatelessWidget {
     super.key,
     required this.sitSpot,
     this.alPulsarInvitacion,
+    this.alPulsarActivo,
     this.alJubilar,
   });
 
@@ -30,6 +31,11 @@ class TarjetaSitSpot extends StatelessWidget {
   /// niño todavía no tiene sit spot, la tarjeta se muestra estática
   /// (modo S1, tests que no quieren disparar navegación).
   final VoidCallback? alPulsarInvitacion;
+
+  /// Callback que el home cabla a `PantallaPaginaSitSpot` cuando el
+  /// sit spot activo existe. Si es null, la tarjeta no es pulsable —
+  /// modo lectura para tests aislados.
+  final VoidCallback? alPulsarActivo;
 
   /// Callback que el home cabla a la jubilación del sit spot activo
   /// (doc 13 §2.6). Si es null, el menú no aparece (tests que no
@@ -52,6 +58,7 @@ class TarjetaSitSpot extends StatelessWidget {
       sitSpot: sitSpot!,
       textos: textos,
       esquema: esquema,
+      alPulsar: alPulsarActivo,
       alJubilar: alJubilar,
     );
   }
@@ -146,88 +153,98 @@ class _TarjetaActiva extends StatelessWidget {
     required this.sitSpot,
     required this.textos,
     required this.esquema,
+    this.alPulsar,
     this.alJubilar,
   });
 
   final SitSpot sitSpot;
   final TextosApp textos;
   final ColorScheme esquema;
+  final VoidCallback? alPulsar;
   final VoidCallback? alJubilar;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 8, 16),
-      decoration: BoxDecoration(
-        color: esquema.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: esquema.outline, width: 0.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    sitSpot.nombre,
-                    style: TipografiaCuaderno.serif(
-                      color: esquema.onSurface,
-                      tamano: TipografiaCuaderno.tamano17,
-                      peso: TipografiaCuaderno.pesoMedio,
-                    ),
+    final contenido = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  sitSpot.nombre,
+                  style: TipografiaCuaderno.serif(
+                    color: esquema.onSurface,
+                    tamano: TipografiaCuaderno.tamano17,
+                    peso: TipografiaCuaderno.pesoMedio,
                   ),
                 ),
               ),
-              if (alJubilar != null)
-                PopupMenuButton<String>(
-                  tooltip: 'opciones del sit spot',
-                  icon: const Icon(Icons.more_vert),
-                  onSelected: (valor) {
-                    if (valor == 'jubilar') alJubilar!();
-                  },
-                  itemBuilder: (_) => const [
-                    PopupMenuItem<String>(
-                      value: 'jubilar',
-                      child: Text('jubilar este sit spot'),
-                    ),
-                  ],
-                ),
-            ],
+            ),
+            if (alJubilar != null)
+              PopupMenuButton<String>(
+                tooltip: 'opciones del sit spot',
+                icon: const Icon(Icons.more_vert),
+                onSelected: (valor) {
+                  if (valor == 'jubilar') alJubilar!();
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem<String>(
+                    value: 'jubilar',
+                    child: Text('jubilar este sit spot'),
+                  ),
+                ],
+              ),
+          ],
+        ),
+        if (sitSpot.dondeNombre.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 0, right: 8),
+            child: Text(
+              sitSpot.dondeNombre,
+              style: TipografiaCuaderno.serif(
+                color: PaletaCuaderno.tintaTenue,
+                tamano: TipografiaCuaderno.tamano13,
+                altoLinea: 1.4,
+              ),
+            ),
           ),
-          if (sitSpot.dondeNombre.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 0, right: 8),
-              child: Text(
-                sitSpot.dondeNombre,
-                style: TipografiaCuaderno.serif(
-                  color: PaletaCuaderno.tintaTenue,
-                  tamano: TipografiaCuaderno.tamano13,
-                  altoLinea: 1.4,
-                ),
-              ),
-            ),
-          ],
-          if (sitSpot.ultimaVisita != null) ...[
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.only(left: 0, right: 8),
-              child: Text(
-                textos.sitSpotUltimaVisita(
-                  _formatearHace(sitSpot.ultimaVisita!),
-                ),
-                style: TipografiaCuaderno.sans(
-                  color: esquema.tertiary,
-                  tamano: TipografiaCuaderno.tamano12,
-                ),
-              ),
-            ),
-          ],
         ],
+        if (sitSpot.ultimaVisita != null) ...[
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(left: 0, right: 8),
+            child: Text(
+              textos.sitSpotUltimaVisita(
+                _formatearHace(sitSpot.ultimaVisita!),
+              ),
+              style: TipografiaCuaderno.sans(
+                color: esquema.tertiary,
+                tamano: TipografiaCuaderno.tamano12,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+
+    return Material(
+      color: esquema.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 16),
+          child: contenido,
+        ),
       ),
     );
   }

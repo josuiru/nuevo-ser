@@ -17,10 +17,12 @@ import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
+import '../pantalla_observacion/pantalla_detalle_observacion.dart';
 import '../pantalla_observacion/pantalla_observacion.dart';
 import '../pantalla_observaciones/pantalla_lista_observaciones.dart';
 import '../pantalla_profesor/pantalla_login_profesor.dart';
 import '../pantalla_sit_spot/pantalla_crear_sit_spot.dart';
+import '../pantalla_sit_spot/pantalla_pagina_sit_spot.dart';
 import '../pantalla_tutor/pantalla_tutor.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
@@ -231,6 +233,8 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               alJubilarSitSpot: _jubilarSitSpot,
               alAbrirListaObservaciones: _abrirListaObservaciones,
               alAbrirMisterio: _abrirPaginaMisterio,
+              alAbrirPaginaSitSpot: _abrirPaginaSitSpot,
+              alAbrirDetalleObservacion: _abrirDetalleObservacion,
             ),
             _VistaProximamente(textos: textos),
             _VistaMisterios(
@@ -386,6 +390,35 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
     }
   }
 
+  Future<void> _abrirPaginaSitSpot() async {
+    final sitSpot = widget.estado.sitSpot;
+    if (sitSpot == null) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaPaginaSitSpot(
+          repositorio: widget.repositorio,
+          sitSpot: sitSpot,
+          alAbrirNuevaObservacion: _abrirNuevaObservacion,
+        ),
+      ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
+  Future<void> _abrirDetalleObservacion(Observacion observacion) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaDetalleObservacion(
+          repositorio: widget.repositorio,
+          observacion: observacion,
+          almacenadorMedios: widget.almacenadorMedios,
+        ),
+      ),
+    );
+  }
+
   Future<void> _abrirAjustes() async {
     final repoIdioma = widget.repoIdioma!;
     final locale = widget.locale!;
@@ -439,6 +472,8 @@ class _VistaCuaderno extends StatelessWidget {
     required this.alJubilarSitSpot,
     required this.alAbrirListaObservaciones,
     required this.alAbrirMisterio,
+    required this.alAbrirPaginaSitSpot,
+    required this.alAbrirDetalleObservacion,
   });
 
   final EstadoCuaderno estado;
@@ -448,6 +483,8 @@ class _VistaCuaderno extends StatelessWidget {
   final VoidCallback alJubilarSitSpot;
   final VoidCallback alAbrirListaObservaciones;
   final void Function(Misterio misterio) alAbrirMisterio;
+  final VoidCallback alAbrirPaginaSitSpot;
+  final void Function(Observacion observacion) alAbrirDetalleObservacion;
 
   @override
   Widget build(BuildContext context) {
@@ -485,6 +522,8 @@ class _VistaCuaderno extends StatelessWidget {
             TarjetaSitSpot(
               sitSpot: estado.sitSpot,
               alPulsarInvitacion: estado.sitSpot == null ? alCrearSitSpot : null,
+              alPulsarActivo:
+                  estado.sitSpot == null ? null : alAbrirPaginaSitSpot,
               alJubilar: estado.sitSpot == null ? null : alJubilarSitSpot,
             ),
             const SizedBox(height: 24),
@@ -510,7 +549,10 @@ class _VistaCuaderno extends StatelessWidget {
             const SizedBox(height: 16),
             _Cabecera(textos.seccionUltimaPagina),
             const SizedBox(height: 8),
-            SeccionUltimaPagina(observacion: estado.ultimaObservacion),
+            SeccionUltimaPagina(
+              observacion: estado.ultimaObservacion,
+              alPulsar: alAbrirDetalleObservacion,
+            ),
             if (estado.ultimasObservaciones.isNotEmpty) ...[
               const SizedBox(height: 8),
               Align(

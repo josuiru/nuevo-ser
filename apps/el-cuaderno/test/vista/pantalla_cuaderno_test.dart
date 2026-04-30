@@ -272,4 +272,38 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'pulsar la tarjeta del sit spot activo abre PantallaPaginaSitSpot',
+    (tester) async {
+      await bombearPantalla(tester);
+      // El home muestra la tarjeta del sit spot sembrado.
+      expect(find.text('El Roble Grande'), findsWidgets);
+      // Pulsamos en el nombre del sit spot (la tarjeta entera es
+      // pulsable; el InkWell propaga el tap).
+      await tester.tap(find.text('El Roble Grande').first);
+      await tester.pumpAndSettle();
+
+      // En la página del sit spot aparece la cabecera "Activo desde".
+      expect(find.textContaining('Activo desde'), findsOneWidget);
+      expect(find.text('anotar observación aquí'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'pulsar la última página del home abre PantallaDetalleObservacion',
+    (tester) async {
+      await bombearPantalla(tester);
+      // El seed tiene como última observación "Tres pájaros pequeños
+      // marrones..." — destacada en SeccionUltimaPagina.
+      final ultima = find.textContaining('Tres pájaros pequeños marrones');
+      expect(ultima, findsOneWidget);
+      await tester.tap(ultima);
+      await tester.pumpAndSettle();
+
+      // La pantalla de detalle abre con "Página del cuaderno" en el
+      // AppBar.
+      expect(find.text('Página del cuaderno'), findsOneWidget);
+    },
+  );
 }

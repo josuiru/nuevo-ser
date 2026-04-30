@@ -18,9 +18,15 @@ class SeccionUltimaPagina extends StatelessWidget {
   const SeccionUltimaPagina({
     super.key,
     required this.observacion,
+    this.alPulsar,
   });
 
   final Observacion? observacion;
+
+  /// Callback que el home cabla a `PantallaDetalleObservacion`. Si es
+  /// null o no hay observación destacada, la tarjeta no es pulsable —
+  /// modo lectura para tests aislados.
+  final void Function(Observacion observacion)? alPulsar;
 
   @override
   Widget build(BuildContext context) {
@@ -47,43 +53,51 @@ class SeccionUltimaPagina extends StatelessWidget {
     }
 
     final obs = observacion!;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: esquema.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: esquema.outline, width: 0.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    final contenido = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _cabecera(obs),
+          style: TipografiaCuaderno.sans(
+            color: esquema.tertiary,
+            tamano: TipografiaCuaderno.tamano12,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          obs.queVio,
+          style: TipografiaCuaderno.serif(
+            color: esquema.onSurface,
+            tamano: TipografiaCuaderno.tamano14,
+            altoLinea: 1.5,
+          ),
+        ),
+        if (obs.creesQueEs != null) ...[
+          const SizedBox(height: 8),
           Text(
-            _cabecera(obs),
+            '${obs.creesQueEs} · ${obs.confianza.toLocaleLabel(textos.localeName)}',
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            obs.queVio,
-            style: TipografiaCuaderno.serif(
-              color: esquema.onSurface,
-              tamano: TipografiaCuaderno.tamano14,
-              altoLinea: 1.5,
-            ),
-          ),
-          if (obs.creesQueEs != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              '${obs.creesQueEs} · ${obs.confianza.toLocaleLabel(textos.localeName)}',
-              style: TipografiaCuaderno.sans(
-                color: esquema.tertiary,
-                tamano: TipografiaCuaderno.tamano12,
-              ),
-            ),
-          ],
         ],
+      ],
+    );
+
+    return Material(
+      color: esquema.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar == null ? null : () => alPulsar!(obs),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: contenido,
+        ),
       ),
     );
   }
