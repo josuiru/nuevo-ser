@@ -14,6 +14,7 @@ import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
 import 'package:las_versiones/vista/pantalla_cuaderno.dart';
 import 'package:las_versiones/vista/pantalla_esqueleto.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_1.dart';
+import 'package:las_versiones/vista/pantalla_mosaico_arco_2.dart';
 
 void main() {
   setUp(() {
@@ -763,6 +764,167 @@ void main() {
     expect(find.byKey(const ValueKey('1.2.fin')), findsOneWidget,
         reason: 'la 1.2.fin requiere brecha_1_2_completada y se dispara '
             'antes que 1.B.1 (que también la requiere)');
+  });
+
+  testWidgets(
+      'Arco 2 completado (cierre de 2.4.8) y Mosaico M2 NO entregado → '
+      'orquestador muestra la PantallaMosaicoArco2 antes del esqueleto '
+      '(reemplazando el provisional F2-8 que F2-11 retiró)', (tester) async {
+    // Mismo seed que el escenario "salta al esqueleto" pero **sin**
+    // el flag `mosaico_arco_2_entregado` ni los flags de cinemáticas
+    // post-entrega (M2.entrega, 2.Z.1, 2.Z.2). El orquestador debe
+    // mostrar la `PantallaMosaicoArco2` porque
+    // `arco_2_estacion_4_cerrada` está activo y
+    // `mosaico_arco_2_entregado` no.
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+      'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+      'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+      'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_estacion_4_cerrada': true,
+      // mosaico_arco_2_entregado NO está → la `PantallaMosaicoArco2`
+      // debe aparecer antes del esqueleto (y antes de la cinemática
+      // M2.entrega, que requiere ese flag).
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaMosaicoArco2), findsOneWidget,
+        reason: 'el Mosaico M2 debe aparecer al cerrar el Arco 2');
+    expect(find.byType(PantallaEsqueleto), findsNothing);
+    expect(find.byType(PantallaCinematica), findsNothing,
+        reason: 'la cinemática M2.entrega requiere mosaico_arco_2_entregado, '
+            'que aún no está activo');
+  });
+
+  testWidgets(
+      'tras entregar el Mosaico M2 (mosaico_arco_2_entregado activo, '
+      'cinemática M2.entrega NO vista todavía) el orquestador despacha '
+      'la cinemática M2.entrega antes del esqueleto', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'nuevoser.lasversiones.idioma_app': 'es',
+      'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+      'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+      'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_completado': true,
+      'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+      'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
+      'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+      'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+      'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+      'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+      'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+      'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+      'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+      'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+      'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+      'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+      'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
+      'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+      'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+      'nuevoser.lasversiones.flag.arco_2_estacion_4_cerrada': true,
+      // M2 ya entregado, pero cinemática M2.entrega NO vista todavía.
+      'nuevoser.lasversiones.flag.mosaico_arco_2_entregado': true,
+    });
+
+    await tester.pumpWidget(crearApp());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaCinematica), findsOneWidget);
+    expect(find.byKey(const ValueKey('M2.entrega')), findsOneWidget);
+    expect(find.byType(PantallaMosaicoArco2), findsNothing,
+        reason: 'el Mosaico M2 ya está entregado — no vuelve a aparecer');
+    expect(find.byType(PantallaEsqueleto), findsNothing,
+        reason: 'la cinemática post-entrega va antes que el esqueleto');
   });
 
   test('clave de prefs del idioma sigue el namespace '

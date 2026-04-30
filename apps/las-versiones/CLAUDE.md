@@ -98,11 +98,12 @@ apps/las-versiones/
     ├── main.dart            # arranque + Orquestador (5 estados: configuración, brecha, cinemática, mosaico, esqueleto)
     ├── dominio/
     │   ├── brecha.dart                # modelo Brecha + FaseBrecha
-    │   ├── catalogo_brechas.dart      # 4 Brechas (1.1–1.4) con sus fuentes diegéticas + afirmaciones canónicas calibradas
+    │   ├── catalogo_brechas.dart      # 8 Brechas (1.1–1.4 + 2.1–2.4) con sus fuentes diegéticas + afirmaciones canónicas calibradas
     │   ├── escenas_arco_1.dart        # 23 cinemáticas (1.0.1 a 1.Z) cubriendo el arco entero
-    │   ├── escenas_arco_2.dart        # esqueleto Arco 2 — sólo apertura 2.0.1 implementada
+    │   ├── escenas_arco_2.dart        # 34 cinemáticas (2.0.1 a 2.Z.2) cubriendo el Arco 2 entero
     │   ├── cuaderno.dart              # catálogo de entradas
     │   ├── mosaico_arco_1.dart        # Mosaico v2: 8 viñetas pre-descritas + código de confianza por viñeta
+    │   ├── mosaico_arco_2.dart        # Mosaico audio-guía: 8 fragmentos pre-escritos + código de confianza por fragmento
     │   ├── evaluador_preguntas.dart   # criterio algorítmico PR.01/PR.02
     │   ├── evaluacion_fuente.dart     # tipo (primaria/secundaria) + 5 sesgos
     │   └── calibracion.dart           # thin wrapper hacia EvaluadorCalibracion del core
@@ -126,12 +127,13 @@ apps/las-versiones/
         ├── fase_evaluacion.dart                 # F6.3
         ├── fase_reconstruccion.dart             # F6.4 (calibración Brier)
         ├── fase_concilio.dart                   # F6.5 (feedback)
-        ├── pantalla_mosaico_arco_1.dart         # F8 — entrega creativa de fin de arco
+        ├── pantalla_mosaico_arco_1.dart         # F8 — cómic de 8 viñetas, fin de Arco 1
+        ├── pantalla_mosaico_arco_2.dart         # F2-11 — audio-guía de 8 fragmentos, fin de Arco 2
         ├── pantalla_cuaderno.dart               # listado de entradas registradas
         └── pantalla_esqueleto.dart              # post-MVP, "el Archivo abre pronto"
 ```
 
-380 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
+382 tests verde, analyzer limpio. Stack: shared_preferences + StatefulWidget + CustomPainter (sin Flame/Isar/Riverpod aún — siguen pospuestos hasta tener razón real, según el principio del README de `nuevo_ser_core`).
 
 **Cableado al companion (P2)**. `lib/datos/sincronizador_mosaico.dart` archiva el Mosaico v2 en `POST /companion/mosaicos` con `game_id='las-versiones'` (sembrado en `ns_games` por el plugin WP v0.9.0). El sincronizador es opt-in y silencioso: tras pulsar ENTREGAR, el orquestador (`_alEntregarMosaicoArco1`) llama al sincronizador en segundo plano sin bloquear la cinemática 1.M1.entrega. Sin token JWT → `SyncMosaicoSinToken` sin tocar red. Las cinco rutas (sin token, 201, 500, timeout, socket) están cubiertas por tests con `MockClient`. La URL base sigue provisional (`https://nuevoser.example.org`) hasta que cierre la decisión del dominio definitivo.
 
@@ -156,13 +158,13 @@ apps/las-versiones/
 **Sustituciones diegéticas activas**: todo el contenido histórico concreto del guion canónico (autoría de Pío Beltrán, dataciones C14, siglos del edificio del Archivo) está sustituido por formulación genérica que preserva la pedagogía sin afirmar lo no validado. Las 5 fuentes de la Brecha 1.1 son **explícitamente ficticias y diegéticas**. Registro completo en `BLOQUEOS-PENDIENTES.md` por si el comité asesor (doc 16) valida y permite revertir.
 
 **Pendiente** (orden tentativo, sin compromiso de fechas):
-1. Validación humana del comité asesor sobre el contenido del Arco 1 — tracker entradas en `BLOQUEOS-PENDIENTES.md`. Las sustituciones diegéticas residuales (PIO-BELTRAN, EDIFICIO-ARCHIVO, ARALAR-DATACIONES, manos→grabados en 1.Z) se revierten cuando el comité valide.
-2. Resto del Arco 2 (Pompaelo, doc 08): 33 cinemáticas pendientes, 4 Brechas, Mosaico M2 ("audio-guía"). Hoy sólo está la apertura 2.0.1.
-3. P2/P4 reales del motor adaptativo en `nuevo_ser_core` — pospuesto en F7 porque requiere extender `SessionPayload` con metadata por intento.
-4. Pantalla de login para alimentar `RepositorioCuentaBackend` con el token JWT real (mismo bloqueante que para el-cuaderno y uno-roto). Hasta entonces el sincronizador del Mosaico se queda en `SyncMosaicoSinToken`.
+1. Validación humana del comité asesor sobre el contenido de los Arcos 1 y 2 — tracker entradas en `BLOQUEOS-PENDIENTES.md`. Sustituciones diegéticas residuales del Arco 1: PIO-BELTRAN, EDIFICIO-ARCHIVO, ARALAR-DATACIONES, manos→grabados en 1.Z. Sustituciones residuales del Arco 2: yacimiento vascón del norte sin nombre histórico (Brecha 2.4 + cinemática 2.4.3), familia Cornelia + domus subterránea ficticias (Brecha 2.3), inscripción de Licinio + dossier de paralelos epigráficos como modelo literario (Brecha 2.1), dossier arqueológico de Calahorra + arqueóloga local sin nombre (Brecha 2.2). Cuando el comité valide se revierten las sustituciones individualmente.
+2. **Arco 3 — La forja del reino** (doc 09 pendiente de cargar a sesión): no implementado. Es el siguiente arco del juego, anunciado al cerrar la 2.Z.2.
+3. P2/P4 reales del motor adaptativo en `nuevo_ser_core` — pospuesto en F7 porque requiere extender `SessionPayload` con metadata por intento. P4 ya funcional via `EvaluadorCalibracion` (Brier multiclass) — lo usan las 8 Brechas del MVP. P2 sigue stub; HF.10 *detección de omisiones* hace su debut jugable encarnado en P4 (Brechas 2.2/2.3/2.4) hasta que P2 entre.
+4. Pantalla de login para alimentar `RepositorioCuentaBackend` con el token JWT real (mismo bloqueante que para el-cuaderno y uno-roto). Hasta entonces los sincronizadores de los dos Mosaicos (M1 y M2) se quedan en `SyncMosaicoSinToken`.
 5. Decidir si Las Versiones tiene multi-perfil desde el inicio (`GestorPerfiles`) o llega después.
-6. Sistema de cinemáticas — probablemente extraerlo a `nuevo_ser_core/narrative/` cuando lo abordemos, ya que va a ser el primer caso de uso real para esa extracción (uno-roto lo tiene cableado a `voz_personaje` específica del juego, ver README de core §"Deuda de extracción pendiente").
-7. Cerrar paleta visual del juego contra doc 11 (apuntado en BLOQUEOS) — los tonos del código de confianza del Mosaico v2 (azul Sólido / ámbar Probable / rojo claro Disputado) son provisionales hasta este cierre.
+6. Sistema de cinemáticas — probablemente extraerlo a `nuevo_ser_core/narrative/` cuando lo abordemos, ya que va a ser el primer caso de uso real para esa extracción (uno-roto lo tiene cableado a `voz_personaje` específica del juego, ver README de core §"Deuda de extracción pendiente"). Las Versiones tiene 57 cinemáticas (23 del Arco 1 + 34 del Arco 2) — caso de uso ya muy concreto para informar la extracción.
+7. Cerrar paleta visual del juego contra doc 11 (apuntado en BLOQUEOS) — los tonos del código de confianza de los Mosaicos M1 y M2 (azul Sólido / ámbar Probable / rojo claro Disputado) son provisionales hasta este cierre.
 
 ## Decisiones técnicas tomadas
 

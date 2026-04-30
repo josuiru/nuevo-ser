@@ -203,7 +203,7 @@ class _PantallaMosaicoArco2State extends State<PantallaMosaicoArco2> {
 
   String _textoContador(int cantidadMarcadas) {
     final total = MosaicoArco2.fragmentos.length;
-    final minimo = MosaicoArco2.minimoFragmentosMarcadosParaEntregar;
+    const minimo = MosaicoArco2.minimoFragmentosMarcadosParaEntregar;
     if (cantidadMarcadas < minimo) {
       final faltan = minimo - cantidadMarcadas;
       return '$cantidadMarcadas de $total marcados — faltan $faltan para '
@@ -240,9 +240,7 @@ class _CartaFragmento extends StatelessWidget {
         decoration: BoxDecoration(
           color: PaletaArchivo.fondoMedio.withOpacity(0.55),
           border: Border.all(
-            color: color != null
-                ? color
-                : PaletaArchivo.ambarLacre.withOpacity(0.4),
+            color: color ?? PaletaArchivo.ambarLacre.withOpacity(0.4),
             width: color != null ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(6),
