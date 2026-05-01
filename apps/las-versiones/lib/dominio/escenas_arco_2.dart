@@ -326,7 +326,13 @@ class EscenasArco2 {
   /// 2.1.1 — *Bajar al sótano*. Continúa de 2.0.1. Galería técnica
   /// bajo la calle Curia, plataforma con luces dirigidas, restos de
   /// pavimento romano. Maren entra por primera vez en la Pompelo
-  /// subterránea. Doc 08 §2.1.1.
+  /// subterránea. Doc 08 §2.1.1 (tras la sustitución
+  /// POMPAELO-INSCRIPCION validada en v0.3): la pieza sobre la mesa
+  /// es el **ara funeraria de Aelio Attiano** — material real
+  /// publicado por García-Barberena/Unzu/Velaza en *Epigraphica* 76
+  /// (2014). Hallada reutilizada como sillar en la cimentación de
+  /// una torre semicircular de la muralla bajoimperial (calle
+  /// Merced, excavaciones de 2004-2005).
   static const EscenaCinematica bajarAlSotano = EscenaCinematica(
     id: '2.1.1',
     titulo: 'Bajar al sótano',
@@ -346,7 +352,7 @@ class EscenasArco2 {
         textoLectura:
             'Una galería estrecha, baja, con un techo de bóveda romana '
             'en parte. Bombillas tenues. Olor a piedra húmeda. Bajan '
-            'cuarenta metros.',
+            'despacio durante cuarenta metros.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
@@ -358,12 +364,13 @@ class EscenasArco2 {
         texto: 'Con el foro municipal. Lo que queda.',
       ),
       PlanoAmbiente(
-        duracion: Duration(seconds: 4),
+        duracion: Duration(seconds: 5),
         textoLectura:
             'La galería se abre a un espacio más amplio. Plataforma '
             'técnica con luces dirigidas. Restos de pavimento, basa de '
             'columna, fragmentos de muro. Una zona acotada con cinta '
-            'amarilla.',
+            'amarilla. Sobre una mesa de trabajo de madera, una pieza '
+            'de piedra arenisca cubierta parcialmente con una tela.',
       ),
       PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Bienvenida a Pompelo.'),
       PlanoAmbiente(
@@ -400,60 +407,127 @@ class EscenasArco2 {
         duracion: Duration(seconds: 2),
         textoLectura: 'Maren sonríe pequeñísimo.',
       ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Y antes era Pompaelo, ¿no?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Pompelo, mejor. La epigrafía oficial dice Pompelo. '
+            'Pompaelo aparece después, en el Itinerario de Antonino. '
+            'La forma original parece ser Pompelo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1500),
+        textoLectura: 'Maren asiente.',
+      ),
       PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Mira esto.'),
       PlanoAmbiente(
-        duracion: Duration(seconds: 4),
+        duracion: Duration(seconds: 5),
         textoLectura:
-            'Le señala un fragmento de mármol contra la pared. Una '
-            'inscripción. Letras grabadas, fragmento de unos cuarenta '
-            'centímetros, líneas incompletas.',
+            'Le señala la pieza sobre la mesa. Aparta la tela. Es un '
+            'ara — un altar pequeño rectangular en piedra arenisca, '
+            'con corona moldurada en lo alto. Tiene aproximadamente '
+            'medio metro de alto. Está rota en dos partes pero las '
+            'piezas encajan.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto: 'Esa es tu Brecha de hoy.',
       ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tiene texto. Por dos lados.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sí.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿De dónde viene?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Calle Merced. Excavaciones de 2004 y 2005. Estaba '
+            'reutilizada como sillar en la cimentación de una torre '
+            'semicircular de la muralla.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren se acerca. Mira sin tocar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué es?',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Un ara funeraria.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Hablarás con Karim hoy. Él es lo más cercano a un '
+            'epigrafista que tenemos.',
+      ),
     ],
   );
 
-  /// 2.1.2 — *La inscripción*. Maren se acerca al fragmento. Karim
-  /// (epigrafista del Archivo, 47 años) se presenta como mentor de la
-  /// estación. Doc 08 §2.1.2.
+  /// 2.1.2 — *Las dos caras*. Maren se acerca al ara. Las luces
+  /// dirigidas iluminan dos caras contiguas con inscripciones de
+  /// distinto tamaño. Karim (epigrafista del Archivo, 47 años) se
+  /// presenta como mentor de la estación. Doc 08 §2.1.2 v0.3.
   ///
-  /// La inscripción literal es **ficticia y diegética** — el doc 08
-  /// inventa el fragmento como pieza didáctica del juego, no es
-  /// epígrafe arqueológico real. El texto preserva la estructura
-  /// canónica de las honoríficas romanas (HF.07 enseña por
-  /// reconocimiento de patrón) sin afirmar nada concreto.
+  /// El texto literal del ara reproduce la transcripción de
+  /// García-Barberena/Unzu/Velaza, *Epigraphica* 76 (2014). Cara A:
+  /// `· D · M · S ·` (Dis Manibus Sacrum, fórmula funeraria estándar
+  /// del s. I). Cara B: 6 líneas dedicadas a Aelio Attiano por su
+  /// padre homónimo, paleografía del s. III, con el error
+  /// gramatical en línea 5 (dativo donde debería ir nominativo) que
+  /// es el núcleo pedagógico de la Estación.
   static const EscenaCinematica laInscripcion = EscenaCinematica(
     id: '2.1.2',
-    titulo: 'La inscripción',
+    titulo: 'Las dos caras',
     flagDeSalida: 'escena_2_1_2_vista',
     flagsRequeridos: {'escena_2_1_1_vista'},
     ambiente: AmbienteArchivo.pompeloSubterranea,
     planos: [
       PlanoAmbiente(
-        duracion: Duration(seconds: 4),
+        duracion: Duration(seconds: 5),
         textoLectura:
-            'Maren se acerca. La inscripción se ve ahora con detalle. '
-            'Letras capitales romanas. Tres líneas conservadas, parte '
-            'de una cuarta.',
+            'Maren se acerca al ara. Las luces dirigidas iluminan dos '
+            'caras contiguas del cubo. En una, una sola línea breve. '
+            'En la otra contigua, un texto más largo en seis líneas, '
+            'con erosiones notables en los bordes derechos.',
       ),
-      // El texto literal de la inscripción se muestra como bloque
-      // de lectura — sin atribución. Aprende a leer "lo que está y
-      // lo que no" (HF.07 + capítulo de Karim en 2.1.3).
       PlanoAmbiente(
-        duracion: Duration(seconds: 6),
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Cara A:',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: '· D · M · S ·',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Cara B:',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
         textoLectura:
-            '...VS · LICINIO · CO[ ]\n'
-            'PRINCIPI · OPTIMO · DE[ ]\n'
-            '...VR · DEDICAVIT · EX · V[ ]\n'
-            '[ ] · BENE · MERENT[ ]',
+            '   D · M\n'
+            '   [A]elio Att[i]-\n'
+            '   ano BNFO\n'
+            '   ann(orum) XX+[--]\n'
+            '   [A]elio Attia[n]-\n'
+            '   o ex ro(gatu) po[s(uit)]',
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Maren la mira en silencio.',
+        textoLectura: 'Maren las mira en silencio.',
       ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No la entiendo.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No la entiendo bien.'),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto: 'No tienes que entenderla todavía.',
@@ -471,17 +545,18 @@ class EscenasArco2 {
         duracion: Duration(seconds: 4),
         textoLectura:
             'Detrás de ellas se oye un paso. Karim aparece en la '
-            'galería. Chaqueta gris, libreta en una mano, una linterna '
-            'en la otra.',
+            'galería. 47 años, chaqueta gris, libreta en una mano, '
+            'una linterna pequeña en la otra.',
       ),
       PlanoDialogo(voz: VozPersonaje.karim, texto: 'Buenos días.'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Hola.'),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Isaura me dijo que tu primera Brecha romana iba a ser una '
-            'inscripción. Yo soy lo más cercano a un epigrafista que '
-            'tenemos. Voy a estar contigo hoy.',
+            'Isaura me dijo que tu primera Brecha romana iba a ser un '
+            'ara funeraria con dos textos. Que te enfrentaras a algo '
+            'difícil de entrada. Yo soy lo más cercano a un '
+            'epigrafista que tenemos. Voy a estar contigo hoy.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
@@ -495,7 +570,7 @@ class EscenasArco2 {
         duracion: Duration(seconds: 3),
         textoLectura:
             'Isaura asiente y se va. Maren y Karim se quedan solos '
-            'delante de la inscripción.',
+            'delante del ara.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
@@ -509,16 +584,23 @@ class EscenasArco2 {
     ],
   );
 
-  /// 2.1.3 — *Karim enseña epigrafía*. Convenciones epigráficas
-  /// como subhabilidad de HF.07. Karim explica que el texto está
-  /// abreviado, codificado y roto, y que las inscripciones
-  /// honoríficas tienen estructura previsible. Doc 08 §2.1.3.
+  /// 2.1.3 — *Karim enseña epigrafía*. Karim explica las
+  /// convenciones epigráficas básicas, identifica la cara A como
+  /// fórmula funeraria estándar (DMS = *Dis Manibus Sacrum*), data
+  /// las dos caras por paleografía (cara A s. I d.C., cara B s. III
+  /// d.C.) y plantea las tres hipótesis canónicas para el desfase
+  /// cronológico de doscientos años entre las dos caras del mismo
+  /// cubo. Después lee la cara B con el difunto Aelio Attiano (29-42
+  /// años, joven adulto) y el dedicante (su padre homónimo) y
+  /// articula el error gramatical de la línea 5 — el dedicante en
+  /// dativo donde debería ir en nominativo. Doc 08 §2.1.3 v0.3.
   ///
-  /// Las afirmaciones histórico-epigráficas concretas (princeps
-  /// optimus → asociado a Trajano → s. II) se conservan tal como
-  /// las plantea el doc — el propio texto incluye que **Probable,
-  /// no Sólido**, lo cual encarna la pedagogía del juego. Anotado
-  /// en `BLOQUEOS-PENDIENTES.md` para validación del comité.
+  /// HF.07 (lectura de fuentes en lengua original) + HF.09
+  /// (detección de sesgo del productor: el error escapa al control
+  /// del dedicante). Las tres hipótesis del desfase cronológico y el
+  /// par hecho/causa del error del lapicida son las dos
+  /// calibraciones dobles que sostienen la pedagogía Brier P4 del
+  /// catálogo `CatalogoBrechas.brecha21`.
   static const EscenaCinematica karimEnsenaEpigrafia = EscenaCinematica(
     id: '2.1.3',
     titulo: 'Karim enseña epigrafía',
@@ -553,71 +635,255 @@ class EscenasArco2 {
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Karim le señala las líneas.',
+        textoLectura: 'Karim le señala la cara A primero.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Ésta es una inscripción honorífica. Lo sé porque tiene '
-            'estructura de honorífica: nombre del honrado, su cargo y '
-            'rango, identidad del dedicante, motivo de la dedicación.',
+            'Empezamos por aquí. D punto M punto S. Tres letras, tres '
+            'puntos.',
       ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Abreviaturas?'),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'VS LICINIO. Algo Licinio. Un romano de la familia de los '
-            'Licinios. CO[...]. Probablemente consul — cónsul.',
-      ),
-      PlanoDialogo(
-        voz: VozPersonaje.karim,
-        texto:
-            'PRINCIPI OPTIMO — al óptimo príncipe. DE[...] — algo más '
-            'que falta. DEDICAVIT EX V[...] — dedicó ex... '
-            'probablemente ex voto. BENE MERENT[...] — al que bien lo '
-            'merece, frase de fin.',
+            'Dis Manibus Sacrum. Consagrado a los Dioses Manes. Es la '
+            'fórmula estándar de las inscripciones funerarias romanas. '
+            'Casi todas empiezan así.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: '¿Princeps optimus es un emperador?',
+        texto: 'Entonces ya sé que es funeraria.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Lo es. Es un epíteto que empezó a usarse para Trajano. Si '
-            'el "princeps optimus" es Trajano, esto es del s. II.',
+            'Sólo con eso, sí. Esta es una inscripción funeraria '
+            'romana. Ahora cuándo se hizo, eso es otra historia.',
       ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Lo sabemos seguro?'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Karim le pasa la linterna y le señala la cara B.',
+      ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'No. Sabemos que el epíteto se usó después también. Pero '
-            '"princeps optimus" sin más adornos en una honorífica es '
-            'altamente compatible con época trajanea.',
+            'Mira los detalles aquí. El módulo de las letras. La '
+            'forma. La E con tendencia cursiva, casi como una epsilon '
+            'griega. La L con esa apertura. ¿Ves la diferencia con la '
+            'cara A?',
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: 'O sea Probable, no Sólido.',
-        pausaPrevia: Duration(milliseconds: 700),
+        texto:
+            'La A es más rígida, más cuadrada. La B es más suelta.',
+        pausaPrevia: Duration(milliseconds: 800),
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
-        texto: 'Bien.',
+        texto:
+            'Bien. La paleografía de la cara A apunta al s. I d.C. La '
+            'cara B al s. III d.C.',
       ),
-      // Voz del Cuaderno durante el trabajo. Sin atribución de
-      // personaje — viene de la propia Cronista.
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Pero están en la misma piedra.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Doscientos años entre las dos caras de un mismo cubo.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cómo?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Esa es la pregunta que te vas a llevar hoy. Tres '
+            'hipótesis posibles. Te las anoto.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            '1. La cara A se grabó completa con DMS y el resto se '
+            'pintó debajo con pigmento. El pigmento se perdió. '
+            'Después, cuando pasó el tiempo y la pintura desapareció, '
+            'la pieza se reutilizó grabando texto nuevo en la cara '
+            'contigua.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            '2. El ara fue preparada por una officina epigraphica '
+            '— un taller — con DMS ya grabado, lista para vender a '
+            'quien la necesitara. Estuvo sin comprador hasta el s. '
+            'III, cuando alguien la usó.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            '3. El ara fue desechada por un defecto en la letra S de '
+            'la cara A — algunos lapicidas creen ver un abombamiento '
+            'que la haría imperfecta. Se reusó después.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Ninguna de las tres está confirmada. Las tres son '
+            'plausibles. Vas a tener que sostener la incertidumbre.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Karim ahora va a la cara B con detalle.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'D M. Lo mismo. Dis Manibus. Aelio Attiano. Algo Aelio '
+            'Attiano. Dativo. Es a quién va dedicada. BNFO. ¿Ves esto?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'No es ortodoxo. La fórmula podría ser bono filio — al '
+            'buen hijo. O bene merenti — al que bien lo merece. '
+            'Discusión académica abierta.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Annorum y un número. Las letras posteriores se han '
+            'perdido pero hay espacio entre veintinueve y cuarenta y '
+            'dos. Joven o adulto joven, no anciano.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1500),
+        textoLectura: 'Maren apunta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Y aquí — atención — la línea cinco repite.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1500),
+        textoLectura: 'Le señala.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Aelio Attiano. Otra vez. El mismo nombre.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Por qué?',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Porque es el nombre del padre. Pero está mal escrito.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cómo mal?'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Está en dativo. El padre que dedicó la piedra debería '
+            'estar en nominativo — porque es el sujeto de "dedicó". '
+            'Pero el lapicida lo puso en dativo. Igual que el difunto.',
+      ),
+      PlanoAmbiente(duracion: Duration(seconds: 2)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Es un error.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Eso me confunde.',
+        pausaPrevia: Duration(milliseconds: 1100),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'A mí también, las primeras veces. Pero los errores en '
+            'epigrafía son importantes. Porque te dicen algo que el '
+            'texto correcto no te diría.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué me dice un error?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Te dice que alguien hizo esto. Y que ese alguien tenía '
+            'limitaciones. ¿Distracción? ¿Escaso dominio del latín en '
+            'un taller local? ¿Apuro? La pieza no salió de una '
+            'fábrica industrial — salió de manos humanas con '
+            'limitaciones.',
+      ),
+      PlanoAmbiente(duracion: Duration(seconds: 2)),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'La traducción consensuada del texto, con la corrección '
+            'del error, es:',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'A los Dioses Manes. A Elio Attiano, su buen hijo, de '
+            'treinta (y tantos) años de edad, lo dedicó (el monumento) '
+            'Elio Attiano, de acuerdo con su ruego.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'El padre y el hijo se llaman igual.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Y el padre dedicó la piedra al hijo muerto.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Pausa larga. Maren mira el ara. Karim no la interrumpe.',
+      ),
       PlanoDialogo(
         voz: VozPersonaje.vozDeFuente,
         texto:
-            'Las inscripciones tienen plantilla. Como un certificado '
-            'moderno. Si conoces la plantilla, lees lo que no está '
-            'escrito.',
-        pausaPrevia: Duration(milliseconds: 1200),
+            'Aelio Attiano. El padre. Aelio Attiano. El hijo. '
+            'Veintinueve, treinta, cuarenta años — no llegó a viejo.',
+        pausaPrevia: Duration(milliseconds: 1000),
       ),
       PlanoDialogo(
         voz: VozPersonaje.vozDeFuente,
         texto:
-            'Eso me parece extraño. Estoy leyendo lo que no está. '
-            '¿Cómo distingo lo que falta de lo que invento?',
+            'El padre escribió mal su propio nombre en su propia '
+            'piedra. O el lapicida que pagó lo escribió mal. O nunca '
+            'lo había escrito antes y no sabía hacerlo bien.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Eso me toca. La piedra no es perfecta. La piedra está '
+            'hecha por alguien con limitaciones. Y alguien la encargó '
+            'cuando se le murió un hijo.',
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
@@ -630,17 +896,39 @@ class EscenasArco2 {
             'importante.',
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cuál?'),
-      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Quién pagó esto.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Esta piedra no estaba donde fue hecha cuando la '
+            'encontraron.',
+      ),
     ],
   );
 
-  /// 2.1.4 — *Quién pagó esto*. HF.07 + HF.09 (detección de sesgo
-  /// del productor) + PR.02 (formulación de preguntas de profundidad).
-  /// Karim guía a Maren a la pregunta clave de la fuente romana:
-  /// no qué dice, sino quién pagó por que se diga. Doc 08 §2.1.4.
+  /// 2.1.4 — *Dónde apareció*. Karim explica el contexto del
+  /// hallazgo: el ara fue reutilizada como sillar en la cimentación
+  /// de una torre semicircular de la muralla bajoimperial (calle
+  /// Merced, año 2004), junto a otras dos aras y dos estelas.
+  /// Datación de la muralla: finales s. III - principios s. IV,
+  /// periodo de mucha inestabilidad. Maren articula que esto parece
+  /// una falta de respeto y Karim sostiene la incertidumbre sobre la
+  /// familia ("Pueden haber estado y no haber tenido voz. Pueden no
+  /// haber estado ya. Pueden haber consentido. La piedra no nos lo
+  /// dice."). Línea pedagógica nuclear: una inscripción no es
+  /// documento neutral, es propaganda en el sentido amplio. Pero el
+  /// error gramatical del lapicida es **información que escapa a la
+  /// propaganda** — el padre no eligió que el lapicida se
+  /// equivocara. Doc 08 §2.1.4 v0.3.
+  ///
+  /// HF.07 + HF.09 (detección de sesgo del productor) + CC.05
+  /// (causalidad histórica) + PR.02 (formulación de preguntas de
+  /// profundidad). Mantiene `flagDeSalida: 'escena_2_1_4_vista'`,
+  /// pero el flag de disparo de la Brecha jugable
+  /// `inscripcion_romana_estudiada` (que F2-10a introdujo) sigue
+  /// activándose al cierre de esta cinemática.
   static const EscenaCinematica quienPagoEsto = EscenaCinematica(
     id: '2.1.4',
-    titulo: 'Quién pagó esto',
+    titulo: 'Dónde apareció',
     flagDeSalida: 'escena_2_1_4_vista',
     flagsRequeridos: {'escena_2_1_3_vista'},
     ambiente: AmbienteArchivo.mesaTrabajoArchivo,
@@ -648,59 +936,99 @@ class EscenasArco2 {
       PlanoAmbiente(
         duracion: Duration(seconds: 3),
         textoLectura:
-            'Karim se sienta en una caja vieja de fragmentos. Maren se '
-            'sienta enfrente.',
+            'Karim se sienta en una caja vieja de fragmentos. Maren '
+            'se sienta enfrente.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Las inscripciones honoríficas no se pagaban solas. Alguien '
-            'las encargaba. Alguien quería que esto estuviera escrito '
-            'en piedra. Y alguien — quizá el mismo, quizá otro — pagaba '
-            'el coste material.',
-      ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cómo lo sé?'),
-      PlanoDialogo(
-        voz: VozPersonaje.karim,
-        texto:
-            'Por la línea perdida. DEDICAVIT EX V[...]. Dedicó por... '
-            'es la fórmula. Lo que falta es el nombre del dedicante. '
-            'Sin el nombre del dedicante, no sabes quién pagó.',
+            'El ara fue hallada como sillar de la muralla '
+            'bajoimperial. Calle Merced, año 2004. Estaba en la '
+            'cimentación de una torre semicircular, junto a otras dos '
+            'aras y dos estelas.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: '¿Y sabemos algo del dedicante por otra vía?',
-        pausaPrevia: Duration(milliseconds: 700),
+        texto: '¿Cuándo se construyó esa muralla?',
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Sólo que respetaba mucho a Licinio el cónsul para hacerle '
-            'una honorífica en piedra. Pudo ser un cliente, un liberto, '
-            'un colega, un familiar. Pudo ser la propia ciudad de '
-            'Pompelo a través de su senado local. Cada hipótesis '
-            'cambia lo que la inscripción significa.',
+            'Finales del s. III, principios del s. IV. Periodo de '
+            'mucha inestabilidad.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: 'Si la pagó la ciudad, es propaganda institucional.',
+        texto:
+            'La piedra es del s. III. La muralla se hizo a finales '
+            'del s. III. Entonces la piedra...',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'No estuvo mucho tiempo en la necrópolis donde fue hecha.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'O sea, alguien enterró a Aelio Attiano. Su padre encargó '
+            'esta piedra, mal escrita, para honrar al hijo muerto. La '
+            'piedra estuvo en la necrópolis quizá unos años, quizá '
+            'unas décadas.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Posiblemente.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Y después la arrancaron. Para poner la piedra en una '
+            'muralla.',
       ),
       PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
+      PlanoAmbiente(duracion: Duration(seconds: 2)),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: 'Si la pagó un cliente o un liberto, es propaganda personal.',
-      ),
-      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sí.'),
-      PlanoDialogo(
-        voz: VozPersonaje.maren,
-        texto: '¿Y cómo se distingue?',
-        pausaPrevia: Duration(milliseconds: 600),
+        texto: 'Eso parece una falta de respeto.',
+        pausaPrevia: Duration(milliseconds: 1100),
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'A veces no se puede. Te quedas con varias hipótesis y '
-            'declaras tu nivel de confianza con honestidad.',
+            'Lo es. Hoy lo vemos así. Pero hay que entender el '
+            'contexto.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué contexto?'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Crisis. La muralla se construyó deprisa porque había '
+            'inestabilidad — invasiones, conflictos, nadie sabía qué '
+            'venía. Cuando hay urgencia, los ladrillos vienen de donde '
+            'sea. Incluso de los monumentos a tus muertos.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Eso lo decidió la ciudad?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'La ciudad o quien dirigía la construcción de la muralla. '
+            'No lo sabemos exactamente. Sabemos que pasó.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y la familia de Aelio Attiano? ¿Ya no estaba?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Tampoco lo sabemos. Pueden haber estado y no haber tenido '
+            'voz. Pueden no haber estado ya. Pueden haber consentido. '
+            'La piedra no nos lo dice.',
+        pausaPrevia: Duration(milliseconds: 800),
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
@@ -710,116 +1038,75 @@ class EscenasArco2 {
         voz: VozPersonaje.karim,
         texto: 'Una cosa más. Y es importante.',
       ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
-      // Línea pedagógica nuclear de la Estación 2.1.
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Sí?'),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Una inscripción no es un documento neutral. Es propaganda. '
-            'Lo que está escrito en piedra está escrito porque alguien '
-            'quería que durara y que la gente lo viera. Eso no significa '
-            'que mienta — pero significa que selecciona. Lo que no le '
-            'interesaba al dedicante no aparece. Lo que sí le interesaba '
-            'aparece exagerado.',
+            'Una inscripción no es un documento neutral. Es propaganda '
+            'en el sentido amplio — está hecha porque alguien quería '
+            'que durara y que la gente la viera. Un padre que enterró '
+            'a un hijo encargó esta piedra para que el dolor durara '
+            'en piedra, no en memoria personal. Eso no significa que '
+            'mienta — pero significa que selecciona. La piedra no nos '
+            'cuenta cómo era Aelio Attiano. Nos cuenta cómo el padre '
+            'quería recordarlo. Buen hijo. Treinta años. De acuerdo '
+            'con su ruego. Tres frases. El resto se ha perdido o '
+            'nunca estuvo.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: 'Como una valla publicitaria moderna.',
+        texto: 'Y el error.',
+        pausaPrevia: Duration(milliseconds: 1000),
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
-        texto: 'Más caro y más duradero. Pero sí.',
-      ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura:
-            'Karim se levanta. "Te dejo trabajar. Vuelvo en una hora a '
-            'ver tu reconstrucción. Si te atascas, sube y me preguntas."',
-      ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
-      // La fase jugable de Reconstrucción de la Estación 2.1
-      // (declarar 6 afirmaciones con niveles de confianza sobre la
-      // inscripción) está pendiente — requiere refactor del modelo
-      // FaseBrecha o pantalla específica nueva. Anotado en
-      // BLOQUEOS-PENDIENTES.md.
-      PlanoAmbiente(
-        duracion: Duration(seconds: 4),
-        textoLectura:
-            'Maren se queda con la inscripción y la Mesa de Trabajo. '
-            'Trabaja una hora. Su reconstrucción produce 6 afirmaciones: '
-            '1 Sólida, 3 Probables, 2 Disputadas. Karim vuelve.',
-      ),
-      PlanoDialogo(
-        voz: VozPersonaje.karim,
-        texto: 'A ver.',
-      ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura:
-            'Maren le pasa la reconstrucción. Karim la lee. Asiente '
-            'despacio.',
-      ),
-      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Una pregunta.'),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
-      PlanoDialogo(
-        voz: VozPersonaje.karim,
-        texto:
-            'Has marcado Probable la datación trajanea. ¿Qué te haría '
-            'declararla Sólido?',
+        texto: '¿Qué del error?',
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
         texto:
-            'Una corroboración independiente. Si supiéramos que ese '
-            'Licinio cónsul fue contemporáneo de Trajano, tendría '
-            'datación cruzada.',
-        pausaPrevia: Duration(milliseconds: 700),
-      ),
-      PlanoDialogo(
-        voz: VozPersonaje.karim,
-        texto: '¿Has buscado los Licinios cónsules?',
-        pausaPrevia: Duration(milliseconds: 600),
-      ),
-      PlanoDialogo(
-        voz: VozPersonaje.maren,
-        texto: 'No. No se me ocurrió.',
-        pausaPrevia: Duration(milliseconds: 700),
-      ),
-      PlanoDialogo(voz: VozPersonaje.karim, texto: 'La PIR.'),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿La qué?'),
-      PlanoDialogo(
-        voz: VozPersonaje.karim,
-        texto:
-            'Prosopographia Imperii Romani. Es un repertorio de '
-            'personas conocidas del Imperio. Los cónsules están todos. '
-            'Si el cognomen perdido lo identifica, puedes buscarlo.',
+            'El error nos dice algo que el padre no eligió. El padre '
+            'no eligió que el lapicida se equivocara. El error está '
+            'ahí en contra de la voluntad de quien encargó. Eso es '
+            'información que no es propaganda.',
+        pausaPrevia: Duration(milliseconds: 800),
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Maren lo apunta.',
+        textoLectura: 'Karim sonríe pequeño.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.karim,
         texto:
-            'Mañana tienes deberes. Buscas los Licinios cónsules de '
-            'época trajanea. Si encuentras uno que encaje, vuelves con '
-            'tu reconstrucción mejorada. Si no encuentras ninguno '
-            'claro, vuelves con tu reconstrucción tal cual y declarando '
-            'los límites.',
+            'Eso lo digo yo a estudiantes universitarios y muchos no '
+            'lo ven. Lo has dicho tú al primer día.',
       ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
       PlanoDialogo(
         voz: VozPersonaje.karim,
-        texto: 'Bienvenida a la epigrafía.',
-        pausaPrevia: Duration(milliseconds: 800),
+        texto:
+            'Te dejo trabajar. Vuelvo en una hora a ver tu '
+            'reconstrucción. Si te atascas, sube y me preguntas.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Karim se va. Maren se queda con el ara y la Mesa de '
+            'Trabajo.',
       ),
     ],
   );
 
   /// 2.1.5 — *Reconstrucción y Concilio*. Dos días después. Maren
-  /// presenta su reconstrucción mejorada con la búsqueda en la PIR.
-  /// Aitor revisa técnico, Begoña hace la pregunta de fondo
-  /// ("¿por qué Pompelo y no Roma?"). Doc 08 §2.1.5.
+  /// presenta su reconstrucción de 8 afirmaciones del ara de Aelio
+  /// Attiano. Aitor le hace preguntas técnicas. Begoña hace dos
+  /// preguntas: por qué la piedra apareció en la muralla y no en la
+  /// necrópolis (causalidad histórica + crisis del s. III) y por
+  /// qué le ha dado importancia al error del lapicida (información
+  /// que escapa a la propaganda). Karim asiente desde su sitio
+  /// durante tres segundos largos. Begoña lo nota: "¿Te has portado
+  /// bien?" / "No demasiado. Pero ella sí." Doc 08 §2.1.5 v0.3.
   ///
   /// **Precondición desde F2-10a**: requiere `brecha_2_1_completada`
   /// (en lugar del previo `escena_2_1_4_vista`). La Brecha 2.1
@@ -841,23 +1128,23 @@ class EscenasArco2 {
         textoLectura:
             'Dos días después. Salón del Concilio. Begoña, Isaura, '
             'Karim y Aitor sentados a la mesa larga. Maren entra con '
-            'su reconstrucción mejorada — encontró candidatos para el '
-            '"Licinio cónsul" en la PIR; dos posibilidades, una más '
-            'probable que otra. Su confianza en la datación trajanea '
-            'sube de Probable a Probable-alto. Mantiene Disputado lo '
-            'que no se puede determinar.',
+            'su reconstrucción — 8 afirmaciones distribuidas entre '
+            'niveles de confianza, con dos pares de calibración doble: '
+            'el error del lapicida (Sólido en el hecho, Disputado en '
+            'la causa) y la reutilización en muralla (Sólido en el '
+            'hecho, Probable en el contexto de inestabilidad).',
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 3),
         textoLectura:
-            'Aitor le hace preguntas técnicas sobre las dos '
-            'candidaturas. Maren las defiende con cautela.',
+            'Aitor le hace preguntas técnicas. Maren las defiende '
+            'con cautela.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.begona,
         texto:
-            '¿Por qué crees que esta inscripción está aquí en Pompelo '
-            'y no en Roma?',
+            '¿Por qué crees que esta piedra apareció en la muralla y '
+            'no en la necrópolis donde fue hecha?',
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 3),
@@ -866,42 +1153,97 @@ class EscenasArco2 {
       PlanoDialogo(
         voz: VozPersonaje.maren,
         texto:
-            'No lo sé bien. Pompelo era ciudad importante de la zona '
-            'pero no era de las grandes. Que un cónsul tuviera '
-            'honorífica aquí significa que tenía algún vínculo con la '
-            'ciudad. O que su familia tenía vínculos con élites '
-            'locales.',
-        pausaPrevia: Duration(milliseconds: 800),
+            'La construcción de la muralla bajoimperial de Pompelo '
+            'coincide con un periodo de crisis e inestabilidad. La '
+            'construcción fue urgente. Los materiales se trajeron de '
+            'donde había. La necrópolis estaba cerca y aún tenía '
+            'piedras. La descontextualización del ara nos dice algo '
+            'sobre el contexto, no sobre Aelio Attiano: nos dice que '
+            'en ese momento — finales del s. III, comienzos del s. IV '
+            '— la dignidad funeraria valía menos que la urgencia '
+            'defensiva.',
+        pausaPrevia: Duration(milliseconds: 1000),
       ),
-      PlanoDialogo(
-        voz: VozPersonaje.begona,
-        texto: '¿Lo declaras?',
-      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
       PlanoDialogo(
         voz: VozPersonaje.maren,
         texto:
-            'Lo declaro Disputado. No tengo evidencia para ninguna de '
-            'las dos hipótesis.',
-        pausaPrevia: Duration(milliseconds: 700),
+            'No sé si eso es una conclusión universal. Puede que la '
+            'muralla se haya construido con piedras tomadas con prisa '
+            'incluso en periodos no críticos — porque era barato. '
+            'Pero el conjunto de evidencias del s. III navarro apunta '
+            'a crisis. Lo declaro Probable.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.begona,
         texto: 'Bien.',
-        pausaPrevia: Duration(milliseconds: 600),
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(voz: VozPersonaje.begona, texto: 'Y otra cosa.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'El error del lapicida. ¿Por qué le has dado importancia?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque Karim me preguntó qué me dice un error. Y respondí '
+            'que el error nos dice algo que el dedicante no eligió. Y '
+            'eso me parece importante metodológicamente. Una '
+            'inscripción es propaganda en el sentido de que selecciona, '
+            'sí. Pero un error es información que escapa a la '
+            'propaganda. El productor humano deja huellas que el '
+            'dedicante no controlaba.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(duracion: Duration(seconds: 2)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'En esta pieza, el productor — el lapicida — quizá tenía '
+            'poco latín. Eso es información sobre Pompelo en el s. '
+            'III: una ciudad que ya no produce sus inscripciones con '
+            'un latín perfecto. La romanización lingüística no era '
+            'completa, o estaba retrocediendo. La piedra nos lo dice '
+            'a través del error.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Bien.',
+        pausaPrevia: Duration(milliseconds: 800),
       ),
       PlanoAmbiente(
         duracion: Duration(seconds: 4),
         textoLectura:
-            'Concilio cierra. Sellada con dos Probable revisables. '
-            'Karim asiente con respeto.',
+            'Karim asiente desde su sitio. No dice nada. Pero su '
+            'asentimiento dura tres segundos largos. Begoña lo nota.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: '¿Te has portado bien?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'No demasiado. Pero ella sí.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Concilio cierra. Sellada con los niveles de confianza '
+            'declarados. Karim hace una inclinación de cabeza a Maren.',
       ),
     ],
   );
 
   /// 2.1.6 — *El primer apunte de Pompelo*. Esa noche, voz del
-  /// Cuaderno. Cierre de la Estación 2.1 con la lección que más
-  /// le ha tocado: "una inscripción no es un documento neutral".
-  /// Doc 08 §2.1.6.
+  /// Cuaderno. Cierre de la Estación 2.1 con las dos lecciones
+  /// articuladas en el Concilio: "una inscripción no es un
+  /// documento neutral, es propaganda" + "un error en una
+  /// inscripción es información que escapa a la propaganda. Las
+  /// piedras no son sólo lo que el dedicante eligió. Son también lo
+  /// que escapó a su elección." Doc 08 §2.1.6 v0.3.
   static const EscenaCinematica primerApunteDePompelo = EscenaCinematica(
     id: '2.1.6',
     titulo: 'El primer apunte de Pompelo',
@@ -920,8 +1262,8 @@ class EscenasArco2 {
         voz: VozPersonaje.vozDeFuente,
         texto:
             'La diferencia entre Aralar y Pompelo es que en Aralar yo '
-            'no entendía el silencio y en Pompelo no entiendo lo que '
-            'se ha dicho.',
+            'no entendía el silencio y en Pompelo no entiendo bien lo '
+            'que se ha dicho.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.vozDeFuente,
@@ -933,6 +1275,31 @@ class EscenasArco2 {
       PlanoDialogo(
         voz: VozPersonaje.vozDeFuente,
         texto: 'Eso lo voy a apuntar en grande.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Pero también pensé otra cosa hoy. Que un error en una '
+            'inscripción es información que escapa a la propaganda. '
+            'El padre de Aelio Attiano quería honrar a su hijo. '
+            'Eligió las palabras. Pagó al lapicida. El lapicida '
+            'cometió un error. El error está ahí en contra de la '
+            'voluntad del padre. Y el error me dice algo del Pompelo '
+            'del s. III — que el latín no era ya tan firme, que los '
+            'talleres tenían limitaciones.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Las piedras no son sólo lo que el dedicante eligió. Son '
+            'también lo que escapó a su elección.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Eso también va en grande.',
         pausaPrevia: Duration(milliseconds: 700),
       ),
       PlanoCierreAmable(textoBoton: 'CERRAR EL CUADERNO'),
