@@ -317,4 +317,34 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// cafetería del casco viejo de Iruña ya en uso desde el Arco 1).
   static const AmbienteArchivo cafeteriaCascoViejoTudela =
       AmbienteArchivo._('cafeteria_casco_viejo_tudela');
+
+  /// Coche de Marina — su Polo viejo, más pequeño que el C4 de
+  /// Aitor o el coche de Isaura. Marina conduce con una mano,
+  /// música pop española de fondo a volumen bajo. Lugar de la
+  /// 3.3.1 (camino a Leyre con Marina contando la leyenda de
+  /// Virila mientras conduce).
+  static const AmbienteArchivo cocheMarina =
+      AmbienteArchivo._('coche_marina');
+
+  /// Monasterio de San Salvador de Leyre — al pie de la sierra de
+  /// Leyre, frente al embalse de Yesa. Modesto por fuera, sólido,
+  /// encajado en el paisaje. Cripta románica del s. XI con
+  /// capiteles tallados y columnas robustas — lo más antiguo
+  /// conservado. Iglesia superior algo posterior. Aquí
+  /// descansaron los restos de los reyes de Pamplona Sancho I,
+  /// García Sánchez I, Sancho II y García Sánchez II durante
+  /// siglos. Lugar de la 3.3.2 (entrada al monasterio) y de la
+  /// 3.3.4 (sala cedida para la Mesa de Trabajo).
+  static const AmbienteArchivo monasterioLeyre =
+      AmbienteArchivo._('monasterio_leyre');
+
+  /// Scriptorium reconstituido en una sala del monasterio de
+  /// Leyre — los códices originales están en archivos, pero hay
+  /// reproducciones de los manuscritos del s. XI-XIII donde
+  /// aparece por primera vez documentada la leyenda del abad
+  /// Virila (en un códice del s. XIII). Lugar de la 3.3.3, donde
+  /// un monje del monasterio actual les enseña las
+  /// reproducciones a Maren y a Marina.
+  static const AmbienteArchivo scriptoriumLeyre =
+      AmbienteArchivo._('scriptorium_leyre');
 }

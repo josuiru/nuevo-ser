@@ -57,6 +57,13 @@ class EscenasArco3 {
     reconstruccionYConcilioBanuQasi,
     elSilencioDeMaren,
     teTratoBien,
+    caminoALeyre,
+    elMonasterio,
+    laLeyendaDeVirila,
+    cuandoSeEscribio,
+    concilioLeyre,
+    laLeyendaNoMienteDesplaza,
+    naiaPreguntaOtraVez,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -116,6 +123,28 @@ class EscenasArco3 {
     },
     'escena_3_b_1_vista': {
       'isaura_supo_de_tasio',
+    },
+    'escena_3_3_1_vista': {
+      'leyenda_virila_oida',
+      'viaje_a_leyre_iniciado',
+    },
+    'escena_3_3_2_vista': {
+      'monasterio_leyre_visitado',
+    },
+    'escena_3_3_3_vista': {
+      'leyenda_virila_documentada_aprendida',
+    },
+    'escena_3_3_4_vista': {
+      'leyenda_virila_estudiada',
+    },
+    'escena_3_3_5_vista': {
+      'concilio_3_3_cerrado',
+    },
+    'escena_3_3_6_vista': {
+      'arco_3_estacion_3_cerrada',
+    },
+    'escena_3_c_1_vista': {
+      'naia_pregunto_oficio',
     },
   };
 
@@ -1554,6 +1583,518 @@ class EscenasArco3 {
             'Maren asiente. Sale. La cámara se queda con Isaura. '
             'Coge el libro que Maren ha devuelto. No lo mira. Lo deja '
             'sobre la mesa con cuidado. Mira hacia la ventana norte.',
+      ),
+    ],
+  );
+
+  /// 3.3.1 — *Camino a Leyre*. Primeras semanas de abril. Esta vez
+  /// Maren va con Marina en su Polo viejo: coche más pequeño,
+  /// música pop española de fondo a volumen bajo. Marina conduce
+  /// con una mano y come una galleta con la otra. Marina anticipa
+  /// el monasterio (*"feo en plan que no tiene los lujos góticos.
+  /// Pero por dentro la cripta es brutal"*) y le cuenta a Maren la
+  /// leyenda del abad Virila — el abad que se preguntaba qué era
+  /// la eternidad de Dios, salió a pasear por el bosque del
+  /// monasterio, oyó cantar a un pájaro, se sentó a escucharlo y
+  /// cuando volvió al monasterio habían pasado trescientos años.
+  /// Maren responde *"Eso es bonito"* — Marina deja caer un
+  /// *"Pero ya verás"* sin completar la frase. Doc 09 §3.3.1.
+  static const EscenaCinematica caminoALeyre = EscenaCinematica(
+    id: '3.3.1',
+    titulo: 'Camino a Leyre',
+    flagDeSalida: 'escena_3_3_1_vista',
+    flagsRequeridos: {'escena_3_b_1_vista'},
+    ambiente: AmbienteArchivo.cocheMarina,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Esta vez Maren va con Marina. Coche más pequeño, música '
+            'pop española de fondo a volumen bajo. Marina conduce con '
+            'una mano, comiendo una galleta con la otra.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: '¿Has estado en Leyre?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No.'),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Te va a gustar. Es feo en plan que no tiene los lujos '
+            'góticos. Pero por dentro la cripta es brutal.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(voz: VozPersonaje.marina, texto: '¿Sabes la leyenda?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Algo. El abad y un pájaro.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.marina, texto: 'El abad Virila.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Marina cuenta la leyenda mientras conduce.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'El abad Virila se preguntaba qué era la eternidad de '
+            'Dios. Salió un día a pasear por el bosque del '
+            'monasterio. Oyó un pájaro cantar. Se sentó a escucharlo. '
+            'Cuando volvió al monasterio, habían pasado trescientos '
+            'años. Nadie lo conocía. Se murió poco después.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Eso es bonito.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.marina, texto: 'Es bonito.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Pero...?'),
+      PlanoDialogo(voz: VozPersonaje.marina, texto: 'Pero ya verás.'),
+    ],
+  );
+
+  /// 3.3.2 — *El monasterio*. Llegan a Leyre. El monasterio es
+  /// modesto por fuera, sólido, encajado en el paisaje. Detrás la
+  /// sierra; delante el embalse de Yesa. Entran. La cripta románica
+  /// del s. XI es lo más antiguo conservado: capiteles tallados con
+  /// escenas y figuras, columnas robustas. La iglesia superior es
+  /// algo posterior. Marina le cuenta a Maren que aquí descansaron
+  /// los reyes de Pamplona Sancho I, García Sánchez I, Sancho II y
+  /// García Sánchez II — sus restos estuvieron aquí siglos. Maren
+  /// mira la cripta dos minutos en silencio. Marina cierra: *"Tu
+  /// Brecha es la leyenda. La oirás muchas veces si te quedas en el
+  /// oficio. Cada vez con matices distintos."* Doc 09 §3.3.2.
+  static const EscenaCinematica elMonasterio = EscenaCinematica(
+    id: '3.3.2',
+    titulo: 'El monasterio',
+    flagDeSalida: 'escena_3_3_2_vista',
+    flagsRequeridos: {'escena_3_3_1_vista'},
+    ambiente: AmbienteArchivo.monasterioLeyre,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Llegan. El monasterio es modesto por fuera. Sólido. '
+            'Encaja en el paisaje. Detrás, la sierra. Delante, el '
+            'embalse de Yesa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Entran. La cripta románica — del s. XI — es lo más '
+            'antiguo conservado. Capiteles tallados con escenas y '
+            'figuras, columnas robustas. La iglesia superior es algo '
+            'posterior.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto: 'Aquí descansaron los reyes de Pamplona.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Cuáles?'),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Sancho I, García Sánchez I, Sancho II, García Sánchez '
+            'II. Sus restos estuvieron aquí siglos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura: 'Maren mira la cripta. Dos minutos en silencio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.marina,
+        texto:
+            'Tu Brecha es la leyenda. La oirás muchas veces si te '
+            'quedas en el oficio. Cada vez con matices distintos.',
+      ),
+    ],
+  );
+
+  /// 3.3.3 — *La leyenda de Virila*. Scriptorium reconstituido en
+  /// una sala del monasterio (los códices originales están en
+  /// archivos, pero hay reproducciones). Un monje mayor del
+  /// monasterio actual les recibe y les enseña reproducciones de
+  /// códices del s. XI-XIII. La revelación clave: la leyenda de
+  /// Virila aparece por primera vez documentada en un códice del s.
+  /// XIII — al menos cuatro siglos después del Virila histórico que
+  /// aparece en listas de abades de Leyre del s. IX o principios
+  /// del X. Hay menciones en documentación previa a 1200 de un
+  /// abad llamado Virila, pero la leyenda tal como se conoce — los
+  /// trescientos años, el pájaro, el regreso — es del XIII. El
+  /// monje cierra con la pregunta: *"Entonces, ¿qué nos cuenta esta
+  /// leyenda?" / "Esa es la pregunta para vosotras."* Doc 09 §3.3.3.
+  static const EscenaCinematica laLeyendaDeVirila = EscenaCinematica(
+    id: '3.3.3',
+    titulo: 'La leyenda de Virila',
+    flagDeSalida: 'escena_3_3_3_vista',
+    flagsRequeridos: {'escena_3_3_2_vista'},
+    ambiente: AmbienteArchivo.scriptoriumLeyre,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Un monje mayor las recibe. Les enseña reproducciones de '
+            'códices del s. XI-XIII. La leyenda de Virila aparece por '
+            'primera vez documentada en un códice del s. XIII.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.monjeLeyre,
+        texto:
+            'La leyenda dice que Virila fue abad aquí en el s. IX o '
+            'principios del X. Los códices que la cuentan son del '
+            'XIII y posteriores.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cuatro siglos después?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.monjeLeyre, texto: 'Al menos.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿No hay menciones anteriores?',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.monjeLeyre,
+        texto:
+            'En documentación previa a 1200, no. Hay listas de abades '
+            'de Leyre del s. IX y X, y aparece un Virila en una de '
+            'ellas. Pero la leyenda tal como se conoce — los '
+            'trescientos años, el pájaro, el regreso — es del XIII.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren mira la reproducción del códice.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Entonces, ¿qué nos cuenta esta leyenda?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.monjeLeyre,
+        texto: 'Esa es la pregunta para vosotras.',
+      ),
+    ],
+  );
+
+  /// 3.3.4 — *Cuándo se escribió*. Mesa de Trabajo en una sala del
+  /// propio monasterio cedida. PH.10 (la leyenda como fuente
+  /// histórica de su propia época, no de la que cuenta). Maren
+  /// trabaja comparando versiones de la leyenda — la del s. XIII,
+  /// una del s. XV, una del XVII — y estudiando el contexto
+  /// monástico de cada momento de redacción. Voz del Cuaderno
+  /// articulando la lección clave del PH.10: la leyenda no es
+  /// sobre el s. IX, es sobre el s. XIII (Leyre en declive,
+  /// reformas cluniacenses, memoria del esplendor pasado
+  /// perdiéndose); los trescientos años no son los del milagro
+  /// sino los que separan la fundación de Leyre del momento de
+  /// redacción de la leyenda. La Cronista produce 6 afirmaciones
+  /// (3 Sólido + 3 Probable). Doc 09 §3.3.4.
+  static const EscenaCinematica cuandoSeEscribio = EscenaCinematica(
+    id: '3.3.4',
+    titulo: 'Cuándo se escribió',
+    flagDeSalida: 'escena_3_3_4_vista',
+    flagsRequeridos: {'escena_3_3_3_vista'},
+    ambiente: AmbienteArchivo.monasterioLeyre,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren trabaja en una sala cedida del monasterio. Compara '
+            'las distintas versiones de la leyenda — la del s. XIII, '
+            'una del s. XV, una del XVII. Estudia el contexto '
+            'monástico de cada momento de redacción.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'La leyenda se escribe en el s. XIII. ¿Por qué entonces?',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Leyre en el s. XIII estaba en declive. Había perdido su '
+            'importancia política. Los reyes ya no se enterraban aquí. '
+            'La nueva orden cluniacense había reformado la liturgia. '
+            'La memoria del esplendor pasado se estaba perdiendo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La leyenda, vista desde ahí, no es sobre el s. IX. Es '
+            'sobre el s. XIII. Es un monasterio que mira hacia atrás '
+            '300 años — los años desde su fundación — y cuenta una '
+            'historia de un abad que se sentó a escuchar trescientos '
+            'años de eternidad.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Esos trescientos años no son los del milagro. Son los '
+            'que separan la fundación de Leyre del momento de '
+            'redacción de la leyenda.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La leyenda de Virila no cuenta lo que pasó en el s. IX. '
+            'Cuenta cómo Leyre del s. XIII se sentía mirando al s. '
+            'IX.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            'La Cronista produce 6 afirmaciones:\n\n'
+            '1. La leyenda aparece documentada por primera vez en '
+            'códice del s. XIII de Leyre. Sólido.\n'
+            '2. Un abad llamado Virila aparece en listas de abades '
+            'del s. IX de Leyre. Sólido.\n'
+            '3. La conexión entre el Virila histórico y el legendario '
+            'no puede establecerse con certeza. Sólido (la '
+            'incertidumbre).',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 8),
+        textoLectura:
+            '4. La leyenda en su forma plenamente desarrollada es '
+            'producto del contexto monástico del s. XIII en un Leyre '
+            'en declive relativo. Probable.\n'
+            '5. La cifra "trescientos años" coincide aproximadamente '
+            'con el tiempo entre la fundación de Leyre y la redacción '
+            'de la leyenda — probablemente significativo, no casual. '
+            'Probable.\n'
+            '6. La leyenda nos informa más sobre la espiritualidad y '
+            'la auto-percepción del s. XIII que sobre el s. IX. '
+            'Probable.',
+      ),
+    ],
+  );
+
+  /// 3.3.5 — *Concilio* de la Estación 3.3. Una semana después,
+  /// vuelta a Iruña. Salón del Concilio. Aitor (revisor) + Joana +
+  /// Maren. Joana cuestiona la afirmación 5 (coincidencia de
+  /// "trescientos años" entre el milagro y la fundación de Leyre)
+  /// — *"es interpretativa"*. Maren la mantiene como Probable.
+  /// Joana le pide que busque paralelos en otras leyendas
+  /// monásticas con cifras simbólicas vinculadas a fundaciones —
+  /// *"Para Aprendiz III, sí"*. Aitor sella pero apunta que Joana
+  /// tiene razón: dejar la afirmación 5 abierta para revisión
+  /// cuando los paralelos lleguen. Doc 09 §3.3.5.
+  static const EscenaCinematica concilioLeyre = EscenaCinematica(
+    id: '3.3.5',
+    titulo: 'Concilio de Leyre',
+    flagDeSalida: 'escena_3_3_5_vista',
+    flagsRequeridos: {'escena_3_3_4_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Una semana después, vuelta a Iruña. Salón del Concilio. '
+            'Aitor (revisor) y Joana a la mesa. Maren presenta su '
+            'reconstrucción.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'Tu afirmación 5 — la coincidencia de "trescientos años" '
+            '— es interpretativa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí. La declaro Probable.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.joana, texto: '¿Qué te haría Sólida?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Si encontrara explicitada la cifra en el códice como '
+            'referencia a la fundación. O si otras leyendas paralelas '
+            'usaran cifras simbólicas similares vinculadas a '
+            'fundaciones.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto: '¿Has buscado paralelos?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No.'),
+      PlanoDialogo(voz: VozPersonaje.joana, texto: 'Para Aprendiz III, sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Sellada. Pero Joana tiene razón — busca paralelos. '
+            'Déjate la afirmación 5 abierta para revisión cuando los '
+            'tengas.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+    ],
+  );
+
+  /// 3.3.6 — *La leyenda no miente, desplaza*. Esa noche. Voz del
+  /// Cuaderno breve cerrando la Estación con la lección PH.10:
+  /// *"Las leyendas no mienten. Desplazan. Cuentan otra cosa de la
+  /// que parece. Quien las escucha sin entender el desplazamiento
+  /// las toma literales. Quien las entiende ve dos historias a la
+  /// vez: la que dicen y la que ocultan. El abad Virila escuchó un
+  /// pájaro. Pero quien lo cuenta lleva trescientos años escuchando
+  /// el silencio de la grandeza pasada."* Doc 09 §3.3.6.
+  static const EscenaCinematica laLeyendaNoMienteDesplaza = EscenaCinematica(
+    id: '3.3.6',
+    titulo: 'La leyenda no miente, desplaza',
+    flagDeSalida: 'escena_3_3_6_vista',
+    flagsRequeridos: {'escena_3_3_5_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Es de noche. Maren en su mesa, cuaderno abierto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Las leyendas no mienten. Desplazan.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Cuentan otra cosa de la que parece. Quien las escucha '
+            'sin entender el desplazamiento las toma literales. Quien '
+            'las entiende ve dos historias a la vez: la que dicen y '
+            'la que ocultan.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'El abad Virila escuchó un pájaro. Pero quien lo cuenta '
+            'lleva trescientos años escuchando el silencio de la '
+            'grandeza pasada.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.C.1 — *Naia pregunta otra vez*. Latente post-Estación 3.3.
+  /// ~10 días después. Sábado tarde. Habitación de Maren. Naia (8
+  /// años, hermana pequeña) entra sin llamar con un papel doblado
+  /// — ha escrito una pregunta para Maren porque *"si la digo se
+  /// me olvida hacerla bien"*. La pregunta, en letra grande de
+  /// niña: *"Si las leyendas son sobre el momento en que se
+  /// escriben, ¿qué pasa con las películas?"* Naia oyó por
+  /// casualidad la conversación de Maren con Antonio sobre Leyre,
+  /// contó lo del pájaro al cole, y cuando su profesora dijo *"qué
+  /// historia más bonita"* Naia pensó en lo que había oído a su
+  /// hermana. Maren confirma que sí — las películas también son
+  /// sobre el momento en que se hacen, no sobre la época que
+  /// cuentan, casi siempre. Naia agradece y sale. Maren guarda el
+  /// papel dentro del cuaderno. Voz del Cuaderno cierra: *"Mi
+  /// hermana de ocho años acaba de hacerme una pregunta de oficio.
+  /// Voy a guardar el papel toda mi vida."* Doc 09 §3.C.1.
+  static const EscenaCinematica naiaPreguntaOtraVez = EscenaCinematica(
+    id: '3.C.1',
+    titulo: 'Naia pregunta otra vez',
+    flagDeSalida: 'escena_3_c_1_vista',
+    flagsRequeridos: {'arco_3_estacion_3_cerrada'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Sábado tarde. Maren está en su mesa estudiando para un '
+            'examen del instituto. Naia entra sin llamar. Trae un '
+            'papel doblado.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.naia, texto: 'Hola.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Hola.'),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: 'Te he escrito una pregunta.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Por qué escrita?'),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: 'Porque si la digo se me olvida hacerla bien.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Le pasa el papel. Maren lo abre. Letra grande de niña '
+            'de 8 años. La pregunta dice:',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Si las leyendas son sobre el momento en que se escriben, '
+            '¿qué pasa con las películas?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Maren se queda quieta. Quince segundos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Naia. ¿De qué te has enterado tú?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto:
+            'Te oí ayer hablando con aita de Leyre. Conté lo del '
+            'pájaro al cole. Mi profesora dijo "qué historia más '
+            'bonita". Pero yo pensé en lo que te oí decir a ti.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué pensaste?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto:
+            'Que las películas también son sobre el momento en que '
+            'se hacen, ¿no? No sobre la época que cuentan.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Y eso pasa siempre?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Casi siempre.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: 'Vale. Gracias.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Naia sale. Maren se queda con el papel en la mano. Lo '
+            'dobla con cuidado. Lo guarda dentro del cuaderno.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Mi hermana de ocho años acaba de hacerme una pregunta '
+            'de oficio.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Voy a guardar el papel toda mi vida.',
+        pausaPrevia: Duration(milliseconds: 800),
       ),
     ],
   );

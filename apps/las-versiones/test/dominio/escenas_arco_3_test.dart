@@ -431,13 +431,243 @@ void main() {
     );
   });
 
+  group('EscenasArco3.caminoALeyre (3.3.1)', () {
+    test(
+      'precondición = escena_3_b_1_vista — la 3.B.1 (Te trató bien) '
+      'desbloquea el viaje a Leyre',
+      () {
+        expect(
+          EscenasArco3.caminoALeyre.flagsRequeridos,
+          {'escena_3_b_1_vista'},
+        );
+      },
+    );
+
+    test(
+      'el ambiente es cocheMarina — el viaje lo lleva Marina, no '
+      'Aitor (3.2.1) ni Isaura',
+      () {
+        expect(
+          EscenasArco3.caminoALeyre.ambiente,
+          same(AmbienteArchivo.cocheMarina),
+        );
+      },
+    );
+
+    test(
+      'Marina cuenta a Maren la leyenda del abad Virila — los '
+      'trescientos años, el pájaro, el regreso',
+      () {
+        final dialogos = EscenasArco3.caminoALeyre.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Virila'));
+        expect(dialogos, contains('trescientos años'));
+        expect(dialogos, contains('pájaro'));
+      },
+    );
+  });
+
+  group('EscenasArco3.elMonasterio (3.3.2)', () {
+    test('viaja con ambiente monasterioLeyre', () {
+      expect(
+        EscenasArco3.elMonasterio.ambiente,
+        same(AmbienteArchivo.monasterioLeyre),
+      );
+    });
+
+    test(
+      'menciona los cuatro reyes de Pamplona enterrados en Leyre + '
+      'la cripta románica del s. XI',
+      () {
+        final dialogos = EscenasArco3.elMonasterio.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        final acotaciones = EscenasArco3.elMonasterio.planos
+            .whereType<PlanoAmbiente>()
+            .map((p) => p.textoLectura ?? '')
+            .join(' ');
+        expect(dialogos, contains('Sancho I'));
+        expect(dialogos, contains('García Sánchez I'));
+        expect(dialogos, contains('Sancho II'));
+        expect(dialogos, contains('García Sánchez II'));
+        expect(acotaciones, contains('cripta románica'));
+        expect(acotaciones, contains('s. XI'));
+      },
+    );
+  });
+
+  group('EscenasArco3.laLeyendaDeVirila (3.3.3)', () {
+    test('viaja con ambiente scriptoriumLeyre', () {
+      expect(
+        EscenasArco3.laLeyendaDeVirila.ambiente,
+        same(AmbienteArchivo.scriptoriumLeyre),
+      );
+    });
+
+    test(
+      'la voz monjeLeyre articula la revelación clave: leyenda en '
+      'códice del s. XIII, Virila histórico s. IX o principios del X',
+      () {
+        final dialogosMonje = EscenasArco3.laLeyendaDeVirila.planos
+            .whereType<PlanoDialogo>()
+            .where((p) => p.voz == VozPersonaje.monjeLeyre)
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogosMonje, contains('s. IX'));
+        expect(dialogosMonje, contains('XIII'));
+      },
+    );
+
+    test(
+      'cierra con la pregunta abierta del monje "Esa es la pregunta '
+      'para vosotras" — pasaje del oficio',
+      () {
+        final dialogos = EscenasArco3.laLeyendaDeVirila.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Esa es la pregunta para vosotras'));
+      },
+    );
+  });
+
+  group('EscenasArco3.cuandoSeEscribio (3.3.4)', () {
+    test(
+      'la voz del Cuaderno articula la lección PH.10: la leyenda no '
+      'cuenta el s. IX, cuenta cómo Leyre del s. XIII se sentía '
+      'mirando al s. IX',
+      () {
+        final dialogosCuaderno = EscenasArco3.cuandoSeEscribio.planos
+            .whereType<PlanoDialogo>()
+            .where((p) => p.voz == VozPersonaje.vozDeFuente)
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogosCuaderno, contains('declive'));
+        expect(dialogosCuaderno, contains('cluniacense'));
+        expect(
+          dialogosCuaderno,
+          contains('cómo Leyre del s. XIII se sentía'),
+        );
+      },
+    );
+
+    test(
+      'la Cronista produce 6 afirmaciones (3 Sólido + 3 Probable)',
+      () {
+        final acotaciones = EscenasArco3.cuandoSeEscribio.planos
+            .whereType<PlanoAmbiente>()
+            .map((p) => p.textoLectura ?? '')
+            .join(' ');
+        expect(acotaciones, contains('6 afirmaciones'));
+        expect(acotaciones, contains('1.'));
+        expect(acotaciones, contains('6.'));
+      },
+    );
+  });
+
+  group('EscenasArco3.concilioLeyre (3.3.5)', () {
+    test('ambiente = salonConcilio', () {
+      expect(
+        EscenasArco3.concilioLeyre.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test(
+      'Joana cuestiona la afirmación 5 (cifra "trescientos años") '
+      'como interpretativa, Maren la mantiene Probable y Aitor sella',
+      () {
+        final dialogos = EscenasArco3.concilioLeyre.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('interpretativa'));
+        expect(dialogos, contains('Probable'));
+        expect(dialogos, contains('Sellada'));
+        expect(dialogos, contains('paralelos'));
+      },
+    );
+  });
+
+  group('EscenasArco3.laLeyendaNoMienteDesplaza (3.3.6)', () {
+    test(
+      'la voz del Cuaderno cierra con la lección PH.10: las leyendas '
+      'no mienten, desplazan',
+      () {
+        final dialogos = EscenasArco3.laLeyendaNoMienteDesplaza.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Las leyendas no mienten. Desplazan'));
+        expect(dialogos, contains('escuchando el silencio'));
+      },
+    );
+
+    test(
+      'al cerrar la escena se activa arco_3_estacion_3_cerrada — '
+      'desbloquea la 3.C.1 latente con Naia',
+      () {
+        expect(
+          EscenasArco3.flagsDeCierrePorEscena['escena_3_3_6_vista'],
+          contains('arco_3_estacion_3_cerrada'),
+        );
+      },
+    );
+  });
+
+  group('EscenasArco3.naiaPreguntaOtraVez (3.C.1)', () {
+    test(
+      'precondición = arco_3_estacion_3_cerrada — la 3.3.6 lo activa',
+      () {
+        expect(
+          EscenasArco3.naiaPreguntaOtraVez.flagsRequeridos,
+          {'arco_3_estacion_3_cerrada'},
+        );
+      },
+    );
+
+    test(
+      'la voz de Naia plantea la pregunta de oficio que abre PH.10 '
+      'al lenguaje contemporáneo: las películas también son sobre el '
+      'momento en que se hacen',
+      () {
+        final dialogos = EscenasArco3.naiaPreguntaOtraVez.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('películas'));
+        expect(dialogos, contains('momento en que se hacen'));
+      },
+    );
+
+    test(
+      'cierra con el voto de Maren "Voy a guardar el papel toda mi '
+      'vida" — articula el reconocimiento del oficio en su hermana',
+      () {
+        final dialogos = EscenasArco3.naiaPreguntaOtraVez.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(
+          dialogos,
+          contains('hermana de ocho años acaba de hacerme una pregunta'),
+        );
+        expect(dialogos, contains('guardar el papel toda mi vida'));
+      },
+    );
+  });
+
   group('EscenasArco3.todas', () {
     test(
       'catálogo cubre apertura (3.0.x) + Estación 3.1 completa + '
       'latente 3.A.1 + Estación 3.2 completa (3.2.1 a 3.2.8) + '
-      'latente 3.B.1 — 17 cinemáticas implementadas',
+      'latente 3.B.1 + Estación 3.3 completa (3.3.1 a 3.3.6) + '
+      'latente 3.C.1 — 24 cinemáticas implementadas',
       () {
-        expect(EscenasArco3.todas, hasLength(17));
+        expect(EscenasArco3.todas, hasLength(24));
         expect(
           EscenasArco3.todas.map((escena) => escena.id).toList(),
           [
@@ -458,6 +688,13 @@ void main() {
             '3.2.7',
             '3.2.8',
             '3.B.1',
+            '3.3.1',
+            '3.3.2',
+            '3.3.3',
+            '3.3.4',
+            '3.3.5',
+            '3.3.6',
+            '3.C.1',
           ],
         );
       },

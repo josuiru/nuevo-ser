@@ -198,6 +198,19 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.tintaTenue,
   );
 
+  /// **El monje de Leyre** — voz del scriptorium reconstituido del
+  /// monasterio de San Salvador de Leyre (Estación 3.3). El doc 09
+  /// §3.3.3 lo presenta como "un monje mayor" del monasterio actual
+  /// que enseña a Maren las reproducciones de los códices del s.
+  /// XI-XIII, y deliberadamente no le asigna nombre en pantalla.
+  /// Aquí se resuelve con una etiqueta funcional `Monje` simétrica
+  /// al `Arqueólogo`/`Arqueóloga` ya presentes — voz local del
+  /// territorio, no del Archivo. Tinta tenue.
+  static const VozPersonaje monjeLeyre = VozPersonaje._(
+    nombreVisible: 'Monje',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
   /// Voz sin atribución personal, reservada a **fragmentos de fuente
   /// histórica** que el player levanta del manuscrito sin ponerlos en
   /// boca de un personaje del elenco: una cita en latín, una línea
