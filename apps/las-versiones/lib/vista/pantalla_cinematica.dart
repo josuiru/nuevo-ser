@@ -168,6 +168,16 @@ class _PantallaCinematicaState extends State<PantallaCinematica> {
     final plano = _planoActual;
     switch (_fase) {
       case _Fase.pausaPrevia:
+        // Durante un PlanoAmbiente la fase queda en pausaPrevia
+        // mientras corre su Timer; el tap salta el resto del plano.
+        // En la pausa previa de un PlanoDialogo (típicamente <1s) lo
+        // ignoramos para no interrumpir el ritmo del diálogo antes de
+        // que empiece el reveal.
+        if (plano is PlanoAmbiente) {
+          HapticFeedback.selectionClick();
+          _avanzar();
+        }
+        return;
       case _Fase.mostrandoOpciones:
       case _Fase.mostrandoCierreAmable:
         return;
