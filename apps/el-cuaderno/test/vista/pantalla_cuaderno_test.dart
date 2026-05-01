@@ -533,17 +533,26 @@ void main() {
   group('pestaña Mapa', () {
     Widget stubMapa(BuildContext context, DatosMapa datos) {
       // Stub: no monta `FlutterMap`, evita la red. Pinta un Container
-      // con un texto que codifica los datos clave para que los tests
-      // puedan verificar centro y conteo de markers.
+      // con un texto que codifica centro+conteo y un botón pulsable
+      // por marker (con su tooltip como label) — así los tests
+      // verifican el dispatcher de estados y los callbacks `alPulsar`.
       return Container(
         key: const ValueKey('mapa-stub'),
         color: const Color(0xFFEEEEEE),
-        child: Center(
-          child: Text(
-            'mapa: centro=${datos.centroLat.toStringAsFixed(2)},'
-            '${datos.centroLng.toStringAsFixed(2)} '
-            'markers=${datos.markers.length}',
-          ),
+        child: Column(
+          children: [
+            Text(
+              'mapa: centro=${datos.centroLat.toStringAsFixed(2)},'
+              '${datos.centroLng.toStringAsFixed(2)} '
+              'markers=${datos.markers.length}',
+            ),
+            for (var i = 0; i < datos.markers.length; i++)
+              TextButton(
+                key: ValueKey('marker-$i'),
+                onPressed: datos.markers[i].alPulsar,
+                child: Text(datos.markers[i].tooltip ?? 'sin tooltip'),
+              ),
+          ],
         ),
       );
     }
@@ -636,6 +645,80 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byKey(const ValueKey('mapa-stub')), findsOneWidget);
         expect(find.text('mapa: centro=42.81,-1.65 markers=1'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'opt-in ON + tap en marker del sit spot → abre PantallaPaginaSitSpot',
+      (tester) async {
+        repositorio = RepositorioMemoria();
+        await repositorio.establecerSitSpot(SitSpot(
+          id: 'ss-1',
+          nombre: 'El Roble Grande',
+          dondeNombre: 'parque',
+          creadoEn: DateTime(2026, 3, 1),
+          coordenadas: const Coordenadas(lat: 42.81, lng: -1.65),
+        ));
+        estado.dispose();
+        estado = EstadoCuaderno(
+          repositorio: repositorio,
+          proveedorAhora: ahoraPrimavera,
+        );
+        final repoOptIn = crearRepoOptIn();
+        await repoOptIn.activar();
+        await bombearPantalla(
+          tester,
+          repoMapaOnlineOptIn: repoOptIn,
+          constructorMapa: stubMapa,
+        );
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const ValueKey('marker-0')));
+        await tester.pumpAndSettle();
+
+        // PantallaPaginaSitSpot tiene "Activo desde el ..." en cabecera.
+        expect(find.textContaining('Activo desde el'), findsOneWidget);
+        expect(find.text('anotar observación aquí'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'opt-in ON + tap en marker de observación → abre PantallaDetalleObservacion',
+      (tester) async {
+        repositorio = RepositorioMemoria();
+        await repositorio.guardarObservacion(Observacion(
+          id: 'obs-1',
+          cuandoCreada: DateTime(2026, 4, 28),
+          cuandoOcurrio: DateTime(2026, 4, 28),
+          dondeNombre: 'esquina',
+          queVio: 'una flor amarilla rara',
+          confianza: NivelConfianza.hipotesisActiva,
+          dondeCoordenadas: const Coordenadas(lat: 43.26, lng: -2.93),
+        ));
+        estado.dispose();
+        estado = EstadoCuaderno(
+          repositorio: repositorio,
+          proveedorAhora: ahoraPrimavera,
+        );
+        final repoOptIn = crearRepoOptIn();
+        await repoOptIn.activar();
+        await bombearPantalla(
+          tester,
+          repoMapaOnlineOptIn: repoOptIn,
+          constructorMapa: stubMapa,
+        );
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+
+        // Sin sit spot, el primer (y único) marker es la observación.
+        await tester.tap(find.byKey(const ValueKey('marker-0')));
+        await tester.pumpAndSettle();
+
+        // PantallaDetalleObservacion tiene "Página del cuaderno" en
+        // su AppBar.
+        expect(find.text('Página del cuaderno'), findsOneWidget);
+        expect(find.text('una flor amarilla rara'), findsOneWidget);
       },
     );
 

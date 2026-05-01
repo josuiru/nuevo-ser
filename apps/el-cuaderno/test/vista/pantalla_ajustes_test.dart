@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:el_cuaderno/datos/almacenador_medios.dart';
 import 'package:el_cuaderno/datos/cola_sync_observaciones.dart';
+import 'package:el_cuaderno/datos/repositorio_mapa_online_opt_in.dart';
 import 'package:el_cuaderno/datos/repositorio_presentacion_sit_spot.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
@@ -43,6 +44,7 @@ void main() {
     AlmacenadorMedios? almacenadorMedios,
     RepositorioPresentacionSitSpot? repoPresentacionSitSpot,
     VoidCallback? alResetearPresentacionSitSpot,
+    RepositorioMapaOnlineOptIn? repoMapaOnlineOptIn,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
@@ -62,6 +64,7 @@ void main() {
           almacenadorMedios: almacenadorMedios,
           repoPresentacionSitSpot: repoPresentacionSitSpot,
           alResetearPresentacionSitSpot: alResetearPresentacionSitSpot,
+          repoMapaOnlineOptIn: repoMapaOnlineOptIn,
         ),
       ),
     );
@@ -452,6 +455,34 @@ void main() {
 
       expect(await repoPresentacion.cargar(), isFalse);
       expect(resetCalled, 1);
+    },
+  );
+
+  testWidgets(
+    'borrar mi cuaderno también purga el opt-in del mapa online',
+    (tester) async {
+      final repoMapa = RepositorioMapaOnlineOptIn(
+        prefs: SharedPreferences.getInstance,
+      );
+      await repoMapa.activar();
+      expect(await repoMapa.cargar(), isTrue);
+
+      await bombear(tester, repoMapaOnlineOptIn: repoMapa);
+
+      await tester.tap(find.text('Borrar mi cuaderno'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Seguir'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'borrar');
+      await tester.pump();
+      await tester.tap(find.widgetWithText(TextButton, 'Borrar todo'));
+      await tester.pumpAndSettle();
+
+      expect(
+        await repoMapa.cargar(),
+        isFalse,
+        reason: 'el opt-in vuelve a OFF, como en una instalación nueva',
+      );
     },
   );
 }

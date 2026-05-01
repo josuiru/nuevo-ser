@@ -472,6 +472,11 @@ class PantallaAjustes extends StatelessWidget {
     // home tras notificar el reset.
     await repoPresentacionSitSpot?.borrar();
     alResetearPresentacionSitSpot?.call();
+    // El opt-in del mapa online vuelve a OFF — la próxima persona que
+    // use este dispositivo no debería heredar el consentimiento del
+    // adulto anterior, y la pestaña Mapa volverá a mostrar la
+    // microcopia "el mapa está apagado".
+    await repoMapaOnlineOptIn?.borrar();
     if (!context.mounted) return;
     final mensaje = '${textos.ajustesBorradoCompleto} '
         '(${resultado.observacionesBorradas} · '

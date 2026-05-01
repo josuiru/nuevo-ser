@@ -272,6 +272,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               constructorMapa: widget.constructorMapa,
               alAbrirAjustes: puedeAbrirAjustes ? _abrirAjustes : null,
               alAbrirCrearSitSpot: _abrirCrearSitSpot,
+              alAbrirPaginaSitSpot: _abrirPaginaSitSpot,
               alAbrirDetalleObservacion: _abrirDetalleObservacion,
             ),
             _VistaMisterios(
@@ -722,6 +723,7 @@ class _VistaMapa extends StatefulWidget {
     required this.constructorMapa,
     required this.alAbrirAjustes,
     required this.alAbrirCrearSitSpot,
+    required this.alAbrirPaginaSitSpot,
     required this.alAbrirDetalleObservacion,
   });
 
@@ -732,6 +734,7 @@ class _VistaMapa extends StatefulWidget {
       constructorMapa;
   final VoidCallback? alAbrirAjustes;
   final void Function() alAbrirCrearSitSpot;
+  final void Function() alAbrirPaginaSitSpot;
   final void Function(Observacion observacion) alAbrirDetalleObservacion;
 
   @override
@@ -800,6 +803,7 @@ class _EstadoVistaMapa extends State<_VistaMapa> {
               icono: Icons.place,
               color: PaletaCuaderno.tinta,
               tooltip: widget.estado.sitSpot?.nombre,
+              alPulsar: widget.alAbrirPaginaSitSpot,
             ),
           for (final obs in _observacionesConCoords)
             DescriptorMarker(
