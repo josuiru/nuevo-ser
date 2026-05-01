@@ -7,7 +7,9 @@ import 'package:las_versiones/datos/repositorio_cuaderno.dart';
 import 'package:las_versiones/datos/repositorio_estado_brecha.dart';
 import 'package:las_versiones/datos/repositorio_flags_narrativos.dart';
 import 'package:las_versiones/datos/repositorio_mosaico.dart';
+import 'package:las_versiones/datos/reseteo_archivo.dart';
 import 'package:las_versiones/main.dart';
+import 'package:las_versiones/vista/pantalla_ajustes.dart';
 import 'package:las_versiones/vista/pantalla_brecha.dart';
 import 'package:las_versiones/vista/pantalla_cinematica.dart';
 import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
@@ -54,6 +56,10 @@ void main() {
     );
   }
 
+  ReseteoArchivo crearReseteoArchivo() {
+    return const ReseteoArchivo(prefs: SharedPreferences.getInstance);
+  }
+
   AppLasVersiones crearApp() {
     return AppLasVersiones(
       repoIdioma: crearRepoIdioma(),
@@ -62,6 +68,7 @@ void main() {
       repoCuaderno: crearRepoCuaderno(),
       repoMosaico: crearRepoMosaico(),
       repoCuenta: crearRepoCuenta(),
+      reseteoArchivo: crearReseteoArchivo(),
     );
   }
 
@@ -185,6 +192,121 @@ void main() {
   });
 
   testWidgets(
+    'F2-21: desde el esqueleto, AJUSTES → RESETEAR ARCHIVO → SÍ '
+    'borra todas las claves nuevoser.lasversiones.* y devuelve el '
+    'orquestador a la PantallaConfiguracionInicial — escape de '
+    'la prueba real que motivó el slice',
+    (tester) async {
+      // Sembramos el mismo estado "todo cerrado, esqueleto" que el
+      // test anterior, más una clave de un namespace ajeno (uno-roto)
+      // que NO debe borrarse en el reset.
+      SharedPreferences.setMockInitialValues({
+        'nuevoser.lasversiones.idioma_app': 'eu',
+        'nuevoser.lasversiones.flag.escena_1_0_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_0_2_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_1_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_1_2_vista': true,
+        'nuevoser.lasversiones.flag.aralar_dolmen_alcanzado': true,
+        'nuevoser.lasversiones.flag.brecha_1_1_completada': true,
+        'nuevoser.lasversiones.flag.escena_1_1_7_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_a_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_b_vista': true,
+        'nuevoser.lasversiones.flag.arco_1_completado': true,
+        'nuevoser.lasversiones.flag.mosaico_arco_1_entregado': true,
+        'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
+        'nuevoser.lasversiones.flag.escena_1_z_vista': true,
+        'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
+        'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
+        'nuevoser.lasversiones.flag.arco_2_iniciado': true,
+        'nuevoser.lasversiones.flag.escena_2_1_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_1_2_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_1_3_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_1_4_vista': true,
+        'nuevoser.lasversiones.flag.inscripcion_romana_estudiada': true,
+        'nuevoser.lasversiones.flag.brecha_2_1_completada': true,
+        'nuevoser.lasversiones.flag.escena_2_1_5_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_1_6_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_a_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_a_2_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_2_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_2_2_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_2_3_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_2_4_vista': true,
+        'nuevoser.lasversiones.flag.omisiones_quintiliano_estudiadas': true,
+        'nuevoser.lasversiones.flag.brecha_2_2_completada': true,
+        'nuevoser.lasversiones.flag.escena_2_2_5_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_2_6_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_b_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_3_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_3_2_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_3_3_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_3_4_vista': true,
+        'nuevoser.lasversiones.flag.comprender_sin_justificar_aprendido': true,
+        'nuevoser.lasversiones.flag.brecha_2_3_completada': true,
+        'nuevoser.lasversiones.flag.escena_2_3_5_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_3_6_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_c_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_2_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_3_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_4_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_5_vista': true,
+        'nuevoser.lasversiones.flag.silencio_es_dato_aprendido': true,
+        'nuevoser.lasversiones.flag.brecha_2_4_completada': true,
+        'nuevoser.lasversiones.flag.escena_2_4_6_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_7_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_4_8_vista': true,
+        'nuevoser.lasversiones.flag.mosaico_arco_2_entregado': true,
+        'nuevoser.lasversiones.flag.escena_m2_entrega_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_z_1_vista': true,
+        'nuevoser.lasversiones.flag.escena_2_z_2_vista': true,
+        // Clave de un juego hermano del monorepo, no debe borrarse.
+        'uroto.perfil.principal.algun_estado': 'preservado',
+      });
+
+      await tester.pumpWidget(crearApp());
+      await tester.pumpAndSettle();
+      expect(find.byType(PantallaEsqueleto), findsOneWidget,
+          reason: 'precondición: arranque cae en el esqueleto');
+
+      // Pulsa AJUSTES — abre la PantallaAjustes superpuesta.
+      await tester.tap(find.text('AJUSTES'));
+      await tester.pumpAndSettle();
+      expect(find.byType(PantallaAjustes), findsOneWidget);
+
+      // Pulsa RESETEAR ARCHIVO → diálogo confirmación → SÍ, RESETEAR.
+      await tester.tap(find.text('RESETEAR ARCHIVO'));
+      await tester.pumpAndSettle();
+      expect(find.text('¿Resetear el Archivo?'), findsOneWidget);
+      await tester.tap(find.text('SÍ, RESETEAR'));
+      await tester.pumpAndSettle();
+
+      // Tras el reset el orquestador re-despacha a la configuración
+      // inicial (idioma borrado), y el SharedPreferences pierde todas
+      // las claves del namespace pero conserva las ajenas.
+      expect(find.byType(PantallaConfiguracionInicial), findsOneWidget);
+      expect(find.byType(PantallaEsqueleto), findsNothing);
+      expect(find.byType(PantallaAjustes), findsNothing);
+      expect(localeAppLasVersiones.value, isNull,
+          reason: 'el Locale global vuelve a null para que la elección '
+              'de idioma reaparezca');
+
+      final almacen = await SharedPreferences.getInstance();
+      expect(
+        almacen.getKeys().where((k) => k.startsWith('nuevoser.lasversiones.')),
+        isEmpty,
+        reason: 'todas las claves del juego se purgan',
+      );
+      expect(
+        almacen.getString('uroto.perfil.principal.algun_estado'),
+        'preservado',
+        reason: 'las claves de otros namespaces se respetan',
+      );
+    },
+  );
+
+  testWidgets(
       'arranque con cinemática 1.1.2 cerrada y Brecha 1.1 sin completar → '
       'abre la PantallaBrecha en fase formulación', (tester) async {
     SharedPreferences.setMockInitialValues({
@@ -269,6 +391,7 @@ void main() {
       repoCuaderno: crearRepoCuaderno(),
       repoMosaico: crearRepoMosaico(),
       repoCuenta: crearRepoCuenta(),
+      reseteoArchivo: crearReseteoArchivo(),
     ));
     await tester.pumpAndSettle();
 

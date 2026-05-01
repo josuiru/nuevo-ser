@@ -31,11 +31,19 @@ class PantallaEsqueleto extends StatelessWidget {
   /// el dispositivo puede ser compartido con la Cronista.
   final bool sesionIniciada;
 
+  /// Callback opcional para abrir la pantalla de ajustes — superficie
+  /// mínima de escape (resetear el Archivo). Si es `null` no se
+  /// muestra el botón. Se añade en F2-21 después de que una prueba
+  /// real expusiera que la Cronista podía quedarse sin camino para
+  /// volver atrás desde dentro del juego.
+  final VoidCallback? alAbrirAjustes;
+
   const PantallaEsqueleto({
     super.key,
     this.alAbrirCuaderno,
     this.alAbrirSesion,
     this.sesionIniciada = false,
+    this.alAbrirAjustes,
   });
 
   @override
@@ -125,6 +133,27 @@ class PantallaEsqueleto extends StatelessWidget {
                   ),
                   label: Text(
                     sesionIniciada ? 'SESIÓN INICIADA' : 'INICIAR SESIÓN',
+                    style: TextStyle(
+                      fontSize: 11,
+                      letterSpacing: 3,
+                      color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            if (alAbrirAjustes != null)
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: TextButton.icon(
+                  onPressed: alAbrirAjustes,
+                  icon: const Icon(
+                    Icons.settings_outlined,
+                    color: PaletaArchivo.ambarLacre,
+                  ),
+                  label: Text(
+                    'AJUSTES',
                     style: TextStyle(
                       fontSize: 11,
                       letterSpacing: 3,

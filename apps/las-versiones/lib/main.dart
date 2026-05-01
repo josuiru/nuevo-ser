@@ -13,6 +13,7 @@ import 'datos/repositorio_cuaderno.dart';
 import 'datos/repositorio_estado_brecha.dart';
 import 'datos/repositorio_flags_narrativos.dart';
 import 'datos/repositorio_mosaico.dart';
+import 'datos/reseteo_archivo.dart';
 import 'datos/sincronizador_mosaico.dart';
 import 'dominio/brecha.dart';
 import 'dominio/catalogo_brechas.dart';
@@ -23,6 +24,7 @@ import 'dominio/escenas_arco_3.dart';
 import 'dominio/mosaico_arco_1.dart';
 import 'dominio/mosaico_arco_2.dart';
 import 'nucleo/paleta_archivo.dart';
+import 'vista/pantalla_ajustes.dart';
 import 'vista/pantalla_brecha.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
@@ -91,6 +93,14 @@ void main() async {
     claveEmail: _claveEmailBackend,
   );
 
+  // Reset total del Archivo desde la PantallaAjustes. Borra todas las
+  // claves del namespace `nuevoser.lasversiones.*` — cubre cualquier
+  // repositorio del juego que respete la convención sin tener que
+  // listarlos uno a uno.
+  const reseteoArchivo = ReseteoArchivo(
+    prefs: SharedPreferences.getInstance,
+  );
+
   runApp(AppLasVersiones(
     repoIdioma: repoIdioma,
     repoFlags: const RepositorioFlagsNarrativos(),
@@ -98,6 +108,7 @@ void main() async {
     repoCuaderno: const RepositorioCuaderno(),
     repoMosaico: const RepositorioMosaico(),
     repoCuenta: repoCuenta,
+    reseteoArchivo: reseteoArchivo,
   ));
 }
 
@@ -108,6 +119,7 @@ class AppLasVersiones extends StatelessWidget {
   final RepositorioCuaderno repoCuaderno;
   final RepositorioMosaico repoMosaico;
   final RepositorioCuentaBackend repoCuenta;
+  final ReseteoArchivo reseteoArchivo;
 
   const AppLasVersiones({
     super.key,
@@ -117,6 +129,7 @@ class AppLasVersiones extends StatelessWidget {
     required this.repoCuaderno,
     required this.repoMosaico,
     required this.repoCuenta,
+    required this.reseteoArchivo,
   });
 
   @override
@@ -161,6 +174,7 @@ class AppLasVersiones extends StatelessWidget {
             repoCuaderno: repoCuaderno,
             repoMosaico: repoMosaico,
             repoCuenta: repoCuenta,
+            reseteoArchivo: reseteoArchivo,
           ),
         );
       },
@@ -200,6 +214,7 @@ class Orquestador extends StatefulWidget {
   final RepositorioCuaderno repoCuaderno;
   final RepositorioMosaico repoMosaico;
   final RepositorioCuentaBackend repoCuenta;
+  final ReseteoArchivo reseteoArchivo;
 
   const Orquestador({
     super.key,
@@ -209,6 +224,7 @@ class Orquestador extends StatefulWidget {
     required this.repoCuaderno,
     required this.repoMosaico,
     required this.repoCuenta,
+    required this.reseteoArchivo,
   });
 
   @override
@@ -569,6 +585,45 @@ class _OrquestadorState extends State<Orquestador> {
     await widget.repoCuenta.cerrarSesion();
   }
 
+  /// Abre la pantalla de ajustes como ruta superpuesta. La pantalla
+  /// expone el botón de reset y delega en [_resetearArchivo] cuando
+  /// la Cronista confirma. Tras volver de la pantalla recargamos el
+  /// estado completo del orquestador para reflejar lo que haya pasado
+  /// (típicamente: vuelta a la configuración inicial si se reseteó).
+  Future<void> _alAbrirAjustes() async {
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaAjustes(
+          alResetearArchivo: _resetearArchivo,
+        ),
+      ),
+    );
+    if (!mounted) return;
+    setState(() => _cargando = true);
+    await _cargarEstadoInicial();
+  }
+
+  /// Borra todas las claves del namespace del juego y limpia el
+  /// estado en memoria. Tras esto el orquestador re-despacha a la
+  /// `PantallaConfiguracionInicial` igual que en el primer arranque
+  /// del dispositivo. El `Locale` global vuelve a `null` para que la
+  /// elección del idioma reaparezca como decisión real (no quede el
+  /// idioma anterior aplicado al fondo).
+  Future<void> _resetearArchivo() async {
+    await widget.reseteoArchivo.borrarTodo();
+    localeAppLasVersiones.value = null;
+    if (!mounted) return;
+    _flagsActivos = const {};
+    _idiomaElegido = false;
+    _sesionIniciada = false;
+    setState(() {
+      _brechaAbierta = null;
+      _faseBrechaActiva = FaseBrecha.formulacionPreguntas;
+      _escenaEnReproduccion = null;
+    });
+  }
+
   /// Llama al backend, persiste token y email en éxito, y devuelve
   /// `null` o un mensaje de error en castellano para que la
   /// `PantallaLogin` lo enseñe inline. La función NO toca el estado
@@ -647,6 +702,7 @@ class _OrquestadorState extends State<Orquestador> {
       alAbrirCuaderno: _alAbrirCuaderno,
       alAbrirSesion: _alAbrirSesion,
       sesionIniciada: _sesionIniciada,
+      alAbrirAjustes: _alAbrirAjustes,
     );
   }
 }
