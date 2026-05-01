@@ -4558,44 +4558,54 @@ const MisterioIsarSchema = CollectionSchema(
       name: r'abierto',
       type: IsarType.bool,
     ),
-    r'descripcionCorta': PropertySchema(
+    r'cerradoPorNino': PropertySchema(
       id: 1,
+      name: r'cerradoPorNino',
+      type: IsarType.dateTime,
+    ),
+    r'descripcionCorta': PropertySchema(
+      id: 2,
       name: r'descripcionCorta',
       type: IsarType.string,
     ),
     r'estado': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'estado',
       type: IsarType.string,
       enumMap: _MisterioIsarestadoEnumValueMap,
     ),
     r'idDominio': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'idDominio',
       type: IsarType.string,
     ),
     r'observacionesIds': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'observacionesIds',
       type: IsarType.stringList,
     ),
     r'pregunta': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'pregunta',
       type: IsarType.string,
     ),
     r'regions': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'regions',
       type: IsarType.stringList,
     ),
+    r'respuestaDelNino': PropertySchema(
+      id: 8,
+      name: r'respuestaDelNino',
+      type: IsarType.string,
+    ),
     r'retiradoEn': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'retiradoEn',
       type: IsarType.dateTime,
     ),
     r'seasons': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'seasons',
       type: IsarType.stringList,
     )
@@ -4665,6 +4675,12 @@ int _misterioIsarEstimateSize(
       bytesCount += value.length * 3;
     }
   }
+  {
+    final value = object.respuestaDelNino;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.seasons.length * 3;
   {
     for (var i = 0; i < object.seasons.length; i++) {
@@ -4682,14 +4698,16 @@ void _misterioIsarSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.abierto);
-  writer.writeString(offsets[1], object.descripcionCorta);
-  writer.writeString(offsets[2], object.estado.name);
-  writer.writeString(offsets[3], object.idDominio);
-  writer.writeStringList(offsets[4], object.observacionesIds);
-  writer.writeString(offsets[5], object.pregunta);
-  writer.writeStringList(offsets[6], object.regions);
-  writer.writeDateTime(offsets[7], object.retiradoEn);
-  writer.writeStringList(offsets[8], object.seasons);
+  writer.writeDateTime(offsets[1], object.cerradoPorNino);
+  writer.writeString(offsets[2], object.descripcionCorta);
+  writer.writeString(offsets[3], object.estado.name);
+  writer.writeString(offsets[4], object.idDominio);
+  writer.writeStringList(offsets[5], object.observacionesIds);
+  writer.writeString(offsets[6], object.pregunta);
+  writer.writeStringList(offsets[7], object.regions);
+  writer.writeString(offsets[8], object.respuestaDelNino);
+  writer.writeDateTime(offsets[9], object.retiradoEn);
+  writer.writeStringList(offsets[10], object.seasons);
 }
 
 MisterioIsar _misterioIsarDeserialize(
@@ -4700,17 +4718,19 @@ MisterioIsar _misterioIsarDeserialize(
 ) {
   final object = MisterioIsar();
   object.abierto = reader.readBool(offsets[0]);
-  object.descripcionCorta = reader.readString(offsets[1]);
+  object.cerradoPorNino = reader.readDateTimeOrNull(offsets[1]);
+  object.descripcionCorta = reader.readString(offsets[2]);
   object.estado =
-      _MisterioIsarestadoValueEnumMap[reader.readStringOrNull(offsets[2])] ??
+      _MisterioIsarestadoValueEnumMap[reader.readStringOrNull(offsets[3])] ??
           NivelConfianzaIsar.consenso;
-  object.idDominio = reader.readString(offsets[3]);
+  object.idDominio = reader.readString(offsets[4]);
   object.isarId = id;
-  object.observacionesIds = reader.readStringList(offsets[4]) ?? [];
-  object.pregunta = reader.readString(offsets[5]);
-  object.regions = reader.readStringList(offsets[6]) ?? [];
-  object.retiradoEn = reader.readDateTimeOrNull(offsets[7]);
-  object.seasons = reader.readStringList(offsets[8]) ?? [];
+  object.observacionesIds = reader.readStringList(offsets[5]) ?? [];
+  object.pregunta = reader.readString(offsets[6]);
+  object.regions = reader.readStringList(offsets[7]) ?? [];
+  object.respuestaDelNino = reader.readStringOrNull(offsets[8]);
+  object.retiradoEn = reader.readDateTimeOrNull(offsets[9]);
+  object.seasons = reader.readStringList(offsets[10]) ?? [];
   return object;
 }
 
@@ -4724,22 +4744,26 @@ P _misterioIsarDeserializeProp<P>(
     case 0:
       return (reader.readBool(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (_MisterioIsarestadoValueEnumMap[
               reader.readStringOrNull(offset)] ??
           NivelConfianzaIsar.consenso) as P;
-    case 3:
-      return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readStringList(offset) ?? []) as P;
-    case 5:
       return (reader.readString(offset)) as P;
-    case 6:
+    case 5:
       return (reader.readStringList(offset) ?? []) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 8:
+      return (reader.readStringOrNull(offset)) as P;
+    case 9:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 10:
       return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -5014,6 +5038,80 @@ extension MisterioIsarQueryFilter
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'abierto',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      cerradoPorNinoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'cerradoPorNino',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      cerradoPorNinoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'cerradoPorNino',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      cerradoPorNinoEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'cerradoPorNino',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      cerradoPorNinoGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'cerradoPorNino',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      cerradoPorNinoLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'cerradoPorNino',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      cerradoPorNinoBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'cerradoPorNino',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -6069,6 +6167,160 @@ extension MisterioIsarQueryFilter
   }
 
   QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'respuestaDelNino',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'respuestaDelNino',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'respuestaDelNino',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'respuestaDelNino',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'respuestaDelNino',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'respuestaDelNino',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'respuestaDelNino',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'respuestaDelNino',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'respuestaDelNino',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'respuestaDelNino',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'respuestaDelNino',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      respuestaDelNinoIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'respuestaDelNino',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
       retiradoEnIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -6389,6 +6641,20 @@ extension MisterioIsarQuerySortBy
   }
 
   QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      sortByCerradoPorNino() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cerradoPorNino', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      sortByCerradoPorNinoDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cerradoPorNino', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
       sortByDescripcionCorta() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'descripcionCorta', Sort.asc);
@@ -6438,6 +6704,20 @@ extension MisterioIsarQuerySortBy
     });
   }
 
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      sortByRespuestaDelNino() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'respuestaDelNino', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      sortByRespuestaDelNinoDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'respuestaDelNino', Sort.desc);
+    });
+  }
+
   QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy> sortByRetiradoEn() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'retiradoEn', Sort.asc);
@@ -6463,6 +6743,20 @@ extension MisterioIsarQuerySortThenBy
   QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy> thenByAbiertoDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'abierto', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      thenByCerradoPorNino() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cerradoPorNino', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      thenByCerradoPorNinoDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cerradoPorNino', Sort.desc);
     });
   }
 
@@ -6528,6 +6822,20 @@ extension MisterioIsarQuerySortThenBy
     });
   }
 
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      thenByRespuestaDelNino() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'respuestaDelNino', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      thenByRespuestaDelNinoDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'respuestaDelNino', Sort.desc);
+    });
+  }
+
   QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy> thenByRetiradoEn() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'retiradoEn', Sort.asc);
@@ -6547,6 +6855,13 @@ extension MisterioIsarQueryWhereDistinct
   QueryBuilder<MisterioIsar, MisterioIsar, QDistinct> distinctByAbierto() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'abierto');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QDistinct>
+      distinctByCerradoPorNino() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'cerradoPorNino');
     });
   }
 
@@ -6592,6 +6907,14 @@ extension MisterioIsarQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MisterioIsar, MisterioIsar, QDistinct>
+      distinctByRespuestaDelNino({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'respuestaDelNino',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<MisterioIsar, MisterioIsar, QDistinct> distinctByRetiradoEn() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'retiradoEn');
@@ -6616,6 +6939,13 @@ extension MisterioIsarQueryProperty
   QueryBuilder<MisterioIsar, bool, QQueryOperations> abiertoProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'abierto');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, DateTime?, QQueryOperations>
+      cerradoPorNinoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'cerradoPorNino');
     });
   }
 
@@ -6655,6 +6985,13 @@ extension MisterioIsarQueryProperty
   QueryBuilder<MisterioIsar, List<String>, QQueryOperations> regionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'regions');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, String?, QQueryOperations>
+      respuestaDelNinoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'respuestaDelNino');
     });
   }
 

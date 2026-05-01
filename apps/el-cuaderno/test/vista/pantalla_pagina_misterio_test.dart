@@ -176,4 +176,151 @@ void main() {
       );
     },
   );
+
+  group('cierre amable del Misterio', () {
+    testWidgets(
+      'sin evidencias el botón "ya tengo mi respuesta" no aparece',
+      (tester) async {
+        await repositorio.guardarMisterio(crearMisterio());
+        await bombear(tester, misterio: crearMisterio());
+        expect(
+          find.text('ya tengo mi respuesta sobre este Misterio'),
+          findsNothing,
+          reason: 'cerrar sin haber anotado nada es prematuro',
+        );
+      },
+    );
+
+    testWidgets(
+      'con >=1 evidencia, el botón "ya tengo mi respuesta" aparece',
+      (tester) async {
+        await repositorio.guardarMisterio(crearMisterio());
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'caracoles tras llover',
+          misterioId: 'mist-1',
+        );
+        await bombear(tester, misterio: crearMisterio());
+        expect(
+          find.text('ya tengo mi respuesta sobre este Misterio'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'pulsar abre PantallaCerrarMisterio y al guardar persiste el cierre',
+      (tester) async {
+        await repositorio.guardarMisterio(crearMisterio());
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'caracoles tras llover',
+          misterioId: 'mist-1',
+        );
+        await bombear(tester, misterio: crearMisterio());
+        await tester
+            .tap(find.text('ya tengo mi respuesta sobre este Misterio'));
+        await tester.pumpAndSettle();
+        expect(
+          find.textContaining('Cuenta con tus palabras'),
+          findsOneWidget,
+        );
+        await tester.enterText(
+          find.byType(TextField),
+          'tras la lluvia salen caracoles y babosas',
+        );
+        await tester.pump();
+        await tester.tap(find.text('guardar mi respuesta'));
+        await tester.pumpAndSettle();
+        // Vuelve a la página del Misterio y muestra la respuesta.
+        expect(find.text('Tu respuesta'), findsOneWidget);
+        expect(
+          find.textContaining('tras la lluvia salen caracoles y babosas'),
+          findsOneWidget,
+        );
+        // Persiste en el repo.
+        final misterio = await repositorio.obtenerMisterioPorId('mist-1');
+        expect(misterio!.estaCerradoPorNino, isTrue);
+        expect(
+          misterio.respuestaDelNino,
+          'tras la lluvia salen caracoles y babosas',
+        );
+      },
+    );
+
+    testWidgets(
+      'misterio cerrado: oculta los botones de evidencia y de cierre',
+      (tester) async {
+        await repositorio.guardarMisterio(crearMisterio());
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'caracoles tras llover',
+          misterioId: 'mist-1',
+        );
+        await repositorio.cerrarMisterioParaNino(
+          'mist-1',
+          'mi respuesta sobre la lluvia',
+        );
+        await bombear(
+          tester,
+          misterio: (await repositorio.obtenerMisterioPorId('mist-1'))!,
+          alAbrirNuevaObservacion: (_) async {},
+        );
+        expect(find.text('Tu respuesta'), findsOneWidget);
+        expect(
+          find.textContaining('mi respuesta sobre la lluvia'),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining('Cerrado el'),
+          findsOneWidget,
+        );
+        expect(
+          find.text('anotar evidencia para este misterio'),
+          findsNothing,
+          reason: 'si está cerrado, el flujo de anotar evidencia se calla',
+        );
+        expect(
+          find.text('ya tengo mi respuesta sobre este Misterio'),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets(
+      'reabrir: confirma → respuesta desaparece, botones vuelven',
+      (tester) async {
+        await repositorio.guardarMisterio(crearMisterio());
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'caracoles tras llover',
+          misterioId: 'mist-1',
+        );
+        await repositorio.cerrarMisterioParaNino(
+          'mist-1',
+          'mi respuesta sobre la lluvia',
+        );
+        await bombear(
+          tester,
+          misterio: (await repositorio.obtenerMisterioPorId('mist-1'))!,
+          alAbrirNuevaObservacion: (_) async {},
+        );
+        await tester.tap(find.text('reabrir este Misterio'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Reabrir'));
+        await tester.pumpAndSettle();
+        expect(find.text('Tu respuesta'), findsNothing);
+        expect(
+          find.text('anotar evidencia para este misterio'),
+          findsOneWidget,
+        );
+        expect(
+          find.text('ya tengo mi respuesta sobre este Misterio'),
+          findsOneWidget,
+        );
+        final misterio = await repositorio.obtenerMisterioPorId('mist-1');
+        expect(misterio!.estaCerradoPorNino, isFalse);
+      },
+    );
+  });
 }

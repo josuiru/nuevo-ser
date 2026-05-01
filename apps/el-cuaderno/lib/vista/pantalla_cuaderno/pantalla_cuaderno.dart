@@ -962,6 +962,7 @@ class _VistaMisterios extends StatelessWidget {
                 ? textos.misteriosFueraDeContexto
                 : textos.misteriosVacio)
             : null;
+        final cerrados = estado.misteriosCerrados;
         return ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
           children: [
@@ -987,6 +988,18 @@ class _VistaMisterios extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
               ],
+            if (cerrados.isNotEmpty) ...[
+              const SizedBox(height: 28),
+              const _Cabecera('Ya cerrados'),
+              const SizedBox(height: 12),
+              for (final misterio in cerrados) ...[
+                _TarjetaMisterioCerrado(
+                  misterio: misterio,
+                  alPulsar: () => alAbrirMisterio(misterio),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ],
           ],
         );
       },
@@ -1008,6 +1021,65 @@ class _Cabecera extends StatelessWidget {
         color: esquema.tertiary,
         tamano: TipografiaCuaderno.tamano12,
         peso: TipografiaCuaderno.pesoMedio,
+      ),
+    );
+  }
+}
+
+/// Versión visual reducida de `TarjetaMisterio` para Misterios que el
+/// niño ya ha cerrado. Sin "estado del consenso" ni "estos días" —
+/// muestra pregunta + un fragmento corto de la respuesta del niño +
+/// fecha de cierre. Tap → página del Misterio (donde ve la respuesta
+/// completa y puede reabrir).
+class _TarjetaMisterioCerrado extends StatelessWidget {
+  const _TarjetaMisterioCerrado({
+    required this.misterio,
+    required this.alPulsar,
+  });
+
+  final Misterio misterio;
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = Theme.of(context).colorScheme;
+    final fecha = misterio.cerradoPorNino!;
+    final fechaFormateada =
+        '${fecha.day.toString().padLeft(2, '0')}/'
+        '${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
+    return Material(
+      color: esquema.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                misterio.pregunta,
+                style: TipografiaCuaderno.serif(
+                  color: esquema.onSurface,
+                  tamano: TipografiaCuaderno.tamano14,
+                  altoLinea: 1.4,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'cerrado el $fechaFormateada',
+                style: TipografiaCuaderno.sans(
+                  color: esquema.tertiary,
+                  tamano: TipografiaCuaderno.tamano11,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

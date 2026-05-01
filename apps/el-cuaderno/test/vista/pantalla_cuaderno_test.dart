@@ -435,6 +435,74 @@ void main() {
   );
 
   testWidgets(
+    'pestaña Misterios: sección "Ya cerrados" sólo aparece si hay cerrados '
+    'y muestra fecha + cabecera',
+    (tester) async {
+      repositorio = RepositorioMemoria();
+      await repositorio.guardarMisterio(Misterio(
+        id: 'm-1',
+        pregunta: '¿qué insectos visitan las flores azules?',
+        descripcionCorta: 'pista',
+        estado: NivelConfianza.hipotesisActiva,
+        abierto: true,
+      ));
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: ahoraPrimavera,
+      );
+      await bombearPantalla(tester);
+      await tester.tap(find.text('misterios'));
+      await tester.pumpAndSettle();
+      expect(find.text('Ya cerrados'), findsNothing);
+      await repositorio.cerrarMisterioParaNino('m-1', 'mi respuesta');
+      await estado.cargar();
+      await tester.pumpAndSettle();
+      expect(find.text('Ya cerrados'), findsOneWidget);
+      expect(find.textContaining('cerrado el'), findsOneWidget);
+      expect(
+        find.text('¿qué insectos visitan las flores azules?'),
+        findsOneWidget,
+        reason: 'sólo en la sección "Ya cerrados", no duplicado en abiertos',
+      );
+    },
+  );
+
+  testWidgets(
+    'pestaña Misterios: tap en tarjeta cerrada abre PantallaPaginaMisterio '
+    'con el bloque de respuesta visible',
+    (tester) async {
+      repositorio = RepositorioMemoria();
+      await repositorio.guardarMisterio(Misterio(
+        id: 'm-1',
+        pregunta: '¿qué insectos visitan las flores azules?',
+        descripcionCorta: 'pista',
+        estado: NivelConfianza.hipotesisActiva,
+        abierto: true,
+      ));
+      await repositorio.cerrarMisterioParaNino(
+        'm-1',
+        'tres mariposas blancas y una abeja',
+      );
+      estado.dispose();
+      estado = EstadoCuaderno(
+        repositorio: repositorio,
+        proveedorAhora: ahoraPrimavera,
+      );
+      await bombearPantalla(tester);
+      await tester.tap(find.text('misterios'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('¿qué insectos visitan las flores azules?'));
+      await tester.pumpAndSettle();
+      expect(find.text('Tu respuesta'), findsOneWidget);
+      expect(
+        find.textContaining('tres mariposas blancas y una abeja'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
     'pestaña Misterios: catálogo abierto pero todo filtrado fuera → '
     'microcopia "vuelve a mirar al cambiar el tiempo"',
     (tester) async {

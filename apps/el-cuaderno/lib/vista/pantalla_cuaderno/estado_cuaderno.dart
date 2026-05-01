@@ -42,6 +42,7 @@ class EstadoCuaderno extends ChangeNotifier {
   bool _cargando = false;
   SitSpot? _sitSpot;
   List<Misterio> _misteriosAbiertos = const [];
+  List<Misterio> _misteriosCerrados = const [];
   int _totalMisteriosAbiertosSinFiltro = 0;
   List<Observacion> _ultimasObservaciones = const [];
   Map<String, int> _evidenciasPorMisterio = const {};
@@ -53,6 +54,14 @@ class EstadoCuaderno extends ChangeNotifier {
   bool get cargando => _cargando;
   SitSpot? get sitSpot => _sitSpot;
   List<Misterio> get misteriosAbiertos => _misteriosAbiertos;
+
+  /// Misterios que el niño ha cerrado declarando *"ya tengo mi
+  /// respuesta"*. Los más recientemente cerrados primero. La pestaña
+  /// Misterios los lista en una sección separada bajo los abiertos.
+  /// **Sin filtro fenológico**: una vez cerrado el ciclo del niño,
+  /// la fecha del cierre y la respuesta son patrimonio del cuaderno
+  /// independientemente del calendario.
+  List<Misterio> get misteriosCerrados => _misteriosCerrados;
 
   /// Cuántos Misterios abiertos había en el repo **antes** del filtro
   /// fenológico/regional. Permite a la pestaña Misterios distinguir
@@ -101,6 +110,7 @@ class EstadoCuaderno extends ChangeNotifier {
     try {
       final sitSpotResultado = await repositorio.obtenerSitSpot();
       final misteriosCrudo = await repositorio.obtenerMisteriosAbiertos();
+      final cerrados = await repositorio.obtenerMisteriosCerradosPorNino();
       final ultimas = await repositorio.obtenerObservaciones(limite: 5);
       final ahora = _proveedorAhora();
       final estacionActual = estacionDeFecha(ahora);
@@ -137,6 +147,7 @@ class EstadoCuaderno extends ChangeNotifier {
       }
       _sitSpot = sitSpotResultado;
       _misteriosAbiertos = misteriosFiltrados;
+      _misteriosCerrados = cerrados;
       _totalMisteriosAbiertosSinFiltro = misteriosCrudo.length;
       _ultimasObservaciones = ultimas;
       _evidenciasPorMisterio = evidencias;

@@ -216,6 +216,13 @@ class MisterioIsar {
   /// equivalencia es segura.
   List<String> regions = const <String>[];
 
+  /// Cuándo el niño cerró el Misterio para sí. Estado del niño, no del
+  /// catálogo (paralelo a [observacionesIds]).
+  DateTime? cerradoPorNino;
+
+  /// Lo que el niño anotó al cerrar. Vive aquí porque es por-niño.
+  String? respuestaDelNino;
+
   static MisterioIsar desdeDominio(Misterio misterio) {
     return MisterioIsar()
       ..idDominio = misterio.id
@@ -226,7 +233,9 @@ class MisterioIsar {
       ..observacionesIds = List.of(misterio.observacionesIds)
       ..retiradoEn = misterio.retiradoEn
       ..seasons = List.of(misterio.seasons)
-      ..regions = List.of(misterio.regions ?? const <String>[]);
+      ..regions = List.of(misterio.regions ?? const <String>[])
+      ..cerradoPorNino = misterio.cerradoPorNino
+      ..respuestaDelNino = misterio.respuestaDelNino;
   }
 
   Misterio aDominio() {
@@ -240,6 +249,8 @@ class MisterioIsar {
       retiradoEn: retiradoEn,
       seasons: List.of(seasons),
       regions: regions.isEmpty ? null : List.of(regions),
+      cerradoPorNino: cerradoPorNino,
+      respuestaDelNino: respuestaDelNino,
     );
   }
 }

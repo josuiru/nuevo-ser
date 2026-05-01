@@ -6,6 +6,7 @@ import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'pantalla_cerrar_misterio.dart';
 
 /// Página completa de un Misterio. La tarjeta del home muestra sólo
 /// pregunta + bajada + estado; aquí el niño lee la pregunta del oficio
@@ -13,9 +14,19 @@ import '../tema/tipografia.dart';
 /// observación nueva con el Misterio preseleccionado para no romper el
 /// flujo "leer Misterio → anotar evidencia".
 ///
-/// Lectura pura — toda la mutación pasa por `PantallaObservacion`. Si el
-/// orquestador no inyecta [alAbrirNuevaObservacion], el botón no aparece
-/// (modo S1, tests aislados).
+/// Si el Misterio está abierto y tiene >=1 evidencia, aparece también
+/// el botón "ya tengo mi respuesta sobre este Misterio" que abre la
+/// pantalla de cierre amable. Sin evidencias el botón no aparece —
+/// cerrar un Misterio sin haber anotado nada es prematuro.
+///
+/// Si el Misterio está cerrado por el niño, en lugar del botón "anotar
+/// evidencia" aparece el bloque con la respuesta + fecha + botón
+/// discreto "reabrir este Misterio".
+///
+/// Lectura pura — toda la mutación pasa por `PantallaObservacion` o por
+/// la pantalla de cierre. Si el orquestador no inyecta
+/// [alAbrirNuevaObservacion], el botón de evidencia no aparece (modo
+/// S1, tests aislados).
 class PantallaPaginaMisterio extends StatefulWidget {
   const PantallaPaginaMisterio({
     super.key,
@@ -37,6 +48,7 @@ class PantallaPaginaMisterio extends StatefulWidget {
 }
 
 class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
+  late Misterio _misterio = widget.misterio;
   List<Observacion> _observaciones = const [];
   bool _cargando = true;
 
@@ -47,11 +59,14 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
   }
 
   Future<void> _cargar() async {
-    final lista = await widget.repositorio
-        .obtenerObservaciones(misterioId: widget.misterio.id);
+    final lista =
+        await widget.repositorio.obtenerObservaciones(misterioId: _misterio.id);
+    final actualizado =
+        await widget.repositorio.obtenerMisterioPorId(_misterio.id);
     if (!mounted) return;
     setState(() {
       _observaciones = lista;
+      if (actualizado != null) _misterio = actualizado;
       _cargando = false;
     });
   }
@@ -59,16 +74,61 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
   Future<void> _anotarEvidencia() async {
     final cb = widget.alAbrirNuevaObservacion;
     if (cb == null) return;
-    await cb(widget.misterio.id);
+    await cb(_misterio.id);
     if (mounted) {
       await _cargar();
     }
+  }
+
+  Future<void> _abrirCierre() async {
+    final guardado = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => PantallaCerrarMisterio(
+          repositorio: widget.repositorio,
+          misterio: _misterio,
+        ),
+      ),
+    );
+    if (guardado == true && mounted) {
+      await _cargar();
+    }
+  }
+
+  Future<void> _confirmarReabrir() async {
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Reabrir este Misterio'),
+        content: const Text(
+          'Si lo reabres, tu respuesta se borra y el Misterio vuelve a la '
+          'lista de abiertos. Las anotaciones que ya tenías se conservan.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('No'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Reabrir'),
+          ),
+        ],
+      ),
+    );
+    if (confirmado != true || !mounted) return;
+    await widget.repositorio.reabrirMisterioParaNino(_misterio.id);
+    if (mounted) await _cargar();
   }
 
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
     final textos = TextosApp.of(context);
+    final estaCerrado = _misterio.estaCerradoPorNino;
+    final puedeAnotarEvidencia =
+        widget.alAbrirNuevaObservacion != null && !estaCerrado;
+    final puedeCerrar =
+        !estaCerrado && _observaciones.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Misterio')),
@@ -78,8 +138,16 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
             : ListView(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
                 children: [
-                  _Cabecera(misterio: widget.misterio, textos: textos),
-                  if (widget.alAbrirNuevaObservacion != null) ...[
+                  _Cabecera(misterio: _misterio, textos: textos),
+                  if (estaCerrado) ...[
+                    const SizedBox(height: 20),
+                    _BloqueRespuestaDelNino(
+                      misterio: _misterio,
+                      esquema: esquema,
+                      alReabrir: _confirmarReabrir,
+                    ),
+                  ],
+                  if (puedeAnotarEvidencia) ...[
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
@@ -87,6 +155,19 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
                         onPressed: _anotarEvidencia,
                         icon: const Icon(Icons.edit_outlined),
                         label: const Text('anotar evidencia para este misterio'),
+                      ),
+                    ),
+                  ],
+                  if (puedeCerrar) ...[
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _abrirCierre,
+                        icon: const Icon(Icons.bookmark_outline),
+                        label: const Text(
+                          'ya tengo mi respuesta sobre este Misterio',
+                        ),
                       ),
                     ),
                   ],
@@ -169,6 +250,73 @@ class _Cabecera extends StatelessWidget {
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BloqueRespuestaDelNino extends StatelessWidget {
+  const _BloqueRespuestaDelNino({
+    required this.misterio,
+    required this.esquema,
+    required this.alReabrir,
+  });
+
+  final Misterio misterio;
+  final ColorScheme esquema;
+  final VoidCallback alReabrir;
+
+  @override
+  Widget build(BuildContext context) {
+    final fecha = misterio.cerradoPorNino!;
+    final fechaFormateada =
+        '${fecha.day.toString().padLeft(2, '0')}/'
+        '${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: esquema.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: esquema.outline, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Tu respuesta',
+            style: TipografiaCuaderno.sans(
+              color: esquema.tertiary,
+              tamano: TipografiaCuaderno.tamano12,
+              peso: TipografiaCuaderno.pesoMedio,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            misterio.respuestaDelNino ?? '',
+            style: TipografiaCuaderno.serif(
+              color: esquema.onSurface,
+              tamano: TipografiaCuaderno.tamano14,
+              altoLinea: 1.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Cerrado el $fechaFormateada',
+            style: TipografiaCuaderno.sans(
+              color: esquema.tertiary,
+              tamano: TipografiaCuaderno.tamano12,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: alReabrir,
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text('reabrir este Misterio'),
             ),
           ),
         ],

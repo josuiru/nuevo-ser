@@ -80,6 +80,32 @@ abstract class RepositorioLocal {
     String misterioId,
   );
 
+  /// Devuelve un Misterio por id o `null` si no existe en el catálogo
+  /// del niño. Útil para la página del Misterio cerrado, que necesita
+  /// refrescar el modelo tras cerrar/reabrir.
+  Future<Misterio?> obtenerMisterioPorId(String id);
+
+  /// Misterios que el niño ha cerrado declarando *"ya tengo mi
+  /// respuesta"*. Estado del niño, no del catálogo — el
+  /// [Misterio.estado] (consenso/hipotesisActiva) sigue intacto. Los
+  /// más recientemente cerrados primero. No incluye Misterios sin
+  /// cerrar.
+  Future<List<Misterio>> obtenerMisteriosCerradosPorNino();
+
+  /// El niño declara que ya tiene su respuesta para [misterioId].
+  /// Persiste `cerradoPorNino = ahora` y `respuestaDelNino = respuesta`.
+  /// **Lanza** si el Misterio no existe, si ya estaba cerrado, o si
+  /// [respuesta] es vacía/sólo-espacios — el contenido pedagógico del
+  /// cierre es la respuesta del niño, sin texto el cierre es ruido.
+  /// El [Misterio.estado] canónico no se toca.
+  Future<void> cerrarMisterioParaNino(String misterioId, String respuesta);
+
+  /// El niño reabre un Misterio que había cerrado. Limpia
+  /// `cerradoPorNino` y `respuestaDelNino`. Idempotente sólo si el
+  /// Misterio existía y estaba cerrado; lanza si no existe. Reabrir un
+  /// Misterio ya abierto no es un error — no hace nada.
+  Future<void> reabrirMisterioParaNino(String misterioId);
+
   /// Borra **todo** el contenido local del cuaderno: observaciones, sit
   /// spot (activo y retirados), misterios. Operación destructiva e
   /// irreversible — la pantalla Ajustes la envuelve en doble

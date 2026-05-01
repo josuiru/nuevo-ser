@@ -110,8 +110,14 @@ class RepositorioMemoria implements RepositorioLocal {
 
   @override
   Future<List<Misterio>> obtenerMisteriosAbiertos() async {
+    // Cerrados por el niño se excluyen — pasan al getter dedicado
+    // [obtenerMisteriosCerradosPorNino]. La página del Misterio cerrado
+    // sigue accesible por id desde anclajes históricos del cuaderno.
     return _misterios.values
-        .where((misterio) => misterio.abierto && misterio.estaVigente)
+        .where((misterio) =>
+            misterio.abierto &&
+            misterio.estaVigente &&
+            !misterio.estaCerradoPorNino)
         .toList()
       ..sort((a, b) => a.pregunta.compareTo(b.pregunta));
   }
@@ -147,6 +153,62 @@ class RepositorioMemoria implements RepositorioLocal {
   /// `guardarMisterio` del repositorio Isar.
   Future<void> guardarMisterio(Misterio misterio) async {
     _misterios[misterio.id] = misterio;
+  }
+
+  @override
+  Future<Misterio?> obtenerMisterioPorId(String id) async {
+    return _misterios[id];
+  }
+
+  @override
+  Future<List<Misterio>> obtenerMisteriosCerradosPorNino() async {
+    final cerrados = _misterios.values
+        .where((misterio) =>
+            misterio.estaCerradoPorNino && misterio.estaVigente)
+        .toList()
+      ..sort((a, b) => b.cerradoPorNino!.compareTo(a.cerradoPorNino!));
+    return cerrados;
+  }
+
+  @override
+  Future<void> cerrarMisterioParaNino(
+    String misterioId,
+    String respuesta,
+  ) async {
+    final misterio = _misterios[misterioId];
+    if (misterio == null) {
+      throw StateError(
+        'no hay misterio con id $misterioId — el catálogo no lo conoce',
+      );
+    }
+    if (misterio.estaCerradoPorNino) {
+      throw StateError(
+        'el misterio $misterioId ya está cerrado — reábrelo antes',
+      );
+    }
+    if (respuesta.trim().isEmpty) {
+      throw ArgumentError.value(
+        respuesta,
+        'respuesta',
+        'cerrar un Misterio exige una respuesta no vacía',
+      );
+    }
+    _misterios[misterioId] = misterio.copyWith(
+      cerradoPorNino: DateTime.now(),
+      respuestaDelNino: respuesta,
+    );
+  }
+
+  @override
+  Future<void> reabrirMisterioParaNino(String misterioId) async {
+    final misterio = _misterios[misterioId];
+    if (misterio == null) {
+      throw StateError(
+        'no hay misterio con id $misterioId — el catálogo no lo conoce',
+      );
+    }
+    if (!misterio.estaCerradoPorNino) return;
+    _misterios[misterioId] = misterio.reabiertoPorNino();
   }
 
   @override

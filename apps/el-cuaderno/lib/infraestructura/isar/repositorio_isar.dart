@@ -150,6 +150,8 @@ class RepositorioIsar implements RepositorioLocal {
         .abiertoEqualTo(true)
         .and()
         .retiradoEnIsNull()
+        .and()
+        .cerradoPorNinoIsNull()
         .sortByPregunta()
         .findAll();
     return [for (final modelo in modelos) modelo.aDominio()];
@@ -224,6 +226,81 @@ class RepositorioIsar implements RepositorioLocal {
       modelo.isarId = existente.isarId;
     }
     await _isar.writeTxn(() async {
+      await _isar.misterioIsars.put(modelo);
+    });
+  }
+
+  @override
+  Future<Misterio?> obtenerMisterioPorId(String id) async {
+    final modelo = await _isar.misterioIsars
+        .where()
+        .idDominioEqualTo(id)
+        .findFirst();
+    return modelo?.aDominio();
+  }
+
+  @override
+  Future<List<Misterio>> obtenerMisteriosCerradosPorNino() async {
+    final modelos = await _isar.misterioIsars
+        .filter()
+        .cerradoPorNinoIsNotNull()
+        .and()
+        .retiradoEnIsNull()
+        .sortByCerradoPorNinoDesc()
+        .findAll();
+    return [for (final modelo in modelos) modelo.aDominio()];
+  }
+
+  @override
+  Future<void> cerrarMisterioParaNino(
+    String misterioId,
+    String respuesta,
+  ) async {
+    if (respuesta.trim().isEmpty) {
+      throw ArgumentError.value(
+        respuesta,
+        'respuesta',
+        'cerrar un Misterio exige una respuesta no vacía',
+      );
+    }
+    await _isar.writeTxn(() async {
+      final modelo = await _isar.misterioIsars
+          .where()
+          .idDominioEqualTo(misterioId)
+          .findFirst();
+      if (modelo == null) {
+        throw StateError(
+          'no hay misterio con id $misterioId — el catálogo no lo conoce',
+        );
+      }
+      if (modelo.cerradoPorNino != null) {
+        throw StateError(
+          'el misterio $misterioId ya está cerrado — reábrelo antes',
+        );
+      }
+      modelo
+        ..cerradoPorNino = DateTime.now()
+        ..respuestaDelNino = respuesta;
+      await _isar.misterioIsars.put(modelo);
+    });
+  }
+
+  @override
+  Future<void> reabrirMisterioParaNino(String misterioId) async {
+    await _isar.writeTxn(() async {
+      final modelo = await _isar.misterioIsars
+          .where()
+          .idDominioEqualTo(misterioId)
+          .findFirst();
+      if (modelo == null) {
+        throw StateError(
+          'no hay misterio con id $misterioId — el catálogo no lo conoce',
+        );
+      }
+      if (modelo.cerradoPorNino == null) return;
+      modelo
+        ..cerradoPorNino = null
+        ..respuestaDelNino = null;
       await _isar.misterioIsars.put(modelo);
     });
   }

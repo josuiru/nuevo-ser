@@ -23,6 +23,8 @@ class Misterio {
     this.retiradoEn,
     this.seasons = const <String>[],
     this.regions,
+    this.cerradoPorNino,
+    this.respuestaDelNino,
   }) {
     if (pregunta.isEmpty) {
       throw ArgumentError.value(
@@ -37,6 +39,24 @@ class Misterio {
         'estado',
         'noSegura no aplica a Misterios — el sistema declara hipótesis '
             'activa cuando hay incertidumbre real',
+      );
+    }
+    // Cerrar un Misterio sin haber escrito nada no es cerrar — la respuesta
+    // del niño es el contenido pedagógico del cierre. Sin texto el dato
+    // es ruido.
+    if (cerradoPorNino != null &&
+        (respuestaDelNino == null || respuestaDelNino!.trim().isEmpty)) {
+      throw ArgumentError.value(
+        respuestaDelNino,
+        'respuestaDelNino',
+        'cerrar un Misterio exige una respuesta del niño no vacía',
+      );
+    }
+    if (cerradoPorNino == null && respuestaDelNino != null) {
+      throw ArgumentError.value(
+        respuestaDelNino,
+        'respuestaDelNino',
+        'no puede haber respuesta del niño sin cerradoPorNino',
       );
     }
   }
@@ -87,7 +107,24 @@ class Misterio {
   /// catálogo**, no estado del niño.
   final List<String>? regions;
 
+  /// Cuándo el niño declaró *"ya tengo mi respuesta"* sobre este
+  /// Misterio. **Estado del niño, no del catálogo** — el `estado`
+  /// canónico del consenso científico no se mueve al cerrar; lo que se
+  /// mueve es el ciclo de pregunta del niño con esta pregunta concreta.
+  /// `null` significa que el Misterio sigue abierto para este niño.
+  /// Cerrar exige texto en [respuestaDelNino] (validado en el
+  /// constructor).
+  final DateTime? cerradoPorNino;
+
+  /// Lo que el niño anotó sobre lo que ha aprendido al cerrar este
+  /// Misterio. **No es la respuesta canónica** — es el cierre del ciclo
+  /// del niño con su pregunta. Texto libre, sin formato, sin
+  /// validación más allá de "no vacío" si [cerradoPorNino] no es null.
+  final String? respuestaDelNino;
+
   bool get estaVigente => retiradoEn == null;
+
+  bool get estaCerradoPorNino => cerradoPorNino != null;
 
   Misterio copyWith({
     String? id,
@@ -99,6 +136,8 @@ class Misterio {
     DateTime? retiradoEn,
     List<String>? seasons,
     List<String>? regions,
+    DateTime? cerradoPorNino,
+    String? respuestaDelNino,
   }) {
     return Misterio(
       id: id ?? this.id,
@@ -110,6 +149,25 @@ class Misterio {
       retiradoEn: retiradoEn ?? this.retiradoEn,
       seasons: seasons ?? this.seasons,
       regions: regions ?? this.regions,
+      cerradoPorNino: cerradoPorNino ?? this.cerradoPorNino,
+      respuestaDelNino: respuestaDelNino ?? this.respuestaDelNino,
+    );
+  }
+
+  /// Reabrir un Misterio cerrado: descarta tanto la fecha de cierre
+  /// como la respuesta del niño. `copyWith` no sirve para esto porque
+  /// el patrón `?? this.x` lo hace incapaz de poner null.
+  Misterio reabiertoPorNino() {
+    return Misterio(
+      id: id,
+      pregunta: pregunta,
+      descripcionCorta: descripcionCorta,
+      estado: estado,
+      abierto: abierto,
+      observacionesIds: observacionesIds,
+      retiradoEn: retiradoEn,
+      seasons: seasons,
+      regions: regions,
     );
   }
 
@@ -123,6 +181,9 @@ class Misterio {
         'retiradoEn': retiradoEn?.toIso8601String(),
         'seasons': seasons,
         if (regions != null) 'regions': regions,
+        if (cerradoPorNino != null)
+          'cerradoPorNino': cerradoPorNino!.toIso8601String(),
+        if (respuestaDelNino != null) 'respuestaDelNino': respuestaDelNino,
       };
 
   static Misterio fromJson(Map<String, dynamic> json) {
@@ -142,6 +203,10 @@ class Misterio {
       regions: json['regions'] == null
           ? null
           : (json['regions'] as List<dynamic>).cast<String>(),
+      cerradoPorNino: json['cerradoPorNino'] == null
+          ? null
+          : DateTime.parse(json['cerradoPorNino'] as String),
+      respuestaDelNino: json['respuestaDelNino'] as String?,
     );
   }
 
@@ -171,6 +236,8 @@ class Misterio {
         if (other.regions![indice] != regions![indice]) return false;
       }
     }
+    if (other.cerradoPorNino != cerradoPorNino) return false;
+    if (other.respuestaDelNino != respuestaDelNino) return false;
     return true;
   }
 
@@ -185,5 +252,7 @@ class Misterio {
         retiradoEn,
         Object.hashAll(seasons),
         regions == null ? null : Object.hashAll(regions!),
+        cerradoPorNino,
+        respuestaDelNino,
       );
 }
