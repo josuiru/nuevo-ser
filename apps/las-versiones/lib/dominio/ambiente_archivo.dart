@@ -379,4 +379,27 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// Maren — un umbral.
   static const AmbienteArchivo portalCasaEider =
       AmbienteArchivo._('portal_casa_eider');
+
+  /// Conjunto románico de Estella/Lizarra — iglesia del Santo
+  /// Sepulcro, San Pedro de la Rúa, palacio de los Reyes (uno de
+  /// los pocos palacios civiles románicos conservados de
+  /// Europa), San Miguel. Estella es la **ciudad-Camino**
+  /// fundada en 1090 por Sancho Ramírez con privilegios
+  /// específicos para atraer población franca y servir al
+  /// Camino de Santiago en pleno auge. Lugar de la 3.5.1 (paseo
+  /// guiado por Aitor mostrando los cuatro monumentos como
+  /// fuentes arquitectónicas) y de la 3.5.2 (sala cedida en
+  /// alguno de los edificios para Mesa de Trabajo).
+  static const AmbienteArchivo estellaConjuntoRomanico =
+      AmbienteArchivo._('estella_conjunto_romanico');
+
+  /// Calle de la Rúa de Estella al anochecer — la calle mayor
+  /// del trazado urbano de la fundación de 1090, eje del Camino
+  /// de Santiago a su paso por la villa. Lugar del cierre
+  /// 3.5.4 con Maren y Aitor paseando, un grupo de peregrinos
+  /// pasando con guitarra. Cierra la única Estación de respiro
+  /// del Arco 3 con el aforismo de Aitor *"el oficio también
+  /// incluye respirar"*.
+  static const AmbienteArchivo calleRuaEstella =
+      AmbienteArchivo._('calle_rua_estella');
 }

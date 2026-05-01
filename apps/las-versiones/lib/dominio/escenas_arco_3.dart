@@ -72,6 +72,10 @@ class EscenasArco3 {
     concilioRoncesvalles,
     loBonitoMiente,
     eiderSeVa,
+    llegadaAEstella,
+    mesaYReconstruccionEstella,
+    concilioEstella,
+    calleRuaAlAnochecer,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -178,6 +182,19 @@ class EscenasArco3 {
     },
     'escena_3_d_1_vista': {
       'eider_se_va',
+    },
+    'escena_3_5_1_vista': {
+      'estella_conjunto_visitado',
+      'viaje_a_estella_iniciado',
+    },
+    'escena_3_5_2_vista': {
+      'reconstruccion_estella_producida',
+    },
+    'escena_3_5_3_vista': {
+      'concilio_3_5_cerrado',
+    },
+    'escena_3_5_4_vista': {
+      'arco_3_estacion_5_cerrada',
     },
   };
 
@@ -2651,6 +2668,205 @@ class EscenasArco3 {
         voz: VozPersonaje.vozDeFuente,
         texto: 'No sé qué hacer.',
         pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 3.5.1 — *Llegada a Estella*. La Estación 3.5 es la única
+  /// **Brecha de respiro** del Arco 3 (doc 09 §3.5: *"Brecha más
+  /// serena, casi de respiro"*). Maren y Aitor llegan a Estella
+  /// y recorren el conjunto románico — iglesia del Santo
+  /// Sepulcro, San Pedro de la Rúa, palacio de los Reyes (uno
+  /// de los pocos palacios civiles románicos conservados de
+  /// Europa), San Miguel. Aitor le explica la lección de la
+  /// Estación: las ciudades pueden fundarse, no siempre han
+  /// estado donde están — Estella es proyecto político de
+  /// Sancho Ramírez en 1090, **ciudad fundada para el Camino
+  /// de Santiago** con privilegios concretos para atraer
+  /// población franca, conviviendo con la población vasco-
+  /// romance preexistente. Doc 09 §3.5.
+  static const EscenaCinematica llegadaAEstella = EscenaCinematica(
+    id: '3.5.1',
+    titulo: 'Llegada a Estella',
+    flagDeSalida: 'escena_3_5_1_vista',
+    flagsRequeridos: {'escena_3_d_1_vista'},
+    ambiente: AmbienteArchivo.estellaConjuntoRomanico,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Estella/Lizarra. Maren y Aitor llegan a media mañana. '
+            'Conjunto románico: iglesia del Santo Sepulcro, San Pedro '
+            'de la Rúa, palacio de los Reyes, San Miguel.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Estella es ciudad fundada. No estaba aquí antes de 1090. '
+            'La fundó Sancho Ramírez con carta puebla — privilegios '
+            'específicos para atraer población franca y servir al '
+            'Camino de Santiago, que estaba en pleno auge.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Y antes de 1090?'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Población vasco-romance dispersa en el valle. La fundación '
+            'concentra a los recién llegados francos en un trazado '
+            'urbano nuevo, con sus propios fueros. Los preexistentes '
+            'siguen ahí, pero la villa-Camino es proyecto político.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Aitor le señala los cuatro monumentos como fuentes '
+            'arquitectónicas. El palacio de los Reyes — uno de los '
+            'pocos palacios civiles románicos conservados de Europa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Entonces una ciudad medieval no es siempre algo que ha '
+            'crecido orgánicamente. A veces es proyecto.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'A menudo lo es.'),
+    ],
+  );
+
+  /// 3.5.2 — *Mesa de Trabajo y Reconstrucción*. Sala cedida en
+  /// alguno de los edificios de Estella. Maren trabaja con la
+  /// carta puebla de 1090 y la documentación municipal del s.
+  /// XII, complementadas por los monumentos como fuentes
+  /// arquitectónicas. Produce 6 afirmaciones todas Sólido o
+  /// Probable — Brecha bien acotada, sin disputa metodológica
+  /// grande. Doc 09 §3.5.
+  static const EscenaCinematica mesaYReconstruccionEstella = EscenaCinematica(
+    id: '3.5.2',
+    titulo: 'Mesa de Trabajo y Reconstrucción',
+    flagDeSalida: 'escena_3_5_2_vista',
+    flagsRequeridos: {'escena_3_5_1_vista'},
+    ambiente: AmbienteArchivo.estellaConjuntoRomanico,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mesa de Trabajo. Carta puebla de Estella (1090), '
+            'documentación municipal del s. XII, los monumentos como '
+            'fuentes arquitectónicas. Brecha bien acotada — sin disputa '
+            'metodológica grande.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 9),
+        textoLectura:
+            '1. Estella se funda en 1090 por carta puebla de Sancho '
+            'Ramírez. Sólido.\n'
+            '2. La fundación es proyecto político vinculado al auge '
+            'del Camino de Santiago. Sólido.\n'
+            '3. Los privilegios atraen población franca, '
+            'principalmente occitano-hablante. Sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 9),
+        textoLectura:
+            '4. La población vasco-romance preexistente del valle '
+            'permanece, pero la villa-Camino es trazado urbano nuevo '
+            'con sus propios fueros. Probable.\n'
+            '5. La economía de Estella en el s. XII es economía de '
+            'ciudad-paso — peregrinos, mercaderes, hospederías, '
+            'cambistas. Sólido.\n'
+            '6. El conjunto románico conservado (Santo Sepulcro, San '
+            'Pedro de la Rúa, palacio de los Reyes, San Miguel) '
+            'refleja el esplendor de la villa en su primer siglo. '
+            'Probable.',
+      ),
+    ],
+  );
+
+  /// 3.5.3 — *Concilio de Estella*. Salón del Concilio en el
+  /// Archivo de Iruña. El Concilio aprueba sin tensiones — la
+  /// Brecha está bien acotada, las 6 afirmaciones bien
+  /// calibradas, no hay disputa metodológica grande. Aitor
+  /// cierra con la lección clave: *"Bien. Ya sabes que se pueden
+  /// hacer Brechas que no acaban contigo"*. Doc 09 §3.5.
+  static const EscenaCinematica concilioEstella = EscenaCinematica(
+    id: '3.5.3',
+    titulo: 'Concilio de Estella',
+    flagDeSalida: 'escena_3_5_3_vista',
+    flagsRequeridos: {'escena_3_5_2_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Salón del Concilio. Maren presenta su reconstrucción. '
+            'Aprobada sin tensiones — Brecha bien acotada, calibración '
+            'limpia, sin disputa metodológica grande.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Bien. Ya sabes que se pueden hacer Brechas que no '
+            'acaban contigo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No me había dado cuenta hasta ahora.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 3.5.4 — *Calle de la Rúa al anochecer*. Cierre de la
+  /// Estación 3.5. Maren y Aitor caminando por la calle de la
+  /// Rúa de Estella al anochecer — la calle mayor del trazado
+  /// urbano de la fundación de 1090, eje del Camino de Santiago
+  /// a su paso por la villa. Un grupo de peregrinos pasando
+  /// con guitarra, música del Camino. Aitor: *"Necesitabas una
+  /// así. El oficio también incluye respirar"*. Voz del
+  /// Cuaderno esa noche: *"Hoy no hay nada que decir. Por una
+  /// vez la Brecha era simple. Ha sido un alivio"*. Doc 09 §3.5.
+  static const EscenaCinematica calleRuaAlAnochecer = EscenaCinematica(
+    id: '3.5.4',
+    titulo: 'Calle de la Rúa al anochecer',
+    flagDeSalida: 'escena_3_5_4_vista',
+    flagsRequeridos: {'escena_3_5_3_vista'},
+    ambiente: AmbienteArchivo.calleRuaEstella,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Calle de la Rúa, Estella, anochecer. Maren y Aitor '
+            'caminando despacio. Un grupo de peregrinos pasa con una '
+            'guitarra — música del Camino.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Necesitabas una así.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'El oficio también incluye respirar.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'La música de los peregrinos se aleja calle abajo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Hoy no hay nada que decir.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Por una vez la Brecha era simple.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Ha sido un alivio.',
+        pausaPrevia: Duration(milliseconds: 1000),
       ),
     ],
   );

@@ -920,15 +920,145 @@ void main() {
     );
   });
 
+  group('EscenasArco3.llegadaAEstella (3.5.1)', () {
+    test(
+      'precondición = escena_3_d_1_vista — la 3.D.1 (Eider se va) '
+      'desbloquea el viaje a Estella; el oficio sigue después del '
+      'momento crudo con Eider',
+      () {
+        expect(
+          EscenasArco3.llegadaAEstella.flagsRequeridos,
+          {'escena_3_d_1_vista'},
+        );
+      },
+    );
+
+    test('viaja con ambiente estellaConjuntoRomanico', () {
+      expect(
+        EscenasArco3.llegadaAEstella.ambiente,
+        same(AmbienteArchivo.estellaConjuntoRomanico),
+      );
+    });
+
+    test(
+      'Aitor articula la lección de la Estación: las ciudades pueden '
+      'fundarse — Estella es proyecto político de Sancho Ramírez en '
+      '1090 con privilegios para población franca y el Camino',
+      () {
+        final dialogos = EscenasArco3.llegadaAEstella.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('1090'));
+        expect(dialogos, contains('Sancho Ramírez'));
+        expect(dialogos, contains('carta puebla'));
+        expect(dialogos, contains('franca'));
+        expect(dialogos, contains('Camino de Santiago'));
+        expect(dialogos, contains('vasco-romance'));
+      },
+    );
+  });
+
+  group('EscenasArco3.mesaYReconstruccionEstella (3.5.2)', () {
+    test(
+      'la Cronista produce 6 afirmaciones — todas Sólido o Probable, '
+      'sin Disputado: Brecha de respiro bien acotada (doc 09 §3.5)',
+      () {
+        final acotaciones = EscenasArco3.mesaYReconstruccionEstella.planos
+            .whereType<PlanoAmbiente>()
+            .map((p) => p.textoLectura ?? '')
+            .join(' ');
+        expect(acotaciones, contains('1.'));
+        expect(acotaciones, contains('6.'));
+        expect(acotaciones, contains('carta puebla'));
+        expect(acotaciones, isNot(contains('Disputado')));
+      },
+    );
+  });
+
+  group('EscenasArco3.concilioEstella (3.5.3)', () {
+    test('viaja con ambiente salonConcilio', () {
+      expect(
+        EscenasArco3.concilioEstella.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test(
+      'Aitor cierra con la lección clave del oficio sostenible: '
+      '"se pueden hacer Brechas que no acaban contigo"',
+      () {
+        final dialogos = EscenasArco3.concilioEstella.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(
+          dialogos,
+          contains('Brechas que no acaban contigo'),
+        );
+      },
+    );
+  });
+
+  group('EscenasArco3.calleRuaAlAnochecer (3.5.4)', () {
+    test('viaja con ambiente calleRuaEstella', () {
+      expect(
+        EscenasArco3.calleRuaAlAnochecer.ambiente,
+        same(AmbienteArchivo.calleRuaEstella),
+      );
+    });
+
+    test(
+      'Aitor articula el aforismo "el oficio también incluye '
+      'respirar" — único momento del Arco 3 donde Maren no carga',
+      () {
+        final dialogos = EscenasArco3.calleRuaAlAnochecer.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Necesitabas una así'));
+        expect(dialogos, contains('El oficio también incluye respirar'));
+      },
+    );
+
+    test(
+      'la voz del Cuaderno cierra con "Ha sido un alivio" — Brecha '
+      'simple, voz breve sin lección integradora',
+      () {
+        final dialogosCuaderno = EscenasArco3.calleRuaAlAnochecer.planos
+            .whereType<PlanoDialogo>()
+            .where((p) => p.voz == VozPersonaje.vozDeFuente)
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogosCuaderno, contains('Hoy no hay nada que decir'));
+        expect(dialogosCuaderno, contains('la Brecha era simple'));
+        expect(dialogosCuaderno, contains('Ha sido un alivio'));
+      },
+    );
+
+    test(
+      'al cerrar la escena se activa arco_3_estacion_5_cerrada — '
+      'última flag de Estación antes de la Brecha 3.6 jugable de '
+      'Tudela 1378 (TUDELA-1378 sigue bloqueada por validación)',
+      () {
+        expect(
+          EscenasArco3.flagsDeCierrePorEscena['escena_3_5_4_vista'],
+          contains('arco_3_estacion_5_cerrada'),
+        );
+      },
+    );
+  });
+
   group('EscenasArco3.todas', () {
     test(
       'catálogo cubre apertura (3.0.x) + Estación 3.1 completa + '
       'latente 3.A.1 + Estación 3.2 completa (3.2.1 a 3.2.8) + '
       'latente 3.B.1 + Estación 3.3 completa (3.3.1 a 3.3.6) + '
       'latente 3.C.1 + Estación 3.4 completa (3.4.1 a 3.4.7) + '
-      'latente 3.D.1 — 32 cinemáticas implementadas',
+      'latente 3.D.1 + Estación 3.5 completa (3.5.1 a 3.5.4) — '
+      '36 cinemáticas implementadas',
       () {
-        expect(EscenasArco3.todas, hasLength(32));
+        expect(EscenasArco3.todas, hasLength(36));
         expect(
           EscenasArco3.todas.map((escena) => escena.id).toList(),
           [
@@ -964,6 +1094,10 @@ void main() {
             '3.4.6',
             '3.4.7',
             '3.D.1',
+            '3.5.1',
+            '3.5.2',
+            '3.5.3',
+            '3.5.4',
           ],
         );
       },
