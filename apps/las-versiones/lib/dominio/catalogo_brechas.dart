@@ -1045,57 +1045,82 @@ class CatalogoBrechas {
   /// Lista ordenada de todas las Brechas catalogadas. El orquestador
   /// la consulta para resolver `brechaPendiente()` igual que
   /// `EscenasArco1.todas` resuelve la próxima cinemática.
-  /// **Brecha 2.1 — Pompaelo bajo Iruña** (Arco 2, primera Estación).
-  /// Maren investiga una inscripción honorífica romana mutilada
-  /// hallada en una galería técnica bajo la calle Curia. La pedagogía
-  /// del oficio cambia respecto al Arco 1: ya no se trata de leer
-  /// objetos arqueológicos sin texto, sino de leer una fuente
-  /// **textual con propaganda**. Karim Belkacem (epigrafista del
-  /// Archivo) le enseña convenciones epigráficas (mayúsculas
-  /// latinas, abreviaturas IMP/CAES/AVG, fórmulas honoríficas,
-  /// dedicantes) y la postura epistémica clave del arco: una
-  /// inscripción NO es un documento neutral — es propaganda. El
-  /// productor pagó para que se viera lo que se ve. Lo que no le
-  /// interesaba al dedicante no aparece; lo que sí, aparece exagerado.
+  /// **Brecha 2.1 — Pompelo bajo Iruña** (Arco 2, primera Estación).
+  /// Maren baja al sótano romano del Archivo y trabaja con el **ara
+  /// funeraria doble de Aelio Attiano** — ara real hallada en la
+  /// calle Merced de Iruña en las excavaciones de 2004-2005, publicada
+  /// por García-Barberena, Unzu y Velaza en *Epigraphica* 76 (2014).
+  /// La pieza tiene dos inscripciones grabadas en caras contiguas con
+  /// dos siglos de diferencia: cara A (s. I, fórmula `D · M · S`) y
+  /// cara B (s. III, dedicatoria `D M / [A]elio Att[i]ano BNFO /
+  /// ann(orum) XX+[--] / [A]elio Attia[n]o ex ro(gatu) po[s(uit)]`).
+  /// Karim Belkacem (lo más cercano a un epigrafista que tiene el
+  /// Archivo) le enseña convenciones epigráficas y la postura clave
+  /// del oficio: una inscripción NO es un documento neutral — es
+  /// propaganda en el sentido amplio. El padre eligió las palabras y
+  /// pagó al lapicida; lo que no le interesaba conservar no aparece.
+  ///
+  /// **Capa pedagógica adicional respecto al Arco 1**: el lapicida
+  /// cometió un error gramatical en la cara B (el dedicante aparece
+  /// en dativo cuando debería ir en nominativo). Maren articula la
+  /// idea metodológica clave: *un error es información que escapa a
+  /// la propaganda*. El padre no eligió que el lapicida se equivocara;
+  /// el error está ahí en contra de la voluntad de quien encargó la
+  /// pieza, y nos dice algo del Pompelo del s. III (latín no firme,
+  /// taller con limitaciones) que el dedicante no controlaba. Karim
+  /// describe a Maren como "lo dijo al primer día lo que estudiantes
+  /// universitarios tardan en ver".
+  ///
+  /// **Reutilización en muralla bajoimperial**: el ara fue arrancada
+  /// de su necrópolis y reutilizada como sillar en la cimentación de
+  /// una torre semicircular de la muralla bajoimperial (finales s. III
+  /// — comienzos s. IV). La descontextualización conecta narrativamente
+  /// con la Estación 2.3 (la crisis del s. III) y permite el debut
+  /// jugable de CC.05 (causalidad histórica) más explícito.
   ///
   /// Habilidades ejercitadas según doc 02:
   /// - PR.01, PR.02 — formulación de preguntas críticas.
   /// - HF.01-07 + HF.09 — análisis de fuente textual con sesgo del
-  ///   productor. (HF.08 corroboración cruzada no aplica: es una
-  ///   sola inscripción mutilada, no se cruza con otra del mismo
-  ///   evento — los paralelos son comparativos, no corroboradores
-  ///   directos.)
-  /// - CC.04 — cronología relativa por convenciones epigráficas
-  ///   (datación por nomenclatura imperial y formulario).
+  ///   productor.
+  /// - CC.04, CC.05 — cronología relativa por convenciones epigráficas
+  ///   y causalidad histórica (la reutilización en muralla como
+  ///   evidencia del contexto de inestabilidad del s. III).
   /// - AH.01-03 — argumentación + calibración Brier (P4 en AH.03).
   ///
-  /// **Catálogo amplio**: 5 fuentes y **6 afirmaciones canónicas**
-  /// (vs. las 4 de las Brechas del Arco 1). Mínimo de afirmaciones
-  /// para ir al Concilio: 4 (parametrizable desde F2-9 con
-  /// `minimoAfirmacionesParaConcilio`). Las afirmaciones se
-  /// distribuyen 2 Sólidas + 2 Probables + 2 Disputadas — la
-  /// pedagogía de la Estación es justamente que en una fuente
-  /// textual con propaganda **el oficio honesto declara muchas
-  /// Disputado y Probable, no muchas Sólido**. Sostener tres
-  /// declaraciones de Sólido aquí sería sobreconfianza.
+  /// **Catálogo amplio**: 4 fuentes y **10 afirmaciones canónicas**
+  /// (las 8 del doc validado, con las dos de calibración doble —
+  /// hecho del error / causa del error, hecho de la reutilización /
+  /// contexto de inestabilidad — separadas en pares para preservar
+  /// el matiz sin extender el enum `NivelConfianza`). Distribución
+  /// pedagógica: 6 Sólido + 2 Probable + 2 Disputado.
   ///
-  /// **Las cinco fuentes son explícitamente ficticias y diegéticas**:
-  /// - La inscripción en sí es modelo literario verosímil basado en
-  ///   formularios honoríficos romanos genéricos, sin reproducir
-  ///   ninguna inscripción real catalogada en CIL II o Hispania
-  ///   Epigraphica.
-  /// - El "Licinio cónsul" honrado es figura ficticia diegética; la
-  ///   *gens Licinia* sí es real y produjo cónsules a lo largo del
-  ///   Imperio (la pedagogía sostiene la verosimilitud).
-  /// - La PIR (*Prosopographia Imperii Romani*) sí es herramienta
-  ///   real y trazable — se cita por su nombre canónico sin afirmar
-  ///   entradas concretas.
+  /// `minimoAfirmacionesParaConcilio: 7` — declarar 7 de 10 fuerza al
+  /// jugador a tocar al menos una no-Sólido (las 6 Sólido por sí
+  /// solas no llegan al mínimo). La pedagogía de la Estación es que
+  /// en una pieza con propaganda + información que escapa, sostener
+  /// la incertidumbre es parte del oficio: las tres hipótesis sobre
+  /// el desfase temporal de las dos caras y la causa exacta del error
+  /// del lapicida son Disputadas legítimas.
   ///
-  /// Ver `BLOQUEOS-PENDIENTES.md` para el detalle de sustituciones.
+  /// **Material trazable validado por el comité provisional**
+  /// (POMPAELO-INSCRIPCION V-NOSOTROS, ver tracker v0.6):
+  /// - El ara funeraria doble de Aelio Attiano es real y publicada
+  ///   (García-Barberena/Unzu/Velaza 2014, *Epigraphica* 76,
+  ///   pp. 323-344). Custodiada en el Almacén de Arqueología del
+  ///   Gobierno de Navarra.
+  /// - Las tablas de Arre (CIL II 2958-2960) son reales y dan la
+  ///   forma `Pompelo` canónica (se prefiere a `Pompaelo`, que
+  ///   aparece sólo en el *Itinerario de Antonino*).
+  /// - La muralla bajoimperial de Pompelo (calle Merced) es real,
+  ///   con datación finales s. III - inicios s. IV.
+  ///
+  /// Ver `BLOQUEOS-PENDIENTES.md` — entrada LICINIO-CONSUL cerrada
+  /// por POMPAELO-INSCRIPCION; el ara de Aelio Attiano sustituye la
+  /// inscripción ficticia anterior.
   static const Brecha brecha21 = Brecha(
     id: '2.1',
-    titulo: 'La inscripción de Licinio',
-    ubicacionVisible: 'IRUÑA — POMPAELO SUBTERRÁNEA',
+    titulo: 'El ara de Aelio Attiano',
+    ubicacionVisible: 'IRUÑA — POMPELO SUBTERRÁNEA',
     habilidadesEjercitadas: [
       'PR.01',
       'PR.02',
@@ -1108,6 +1133,7 @@ class CatalogoBrechas {
       'HF.07',
       'HF.09',
       'CC.04',
+      'CC.05',
       'AH.01',
       'AH.02',
       'AH.03',
@@ -1115,207 +1141,263 @@ class CatalogoBrechas {
     fuentes: _fuentesBrecha21,
     afirmacionesCanonicas: _afirmacionesBrecha21,
     flagDeCompletado: 'brecha_2_1_completada',
-    minimoAfirmacionesParaConcilio: 4,
+    minimoAfirmacionesParaConcilio: 7,
   );
 
   static const List<Fuente> _fuentesBrecha21 = [
     Fuente(
-      id: 'inscripcion_in_situ',
-      tipoVisible: 'La inscripción honorífica completa, in situ',
+      id: 'ara_aelio_attiano',
+      tipoVisible: 'El ara funeraria doble de Aelio Attiano, in situ',
       descripcion:
-          'Bloque calizo rectangular reutilizado como pavimento en una '
-          'galería técnica bajo la calle Curia. Inscripción en cuatro '
-          'líneas en mayúsculas romanas. La superficie está pulida, '
-          'el grabado profundo, las letras de buena factura. La cuarta '
-          'línea está mutilada: queda DEDICAVIT EX V[...] y el resto '
-          'se perdió cuando el bloque fue cortado para cubrir el '
-          'acueducto.',
+          'Ara funeraria de piedra arenisca, aproximadamente medio '
+          'metro de alto, con corona moldurada en lo alto, rota en '
+          'dos partes que encajan. Tiene texto grabado en dos caras '
+          'contiguas. Cara A: una sola línea breve, `D · M · S` '
+          '(*Dis Manibus Sacrum*), paleografía del s. I d.C., letras '
+          'rígidas y cuadradas. Cara B: seis líneas con erosiones en '
+          'los bordes derechos, `D M / [A]elio Att[i]ano BNFO / '
+          'ann(orum) XX+[--] / [A]elio Attia[n]o ex ro(gatu) po[s(uit)]`, '
+          'paleografía del s. III d.C. con E cursiva (casi epsilon '
+          'griega) y L de apertura suelta. La traducción consensuada, '
+          'corrigiendo el error gramatical del lapicida en la línea 5: '
+          '*A los Dioses Manes. A Elio Attiano, su buen hijo, de '
+          'treinta (y tantos) años de edad, lo dedicó (el monumento) '
+          'Elio Attiano, de acuerdo con su ruego.* La pieza fue hallada '
+          'reutilizada como sillar en la cimentación de una torre '
+          'semicircular de la muralla bajoimperial.',
       propiedadesCanonicas: PropiedadesFuente(
         tipo: TipoFuente.primaria,
-        autor: 'El dedicante anónimo (cuya identidad la línea perdida '
-            'borró)',
-        fecha: 'Probablemente s. I-III d.C. por convenciones '
-            'epigráficas; con detalle posible época trajanea por '
-            'nomenclatura imperial',
-        publico: 'Las personas que circulaban por el lugar público '
-            'de Pompaelo donde la inscripción estaba originalmente '
-            'expuesta',
-        intereses: 'Que el honrado quedara registrado en piedra ante '
-            'la comunidad',
-        omisiones: 'No dice quién pagó, no dice por qué se honra '
-            'aquí en Pompaelo, no dice qué relación tenía el '
-            'dedicante con el honrado',
+        autor: 'El padre de Aelio Attiano (dedicante) + el lapicida '
+            'del taller local (productor material)',
+        fecha: 'Cara A: s. I d.C. por paleografía. Cara B: s. III '
+            'd.C. por paleografía y formulario',
+        publico: 'Las personas que pasaran por la necrópolis donde '
+            'la pieza estuvo originalmente expuesta, quizá unos años '
+            'o unas décadas, antes de su reutilización en la muralla',
+        intereses: 'El padre eligió las palabras para que el dolor '
+            'durara en piedra: el "buen hijo" recordado, la edad, la '
+            'fórmula del ruego. Selecciona qué del difunto conservar',
+        omisiones: 'No nos cuenta cómo era Aelio Attiano realmente '
+            '— sólo cómo el padre quería recordarlo. Tres frases. El '
+            'resto se ha perdido o nunca estuvo',
         corroboraOContradice: 'Es la fuente principal — todo lo demás '
-            'la interpreta',
+            'la interpreta. El error gramatical de la línea 5 es '
+            'información que escapa a la propaganda del padre',
         sesgo: SesgoFuente.oficialista,
       ),
     ),
     Fuente(
-      id: 'linea_dedicacion_perdida',
-      tipoVisible: 'La línea perdida: DEDICAVIT EX V[...]',
+      id: 'publicacion_velaza_2014',
+      tipoVisible: 'García-Barberena, Unzu y Velaza, *Epigraphica* 76 '
+          '(2014), pp. 323-344',
       descripcion:
-          'La cuarta línea de la inscripción quedó cortada cuando el '
-          'bloque se reutilizó. Sólo se conservan las primeras '
-          'letras: DEDICAVIT EX V (luego se rompe). La fórmula '
-          'DEDICAVIT EX seguida de un sustantivo (VOTO, VIRIBUS, '
-          'VOLVNTATE) es estándar; el dedicante venía después, en '
-          'la línea perdida.',
+          'Publicación académica que da a conocer el ara funeraria '
+          'doble. Discute la transcripción, la paleografía, las tres '
+          'hipótesis sobre el desfase temporal de las dos caras '
+          '(pintura debajo, taller con stock, pieza desechada por '
+          'defecto y reusada), el error gramatical de la línea 5 '
+          '(distracción, escaso dominio del latín, prisas), y el '
+          'contexto de hallazgo en la muralla bajoimperial. La '
+          'transcripción consensuada se basa en autopsia directa de '
+          'la pieza con luz rasante.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'María García-Barberena, Mercedes Unzu (arqueólogas '
+            'directoras de la excavación), Javier Velaza (epigrafista '
+            'de la Universitat de Barcelona)',
+        fecha: '2014 — diez años después del hallazgo de 2004',
+        publico: 'Especialistas en epigrafía romana hispana',
+        intereses: 'Edición rigurosa, identificación de paralelos, '
+            'reconstrucción metodológica',
+        omisiones: 'No agota las hipótesis sobre la causa del error '
+            'del lapicida ni la decisión política de reutilizar piezas '
+            'funerarias en la muralla — son cuestiones abiertas',
+        corroboraOContradice: 'Es la fuente secundaria más autorizada '
+            'sobre la pieza. Karim contrasta su trabajo con esta '
+            'edición',
+      ),
+    ),
+    Fuente(
+      id: 'tablas_arre_pompelo',
+      tipoVisible: 'Las tablas de Arre — CIL II 2958, 2959, 2960',
+      descripcion:
+          'Tres tablas de bronce halladas en Arre (a unos kilómetros '
+          'de Iruña) que contienen el nombre `Pompelo` en epigrafía '
+          'romana de los siglos I-II d.C. Forman parte del Corpus '
+          'Inscriptionum Latinarum, volumen II (Hispania). Las tablas '
+          'establecen que la forma canónica oficial era *Pompelo* — '
+          'la variante *Pompaelo* aparece sólo después, en el '
+          '*Itinerario de Antonino* (s. III-IV). La historiografía '
+          'actual prefiere Pompelo siguiendo la epigrafía contemporánea.',
       propiedadesCanonicas: PropiedadesFuente(
         tipo: TipoFuente.primaria,
-        autor: 'El propio dedicante (la línea era suya por convención)',
-        fecha: 'Misma que la inscripción completa',
-        publico: 'Mismo',
-        intereses: 'El dedicante quería identificarse — la pérdida '
-            'es accidental, no intencional',
-        omisiones: 'Por la mutilación, la identidad del dedicante '
-            'queda borrada — no por silencio del productor sino por '
-            'azar histórico',
-        corroboraOContradice: 'No corrobora ni contradice por sí sola '
-            '— fija sólo que hubo dedicación voluntaria',
+        autor: 'Las instituciones de Pompelo que produjeron las tablas',
+        fecha: 's. I-II d.C.',
+        publico: 'Uso oficial municipal',
+        intereses: 'Registro institucional formal',
+        omisiones: 'No dicen nada del ara de Aelio Attiano, pero '
+            'fijan el nombre canónico de la ciudad en el periodo de '
+            'la cara A del ara',
+        corroboraOContradice: 'Anclan la forma `Pompelo` como nombre '
+            'oficial en el periodo de la pieza, frente a `Pompaelo` '
+            'que es variante posterior',
       ),
     ),
     Fuente(
-      id: 'paralelos_epigraficos_pompaelo',
-      tipoVisible: 'Repertorio de inscripciones de Pompaelo del '
-          'mismo periodo',
+      id: 'datos_muralla_bajoimperial',
+      tipoVisible: 'Datos arqueológicos de la muralla bajoimperial '
+          '(calle Merced, excavaciones 2004-2005)',
       descripcion:
-          'Karim ha compilado para esta Brecha un dossier con cinco '
-          'inscripciones honoríficas y funerarias halladas en el '
-          'área de Pompaelo, fechadas en el rango s. I-III d.C. Sirve '
-          'para comparar formularios, calidad del grabado y patrones '
-          'de uso del espacio público. Ninguna nombra al "Licinio '
-          'cónsul" ni al dedicante perdido.',
+          'Documentación arqueológica de la torre semicircular de la '
+          'muralla bajoimperial donde fue hallada el ara como sillar '
+          'reutilizado. La muralla data de finales del s. III - '
+          'inicios del s. IV. El relleno incluye además otras dos '
+          'aras y dos estelas reutilizadas. La construcción es de '
+          'apariencia urgente, con materiales heterogéneos, signos de '
+          'rapidez. Periodo histórico: crisis del s. III, '
+          'inestabilidad del Imperio, presión externa creciente sobre '
+          'las ciudades hispanas.',
       propiedadesCanonicas: PropiedadesFuente(
-        tipo: TipoFuente.secundaria,
-        autor: 'Compilado por Karim Belkacem para la Brecha',
-        fecha: 'Compilación reciente; las inscripciones son del s. '
-            'I-III d.C.',
-        publico: 'Aprendices del Archivo trabajando en epigrafía',
-        intereses: 'Pedagógicos — proveer paralelos para que la '
-            'aprendiz contextualice',
-        omisiones: 'No incluye paralelos fuera de Pompaelo (lo cual '
-            'limita comparaciones de redes provinciales)',
-        corroboraOContradice: 'Corrobora que el formulario y la '
-            'calidad de la inscripción de Licinio encajan con la '
-            'práctica epigráfica local del periodo',
-      ),
-    ),
-    Fuente(
-      id: 'pir_repertorio',
-      tipoVisible: 'PIR — Prosopographia Imperii Romani',
-      descripcion:
-          'Repertorio canónico de personas conocidas del Imperio '
-          'Romano. Incluye todos los cónsules con su nomen, cognomen, '
-          'datación y referencias bibliográficas. Karim instruye a '
-          'Maren para buscar Licinios cónsules de época trajanea. '
-          'El repertorio devuelve dos candidatos posibles, uno más '
-          'compatible que otro con la mutilación de la inscripción.',
-      propiedadesCanonicas: PropiedadesFuente(
-        tipo: TipoFuente.secundaria,
-        autor: 'Académicos de la prosopografía romana, varias '
-            'generaciones',
-        fecha: 'Compilación con actualizaciones desde el s. XIX',
-        publico: 'Especialistas en historia romana',
-        intereses: 'Construir un repertorio exhaustivo y trazable',
-        omisiones: 'No nombra personas que no llegaron al rango '
-            'consular ni dedicantes anónimos — herramienta para una '
-            'élite',
-        corroboraOContradice: 'Permite afinar la datación trajanea '
-            'de la inscripción al cruzar con candidatos consulares '
-            'documentados',
-      ),
-    ),
-    Fuente(
-      id: 'paralelos_inscripciones_capital',
-      tipoVisible: 'Inscripciones honoríficas similares conservadas '
-          'en Roma',
-      descripcion:
-          'Selección comparativa de tres inscripciones honoríficas '
-          'romanas dedicadas a senadores y cónsules en Roma misma. '
-          'Permite contrastar el formulario de Pompaelo con el del '
-          'centro del Imperio: en general las urbanas son más largas '
-          'y elaboradas; las provinciales como la de Pompaelo son '
-          'más concisas y reciclan fórmulas estándar.',
-      propiedadesCanonicas: PropiedadesFuente(
-        tipo: TipoFuente.secundaria,
-        autor: 'Compilación académica',
-        fecha: 'Inscripciones del s. I-III d.C.',
-        publico: 'Investigadores de epigrafía romana',
-        intereses: 'Análisis comparativo del lenguaje honorífico',
-        omisiones: 'Por sesgo tradicional, los dedicantes no '
-            'élites están infrarepresentados (lo cual también '
-            'afecta a esta comparación con Pompaelo)',
-        corroboraOContradice: 'Sugiere que la inscripción de Pompaelo '
-            'sigue convención provincial pero no permite afirmar el '
-            'vínculo del honrado con la ciudad',
-        sesgo: SesgoFuente.invisibilizador,
+        tipo: TipoFuente.primaria,
+        autor: 'Quienes construyeron la muralla — institución municipal '
+            'o autoridad militar, no consta exactamente quién',
+        fecha: 'Finales s. III - inicios s. IV d.C.',
+        publico: 'Defensa de la ciudad',
+        intereses: 'Prioridad funcional inmediata, no conmemorativa',
+        omisiones: 'No sabemos si las familias de los difuntos cuyos '
+            'monumentos se reutilizaron consintieron, protestaron o '
+            'ya no estaban — la documentación arqueológica no lo '
+            'preserva',
+        corroboraOContradice: 'Confirma el contexto de la reutilización '
+            'del ara y permite anclar la fecha post quem para la '
+            'descontextualización de la pieza funeraria',
       ),
     ),
   ];
 
   static const List<AfirmacionCanonica> _afirmacionesBrecha21 = [
     AfirmacionCanonica(
-      id: 'tipo_honorifica',
-      texto: 'La inscripción es honorífica — no funeraria, no votiva. '
-          'Honra a una persona viva (o recién fallecida sin contexto '
-          'funerario) en un lugar público.',
+      id: 'ara_funeraria_doble',
+      texto: 'La pieza es un ara funeraria romana con dos inscripciones '
+          'cronológicamente distintas grabadas en caras contiguas.',
       calibracionCorrecta: NivelConfianza.solido,
       idsFuentesAnclaje: [
-        'inscripcion_in_situ',
-        'paralelos_epigraficos_pompaelo',
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
       ],
     ),
     AfirmacionCanonica(
-      id: 'siglo_inscripcion_amplio',
-      texto: 'La inscripción es datable, por sus características '
-          'epigráficas (forma de las letras, formulario, '
-          'abreviaturas), entre los siglos I y III d.C.',
+      id: 'cara_a_siglo_i',
+      texto: 'La cara A (`D · M · S`) data del s. I d.C. por '
+          'paleografía. Es la fórmula estándar *Dis Manibus Sacrum* '
+          'que abre casi todas las inscripciones funerarias romanas.',
       calibracionCorrecta: NivelConfianza.solido,
       idsFuentesAnclaje: [
-        'inscripcion_in_situ',
-        'paralelos_epigraficos_pompaelo',
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
       ],
     ),
     AfirmacionCanonica(
-      id: 'datacion_trajanea',
-      texto: 'La inscripción puede datarse, con mayor precisión, en '
-          'época trajanea (98-117 d.C.) por la nomenclatura imperial '
-          'y el cruce con candidatos en la PIR.',
-      calibracionCorrecta: NivelConfianza.probable,
+      id: 'cara_b_siglo_iii',
+      texto: 'La cara B data del s. III d.C. por paleografía y '
+          'formulario (E cursiva tipo epsilon, L de apertura suelta, '
+          'fórmula DM sin S, BNFO no ortodoxo).',
+      calibracionCorrecta: NivelConfianza.solido,
       idsFuentesAnclaje: [
-        'inscripcion_in_situ',
-        'pir_repertorio',
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
       ],
     ),
     AfirmacionCanonica(
-      id: 'licinio_consul',
-      texto: 'El honrado fue un cónsul perteneciente a la gens '
-          'Licinia, identificable con uno o dos candidatos '
-          'compatibles en la PIR.',
-      calibracionCorrecta: NivelConfianza.probable,
-      idsFuentesAnclaje: [
-        'inscripcion_in_situ',
-        'pir_repertorio',
-      ],
-    ),
-    AfirmacionCanonica(
-      id: 'identidad_dedicante',
-      texto: 'Se puede determinar quién pagó la inscripción '
-          '— si fue la propia ciudad de Pompaelo a través de su '
-          'senado local, un cliente, un liberto, un colega, un '
-          'familiar.',
-      calibracionCorrecta: NivelConfianza.disputado,
-      idsFuentesAnclaje: ['linea_dedicacion_perdida'],
-    ),
-    AfirmacionCanonica(
-      id: 'vinculo_pompaelo_honrado',
-      texto: 'Se puede determinar por qué esta inscripción está aquí '
-          'en Pompaelo y no en Roma — qué vínculo concreto tenía el '
-          'honrado con la ciudad.',
+      id: 'tres_hipotesis_desfase',
+      texto: 'La diferencia cronológica de dos siglos entre las dos '
+          'caras admite tres hipótesis plausibles que las fuentes no '
+          'permiten cerrar: (1) cara A grabada con DMS y resto '
+          'pintado con pigmento perdido y reutilizada después; (2) '
+          'pieza preparada por una *officina epigraphica* con DMS '
+          'pre-grabado, sin comprador hasta el s. III; (3) pieza '
+          'desechada por defecto en la S de la cara A y reutilizada.',
       calibracionCorrecta: NivelConfianza.disputado,
       idsFuentesAnclaje: [
-        'inscripcion_in_situ',
-        'paralelos_inscripciones_capital',
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'difunto_joven_adulto',
+      texto: 'El difunto, Aelio Attiano, era un joven adulto entre '
+          '29 y 42 años — la línea con `ann(orum) XX+[--]` y el espacio '
+          'disponible acotan el rango. No era anciano.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'dedicante_padre',
+      texto: 'El dedicante era con alta probabilidad el padre del '
+          'difunto, dado que padre e hijo compartían *nomen* (Aelius) '
+          'y *cognomen* (Attianus) — práctica romana documentada de '
+          'transmisión nominal patrilineal.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'error_lapicida_hecho',
+      texto: 'El lapicida cometió un error gramatical en la línea 5: '
+          'el dedicante aparece en dativo (*[A]elio Attia[n]o*) cuando '
+          'debería ir en nominativo (sujeto del verbo *posuit*). El '
+          'error es factualmente atestiguado por la transcripción.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'error_lapicida_causa',
+      texto: 'La causa exacta del error gramatical es indeterminable '
+          'desde la pieza: distracción del lapicida, escaso dominio '
+          'del latín en el taller local del Pompelo del s. III, prisas '
+          '— las tres explicaciones son plausibles y la pieza no las '
+          'discrimina. Lo que el error sí dice metodológicamente es '
+          'que la romanización lingüística no estaba completa o estaba '
+          'retrocediendo en la ciudad del periodo.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'reutilizacion_muralla_hecho',
+      texto: 'La pieza fue reutilizada como sillar en la cimentación '
+          'de una torre semicircular de la muralla bajoimperial de '
+          'Pompelo, datable en finales del s. III - inicios del s. IV '
+          'd.C. El hecho de la reutilización es factualmente '
+          'atestiguado por el contexto arqueológico del hallazgo.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'ara_aelio_attiano',
+        'datos_muralla_bajoimperial',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'reutilizacion_contexto',
+      texto: 'La reutilización refleja una situación de construcción '
+          'urgente y apresurada en contexto de inestabilidad del '
+          'Imperio del s. III — la dignidad funeraria valió menos '
+          'que la urgencia defensiva. Es lectura plausible pero no '
+          'cerrada: una muralla podía construirse con piezas tomadas '
+          'con prisa también en periodos no críticos por economía.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'datos_muralla_bajoimperial',
+        'publicacion_velaza_2014',
       ],
     ),
   ];
@@ -1435,7 +1517,7 @@ class CatalogoBrechas {
       descripcion:
           'Foro romano parcialmente conservado, restos de termas, '
           'cimientos. Calahorra moderna construida encima de manera '
-          'paralela a Iruña sobre Pompaelo. En el museo local hay '
+          'paralela a Iruña sobre Pompelo. En el museo local hay '
           'una sala dedicada a Quintiliano: una estatua moderna, '
           'una placa, fragmentos cerámicos del barrio donde se cree '
           'que vivió.',
@@ -1457,12 +1539,12 @@ class CatalogoBrechas {
       ),
     ),
     Fuente(
-      id: 'comparacion_calagurris_pompaelo',
-      tipoVisible: 'Comparación con Pompaelo',
+      id: 'comparacion_calagurris_pompelo',
+      tipoVisible: 'Comparación con Pompelo',
       descripcion:
-          'Maren ya conoce Pompaelo bajo Iruña por la Brecha 2.1. La '
+          'Maren ya conoce Pompelo bajo Iruña por la Brecha 2.1. La '
           'arqueóloga señala el paralelo: Calahorra moderna sobre '
-          'Calagurris romana funciona como Iruña sobre Pompaelo — '
+          'Calagurris romana funciona como Iruña sobre Pompelo — '
           'misma lógica de superposición urbana, ambas en la red '
           'de ciudades romanas del valle del Ebro y el Pirineo '
           'occidental.',
@@ -1545,7 +1627,7 @@ class CatalogoBrechas {
       calibracionCorrecta: NivelConfianza.solido,
       idsFuentesAnclaje: [
         'institutio_oratoria_pasajes',
-        'comparacion_calagurris_pompaelo',
+        'comparacion_calagurris_pompelo',
       ],
     ),
     AfirmacionCanonica(

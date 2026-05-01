@@ -236,26 +236,21 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 
 ---
 
-## Estación 2.1 — sustituciones diegéticas e inscripción ficticia (F2-1)
+## Estación 2.1 — sustituida por POMPAELO-INSCRIPCION validada (F2-17)
 
-**Tracker doc 17**: pendiente.
+**Tracker doc 17**: validada en revisión v0.3 del paquete documental — `coleccion-nuevo-ser-paquete-documental-v0.3/cambios-pendientes-v0.3/escenas-1200-y-final-arco-4.md` recoge la sustitución del modelo literario "inscripción de Licinio cónsul" por la **ara funeraria real de Aelio Attiano** publicada por García-Barberena, Unzu y Velaza en *Epigraphica* 76 (2014).
 
-**Guion canónico (doc 08 §2.1)**: la primera Brecha del Arco 2 ocurre en una galería técnica bajo la calle Curia de Iruña — restos de Pompaelo romana parcialmente excavados, plataforma con luces dirigidas, una inscripción honorífica encontrada en superficie reutilizada como pavimento. Karim Belkacem (epigrafista del Archivo, doc 08 §2.1.2, 47 años) enseña a Maren las convenciones epigráficas (líneas en mayúsculas latinas, abreviaturas IMP/CAES/AVG, fórmulas honoríficas, dedicantes individuales vs colectivos, datación por nomenclatura imperial) y la postura epistémica clave: una inscripción NO es un documento neutral, es propaganda — el productor pagó para que se viera lo que se ve.
+**Estado**: cerrada como sustitución por material validado. Las cinemáticas de la Estación 2.1 (`escenas_arco_2.dart`, 2.1.1–2.1.6) y la Brecha 2.1 jugable (`catalogo_brechas.dart::CatalogoBrechas.brecha21`) usan el ara real de Aelio Attiano. El catálogo expone 4 fuentes diegéticas (ara primaria oficialista, publicación Velaza 2014 secundaria, tablillas de Arre primarias con CIL II 2958-2960 ancla la forma *Pompelo*, datos de la muralla bajoimperial primarios) y 10 afirmaciones canónicas con la calibración doble del doc validado: el error del lapicida en par hecho/causa (Sólido/Disputado) y la reutilización en muralla en par hecho/contexto (Sólido/Probable). `minimoAfirmacionesParaConcilio: 7`. Se preserva la pedagogía del oficio honesto declarando muchas Disputado/Probable cuando la fuente textual lleva propaganda y huecos no rellenables.
 
-**Estado**: implementada como cadena de 6 cinemáticas (2.1.1–2.1.6) que cubren narrativamente la pedagogía sin pantalla de Reconstrucción jugable. La Brecha 2.1 jugable real (con Mesa de Trabajo + declaración de afirmaciones con niveles de confianza sobre la inscripción) queda **pendiente** — requiere refactor del modelo `FaseBrecha` o variante específica para inscripciones (ver sección siguiente).
+**Cambio terminológico global Pompaelo → Pompelo**: las tablillas hospitalarias de Arre (CIL II 2958-2960) anclan la forma local *Pompelo* (no *Pompaelo*) como atestiguada en epigrafía hispanorromana. Aplicado en `escenas_arco_1.dart`, `escenas_arco_2.dart`, `ambiente_archivo.dart` (con renombre del identifier `pompaeloSubterranea` → `pompeloSubterranea` y de la cadena de persistencia `'pompelo_subterranea'`), `mosaico_arco_2.dart` (los dos fragmentos del Arco 2 sobre la Estación 2.1 reescritos con la nueva terminología y las nuevas IDs `pompelo_ara_dos_caras` + `pompelo_error_lapicida_y_muralla`), `widget_test.dart` y `catalogo_brechas.dart`. Se preservan las menciones al *Itinerario de Antonino* (que sí grafía *Pompaelone*) en su contexto literario original.
 
-**Sustituciones diegéticas aplicadas en el contenido**:
-- **Inscripción romana**: la inscripción que Karim enseña es **ficticia y diegética**. El bloque de texto en la cinemática 2.1.2 (`PlanoAmbiente` con la inscripción literal) es modelo literario verosímil basado en formularios honoríficos romanos genéricos, sin reproducir literalmente ninguna inscripción real catalogada en CIL II o en Hispania Epigraphica. Las abreviaturas (IMP CAES AVG, DD PP, dedicación a un princeps) son convenciones epigráficas estándar — pedagógicas, no afirmaciones de hallazgo histórico.
-- **Princeps homenajeado**: el guion canónico menciona "PRINCIPS-OPTIMVS-TRAJANO" como ejemplo de fórmula honorífica reconocible (Trajano fue el primer emperador conocido como *optimus princeps*). Sustituido por una formulación genérica que mantiene la convención sin afirmar que la inscripción ficticia honra a un emperador concreto. Si el comité valida la elección de Trajano (apropiada cronológicamente para Pompaelo en el siglo II), se revierte.
-- **Pompaelo bajo la calle Curia**: validado como entrada (ya aparece en 1.0.2). La galería técnica subterránea es ficticia pero arqueológicamente verosímil (Pamplona tiene yacimientos romanos parcialmente musealizados). No se afirma una visita pública concreta.
-- **Referencia bibliográfica PIR (Prosopographia Imperii Romani)**: Karim la cita por su nombre canónico — herramienta epigráfica real, pública y trazable. No se inventa entrada ni cita concreta dentro del PIR.
+**Material validado preservado**: ara funeraria de doble inscripción (cara A s. I dedicada a Aelio Attiano por su padre, cara B s. III reutilizando la pieza), error del lapicida en la cara A (latín agramatical en una zona donde lo previsible sería una élite hablando latín culto), reutilización de la pieza en la muralla bajoimperial de Pompelo, tres hipótesis canónicas para el desfase cronológico entre las dos inscripciones, datación amplia s. I-III, las dos preguntas que el ara mutilada por la reutilización deja sin respuesta (vínculo familiar exacto del difunto y ocupación que justifique el ara doble). Material trazable: García-Barberena/Unzu/Velaza *Epigraphica* 76 (2014), CIL II 2958-2960, *Prosopographia Imperii Romani* (PIR) como herramienta canónica.
 
-**Pendiente de revisión humana**:
-- ¿La inscripción ficticia es lo bastante verosímil para sostener la pedagogía sin inducir a malentendido (un aprendiz creyendo que es real)? Posible mitigación: añadir voz del Cuaderno aclarando que es ejemplo de Karim, no inscripción real catalogada.
-- Tono de Karim — primera aparición con material narrativo largo. ¿La voz de Cronista revisor/mentor encaja con la Bíblia de Personajes (doc 04, hoy con entrada inicial para Karim como epigrafista)?
-- Decisión sobre el princeps homenajeado en la inscripción ficticia. Si se quiere fijar Trajano (canónicamente apropiado), revertir la sustitución; si se prefiere ambigüedad, mantener.
+**Sustituciones diegéticas residuales**:
+- La voz de Karim como epigrafista revisor sigue siendo material narrativo cerrado por el guion canónico — no requiere validación adicional del comité. Su entrada en doc 04 está actualizada con el material de F2-1.
+- Las cinemáticas 2.1.1–2.1.6 actualizadas con el contenido del doc validado (texto del ara, error del lapicida, reutilización en muralla, Karim como epigrafista en lugar de pedagogo abstracto) llegan en un slice posterior — el catálogo de la Brecha jugable y la pantalla de Reconstrucción ya usan el material correcto.
 
-**Cuando el comité valide**: se puede cambiar la inscripción ficticia por una real catalogada (con su CIL/HEp y bibliografía), o mantener la ficticia con etiqueta narrativa explícita.
+**Anteriores entradas cerradas**: las dos entradas previas "Estación 2.1 — sustituciones diegéticas e inscripción ficticia (F2-1)" y "Brecha 2.1 jugable — catálogo + cableado al orquestador (F2-10a)" se sustituyen por esta entrada de cierre. La inscripción ficticia de "Licinio cónsul" + el repertorio de paralelos epigráficos de Pompaelo ya no aparecen en el código.
 
 ---
 
@@ -268,35 +263,6 @@ El orquestador encadena Arco 1 → Arco 2 cruzando `arco_1_cerrado_por_la_cronis
 **Por qué no se cambia ahora**: el cambio rompería el test caracterización `los tres aspirantes (Maren, Tasio, Karim) llevan tinta principal` en `voz_personaje_test.dart`, que aún asume el modelo viejo donde Karim era aspirante. Hay que migrar en un slice dedicado: actualizar el test (sacar Karim del grupo de aspirantes, añadirlo a un nuevo grupo de Cronistas técnicos), cambiar el color, regenerar la entrada del Cuaderno si menciona el color.
 
 **Pendiente**: slice corto de migración, no urgente. Hasta entonces, la docstring de `karim` ya documenta la inconsistencia.
-
----
-
-## Brecha 2.1 jugable — catálogo + cableado al orquestador (F2-10a)
-
-**Tracker doc 17**: pendiente.
-
-**Estado**: la primera Brecha jugable del Arco 2 está implementada en `CatalogoBrechas.brecha21` y cableada al orquestador. Se dispara con `inscripcion_romana_estudiada` (flag que la cinemática 2.1.4 *Quién pagó esto* activa al cerrar) y se interpone entre la 2.1.4 y la 2.1.5 *Reconstrucción y Concilio* — ahora la 2.1.5 requiere `brecha_2_1_completada` en lugar del previo `escena_2_1_4_vista`. Son dos Concilios narrativamente distintos según el doc 08 §2.1.4 / §2.1.5: el interno con Karim en la Mesa de Trabajo (jugable) y el formal en el salón con Begoña/Isaura/Karim/Aitor dos días después (cinemática).
-
-**Catálogo de la Brecha 2.1**:
-- 5 fuentes diegéticas: la inscripción in situ (primaria, sesgo oficialista), la línea de dedicación perdida (primaria, accidente de mutilación), un repertorio de paralelos epigráficos de Pompaelo (secundaria), la PIR (*Prosopographia Imperii Romani*, secundaria, herramienta), y paralelos de inscripciones de la capital (secundaria, sesgo invisibilizador por infrarrepresentación de dedicantes no élite).
-- 6 afirmaciones canónicas distribuidas pedagógicamente 2 Sólido + 2 Probable + 2 Disputado: la pedagogía de la Estación 2.1 es justamente que en una fuente textual con propaganda el oficio honesto declara muchas Disputado y Probable, no muchas Sólido. Las dos Sólidas son la naturaleza honorífica y la datación amplia s. I-III; las dos Disputadas son la identidad del dedicante y el vínculo del honrado con Pompaelo (las dos preguntas que la inscripción mutilada deja explícitamente sin respuesta según el doc 08 §2.1.4 + §2.1.5).
-- `minimoAfirmacionesParaConcilio: 4` — declarar sólo 3 de 6 sería trivializar la mecánica. El parámetro lo introduce F2-9.
-
-**Material trazable** (sin sustitución):
-- La PIR (*Prosopographia Imperii Romani*) se cita por su nombre canónico — herramienta epigráfica real, pública y trazable. No se inventa entrada concreta.
-- La *gens Licinia* es real y produjo cónsules a lo largo del Imperio (apellido común de la élite romana). No se afirma cónsul concreto.
-
-**Sustituciones diegéticas adicionales aplicadas en el catálogo**:
-- **Inscripción honorífica con dedicante mutilado**: el catálogo describe la inscripción como "bloque calizo rectangular" hallado en una galería técnica bajo la calle Curia, con cuarta línea "DEDICAVIT EX V[...]" mutilada por reutilización como pavimento. Es modelo literario verosímil basado en formularios honoríficos romanos genéricos — ninguna inscripción real catalogada en CIL II o Hispania Epigraphica.
-- **"Licinio cónsul"**: figura ficticia diegética. La gens Licinia es real, pero el cónsul concreto homenajeado en la inscripción ficticia no se identifica con un Licinio histórico. El nombre del catálogo (`La inscripción de Licinio`) preserva la verosimilitud sin afirmar identidad histórica.
-- **Repertorio de paralelos epigráficos de Pompaelo**: la fuente compilada por Karim para la Brecha es ficticia diegética. Pamplona/Pompaelo tiene yacimientos romanos parcialmente documentados, pero el dossier específico de cinco inscripciones que esta Brecha presenta no se reproduce de un repertorio real.
-
-**Pendiente de revisión humana**:
-- ¿La distribución 2 Sólido + 2 Probable + 2 Disputado encaja con cómo el doc 08 §2.1.4 detalla las "6 afirmaciones" de Maren ("una es Sólido, tres son Probable, dos son Disputado")? Hay divergencia: el doc tiene 1 Sólida + 3 Probables + 2 Disputadas; el catálogo simplifica a 2+2+2 para que la pedagogía sea más legible (cada nivel está bien representado). Posible ajuste si el comité prefiere fidelidad al doc.
-- ¿El "Licinio cónsul" ficticio es lo bastante claro como diegético? La cinemática 2.1.4 ya nombra "Licinio el cónsul" siguiendo el doc 08; el catálogo lo reusa sin afirmar identificación histórica. Posible mitigación: añadir voz del Cuaderno explicitando la naturaleza pedagógica del ejercicio.
-- Pedagogically, ¿es razonable que la Brecha cierre con Concilio interno (Karim solo) y dos días después la cinemática 2.1.5 reproduzca el Concilio formal? El doc 08 lo sostiene explícitamente. La pantalla `FaseConcilio` actual del juego representa el Concilio interno inmediato; la 2.1.5 representa el formal con la mesa entera.
-
-**Cuando el comité valide**: se puede sustituir la inscripción ficticia por una real catalogada (con CIL/HEp), nombrar al "Licinio cónsul" con un Licinio histórico documentable en la PIR de época trajanea, o mantener la ficción con etiqueta narrativa explícita.
 
 ---
 

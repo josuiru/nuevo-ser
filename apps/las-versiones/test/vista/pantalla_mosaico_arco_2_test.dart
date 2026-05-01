@@ -133,7 +133,7 @@ void main() {
       (tester) async {
     SharedPreferences.setMockInitialValues({
       'nuevoser.lasversiones.mosaico.arco_2':
-          '{"pompaelo_la_inscripcion_in_situ":"solido",'
+          '{"pompelo_ara_dos_caras":"solido",'
           '"calagurris_lo_que_quintiliano_omite":"probable",'
           '"domus_la_familia_que_no_aparece":"solido"}',
     });

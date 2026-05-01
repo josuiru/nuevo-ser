@@ -164,14 +164,14 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   static const AmbienteArchivo museoNavarra =
       AmbienteArchivo._('museo_navarra');
 
-  /// Pompaelo subterránea — galería técnica baja con bóveda romana
+  /// Pompelo subterránea — galería técnica baja con bóveda romana
   /// parcial, plataforma con luces dirigidas, restos de pavimento y
   /// fragmentos de muro. Vive bajo la calle Curia del casco viejo
   /// de Iruña; sólo accesible por puerta lateral del sótano del
   /// Archivo. Lugar de la 2.1.1 y 2.1.2 (descubrimiento de la
   /// inscripción romana).
-  static const AmbienteArchivo pompaeloSubterranea =
-      AmbienteArchivo._('pompaelo_subterranea');
+  static const AmbienteArchivo pompeloSubterranea =
+      AmbienteArchivo._('pompelo_subterranea');
 
   /// Mesa de Trabajo del Archivo — escritorio amplio, lupa de
   /// brazo, libretas, herramientas técnicas. Espacio donde Maren
@@ -193,7 +193,7 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// Yacimiento romano de Calahorra — foro parcialmente conservado,
   /// restos de termas, cimientos a vista, calles modernas alrededor.
   /// Calahorra construida encima de Calagurris en una arqueología
-  /// que recuerda a Iruña sobre Pompaelo. Lugar de la 2.2.2 (visita
+  /// que recuerda a Iruña sobre Pompelo. Lugar de la 2.2.2 (visita
   /// guiada por la arqueóloga local).
   static const AmbienteArchivo yacimientoCalahorra =
       AmbienteArchivo._('yacimiento_calahorra');

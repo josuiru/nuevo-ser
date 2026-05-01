@@ -25,7 +25,7 @@
 /// El reconocimiento del oficio bien hecho NO está en haber afirmado
 /// con certeza, sino en haber **declarado la incertidumbre con
 /// precisión** — exactamente lo que las cuatro Estaciones del arco
-/// (Pompaelo bajo Iruña, Quintiliano de Calagurris, la domus de los
+/// (Pompelo bajo Iruña, Quintiliano de Calagurris, la domus de los
 /// mosaicos, Wamba contra los vascones) han enseñado.
 ///
 /// El Mosaico **no se evalúa con criterio algorítmico**. Es lectura
@@ -123,30 +123,36 @@ class MosaicoArco2 {
   /// agrupamiento se usa para que la pantalla los distribuya con
   /// los dos fragmentos de cada Estación adyacentes.
   static const List<FragmentoAudioGuia> fragmentos = [
-    // Estación 2.1 — Pompaelo bajo Iruña, La inscripción de Licinio.
+    // Estación 2.1 — Pompelo bajo Iruña, El ara de Aelio Attiano.
     FragmentoAudioGuia(
-      id: 'pompaelo_la_inscripcion_in_situ',
+      id: 'pompelo_ara_dos_caras',
       textoLeido:
-          'Bajo la calle Curia de Iruña hay un bloque calizo que honra '
-          'a un cónsul Licinio. La inscripción es honorífica — eso lo '
-          'sabemos por su forma. Y la datamos en algún momento entre '
-          'el siglo I y el III. Hasta ahí podemos afirmar.',
+          'Bajo la calle Curia de Iruña apareció un ara funeraria de '
+          'piedra arenisca con texto grabado en dos caras contiguas. '
+          'La cara A es del siglo primero. La cara B es del siglo '
+          'tercero. Doscientos años entre las dos caras de un mismo '
+          'cubo. La cara B la dedica un padre, Aelio Attiano, a su '
+          'hijo del mismo nombre, muerto entre los veintinueve y los '
+          'cuarenta y dos años.',
       idsFuentesAncladas: [
-        'inscripcion_in_situ',
-        'paralelos_inscripciones_pompaelo',
+        'ara_aelio_attiano',
+        'publicacion_velaza_2014',
       ],
       idBrechaOrigen: '2.1',
     ),
     FragmentoAudioGuia(
-      id: 'pompaelo_lo_que_la_inscripcion_no_dice',
+      id: 'pompelo_error_lapicida_y_muralla',
       textoLeido:
-          'La cuarta línea está mutilada. Quién pagó este homenaje y '
-          'qué relación tenía Licinio con Pompaelo no podemos cerrarlo '
-          'desde la inscripción. Lo dejamos abierto. La pregunta es '
-          'parte del registro.',
+          'El lapicida cometió un error: puso al padre en dativo donde '
+          'debería ir nominativo. El padre eligió las palabras pero no '
+          'eligió que el lapicida se equivocara. El error es información '
+          'que escapa a la propaganda. Y la pieza terminó como sillar '
+          'en la cimentación de la muralla bajoimperial — la dignidad '
+          'funeraria valió menos que la urgencia defensiva en la crisis '
+          'del siglo tercero. Probablemente. No lo cerramos.',
       idsFuentesAncladas: [
-        'inscripcion_in_situ',
-        'linea_dedicacion_perdida',
+        'ara_aelio_attiano',
+        'datos_muralla_bajoimperial',
       ],
       idBrechaOrigen: '2.1',
     ),

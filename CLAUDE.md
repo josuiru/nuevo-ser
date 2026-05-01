@@ -91,7 +91,7 @@ Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se c
 - **Smoke PHP** `cuaderno.php` (27), `mosaicos.php` (38), `aulas.php` (13), `agregados.php` (28: validación + hash determinista + parsear_respuesta_llm con JSON estricto/markdown/anidado/inválido/vacío + generar_resumen con stub OK/PII rechazada/cliente que lanza).
 - **Pendientes acoplados a auth de profesor/cuidador** (no decidida): `POST /classrooms`, `GET /classrooms/{id}/aggregates` y los 3 de cuidadores. JWT actual sólo lleva `nino_id`.
 
-Plugin WP en v0.9.0. Tests: 325 (uno-roto) + 382 (las-versiones) + 134 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 8 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, paridad_calibracion, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
+Plugin WP en v0.9.0. Tests: 325 (uno-roto) + 398 (las-versiones) + 134 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 8 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, paridad_calibracion, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
 
 ## Decisiones cerradas
 

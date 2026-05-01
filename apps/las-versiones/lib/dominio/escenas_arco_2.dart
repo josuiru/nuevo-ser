@@ -20,7 +20,7 @@ class EscenasArco2 {
 
   /// Lista ordenada de escenas del Arco 2 disponibles para el
   /// orquestador. Cubre 2.0.1 (apertura), la Estación 2.1 completa
-  /// (Pompaelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas
+  /// (Pompelo bajo Iruña, doc 08 §2.1.1–2.1.6), las dos cinemáticas
   /// latentes post-Estación 2.1 (2.A.1 *El libro de Quintiliano* y
   /// 2.A.2 *Marina y los descansos*), la Estación 2.2 completa
   /// (Quintiliano de Calagurris, doc 08 §2.2.1–2.2.6), la cinemática
@@ -58,7 +58,7 @@ class EscenasArco2 {
     karimEnsenaEpigrafia,
     quienPagoEsto,
     reconstruccionYConcilio,
-    primerApunteDePompaelo,
+    primerApunteDePompelo,
     elLibroDeQuintiliano,
     marinaYLosDescansos,
     caminoACalahorra,
@@ -276,7 +276,7 @@ class EscenasArco2 {
       ),
 
       // Maren mira hacia la escalera del sótano — primer indicio del
-      // espacio nuevo del arco. Pompaelo está literalmente debajo de
+      // espacio nuevo del arco. Pompelo está literalmente debajo de
       // la calle Curia: el Archivo lo conecta por una galería técnica.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
@@ -284,11 +284,11 @@ class EscenasArco2 {
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
-        texto: '¿A Pompaelo?',
+        texto: '¿A Pompelo?',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
-        texto: 'A Pompaelo.',
+        texto: 'A Pompelo.',
       ),
 
       PlanoAmbiente(
@@ -325,14 +325,14 @@ class EscenasArco2 {
 
   /// 2.1.1 — *Bajar al sótano*. Continúa de 2.0.1. Galería técnica
   /// bajo la calle Curia, plataforma con luces dirigidas, restos de
-  /// pavimento romano. Maren entra por primera vez en la Pompaelo
+  /// pavimento romano. Maren entra por primera vez en la Pompelo
   /// subterránea. Doc 08 §2.1.1.
   static const EscenaCinematica bajarAlSotano = EscenaCinematica(
     id: '2.1.1',
     titulo: 'Bajar al sótano',
     flagDeSalida: 'escena_2_1_1_vista',
     flagsRequeridos: {'escena_2_0_1_vista'},
-    ambiente: AmbienteArchivo.pompaeloSubterranea,
+    ambiente: AmbienteArchivo.pompeloSubterranea,
     planos: [
       PlanoAmbiente(
         duracion: Duration(seconds: 4),
@@ -365,7 +365,7 @@ class EscenasArco2 {
             'columna, fragmentos de muro. Una zona acotada con cinta '
             'amarilla.',
       ),
-      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Bienvenida a Pompaelo.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Bienvenida a Pompelo.'),
       PlanoAmbiente(
         duracion: Duration(seconds: 3),
         textoLectura: 'Maren se queda quieta. Mira. Tres segundos.',
@@ -429,7 +429,7 @@ class EscenasArco2 {
     titulo: 'La inscripción',
     flagDeSalida: 'escena_2_1_2_vista',
     flagsRequeridos: {'escena_2_1_1_vista'},
-    ambiente: AmbienteArchivo.pompaeloSubterranea,
+    ambiente: AmbienteArchivo.pompeloSubterranea,
     planos: [
       PlanoAmbiente(
         duracion: Duration(seconds: 4),
@@ -678,7 +678,7 @@ class EscenasArco2 {
             'Sólo que respetaba mucho a Licinio el cónsul para hacerle '
             'una honorífica en piedra. Pudo ser un cliente, un liberto, '
             'un colega, un familiar. Pudo ser la propia ciudad de '
-            'Pompaelo a través de su senado local. Cada hipótesis '
+            'Pompelo a través de su senado local. Cada hipótesis '
             'cambia lo que la inscripción significa.',
       ),
       PlanoDialogo(
@@ -819,7 +819,7 @@ class EscenasArco2 {
   /// 2.1.5 — *Reconstrucción y Concilio*. Dos días después. Maren
   /// presenta su reconstrucción mejorada con la búsqueda en la PIR.
   /// Aitor revisa técnico, Begoña hace la pregunta de fondo
-  /// ("¿por qué Pompaelo y no Roma?"). Doc 08 §2.1.5.
+  /// ("¿por qué Pompelo y no Roma?"). Doc 08 §2.1.5.
   ///
   /// **Precondición desde F2-10a**: requiere `brecha_2_1_completada`
   /// (en lugar del previo `escena_2_1_4_vista`). La Brecha 2.1
@@ -856,7 +856,7 @@ class EscenasArco2 {
       PlanoDialogo(
         voz: VozPersonaje.begona,
         texto:
-            '¿Por qué crees que esta inscripción está aquí en Pompaelo '
+            '¿Por qué crees que esta inscripción está aquí en Pompelo '
             'y no en Roma?',
       ),
       PlanoAmbiente(
@@ -866,7 +866,7 @@ class EscenasArco2 {
       PlanoDialogo(
         voz: VozPersonaje.maren,
         texto:
-            'No lo sé bien. Pompaelo era ciudad importante de la zona '
+            'No lo sé bien. Pompelo era ciudad importante de la zona '
             'pero no era de las grandes. Que un cónsul tuviera '
             'honorífica aquí significa que tenía algún vínculo con la '
             'ciudad. O que su familia tenía vínculos con élites '
@@ -898,13 +898,13 @@ class EscenasArco2 {
     ],
   );
 
-  /// 2.1.6 — *El primer apunte de Pompaelo*. Esa noche, voz del
+  /// 2.1.6 — *El primer apunte de Pompelo*. Esa noche, voz del
   /// Cuaderno. Cierre de la Estación 2.1 con la lección que más
   /// le ha tocado: "una inscripción no es un documento neutral".
   /// Doc 08 §2.1.6.
-  static const EscenaCinematica primerApunteDePompaelo = EscenaCinematica(
+  static const EscenaCinematica primerApunteDePompelo = EscenaCinematica(
     id: '2.1.6',
-    titulo: 'El primer apunte de Pompaelo',
+    titulo: 'El primer apunte de Pompelo',
     flagDeSalida: 'escena_2_1_6_vista',
     flagsRequeridos: {'escena_2_1_5_vista'},
     ambiente: AmbienteArchivo.cuartoCasaMaren,
@@ -919,8 +919,8 @@ class EscenasArco2 {
       PlanoDialogo(
         voz: VozPersonaje.vozDeFuente,
         texto:
-            'La diferencia entre Aralar y Pompaelo es que en Aralar yo '
-            'no entendía el silencio y en Pompaelo no entiendo lo que '
+            'La diferencia entre Aralar y Pompelo es que en Aralar yo '
+            'no entendía el silencio y en Pompelo no entiendo lo que '
             'se ha dicho.',
       ),
       PlanoDialogo(
@@ -943,7 +943,7 @@ class EscenasArco2 {
   /// activa cuando `arco_2_estacion_1_cerrada` está alzada. Lugar:
   /// estudio de Antonio en la casa familiar. Personajes: Antonio,
   /// Maren. Doc 08 §2.A.1 — pasan ~5-7 días tras el cierre de
-  /// Pompaelo y Maren va a buscar bibliografía a su padre antes de
+  /// Pompelo y Maren va a buscar bibliografía a su padre antes de
   /// la Estación 2.2 (Calagurris). Antonio le da la *Institutio
   /// Oratoria* en la edición Cousin (latín/francés) y suelta un
   /// comentario clave que Maren guardará: "Quintiliano habla menos
@@ -967,7 +967,7 @@ class EscenasArco2 {
         duracion: Duration(seconds: 4),
         textoLectura:
             'Casa familiar. Cinco o siete días después del Concilio de '
-            'Pompaelo. Maren llama a la puerta del estudio de su padre. '
+            'Pompelo. Maren llama a la puerta del estudio de su padre. '
             'Antonio está leyendo en un sillón, una lámpara baja sobre '
             'el reposabrazos, dos estanterías hasta el techo a su '
             'espalda.',
@@ -1063,7 +1063,7 @@ class EscenasArco2 {
   /// pone una semilla pedagógica para Calahorra: "te va a tocar".
   /// El "no sé explicarte hasta que la sientas" prepara al jugador
   /// para una Estación 2.2 con peso emocional distinto al de
-  /// Pompaelo (técnica) — Calagurris incluirá la cuestión del
+  /// Pompelo (técnica) — Calagurris incluirá la cuestión del
   /// silencio del autor sobre sí mismo.
   ///
   /// **Sin sustituciones diegéticas**: Marina sólo menciona "una
@@ -1094,7 +1094,7 @@ class EscenasArco2 {
       ),
       PlanoDialogo(
         voz: VozPersonaje.marina,
-        texto: '¿Cómo va Pompaelo?',
+        texto: '¿Cómo va Pompelo?',
         pausaPrevia: Duration(milliseconds: 400),
       ),
       PlanoDialogo(
@@ -1291,7 +1291,7 @@ class EscenasArco2 {
   /// del Archivo con investigación local de territorio. La visita
   /// guiada articula la lectura clave de la Estación: Calahorra
   /// moderna sobre Calagurris romana en la misma estratigrafía
-  /// urbana que Iruña sobre Pompaelo. Maren responde a la pregunta
+  /// urbana que Iruña sobre Pompelo. Maren responde a la pregunta
   /// pivotal con la formulación pedagógica del oficio del Arco 2:
   /// "qué dice de sí mismo y qué no dice."
   ///
@@ -1335,7 +1335,7 @@ class EscenasArco2 {
             'el yacimiento. Foro romano parcialmente conservado, '
             'restos de termas, cimientos. Calahorra moderna construida '
             'encima en una estratigrafía que recuerda a Iruña sobre '
-            'Pompaelo: el presente apoyado en el pasado sin tapar '
+            'Pompelo: el presente apoyado en el pasado sin tapar '
             'del todo.',
       ),
       PlanoDialogo(
@@ -1361,7 +1361,7 @@ class EscenasArco2 {
             'a Quintiliano hay una estatua moderna, una placa con '
             'datos básicos y unos fragmentos cerámicos del barrio '
             'donde se cree que vivió. Maren los mira con la atención '
-            'que ya conoce de Pompaelo.',
+            'que ya conoce de Pompelo.',
       ),
       PlanoCierreAmable(textoBoton: 'PASAR A LA SALA DE TRABAJO'),
     ],
@@ -2343,7 +2343,7 @@ class EscenasArco2 {
         voz: VozPersonaje.isaura,
         texto:
             'Lo primero. Lo que sientes es legítimo. La esclavitud '
-            'en Pompaelo fue una atrocidad humana. Hoy lo sabemos. '
+            'en Pompelo fue una atrocidad humana. Hoy lo sabemos. '
             'Entonces lo sabían también — no lo decían así, pero '
             'lo sabían algunos.',
       ),
@@ -3810,7 +3810,7 @@ class EscenasArco2 {
 
   /// **M2.entrega — La entrega del Mosaico M2** (doc 08 §M2, F2-8).
   ///
-  /// Maren sube al ático del Archivo con la audio-guía de Pompaelo
+  /// Maren sube al ático del Archivo con la audio-guía de Pompelo
   /// terminada en el móvil. Andrés está donde siempre, entre las
   /// cajas del fondo. Maren le entrega el archivo. Andrés se pone
   /// los auriculares y escucha los noventa segundos en silencio.

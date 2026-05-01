@@ -153,7 +153,7 @@ class EscenasArco1 {
       'gran_concilio_realizado',
     },
     // Cierre del Arco 1 — Maren asciende a Aprendiz I, se anuncia
-    // el Arco 2 (Pompaelo) y se activa `arco_1_completado` que
+    // el Arco 2 (Pompelo) y se activa `arco_1_completado` que
     // dispara el Mosaico. Tras F8.6 esta cinemática se encadena
     // tras la 1.4.3 (gran Concilio); el Mosaico se reproduce a
     // continuación, conservando el orden narrativo del doc 07
@@ -378,7 +378,7 @@ class EscenasArco1 {
   ///
   /// Día siguiente. Maren llega al Archivo a las 8:55. Isaura la
   /// espera en la entrada con el bastón y la guía por el edificio:
-  /// planta baja, patio interior, sótanos romanos de Pompaelo,
+  /// planta baja, patio interior, sótanos romanos de Pompelo,
   /// biblioteca con Aitor de fondo, ático de Andrés, salón del
   /// Concilio, encuentro con Marina en el pasillo. Cierra con un té
   /// compartido en silencio en la cocina del Archivo: Isaura le
@@ -444,7 +444,7 @@ class EscenasArco1 {
       ),
       PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sigue.'),
 
-      // Sótano: Pompaelo. La ciudad romana de Pompaelo está validada
+      // Sótano: Pompelo. La ciudad romana de Pompelo está validada
       // como entrada en el doc 17 — se puede nombrar.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
@@ -453,7 +453,7 @@ class EscenasArco1 {
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto:
-            'Pompaelo. Esto está debajo del Archivo y debajo de la '
+            'Pompelo. Esto está debajo del Archivo y debajo de la '
             'calle Curia. La domus que estaba aquí en el siglo I.',
       ),
       PlanoAmbiente(
@@ -3127,7 +3127,7 @@ class EscenasArco1 {
   /// junto al brocal del pozo. Isaura aparece a los cinco minutos
   /// y se sienta a su lado. Silencio largo. Validación amable de
   /// Isaura, mención de los gestos de Begoña que importaron, y
-  /// anuncio del Arco 2: bajan a Pompaelo. Maren da las gracias.
+  /// anuncio del Arco 2: bajan a Pompelo. Maren da las gracias.
   /// Aparece flotante "APRENDIZ I" — Maren asciende de rango.
   ///
   /// Pedagógicamente clave: el ascenso de rango llega como
@@ -3228,14 +3228,14 @@ class EscenasArco1 {
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué viene?'),
 
-      // Pompaelo + transición vascón → romano: ambos elementos
+      // Pompelo + transición vascón → romano: ambos elementos
       // están validados en el doc 17 / la propia worldbuilding del
-      // juego (sótano romano de Pompaelo ya nombrado en 1.0.2).
+      // juego (sótano romano de Pompelo ya nombrado en 1.0.2).
       // La frase queda intacta.
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto:
-            'Pompaelo. Es el comienzo del Arco 2. Los romanos llegaron '
+            'Pompelo. Es el comienzo del Arco 2. Los romanos llegaron '
             'y fundaron una ciudad sobre lo que pudo haber sido un '
             'asentamiento vascón previo. La transición Irulegi → '
             'Pompelo es la transición de tu próximo arco.',
@@ -3386,7 +3386,7 @@ class EscenasArco1 {
   /// le dijo Andrés sobre la viñeta del banquete, lo que le dijo
   /// Marina ("ya soy del club"), las cosas que ha aprendido que no
   /// sabía que se podían aprender, la cara rara de la que le habló
-  /// Eider, el anuncio del Arco 2 (Pompaelo, debajo de la calle
+  /// Eider, el anuncio del Arco 2 (Pompelo, debajo de la calle
   /// Curia, foro romano). Cierra con "no sé qué voy a encontrar
   /// pero tengo ganas". Maren cierra el cuaderno, apaga la luz.
   /// Aparece flotante "ARCO 1 — CERRADO". Continuará en Arco 2.
@@ -3466,7 +3466,7 @@ class EscenasArco1 {
         voz: VozPersonaje.vozDeFuente,
         texto:
             'Mañana descanso. El lunes empieza el Arco 2. Isaura '
-            'dijo que vamos a Pompaelo. Bajamos. Debajo de la calle '
+            'dijo que vamos a Pompelo. Bajamos. Debajo de la calle '
             'Curia. Donde el foro romano.',
         pausaPrevia: Duration(milliseconds: 1000),
       ),

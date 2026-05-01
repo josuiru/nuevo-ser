@@ -100,7 +100,7 @@ void main() {
       'nuevoser.lasversiones.flag.escena_m1_entrega_vista': true,
       'nuevoser.lasversiones.flag.escena_1_z_vista': true,
       'nuevoser.lasversiones.flag.arco_1_cerrado_por_la_cronista': true,
-      // Arco 2 — Estación 2.1 entera (Pompaelo bajo Iruña) cerrada
+      // Arco 2 — Estación 2.1 entera (Pompelo bajo Iruña) cerrada
       // para que el orquestador no tenga cinemáticas pendientes.
       'nuevoser.lasversiones.flag.escena_2_0_1_vista': true,
       'nuevoser.lasversiones.flag.arco_2_iniciado': true,

@@ -22,13 +22,14 @@ void main() {
     });
   });
 
-  group('CatalogoBrechas.brecha21 — Pompaelo bajo Iruña', () {
+  group('CatalogoBrechas.brecha21 — Pompelo bajo Iruña '
+      '(ara de Aelio Attiano)', () {
     test('id, título, ubicación y flag de completado estables', () {
       expect(CatalogoBrechas.brecha21.id, '2.1');
-      expect(CatalogoBrechas.brecha21.titulo, 'La inscripción de Licinio');
+      expect(CatalogoBrechas.brecha21.titulo, 'El ara de Aelio Attiano');
       expect(
         CatalogoBrechas.brecha21.ubicacionVisible,
-        'IRUÑA — POMPAELO SUBTERRÁNEA',
+        'IRUÑA — POMPELO SUBTERRÁNEA',
       );
       expect(
         CatalogoBrechas.brecha21.flagDeCompletado,
@@ -36,61 +37,75 @@ void main() {
       );
     });
 
-    test('catálogo amplio: 5 fuentes y 6 afirmaciones canónicas — '
-        'la pedagogía pide más declaraciones que en el Arco 1 (4 '
-        'afirmaciones) porque la fuente textual con propaganda '
-        'requiere distinguir más matices', () {
-      expect(CatalogoBrechas.brecha21.fuentes, hasLength(5));
-      expect(CatalogoBrechas.brecha21.afirmacionesCanonicas, hasLength(6));
+    test('catálogo: 4 fuentes y 10 afirmaciones canónicas — las 8 del '
+        'doc validado POMPAELO-INSCRIPCION con las dos de calibración '
+        'doble (hecho del error / causa del error, hecho de la '
+        'reutilización / contexto de inestabilidad) separadas en pares '
+        'para preservar el matiz', () {
+      expect(CatalogoBrechas.brecha21.fuentes, hasLength(4));
+      expect(CatalogoBrechas.brecha21.afirmacionesCanonicas, hasLength(10));
     });
 
-    test('minimoAfirmacionesParaConcilio elevado a 4 (vs el default 3 '
-        'del Arco 1) — declarar sólo 3 de 6 sería insuficiente para '
-        'sostener la versión sobre la inscripción', () {
+    test('minimoAfirmacionesParaConcilio: 7 — declarar 7 de 10 fuerza '
+        'a tocar al menos una no-Sólido (las 6 Sólido por sí solas '
+        'no llegan al mínimo)', () {
       expect(
         CatalogoBrechas.brecha21.minimoAfirmacionesParaConcilio,
-        4,
+        7,
       );
     });
 
-    test('distribución de calibración pedagógica — 2 Sólidas + 2 '
-        'Probables + 2 Disputadas. La pedagogía de la Estación 2.1 '
-        'es que en una fuente textual con propaganda el oficio '
-        'honesto declara muchas Disputado y Probable, no muchas '
-        'Sólido', () {
+    test('distribución pedagógica 6 Sólido + 2 Probable + 2 Disputado '
+        '— la pieza tiene hechos epigráficos sólidos (paleografía, '
+        'fórmulas, edad del difunto, error gramatical, reutilización) '
+        'pero las inferencias clave (causa del error, contexto de '
+        'inestabilidad, desfase temporal de las dos caras) son '
+        'Probable o Disputado', () {
       final niveles = CatalogoBrechas.brecha21.afirmacionesCanonicas
           .map((a) => a.calibracionCorrecta)
           .toList();
-      expect(niveles.where((n) => n == NivelConfianza.solido), hasLength(2));
+      expect(niveles.where((n) => n == NivelConfianza.solido), hasLength(6));
       expect(niveles.where((n) => n == NivelConfianza.probable), hasLength(2));
       expect(niveles.where((n) => n == NivelConfianza.disputado), hasLength(2));
     });
 
-    test('las dos afirmaciones Sólido son la naturaleza honorífica '
-        'y la datación amplia s. I-III — son las que la convención '
-        'epigráfica permite afirmar sin disputa', () {
-      final solidas = CatalogoBrechas.brecha21.afirmacionesCanonicas
-          .where((a) => a.calibracionCorrecta == NivelConfianza.solido)
-          .map((a) => a.id)
-          .toSet();
-      expect(
-        solidas,
-        {'tipo_honorifica', 'siglo_inscripcion_amplio'},
-      );
+    test('la afirmación Disputada `tres_hipotesis_desfase` recoge las '
+        'tres hipótesis del doc validado sobre el desfase de dos '
+        'siglos entre las dos caras del ara — sostener la incertidumbre '
+        'es parte del oficio', () {
+      final tres = CatalogoBrechas.brecha21.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'tres_hipotesis_desfase');
+      expect(tres.calibracionCorrecta, NivelConfianza.disputado);
+      expect(tres.texto, contains('pintado con pigmento'));
+      expect(tres.texto, contains('officina epigraphica'));
+      expect(tres.texto, contains('desechada por defecto'));
     });
 
-    test('las dos afirmaciones Disputado son la identidad del '
-        'dedicante y el vínculo del honrado con Pompaelo — las dos '
-        'preguntas que la inscripción mutilada deja explícitamente '
-        'sin respuesta', () {
-      final disputadas = CatalogoBrechas.brecha21.afirmacionesCanonicas
-          .where((a) => a.calibracionCorrecta == NivelConfianza.disputado)
-          .map((a) => a.id)
-          .toSet();
-      expect(
-        disputadas,
-        {'identidad_dedicante', 'vinculo_pompaelo_honrado'},
-      );
+    test('el error del lapicida se separa en dos afirmaciones — el '
+        'hecho del error es Sólido (factualmente atestiguado), la '
+        'causa es Disputada (las tres explicaciones plausibles)', () {
+      final hecho = CatalogoBrechas.brecha21.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'error_lapicida_hecho');
+      final causa = CatalogoBrechas.brecha21.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'error_lapicida_causa');
+      expect(hecho.calibracionCorrecta, NivelConfianza.solido);
+      expect(causa.calibracionCorrecta, NivelConfianza.disputado);
+      expect(hecho.texto, contains('error gramatical'));
+      expect(causa.texto, contains('escaso dominio del latín'));
+    });
+
+    test('la reutilización en muralla se separa en dos afirmaciones '
+        '— el hecho es Sólido (atestiguado por el contexto '
+        'arqueológico del hallazgo), el contexto de inestabilidad '
+        'del s. III es Probable (lectura plausible no cerrada)', () {
+      final hecho = CatalogoBrechas.brecha21.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'reutilizacion_muralla_hecho');
+      final contexto = CatalogoBrechas.brecha21.afirmacionesCanonicas
+          .firstWhere((a) => a.id == 'reutilizacion_contexto');
+      expect(hecho.calibracionCorrecta, NivelConfianza.solido);
+      expect(contexto.calibracionCorrecta, NivelConfianza.probable);
+      expect(hecho.texto, contains('muralla bajoimperial'));
+      expect(contexto.texto, contains('inestabilidad del Imperio del s. III'));
     });
 
     test('todas las afirmaciones citan al menos una fuente del '
@@ -118,39 +133,39 @@ void main() {
       }
     });
 
-    test('la inscripción in situ es fuente primaria con sesgo '
-        'oficialista — propaganda institucional según la lección '
-        'pedagógica de Karim en 2.1.4', () {
-      final inscripcion = CatalogoBrechas.brecha21.fuentes
-          .firstWhere((f) => f.id == 'inscripcion_in_situ');
-      expect(inscripcion.propiedadesCanonicas.tipo, TipoFuente.primaria);
+    test('el ara de Aelio Attiano es fuente primaria con sesgo '
+        'oficialista — la inscripción funeraria es propaganda en '
+        'sentido amplio del padre dedicante; el error del lapicida '
+        'es información que escapa', () {
+      final ara = CatalogoBrechas.brecha21.fuentes
+          .firstWhere((f) => f.id == 'ara_aelio_attiano');
+      expect(ara.propiedadesCanonicas.tipo, TipoFuente.primaria);
       expect(
-        inscripcion.propiedadesCanonicas.sesgo,
+        ara.propiedadesCanonicas.sesgo,
         SesgoFuente.oficialista,
       );
     });
 
-    test('los paralelos de inscripciones de la capital llevan sesgo '
-        'invisibilizador — los dedicantes no élites están '
-        'infrarepresentados, dato pedagógico que el oficio debe '
-        'hacer explícito', () {
-      final paralelos = CatalogoBrechas.brecha21.fuentes
-          .firstWhere((f) => f.id == 'paralelos_inscripciones_capital');
-      expect(paralelos.propiedadesCanonicas.tipo, TipoFuente.secundaria);
-      expect(
-        paralelos.propiedadesCanonicas.sesgo,
-        SesgoFuente.invisibilizador,
-      );
+    test('la publicación de Velaza et al. (2014) es fuente '
+        'secundaria autorizada — edición rigurosa de referencia '
+        'sobre la pieza', () {
+      final velaza = CatalogoBrechas.brecha21.fuentes
+          .firstWhere((f) => f.id == 'publicacion_velaza_2014');
+      expect(velaza.propiedadesCanonicas.tipo, TipoFuente.secundaria);
+      expect(velaza.tipoVisible, contains('Velaza'));
+      expect(velaza.tipoVisible, contains('Epigraphica'));
     });
 
-    test('la PIR aparece como herramienta de referencia secundaria '
-        '— se cita por su nombre canónico (Prosopographia Imperii '
-        'Romani) sin afirmar entradas concretas, según el doc 08', () {
-      final pir = CatalogoBrechas.brecha21.fuentes
-          .firstWhere((f) => f.id == 'pir_repertorio');
-      expect(pir.propiedadesCanonicas.tipo, TipoFuente.secundaria);
-      expect(pir.tipoVisible, contains('PIR'));
-      expect(pir.tipoVisible, contains('Prosopographia'));
+    test('las tablas de Arre (CIL II 2958-2960) anclan la forma '
+        '`Pompelo` como nombre canónico oficial frente a `Pompaelo` '
+        '(variante posterior del Itinerario de Antonino)', () {
+      final tablas = CatalogoBrechas.brecha21.fuentes
+          .firstWhere((f) => f.id == 'tablas_arre_pompelo');
+      expect(tablas.propiedadesCanonicas.tipo, TipoFuente.primaria);
+      expect(tablas.tipoVisible, contains('CIL II'));
+      expect(tablas.descripcion, contains('Pompelo'));
+      expect(tablas.descripcion, contains('Pompaelo'));
+      expect(tablas.descripcion, contains('Itinerario de Antonino'));
     });
   });
 
