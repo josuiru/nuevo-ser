@@ -261,4 +261,24 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// genéricamente. Registrado en BLOQUEOS-PENDIENTES.md.
   static const AmbienteArchivo yacimientoVasconNorte =
       AmbienteArchivo._('yacimiento_vascon_norte');
+
+  /// Iglesia de San Saturnino (San Cernin) en Iruña — iglesia gótica
+  /// con dos torres asimétricas, plaza Consistorial cercana. Templo
+  /// real de Pamplona, fundado por los francos del Camino de
+  /// Santiago en el s. XII; el santo titular procede de Tolosa de
+  /// Francia (Saturnino → Sernin → Cernin). Lugar de apertura de la
+  /// Estación 3.1 (doc 09 §3.1.1).
+  static const AmbienteArchivo iglesiaSanCernin =
+      AmbienteArchivo._('iglesia_san_cernin');
+
+  /// Calle de la Navarrería en Iruña — antigua espina dorsal del
+  /// burgo histórico de la Navarrería (vasco-romance), uno de los
+  /// tres burgos medievales de Pamplona junto con San Cernin (los
+  /// francos occitano-hablantes del Camino) y San Nicolás (los
+  /// burgueses comerciantes). Cada burgo tuvo sus propias murallas,
+  /// fueros y enemistades durante doscientos años hasta el
+  /// Privilegio de la Unión de 1423. Lugar del paseo de la 3.1.3
+  /// donde Isaura señala los topónimos occitanos en las calles.
+  static const AmbienteArchivo calleNavarreria =
+      AmbienteArchivo._('calle_navarreria');
 }

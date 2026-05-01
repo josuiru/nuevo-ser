@@ -19,6 +19,7 @@ import 'dominio/catalogo_brechas.dart';
 import 'dominio/cuaderno.dart';
 import 'dominio/escenas_arco_1.dart';
 import 'dominio/escenas_arco_2.dart';
+import 'dominio/escenas_arco_3.dart';
 import 'dominio/mosaico_arco_1.dart';
 import 'dominio/mosaico_arco_2.dart';
 import 'nucleo/paleta_archivo.dart';
@@ -288,7 +289,11 @@ class _OrquestadorState extends State<Orquestador> {
   /// del Arco 2, así que el orden temporal queda correcto.
   EscenaCinematica? _proximaEscenaPendiente() {
     if (!_idiomaElegido) return null;
-    for (final catalogo in [EscenasArco1.todas, EscenasArco2.todas]) {
+    for (final catalogo in [
+      EscenasArco1.todas,
+      EscenasArco2.todas,
+      EscenasArco3.todas,
+    ]) {
       for (final escena in catalogo) {
         final yaVista = _flagsActivos.contains(escena.flagDeSalida);
         if (yaVista) continue;
@@ -355,6 +360,7 @@ class _OrquestadorState extends State<Orquestador> {
       escena.flagDeSalida,
       ...?EscenasArco1.flagsDeCierrePorEscena[escena.flagDeSalida],
       ...?EscenasArco2.flagsDeCierrePorEscena[escena.flagDeSalida],
+      ...?EscenasArco3.flagsDeCierrePorEscena[escena.flagDeSalida],
     };
     for (final flag in flagsACerrar) {
       await widget.repoFlags.activar(flag);
