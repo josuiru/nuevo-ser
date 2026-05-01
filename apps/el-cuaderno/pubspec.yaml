@@ -86,6 +86,19 @@ dependencies:
   # `ACCESS_BACKGROUND_LOCATION` ni se suscribe a `getPositionStream`.
   geolocator: ^10.1.0
 
+  # Mapa de la pestaña "mapa" (B5 parcial, **fallback de experto**).
+  # `flutter_map` rinde tiles raster por HTTP — la versión definitiva
+  # bajará a MBTiles offline cuando entre la decisión humana B5
+  # (proveedor de tiles + política offline). Mientras tanto, el mapa
+  # **NO se monta hasta que el adulto activa explícitamente el opt-in
+  # en Ajustes** ("Activar mapa online"): solo entonces el dispositivo
+  # consulta los tiles a OpenStreetMap, revelando la zona consultada
+  # al servidor (biblia §2.9 sin extracción — el adulto consciente lo
+  # activa con copy explícito que dice qué implica). Sin opt-in, la
+  # pestaña Mapa muestra microcopia educativa y nunca hace request.
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+
   # Exportar el cuaderno como PDF legible (B9 del plan, fallback de
   # experto). Es alternativa al export JSON ya existente — el JSON
   # sigue para reimportar al juego (formato técnico) y el PDF es la

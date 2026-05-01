@@ -7,6 +7,7 @@ import '../../datos/almacenador_medios.dart';
 import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/repositorio_historico_resumenes.dart';
+import '../../datos/repositorio_mapa_online_opt_in.dart';
 import '../../datos/repositorio_presentacion_sit_spot.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
@@ -67,6 +68,8 @@ class PantallaAjustes extends StatelessWidget {
     this.clienteCompanionProfesor,
     this.repoCuentaProfesor,
     this.repoAulaProfesor,
+    this.repoMapaOnlineOptIn,
+    this.alCambiarMapaOnlineOptIn,
   });
 
   final RepositorioLocal repositorio;
@@ -175,6 +178,18 @@ class PantallaAjustes extends StatelessWidget {
   final RepositorioCuentaBackend? repoCuentaProfesor;
   final RepositorioAulaProfesorContrato? repoAulaProfesor;
 
+  /// Opt-in del adulto al mapa online provisional (B5 fallback de
+  /// experto). Si llega no nulo, Ajustes monta el switch que activa o
+  /// desactiva el envío de tile requests a OpenStreetMap. Si es null,
+  /// el bloque no se monta — los tests del flujo principal no lo
+  /// necesitan.
+  final RepositorioMapaOnlineOptIn? repoMapaOnlineOptIn;
+
+  /// Notifica al orquestador (`main.dart`) que el opt-in cambió, para
+  /// que la pestaña Mapa de la pantalla principal recompute su estado
+  /// sin esperar a un reinicio.
+  final VoidCallback? alCambiarMapaOnlineOptIn;
+
   @override
   Widget build(BuildContext context) {
     final textos = TextosApp.of(context);
@@ -267,6 +282,14 @@ class PantallaAjustes extends StatelessWidget {
                 titulo: 'Acceder como profesor',
                 descripcion: 'Esta pantalla es para el adulto que acompaña a la clase. No se enseña al niño.',
                 alPulsar: () => _abrirLoginProfesor(context),
+                esquema: esquema,
+              ),
+            ],
+            if (repoMapaOnlineOptIn != null) ...[
+              const SizedBox(height: 24),
+              _BloqueMapaOnlineOptIn(
+                repoMapaOnline: repoMapaOnlineOptIn!,
+                alCambiar: alCambiarMapaOnlineOptIn,
                 esquema: esquema,
               ),
             ],
@@ -900,6 +923,111 @@ class _EstadoDialogoPalabraClave extends State<_DialogoPalabraClave> {
           child: Text(widget.botonConfirmar),
         ),
       ],
+    );
+  }
+}
+
+/// Switch del opt-in del mapa online (B5 fallback de experto). Activa
+/// o desactiva el envío de tile requests a OpenStreetMap. Por defecto
+/// **desactivado** (offline-first, biblia §2.8): la pestaña Mapa
+/// muestra microcopia educativa hasta que el adulto consciente lo
+/// active aquí. El copy explica qué implica activarlo — el dispositivo
+/// le dirá al servidor de tiles qué zona del mundo se está mirando, y
+/// esa decisión cambiará a MBTiles offline cuando entre B5 humano.
+///
+/// La voz **es del adulto**, no del niño: este bloque no aparece en
+/// el flujo del niño (la pestaña Mapa redirige a Ajustes con el copy
+/// "pídele al adulto que lo active"). Sentence case, sin diminutivos.
+class _BloqueMapaOnlineOptIn extends StatefulWidget {
+  const _BloqueMapaOnlineOptIn({
+    required this.repoMapaOnline,
+    required this.esquema,
+    this.alCambiar,
+  });
+
+  final RepositorioMapaOnlineOptIn repoMapaOnline;
+  final ColorScheme esquema;
+  final VoidCallback? alCambiar;
+
+  @override
+  State<_BloqueMapaOnlineOptIn> createState() =>
+      _EstadoBloqueMapaOnlineOptIn();
+}
+
+class _EstadoBloqueMapaOnlineOptIn extends State<_BloqueMapaOnlineOptIn> {
+  bool? _activo;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargar();
+  }
+
+  Future<void> _cargar() async {
+    final activo = await widget.repoMapaOnline.cargar();
+    if (!mounted) return;
+    setState(() => _activo = activo);
+  }
+
+  Future<void> _alternar(bool nuevoValor) async {
+    if (nuevoValor) {
+      await widget.repoMapaOnline.activar();
+    } else {
+      await widget.repoMapaOnline.desactivar();
+    }
+    if (!mounted) return;
+    setState(() => _activo = nuevoValor);
+    widget.alCambiar?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = widget.esquema;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: esquema.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: esquema.outline, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Activar mapa online (provisional)',
+                  style: TipografiaCuaderno.serif(
+                    color: esquema.onSurface,
+                    tamano: TipografiaCuaderno.tamano14,
+                    peso: TipografiaCuaderno.pesoMedio,
+                  ),
+                ),
+              ),
+              if (_activo != null)
+                Switch.adaptive(
+                  value: _activo!,
+                  onChanged: _alternar,
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Si lo activas, el dispositivo descargará los retazos del '
+            'mapa de OpenStreetMap a través de internet — el servidor de '
+            'tiles verá qué zona del mundo se está mirando. La pestaña '
+            '"mapa" sólo funciona si esto está activo. En una versión '
+            'futura el mapa se descargará una sola vez y dejará de salir '
+            'a internet.',
+            style: TipografiaCuaderno.serif(
+              color: PaletaCuaderno.tintaTenue,
+              tamano: TipografiaCuaderno.tamano13,
+              altoLinea: 1.5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

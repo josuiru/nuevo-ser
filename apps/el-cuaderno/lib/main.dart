@@ -14,6 +14,7 @@ import 'datos/cola_sync_observaciones.dart';
 import 'datos/repositorio_aula_profesor.dart';
 import 'datos/repositorio_historico_resumenes.dart';
 import 'datos/repositorio_perfil_cuaderno.dart';
+import 'datos/repositorio_mapa_online_opt_in.dart';
 import 'datos/repositorio_presentacion_sit_spot.dart';
 import 'datos/selector_imagen.dart';
 import 'datos/servicio_geolocalizacion_plugin.dart';
@@ -153,6 +154,13 @@ Future<void> main() async {
   );
   presentacionSitSpotVista.value = await repoPresentacionSitSpot.cargar();
 
+  // 6) Opt-in del adulto al mapa online provisional (B5 fallback).
+  //    Por defecto OFF — la pestaña Mapa no llama a OSM hasta que el
+  //    adulto lo activa explícitamente desde Ajustes.
+  final repoMapaOnlineOptIn = RepositorioMapaOnlineOptIn(
+    prefs: SharedPreferences.getInstance,
+  );
+
   runApp(AppElCuaderno(
     repoIdioma: repoIdioma,
     repositorioCuaderno: repositorioCuaderno,
@@ -161,6 +169,7 @@ Future<void> main() async {
     repoCuentaProfesor: repoCuentaProfesor,
     repoAulaProfesor: repoAulaProfesor,
     repoPresentacionSitSpot: repoPresentacionSitSpot,
+    repoMapaOnlineOptIn: repoMapaOnlineOptIn,
   ));
 }
 
@@ -172,6 +181,7 @@ class AppElCuaderno extends StatelessWidget {
   final RepositorioCuentaBackend repoCuentaProfesor;
   final RepositorioAulaProfesor repoAulaProfesor;
   final RepositorioPresentacionSitSpot repoPresentacionSitSpot;
+  final RepositorioMapaOnlineOptIn repoMapaOnlineOptIn;
 
   const AppElCuaderno({
     super.key,
@@ -182,6 +192,7 @@ class AppElCuaderno extends StatelessWidget {
     required this.repoCuentaProfesor,
     required this.repoAulaProfesor,
     required this.repoPresentacionSitSpot,
+    required this.repoMapaOnlineOptIn,
   });
 
   @override
@@ -257,6 +268,7 @@ class AppElCuaderno extends StatelessWidget {
       repoCuentaProfesor: repoCuentaProfesor,
       repoAulaProfesor: repoAulaProfesor,
       repoPresentacionSitSpot: repoPresentacionSitSpot,
+      repoMapaOnlineOptIn: repoMapaOnlineOptIn,
       locale: locale,
       alCambiarIdioma: () async {
         await repoIdioma.borrar();
@@ -276,6 +288,7 @@ class _OrquestadorJuego extends StatefulWidget {
   final RepositorioCuentaBackend repoCuentaProfesor;
   final RepositorioAulaProfesor repoAulaProfesor;
   final RepositorioPresentacionSitSpot repoPresentacionSitSpot;
+  final RepositorioMapaOnlineOptIn repoMapaOnlineOptIn;
   final Locale locale;
   final Future<void> Function() alCambiarIdioma;
   final VoidCallback alResetearPresentacionSitSpot;
@@ -287,6 +300,7 @@ class _OrquestadorJuego extends StatefulWidget {
     required this.repoCuentaProfesor,
     required this.repoAulaProfesor,
     required this.repoPresentacionSitSpot,
+    required this.repoMapaOnlineOptIn,
     required this.locale,
     required this.alCambiarIdioma,
     required this.alResetearPresentacionSitSpot,
@@ -480,6 +494,7 @@ class _EstadoOrquestadorJuego extends State<_OrquestadorJuego> {
           clienteCompanionProfesor: _clienteCompanion,
           repoCuentaProfesor: widget.repoCuentaProfesor,
           repoAulaProfesor: widget.repoAulaProfesor,
+          repoMapaOnlineOptIn: widget.repoMapaOnlineOptIn,
         );
       },
     );

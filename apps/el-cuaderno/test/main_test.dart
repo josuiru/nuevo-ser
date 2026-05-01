@@ -1,4 +1,5 @@
 import 'package:el_cuaderno/datos/repositorio_aula_profesor.dart';
+import 'package:el_cuaderno/datos/repositorio_mapa_online_opt_in.dart';
 import 'package:el_cuaderno/datos/repositorio_perfil_cuaderno.dart';
 import 'package:el_cuaderno/datos/repositorio_presentacion_sit_spot.dart';
 import 'package:el_cuaderno/datos_simulados/seed.dart';
@@ -68,6 +69,12 @@ void main() {
     );
   }
 
+  RepositorioMapaOnlineOptIn crearRepoMapaOnlineOptIn() {
+    return RepositorioMapaOnlineOptIn(
+      prefs: SharedPreferences.getInstance,
+    );
+  }
+
   Future<AppElCuaderno> crearApp() async {
     return AppElCuaderno(
       repoIdioma: crearRepoIdioma(),
@@ -77,6 +84,7 @@ void main() {
       repoCuentaProfesor: crearRepoCuentaProfesor(),
       repoAulaProfesor: crearRepoAulaProfesor(),
       repoPresentacionSitSpot: crearRepoPresentacionSitSpot(),
+      repoMapaOnlineOptIn: crearRepoMapaOnlineOptIn(),
     );
   }
 

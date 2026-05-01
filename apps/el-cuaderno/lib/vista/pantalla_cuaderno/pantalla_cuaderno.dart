@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
@@ -7,6 +9,7 @@ import '../../datos/cliente_auth_cuaderno.dart';
 import '../../datos/cola_sync_observaciones.dart';
 import '../../datos/selector_imagen.dart';
 import '../../datos/repositorio_historico_resumenes.dart';
+import '../../datos/repositorio_mapa_online_opt_in.dart';
 import '../../datos/repositorio_presentacion_sit_spot.dart';
 import '../../datos/sincronizador_agregados.dart';
 import '../../dominio/exportador_cuaderno.dart';
@@ -27,6 +30,7 @@ import '../pantalla_sit_spot/pantalla_pagina_sit_spot.dart';
 import '../pantalla_tutor/pantalla_tutor.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'datos_mapa.dart';
 import 'estado_cuaderno.dart';
 import 'pantalla_pagina_misterio.dart';
 import 'seccion_ultima_pagina.dart';
@@ -66,6 +70,8 @@ class PantallaCuaderno extends StatefulWidget {
     this.clienteCompanionProfesor,
     this.repoCuentaProfesor,
     this.repoAulaProfesor,
+    this.repoMapaOnlineOptIn,
+    this.constructorMapa,
   });
 
   final RepositorioLocal repositorio;
@@ -188,12 +194,33 @@ class PantallaCuaderno extends StatefulWidget {
   final RepositorioCuentaBackend? repoCuentaProfesor;
   final RepositorioAulaProfesorContrato? repoAulaProfesor;
 
+  /// Opt-in del adulto al mapa online provisional (B5 fallback de
+  /// experto). Si llega no nulo, la pestaña Mapa lo lee al construirse
+  /// y decide si monta el `FlutterMap` (opt-in activo) o microcopia
+  /// educativa (opt-in inactivo). Si es null, la pestaña cae al estado
+  /// "tu adulto puede activar el mapa en Ajustes" — es lo mismo que
+  /// `false`, sólo que el orquestador no lo cabló (p. ej. tests).
+  final RepositorioMapaOnlineOptIn? repoMapaOnlineOptIn;
+
+  /// Constructor opcional del widget de mapa para tests. Por defecto
+  /// se usa `FlutterMap` real, que en `flutter test` falla al pintar
+  /// tiles porque no hay capa de red. Tests inyectan un stub que pinta
+  /// un `Container` y permiten ejercitar el dispatcher de estados.
+  final Widget Function(BuildContext context, DatosMapa datos)?
+      constructorMapa;
+
   @override
   State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
 }
 
 class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
   int _indicePestana = 0;
+
+  /// Versión del opt-in del mapa online. Se incrementa cada vez que el
+  /// adulto cambia el switch en Ajustes — la usamos como `Key` de la
+  /// pestaña Mapa para forzar que `_VistaMapa` se reconstruya y vuelva
+  /// a leer el repo.
+  int _versionMapaOptIn = 0;
 
   @override
   void initState() {
@@ -237,7 +264,16 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               alAbrirPaginaSitSpot: _abrirPaginaSitSpot,
               alAbrirDetalleObservacion: _abrirDetalleObservacion,
             ),
-            _VistaProximamente(textos: textos),
+            _VistaMapa(
+              key: ValueKey('vista-mapa-$_versionMapaOptIn'),
+              repositorio: widget.repositorio,
+              estado: widget.estado,
+              repoMapaOnline: widget.repoMapaOnlineOptIn,
+              constructorMapa: widget.constructorMapa,
+              alAbrirAjustes: puedeAbrirAjustes ? _abrirAjustes : null,
+              alAbrirCrearSitSpot: _abrirCrearSitSpot,
+              alAbrirDetalleObservacion: _abrirDetalleObservacion,
+            ),
             _VistaMisterios(
               estado: widget.estado,
               alAbrirMisterio: _abrirPaginaMisterio,
@@ -456,6 +492,11 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           clienteCompanionProfesor: widget.clienteCompanionProfesor,
           repoCuentaProfesor: widget.repoCuentaProfesor,
           repoAulaProfesor: widget.repoAulaProfesor,
+          repoMapaOnlineOptIn: widget.repoMapaOnlineOptIn,
+          alCambiarMapaOnlineOptIn: () {
+            if (!mounted) return;
+            setState(() => _versionMapaOptIn++);
+          },
         ),
       ),
     );
@@ -613,10 +654,180 @@ List<Widget> _tipFenologico(EstadoCuaderno estado) {
   ];
 }
 
-class _VistaProximamente extends StatelessWidget {
-  const _VistaProximamente({required this.textos});
+/// Constructor del mapa por defecto: `FlutterMap` real con tiles OSM.
+/// Pintar tiles requiere conexión a internet — esto **sólo se invoca
+/// cuando el adulto activó el opt-in en Ajustes** (biblia §2.9).
+Widget _constructorMapaPorDefecto(BuildContext context, DatosMapa datos) {
+  return FlutterMap(
+    options: MapOptions(
+      initialCenter: LatLng(datos.centroLat, datos.centroLng),
+      initialZoom: datos.zoom,
+    ),
+    children: [
+      TileLayer(
+        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        userAgentPackageName: 'org.coleccionnuevoser.elcuaderno',
+        // OSM exige cabecera User-Agent identificable y un cap razonable
+        // de requests. Sin esto, el servidor puede bloquear el cliente.
+      ),
+      MarkerLayer(
+        markers: [
+          for (final descriptor in datos.markers)
+            Marker(
+              point: LatLng(descriptor.lat, descriptor.lng),
+              width: 40,
+              height: 40,
+              child: GestureDetector(
+                onTap: descriptor.alPulsar,
+                child: Tooltip(
+                  message: descriptor.tooltip ?? '',
+                  child: Icon(
+                    descriptor.icono,
+                    color: descriptor.color ?? PaletaCuaderno.tinta,
+                    size: 32,
+                    shadows: const [
+                      Shadow(blurRadius: 3, color: Colors.white),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    ],
+  );
+}
 
-  final TextosApp textos;
+/// Pestaña Mapa del bottom nav (B5 fallback de experto, pendiente de
+/// MBTiles offline). Cuatro estados:
+///
+/// 1. **Sin opt-in del adulto** (default): microcopia educativa con
+///    botón "abrir Ajustes" donde el adulto puede activarlo. Sin
+///    request a OSM. Es el estado pedagógicamente correcto del MVP —
+///    el niño no fuerza una decisión que no le toca.
+/// 2. **Opt-in activo + sin sit spot con coordenadas + sin
+///    observaciones con coordenadas**: invitación a configurar un
+///    sit spot anclando la posición.
+/// 3. **Opt-in activo + coordenadas disponibles**: mapa real con
+///    marker(s) — sit spot (verde bosque) y observaciones con
+///    `dondeCoordenadas` (otro tono). El tap en una observación abre
+///    el detalle.
+/// 4. **Cargando** (lectura inicial del repo de opt-in): spinner.
+class _VistaMapa extends StatefulWidget {
+  const _VistaMapa({
+    super.key,
+    required this.repositorio,
+    required this.estado,
+    required this.repoMapaOnline,
+    required this.constructorMapa,
+    required this.alAbrirAjustes,
+    required this.alAbrirCrearSitSpot,
+    required this.alAbrirDetalleObservacion,
+  });
+
+  final RepositorioLocal repositorio;
+  final EstadoCuaderno estado;
+  final RepositorioMapaOnlineOptIn? repoMapaOnline;
+  final Widget Function(BuildContext context, DatosMapa datos)?
+      constructorMapa;
+  final VoidCallback? alAbrirAjustes;
+  final void Function() alAbrirCrearSitSpot;
+  final void Function(Observacion observacion) alAbrirDetalleObservacion;
+
+  @override
+  State<_VistaMapa> createState() => _EstadoVistaMapa();
+}
+
+class _EstadoVistaMapa extends State<_VistaMapa> {
+  bool _cargando = true;
+  bool _optInActivo = false;
+  List<Observacion> _observacionesConCoords = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _cargar();
+  }
+
+  Future<void> _cargar() async {
+    final activo = widget.repoMapaOnline == null
+        ? false
+        : await widget.repoMapaOnline!.cargar();
+    List<Observacion> observaciones = const [];
+    if (activo) {
+      // Sólo leemos las observaciones cuando el mapa va a montarse —
+      // lectura local, sin red. Si el opt-in está OFF no tiene sentido
+      // tocar el repo para nada.
+      final todas =
+          await widget.repositorio.obtenerObservaciones(limite: 200);
+      observaciones = todas
+          .where((obs) => obs.dondeCoordenadas != null)
+          .toList(growable: false);
+    }
+    if (!mounted) return;
+    setState(() {
+      _cargando = false;
+      _optInActivo = activo;
+      _observacionesConCoords = observaciones;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_cargando) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+    if (!_optInActivo) {
+      return _AvisoMapaInactivo(alAbrirAjustes: widget.alAbrirAjustes);
+    }
+    return ListenableBuilder(
+      listenable: widget.estado,
+      builder: (context, _) {
+        final coordsSitSpot = widget.estado.sitSpot?.coordenadas;
+        if (coordsSitSpot == null && _observacionesConCoords.isEmpty) {
+          return _AvisoSinCoordenadas(
+            alAbrirCrearSitSpot: widget.alAbrirCrearSitSpot,
+          );
+        }
+        // Centramos en el sit spot si lo hay, si no en la primera
+        // observación con coords. Zoom 15 = nivel "barrio".
+        final centro = coordsSitSpot ?? _observacionesConCoords.first.dondeCoordenadas!;
+        final markers = <DescriptorMarker>[
+          if (coordsSitSpot != null)
+            DescriptorMarker(
+              lat: coordsSitSpot.lat,
+              lng: coordsSitSpot.lng,
+              icono: Icons.place,
+              color: PaletaCuaderno.tinta,
+              tooltip: widget.estado.sitSpot?.nombre,
+            ),
+          for (final obs in _observacionesConCoords)
+            DescriptorMarker(
+              lat: obs.dondeCoordenadas!.lat,
+              lng: obs.dondeCoordenadas!.lng,
+              icono: Icons.fiber_manual_record,
+              color: PaletaCuaderno.tintaTenue,
+              tooltip: obs.queVio,
+              alPulsar: () => widget.alAbrirDetalleObservacion(obs),
+            ),
+        ];
+        final datos = DatosMapa(
+          centroLat: centro.lat,
+          centroLng: centro.lng,
+          markers: markers,
+        );
+        final builder =
+            widget.constructorMapa ?? _constructorMapaPorDefecto;
+        return builder(context, datos);
+      },
+    );
+  }
+}
+
+class _AvisoMapaInactivo extends StatelessWidget {
+  const _AvisoMapaInactivo({required this.alAbrirAjustes});
+
+  final VoidCallback? alAbrirAjustes;
 
   @override
   Widget build(BuildContext context) {
@@ -624,13 +835,85 @@ class _VistaProximamente extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
-        child: Text(
-          textos.navProximamente,
-          textAlign: TextAlign.center,
-          style: TipografiaCuaderno.serif(
-            color: esquema.tertiary,
-            tamano: TipografiaCuaderno.tamano14,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'El mapa está apagado.',
+              textAlign: TextAlign.center,
+              style: TipografiaCuaderno.serif(
+                color: esquema.onSurface,
+                tamano: TipografiaCuaderno.tamano14,
+                peso: TipografiaCuaderno.pesoMedio,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'El adulto que te acompaña puede encenderlo desde Ajustes. '
+              'Mientras esté apagado, este cuaderno no le pide al servidor '
+              'de mapas qué zona del mundo estás mirando.',
+              textAlign: TextAlign.center,
+              style: TipografiaCuaderno.serif(
+                color: PaletaCuaderno.tintaTenue,
+                tamano: TipografiaCuaderno.tamano13,
+                altoLinea: 1.5,
+              ),
+            ),
+            if (alAbrirAjustes != null) ...[
+              const SizedBox(height: 20),
+              FilledButton.tonal(
+                onPressed: alAbrirAjustes,
+                child: const Text('abrir Ajustes'),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AvisoSinCoordenadas extends StatelessWidget {
+  const _AvisoSinCoordenadas({required this.alAbrirCrearSitSpot});
+
+  final VoidCallback alAbrirCrearSitSpot;
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = Theme.of(context).colorScheme;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Aún no has anclado tu lugar al mapa.',
+              textAlign: TextAlign.center,
+              style: TipografiaCuaderno.serif(
+                color: esquema.onSurface,
+                tamano: TipografiaCuaderno.tamano14,
+                peso: TipografiaCuaderno.pesoMedio,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Cuando configures tu sit spot y le ancles la posición, '
+              'aparecerá aquí. Las observaciones con posición ancladas '
+              'también se ven en el mapa.',
+              textAlign: TextAlign.center,
+              style: TipografiaCuaderno.serif(
+                color: PaletaCuaderno.tintaTenue,
+                tamano: TipografiaCuaderno.tamano13,
+                altoLinea: 1.5,
+              ),
+            ),
+            const SizedBox(height: 20),
+            FilledButton.tonal(
+              onPressed: alAbrirCrearSitSpot,
+              child: const Text('configurar sit spot'),
+            ),
+          ],
         ),
       ),
     );

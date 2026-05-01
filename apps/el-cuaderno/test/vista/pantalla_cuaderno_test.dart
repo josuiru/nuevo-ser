@@ -1,13 +1,18 @@
+import 'package:el_cuaderno/datos/repositorio_mapa_online_opt_in.dart';
 import 'package:el_cuaderno/datos_simulados/seed.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
+import 'package:el_cuaderno/dominio/observacion.dart';
+import 'package:el_cuaderno/dominio/sit_spot.dart';
 import 'package:el_cuaderno/infraestructura/memoria/repositorio_memoria.dart';
 import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
+import 'package:el_cuaderno/vista/pantalla_cuaderno/datos_mapa.dart';
 import 'package:el_cuaderno/vista/pantalla_cuaderno/estado_cuaderno.dart';
 import 'package:el_cuaderno/vista/pantalla_cuaderno/pantalla_cuaderno.dart';
 import 'package:el_cuaderno/vista/tema/tema.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   late RepositorioMemoria repositorio;
@@ -36,6 +41,8 @@ void main() {
   Future<void> bombearPantalla(
     WidgetTester tester, {
     String? nombrePerfilActivo,
+    RepositorioMapaOnlineOptIn? repoMapaOnlineOptIn,
+    Widget Function(BuildContext, DatosMapa)? constructorMapa,
   }) async {
     // El ListView crece más allá del viewport por defecto del
     // tester (800x600). Damos un viewport amplio para que todas las
@@ -51,6 +58,8 @@ void main() {
           repositorio: repositorio,
           estado: estado,
           nombrePerfilActivo: nombrePerfilActivo,
+          repoMapaOnlineOptIn: repoMapaOnlineOptIn,
+          constructorMapa: constructorMapa,
         ),
       ),
     );
@@ -520,4 +529,166 @@ void main() {
       );
     },
   );
+
+  group('pestaña Mapa', () {
+    Widget stubMapa(BuildContext context, DatosMapa datos) {
+      // Stub: no monta `FlutterMap`, evita la red. Pinta un Container
+      // con un texto que codifica los datos clave para que los tests
+      // puedan verificar centro y conteo de markers.
+      return Container(
+        key: const ValueKey('mapa-stub'),
+        color: const Color(0xFFEEEEEE),
+        child: Center(
+          child: Text(
+            'mapa: centro=${datos.centroLat.toStringAsFixed(2)},'
+            '${datos.centroLng.toStringAsFixed(2)} '
+            'markers=${datos.markers.length}',
+          ),
+        ),
+      );
+    }
+
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+    });
+
+    RepositorioMapaOnlineOptIn crearRepoOptIn() => RepositorioMapaOnlineOptIn(
+          prefs: SharedPreferences.getInstance,
+        );
+
+    testWidgets(
+      'sin repoMapaOnline (null) → microcopia "el mapa está apagado"',
+      (tester) async {
+        await bombearPantalla(tester);
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+        expect(find.text('El mapa está apagado.'), findsOneWidget);
+        expect(find.byKey(const ValueKey('mapa-stub')), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'opt-in OFF → microcopia + botón "abrir Ajustes"',
+      (tester) async {
+        final repoOptIn = crearRepoOptIn();
+        await bombearPantalla(
+          tester,
+          repoMapaOnlineOptIn: repoOptIn,
+          constructorMapa: stubMapa,
+        );
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+        expect(find.text('El mapa está apagado.'), findsOneWidget);
+        // El botón "abrir Ajustes" sólo se muestra cuando hay repoIdioma+
+        // locale+alCambiarIdioma. En este test no se cablea (modo
+        // aislado), así que el botón NO aparece, pero la microcopia sí.
+        expect(find.text('abrir Ajustes'), findsNothing);
+        expect(find.byKey(const ValueKey('mapa-stub')), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'opt-in ON + sin coords (sit spot del seed sin coords ni '
+      'observaciones con coords) → microcopia "ancla tu lugar"',
+      (tester) async {
+        final repoOptIn = crearRepoOptIn();
+        await repoOptIn.activar();
+        await bombearPantalla(
+          tester,
+          repoMapaOnlineOptIn: repoOptIn,
+          constructorMapa: stubMapa,
+        );
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+        expect(
+          find.text('Aún no has anclado tu lugar al mapa.'),
+          findsOneWidget,
+        );
+        expect(find.byKey(const ValueKey('mapa-stub')), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'opt-in ON + sit spot con coords → mapa real (stub) con 1 marker',
+      (tester) async {
+        // Seed sustituido: vaciamos y montamos un sit spot con coords.
+        repositorio = RepositorioMemoria();
+        await repositorio.establecerSitSpot(SitSpot(
+          id: 'ss-1',
+          nombre: 'El Roble Grande',
+          dondeNombre: 'parque',
+          creadoEn: DateTime(2026, 3, 1),
+          coordenadas: const Coordenadas(lat: 42.81, lng: -1.65),
+        ));
+        estado.dispose();
+        estado = EstadoCuaderno(
+          repositorio: repositorio,
+          proveedorAhora: ahoraPrimavera,
+        );
+        final repoOptIn = crearRepoOptIn();
+        await repoOptIn.activar();
+        await bombearPantalla(
+          tester,
+          repoMapaOnlineOptIn: repoOptIn,
+          constructorMapa: stubMapa,
+        );
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const ValueKey('mapa-stub')), findsOneWidget);
+        expect(find.text('mapa: centro=42.81,-1.65 markers=1'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'opt-in ON + sit spot sin coords pero observaciones con coords → '
+      'mapa real (stub) centrado en la primera observación',
+      (tester) async {
+        repositorio = RepositorioMemoria();
+        // Sit spot sin coords + 2 observaciones con coords.
+        await repositorio.establecerSitSpot(SitSpot(
+          id: 'ss-1',
+          nombre: 'parque',
+          dondeNombre: 'parque',
+          creadoEn: DateTime(2026, 3, 1),
+        ));
+        await repositorio.guardarObservacion(Observacion(
+          id: 'obs-1',
+          cuandoCreada: DateTime(2026, 4, 28),
+          cuandoOcurrio: DateTime(2026, 4, 28),
+          dondeNombre: 'esquina',
+          queVio: 'una flor amarilla',
+          confianza: NivelConfianza.hipotesisActiva,
+          dondeCoordenadas: const Coordenadas(lat: 43.26, lng: -2.93),
+        ));
+        await repositorio.guardarObservacion(Observacion(
+          id: 'obs-2',
+          cuandoCreada: DateTime(2026, 4, 29),
+          cuandoOcurrio: DateTime(2026, 4, 29),
+          dondeNombre: 'esquina',
+          queVio: 'una mariposa',
+          confianza: NivelConfianza.hipotesisActiva,
+          dondeCoordenadas: const Coordenadas(lat: 43.27, lng: -2.94),
+        ));
+        estado.dispose();
+        estado = EstadoCuaderno(
+          repositorio: repositorio,
+          proveedorAhora: ahoraPrimavera,
+        );
+        final repoOptIn = crearRepoOptIn();
+        await repoOptIn.activar();
+        await bombearPantalla(
+          tester,
+          repoMapaOnlineOptIn: repoOptIn,
+          constructorMapa: stubMapa,
+        );
+        await tester.tap(find.text('mapa'));
+        await tester.pumpAndSettle();
+        // Sin sit spot con coords, el centro cae en la primera
+        // observación de la lista. `obtenerObservaciones` devuelve por
+        // orden descendente: obs-2 (2026-04-29) primero.
+        expect(find.byKey(const ValueKey('mapa-stub')), findsOneWidget);
+        expect(find.text('mapa: centro=43.27,-2.94 markers=2'), findsOneWidget);
+      },
+    );
+  });
 }
