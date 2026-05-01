@@ -64,6 +64,14 @@ class EscenasArco3 {
     concilioLeyre,
     laLeyendaNoMienteDesplaza,
     naiaPreguntaOtraVez,
+    caminoARoncesvalles,
+    elPaso,
+    lasDosVersiones,
+    laChanson,
+    reconstruccionRoncesvalles,
+    concilioRoncesvalles,
+    loBonitoMiente,
+    eiderSeVa,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -145,6 +153,31 @@ class EscenasArco3 {
     },
     'escena_3_c_1_vista': {
       'naia_pregunto_oficio',
+    },
+    'escena_3_4_1_vista': {
+      'aviso_chanson_recibido',
+      'viaje_a_roncesvalles_iniciado',
+    },
+    'escena_3_4_2_vista': {
+      'paso_roncesvalles_alcanzado',
+    },
+    'escena_3_4_3_vista': {
+      'dos_versiones_estudiadas',
+    },
+    'escena_3_4_4_vista': {
+      'chanson_como_propaganda_aprendida',
+    },
+    'escena_3_4_5_vista': {
+      'reconstruccion_roncesvalles_producida',
+    },
+    'escena_3_4_6_vista': {
+      'concilio_3_4_cerrado',
+    },
+    'escena_3_4_7_vista': {
+      'arco_3_estacion_4_cerrada',
+    },
+    'escena_3_d_1_vista': {
+      'eider_se_va',
     },
   };
 
@@ -2095,6 +2128,529 @@ class EscenasArco3 {
         voz: VozPersonaje.vozDeFuente,
         texto: 'Voy a guardar el papel toda mi vida.',
         pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
+  /// 3.4.1 — *Camino a Roncesvalles*. Mediados de abril. Coche de
+  /// Aitor subiendo al Pirineo entre bosques de hayas y niebla
+  /// baja. Aitor le anticipa a Maren la doble lectura del 778: el
+  /// relato de la *Chanson de Roland* (ejército de Carlomagno
+  /// derrotado por sarracenos tras una traición) frente a la
+  /// realidad documentada — *"la Chanson la escriben unos
+  /// doscientos años después del hecho. Y los moros no aparecen
+  /// en las fuentes del s. VIII que mencionan el suceso"*. Maren
+  /// concluye preliminar: *"Entonces los moros son ficción"*.
+  /// Aitor: *"Probablemente. Pero ya verás cómo y por qué"*. Doc
+  /// 09 §3.4.1.
+  static const EscenaCinematica caminoARoncesvalles = EscenaCinematica(
+    id: '3.4.1',
+    titulo: 'Camino a Roncesvalles',
+    flagDeSalida: 'escena_3_4_1_vista',
+    flagsRequeridos: {'escena_3_c_1_vista'},
+    ambiente: AmbienteArchivo.cocheAitor,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Coche de Aitor. Sube hacia el Pirineo. Bosques de hayas. '
+            'Niebla baja en algunos tramos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: '¿Sabes la Chanson de Roland?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Algo. He leído resúmenes.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'El relato dice que un ejército de Carlomagno fue derrotado '
+            'en Roncesvalles por sarracenos — moros — tras una '
+            'traición de un noble cristiano.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Y la realidad?'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'La realidad es lo que tienes que reconstruir tú.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Pero te avanzo: la Chanson la escriben unos doscientos '
+            'años después del hecho. Y los moros no aparecen en las '
+            'fuentes del s. VIII que mencionan el suceso.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Entonces los moros son ficción.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Probablemente. Pero ya verás cómo y por qué.',
+      ),
+    ],
+  );
+
+  /// 3.4.2 — *El paso*. Llegan a Roncesvalles. Paso pirenaico,
+  /// niebla, la colegiata real (hospital histórico de peregrinos),
+  /// la carretera por la que se baja a Francia. Maren mira al
+  /// norte (Francia) y al sur (Navarra) — el paso es pequeño en
+  /// términos geográficos pero importantísimo históricamente.
+  /// Aitor le sitúa el episodio del 778: los carolingios habían
+  /// cruzado al sur como aliados de Sulayman al-Arabi de Zaragoza,
+  /// fracasaron, volvían frustrados al norte y la retaguardia
+  /// fue emboscada por vascones. La emboscada sucedió
+  /// probablemente algo más al norte, en territorio que hoy es
+  /// Francia. Doc 09 §3.4.2.
+  static const EscenaCinematica elPaso = EscenaCinematica(
+    id: '3.4.2',
+    titulo: 'El paso',
+    flagDeSalida: 'escena_3_4_2_vista',
+    flagsRequeridos: {'escena_3_4_1_vista'},
+    ambiente: AmbienteArchivo.pasoRoncesvalles,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Roncesvalles. Paso de montaña, niebla. La colegiata real, '
+            'hospital de peregrinos histórico. La carretera por la que '
+            'se baja a Francia.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren mira hacia el norte — Francia. Hacia el sur — '
+            'Navarra. El paso es pequeño en términos geográficos pero '
+            'importantísimo históricamente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Aquí pasaron carolingios en 778. Aquí pasaron peregrinos '
+            'del Camino desde el s. XI. Aquí pasó casi todo lo que '
+            'entró y salió de la península durante mil años.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Aquí mismo, este paso concreto?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Aquí o cerca. La emboscada del 778 sucedió probablemente '
+            'algo más al norte, en territorio que hoy es Francia.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y los carolingios qué hacían aquí?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Habían cruzado al sur como aliados de Sulayman al-Arabi '
+            'de Zaragoza. Atacaron Zaragoza, fracasaron. Volvían '
+            'frustrados al norte. La retaguardia atravesaba este paso '
+            'cuando fue emboscada.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Por quién?'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Vascones.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.4.3 — *Las dos versiones*. Sala de trabajo cedida en la
+  /// colegiata. Aitor le presenta a Maren las dos lecturas en
+  /// paralelo: la histórica documentada por las fuentes
+  /// carolingias del s. VIII-IX (*Vita Karoli* de Eginardo,
+  /// *Annales Regni Francorum*) — emboscada vascona a la
+  /// retaguardia carolingia que volvía de Zaragoza, muerte de
+  /// Rolando conde de la Marca de Bretaña — frente a la legendaria
+  /// (*Chanson de Roland* h. 1100) — sarracenos en lugar de
+  /// vascones, traición de Ganelón como motor narrativo,
+  /// estructura de combate cristiano-musulmán. La voz del
+  /// Cuaderno articula los tres cambios y apunta a las Cruzadas
+  /// como contexto de redacción. Doc 09 §3.4.3.
+  static const EscenaCinematica lasDosVersiones = EscenaCinematica(
+    id: '3.4.3',
+    titulo: 'Las dos versiones',
+    flagDeSalida: 'escena_3_4_3_vista',
+    flagsRequeridos: {'escena_3_4_2_vista'},
+    ambiente: AmbienteArchivo.colegiataRoncesvalles,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Sala de trabajo cedida en la colegiata. Aitor pone sobre '
+            'la mesa el material de las dos lecturas en paralelo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Versión histórica (fuentes del s. VIII y IX):\n'
+            '• Vita Karoli de Eginardo (s. IX, biografía de Carlomagno).\n'
+            '• Annales Regni Francorum (anales del reino franco, s. IX).\n'
+            '• Mención breve en otras fuentes carolingias del periodo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Las fuentes contemporáneas dicen: una emboscada vascona '
+            'a la retaguardia carolingia que volvía frustrada de '
+            'Zaragoza. Murieron varios nobles, entre ellos un tal '
+            'Rolando, conde de la Marca de Bretaña. Los vascones se '
+            'retiraron sin posibilidad de represalia carolingia '
+            'inmediata.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Versión legendaria (Chanson de Roland, h. 1100):\n'
+            '• Texto épico francés de finales del s. XI / principios '
+            'del XII.\n'
+            '• Atribuye la emboscada a sarracenos en lugar de a '
+            'vascones.\n'
+            '• Convierte a Rolando en héroe central, con espada '
+            'Durendal y olifante.\n'
+            '• Añade traición del cristiano Ganelón como motor '
+            'narrativo.\n'
+            '• Estructura la batalla como combate religioso '
+            'cristiano-musulmán.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'La Chanson cambia tres cosas grandes:',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            '1. Vascones por moros.\n'
+            '2. Emboscada por traición.\n'
+            '3. Conflicto político por conflicto religioso.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Los tres cambios apuntan en la misma dirección. La '
+            'Chanson reescribe Roncesvalles para que encaje con las '
+            'Cruzadas — que están empezando precisamente cuando se '
+            'escribe.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.4.4 — *La Chanson*. Mesa de Trabajo en la colegiata.
+  /// PH.10 ampliado a su forma más completa: la leyenda no sólo
+  /// desplaza temporalmente — como Virila en la 3.3 — sino que
+  /// **reescribe identidades enteras** para servir a una agenda
+  /// contemporánea de su redacción. Las primeras Cruzadas se
+  /// predican en 1095 y la *Chanson* se escribe en torno a 1100.
+  /// Convierte un episodio menor de hace 320 años en epopeya
+  /// cristiano-musulmana — exactamente lo que Europa quería oír
+  /// en el momento. Voz del Cuaderno articulando: propaganda
+  /// cruzada no manipulada deliberadamente, sino respirada por
+  /// los redactores en el aire de su tiempo. Doc 09 §3.4.4.
+  static const EscenaCinematica laChanson = EscenaCinematica(
+    id: '3.4.4',
+    titulo: 'La Chanson',
+    flagDeSalida: 'escena_3_4_4_vista',
+    flagsRequeridos: {'escena_3_4_3_vista'},
+    ambiente: AmbienteArchivo.colegiataRoncesvalles,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Maren analiza la Chanson en su contexto. Las primeras '
+            'Cruzadas se predican en 1095. La Chanson se escribe en '
+            'torno a 1100. Su versión de Roncesvalles convierte un '
+            'episodio menor de hace 320 años en epopeya de cristianos '
+            'contra musulmanes — exactamente lo que Europa quería '
+            'oír en el momento.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La Chanson es propaganda cruzada. No de manera '
+            'consciente, no como manipulación deliberada. Pero el '
+            'aire que respiraban los redactores estaba lleno de '
+            'cruzadas, y el episodio del 778 lo reescribieron en '
+            'ese aire.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Los vascones no eran enemigo conveniente para los '
+            'cruzados — eran cristianos. Los moros sí. Cambia el '
+            'enemigo y el episodio sirve de arenga.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.4.5 — *Reconstrucción*. Mesa de Trabajo. La Cronista
+  /// produce 8 afirmaciones distinguiendo claramente entre los
+  /// dos planos — el episodio del 778 documentado y la *Chanson*
+  /// como obra literaria del s. XII. La afirmación 8 cierra con
+  /// el matiz metodológico clave: *"Roncesvalles como evento es
+  /// uno y la Chanson como obra literaria es otra: la honestidad
+  /// histórica exige no confundirlos, aunque la cultura popular
+  /// los haya fundido"* — Sólido como afirmación metodológica.
+  /// Doc 09 §3.4.5.
+  static const EscenaCinematica reconstruccionRoncesvalles = EscenaCinematica(
+    id: '3.4.5',
+    titulo: 'Reconstrucción',
+    flagDeSalida: 'escena_3_4_5_vista',
+    flagsRequeridos: {'escena_3_4_4_vista'},
+    ambiente: AmbienteArchivo.colegiataRoncesvalles,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mesa de Trabajo. La Cronista produce 8 afirmaciones '
+            'distinguiendo claramente entre los dos planos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 9),
+        textoLectura:
+            '1. En 778, una emboscada vascona destruyó la retaguardia '
+            'del ejército de Carlomagno en el Pirineo. Sólido.\n'
+            '2. Las fuentes carolingias contemporáneas identifican a '
+            'los atacantes como vascones. Sólido.\n'
+            '3. La emboscada respondía probablemente a represalias '
+            'por daños del ejército carolingio en su paso por '
+            'territorio vascón. Probable.\n'
+            '4. La Chanson de Roland (~1100) reescribe el episodio '
+            'sustituyendo a los vascones por musulmanes. Sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 9),
+        textoLectura:
+            '5. Esta sustitución refleja el contexto de las Cruzadas, '
+            'no la realidad del 778. Probable.\n'
+            '6. La Chanson añade el motor narrativo de la traición '
+            'de Ganelón, ausente de las fuentes contemporáneas. '
+            'Sólido.\n'
+            '7. La popularidad de la Chanson medieval fijó la versión '
+            'legendaria como "memoria popular" del episodio durante '
+            'siglos. Probable.\n'
+            '8. Roncesvalles como evento es uno y la Chanson como '
+            'obra literaria es otra: la honestidad histórica exige '
+            'no confundirlos, aunque la cultura popular los haya '
+            'fundido. Sólido como afirmación metodológica.',
+      ),
+    ],
+  );
+
+  /// 3.4.6 — *Concilio*. Días después en Iruña, salón del
+  /// Concilio. Aitor (acompañante), Karim, Joana revisores.
+  /// Karim aprueba la afirmación 5 con énfasis — el reconocimiento
+  /// explícito del contexto cruzado. Aitor le pregunta sobre la
+  /// afirmación 7, si la "memoria popular" tiene también su
+  /// propia historia que merece estudio; Maren admite que sí pero
+  /// queda fuera de esta Brecha. Joana asiente sin comentar y
+  /// cierra: *"Sellada"*. Doc 09 §3.4.6.
+  static const EscenaCinematica concilioRoncesvalles = EscenaCinematica(
+    id: '3.4.6',
+    titulo: 'Concilio de Roncesvalles',
+    flagDeSalida: 'escena_3_4_6_vista',
+    flagsRequeridos: {'escena_3_4_5_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Días después en Iruña. Salón del Concilio. Aitor '
+            'acompañante; Karim y Joana revisores. Maren presenta su '
+            'reconstrucción.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Tu afirmación 5 — el reconocimiento explícito del '
+            'contexto cruzado — la apruebo con énfasis. Es el corazón '
+            'de la Brecha.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Tu afirmación 7 dice que la "memoria popular" fijó la '
+            'versión legendaria durante siglos. ¿Esa memoria popular '
+            'tiene también su propia historia que merece estudio?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí. Pero queda fuera de esta Brecha.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Joana asiente sin comentar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto: 'Sellada.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+    ],
+  );
+
+  /// 3.4.7 — *Lo bonito miente*. Esa noche, habitación de Maren.
+  /// Voz del Cuaderno cierra la Estación 3.4 con la lección
+  /// integradora del oficio frente a la épica: *"Lo bonito miente
+  /// más que lo aburrido"*. La *Chanson* es bonita — tiene épica,
+  /// traición, espadas, olifantes. La realidad es aburrida —
+  /// una emboscada en un paso de montaña a un ejército que
+  /// volvía frustrado. *"El oficio sirve para defender lo aburrido
+  /// cuando es verdad. Eso me cuesta. Lo aburrido no se defiende
+  /// solo. Pero si no lo defendemos nosotras, nadie lo va a
+  /// defender"*. Doc 09 §3.4.7.
+  static const EscenaCinematica loBonitoMiente = EscenaCinematica(
+    id: '3.4.7',
+    titulo: 'Lo bonito miente',
+    flagDeSalida: 'escena_3_4_7_vista',
+    flagsRequeridos: {'escena_3_4_6_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Es de noche. Maren en su mesa, cuaderno abierto.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Lo bonito miente más que lo aburrido.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La Chanson es bonita. Tiene épica, traición, espadas, '
+            'olifantes. La realidad — una emboscada en un paso de '
+            'montaña a un ejército que volvía frustrado — es '
+            'aburrida.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'El oficio sirve para defender lo aburrido cuando es '
+            'verdad. Eso me cuesta. Lo aburrido no se defiende solo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Pero si no lo defendemos nosotras, nadie lo va a '
+            'defender.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+    ],
+  );
+
+  /// 3.D.1 — *Eider se va*. Latente, ~5 días después de la
+  /// Estación 3.4. Portal del bloque de Eider. Maren ha pasado
+  /// sin avisar; Eider baja en chándal, saliendo a entrenar al
+  /// baloncesto. Maren pide perdón por no haber ido al partido
+  /// importante. Eider responde con la frase clave: *"No estoy
+  /// enfadada. Estoy cansada. Estoy cansada de tener una mejor
+  /// amiga que tiene una vida que yo no entiendo"*. Maren: *"No
+  /// es lo mismo que perderte"*. Eider: *"No"*. Eider se va a
+  /// baloncesto sin cerrar nada. Maren camina a casa sin mirar
+  /// el móvil, sin llorar — sólo camina. Voz del Cuaderno esa
+  /// noche: *"Eider tiene razón. Yo no le he explicado nunca lo
+  /// que hago. Y aunque se lo explicara, no es algo que se pueda
+  /// explicar en cinco minutos. Hace falta haberlo vivido. No sé
+  /// qué hacer"*. Doc 09 §3.D.1. Esta es la cinemática más
+  /// emocionalmente cruda del Arco 3 hasta ahora — el coste
+  /// personal del oficio articulado por una amiga adolescente
+  /// que no entra en el oficio.
+  static const EscenaCinematica eiderSeVa = EscenaCinematica(
+    id: '3.D.1',
+    titulo: 'Eider se va',
+    flagDeSalida: 'escena_3_d_1_vista',
+    flagsRequeridos: {'arco_3_estacion_4_cerrada'},
+    ambiente: AmbienteArchivo.portalCasaEider,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren ha pasado por casa de Eider sin avisar. Eider '
+            'baja al portal en chándal, saliendo a entrenar.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.eider, texto: 'Hola.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Hola.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No vine al partido. Ya lo sabes.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.eider, texto: 'Lo sé.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Quería pedir perdón.'),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Maren. No estoy enfadada. Estoy cansada.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿De mí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto:
+            'No exactamente. Estoy cansada de tener una mejor amiga '
+            'que tiene una vida que yo no entiendo.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No es lo mismo que perderte.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.eider, texto: 'No.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.eider,
+        texto: 'Voy al baloncesto. ¿Hablamos otro día?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Eider se va. Maren se queda en el portal. Camina a casa. '
+            'No mira el móvil. No llora. Camina.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Eider tiene razón.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Yo no le he explicado nunca lo que hago. Y aunque se lo '
+            'explicara, no es algo que se pueda explicar en cinco '
+            'minutos. Hace falta haberlo vivido.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'No sé qué hacer.',
+        pausaPrevia: Duration(milliseconds: 1200),
       ),
     ],
   );

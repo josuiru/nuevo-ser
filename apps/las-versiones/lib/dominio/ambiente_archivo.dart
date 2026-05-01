@@ -347,4 +347,36 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// reproducciones a Maren y a Marina.
   static const AmbienteArchivo scriptoriumLeyre =
       AmbienteArchivo._('scriptorium_leyre');
+
+  /// Paso pirenaico de Roncesvalles — montaña, niebla baja,
+  /// bosque de hayas. Pequeño en términos geográficos pero
+  /// importantísimo históricamente: por aquí cruzaron carolingios
+  /// en 778 (la emboscada vascona que la *Chanson de Roland*
+  /// reescribiría siglos después como combate cristiano-musulmán)
+  /// y desde el s. XI los peregrinos del Camino. Lugar exterior
+  /// de la 3.4.2, donde Maren mira hacia Francia al norte y
+  /// Navarra al sur.
+  static const AmbienteArchivo pasoRoncesvalles =
+      AmbienteArchivo._('paso_roncesvalles');
+
+  /// Colegiata real de Santa María de Roncesvalles — hospital
+  /// histórico de peregrinos del Camino, conjunto monumental
+  /// medieval. La 3.4.3 sucede en una sala de trabajo cedida
+  /// dentro de la colegiata, donde Aitor le presenta a Maren las
+  /// dos lecturas del 778: la histórica documentada por las
+  /// fuentes carolingias del s. VIII-IX (*Vita Karoli* de
+  /// Eginardo, *Annales Regni Francorum*) y la legendaria de la
+  /// *Chanson de Roland* (h. 1100).
+  static const AmbienteArchivo colegiataRoncesvalles =
+      AmbienteArchivo._('colegiata_roncesvalles');
+
+  /// Portal del bloque donde vive Eider — escalera de un edificio
+  /// urbano de Iruña. Espacio de paso, no de intimidad. Lugar de
+  /// la 3.D.1 latente *"Eider se va"*, donde Maren pasa sin avisar
+  /// y Eider baja en chándal saliendo a entrenar al baloncesto.
+  /// El portal como espacio físico marca la distancia que la
+  /// escena articula: ni casa de Eider ni espacio íntimo de
+  /// Maren — un umbral.
+  static const AmbienteArchivo portalCasaEider =
+      AmbienteArchivo._('portal_casa_eider');
 }

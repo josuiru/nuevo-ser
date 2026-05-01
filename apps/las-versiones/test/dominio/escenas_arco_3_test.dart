@@ -660,14 +660,275 @@ void main() {
     );
   });
 
+  group('EscenasArco3.caminoARoncesvalles (3.4.1)', () {
+    test(
+      'precondición = escena_3_c_1_vista — la 3.C.1 (Naia pregunta '
+      'otra vez) desbloquea el viaje a Roncesvalles',
+      () {
+        expect(
+          EscenasArco3.caminoARoncesvalles.flagsRequeridos,
+          {'escena_3_c_1_vista'},
+        );
+      },
+    );
+
+    test('viaja con ambiente cocheAitor — el viaje lo lleva Aitor', () {
+      expect(
+        EscenasArco3.caminoARoncesvalles.ambiente,
+        same(AmbienteArchivo.cocheAitor),
+      );
+    });
+
+    test(
+      'Aitor anticipa la doble lectura del 778: la Chanson de Roland '
+      'reescribe siglos después con sarracenos en lugar de vascones',
+      () {
+        final dialogos = EscenasArco3.caminoARoncesvalles.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Chanson de Roland'));
+        expect(dialogos, contains('sarracenos'));
+        expect(dialogos, contains('s. VIII'));
+        expect(dialogos, contains('moros son ficción'));
+      },
+    );
+  });
+
+  group('EscenasArco3.elPaso (3.4.2)', () {
+    test('viaja con ambiente pasoRoncesvalles', () {
+      expect(
+        EscenasArco3.elPaso.ambiente,
+        same(AmbienteArchivo.pasoRoncesvalles),
+      );
+    });
+
+    test(
+      'Aitor sitúa el episodio del 778: Sulayman al-Arabi de '
+      'Zaragoza + retaguardia carolingia + emboscada vascona',
+      () {
+        final dialogos = EscenasArco3.elPaso.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Sulayman al-Arabi'));
+        expect(dialogos, contains('Zaragoza'));
+        expect(dialogos, contains('retaguardia'));
+        expect(dialogos, contains('Vascones'));
+      },
+    );
+  });
+
+  group('EscenasArco3.lasDosVersiones (3.4.3)', () {
+    test('viaja con ambiente colegiataRoncesvalles', () {
+      expect(
+        EscenasArco3.lasDosVersiones.ambiente,
+        same(AmbienteArchivo.colegiataRoncesvalles),
+      );
+    });
+
+    test(
+      'enumera las fuentes históricas ancla — Vita Karoli de '
+      'Eginardo + Annales Regni Francorum',
+      () {
+        final acotaciones = EscenasArco3.lasDosVersiones.planos
+            .whereType<PlanoAmbiente>()
+            .map((p) => p.textoLectura ?? '')
+            .join(' ');
+        expect(acotaciones, contains('Vita Karoli'));
+        expect(acotaciones, contains('Eginardo'));
+        expect(acotaciones, contains('Annales Regni Francorum'));
+      },
+    );
+
+    test(
+      'la voz del Cuaderno articula los tres cambios de la Chanson '
+      '+ apunta a las Cruzadas como contexto de redacción',
+      () {
+        final dialogosCuaderno = EscenasArco3.lasDosVersiones.planos
+            .whereType<PlanoDialogo>()
+            .where((p) => p.voz == VozPersonaje.vozDeFuente)
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogosCuaderno, contains('1. Vascones por moros'));
+        expect(dialogosCuaderno, contains('2. Emboscada por traición'));
+        expect(
+          dialogosCuaderno,
+          contains('3. Conflicto político por conflicto religioso'),
+        );
+        expect(dialogosCuaderno, contains('Cruzadas'));
+      },
+    );
+  });
+
+  group('EscenasArco3.laChanson (3.4.4)', () {
+    test(
+      'sitúa cronológicamente: Cruzadas predicadas en 1095, Chanson '
+      'escrita en torno a 1100, episodio del 778 reescrito 320 años '
+      'después',
+      () {
+        final acotaciones = EscenasArco3.laChanson.planos
+            .whereType<PlanoAmbiente>()
+            .map((p) => p.textoLectura ?? '')
+            .join(' ');
+        expect(acotaciones, contains('1095'));
+        expect(acotaciones, contains('1100'));
+        expect(acotaciones, contains('320 años'));
+      },
+    );
+
+    test(
+      'la voz del Cuaderno articula la lección PH.10 ampliada: la '
+      'Chanson como propaganda cruzada respirada — no como '
+      'manipulación deliberada',
+      () {
+        final dialogosCuaderno = EscenasArco3.laChanson.planos
+            .whereType<PlanoDialogo>()
+            .where((p) => p.voz == VozPersonaje.vozDeFuente)
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogosCuaderno, contains('propaganda cruzada'));
+        expect(dialogosCuaderno, contains('no como manipulación deliberada'));
+        expect(dialogosCuaderno, contains('arenga'));
+      },
+    );
+  });
+
+  group('EscenasArco3.reconstruccionRoncesvalles (3.4.5)', () {
+    test(
+      'la Cronista produce 8 afirmaciones — la afirmación 8 lleva '
+      'la calibración "Sólido como afirmación metodológica" del '
+      'matiz pedagógico (no es un nivel nuevo del enum, es texto)',
+      () {
+        final acotaciones = EscenasArco3.reconstruccionRoncesvalles.planos
+            .whereType<PlanoAmbiente>()
+            .map((p) => p.textoLectura ?? '')
+            .join(' ');
+        expect(acotaciones, contains('8 afirmaciones'));
+        expect(acotaciones, contains('1.'));
+        expect(acotaciones, contains('8.'));
+        expect(acotaciones, contains('Sólido como afirmación metodológica'));
+      },
+    );
+  });
+
+  group('EscenasArco3.concilioRoncesvalles (3.4.6)', () {
+    test('viaja con ambiente salonConcilio', () {
+      expect(
+        EscenasArco3.concilioRoncesvalles.ambiente,
+        same(AmbienteArchivo.salonConcilio),
+      );
+    });
+
+    test(
+      'Karim aprueba la afirmación 5 (contexto cruzado) con énfasis, '
+      'Aitor pregunta sobre la afirmación 7 (memoria popular) y '
+      'Joana cierra con "Sellada"',
+      () {
+        final dialogos = EscenasArco3.concilioRoncesvalles.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('afirmación 5'));
+        expect(dialogos, contains('contexto cruzado'));
+        expect(dialogos, contains('afirmación 7'));
+        expect(dialogos, contains('memoria popular'));
+        expect(dialogos, contains('Sellada'));
+      },
+    );
+  });
+
+  group('EscenasArco3.loBonitoMiente (3.4.7)', () {
+    test(
+      'la voz del Cuaderno cierra la Estación 3.4 con la lección '
+      'integradora: "Lo bonito miente más que lo aburrido"',
+      () {
+        final dialogos = EscenasArco3.loBonitoMiente.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('Lo bonito miente más que lo aburrido'));
+        expect(
+          dialogos,
+          contains('si no lo defendemos nosotras, nadie lo va a defender'),
+        );
+      },
+    );
+
+    test(
+      'al cerrar la escena se activa arco_3_estacion_4_cerrada — '
+      'desbloquea la 3.D.1 latente con Eider',
+      () {
+        expect(
+          EscenasArco3.flagsDeCierrePorEscena['escena_3_4_7_vista'],
+          contains('arco_3_estacion_4_cerrada'),
+        );
+      },
+    );
+  });
+
+  group('EscenasArco3.eiderSeVa (3.D.1)', () {
+    test(
+      'precondición = arco_3_estacion_4_cerrada — la 3.4.7 lo activa',
+      () {
+        expect(
+          EscenasArco3.eiderSeVa.flagsRequeridos,
+          {'arco_3_estacion_4_cerrada'},
+        );
+      },
+    );
+
+    test('viaja con ambiente portalCasaEider — un umbral, no un interior',
+        () {
+      expect(
+        EscenasArco3.eiderSeVa.ambiente,
+        same(AmbienteArchivo.portalCasaEider),
+      );
+    });
+
+    test(
+      'contiene la frase clave de Eider que articula el coste '
+      'personal del oficio — "Estoy cansada de tener una mejor '
+      'amiga que tiene una vida que yo no entiendo"',
+      () {
+        final dialogos = EscenasArco3.eiderSeVa.planos
+            .whereType<PlanoDialogo>()
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogos, contains('No estoy enfadada. Estoy cansada'));
+        expect(
+          dialogos,
+          contains('una vida que yo no entiendo'),
+        );
+        expect(dialogos, contains('No es lo mismo que perderte'));
+      },
+    );
+
+    test(
+      'la voz del Cuaderno cierra la noche con "No sé qué hacer" — '
+      'sin epifanía, sin solución; el coste personal queda abierto',
+      () {
+        final dialogosCuaderno = EscenasArco3.eiderSeVa.planos
+            .whereType<PlanoDialogo>()
+            .where((p) => p.voz == VozPersonaje.vozDeFuente)
+            .map((p) => p.texto)
+            .join(' ');
+        expect(dialogosCuaderno, contains('Eider tiene razón'));
+        expect(dialogosCuaderno, contains('Hace falta haberlo vivido'));
+        expect(dialogosCuaderno, contains('No sé qué hacer'));
+      },
+    );
+  });
+
   group('EscenasArco3.todas', () {
     test(
       'catálogo cubre apertura (3.0.x) + Estación 3.1 completa + '
       'latente 3.A.1 + Estación 3.2 completa (3.2.1 a 3.2.8) + '
       'latente 3.B.1 + Estación 3.3 completa (3.3.1 a 3.3.6) + '
-      'latente 3.C.1 — 24 cinemáticas implementadas',
+      'latente 3.C.1 + Estación 3.4 completa (3.4.1 a 3.4.7) + '
+      'latente 3.D.1 — 32 cinemáticas implementadas',
       () {
-        expect(EscenasArco3.todas, hasLength(24));
+        expect(EscenasArco3.todas, hasLength(32));
         expect(
           EscenasArco3.todas.map((escena) => escena.id).toList(),
           [
@@ -695,6 +956,14 @@ void main() {
             '3.3.5',
             '3.3.6',
             '3.C.1',
+            '3.4.1',
+            '3.4.2',
+            '3.4.3',
+            '3.4.4',
+            '3.4.5',
+            '3.4.6',
+            '3.4.7',
+            '3.D.1',
           ],
         );
       },
