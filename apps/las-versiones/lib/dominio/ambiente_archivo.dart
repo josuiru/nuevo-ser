@@ -281,4 +281,40 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// donde Isaura señala los topónimos occitanos en las calles.
   static const AmbienteArchivo calleNavarreria =
       AmbienteArchivo._('calle_navarreria');
+
+  /// Coche de Aitor — un C4 más nuevo que el de Isaura, según el
+  /// doc 09 §3.2.1. Aitor lleva a Maren en este coche al viaje a
+  /// Tudela porque Isaura tiene tribunal ese día. Ambiente
+  /// específico para distinguirlo de `cocheIsaura` — los dos coches
+  /// implican dos modos de viaje distintos del Archivo.
+  static const AmbienteArchivo cocheAitor =
+      AmbienteArchivo._('coche_aitor');
+
+  /// Mezquita-catedral de Tudela — la actual catedral de Santa
+  /// María, construida en el s. XII sobre la mezquita aljama
+  /// musulmana del s. IX-XII tras la conquista cristiana de 1119.
+  /// Conserva elementos de las dos cosas dentro: capiteles que
+  /// reutilizan piezas islámicas, inscripciones árabes parcialmente
+  /// borradas en una sala lateral. Lugar de la 3.2.2 donde Aitor
+  /// le presenta a Maren el material físico del periodo de los
+  /// Banu Qasi.
+  static const AmbienteArchivo mezquitaCatedralTudela =
+      AmbienteArchivo._('mezquita_catedral_tudela');
+
+  /// Sala de trabajo del museo de Tudela con material de los Banu
+  /// Qasi — fuentes árabes (Ibn Hayyán *Muqtabis*, Al-Razi,
+  /// crónicas anónimas, inscripciones), fuentes cristianas (la
+  /// *Crónica de Alfonso III* y otras), material arqueológico
+  /// (alcazaba, cerámica, monedas). Espacio donde Maren trabaja la
+  /// reconstrucción de la dinastía muladí en la 3.2.3 y la 3.2.6.
+  static const AmbienteArchivo salaMuseoTudela =
+      AmbienteArchivo._('sala_museo_tudela');
+
+  /// Cafetería pequeña del casco viejo de Tudela — cinco mesas, una
+  /// barra. Aitor es cliente habitual: el dueño le saluda con la
+  /// cabeza al entrar. Lugar del primer encuentro narrativo con
+  /// Tasio (3.2.5) — diferente de `cafeteriaCascoViejo` (que es la
+  /// cafetería del casco viejo de Iruña ya en uso desde el Arco 1).
+  static const AmbienteArchivo cafeteriaCascoViejoTudela =
+      AmbienteArchivo._('cafeteria_casco_viejo_tudela');
 }

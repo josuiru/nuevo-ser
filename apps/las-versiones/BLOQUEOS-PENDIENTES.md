@@ -95,6 +95,31 @@ referencias y revertir la sustitución.
 
 ---
 
+## BANU-QASI — Estación 3.2 (Tudela y los Banu Qasi) (F2-20b)
+
+**Tracker doc 17**: Prioridad 2 del comité provisional, **sin validar**. La validación crítica TUDELA-1378 (Estación 3.6) tiene prioridad sobre ésta.
+
+**Guion canónico (doc 09 §3.2)**: 8 cinemáticas que cubren narrativamente el material de los Banu Qasi (dinastía muladí del s. VIII-X que gobernó la Ribera del Ebro, especialmente Tudela), el primer encuentro narrativo con Tasio en una cafetería del casco viejo de Tudela, y la conversación de Maren con Isaura dos días después en la 3.B.1 (latente). El núcleo pedagógico es la lectura crítica de fuentes árabes (Ibn Hayyán *Muqtabis* hostil cuando se rebelan + Al-Razi geográfica + crónica anónima + inscripciones árabes locales) contra fuentes cristianas hostiles (la *Crónica de Alfonso III* y otras) + material arqueológico (alcazaba, cerámica, monedas) — y declarar la identidad muladí como Sólido como afirmación metodológica (la dicotomía moderna *"musulmán vs hispano"* no aplica al periodo).
+
+**Estado**: las 9 cinemáticas (3.2.1–3.2.8 + 3.B.1) implementadas como narrativa, sin pantalla de Reconstrucción jugable. La Brecha 3.2 jugable real (con Mesa de Trabajo + declaración de afirmaciones con niveles de confianza sobre los Banu Qasi) queda **pendiente** — requiere validación BANU-QASI cerrada por el comité antes de implementarse, porque las 6 afirmaciones canónicas del catálogo jugable necesitan precisión histórica fina (especialmente las dataciones del s. VIII-X y la atribución del proyecto rebelde a Lubb ibn Muhammad).
+
+**Material trazable preservado** (sin sustitución hoy):
+- **Mezquita-catedral de Tudela** (Catedral de Santa María): construcción cristiana sobre la mezquita aljama tras la conquista de 1119, conservación parcial de elementos islámicos como hecho arqueológico documentado.
+- **Banu Qasi** como dinastía muladí: descendientes de Casio (conde visigodo convertido al islam tras la invasión, según Ibn Hayyán que cita fuentes anteriores perdidas — declarado **Probable** en la cinemática 3.2.7, no Sólido).
+- **Ibn Hayyán** y su *Muqtabis* (s. XI), **Al-Razi** (s. X), **Crónica de Alfonso III**: fuentes históricas reales y bien establecidas en la historiografía.
+- **Lubb ibn Muhammad** y la rebelión del s. IX: figura histórica documentada, declarada en cinemática como "proyecto de soberanía local fronteriza, no movimiento religioso" con calibración **Probable**.
+- **Derrota tras 920 + reabsorción + reorganización administrativa hasta la conquista cristiana de 1119**: marco cronológico preservado del doc 09.
+
+**Pendiente de revisión humana**:
+- ¿La caracterización de los Banu Qasi como "muladíes plenamente musulmanes en el s. IX aunque hispano-cristianos hace tres generaciones" es la lectura consensuada hoy en arabismo navarro? Posible matización si el comité prefiere una formulación más cauta sobre el ritmo de la conversión.
+- ¿La derrota tras 920 puede datarse con más precisión? La cinemática usa "tras 920" sin fecha exacta; puede afinarse cuando el comité valide.
+- Tono de Tasio en 3.2.5 (primer encuentro): material narrativo cerrado por el guion canónico, no requiere validación histórica del comité, pero sí queda pendiente de revisión por la Bíblia de Personajes (doc 04) cuando entre Tasio formalmente.
+- **3.B.1 — relación romántica Isaura/Tasio**: la confesión final de Isaura *"Lo sigo queriendo"* es material narrativo del guion canónico, sin sustitución.
+
+**Cuando el comité valide BANU-QASI**: se puede afinar la cronología de la rebelión, datar con precisión la derrota, validar la atribución a Lubb ibn Muhammad como cabeza del proyecto, y abrir la Brecha 3.2 jugable con las 6 afirmaciones canónicas calibradas.
+
+---
+
 ## Mecánicas pedagógicas (F6) — decisiones tomadas sin consenso
 
 Estas son decisiones de diseño pedagógico que normalmente pediría

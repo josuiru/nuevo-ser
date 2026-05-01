@@ -34,7 +34,11 @@ class EscenasArco3 {
   /// orquestador. La 3.0.1 requiere `arco_2_cerrado_por_la_cronista`
   /// (que la 2.Z.2 *La grabación* del Arco 2 activa). La 3.A.1 se
   /// ordena detrás de 3.1.5 porque requiere
-  /// `arco_3_estacion_1_cerrada` (que la 3.1.5 activa).
+  /// `arco_3_estacion_1_cerrada` (que la 3.1.5 activa). La Estación
+  /// 3.2 arranca con 3.2.1 que requiere `escena_3_a_1_vista` (la
+  /// latente de Marina cierra antes del viaje a Tudela). La 3.B.1
+  /// se ordena detrás de 3.2.8 porque requiere
+  /// `arco_3_estacion_2_cerrada` (que la 3.2.8 activa).
   static const List<EscenaCinematica> todas = [
     aperturaDelArco,
     eiderYLaDistancia,
@@ -44,6 +48,15 @@ class EscenasArco3 {
     concilioSanCernin,
     irunaCosmopolita,
     marinaYLosPuentes,
+    caminoATudela,
+    tudelaYLosBanuQasi,
+    lasFuentesArabes,
+    laCafeteria,
+    elEncuentroConTasio,
+    vueltaAlTrabajo,
+    reconstruccionYConcilioBanuQasi,
+    elSilencioDeMaren,
+    teTratoBien,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -74,6 +87,35 @@ class EscenasArco3 {
     },
     'escena_3_a_1_vista': {
       'consejo_marina_puentes_recibido',
+    },
+    'escena_3_2_1_vista': {
+      'aviso_aitor_tasio_recibido',
+      'viaje_a_tudela_iniciado',
+    },
+    'escena_3_2_2_vista': {
+      'mezquita_catedral_visitada',
+    },
+    'escena_3_2_3_vista': {
+      'fuentes_arabes_estudiadas',
+    },
+    'escena_3_2_4_vista': {
+      'cafeteria_tudela_alcanzada',
+    },
+    'escena_3_2_5_vista': {
+      'met_tasio',
+      'tasio_first_encounter',
+    },
+    'escena_3_2_6_vista': {
+      'reconstruccion_banu_qasi_iniciada',
+    },
+    'escena_3_2_7_vista': {
+      'concilio_3_2_cerrado',
+    },
+    'escena_3_2_8_vista': {
+      'arco_3_estacion_2_cerrada',
+    },
+    'escena_3_b_1_vista': {
+      'isaura_supo_de_tasio',
     },
   };
 
@@ -667,6 +709,851 @@ class EscenasArco3 {
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
         textoLectura: 'Marina sale.',
+      ),
+    ],
+  );
+
+  /// 3.2.1 — *Camino a Tudela*. Mediados de marzo. Aitor lleva a
+  /// Maren a Tudela en su C4 (Isaura tiene tribunal ese día). Hora
+  /// y media de viaje. Aitor le avisa explícitamente: *"Tasio está
+  /// en Tudela. Es probable que te encuentre. Esto no es
+  /// coincidencia accidental — él sabe que tú vas a venir aquí esta
+  /// semana. Lo sabe porque alguien del Archivo se lo dice por
+  /// costumbre."* Karim como informante honesto. Aitor declina ser
+  /// mentor de la situación (*"yo no soy tu mentor en esto"*) pero
+  /// le da el consejo metodológico clave: *"si hablas con él, no te
+  /// tienes que defender. No te está atacando. Pero tampoco te está
+  /// cuidando. Está examinándote. No hay nada malo en dejarse
+  /// examinar — pero tienes que saber qué le enseñas tú."* Doc 09
+  /// §3.2.1.
+  static const EscenaCinematica caminoATudela = EscenaCinematica(
+    id: '3.2.1',
+    titulo: 'Camino a Tudela',
+    flagDeSalida: 'escena_3_2_1_vista',
+    flagsRequeridos: {'escena_3_a_1_vista'},
+    ambiente: AmbienteArchivo.cocheAitor,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Aitor conduce un C4 más nuevo que el de Isaura. Maren '
+            'va de copiloto. Hora y media de viaje hasta la Ribera.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Te aviso de algo.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Tasio está en Tudela. Lo sabes.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Lo sabía.'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Es probable que te encuentre. Esto no es coincidencia '
+            'accidental — él sabe que tú vas a venir aquí esta '
+            'semana. Lo sabe porque alguien del Archivo se lo dice '
+            'por costumbre.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Quién?'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Karim. Pero Karim es honesto y te lo diría a la cara si '
+            'se lo preguntas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tasio va a aparecer?',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Probable. Sólido tirando a Probable.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué hago?'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Lo que decidas.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Eso no es respuesta.'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Es la única que tengo. Yo no soy tu mentor en esto.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren mira el paisaje. La Ribera se abre — campos de '
+            'regadío, el Ebro a lo lejos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Pero te voy a decir una cosa.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Si hablas con él, no te tienes que defender. No te está '
+            'atacando. Pero tampoco te está cuidando. Está '
+            'examinándote. No hay nada malo en dejarse examinar — '
+            'pero tienes que saber qué le enseñas tú.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+    ],
+  );
+
+  /// 3.2.2 — *Tudela y los Banu Qasi*. Llegan a Tudela. Distinta al
+  /// norte: calor más pronto en el año, ladrillo en lugar de piedra,
+  /// casas con galería. Visitan la mezquita-catedral por fuera —
+  /// edificio que es las dos cosas a la vez (mezquita aljama del s.
+  /// IX al XII, catedral cristiana tras 1119). Capiteles que
+  /// reutilizan piezas islámicas, inscripciones árabes parcialmente
+  /// borradas en una sala lateral. Aitor le explica que la cuestión
+  /// de qué se conservó y qué no es ya parte de su Brecha. Doc 09
+  /// §3.2.2.
+  ///
+  /// Material trazable: Catedral de Santa María de Tudela real,
+  /// construcción cristiana sobre la mezquita aljama tras la
+  /// conquista de 1119, conservación parcial de elementos islámicos
+  /// como hecho arqueológico documentado. BANU-QASI Prioridad 2 del
+  /// comité provisional sin validar — registro en BLOQUEOS.
+  static const EscenaCinematica tudelaYLosBanuQasi = EscenaCinematica(
+    id: '3.2.2',
+    titulo: 'Tudela y los Banu Qasi',
+    flagDeSalida: 'escena_3_2_2_vista',
+    flagsRequeridos: {'escena_3_2_1_vista'},
+    ambiente: AmbienteArchivo.mezquitaCatedralTudela,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Tudela. Distinto al norte. Calor más pronto en el año. '
+            'Ladrillo en lugar de piedra. Casas con galería. La '
+            'mezquita-catedral por fuera — un edificio que es las dos '
+            'cosas a la vez.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Esto fue mezquita aljama del s. IX al XII. Tras la '
+            'conquista cristiana, catedral. Conserva elementos de las '
+            'dos cosas dentro.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Entran. Las naves cristianas medievales tienen capiteles '
+            'que reutilizan piezas islámicas. Inscripciones árabes '
+            'parcialmente borradas en una sala lateral.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿La conservaron así a propósito?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'En parte sí, en parte no llegaron a destruir todo. La '
+            'cuestión de qué se conservó y qué no es ya tu Brecha.',
+      ),
+    ],
+  );
+
+  /// 3.2.3 — *Las fuentes árabes*. Sala de trabajo cedida por el
+  /// museo de Tudela con material árabe sobre los Banu Qasi. La
+  /// conservadora del museo (sin nombre en el doc) le presenta el
+  /// material: Ibn Hayyán *Muqtabis* (s. XI, fuente cordobesa
+  /// hostil cuando los Banu Qasi se rebelan), Al-Razi (s. X,
+  /// descripción geográfica de Tudela), crónica anónima del periodo,
+  /// inscripciones árabes locales, *Crónica de Alfonso III* y otras
+  /// cristianas que mencionan a los Banu Qasi como aliados o
+  /// enemigos según conveniencia, material arqueológico (alcazaba,
+  /// cerámica, monedas). Voz del Cuaderno articulando que los
+  /// Banu Qasi eran muladíes — descendientes hispano-godos
+  /// convertidos al islam — y que la pregunta moderna *"¿musulmanes
+  /// o hispanos?"* presupone una dicotomía que en su época no
+  /// funcionaba así. Doc 09 §3.2.3.
+  static const EscenaCinematica lasFuentesArabes = EscenaCinematica(
+    id: '3.2.3',
+    titulo: 'Las fuentes árabes',
+    flagDeSalida: 'escena_3_2_3_vista',
+    flagsRequeridos: {'escena_3_2_2_vista'},
+    ambiente: AmbienteArchivo.salaMuseoTudela,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Sala de trabajo cedida por el museo de Tudela. La '
+            'conservadora le presenta el material a Maren. Las '
+            'fuentes árabes principales para los Banu Qasi están '
+            'sobre la mesa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            '1. Ibn Hayyán (s. XI), Muqtabis — fuente cordobesa '
+            'hostil a los Banu Qasi cuando se rebelan.\n'
+            '2. Al-Razi (s. X) — descripción geográfica que '
+            'menciona Tudela.\n'
+            '3. Crónica anónima del periodo, fragmentos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            '4. Inscripciones árabes locales conservadas, algunas '
+            'datadas, otras no.\n'
+            '5. Crónicas cristianas — la Crónica de Alfonso III y '
+            'otras que mencionan a los Banu Qasi como aliados o '
+            'enemigos según conveniencia.\n'
+            '6. Material arqueológico — alcazaba, restos cerámicos, '
+            'monedas.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren trabaja durante varias horas. La interfaz le '
+            'permite leer fragmentos en árabe original con apoyo del '
+            'tutor, comparar con versiones cristianas paralelas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Los Banu Qasi son fascinantes. Eran muladíes — '
+            'descendientes hispano-godos convertidos. Su nombre Qasi '
+            'viene de Casio, el conde visigodo que se convirtió al '
+            'islam tras la invasión.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Eran cristianos hace tres generaciones. Después fueron '
+            'musulmanes plenos. Después se aliaron con vascones de '
+            'Pamplona contra Córdoba. Después fueron derrotados por '
+            'Córdoba y reabsorbidos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'La cuestión de su identidad es difícil. ¿Eran '
+            '"musulmanes pero hispanos"? ¿"Hispanos pero musulmanes"? '
+            'Las dos cosas a la vez. La pregunta presupone una '
+            'dicotomía que en su época no funcionaba así.',
+      ),
+    ],
+  );
+
+  /// 3.2.4 — *La cafetería*. 13:30, salen del museo. Aitor conoce
+  /// un sitio en el casco viejo de Tudela: cafetería pequeña de
+  /// cinco mesas y una barra. El dueño le saluda con la cabeza —
+  /// Aitor es cliente habitual de otras visitas. Se sientan, piden,
+  /// Aitor lee correo en el móvil, Maren bebe agua. **Tres minutos
+  /// después, Tasio entra.** Doc 09 §3.2.4.
+  static const EscenaCinematica laCafeteria = EscenaCinematica(
+    id: '3.2.4',
+    titulo: 'La cafetería',
+    flagDeSalida: 'escena_3_2_4_vista',
+    flagsRequeridos: {'escena_3_2_3_vista'},
+    ambiente: AmbienteArchivo.cafeteriaCascoViejoTudela,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Salen del museo a las 13:30. Aitor conoce un sitio en '
+            'el casco viejo.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Aquí. Comen bien.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Cafetería pequeña, cinco mesas, una barra. El dueño los '
+            'conoce a Aitor de otras visitas — saluda con la cabeza.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Se sientan. Piden. Aitor lee un correo en el móvil. '
+            'Maren bebe agua.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Tres minutos después, Tasio entra.',
+      ),
+    ],
+  );
+
+  /// 3.2.5 — *El encuentro con Tasio*. Misma cafetería. Primer
+  /// encuentro narrativo con Tasio (32 años, camisa azul lavada,
+  /// vaqueros, botas; cara abierta, ni sonrisa simpática ni mirada
+  /// agresiva, sólo presencia). Tasio invita a Maren a un café —
+  /// *"Esto no es soborno. Es protocolo."* La conversación que
+  /// sigue es un examen pedagógico sin disfrazarse: Tasio le hace
+  /// tres preguntas clave (*"¿Crees que el Archivo es reformable
+  /// desde dentro?"* / *"¿Tú quieres ser Isaura?"* / *"¿Qué quieres
+  /// ser?"*) y le deja una cuarta pregunta para mascar sola (sobre
+  /// la asunción de que ser Isaura es el techo). Cierre con la
+  /// petición clave: *"Cuando trabajes la Brecha del incendio de la
+  /// judería de Tudela del 1378, recuérdame. Porque la Brecha tiene
+  /// tres lecturas: la de Isaura, la mía, y la tercera. La tercera
+  /// es la tuya, si la haces. No la fuerces. Pero no la evites
+  /// tampoco."* Aitor se queda en su mesa sin intervenir. Doc 09
+  /// §3.2.5.
+  static const EscenaCinematica elEncuentroConTasio = EscenaCinematica(
+    id: '3.2.5',
+    titulo: 'El encuentro con Tasio',
+    flagDeSalida: 'escena_3_2_5_vista',
+    flagsRequeridos: {'escena_3_2_4_vista'},
+    ambiente: AmbienteArchivo.cafeteriaCascoViejoTudela,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Tasio. 32 años. Camisa azul lavada, vaqueros, botas. '
+            'Cara abierta — ni la sonrisa simpática ni la mirada '
+            'agresiva. Sólo presencia.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Mira hacia la mesa de Aitor. Aitor levanta la vista del '
+            'móvil.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: 'Aitor.'),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Tasio.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: '¿Tú eres la nueva de Isaura?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren tarda tres segundos.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Soy Maren.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Lo sé. ¿Te puedo invitar a un café cuando termines la '
+            'comida?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren mira a Aitor. Aitor le hace un asentimiento '
+            'mínimo: tú decides. Vuelve al móvil.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Quince minutos. Estoy en la barra.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Tasio se va a la barra. Pide un café. Lee un libro '
+            'pequeño.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Aitor habla en voz muy baja sin mirar a Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Yo me quedo aquí. Si necesitas que intervenga, mira '
+            'hacia mí. Si no, no me meto.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Aitor sigue con el móvil. Maren come. Acaba en quince '
+            'minutos. Va a la barra. Tasio cierra el libro. Le hace '
+            'señas para que se siente en una mesa pequeña al fondo.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Café también.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'El camarero trae los cafés. Tasio paga los dos antes de '
+            'que Maren pueda intervenir.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Esto no es soborno. Es protocolo.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Ya.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Tasio bebe.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: '¿Cuánto llevas en el oficio?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Ocho meses.'),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: 'Y ya en Tudela.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vine a trabajar los Banu Qasi.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Buen lugar para empezar la Ribera.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: '¿Qué te parece la Brecha?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Difícil. Las fuentes árabes son riquísimas pero hay que '
+            'aprender a leerlas. Las cristianas son hostiles y '
+            'filtran lo importante. Y los restos arqueológicos están '
+            'limitados — la alcazaba se ha estudiado pero el barrio '
+            'musulmán fuera, menos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: '¿Y eso te dice algo?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Que la mirada arqueológica también ha sido sesgada.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: 'Bien.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Tasio cambia de tono ligeramente. Más directo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Maren. ¿Te puedo preguntar algo más directo?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: '¿Crees que el Archivo es reformable desde dentro?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren se queda. Aitor desde su mesa no levanta la vista.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No sé.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Esa respuesta es buena. La gente que está segura de que '
+            'sí está mintiendo. La gente que está segura de que no '
+            'está vendiendo el oficio entero.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Pero tú decidiste que no.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Yo decidí que para mí no. Eso no es lo mismo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(duracion: Duration(seconds: 2)),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Otra. ¿Tú quieres ser Isaura?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa muy larga.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No.'),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: '¿Qué quieres ser?'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa más larga aún.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No lo sé.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Tampoco lo sabía yo a tu edad. Pero tenía la sensación '
+            'de que ser Isaura era el techo. ¿La tienes tú?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No me la había hecho hasta ahora.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'La pregunta no es trampa. Te la dejo para que la masques '
+            'sola.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Tasio termina su café. Mira a Maren con seriedad nueva.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: 'Una última.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Cuando trabajes la Brecha del incendio de la judería de '
+            'Tudela del 1378, recuérdame.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Por qué?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Porque la Brecha tiene tres lecturas: la de Isaura, la '
+            'mía, y la tercera. La tercera es la tuya, si la haces. '
+            'No la fuerces. Pero no la evites tampoco.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Si llegas a una versión propia, defiéndela bien. Si no '
+            'llegas, no te inventes una para complacer a nadie. Ni a '
+            'Isaura, ni a mí.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Tasio se levanta. Le tiende la mano. Maren se la da. '
+            'Apretón breve, firme.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Vas a ser buena. Tú decide a qué.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Tasio sale. La puerta de la cafetería se cierra. Maren '
+            'se queda sentada en la mesa con el café a medio terminar. '
+            'Aitor desde su mesa la mira por primera vez. No comenta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: '¿Volvemos al museo?',
+        pausaPrevia: Duration(milliseconds: 2000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+    ],
+  );
+
+  /// 3.2.6 — *Vuelta al trabajo*. Esa tarde. Sala del museo de
+  /// Tudela. Maren vuelve al trabajo durante tres horas más con las
+  /// fuentes. Aitor lee en una silla cercana sin molestarla. Maren
+  /// produce una reconstrucción inicial de los Banu Qasi. Termina a
+  /// las seis y le pide a Aitor volver a Iruña. En el coche, Maren
+  /// no habla durante una hora. Aitor pone música baja —
+  /// instrumental, sin comentar. Cuarenta minutos antes de Iruña,
+  /// Maren rompe el silencio: *"¿Tasio era así de directo de
+  /// joven?"* / *"Más."* Maren decide no contarle a Isaura todavía
+  /// — Aitor confirma con suavidad: *"Isaura no regaña por
+  /// silencios necesarios."* Doc 09 §3.2.6.
+  static const EscenaCinematica vueltaAlTrabajo = EscenaCinematica(
+    id: '3.2.6',
+    titulo: 'Vuelta al trabajo',
+    flagDeSalida: 'escena_3_2_6_vista',
+    flagsRequeridos: {'escena_3_2_5_vista'},
+    ambiente: AmbienteArchivo.salaMuseoTudela,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren vuelve al trabajo. Tres horas más con las fuentes. '
+            'Aitor lee en una silla cercana sin molestarla. Maren '
+            'produce una reconstrucción inicial de los Banu Qasi. La '
+            'afina. Termina a las seis. Le pide a Aitor volver a '
+            'Iruña.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: '¿Ya?'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Vuelven en el coche. Maren no habla durante una hora. '
+            'Aitor pone música baja — algo instrumental, no comenta.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Cuarenta minutos antes de Iruña, Maren habla.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Aitor.'),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tasio era así de directo de joven?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Más.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No le voy a contar a Isaura todavía.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'No me va a regañar por no contarlo, ¿no?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Isaura no regaña por silencios necesarios.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren asiente. La música sigue. Llegan a Iruña a las '
+            'ocho. Aitor la deja en su portal.',
+      ),
+    ],
+  );
+
+  /// 3.2.7 — *Reconstrucción y Concilio* de la Estación 3.2. Una
+  /// semana después. Salón del Concilio con Karim, Aitor, Joana y
+  /// Maren. Maren presenta su reconstrucción de los Banu Qasi
+  /// (~9 afirmaciones distribuidas: dinastía muladí Sólido,
+  /// origen documentado en Casio Probable basado en Ibn Hayyán que
+  /// cita fuentes anteriores perdidas, alianzas alternantes con
+  /// Pamplona-vascones y Córdoba Sólido, rebelión del s. IX de Lubb
+  /// ibn Muhammad y descendientes como proyecto de soberanía local
+  /// fronteriza Probable, derrota tras 920 con reorganización
+  /// administrativa Probable, identidad cultural plenamente
+  /// musulmana en s. IX **Sólido como afirmación metodológica** —
+  /// la dicotomía moderna *"musulmán vs hispano"* no aplica al
+  /// periodo). Karim pregunta sobre conservación selectiva de
+  /// fuentes. Concilio cierra. Sellada. Doc 09 §3.2.7.
+  static const EscenaCinematica reconstruccionYConcilioBanuQasi =
+      EscenaCinematica(
+    id: '3.2.7',
+    titulo: 'Reconstrucción y Concilio',
+    flagDeSalida: 'escena_3_2_7_vista',
+    flagsRequeridos: {'escena_3_2_6_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Una semana después. Salón del Concilio. Karim, Aitor y '
+            'Joana a la mesa. Maren presenta su reconstrucción de '
+            'los Banu Qasi. La presentación va bien — el material '
+            'que ha trabajado es sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            'Las afirmaciones más importantes:\n\n'
+            '— Dinastía muladí que gobernó la Ribera del Ebro, '
+            'especialmente Tudela, entre los s. VIII y X. Sólido.\n'
+            '— Origen documentado en Casio, conde visigodo convertido '
+            'al islam tras la invasión. Probable (Ibn Hayyán cita '
+            'fuentes anteriores perdidas).',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            '— Alianzas alternantes con Pamplona-vascones y con '
+            'Córdoba según conveniencia política. Sólido.\n'
+            '— Rebelión contra Córdoba en el s. IX (Lubb ibn '
+            'Muhammad y descendientes) como proyecto de soberanía '
+            'local fronteriza, no movimiento religioso. Probable.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 7),
+        textoLectura:
+            '— Derrota tras 920 supuso reabsorción militar y '
+            'reorganización administrativa que dejó a Tudela '
+            'debilitada hasta la conquista cristiana de 1119. '
+            'Probable.\n'
+            '— Identidad cultural plenamente musulmana en el s. IX '
+            'aunque su origen reciente fuera hispano-cristiano. La '
+            'dicotomía moderna "musulmán vs hispano" no aplica al '
+            'periodo. Sólido como afirmación metodológica.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Karim hace una pregunta sobre la conservación selectiva '
+            'de fuentes — qué se conserva y qué se ha perdido, y por '
+            'qué. Maren contesta con cuidado.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Concilio cierra. Sellada.',
+      ),
+    ],
+  );
+
+  /// 3.2.8 — *El silencio de Maren*. Esa noche. Habitación de
+  /// Maren. **Maren no escribe en el cuaderno esta noche.** Lo
+  /// abre. Mira la página en blanco. Lo cierra. Se acuesta. La
+  /// cámara muestra la habitación oscura. El cuaderno cerrado en
+  /// la mesa. Tres segundos. Negro. Doc 09 §3.2.8 — la única
+  /// noche del MVP en que la voz del Cuaderno no aparece como
+  /// reacción a una Estación cerrada. El silencio es el dato
+  /// (eco metodológico de Karim en 2.4.5).
+  static const EscenaCinematica elSilencioDeMaren = EscenaCinematica(
+    id: '3.2.8',
+    titulo: 'El silencio de Maren',
+    flagDeSalida: 'escena_3_2_8_vista',
+    flagsRequeridos: {'escena_3_2_7_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren no escribe en el cuaderno esta noche. Lo abre. '
+            'Mira la página en blanco. Lo cierra. Se acuesta.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'La cámara muestra la habitación oscura. El cuaderno '
+            'cerrado en la mesa. Tres segundos. Negro.',
+      ),
+    ],
+  );
+
+  /// 3.B.1 — *"¿Te trató bien?"*. Latente post-Estación 3.2. Dos
+  /// días después. Despacho de Isaura. Maren entra con el pretexto
+  /// de devolver un libro. Isaura la mira un segundo de más al
+  /// entrar — Maren se da cuenta de que Isaura sabe (Aitor ya le ha
+  /// dicho que comieron en la cafetería de Tudela, sin más
+  /// detalles). Isaura no insiste; deja que Maren se siente sin
+  /// invitarla. Maren confiesa el café con Tasio. La pregunta clave
+  /// de Isaura — *"¿Te trató bien?"* — es la que Maren esperaba y
+  /// no esperaba. Maren confirma con un Sí simple. Isaura no pide
+  /// más. Antes de salir, Maren se gira en la puerta y le hace a
+  /// Isaura una pregunta: *"¿Tú lo querías?"* — Isaura tarda mucho
+  /// en contestar. *"Lo sigo queriendo."* La cámara se queda con
+  /// Isaura mirando hacia la ventana norte. Doc 09 §3.B.1.
+  static const EscenaCinematica teTratoBien = EscenaCinematica(
+    id: '3.B.1',
+    titulo: '¿Te trató bien?',
+    flagDeSalida: 'escena_3_b_1_vista',
+    flagsRequeridos: {'arco_3_estacion_2_cerrada'},
+    ambiente: AmbienteArchivo.despachoIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren entra al despacho con el pretexto de devolver un '
+            'libro. Isaura está en su silla, leyendo. Levanta la '
+            'vista cuando Maren entra. La mira un segundo de más. '
+            'Maren se da cuenta — Isaura sabe.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Hola.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tomo. Ya lo terminé.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Aitor me dijo que estuvisteis comiendo en la cafetería '
+            'de Tudela.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren no contesta. Isaura no insiste. Se queda mirándola. '
+            'Maren se sienta en la silla de enfrente sin que la '
+            'inviten.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tasio me invitó un café.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Mm.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Hablamos veinte minutos.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Te trató bien?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren tarda mucho en contestar. La pregunta es la que '
+            'esperaba pero también la que no esperaba.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa muy larga.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Bien.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Quieres contarme algo?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Todavía no.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren se levanta. En la puerta:',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Isaura.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Tú lo querías?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura: 'Pausa larguísima. Cinco segundos. Diez.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Lo sigo queriendo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren asiente. Sale. La cámara se queda con Isaura. '
+            'Coge el libro que Maren ha devuelto. No lo mira. Lo deja '
+            'sobre la mesa con cuidado. Mira hacia la ventana norte.',
       ),
     ],
   );
