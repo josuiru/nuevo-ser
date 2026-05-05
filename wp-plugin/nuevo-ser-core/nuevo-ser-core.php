@@ -5,7 +5,7 @@
  * Description: Backend compartido de la Colección Nuevo Ser Kids: sync, auth y tutor IA
  *              para Uno Roto y futuros juegos. Expone /wp-json/nuevo-ser/v1/* (canónico)
  *              y /wp-json/uno-roto/v1/* (alias deprecado, vivo hasta v1.5) con JWT propios.
- * Version:     0.13.0
+ * Version:     0.15.0
  * Author:      Equipo Colección Nuevo Ser
  * Author URI:  https://coleccion-nuevo-ser.com/
  * License:     GPL-2.0-or-later
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NS_CORE_VERSION', '0.13.0' );
+define( 'NS_CORE_VERSION', '0.15.0' );
 define( 'NS_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NS_CORE_URL', plugin_dir_url( __FILE__ ) );
 
@@ -63,6 +63,7 @@ require_once NS_CORE_DIR . 'includes/class-ns-auth-adulto.php';
 require_once NS_CORE_DIR . 'includes/class-ns-caregivers.php';
 require_once NS_CORE_DIR . 'includes/class-ns-el-cuaderno.php';
 require_once NS_CORE_DIR . 'includes/class-ns-endpoints.php';
+require_once NS_CORE_DIR . 'includes/class-ns-admin.php';
 
 register_activation_hook( __FILE__, array( 'NS_Activacion', 'activar' ) );
 register_deactivation_hook( __FILE__, array( 'NS_Activacion', 'desactivar' ) );
@@ -70,6 +71,10 @@ register_deactivation_hook( __FILE__, array( 'NS_Activacion', 'desactivar' ) );
 add_action( 'plugins_loaded', array( 'NS_Activacion', 'migrar_si_hace_falta' ) );
 add_action( 'rest_api_init', array( 'NS_Endpoints', 'registrar' ) );
 add_action( 'uroto_cron_purga_tutor', array( 'NS_Activacion', 'ejecutar_purga_tutor' ) );
+
+if ( is_admin() ) {
+	NS_Admin::registrar();
+}
 
 /**
  * Secreto para firmar JWTs. Se espera definir en wp-config.php:

@@ -94,6 +94,61 @@ class NS_Repositorio {
 		) ?: array();
 	}
 
+	/**
+	 * Lista todos los tutores con sus niños asociados, para el panel
+	 * de administración. Devuelve un array de tutores donde cada
+	 * tutor lleva una clave `ninos` con la lista de sus niños.
+	 *
+	 * Sin paginación — el operador típico en piloto tiene unos pocos
+	 * usuarios. Cuando llegue producción y la lista crezca, este
+	 * método aceptará un `limit/offset` sin romper su forma actual.
+	 */
+	public static function listar_usuarios_con_ninos(): array {
+		global $wpdb;
+		$tabla_usuarios = NS_Esquema::nombre_tabla( 'usuarios' );
+		$tabla_ninos    = NS_Esquema::nombre_tabla( 'ninos' );
+
+		$usuarios = $wpdb->get_results(
+			"SELECT id, email, nombre_tutor, locale, creado_en
+			 FROM {$tabla_usuarios}
+			 ORDER BY creado_en DESC",
+			ARRAY_A
+		) ?: array();
+
+		if ( empty( $usuarios ) ) {
+			return array();
+		}
+
+		$ids     = array_map( 'intval', wp_list_pluck( $usuarios, 'id' ) );
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$ninos   = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT id, usuario_id, nombre_mostrar, locale, creado_en
+				 FROM {$tabla_ninos}
+				 WHERE usuario_id IN ({$placeholders})
+				 ORDER BY creado_en ASC",
+				$ids
+			),
+			ARRAY_A
+		) ?: array();
+
+		$ninos_por_tutor = array();
+		foreach ( $ninos as $n ) {
+			$uid = (int) $n['usuario_id'];
+			if ( ! isset( $ninos_por_tutor[ $uid ] ) ) {
+				$ninos_por_tutor[ $uid ] = array();
+			}
+			$ninos_por_tutor[ $uid ][] = $n;
+		}
+
+		foreach ( $usuarios as &$u ) {
+			$u['ninos'] = $ninos_por_tutor[ (int) $u['id'] ] ?? array();
+		}
+		unset( $u );
+
+		return $usuarios;
+	}
+
 	// -------------------------------------------------------------
 	// Progreso.
 	// -------------------------------------------------------------
