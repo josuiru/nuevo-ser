@@ -61,11 +61,13 @@ const _claveEmailProfesor = 'nuevoser.elcuaderno.email_profesor';
 /// re-seleccionar.
 const _claveAulaActivaProfesor = 'nuevoser.elcuaderno.profesor.aula_activa';
 
-/// URL base del backend `nuevo-ser-core`. Provisional — la decisión
-/// del dominio definitivo es humana (memoria
-/// `project_el_cuaderno_decisiones_humanas_pendientes`). Cuando llegue
-/// el dominio real, se sustituye sin tocar el cliente.
-const _urlBaseBackend = 'https://nuevoser.example.org';
+/// URL base del backend `nuevo-ser-core`. Hoy apunta al WordPress
+/// del operador en `uno-roto.gailu.it` — el plugin "Nuevo Ser Core"
+/// está activo allí y sirve los endpoints `/wp-json/nuevo-ser/v1/*`
+/// para los tres juegos del monorepo. La decisión del dominio
+/// canónico definitivo sigue pendiente (memoria
+/// `project_el_cuaderno_decisiones_humanas_pendientes`).
+const _urlBaseBackend = 'https://uno-roto.gailu.it';
 
 /// Locale activo de la app. Es global para que `AppElCuaderno` pueda
 /// reaccionar al cambio sin tener que reconstruir todo el árbol

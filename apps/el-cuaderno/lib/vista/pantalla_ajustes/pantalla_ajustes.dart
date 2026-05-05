@@ -22,6 +22,8 @@ import '../pantalla_sit_spot/pantalla_sit_spots_jubilados.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'bloque_login_adulto.dart';
+import 'pantalla_acerca_de.dart';
+import 'pantalla_imprimir_plantilla.dart';
 
 /// Pantalla de Ajustes — punto de control del niño sobre **su**
 /// cuaderno. Tres acciones nucleares:
@@ -209,6 +211,13 @@ class PantallaAjustes extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _BloqueAccion(
+              titulo: textos.acercaBloque,
+              descripcion: textos.acercaBloqueDescripcion,
+              alPulsar: () => _abrirAcercaDe(context),
+              esquema: esquema,
+            ),
+            const SizedBox(height: 16),
+            _BloqueAccion(
               titulo: textos.ajustesVistaCuidador,
               descripcion: textos.ajustesVistaCuidadorDescripcion,
               alPulsar: () => _abrirCuidador(context),
@@ -226,6 +235,13 @@ class PantallaAjustes extends StatelessWidget {
               titulo: textos.ajustesExportarPdf,
               descripcion: textos.ajustesExportarPdfDescripcion,
               alPulsar: () => _exportarPdf(context),
+              esquema: esquema,
+            ),
+            const SizedBox(height: 16),
+            _BloqueAccion(
+              titulo: textos.imprimirPlantillaBloque,
+              descripcion: textos.imprimirPlantillaBloqueDescripcion,
+              alPulsar: () => _abrirImprimirPlantilla(context),
               esquema: esquema,
             ),
             if (intentarSincronizarObservaciones != null) ...[
@@ -314,6 +330,23 @@ class PantallaAjustes extends StatelessWidget {
           repositorio: repositorio,
           sincronizador: sincronizadorAgregados,
           repoHistorico: repoHistoricoResumenes,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _abrirAcercaDe(BuildContext context) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(builder: (_) => const PantallaAcercaDe()),
+    );
+  }
+
+  Future<void> _abrirImprimirPlantilla(BuildContext context) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaImprimirPlantilla(
+          repositorio: repositorio,
+          nombrePerfilActivo: nombrePerfilActivo,
         ),
       ),
     );
@@ -1002,7 +1035,7 @@ class _EstadoBloqueMapaOnlineOptIn extends State<_BloqueMapaOnlineOptIn> {
             children: [
               Expanded(
                 child: Text(
-                  'Activar mapa online (provisional)',
+                  TextosApp.of(context).ajustesMapaOnlineEtiqueta,
                   style: TipografiaCuaderno.serif(
                     color: esquema.onSurface,
                     tamano: TipografiaCuaderno.tamano14,
@@ -1019,12 +1052,7 @@ class _EstadoBloqueMapaOnlineOptIn extends State<_BloqueMapaOnlineOptIn> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Si lo activas, el dispositivo descargará los retazos del '
-            'mapa de OpenStreetMap a través de internet — el servidor de '
-            'tiles verá qué zona del mundo se está mirando. La pestaña '
-            '"mapa" sólo funciona si esto está activo. En una versión '
-            'futura el mapa se descargará una sola vez y dejará de salir '
-            'a internet.',
+            TextosApp.of(context).ajustesMapaOnlineCuerpo,
             style: TipografiaCuaderno.serif(
               color: PaletaCuaderno.tintaTenue,
               tamano: TipografiaCuaderno.tamano13,

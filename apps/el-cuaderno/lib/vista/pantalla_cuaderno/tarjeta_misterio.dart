@@ -57,35 +57,58 @@ class TarjetaMisterio extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                misterio.pregunta,
-                style: TipografiaCuaderno.serif(
-                  color: esquema.onSurface,
-                  tamano: TipografiaCuaderno.tamano16,
-                  peso: TipografiaCuaderno.pesoMedio,
-                  altoLinea: 1.35,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      misterio.pregunta,
+                      style: TipografiaCuaderno.serif(
+                        color: esquema.onSurface,
+                        tamano: TipografiaCuaderno.tamano16,
+                        peso: TipografiaCuaderno.pesoMedio,
+                        altoLinea: 1.35,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      misterio.descripcionCorta,
+                      style: TipografiaCuaderno.serif(
+                        color: PaletaCuaderno.tintaTenue,
+                        tamano: TipografiaCuaderno.tamano13,
+                        altoLinea: 1.45,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      _piePagina(textos),
+                      style: TipografiaCuaderno.sans(
+                        color: esquema.tertiary,
+                        tamano: TipografiaCuaderno.tamano11,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                misterio.descripcionCorta,
-                style: TipografiaCuaderno.serif(
-                  color: PaletaCuaderno.tintaTenue,
-                  tamano: TipografiaCuaderno.tamano13,
-                  altoLinea: 1.45,
+              // Chevron discreto: marca la tarjeta como pulsable sin
+              // gritar. Sentido pedagógico: el niño ve a la primera
+              // que puede entrar a leer el Misterio. Sólo se monta si
+              // el caller ha cableado [alPulsar] — modo lectura puro
+              // mantiene la tarjeta sin ornamento.
+              if (alPulsar != null) ...[
+                const SizedBox(width: 8),
+                const Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(
+                    Icons.chevron_right,
+                    size: 22,
+                    color: PaletaCuaderno.tintaTenue,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                _piePagina(textos),
-                style: TipografiaCuaderno.sans(
-                  color: esquema.tertiary,
-                  tamano: TipografiaCuaderno.tamano11,
-                ),
-              ),
+              ],
             ],
           ),
         ),

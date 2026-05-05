@@ -842,4 +842,99 @@ void main() {
       },
     );
   });
+
+  group('ecos temporales en el home', () {
+    testWidgets(
+      'sin observaciones a 1 mes / 6 meses / 1 año, el bloque de ecos '
+      'no aparece en el home',
+      (tester) async {
+        // setUp ya construye un cuaderno con seed; pero las
+        // observaciones del seed son recientes (no caen en ninguna
+        // ventana). Comprobamos que la cabecera del bloque de ecos
+        // simplemente no se monta.
+        await bombearPantalla(tester);
+        expect(find.text('Hace un tiempo, por aquí'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'con observación de hace ~1 año y otra de hace ~1 mes el home '
+      'muestra dos filas en el bloque "Hace un tiempo, por aquí"',
+      (tester) async {
+        // Reseteamos el repo para controlar la cardinalidad temporal.
+        repositorio = RepositorioMemoria();
+        await repositorio.guardarObservacion(Observacion(
+          id: 'eco-mes',
+          cuandoCreada: DateTime(2026, 4, 1),
+          cuandoOcurrio: DateTime(2026, 4, 1),
+          dondeNombre: 'jardín',
+          queVio: 'una golondrina volando bajo',
+          confianza: NivelConfianza.hipotesisActiva,
+        ));
+        await repositorio.guardarObservacion(Observacion(
+          id: 'eco-ano',
+          cuandoCreada: DateTime(2025, 5, 1),
+          cuandoOcurrio: DateTime(2025, 5, 1),
+          dondeNombre: 'jardín',
+          queVio: 'una abeja sobre la flor',
+          confianza: NivelConfianza.hipotesisActiva,
+        ));
+        estado.dispose();
+        estado = EstadoCuaderno(
+          repositorio: repositorio,
+          proveedorAhora: ahoraPrimavera,
+        );
+        await bombearPantalla(tester);
+
+        expect(find.text('Hace un tiempo, por aquí'), findsOneWidget);
+        expect(find.text('hace un mes, por estas fechas…'), findsOneWidget);
+        expect(find.text('hace un año, por estas fechas…'), findsOneWidget);
+        // 6 meses no debe aparecer (no hay candidata).
+        expect(
+          find.text('hace seis meses, por estas fechas…'),
+          findsNothing,
+        );
+        // El queVio del eco de hace 1 mes aparece dos veces en el
+        // home: en la tarjeta del eco Y como última página (es la
+        // observación más reciente del cuaderno, no hay otra).
+        expect(find.text('una golondrina volando bajo'), findsNWidgets(2));
+        // El de hace 1 año sólo aparece en su tarjeta de eco.
+        expect(find.text('una abeja sobre la flor'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'pulsar una tarjeta de eco abre el detalle de esa observación',
+      (tester) async {
+        repositorio = RepositorioMemoria();
+        await repositorio.guardarObservacion(Observacion(
+          id: 'eco-mes',
+          cuandoCreada: DateTime(2026, 4, 1),
+          cuandoOcurrio: DateTime(2026, 4, 1),
+          dondeNombre: 'jardín',
+          queVio: 'una golondrina volando bajo',
+          confianza: NivelConfianza.hipotesisActiva,
+        ));
+        estado.dispose();
+        estado = EstadoCuaderno(
+          repositorio: repositorio,
+          proveedorAhora: ahoraPrimavera,
+        );
+        await bombearPantalla(tester);
+
+        // El texto aparece en la tarjeta del eco Y como última
+        // página (única observación). Pulsamos la cabecera del eco
+        // — el `InkWell` exterior cubre toda la fila — para asegurar
+        // que es la tarjeta del eco la que abre el detalle.
+        await tester.tap(find.text('hace un mes, por estas fechas…'));
+        await tester.pumpAndSettle();
+
+        // En la pantalla de detalle el queVio aparece de nuevo;
+        // las cabeceras del bloque eco del home han desaparecido al
+        // navegar.
+        expect(find.text('una golondrina volando bajo'), findsOneWidget);
+        expect(find.text('hace un mes, por estas fechas…'), findsNothing);
+      },
+    );
+  });
 }

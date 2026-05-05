@@ -159,4 +159,29 @@ void main() {
       expect(recibida!.queVio, 'caracol grande');
     },
   );
+
+  testWidgets(
+    'sin observaciones, el icono "leer tus páginas" no aparece en el AppBar',
+    (tester) async {
+      await bombear(tester);
+      expect(find.byTooltip('leer tus páginas'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'con observaciones, el icono "leer tus páginas" abre el modo lectura',
+    (tester) async {
+      await sembrar(id: 'a', queVio: 'mirlo común');
+      await bombear(tester);
+
+      expect(find.byTooltip('leer tus páginas'), findsOneWidget);
+      await tester.tap(find.byTooltip('leer tus páginas'));
+      await tester.pumpAndSettle();
+
+      // En el modo lectura aparece el AppBar "Leer tus páginas".
+      expect(find.text('Leer tus páginas'), findsOneWidget);
+      // El queVio aparece en la página del modo lectura.
+      expect(find.text('mirlo común'), findsOneWidget);
+    },
+  );
 }

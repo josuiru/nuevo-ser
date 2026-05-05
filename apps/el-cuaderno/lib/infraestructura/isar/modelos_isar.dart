@@ -19,6 +19,7 @@ import '../../dominio/misterio.dart';
 import '../../dominio/nivel_confianza.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/pagina_cuaderno.dart';
+import '../../dominio/pregunta_del_nino.dart';
 import '../../dominio/sit_spot.dart';
 
 part 'modelos_isar.g.dart';
@@ -90,6 +91,12 @@ class ObservacionIsar {
   @Index()
   String? misterioId;
 
+  /// Anclaje opcional a una pregunta del niño (Slice 4 de "Mis
+  /// preguntas"). Indexado para que el listado de evidencias por
+  /// pregunta no escanee la colección.
+  @Index()
+  String? preguntaDelNinoId;
+
   @Index()
   String? sitSpotId;
 
@@ -108,6 +115,7 @@ class ObservacionIsar {
       ..fotoRutaLocal = observacion.fotoRutaLocal
       ..dibujoRutaLocal = observacion.dibujoRutaLocal
       ..misterioId = observacion.misterioId
+      ..preguntaDelNinoId = observacion.preguntaDelNinoId
       ..sitSpotId = observacion.sitSpotId;
   }
 
@@ -128,6 +136,7 @@ class ObservacionIsar {
       fotoRutaLocal: fotoRutaLocal,
       dibujoRutaLocal: dibujoRutaLocal,
       misterioId: misterioId,
+      preguntaDelNinoId: preguntaDelNinoId,
       sitSpotId: sitSpotId,
     );
   }
@@ -250,6 +259,62 @@ class MisterioIsar {
       seasons: List.of(seasons),
       regions: regions.isEmpty ? null : List.of(regions),
       cerradoPorNino: cerradoPorNino,
+      respuestaDelNino: respuestaDelNino,
+    );
+  }
+}
+
+/// Espejo Isar de [PreguntaDelNino]. Estructura mucho más sencilla que
+/// [MisterioIsar] porque las preguntas del niño no tienen estado,
+/// estación, región ni `abierto` — siempre están abiertas hasta que el
+/// niño las cierre con su respuesta.
+@collection
+class PreguntaDelNinoIsar {
+  PreguntaDelNinoIsar();
+
+  Id isarId = Isar.autoIncrement;
+
+  @Index(unique: true, replace: true)
+  late String idDominio;
+
+  late String pregunta;
+
+  /// Cuándo el niño la formuló. Indexado para ordenar las abiertas por
+  /// fecha desc sin tener que cargar todas a memoria.
+  @Index()
+  late DateTime formuladaEn;
+
+  /// IDs de observaciones del niño ancladas como evidencia. Lista
+  /// homogénea de strings — Isar la persiste nativa.
+  List<String> observacionesIds = const <String>[];
+
+  /// Cuándo el niño cerró la pregunta. Indexado para que el filtro
+  /// "abiertas" (cerradaEn IS NULL) y el orden de las cerradas (DESC)
+  /// no escaneen toda la colección.
+  @Index()
+  DateTime? cerradaEn;
+
+  /// Lo que el niño anotó al cerrar. Sin texto, el cierre no es
+  /// válido (validado en el dominio).
+  String? respuestaDelNino;
+
+  static PreguntaDelNinoIsar desdeDominio(PreguntaDelNino pregunta) {
+    return PreguntaDelNinoIsar()
+      ..idDominio = pregunta.id
+      ..pregunta = pregunta.pregunta
+      ..formuladaEn = pregunta.formuladaEn
+      ..observacionesIds = List.of(pregunta.observacionesIds)
+      ..cerradaEn = pregunta.cerradaEn
+      ..respuestaDelNino = pregunta.respuestaDelNino;
+  }
+
+  PreguntaDelNino aDominio() {
+    return PreguntaDelNino(
+      id: idDominio,
+      pregunta: pregunta,
+      formuladaEn: formuladaEn,
+      observacionesIds: List.of(observacionesIds),
+      cerradaEn: cerradaEn,
       respuestaDelNino: respuestaDelNino,
     );
   }

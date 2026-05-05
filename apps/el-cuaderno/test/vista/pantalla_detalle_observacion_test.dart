@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
@@ -536,4 +538,59 @@ void main() {
       expect(despues, isNull);
     },
   );
+
+  group('compartir esta página como PDF', () {
+    testWidgets(
+      'la opción aparece en el menú overflow',
+      (tester) async {
+        await bombear(tester, crear());
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+        expect(
+          find.text('compartir esta página como PDF'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'pulsar la opción invoca el lanzador con bytes %PDF válidos',
+      (tester) async {
+        Uint8List? bytesRecibidos;
+        await tester.binding.setSurfaceSize(const Size(800, 1200));
+        await tester.pumpWidget(MaterialApp(
+          theme: TemaCuaderno.claro(),
+          localizationsDelegates: TextosApp.localizationsDelegates,
+          supportedLocales: TextosApp.supportedLocales,
+          locale: const Locale('es'),
+          home: PantallaDetalleObservacion(
+            repositorio: repositorio,
+            observacion: crear(creesQueEs: 'caracol común'),
+            nombrePerfilActivo: 'Maren',
+            lanzadorPdf: (bytes) async {
+              bytesRecibidos = bytes;
+            },
+          ),
+        ));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('compartir esta página como PDF'));
+        // El generador es asíncrono — bombeamos suficientes ticks para
+        // que termine antes de comprobar.
+        for (var i = 0; i < 5; i++) {
+          await tester.pump(const Duration(milliseconds: 200));
+        }
+        await tester.pumpAndSettle();
+
+        expect(bytesRecibidos, isNotNull);
+        expect(bytesRecibidos!.length, greaterThan(500));
+        expect(
+          String.fromCharCodes(bytesRecibidos!.take(4)),
+          '%PDF',
+        );
+      },
+    );
+  });
 }

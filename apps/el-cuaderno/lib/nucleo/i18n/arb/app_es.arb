@@ -86,6 +86,165 @@
     "description": "Placeholder de las pestañas Mapa y Misterios en S1 — el bottom nav está, pero solo Cuaderno y Tutor llevan a algo."
   },
 
+  "homeFabAnotar": "anotar",
+  "@homeFabAnotar": {
+    "description": "Etiqueta del botón flotante del home que abre la pantalla de nueva observación. Verbo en infinitivo, sentence case (biblia §2.5 voz adulta amable, sin diminutivos)."
+  },
+
+  "homeFabAnotarTooltip": "anotar lo que ves",
+  "@homeFabAnotarTooltip": {
+    "description": "Tooltip largo del botón flotante. Lo lee accesibilidad y aparece en pulsación larga; orienta al niño sobre qué hace el botón."
+  },
+
+  "homeOrientacionConMisterios": "Estos son los Misterios que tu cuaderno tiene abiertos. Ábrelos para leerlos; cuando veas algo en tu sit spot que tenga que ver, anótalo.",
+  "@homeOrientacionConMisterios": {
+    "description": "Microcopia breve bajo el saludo del home cuando hay Misterios abiertos. Orienta al niño la primera vez sin gritar — voz adulta amable (biblia §2.5)."
+  },
+
+  "seccionTusPreguntas": "Tus preguntas",
+  "@seccionTusPreguntas": {
+    "description": "Cabecera de la sección donde el niño ve las preguntas que él mismo ha formulado, paralela al catálogo de Misterios pero suya."
+  },
+
+  "seccionMisteriosDelCuaderno": "Misterios del cuaderno",
+  "@seccionMisteriosDelCuaderno": {
+    "description": "Cabecera del catálogo de Misterios curados (los que vienen del adulto), para distinguirlos de las preguntas del niño en la pestaña misterios."
+  },
+
+  "tusPreguntasVacio": "Aún no has formulado ninguna pregunta. Cuando se te ocurra una mientras observas tu lugar, anótala aquí.",
+  "@tusPreguntasVacio": {
+    "description": "Estado vacío de la sección 'Tus preguntas'. Voz adulta amable que conecta la formulación con el sit spot, sin urgencia."
+  },
+
+  "preguntaFabFormular": "formular pregunta",
+  "@preguntaFabFormular": {
+    "description": "Etiqueta del botón que abre la pantalla de formular nueva pregunta del niño."
+  },
+
+  "preguntaFormularTitulo": "Tu pregunta",
+  "@preguntaFormularTitulo": {
+    "description": "Título de la pantalla donde el niño escribe una pregunta nueva. No usa 'Nueva pregunta' porque la palabra 'nueva' subraya la app, no al niño — la pregunta es suya, no del cuaderno."
+  },
+
+  "preguntaFormularIntro": "Una pregunta tuya. La que llevas dándole vueltas, la que se te acaba de ocurrir, la que nadie te ha contado. Escríbela como te suene; no hace falta que esté bien hecha — sólo que sea la tuya.",
+  "@preguntaFormularIntro": {
+    "description": "Microcopia introductoria al formular una pregunta. Voz adulta amable, deja claro que el niño tiene autoridad sobre el formato. Biblia §2.4 (nunca humillar) + §2.5 (respeto por la edad)."
+  },
+
+  "preguntaFormularPlaceholder": "¿…?",
+  "@preguntaFormularPlaceholder": {
+    "description": "Placeholder neutro del campo de pregunta. Sólo dos signos para señalar que va una pregunta — no impone formato ni ejemplo."
+  },
+
+  "preguntaFormularBotonGuardar": "Guardar mi pregunta",
+  "@preguntaFormularBotonGuardar": {
+    "description": "Botón de guardar al final del formulario."
+  },
+
+  "preguntaFormularBotonIdeas": "necesito ideas",
+  "@preguntaFormularBotonIdeas": {
+    "description": "Botón discreto que abre una hoja con esqueletos opcionales si el niño está bloqueado. Por defecto el formulario es libre — esto es opt-in."
+  },
+
+  "preguntaIdeasTitulo": "Si necesitas un punto de partida",
+  "@preguntaIdeasTitulo": {
+    "description": "Título de la hoja con esqueletos opcionales. Voz adulta amable que no presupone que el niño los necesita."
+  },
+
+  "preguntaIdeasIntro": "No tienes que usar ninguno. Si te ayuda alguno, púlsalo y empieza desde ahí.",
+  "@preguntaIdeasIntro": {
+    "description": "Microcopia introductoria a la lista de esqueletos. Subraya que son opt-in."
+  },
+
+  "preguntaIdea1": "¿siempre … cuando …?",
+  "preguntaIdea2": "¿qué pasa cuando …?",
+  "preguntaIdea3": "¿se parece … a …?",
+  "preguntaIdea4": "¿cómo cambia … con el tiempo?",
+  "preguntaIdea5": "¿qué hace … cuando …?",
+  "@preguntaIdea1": {
+    "description": "Esqueleto 1 — pregunta sostenida con condición. Los puntos son del niño."
+  },
+
+  "preguntaPaginaTitulo": "Tu pregunta",
+  "@preguntaPaginaTitulo": {
+    "description": "Título de la página de detalle de una pregunta del niño. Coherente con el título del formulario — la palabra clave es 'tu'."
+  },
+
+  "preguntaPaginaFormulada": "Formulada el {fecha}",
+  "@preguntaPaginaFormulada": {
+    "description": "Línea bajo la pregunta con la fecha en que el niño la escribió.",
+    "placeholders": {
+      "fecha": {
+        "type": "String",
+        "example": "5 de mayo de 2026"
+      }
+    }
+  },
+
+  "preguntaPaginaEvidenciaVacia": "Todavía no has anotado nada para tu pregunta. Vuelve al lugar y mira; cuando veas algo que tenga que ver, anótalo y ánclalo aquí.",
+  "@preguntaPaginaEvidenciaVacia": {
+    "description": "Estado vacío de la sección 'lo que ya has anotado' en la página de la pregunta. Igual de amable que el del Misterio."
+  },
+
+  "preguntaPaginaCabeceraEvidencia": "Lo que ya has anotado",
+  "@preguntaPaginaCabeceraEvidencia": {
+    "description": "Cabecera del listado de observaciones ancladas a la pregunta. Misma palabra que la de Misterio para conservar el lenguaje del oficio."
+  },
+
+  "preguntaPaginaBorrar": "borrar esta pregunta",
+  "preguntaPaginaConfirmaBorrar": "Vas a borrar esta pregunta tuya. Las observaciones que tuvieras ancladas se conservan en el cuaderno. No se puede deshacer.",
+  "@preguntaPaginaBorrar": {
+    "description": "Opción del menú de la página de la pregunta para borrarla."
+  },
+
+  "preguntaPaginaBotonEvidencia": "anotar evidencia para esta pregunta",
+  "@preguntaPaginaBotonEvidencia": {
+    "description": "Botón principal de la página de la pregunta abierta — abre PantallaObservacion con la pregunta preseleccionada."
+  },
+
+  "preguntaPaginaBotonCerrar": "ya tengo mi respuesta sobre esta pregunta",
+  "@preguntaPaginaBotonCerrar": {
+    "description": "Botón secundario de la página de la pregunta cuando hay >=1 evidencia. Abre la pantalla de cierre amable. Si no hay evidencia, no se muestra (cerrar sin haber observado es prematuro)."
+  },
+
+  "preguntaCerrarTitulo": "Tu respuesta",
+  "@preguntaCerrarTitulo": {
+    "description": "Título de la pantalla donde el niño escribe su respuesta al cerrar la pregunta."
+  },
+
+  "preguntaCerrarIntro": "Cuenta con tus palabras lo que has aprendido. No hay respuesta correcta — esto no se corrige ni se nota; sólo se guarda en tu cuaderno.",
+  "@preguntaCerrarIntro": {
+    "description": "Microcopia de la pantalla de cierre. Voz adulta amable: nadie corrige, nadie nota. Mismo tono que el cierre de Misterio."
+  },
+
+  "preguntaCerrarPlaceholder": "tu respuesta",
+  "preguntaCerrarBoton": "Guardar mi respuesta",
+  "@preguntaCerrarBoton": {
+    "description": "Botón de guardar de la pantalla de cierre amable."
+  },
+
+  "preguntaPaginaBloqueRespuesta": "Tu respuesta",
+  "@preguntaPaginaBloqueRespuesta": {
+    "description": "Cabecera del bloque de respuesta cerrada que se muestra en la página de la pregunta cerrada."
+  },
+
+  "preguntaPaginaCerradaEl": "Cerrada el {fecha}",
+  "@preguntaPaginaCerradaEl": {
+    "description": "Línea bajo la respuesta con la fecha de cierre.",
+    "placeholders": {
+      "fecha": {
+        "type": "String",
+        "example": "07/05/2026"
+      }
+    }
+  },
+
+  "preguntaPaginaReabrir": "reabrir esta pregunta",
+  "preguntaPaginaConfirmaReabrir": "Si la reabres, tu respuesta se borra y la pregunta vuelve a la lista de abiertas. Las anotaciones que ya tenías se conservan.",
+  "@preguntaPaginaReabrir": {
+    "description": "Botón discreto que abre el AlertDialog de confirmación de reapertura. Mismo patrón que reabrir Misterio."
+  },
+
   "observacionTitulo": "nueva observación",
   "@observacionTitulo": {
     "description": "Título de la pantalla de Nueva Observación."
@@ -173,12 +332,208 @@
 
   "tutorRespuestaCanned": "El Tutor todavía no está conectado. Vuelve en unas semanas.",
   "@tutorRespuestaCanned": {
-    "description": "Respuesta única del Tutor en S1. La conexión real con Claude API entra en Sprint 4 — esta microcopia es deliberada, no un placeholder técnico (README documenta el motivo)."
+    "description": "Respuesta única del Tutor cuando no hay token (cuenta no vinculada). En S1 era el único estado; tras S4 cubre sólo el caso 'sin cuenta'."
+  },
+
+  "tutorErrorRed": "Ahora mismo no llego al cuaderno. Espera un momento y vuelve a probar.",
+  "@tutorErrorRed": {
+    "description": "Aviso que el Tutor muestra cuando hay token vinculado pero la llamada al backend falló por red, 500 o JSON malformado. Voz adulta amable: no le echa la culpa al niño ni le pide que reinicie, sólo nombra que ahora mismo no se puede."
   },
 
   "ajustesTitulo": "Ajustes",
   "@ajustesTitulo": {
     "description": "Título de la pantalla de Ajustes."
+  },
+  "atlasTitulo": "Tu atlas",
+  "@atlasTitulo": {
+    "description": "Título del AppBar de la pantalla del atlas personal del niño. Sentence case, voz adulta amable. \"Atlas\" funciona en castellano, eu y ca; \"Tu\" personaliza sin invadir."
+  },
+  "atlasSubtitulo": "no es un trofeo. es lo que has visto.",
+  "@atlasSubtitulo": {
+    "description": "Subtítulo bajo el AppBar de la pantalla del atlas. Declara la pedagogía de entrada para que el niño no lea el atlas como una colección de logros. Voz adulta amable, frases cortas en minúscula serif italic."
+  },
+  "atlasSeccionPrimerasVeces": "Tus primeras veces",
+  "@atlasSeccionPrimerasVeces": {
+    "description": "Cabecera de la sección \"primeras veces\" del atlas — listado cronológico inverso de identificaciones nuevas que han aparecido en el cuaderno por primera vez."
+  },
+  "atlasSeccionLoQueHasVisto": "Lo que has visto",
+  "@atlasSeccionLoQueHasVisto": {
+    "description": "Cabecera de la sección agrupada del atlas — sumario por identificación con conteos."
+  },
+  "atlasConteoSingular": "1 vez",
+  "@atlasConteoSingular": {
+    "description": "Texto de la columna derecha de \"Lo que has visto\" cuando el conteo es exactamente 1. Voz adulta amable, sentence case."
+  },
+  "atlasConteoPlural": "{conteo} veces",
+  "@atlasConteoPlural": {
+    "description": "Texto de la columna derecha de \"Lo que has visto\" cuando el conteo es 2 o más.",
+    "placeholders": {
+      "conteo": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "atlasVacioCabecera": "Tu atlas todavía está vacío.",
+  "@atlasVacioCabecera": {
+    "description": "Cabecera del estado vacío del atlas — el niño aún no ha escrito ningún \"crees que es\" en sus observaciones, o todavía no tiene observaciones. Voz adulta amable, sin presionar."
+  },
+  "atlasVacioCuerpo": "Cuando vayas anotando lo que crees que ves, esto se irá llenando solo. No hay prisa.",
+  "@atlasVacioCuerpo": {
+    "description": "Cuerpo del estado vacío del atlas. Explica con voz adulta amable que el atlas no se rellena haciendo cosas extras — se rellena por el oficio normal."
+  },
+  "atlasEnlaceDesdeCuaderno": "ver tu atlas",
+  "@atlasEnlaceDesdeCuaderno": {
+    "description": "Enlace discreto en la pestaña Cuaderno bajo \"ver todas tus páginas\" que abre el atlas. Voz adulta amable, minúscula."
+  },
+  "seccionEcos": "Hace un tiempo, por aquí",
+  "@seccionEcos": {
+    "description": "Cabecera de la sección de ecos temporales del home (entre Misterios y Última página). El cuaderno detecta observaciones de hace ~1 mes / 6 meses / 1 año (±3 días) y las trae como ritual del oficio del lugar (biblia §3.5: \"si vuelves al mismo sitio, ves cómo cambia\"). Sin presión: si no hay candidatas, la sección entera no aparece."
+  },
+  "ecoCabeceraUnMes": "hace un mes, por estas fechas…",
+  "@ecoCabeceraUnMes": {
+    "description": "Cabecera de la fila de eco de hace 1 mes. Voz adulta amable, minúscula con puntos suspensivos como invitación a leer. Tres puntos Unicode (…), no tres puntos sueltos."
+  },
+  "ecoCabeceraSeisMeses": "hace seis meses, por estas fechas…",
+  "@ecoCabeceraSeisMeses": {
+    "description": "Cabecera de la fila de eco de hace ~6 meses. Cierra ciclo equinoccio↔equinoccio o solsticio↔solsticio (biblia §3.5)."
+  },
+  "ecoCabeceraUnAno": "hace un año, por estas fechas…",
+  "@ecoCabeceraUnAno": {
+    "description": "Cabecera de la fila de eco de hace ~1 año. Memoria completa del lugar — el aniversario de cuando empezaste a habitarlo."
+  },
+  "paginaSitSpotResumenMesCabecera": "Este mes aquí",
+  "@paginaSitSpotResumenMesCabecera": {
+    "description": "Cabecera del bloque \"Tu mes en el sit spot\" en la página del sit spot activo. Sans-serif gris ceniza, sentence case, voz adulta amable. Sólo se monta a partir de la segunda visita del mes en curso."
+  },
+  "paginaSitSpotResumenMesVisitas": "{count, plural, =1{Has venido una vez este mes.} =2{Has venido dos veces este mes.} other{Has venido {count} veces este mes.}}",
+  "@paginaSitSpotResumenMesVisitas": {
+    "description": "Línea principal del bloque \"Este mes aquí\". Plurales nombrados (una/dos) hasta dos y dígito a partir de tres. ICU plural sólo admite =0/=1/=2 como literales; el resto va por la rama 'other'. Voz adulta amable, frase corta.",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "paginaSitSpotResumenMesPrimeraUltima": "La primera fue el {primera}. La última, el {ultima}.",
+  "@paginaSitSpotResumenMesPrimeraUltima": {
+    "description": "Línea secundaria del bloque \"Este mes aquí\" con las fechas DD/MM de la primera y última visita del mes. Serif gris tenue, lectura calmada.",
+    "placeholders": {
+      "primera": {"type": "String", "example": "03/05"},
+      "ultima": {"type": "String", "example": "21/05"}
+    }
+  },
+  "lecturaTitulo": "Leer tus páginas",
+  "@lecturaTitulo": {
+    "description": "Título del AppBar del modo lectura del cuaderno. Sentence case, voz adulta amable. La pantalla muestra una observación por página con tipografía serif grande — el oficio del niño tratado como un libro suyo, no como una lista."
+  },
+  "lecturaTooltip": "leer tus páginas",
+  "@lecturaTooltip": {
+    "description": "Tooltip del IconButton (ícono de libro) que abre el modo lectura desde el AppBar de \"Todas tus páginas\". Minúscula, voz adulta amable."
+  },
+  "lecturaPaginaIndicador": "{pagina} de {total}",
+  "@lecturaPaginaIndicador": {
+    "description": "Indicador discreto al pie del modo lectura. Mantenemos formato simple (sin \"página\" ni iconografía) — el contexto ya es claro y la frase es periferia visual.",
+    "placeholders": {
+      "pagina": {"type": "int", "example": "1"},
+      "total": {"type": "int", "example": "12"}
+    }
+  },
+  "lecturaVacioCuerpo": "Aún no has anotado nada. Cuando lo hagas, podrás abrir tu cuaderno como un libro.",
+  "@lecturaVacioCuerpo": {
+    "description": "Estado vacío del modo lectura — alguien que entra sin observaciones. Voz adulta amable, sin presión. Reusa el tono de los demás estados vacíos del cuaderno."
+  },
+  "ajustesMapaOnlineEtiqueta": "Activar el mapa",
+  "@ajustesMapaOnlineEtiqueta": {
+    "description": "Etiqueta del switch en Ajustes que activa la pestaña Mapa. Sentence case, voz adulta amable. La palabra \"provisional\" — que apuntaba a la deuda técnica de B5 (MBTiles offline) — se retira: es información para el equipo de desarrollo, no para la persona adulta que decide. La microcopia de abajo ya cuenta lo que le toca saber (que sale a internet hasta que llegue la versión offline)."
+  },
+  "ajustesMapaOnlineCuerpo": "Si lo activas, el dispositivo se conectará a internet para mostrar la zona del mundo donde estés. La pestaña \"mapa\" sólo funciona con esto encendido. Más adelante el mapa podrá descargarse una vez y dejará de salir a internet.",
+  "@ajustesMapaOnlineCuerpo": {
+    "description": "Microcopia honesta del bloque del mapa en Ajustes (biblia §2.9 sin extracción + §2.8 offline-first). Explica al adulto qué implica encender el switch sin tecnicismos — no menciona \"OpenStreetMap\" ni \"servidor de tiles\" porque el adulto medio no necesita esos términos para decidir."
+  },
+  "compararVisitasTitulo": "Comparar dos visitas",
+  "@compararVisitasTitulo": {
+    "description": "Título del AppBar de la pantalla \"comparar dos visitas\" del sit spot. Sentence case, voz adulta amable. Encarna la mecánica del corazón pedagógico de la biblia §3.5: ver cómo cambia el lugar."
+  },
+  "compararVisitasEnlace": "comparar dos visitas",
+  "@compararVisitasEnlace": {
+    "description": "Etiqueta del botón secundario en PantallaPaginaSitSpot que abre la pantalla del comparador. Minúscula, voz adulta amable."
+  },
+  "compararVisitasIntro": "elige dos momentos. mira qué cambia.",
+  "@compararVisitasIntro": {
+    "description": "Microcopia bajo el nombre del sit spot que enmarca la pedagogía sin imponerla. Frase corta, sin signos de puntuación abruptos, en minúscula serif italic."
+  },
+  "compararVisitasColumnaIzquierda": "primer momento",
+  "@compararVisitasColumnaIzquierda": {
+    "description": "Etiqueta sobre el dropdown de la columna izquierda. Default razonable: la observación más antigua del sit spot. \"Momento\" en lugar de \"visita\" para que también valga si la niña anotó dos cosas el mismo día (dos momentos del mismo día son dos momentos)."
+  },
+  "compararVisitasColumnaDerecha": "segundo momento",
+  "@compararVisitasColumnaDerecha": {
+    "description": "Etiqueta sobre el dropdown de la columna derecha. Default razonable: la observación más reciente del sit spot."
+  },
+  "compararVisitasInsuficientesCabecera": "Necesitas dos visitas para comparar.",
+  "@compararVisitasInsuficientesCabecera": {
+    "description": "Cabecera del estado vacío cuando el sit spot tiene 0 o 1 observaciones. Voz adulta amable, sin reproche. Sentence case con punto final."
+  },
+  "compararVisitasInsuficientesCuerpo": "Cuando vuelvas a tu sit spot otro día y anotes algo, podrás comparar lo que viste antes con lo que ves ahora.",
+  "imprimirPlantillaBloque": "Imprimir páginas en blanco para el campo",
+  "@imprimirPlantillaBloque": {
+    "description": "Etiqueta del bloque en Ajustes que abre la pantalla de imprimir plantilla. Voz adulta amable. Refuerza la promesa offline-first §2.8: el campo no tiene wifi."
+  },
+  "imprimirPlantillaBloqueDescripcion": "Genera un PDF para llevar el cuaderno en papel a una salida. Sin pantallas, sin pilas.",
+  "@imprimirPlantillaBloqueDescripcion": {
+    "description": "Descripción del bloque \"Imprimir páginas en blanco\" en Ajustes. Vende el oficio, no la herramienta."
+  },
+  "imprimirPlantillaTitulo": "Páginas para el campo",
+  "@imprimirPlantillaTitulo": {
+    "description": "Título del AppBar de la pantalla de imprimir plantilla. Sentence case, voz adulta amable."
+  },
+  "imprimirPlantillaIntro": "A veces el campo se mira mejor sin pantalla. Aquí preparas tu cuaderno en papel para llevarlo en la mochila.",
+  "@imprimirPlantillaIntro": {
+    "description": "Microcopia introductoria de la pantalla. Enmarca la pedagogía de salir sin aparato. Voz adulta amable."
+  },
+  "imprimirPlantillaContenido": "Cada página tiene espacio para la fecha, dónde estabas, qué viste, lo que crees que es y un recuadro grande para dibujar.",
+  "@imprimirPlantillaContenido": {
+    "description": "Explicación del contenido de cada página, sin tono escolar."
+  },
+  "imprimirPlantillaSelectorCabecera": "Cuántas páginas",
+  "@imprimirPlantillaSelectorCabecera": {
+    "description": "Cabecera del selector de cantidad de páginas. Sans-serif gris ceniza tamaño 12, como las cabeceras de sección del cuaderno."
+  },
+  "imprimirPlantillaOpcionPaginas": "{paginas} páginas",
+  "@imprimirPlantillaOpcionPaginas": {
+    "description": "Etiqueta de cada chip del selector. Singular/plural se asume plural ya que las opciones son 4/8/16.",
+    "placeholders": {
+      "paginas": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+  "imprimirPlantillaBoton": "Imprimir o compartir",
+  "@imprimirPlantillaBoton": {
+    "description": "Botón principal que dispara la generación del PDF + el lanzador del SO. \"O compartir\" porque el sistema operativo permite también guardar como PDF, mandar por correo, etc."
+  },
+  "imprimirPlantillaNotaFinal": "Si no tienes impresora, también puedes guardar el PDF en el móvil y enseñárselo a quien sí la tenga.",
+  "@imprimirPlantillaNotaFinal": {
+    "description": "Microcopia final que cubre el caso del adulto sin impresora en casa. Voz amable, sin asumir."
+  },
+  "@compararVisitasInsuficientesCuerpo": {
+    "description": "Cuerpo del estado vacío. Explica qué hace falta sin presionar — la biblia §2.7 prohíbe rachas y deberes."
+  },
+  "detalleObservacionPrimeraVez": "primera vez que anotas algo así en el cuaderno.",
+  "@detalleObservacionPrimeraVez": {
+    "description": "Microcopia serif gris ceniza tamaño 12 que aparece en PantallaDetalleObservacion cuando la observación es la primera del cuaderno con su \"crees que es\" normalizado. Sin emojis, sin animación: una nota seca y bonita. Voz adulta amable, frase única, en minúscula como las cabeceras del cuaderno."
+  },
+  "acercaTitulo": "Cómo se usa este cuaderno",
+  "@acercaTitulo": {
+    "description": "Título del AppBar de la pantalla \"Acerca de El Cuaderno\". Voz adulta amable: ni \"Acerca de\" (frío) ni \"Información\" (corporativo). El título funciona para niño, adulto y maestra a la vez."
+  },
+  "acercaBloque": "Cómo se usa este cuaderno",
+  "@acercaBloque": {
+    "description": "Etiqueta del bloque en Ajustes que abre la pantalla. Idéntico al título de AppBar — el niño que lo pulsa sabe a qué entra."
+  },
+  "acercaBloqueDescripcion": "Qué es, cómo anotar, cómo acompañar. Para ti, para tu adulto y para tu maestra.",
+  "@acercaBloqueDescripcion": {
+    "description": "Descripción del bloque \"Cómo se usa este cuaderno\" en Ajustes. Tres lectores explícitos para que el adulto sepa que también encontrará lo suyo."
   },
   "ajustesIdiomaActual": "Idioma del cuaderno: {idioma}",
   "@ajustesIdiomaActual": {

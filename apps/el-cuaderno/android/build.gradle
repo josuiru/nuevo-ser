@@ -3,6 +3,7 @@ allprojects {
         google()
         mavenCentral()
     }
+
 }
 
 rootProject.buildDir = "../build"
@@ -46,10 +47,15 @@ subprojects {
                     }
                 }
             }
+            // Forzamos compileSdk = 35 en TODOS los subproyectos
+            // (excepto :app, que ya lo declara explícitamente). En
+            // debug el `if (==null)` original valía, pero en release
+            // algunos plugins (isar_flutter_libs 3.x) traen un valor
+            // antiguo que rompe la resolución de attrs como
+            // `android:attr/lStar` (introducido en API 31). Sobrescribir
+            // siempre evita el `lStar not found` en release.
             try {
-                if (androidExt.compileSdkVersion == null) {
-                    androidExt.compileSdkVersion 35
-                }
+                androidExt.compileSdk = 35
             } catch (Exception ignored) {
                 // Algunos plugins exponen compileSdk vía propiedad
                 // distinta — ignoramos y dejamos que AGP siga si ya

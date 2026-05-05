@@ -43,6 +43,7 @@ class IsarSetup {
         ObservacionIsarSchema,
         SitSpotIsarSchema,
         MisterioIsarSchema,
+        PreguntaDelNinoIsarSchema,
         PaginaCuadernoIsarSchema,
       ],
       directory: directorio,

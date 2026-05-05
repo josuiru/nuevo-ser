@@ -89,8 +89,12 @@ void main() {
     );
   });
 
-  testWidgets('error de red: cae al canned response sin romper la UI',
-      (tester) async {
+  testWidgets(
+      'error de red con cuenta vinculada: muestra "ahora mismo no llego" '
+      '(NO el canned response del estado sin cuenta)', (tester) async {
+    // Cuenta vinculada (enviarPregunta no es null) pero la llamada falla.
+    // Antes este caso caía al canned response, lo que sugería al adulto
+    // que no había vinculado cuenta — engañoso. Ahora distingue.
     await bombear(tester, enviarPregunta: (_) async {
       throw Exception('boom');
     });
@@ -98,9 +102,24 @@ void main() {
     await tester.tap(find.text('Enviar'));
     await tester.pumpAndSettle();
     expect(
-      find.text('El Tutor todavía no está conectado. Vuelve en unas semanas.'),
+      find.text(
+        'Ahora mismo no llego al cuaderno. Espera un momento y vuelve a probar.',
+      ),
       findsOneWidget,
     );
+    expect(
+      find.text('El Tutor todavía no está conectado. Vuelve en unas semanas.'),
+      findsNothing,
+    );
+  });
+
+  testWidgets(
+      'lista de turnos tiene ScrollController cableado para auto-scroll '
+      '(regresión: si se quita, los turnos nuevos quedan ocultos abajo)',
+      (tester) async {
+    await bombear(tester);
+    final listView = tester.widget<ListView>(find.byType(ListView));
+    expect(listView.controller, isNotNull);
   });
 
   testWidgets('botón Enviar deshabilitado mientras hay respuesta en vuelo',

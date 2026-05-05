@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'textos_app.dart';
 
 // ignore_for_file: type=lint
@@ -12,7 +12,8 @@ class TextosAppCa extends TextosApp {
   String get tituloApp => 'El Quadern';
 
   @override
-  String get subtituloBienvenida => 'Una eina per anotar el que veus viu prop teu.';
+  String get subtituloBienvenida =>
+      'Una eina per anotar el que veus viu prop teu.';
 
   @override
   String get saludoSinNombre => 'Hola.';
@@ -44,7 +45,8 @@ class TextosAppCa extends TextosApp {
   String get seccionUltimaPagina => 'Última pàgina';
 
   @override
-  String get sitSpotInvitacion => 'TODO_CA · Cuando estés en algún sitio al aire libre que te guste — un parque, un árbol, una esquina — puedes hacerlo tu sit spot. Toca aquí cuando estés.';
+  String get sitSpotInvitacion =>
+      'TODO_CA · Cuando estés en algún sitio al aire libre que te guste — un parque, un árbol, una esquina — puedes hacerlo tu sit spot. Toca aquí cuando estés.';
 
   @override
   String sitSpotUltimaVisita(String cuando) {
@@ -52,16 +54,140 @@ class TextosAppCa extends TextosApp {
   }
 
   @override
-  String get ultimaPaginaVacia => 'TODO_CA · Aún no has anotado nada. Cuando lo hagas, aparecerá aquí.';
+  String get ultimaPaginaVacia =>
+      'TODO_CA · Aún no has anotado nada. Cuando lo hagas, aparecerá aquí.';
 
   @override
-  String get misteriosVacio => 'TODO_CA · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.';
+  String get misteriosVacio =>
+      'TODO_CA · Aún no tienes Misterios abiertos. El sistema te propondrá alguno pronto.';
 
   @override
-  String get misteriosFueraDeContexto => 'TODO_CA · Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.';
+  String get misteriosFueraDeContexto =>
+      'TODO_CA · Hoy no hay Misterios para tu lugar y esta estación. Vuelve a mirar al cambiar el tiempo.';
 
   @override
   String get navProximamente => 'Aviat.';
+
+  @override
+  String get homeFabAnotar => 'TODO_CA · anotar';
+
+  @override
+  String get homeFabAnotarTooltip => 'TODO_CA · anotar lo que ves';
+
+  @override
+  String get homeOrientacionConMisterios =>
+      'TODO_CA · Estos son los Misterios que tu cuaderno tiene abiertos. Ábrelos para leerlos; cuando veas algo en tu sit spot que tenga que ver, anótalo.';
+
+  @override
+  String get seccionTusPreguntas => 'TODO_CA · Tus preguntas';
+
+  @override
+  String get seccionMisteriosDelCuaderno => 'TODO_CA · Misterios del cuaderno';
+
+  @override
+  String get tusPreguntasVacio =>
+      'TODO_CA · Aún no has formulado ninguna pregunta. Cuando se te ocurra una mientras observas tu lugar, anótala aquí.';
+
+  @override
+  String get preguntaFabFormular => 'TODO_CA · formular pregunta';
+
+  @override
+  String get preguntaFormularTitulo => 'TODO_CA · Tu pregunta';
+
+  @override
+  String get preguntaFormularIntro =>
+      'TODO_CA · Una pregunta tuya. La que llevas dándole vueltas, la que se te acaba de ocurrir, la que nadie te ha contado. Escríbela como te suene; no hace falta que esté bien hecha — sólo que sea la tuya.';
+
+  @override
+  String get preguntaFormularPlaceholder => '¿…?';
+
+  @override
+  String get preguntaFormularBotonGuardar => 'TODO_CA · Guardar mi pregunta';
+
+  @override
+  String get preguntaFormularBotonIdeas => 'TODO_CA · necesito ideas';
+
+  @override
+  String get preguntaIdeasTitulo =>
+      'TODO_CA · Si necesitas un punto de partida';
+
+  @override
+  String get preguntaIdeasIntro =>
+      'TODO_CA · No tienes que usar ninguno. Si te ayuda alguno, púlsalo y empieza desde ahí.';
+
+  @override
+  String get preguntaIdea1 => 'TODO_CA · ¿siempre … cuando …?';
+
+  @override
+  String get preguntaIdea2 => 'TODO_CA · ¿qué pasa cuando …?';
+
+  @override
+  String get preguntaIdea3 => 'TODO_CA · ¿se parece … a …?';
+
+  @override
+  String get preguntaIdea4 => 'TODO_CA · ¿cómo cambia … con el tiempo?';
+
+  @override
+  String get preguntaIdea5 => 'TODO_CA · ¿qué hace … cuando …?';
+
+  @override
+  String get preguntaPaginaTitulo => 'TODO_CA · Tu pregunta';
+
+  @override
+  String preguntaPaginaFormulada(String fecha) {
+    return 'TODO_CA · Formulada el $fecha';
+  }
+
+  @override
+  String get preguntaPaginaEvidenciaVacia =>
+      'TODO_CA · Todavía no has anotado nada para tu pregunta. Vuelve al lugar y mira; cuando veas algo que tenga que ver, anótalo y ánclalo aquí.';
+
+  @override
+  String get preguntaPaginaCabeceraEvidencia =>
+      'TODO_CA · Lo que ya has anotado';
+
+  @override
+  String get preguntaPaginaBorrar => 'TODO_CA · borrar esta pregunta';
+
+  @override
+  String get preguntaPaginaConfirmaBorrar =>
+      'TODO_CA · Vas a borrar esta pregunta tuya. Las observaciones que tuvieras ancladas se conservan en el cuaderno. No se puede deshacer.';
+
+  @override
+  String get preguntaPaginaBotonEvidencia =>
+      'TODO_CA · anotar evidencia para esta pregunta';
+
+  @override
+  String get preguntaPaginaBotonCerrar =>
+      'TODO_CA · ya tengo mi respuesta sobre esta pregunta';
+
+  @override
+  String get preguntaCerrarTitulo => 'TODO_CA · Tu respuesta';
+
+  @override
+  String get preguntaCerrarIntro =>
+      'TODO_CA · Cuenta con tus palabras lo que has aprendido. No hay respuesta correcta — esto no se corrige ni se nota; sólo se guarda en tu cuaderno.';
+
+  @override
+  String get preguntaCerrarPlaceholder => 'TODO_CA · tu respuesta';
+
+  @override
+  String get preguntaCerrarBoton => 'TODO_CA · Guardar mi respuesta';
+
+  @override
+  String get preguntaPaginaBloqueRespuesta => 'TODO_CA · Tu respuesta';
+
+  @override
+  String preguntaPaginaCerradaEl(String fecha) {
+    return 'TODO_CA · Cerrada el $fecha';
+  }
+
+  @override
+  String get preguntaPaginaReabrir => 'TODO_CA · reabrir esta pregunta';
+
+  @override
+  String get preguntaPaginaConfirmaReabrir =>
+      'TODO_CA · Si la reabres, tu respuesta se borra y la pregunta vuelve a la lista de abiertas. Las anotaciones que ya tenías se conservan.';
 
   @override
   String get observacionTitulo => 'observació nova';
@@ -78,7 +204,8 @@ class TextosAppCa extends TextosApp {
   String get observacionCajaDibujo => 'TODO_CA · dibujo';
 
   @override
-  String get observacionCajaPlaceholder => 'TODO_CA · Si quieres, añade una foto o un dibujo.';
+  String get observacionCajaPlaceholder =>
+      'TODO_CA · Si quieres, añade una foto o un dibujo.';
 
   @override
   String get observacionFotoTomar => 'TODO_CA · tomar foto';
@@ -99,7 +226,8 @@ class TextosAppCa extends TextosApp {
   String get observacionEtiquetaQueViste => 'què has vist';
 
   @override
-  String get observacionPlaceholderQueViste => 'descriu el que has vist, sense posar-li nom si no n\'estàs segura';
+  String get observacionPlaceholderQueViste =>
+      'descriu el que has vist, sense posar-li nom si no n\'estàs segura';
 
   @override
   String get observacionEtiquetaCreesQueEs => 'creus que és';
@@ -117,7 +245,8 @@ class TextosAppCa extends TextosApp {
   String get confianzaNoSegura => 'no n\'estic segura';
 
   @override
-  String get confianzaConsensoTooltip => 'ho has confirmat amb una clau o amb el Tutor';
+  String get confianzaConsensoTooltip =>
+      'ho has confirmat amb una clau o amb el Tutor';
 
   @override
   String get confianzaNoSeguraTooltip => 'no passa res, anota-ho així';
@@ -129,7 +258,8 @@ class TextosAppCa extends TextosApp {
   String get observacionBotonGuardar => 'Desar al quadern';
 
   @override
-  String get tutorSaludoCanonico => 'Soc el Tutor del Quadern. Pregunta\'m el que necessitis.';
+  String get tutorSaludoCanonico =>
+      'Soc el Tutor del Quadern. Pregunta\'m el que necessitis.';
 
   @override
   String get tutorPlaceholderInput => 'escriu la teva pregunta';
@@ -138,10 +268,173 @@ class TextosAppCa extends TextosApp {
   String get tutorBotonEnviar => 'Enviar';
 
   @override
-  String get tutorRespuestaCanned => 'El Tutor encara no està connectat. Torna en unes setmanes.';
+  String get tutorRespuestaCanned =>
+      'El Tutor encara no està connectat. Torna en unes setmanes.';
+
+  @override
+  String get tutorErrorRed =>
+      'TODO_CA · Ahora mismo no llego al cuaderno. Espera un momento y vuelve a probar.';
 
   @override
   String get ajustesTitulo => 'Configuració';
+
+  @override
+  String get atlasTitulo => 'TODO_CA · Tu atlas';
+
+  @override
+  String get atlasSubtitulo =>
+      'TODO_CA · no es un trofeo. es lo que has visto.';
+
+  @override
+  String get atlasSeccionPrimerasVeces => 'TODO_CA · Tus primeras veces';
+
+  @override
+  String get atlasSeccionLoQueHasVisto => 'TODO_CA · Lo que has visto';
+
+  @override
+  String get atlasConteoSingular => 'TODO_CA · 1 vez';
+
+  @override
+  String atlasConteoPlural(int conteo) {
+    return 'TODO_CA · $conteo veces';
+  }
+
+  @override
+  String get atlasVacioCabecera => 'TODO_CA · Tu atlas todavía está vacío.';
+
+  @override
+  String get atlasVacioCuerpo =>
+      'TODO_CA · Cuando vayas anotando lo que crees que ves, esto se irá llenando solo. No hay prisa.';
+
+  @override
+  String get atlasEnlaceDesdeCuaderno => 'TODO_CA · ver tu atlas';
+
+  @override
+  String get seccionEcos => 'TODO_CA · Hace un tiempo, por aquí';
+
+  @override
+  String get ecoCabeceraUnMes => 'TODO_CA · hace un mes, por estas fechas…';
+
+  @override
+  String get ecoCabeceraSeisMeses =>
+      'TODO_CA · hace seis meses, por estas fechas…';
+
+  @override
+  String get ecoCabeceraUnAno => 'TODO_CA · hace un año, por estas fechas…';
+
+  @override
+  String get paginaSitSpotResumenMesCabecera => 'TODO_CA · Este mes aquí';
+
+  @override
+  String paginaSitSpotResumenMesVisitas(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'TODO_CA · Has venido $count veces este mes.',
+      two: 'TODO_CA · Has venido dos veces este mes.',
+      one: 'TODO_CA · Has venido una vez este mes.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String paginaSitSpotResumenMesPrimeraUltima(String primera, String ultima) {
+    return 'TODO_CA · La primera fue el $primera. La última, el $ultima.';
+  }
+
+  @override
+  String get lecturaTitulo => 'TODO_CA · Leer tus páginas';
+
+  @override
+  String get lecturaTooltip => 'TODO_CA · leer tus páginas';
+
+  @override
+  String lecturaPaginaIndicador(int pagina, int total) {
+    return 'TODO_CA · $pagina de $total';
+  }
+
+  @override
+  String get lecturaVacioCuerpo =>
+      'TODO_CA · Aún no has anotado nada. Cuando lo hagas, podrás abrir tu cuaderno como un libro.';
+
+  @override
+  String get ajustesMapaOnlineEtiqueta => 'TODO_CA · Activar el mapa';
+
+  @override
+  String get ajustesMapaOnlineCuerpo =>
+      'TODO_CA · Si lo activas, el dispositivo se conectará a internet para mostrar la zona del mundo donde estés. La pestaña \"mapa\" sólo funciona con esto encendido. Más adelante el mapa podrá descargarse una vez y dejará de salir a internet.';
+
+  @override
+  String get compararVisitasTitulo => 'TODO_CA · Comparar dos visitas';
+
+  @override
+  String get compararVisitasEnlace => 'TODO_CA · comparar dos visitas';
+
+  @override
+  String get compararVisitasIntro =>
+      'TODO_CA · elige dos momentos. mira qué cambia.';
+
+  @override
+  String get compararVisitasColumnaIzquierda => 'TODO_CA · primer momento';
+
+  @override
+  String get compararVisitasColumnaDerecha => 'TODO_CA · segundo momento';
+
+  @override
+  String get compararVisitasInsuficientesCabecera =>
+      'TODO_CA · Necesitas dos visitas para comparar.';
+
+  @override
+  String get compararVisitasInsuficientesCuerpo =>
+      'TODO_CA · Cuando vuelvas a tu sit spot otro día y anotes algo, podrás comparar lo que viste antes con lo que ves ahora.';
+
+  @override
+  String get imprimirPlantillaBloque =>
+      'TODO_CA · Imprimir páginas en blanco para el campo';
+
+  @override
+  String get imprimirPlantillaBloqueDescripcion =>
+      'TODO_CA · Genera un PDF para llevar el cuaderno en papel a una salida. Sin pantallas, sin pilas.';
+
+  @override
+  String get imprimirPlantillaTitulo => 'TODO_CA · Páginas para el campo';
+
+  @override
+  String get imprimirPlantillaIntro =>
+      'TODO_CA · A veces el campo se mira mejor sin pantalla. Aquí preparas tu cuaderno en papel para llevarlo en la mochila.';
+
+  @override
+  String get imprimirPlantillaContenido =>
+      'TODO_CA · Cada página tiene espacio para la fecha, dónde estabas, qué viste, lo que crees que es y un recuadro grande para dibujar.';
+
+  @override
+  String get imprimirPlantillaSelectorCabecera => 'TODO_CA · Cuántas páginas';
+
+  @override
+  String imprimirPlantillaOpcionPaginas(int paginas) {
+    return 'TODO_CA · $paginas páginas';
+  }
+
+  @override
+  String get imprimirPlantillaBoton => 'TODO_CA · Imprimir o compartir';
+
+  @override
+  String get imprimirPlantillaNotaFinal =>
+      'TODO_CA · Si no tienes impresora, también puedes guardar el PDF en el móvil y enseñárselo a quien sí la tenga.';
+
+  @override
+  String get detalleObservacionPrimeraVez =>
+      'TODO_CA · primera vez que anotas algo así en el cuaderno.';
+
+  @override
+  String get acercaTitulo => 'TODO_CA · Cómo se usa este cuaderno';
+
+  @override
+  String get acercaBloque => 'TODO_CA · Cómo se usa este cuaderno';
+
+  @override
+  String get acercaBloqueDescripcion =>
+      'TODO_CA · Qué es, cómo anotar, cómo acompañar. Para ti, para tu adulto y para tu maestra.';
 
   @override
   String ajustesIdiomaActual(String idioma) {
@@ -155,13 +448,15 @@ class TextosAppCa extends TextosApp {
   String get ajustesExportar => 'TODO_CA · Exportar mi cuaderno';
 
   @override
-  String get ajustesExportarDescripcion => 'TODO_CA · Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.';
+  String get ajustesExportarDescripcion =>
+      'TODO_CA · Recibe una copia legible de tus observaciones y Misterios. El cuaderno es tuyo.';
 
   @override
   String get ajustesExportarPdf => 'TODO_CA · Exportar como PDF';
 
   @override
-  String get ajustesExportarPdfDescripcion => 'TODO_CA · Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.';
+  String get ajustesExportarPdfDescripcion =>
+      'TODO_CA · Una copia para imprimir o llevar a un papel. El sistema te preguntará dónde guardarla.';
 
   @override
   String get ajustesExportarDialogoTitulo => 'TODO_CA · Tu cuaderno como texto';
@@ -173,19 +468,22 @@ class TextosAppCa extends TextosApp {
   String get ajustesVistaCuidador => 'TODO_CA · Vista del cuidador';
 
   @override
-  String get ajustesVistaCuidadorDescripcion => 'TODO_CA · Una página discreta para una persona adulta que te acompaña.';
+  String get ajustesVistaCuidadorDescripcion =>
+      'TODO_CA · Una página discreta para una persona adulta que te acompaña.';
 
   @override
   String get ajustesBorrar => 'TODO_CA · Borrar mi cuaderno';
 
   @override
-  String get ajustesBorrarDescripcion => 'TODO_CA · Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.';
+  String get ajustesBorrarDescripcion =>
+      'TODO_CA · Borrar todas tus observaciones, Misterios y sit spot. No se puede deshacer.';
 
   @override
   String get ajustesBorrarDialogoTitulo => 'TODO_CA · ¿Borrar todo?';
 
   @override
-  String ajustesBorrarDialogoCuerpo(int observaciones, int misterios, int sitSpots) {
+  String ajustesBorrarDialogoCuerpo(
+      int observaciones, int misterios, int sitSpots) {
     return 'TODO_CA · Si continúas, se borrarán $observaciones observaciones, $misterios Misterios y $sitSpots sit spot. No se puede deshacer.';
   }
 
@@ -199,25 +497,29 @@ class TextosAppCa extends TextosApp {
   String get ajustesBorrarConfirmacionTitulo => 'TODO_CA · ¿Estás segura?';
 
   @override
-  String get ajustesBorrarConfirmacionCuerpo => 'TODO_CA · Escribe «borrar» abajo para confirmar.';
+  String get ajustesBorrarConfirmacionCuerpo =>
+      'TODO_CA · Escribe «borrar» abajo para confirmar.';
 
   @override
   String get ajustesBorrarConfirmacionPalabra => 'TODO_CA · borrar';
 
   @override
-  String get ajustesBorrarConfirmacionPlaceholder => 'TODO_CA · escribe la palabra';
+  String get ajustesBorrarConfirmacionPlaceholder =>
+      'TODO_CA · escribe la palabra';
 
   @override
   String get ajustesBorrarConfirmacionBoton => 'TODO_CA · Borrar todo';
 
   @override
-  String get ajustesBorradoCompleto => 'TODO_CA · Listo. Tu cuaderno está vacío.';
+  String get ajustesBorradoCompleto =>
+      'TODO_CA · Listo. Tu cuaderno está vacío.';
 
   @override
   String get bienvenidaTitulo => 'Com et dius?';
 
   @override
-  String get bienvenidaCuerpo => 'El teu nom es queda en aquest quadern. No surt al servidor tret que decideixis vincular-lo més endavant.';
+  String get bienvenidaCuerpo =>
+      'El teu nom es queda en aquest quadern. No surt al servidor tret que decideixis vincular-lo més endavant.';
 
   @override
   String get bienvenidaPlaceholderNombre => 'el teu nom';
@@ -229,7 +531,8 @@ class TextosAppCa extends TextosApp {
   String get ajustesSyncObsTitulo => 'TODO_CA · Sincronizar mis observaciones';
 
   @override
-  String get ajustesSyncObsDescripcion => 'TODO_CA · Sube las observaciones nuevas a tu cuenta del servidor para no perderlas si cambias de dispositivo.';
+  String get ajustesSyncObsDescripcion =>
+      'TODO_CA · Sube las observaciones nuevas a tu cuenta del servidor para no perderlas si cambias de dispositivo.';
 
   @override
   String get ajustesSyncObsBoton => 'TODO_CA · Subir ahora';
@@ -238,10 +541,12 @@ class TextosAppCa extends TextosApp {
   String get ajustesSyncObsEnVuelo => 'TODO_CA · Subiendo…';
 
   @override
-  String get ajustesSyncObsSinToken => 'TODO_CA · Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón subirá tus observaciones.';
+  String get ajustesSyncObsSinToken =>
+      'TODO_CA · Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón subirá tus observaciones.';
 
   @override
-  String get ajustesSyncObsNadaPendiente => 'TODO_CA · No hay observaciones pendientes — todo subido.';
+  String get ajustesSyncObsNadaPendiente =>
+      'TODO_CA · No hay observaciones pendientes — todo subido.';
 
   @override
   String ajustesSyncObsTodasEnviadas(int count) {
@@ -268,7 +573,8 @@ class TextosAppCa extends TextosApp {
   String get ajustesCuentaTitulo => 'TODO_CA · Cuenta del adulto';
 
   @override
-  String get ajustesCuentaDescripcion => 'TODO_CA · Si tienes una cuenta de Nuevo Ser, puedes vincularla aquí. Sirve para subir tus observaciones, recibir el resumen escrito del cuidador y conectar el Tutor real.';
+  String get ajustesCuentaDescripcion =>
+      'TODO_CA · Si tienes una cuenta de Nuevo Ser, puedes vincularla aquí. Sirve para subir tus observaciones, recibir el resumen escrito del cuidador y conectar el Tutor real.';
 
   @override
   String get ajustesCuentaPlaceholderEmail => 'TODO_CA · correo del adulto';
@@ -288,28 +594,34 @@ class TextosAppCa extends TextosApp {
   }
 
   @override
-  String get ajustesCuentaSesionIniciadaSinEmail => 'TODO_CA · Sesión iniciada.';
+  String get ajustesCuentaSesionIniciadaSinEmail =>
+      'TODO_CA · Sesión iniciada.';
 
   @override
   String get ajustesCuentaCerrarSesion => 'TODO_CA · Cerrar sesión';
 
   @override
-  String get ajustesCuentaErrorCredenciales => 'TODO_CA · El correo o la contraseña no coinciden con ninguna cuenta.';
+  String get ajustesCuentaErrorCredenciales =>
+      'TODO_CA · El correo o la contraseña no coinciden con ninguna cuenta.';
 
   @override
-  String get ajustesCuentaErrorSinPerfil => 'TODO_CA · La cuenta del adulto no tiene ningún niño asociado todavía.';
+  String get ajustesCuentaErrorSinPerfil =>
+      'TODO_CA · La cuenta del adulto no tiene ningún niño asociado todavía.';
 
   @override
-  String get ajustesCuentaErrorRed => 'TODO_CA · No se ha podido conectar con el servidor. Inténtalo en un momento.';
+  String get ajustesCuentaErrorRed =>
+      'TODO_CA · No se ha podido conectar con el servidor. Inténtalo en un momento.';
 
   @override
-  String get ajustesCuentaErrorVacio => 'TODO_CA · Escribe el correo y la contraseña antes de continuar.';
+  String get ajustesCuentaErrorVacio =>
+      'TODO_CA · Escribe el correo y la contraseña antes de continuar.';
 
   @override
   String get ajustesTutorDebugTitulo => 'TODO_CA · Tutor (debug)';
 
   @override
-  String get ajustesTutorDebugDescripcion => 'TODO_CA · Pega aquí un token del backend para activar el Tutor real. Visible sólo en debug.';
+  String get ajustesTutorDebugDescripcion =>
+      'TODO_CA · Pega aquí un token del backend para activar el Tutor real. Visible sólo en debug.';
 
   @override
   String get ajustesTutorDebugPlaceholder => 'TODO_CA · JWT del backend';
@@ -321,16 +633,19 @@ class TextosAppCa extends TextosApp {
   String get ajustesTutorDebugBotonBorrar => 'TODO_CA · Borrar token';
 
   @override
-  String get ajustesTutorDebugGuardado => 'TODO_CA · Token guardado. Vuelve al Tutor para probarlo.';
+  String get ajustesTutorDebugGuardado =>
+      'TODO_CA · Token guardado. Vuelve al Tutor para probarlo.';
 
   @override
-  String get ajustesTutorDebugBorrado => 'TODO_CA · Token borrado. El Tutor vuelve a la respuesta canónica.';
+  String get ajustesTutorDebugBorrado =>
+      'TODO_CA · Token borrado. El Tutor vuelve a la respuesta canónica.';
 
   @override
   String get cuidadorTitulo => 'TODO_CA · Página del cuidador';
 
   @override
-  String get cuidadorAviso => 'TODO_CA · Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.';
+  String get cuidadorAviso =>
+      'TODO_CA · Esta es la única vista que comparte el juego con quien te acompaña. No verá tus observaciones ni lo que escribes — solo este resumen y una pregunta para hablar.';
 
   @override
   String cuidadorSemanaActual(String isoWeek) {
@@ -380,19 +695,23 @@ class TextosAppCa extends TextosApp {
   }
 
   @override
-  String get cuidadorSincronizarBoton => 'TODO_CA · Compartir resumen con el adulto';
+  String get cuidadorSincronizarBoton =>
+      'TODO_CA · Compartir resumen con el adulto';
 
   @override
   String get cuidadorSincronizarEnVuelo => 'TODO_CA · Pidiéndolo…';
 
   @override
-  String get cuidadorSincronizarSinToken => 'TODO_CA · Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón pedirá un resumen escrito.';
+  String get cuidadorSincronizarSinToken =>
+      'TODO_CA · Aún no hay cuenta vinculada con el servidor. Cuando la haya, este botón pedirá un resumen escrito.';
 
   @override
-  String get cuidadorSincronizarErrorRed => 'TODO_CA · Hoy no se ha podido conectar. Puedes volver a intentarlo más tarde.';
+  String get cuidadorSincronizarErrorRed =>
+      'TODO_CA · Hoy no se ha podido conectar. Puedes volver a intentarlo más tarde.';
 
   @override
-  String get cuidadorSincronizarSinResumen => 'TODO_CA · El servidor no ha podido generar un resumen esta vez. La pregunta de abajo sigue valiendo.';
+  String get cuidadorSincronizarSinResumen =>
+      'TODO_CA · El servidor no ha podido generar un resumen esta vez. La pregunta de abajo sigue valiendo.';
 
   @override
   String get cuidadorResumenCabecera => 'TODO_CA · Esta semana, en una frase';

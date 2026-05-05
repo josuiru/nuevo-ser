@@ -1,5 +1,6 @@
 import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
+import '../../dominio/pregunta_del_nino.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../dominio/sit_spot.dart';
 
@@ -12,6 +13,7 @@ import '../../dominio/sit_spot.dart';
 class RepositorioMemoria implements RepositorioLocal {
   final Map<String, Observacion> _observaciones = {};
   final Map<String, Misterio> _misterios = {};
+  final Map<String, PreguntaDelNino> _preguntasDelNino = {};
   SitSpot? _sitSpotActivo;
   final List<SitSpot> _sitSpotsRetirados = [];
 
@@ -30,26 +32,44 @@ class RepositorioMemoria implements RepositorioLocal {
     final observacion = _observaciones.remove(id);
     if (observacion == null) return;
     final misterioId = observacion.misterioId;
-    if (misterioId == null) return;
-    final misterio = _misterios[misterioId];
-    if (misterio == null) return;
-    if (!misterio.observacionesIds.contains(id)) return;
-    final actualizadas = [
-      for (final ref in misterio.observacionesIds)
-        if (ref != id) ref,
-    ];
-    _misterios[misterioId] =
-        misterio.copyWith(observacionesIds: actualizadas);
+    if (misterioId != null) {
+      final misterio = _misterios[misterioId];
+      if (misterio != null && misterio.observacionesIds.contains(id)) {
+        final actualizadas = [
+          for (final ref in misterio.observacionesIds)
+            if (ref != id) ref,
+        ];
+        _misterios[misterioId] =
+            misterio.copyWith(observacionesIds: actualizadas);
+      }
+    }
+    final preguntaId = observacion.preguntaDelNinoId;
+    if (preguntaId != null) {
+      final pregunta = _preguntasDelNino[preguntaId];
+      if (pregunta != null && pregunta.observacionesIds.contains(id)) {
+        final actualizadas = [
+          for (final ref in pregunta.observacionesIds)
+            if (ref != id) ref,
+        ];
+        _preguntasDelNino[preguntaId] =
+            pregunta.copyWith(observacionesIds: actualizadas);
+      }
+    }
   }
 
   @override
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,
+    String? preguntaDelNinoId,
     String? sitSpotId,
   }) async {
     var lista = _observaciones.values.where((observacion) {
       if (misterioId != null && observacion.misterioId != misterioId) {
+        return false;
+      }
+      if (preguntaDelNinoId != null &&
+          observacion.preguntaDelNinoId != preguntaDelNinoId) {
         return false;
       }
       if (sitSpotId != null && observacion.sitSpotId != sitSpotId) {
@@ -212,18 +232,119 @@ class RepositorioMemoria implements RepositorioLocal {
   }
 
   @override
+  Future<void> guardarPreguntaDelNino(PreguntaDelNino pregunta) async {
+    _preguntasDelNino[pregunta.id] = pregunta;
+  }
+
+  @override
+  Future<void> anclarObservacionAPregunta(
+    String observacionId,
+    String preguntaId,
+  ) async {
+    final observacion = _observaciones[observacionId];
+    if (observacion == null) {
+      throw StateError(
+        'no hay observación con id $observacionId — guárdala antes de anclarla',
+      );
+    }
+    final pregunta = _preguntasDelNino[preguntaId];
+    if (pregunta == null) {
+      throw StateError(
+        'no hay pregunta del niño con id $preguntaId',
+      );
+    }
+    _observaciones[observacionId] =
+        observacion.copyWith(preguntaDelNinoId: preguntaId);
+    if (!pregunta.observacionesIds.contains(observacionId)) {
+      _preguntasDelNino[preguntaId] = pregunta.copyWith(
+        observacionesIds: [...pregunta.observacionesIds, observacionId],
+      );
+    }
+  }
+
+  @override
+  Future<PreguntaDelNino?> obtenerPreguntaDelNinoPorId(String id) async {
+    return _preguntasDelNino[id];
+  }
+
+  @override
+  Future<List<PreguntaDelNino>> obtenerPreguntasDelNinoAbiertas() async {
+    return _preguntasDelNino.values
+        .where((pregunta) => !pregunta.estaCerrada)
+        .toList()
+      ..sort((a, b) => b.formuladaEn.compareTo(a.formuladaEn));
+  }
+
+  @override
+  Future<List<PreguntaDelNino>> obtenerPreguntasDelNinoCerradas() async {
+    return _preguntasDelNino.values
+        .where((pregunta) => pregunta.estaCerrada)
+        .toList()
+      ..sort((a, b) => b.cerradaEn!.compareTo(a.cerradaEn!));
+  }
+
+  @override
+  Future<void> borrarPreguntaDelNino(String id) async {
+    _preguntasDelNino.remove(id);
+  }
+
+  @override
+  Future<void> cerrarPreguntaDelNino(
+    String preguntaId,
+    String respuesta,
+  ) async {
+    final pregunta = _preguntasDelNino[preguntaId];
+    if (pregunta == null) {
+      throw StateError(
+        'no hay pregunta del niño con id $preguntaId',
+      );
+    }
+    if (pregunta.estaCerrada) {
+      throw StateError(
+        'la pregunta $preguntaId ya está cerrada — reábrela antes',
+      );
+    }
+    if (respuesta.trim().isEmpty) {
+      throw ArgumentError.value(
+        respuesta,
+        'respuesta',
+        'cerrar una pregunta exige una respuesta no vacía',
+      );
+    }
+    _preguntasDelNino[preguntaId] = pregunta.copyWith(
+      cerradaEn: DateTime.now(),
+      respuestaDelNino: respuesta,
+    );
+  }
+
+  @override
+  Future<void> reabrirPreguntaDelNino(String preguntaId) async {
+    final pregunta = _preguntasDelNino[preguntaId];
+    if (pregunta == null) {
+      throw StateError(
+        'no hay pregunta del niño con id $preguntaId',
+      );
+    }
+    if (!pregunta.estaCerrada) return;
+    _preguntasDelNino[preguntaId] = pregunta.reabiertaPorNino();
+  }
+
+  @override
   Future<ResultadoBorrado> borrarTodoLoLocal() async {
     final observacionesAntes = _observaciones.length;
     final misteriosAntes = _misterios.length;
+    final preguntasAntes = _preguntasDelNino.length;
     final sitSpotsAntes = _sitSpotsRetirados.length + (_sitSpotActivo == null ? 0 : 1);
     _observaciones.clear();
     _misterios.clear();
+    _preguntasDelNino.clear();
     _sitSpotsRetirados.clear();
     _sitSpotActivo = null;
     return ResultadoBorrado(
       observacionesBorradas: observacionesAntes,
       misteriosBorrados: misteriosAntes,
       sitSpotsBorrados: sitSpotsAntes,
+      preguntasDelNinoBorradas: preguntasAntes,
     );
   }
 }

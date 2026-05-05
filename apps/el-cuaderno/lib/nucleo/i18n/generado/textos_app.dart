@@ -63,7 +63,8 @@ import 'textos_app_eu.dart';
 /// be consistent with the languages listed in the TextosApp.supportedLocales
 /// property.
 abstract class TextosApp {
-  TextosApp(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  TextosApp(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -83,7 +84,8 @@ abstract class TextosApp {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -198,6 +200,216 @@ abstract class TextosApp {
   /// In es, this message translates to:
   /// **'Próximamente.'**
   String get navProximamente;
+
+  /// Etiqueta del botón flotante del home que abre la pantalla de nueva observación. Verbo en infinitivo, sentence case (biblia §2.5 voz adulta amable, sin diminutivos).
+  ///
+  /// In es, this message translates to:
+  /// **'anotar'**
+  String get homeFabAnotar;
+
+  /// Tooltip largo del botón flotante. Lo lee accesibilidad y aparece en pulsación larga; orienta al niño sobre qué hace el botón.
+  ///
+  /// In es, this message translates to:
+  /// **'anotar lo que ves'**
+  String get homeFabAnotarTooltip;
+
+  /// Microcopia breve bajo el saludo del home cuando hay Misterios abiertos. Orienta al niño la primera vez sin gritar — voz adulta amable (biblia §2.5).
+  ///
+  /// In es, this message translates to:
+  /// **'Estos son los Misterios que tu cuaderno tiene abiertos. Ábrelos para leerlos; cuando veas algo en tu sit spot que tenga que ver, anótalo.'**
+  String get homeOrientacionConMisterios;
+
+  /// Cabecera de la sección donde el niño ve las preguntas que él mismo ha formulado, paralela al catálogo de Misterios pero suya.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus preguntas'**
+  String get seccionTusPreguntas;
+
+  /// Cabecera del catálogo de Misterios curados (los que vienen del adulto), para distinguirlos de las preguntas del niño en la pestaña misterios.
+  ///
+  /// In es, this message translates to:
+  /// **'Misterios del cuaderno'**
+  String get seccionMisteriosDelCuaderno;
+
+  /// Estado vacío de la sección 'Tus preguntas'. Voz adulta amable que conecta la formulación con el sit spot, sin urgencia.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no has formulado ninguna pregunta. Cuando se te ocurra una mientras observas tu lugar, anótala aquí.'**
+  String get tusPreguntasVacio;
+
+  /// Etiqueta del botón que abre la pantalla de formular nueva pregunta del niño.
+  ///
+  /// In es, this message translates to:
+  /// **'formular pregunta'**
+  String get preguntaFabFormular;
+
+  /// Título de la pantalla donde el niño escribe una pregunta nueva. No usa 'Nueva pregunta' porque la palabra 'nueva' subraya la app, no al niño — la pregunta es suya, no del cuaderno.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu pregunta'**
+  String get preguntaFormularTitulo;
+
+  /// Microcopia introductoria al formular una pregunta. Voz adulta amable, deja claro que el niño tiene autoridad sobre el formato. Biblia §2.4 (nunca humillar) + §2.5 (respeto por la edad).
+  ///
+  /// In es, this message translates to:
+  /// **'Una pregunta tuya. La que llevas dándole vueltas, la que se te acaba de ocurrir, la que nadie te ha contado. Escríbela como te suene; no hace falta que esté bien hecha — sólo que sea la tuya.'**
+  String get preguntaFormularIntro;
+
+  /// Placeholder neutro del campo de pregunta. Sólo dos signos para señalar que va una pregunta — no impone formato ni ejemplo.
+  ///
+  /// In es, this message translates to:
+  /// **'¿…?'**
+  String get preguntaFormularPlaceholder;
+
+  /// Botón de guardar al final del formulario.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar mi pregunta'**
+  String get preguntaFormularBotonGuardar;
+
+  /// Botón discreto que abre una hoja con esqueletos opcionales si el niño está bloqueado. Por defecto el formulario es libre — esto es opt-in.
+  ///
+  /// In es, this message translates to:
+  /// **'necesito ideas'**
+  String get preguntaFormularBotonIdeas;
+
+  /// Título de la hoja con esqueletos opcionales. Voz adulta amable que no presupone que el niño los necesita.
+  ///
+  /// In es, this message translates to:
+  /// **'Si necesitas un punto de partida'**
+  String get preguntaIdeasTitulo;
+
+  /// Microcopia introductoria a la lista de esqueletos. Subraya que son opt-in.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes que usar ninguno. Si te ayuda alguno, púlsalo y empieza desde ahí.'**
+  String get preguntaIdeasIntro;
+
+  /// Esqueleto 1 — pregunta sostenida con condición. Los puntos son del niño.
+  ///
+  /// In es, this message translates to:
+  /// **'¿siempre … cuando …?'**
+  String get preguntaIdea1;
+
+  /// No description provided for @preguntaIdea2.
+  ///
+  /// In es, this message translates to:
+  /// **'¿qué pasa cuando …?'**
+  String get preguntaIdea2;
+
+  /// No description provided for @preguntaIdea3.
+  ///
+  /// In es, this message translates to:
+  /// **'¿se parece … a …?'**
+  String get preguntaIdea3;
+
+  /// No description provided for @preguntaIdea4.
+  ///
+  /// In es, this message translates to:
+  /// **'¿cómo cambia … con el tiempo?'**
+  String get preguntaIdea4;
+
+  /// No description provided for @preguntaIdea5.
+  ///
+  /// In es, this message translates to:
+  /// **'¿qué hace … cuando …?'**
+  String get preguntaIdea5;
+
+  /// Título de la página de detalle de una pregunta del niño. Coherente con el título del formulario — la palabra clave es 'tu'.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu pregunta'**
+  String get preguntaPaginaTitulo;
+
+  /// Línea bajo la pregunta con la fecha en que el niño la escribió.
+  ///
+  /// In es, this message translates to:
+  /// **'Formulada el {fecha}'**
+  String preguntaPaginaFormulada(String fecha);
+
+  /// Estado vacío de la sección 'lo que ya has anotado' en la página de la pregunta. Igual de amable que el del Misterio.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no has anotado nada para tu pregunta. Vuelve al lugar y mira; cuando veas algo que tenga que ver, anótalo y ánclalo aquí.'**
+  String get preguntaPaginaEvidenciaVacia;
+
+  /// Cabecera del listado de observaciones ancladas a la pregunta. Misma palabra que la de Misterio para conservar el lenguaje del oficio.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que ya has anotado'**
+  String get preguntaPaginaCabeceraEvidencia;
+
+  /// Opción del menú de la página de la pregunta para borrarla.
+  ///
+  /// In es, this message translates to:
+  /// **'borrar esta pregunta'**
+  String get preguntaPaginaBorrar;
+
+  /// No description provided for @preguntaPaginaConfirmaBorrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Vas a borrar esta pregunta tuya. Las observaciones que tuvieras ancladas se conservan en el cuaderno. No se puede deshacer.'**
+  String get preguntaPaginaConfirmaBorrar;
+
+  /// Botón principal de la página de la pregunta abierta — abre PantallaObservacion con la pregunta preseleccionada.
+  ///
+  /// In es, this message translates to:
+  /// **'anotar evidencia para esta pregunta'**
+  String get preguntaPaginaBotonEvidencia;
+
+  /// Botón secundario de la página de la pregunta cuando hay >=1 evidencia. Abre la pantalla de cierre amable. Si no hay evidencia, no se muestra (cerrar sin haber observado es prematuro).
+  ///
+  /// In es, this message translates to:
+  /// **'ya tengo mi respuesta sobre esta pregunta'**
+  String get preguntaPaginaBotonCerrar;
+
+  /// Título de la pantalla donde el niño escribe su respuesta al cerrar la pregunta.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu respuesta'**
+  String get preguntaCerrarTitulo;
+
+  /// Microcopia de la pantalla de cierre. Voz adulta amable: nadie corrige, nadie nota. Mismo tono que el cierre de Misterio.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta con tus palabras lo que has aprendido. No hay respuesta correcta — esto no se corrige ni se nota; sólo se guarda en tu cuaderno.'**
+  String get preguntaCerrarIntro;
+
+  /// No description provided for @preguntaCerrarPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'tu respuesta'**
+  String get preguntaCerrarPlaceholder;
+
+  /// Botón de guardar de la pantalla de cierre amable.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar mi respuesta'**
+  String get preguntaCerrarBoton;
+
+  /// Cabecera del bloque de respuesta cerrada que se muestra en la página de la pregunta cerrada.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu respuesta'**
+  String get preguntaPaginaBloqueRespuesta;
+
+  /// Línea bajo la respuesta con la fecha de cierre.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrada el {fecha}'**
+  String preguntaPaginaCerradaEl(String fecha);
+
+  /// Botón discreto que abre el AlertDialog de confirmación de reapertura. Mismo patrón que reabrir Misterio.
+  ///
+  /// In es, this message translates to:
+  /// **'reabrir esta pregunta'**
+  String get preguntaPaginaReabrir;
+
+  /// No description provided for @preguntaPaginaConfirmaReabrir.
+  ///
+  /// In es, this message translates to:
+  /// **'Si la reabres, tu respuesta se borra y la pregunta vuelve a la lista de abiertas. Las anotaciones que ya tenías se conservan.'**
+  String get preguntaPaginaConfirmaReabrir;
 
   /// Título de la pantalla de Nueva Observación.
   ///
@@ -343,17 +555,275 @@ abstract class TextosApp {
   /// **'Enviar'**
   String get tutorBotonEnviar;
 
-  /// Respuesta única del Tutor en S1. La conexión real con Claude API entra en Sprint 4 — esta microcopia es deliberada, no un placeholder técnico (README documenta el motivo).
+  /// Respuesta única del Tutor cuando no hay token (cuenta no vinculada). En S1 era el único estado; tras S4 cubre sólo el caso 'sin cuenta'.
   ///
   /// In es, this message translates to:
   /// **'El Tutor todavía no está conectado. Vuelve en unas semanas.'**
   String get tutorRespuestaCanned;
+
+  /// Aviso que el Tutor muestra cuando hay token vinculado pero la llamada al backend falló por red, 500 o JSON malformado. Voz adulta amable: no le echa la culpa al niño ni le pide que reinicie, sólo nombra que ahora mismo no se puede.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora mismo no llego al cuaderno. Espera un momento y vuelve a probar.'**
+  String get tutorErrorRed;
 
   /// Título de la pantalla de Ajustes.
   ///
   /// In es, this message translates to:
   /// **'Ajustes'**
   String get ajustesTitulo;
+
+  /// Título del AppBar de la pantalla del atlas personal del niño. Sentence case, voz adulta amable. "Atlas" funciona en castellano, eu y ca; "Tu" personaliza sin invadir.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu atlas'**
+  String get atlasTitulo;
+
+  /// Subtítulo bajo el AppBar de la pantalla del atlas. Declara la pedagogía de entrada para que el niño no lea el atlas como una colección de logros. Voz adulta amable, frases cortas en minúscula serif italic.
+  ///
+  /// In es, this message translates to:
+  /// **'no es un trofeo. es lo que has visto.'**
+  String get atlasSubtitulo;
+
+  /// Cabecera de la sección "primeras veces" del atlas — listado cronológico inverso de identificaciones nuevas que han aparecido en el cuaderno por primera vez.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus primeras veces'**
+  String get atlasSeccionPrimerasVeces;
+
+  /// Cabecera de la sección agrupada del atlas — sumario por identificación con conteos.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que has visto'**
+  String get atlasSeccionLoQueHasVisto;
+
+  /// Texto de la columna derecha de "Lo que has visto" cuando el conteo es exactamente 1. Voz adulta amable, sentence case.
+  ///
+  /// In es, this message translates to:
+  /// **'1 vez'**
+  String get atlasConteoSingular;
+
+  /// Texto de la columna derecha de "Lo que has visto" cuando el conteo es 2 o más.
+  ///
+  /// In es, this message translates to:
+  /// **'{conteo} veces'**
+  String atlasConteoPlural(int conteo);
+
+  /// Cabecera del estado vacío del atlas — el niño aún no ha escrito ningún "crees que es" en sus observaciones, o todavía no tiene observaciones. Voz adulta amable, sin presionar.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu atlas todavía está vacío.'**
+  String get atlasVacioCabecera;
+
+  /// Cuerpo del estado vacío del atlas. Explica con voz adulta amable que el atlas no se rellena haciendo cosas extras — se rellena por el oficio normal.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuando vayas anotando lo que crees que ves, esto se irá llenando solo. No hay prisa.'**
+  String get atlasVacioCuerpo;
+
+  /// Enlace discreto en la pestaña Cuaderno bajo "ver todas tus páginas" que abre el atlas. Voz adulta amable, minúscula.
+  ///
+  /// In es, this message translates to:
+  /// **'ver tu atlas'**
+  String get atlasEnlaceDesdeCuaderno;
+
+  /// Cabecera de la sección de ecos temporales del home (entre Misterios y Última página). El cuaderno detecta observaciones de hace ~1 mes / 6 meses / 1 año (±3 días) y las trae como ritual del oficio del lugar (biblia §3.5: "si vuelves al mismo sitio, ves cómo cambia"). Sin presión: si no hay candidatas, la sección entera no aparece.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace un tiempo, por aquí'**
+  String get seccionEcos;
+
+  /// Cabecera de la fila de eco de hace 1 mes. Voz adulta amable, minúscula con puntos suspensivos como invitación a leer. Tres puntos Unicode (…), no tres puntos sueltos.
+  ///
+  /// In es, this message translates to:
+  /// **'hace un mes, por estas fechas…'**
+  String get ecoCabeceraUnMes;
+
+  /// Cabecera de la fila de eco de hace ~6 meses. Cierra ciclo equinoccio↔equinoccio o solsticio↔solsticio (biblia §3.5).
+  ///
+  /// In es, this message translates to:
+  /// **'hace seis meses, por estas fechas…'**
+  String get ecoCabeceraSeisMeses;
+
+  /// Cabecera de la fila de eco de hace ~1 año. Memoria completa del lugar — el aniversario de cuando empezaste a habitarlo.
+  ///
+  /// In es, this message translates to:
+  /// **'hace un año, por estas fechas…'**
+  String get ecoCabeceraUnAno;
+
+  /// Cabecera del bloque "Tu mes en el sit spot" en la página del sit spot activo. Sans-serif gris ceniza, sentence case, voz adulta amable. Sólo se monta a partir de la segunda visita del mes en curso.
+  ///
+  /// In es, this message translates to:
+  /// **'Este mes aquí'**
+  String get paginaSitSpotResumenMesCabecera;
+
+  /// Línea principal del bloque "Este mes aquí". Plurales nombrados (una/dos) hasta dos y dígito a partir de tres. ICU plural sólo admite =0/=1/=2 como literales; el resto va por la rama 'other'. Voz adulta amable, frase corta.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{Has venido una vez este mes.} =2{Has venido dos veces este mes.} other{Has venido {count} veces este mes.}}'**
+  String paginaSitSpotResumenMesVisitas(int count);
+
+  /// Línea secundaria del bloque "Este mes aquí" con las fechas DD/MM de la primera y última visita del mes. Serif gris tenue, lectura calmada.
+  ///
+  /// In es, this message translates to:
+  /// **'La primera fue el {primera}. La última, el {ultima}.'**
+  String paginaSitSpotResumenMesPrimeraUltima(String primera, String ultima);
+
+  /// Título del AppBar del modo lectura del cuaderno. Sentence case, voz adulta amable. La pantalla muestra una observación por página con tipografía serif grande — el oficio del niño tratado como un libro suyo, no como una lista.
+  ///
+  /// In es, this message translates to:
+  /// **'Leer tus páginas'**
+  String get lecturaTitulo;
+
+  /// Tooltip del IconButton (ícono de libro) que abre el modo lectura desde el AppBar de "Todas tus páginas". Minúscula, voz adulta amable.
+  ///
+  /// In es, this message translates to:
+  /// **'leer tus páginas'**
+  String get lecturaTooltip;
+
+  /// Indicador discreto al pie del modo lectura. Mantenemos formato simple (sin "página" ni iconografía) — el contexto ya es claro y la frase es periferia visual.
+  ///
+  /// In es, this message translates to:
+  /// **'{pagina} de {total}'**
+  String lecturaPaginaIndicador(int pagina, int total);
+
+  /// Estado vacío del modo lectura — alguien que entra sin observaciones. Voz adulta amable, sin presión. Reusa el tono de los demás estados vacíos del cuaderno.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no has anotado nada. Cuando lo hagas, podrás abrir tu cuaderno como un libro.'**
+  String get lecturaVacioCuerpo;
+
+  /// Etiqueta del switch en Ajustes que activa la pestaña Mapa. Sentence case, voz adulta amable. La palabra "provisional" — que apuntaba a la deuda técnica de B5 (MBTiles offline) — se retira: es información para el equipo de desarrollo, no para la persona adulta que decide. La microcopia de abajo ya cuenta lo que le toca saber (que sale a internet hasta que llegue la versión offline).
+  ///
+  /// In es, this message translates to:
+  /// **'Activar el mapa'**
+  String get ajustesMapaOnlineEtiqueta;
+
+  /// Microcopia honesta del bloque del mapa en Ajustes (biblia §2.9 sin extracción + §2.8 offline-first). Explica al adulto qué implica encender el switch sin tecnicismos — no menciona "OpenStreetMap" ni "servidor de tiles" porque el adulto medio no necesita esos términos para decidir.
+  ///
+  /// In es, this message translates to:
+  /// **'Si lo activas, el dispositivo se conectará a internet para mostrar la zona del mundo donde estés. La pestaña \"mapa\" sólo funciona con esto encendido. Más adelante el mapa podrá descargarse una vez y dejará de salir a internet.'**
+  String get ajustesMapaOnlineCuerpo;
+
+  /// Título del AppBar de la pantalla "comparar dos visitas" del sit spot. Sentence case, voz adulta amable. Encarna la mecánica del corazón pedagógico de la biblia §3.5: ver cómo cambia el lugar.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparar dos visitas'**
+  String get compararVisitasTitulo;
+
+  /// Etiqueta del botón secundario en PantallaPaginaSitSpot que abre la pantalla del comparador. Minúscula, voz adulta amable.
+  ///
+  /// In es, this message translates to:
+  /// **'comparar dos visitas'**
+  String get compararVisitasEnlace;
+
+  /// Microcopia bajo el nombre del sit spot que enmarca la pedagogía sin imponerla. Frase corta, sin signos de puntuación abruptos, en minúscula serif italic.
+  ///
+  /// In es, this message translates to:
+  /// **'elige dos momentos. mira qué cambia.'**
+  String get compararVisitasIntro;
+
+  /// Etiqueta sobre el dropdown de la columna izquierda. Default razonable: la observación más antigua del sit spot. "Momento" en lugar de "visita" para que también valga si la niña anotó dos cosas el mismo día (dos momentos del mismo día son dos momentos).
+  ///
+  /// In es, this message translates to:
+  /// **'primer momento'**
+  String get compararVisitasColumnaIzquierda;
+
+  /// Etiqueta sobre el dropdown de la columna derecha. Default razonable: la observación más reciente del sit spot.
+  ///
+  /// In es, this message translates to:
+  /// **'segundo momento'**
+  String get compararVisitasColumnaDerecha;
+
+  /// Cabecera del estado vacío cuando el sit spot tiene 0 o 1 observaciones. Voz adulta amable, sin reproche. Sentence case con punto final.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitas dos visitas para comparar.'**
+  String get compararVisitasInsuficientesCabecera;
+
+  /// Cuerpo del estado vacío. Explica qué hace falta sin presionar — la biblia §2.7 prohíbe rachas y deberes.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuando vuelvas a tu sit spot otro día y anotes algo, podrás comparar lo que viste antes con lo que ves ahora.'**
+  String get compararVisitasInsuficientesCuerpo;
+
+  /// Etiqueta del bloque en Ajustes que abre la pantalla de imprimir plantilla. Voz adulta amable. Refuerza la promesa offline-first §2.8: el campo no tiene wifi.
+  ///
+  /// In es, this message translates to:
+  /// **'Imprimir páginas en blanco para el campo'**
+  String get imprimirPlantillaBloque;
+
+  /// Descripción del bloque "Imprimir páginas en blanco" en Ajustes. Vende el oficio, no la herramienta.
+  ///
+  /// In es, this message translates to:
+  /// **'Genera un PDF para llevar el cuaderno en papel a una salida. Sin pantallas, sin pilas.'**
+  String get imprimirPlantillaBloqueDescripcion;
+
+  /// Título del AppBar de la pantalla de imprimir plantilla. Sentence case, voz adulta amable.
+  ///
+  /// In es, this message translates to:
+  /// **'Páginas para el campo'**
+  String get imprimirPlantillaTitulo;
+
+  /// Microcopia introductoria de la pantalla. Enmarca la pedagogía de salir sin aparato. Voz adulta amable.
+  ///
+  /// In es, this message translates to:
+  /// **'A veces el campo se mira mejor sin pantalla. Aquí preparas tu cuaderno en papel para llevarlo en la mochila.'**
+  String get imprimirPlantillaIntro;
+
+  /// Explicación del contenido de cada página, sin tono escolar.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada página tiene espacio para la fecha, dónde estabas, qué viste, lo que crees que es y un recuadro grande para dibujar.'**
+  String get imprimirPlantillaContenido;
+
+  /// Cabecera del selector de cantidad de páginas. Sans-serif gris ceniza tamaño 12, como las cabeceras de sección del cuaderno.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuántas páginas'**
+  String get imprimirPlantillaSelectorCabecera;
+
+  /// Etiqueta de cada chip del selector. Singular/plural se asume plural ya que las opciones son 4/8/16.
+  ///
+  /// In es, this message translates to:
+  /// **'{paginas} páginas'**
+  String imprimirPlantillaOpcionPaginas(int paginas);
+
+  /// Botón principal que dispara la generación del PDF + el lanzador del SO. "O compartir" porque el sistema operativo permite también guardar como PDF, mandar por correo, etc.
+  ///
+  /// In es, this message translates to:
+  /// **'Imprimir o compartir'**
+  String get imprimirPlantillaBoton;
+
+  /// Microcopia final que cubre el caso del adulto sin impresora en casa. Voz amable, sin asumir.
+  ///
+  /// In es, this message translates to:
+  /// **'Si no tienes impresora, también puedes guardar el PDF en el móvil y enseñárselo a quien sí la tenga.'**
+  String get imprimirPlantillaNotaFinal;
+
+  /// Microcopia serif gris ceniza tamaño 12 que aparece en PantallaDetalleObservacion cuando la observación es la primera del cuaderno con su "crees que es" normalizado. Sin emojis, sin animación: una nota seca y bonita. Voz adulta amable, frase única, en minúscula como las cabeceras del cuaderno.
+  ///
+  /// In es, this message translates to:
+  /// **'primera vez que anotas algo así en el cuaderno.'**
+  String get detalleObservacionPrimeraVez;
+
+  /// Título del AppBar de la pantalla "Acerca de El Cuaderno". Voz adulta amable: ni "Acerca de" (frío) ni "Información" (corporativo). El título funciona para niño, adulto y maestra a la vez.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo se usa este cuaderno'**
+  String get acercaTitulo;
+
+  /// Etiqueta del bloque en Ajustes que abre la pantalla. Idéntico al título de AppBar — el niño que lo pulsa sabe a qué entra.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo se usa este cuaderno'**
+  String get acercaBloque;
+
+  /// Descripción del bloque "Cómo se usa este cuaderno" en Ajustes. Tres lectores explícitos para que el adulto sepa que también encontrará lo suyo.
+  ///
+  /// In es, this message translates to:
+  /// **'Qué es, cómo anotar, cómo acompañar. Para ti, para tu adulto y para tu maestra.'**
+  String get acercaBloqueDescripcion;
 
   /// Texto que muestra el idioma activo en Ajustes.
   ///
@@ -437,7 +907,8 @@ abstract class TextosApp {
   ///
   /// In es, this message translates to:
   /// **'Si continúas, se borrarán {observaciones} observaciones, {misterios} Misterios y {sitSpots} sit spot. No se puede deshacer.'**
-  String ajustesBorrarDialogoCuerpo(int observaciones, int misterios, int sitSpots);
+  String ajustesBorrarDialogoCuerpo(
+      int observaciones, int misterios, int sitSpots);
 
   /// No description provided for @ajustesBorrarDialogoSeguir.
   ///
@@ -779,26 +1250,27 @@ class _TextosAppDelegate extends LocalizationsDelegate<TextosApp> {
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ca', 'es', 'eu'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ca', 'es', 'eu'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_TextosAppDelegate old) => false;
 }
 
 TextosApp lookupTextosApp(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ca': return TextosAppCa();
-    case 'es': return TextosAppEs();
-    case 'eu': return TextosAppEu();
+    case 'ca':
+      return TextosAppCa();
+    case 'es':
+      return TextosAppEs();
+    case 'eu':
+      return TextosAppEu();
   }
 
   throw FlutterError(
-    'TextosApp.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'TextosApp.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

@@ -1,10 +1,15 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
 
 import '../../datos/almacenador_medios.dart';
+import '../../dominio/atlas.dart';
 import '../../dominio/contexto_misterio.dart';
+import '../../dominio/exportador_cuaderno_pdf.dart' show CargarMedioPdf;
 import '../../dominio/fenologia.dart';
+import '../../dominio/generador_observacion_pdf.dart';
 import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
@@ -51,6 +56,9 @@ class PantallaDetalleObservacion extends StatefulWidget {
     this.almacenadorMedios,
     this.constructorMiniatura,
     this.proveedorAhora,
+    this.nombrePerfilActivo,
+    this.cargarMedioParaPdf,
+    this.lanzadorPdf,
   });
 
   final RepositorioLocal repositorio;
@@ -58,6 +66,22 @@ class PantallaDetalleObservacion extends StatefulWidget {
   final AlmacenadorMedios? almacenadorMedios;
   final ConstructorMiniaturaDetalle? constructorMiniatura;
   final DateTime Function()? proveedorAhora;
+
+  /// Nombre del perfil activo para el pie del PDF de la observación
+  /// — *"Cuaderno de campo · {nombre}"*. Si null o vacío, el pie cae
+  /// al genérico "Cuaderno de campo".
+  final String? nombrePerfilActivo;
+
+  /// Resuelve los bytes de un fichero medio (foto/dibujo) por su ruta
+  /// relativa para incrustarlo en el PDF de la observación. Si null,
+  /// el botón "compartir esta página" sigue activo pero el PDF se
+  /// genera sólo con texto. Misma firma que `ExportadorCuadernoPdf`.
+  final CargarMedioPdf? cargarMedioParaPdf;
+
+  /// Inyectable para tests del flujo "compartir esta página". Recibe
+  /// los bytes del PDF y los lleva al SO. Si null, usa
+  /// `Printing.layoutPdf` real.
+  final Future<void> Function(Uint8List bytes)? lanzadorPdf;
 
   @override
   State<PantallaDetalleObservacion> createState() =>
@@ -91,6 +115,13 @@ class _EstadoPantallaDetalleObservacion
   /// en X" no es la respuesta — no va a aplicar nunca aquí).
   Estacion? _proximaEstacionMisterio;
 
+  /// True si esta observación es la primera del cuaderno con su
+  /// `creesQueEs` normalizado. Activa la microcopia "primera vez"
+  /// bajo el bloque de identificación. Se calcula contra la lista
+  /// completa de observaciones del repo, así que es coherente con el
+  /// listado de "Tus primeras veces" del atlas.
+  bool _esPrimeraVezDeIdentificacion = false;
+
   @override
   void initState() {
     super.initState();
@@ -113,6 +144,21 @@ class _EstadoPantallaDetalleObservacion
       _cargando = true;
     });
     await _resolverDependencias();
+  }
+
+  Future<void> _compartirComoPdf() async {
+    final bytes = await GeneradorObservacionPdf.aBytes(
+      observacion: _observacion,
+      nombreDelNino: widget.nombrePerfilActivo,
+      nombreSitSpot: _sitSpot?.nombre,
+      cargarMedio: widget.cargarMedioParaPdf,
+    );
+    final lanzador = widget.lanzadorPdf ?? _lanzadorPdfPorDefecto;
+    await lanzador(bytes);
+  }
+
+  Future<void> _lanzadorPdfPorDefecto(Uint8List bytes) async {
+    await Printing.layoutPdf(onLayout: (_) async => bytes);
   }
 
   Future<void> _confirmarBorrar() async {
@@ -223,6 +269,18 @@ class _EstadoPantallaDetalleObservacion
       );
     }
 
+    // Calcular "primera vez" contra el repositorio completo. La
+    // identificación normalizada se compara con todas las
+    // observaciones; si esta es la más temprana con esa
+    // identificación, encendemos el flag.
+    final identificacion = obs.creesQueEs?.trim() ?? '';
+    bool esPrimeraVez = false;
+    if (identificacion.isNotEmpty) {
+      final todas =
+          await widget.repositorio.obtenerObservaciones(limite: 5000);
+      esPrimeraVez = Atlas.esPrimeraVezDeIdentificacion(obs, todas);
+    }
+
     if (!mounted) return;
     setState(() {
       _misterio = misterio;
@@ -231,6 +289,7 @@ class _EstadoPantallaDetalleObservacion
       _rutaDibujoAbsoluta = rutaDibujo;
       _sugerencia = sugerencia;
       _proximaEstacionMisterio = proximaEstacion;
+      _esPrimeraVezDeIdentificacion = esPrimeraVez;
       _cargando = false;
     });
   }
@@ -270,12 +329,17 @@ class _EstadoPantallaDetalleObservacion
             icon: const Icon(Icons.more_vert),
             onSelected: (valor) {
               if (valor == 'editar') _editar();
+              if (valor == 'compartir') _compartirComoPdf();
               if (valor == 'borrar') _confirmarBorrar();
             },
             itemBuilder: (_) => const [
               PopupMenuItem<String>(
                 value: 'editar',
                 child: Text('editar este registro'),
+              ),
+              PopupMenuItem<String>(
+                value: 'compartir',
+                child: Text('compartir esta página como PDF'),
               ),
               PopupMenuItem<String>(
                 value: 'borrar',
@@ -336,6 +400,17 @@ class _EstadoPantallaDetalleObservacion
                         tamano: TipografiaCuaderno.tamano13,
                       ),
                     ),
+                    if (_esPrimeraVezDeIdentificacion) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        textos.detalleObservacionPrimeraVez,
+                        style: TipografiaCuaderno.serif(
+                          color: PaletaCuaderno.tintaTenue,
+                          tamano: TipografiaCuaderno.tamano12,
+                          altoLinea: 1.4,
+                        ).copyWith(fontStyle: FontStyle.italic),
+                      ),
+                    ],
                   ],
                   if (obs.climaResumen != null &&
                       obs.climaResumen!.isNotEmpty) ...[

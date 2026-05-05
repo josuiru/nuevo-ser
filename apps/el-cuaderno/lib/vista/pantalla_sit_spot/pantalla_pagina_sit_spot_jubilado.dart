@@ -6,6 +6,7 @@ import '../../dominio/sit_spot.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'pantalla_comparar_visitas.dart';
 
 /// Página de un sit spot jubilado (doc 13 §2.6). Lectura pura: el
 /// niño vuelve a su sitio antiguo y ve qué anotó allí, sin poder
@@ -21,6 +22,21 @@ class PantallaPaginaSitSpotJubilado extends StatelessWidget {
 
   final SitSpot sitSpot;
   final RepositorioLocal repositorio;
+
+  static void _abrirComparador(
+    BuildContext context,
+    SitSpot sitSpot,
+    RepositorioLocal repositorio,
+  ) {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaCompararVisitas(
+          repositorio: repositorio,
+          sitSpot: sitSpot,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +80,20 @@ class PantallaPaginaSitSpotJubilado extends StatelessWidget {
                   for (final observacion in observaciones) ...[
                     _TarjetaObservacionLectura(observacion: observacion),
                     const SizedBox(height: 12),
+                  ],
+                  if (observaciones.length >= 2) ...[
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () =>
+                            _abrirComparador(context, sitSpot, repositorio),
+                        icon: const Icon(Icons.compare_arrows_outlined),
+                        label: Text(
+                          TextosApp.of(context).compararVisitasEnlace,
+                        ),
+                      ),
+                    ),
                   ],
                 ],
               ],

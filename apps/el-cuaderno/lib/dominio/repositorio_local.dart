@@ -1,5 +1,6 @@
 import 'misterio.dart';
 import 'observacion.dart';
+import 'pregunta_del_nino.dart';
 import 'sit_spot.dart';
 
 /// Contrato del almacén local del cuaderno. La implementación viva en
@@ -45,10 +46,12 @@ abstract class RepositorioLocal {
   /// Filtros opcionales:
   /// - [limite]: corta la lista a las primeras N entradas.
   /// - [misterioId]: solo las ancladas a ese Misterio.
+  /// - [preguntaDelNinoId]: solo las ancladas a esa pregunta del niño.
   /// - [sitSpotId]: solo las hechas en ese sit spot.
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,
+    String? preguntaDelNinoId,
     String? sitSpotId,
   });
 
@@ -106,15 +109,62 @@ abstract class RepositorioLocal {
   /// Misterio ya abierto no es un error — no hace nada.
   Future<void> reabrirMisterioParaNino(String misterioId);
 
+  /// Persiste o sobrescribe una pregunta formulada por el niño.
+  /// Idempotente por [PreguntaDelNino.id]. Las preguntas del niño
+  /// **conviven** con el catálogo de Misterios pero no se mezclan: ids
+  /// distintos, listados distintos, cierres distintos.
+  Future<void> guardarPreguntaDelNino(PreguntaDelNino pregunta);
+
+  /// Vincula una observación a una pregunta del niño. Paralelo a
+  /// [anclarObservacionAMisterio]. Si la observación ya tenía
+  /// `preguntaDelNinoId`, lo sobrescribe; si la pregunta no tenía la
+  /// observación en su lista, la añade al final.
+  ///
+  /// **Lanza** si la observación o la pregunta no existen.
+  Future<void> anclarObservacionAPregunta(
+    String observacionId,
+    String preguntaId,
+  );
+
+  /// Devuelve la pregunta con [id] o `null` si no existe. Útil para
+  /// refrescar la página de la pregunta tras cerrar/reabrir.
+  Future<PreguntaDelNino?> obtenerPreguntaDelNinoPorId(String id);
+
+  /// Lista de preguntas del niño abiertas (con `cerradaEn == null`).
+  /// Más recientes primero por `formuladaEn`.
+  Future<List<PreguntaDelNino>> obtenerPreguntasDelNinoAbiertas();
+
+  /// Lista de preguntas del niño cerradas. Más recientemente cerradas
+  /// primero por `cerradaEn`.
+  Future<List<PreguntaDelNino>> obtenerPreguntasDelNinoCerradas();
+
+  /// Borra una pregunta del niño por id. Idempotente: si no existe, no
+  /// lanza. Las observaciones que estaban ancladas a ella **NO** se
+  /// borran — sólo pierden el anclaje (la pregunta deja de existir,
+  /// pero las páginas del cuaderno siguen siendo del niño). El flujo
+  /// "borrar mi cuaderno" sí las purga junto con todo lo demás.
+  Future<void> borrarPreguntaDelNino(String id);
+
+  /// El niño declara *"ya tengo mi respuesta"* sobre [preguntaId].
+  /// Persiste `cerradaEn = ahora` y `respuestaDelNino = respuesta`.
+  /// **Lanza** si la pregunta no existe, si ya estaba cerrada, o si
+  /// [respuesta] es vacía/sólo-espacios.
+  Future<void> cerrarPreguntaDelNino(String preguntaId, String respuesta);
+
+  /// El niño reabre una pregunta cerrada. Limpia `cerradaEn` y
+  /// `respuestaDelNino`. Lanza si no existe; idempotente si ya estaba
+  /// abierta.
+  Future<void> reabrirPreguntaDelNino(String preguntaId);
+
   /// Borra **todo** el contenido local del cuaderno: observaciones, sit
-  /// spot (activo y retirados), misterios. Operación destructiva e
-  /// irreversible — la pantalla Ajustes la envuelve en doble
-  /// confirmación (doc 13 §6.3).
+  /// spot (activo y retirados), misterios, preguntas del niño.
+  /// Operación destructiva e irreversible — la pantalla Ajustes la
+  /// envuelve en doble confirmación (doc 13 §6.3).
   ///
   /// "El cuaderno es del niño" (biblia §2.1) — y por tanto debe poder
   /// destruirlo cuando quiera. Devuelve la cuenta total de items
   /// borrados para que la UI pueda mostrar feedback honesto ("borradas
-  /// 47 observaciones, 3 misterios y 1 sit spot").
+  /// 47 observaciones, 3 misterios, 2 preguntas tuyas y 1 sit spot").
   Future<ResultadoBorrado> borrarTodoLoLocal();
 }
 
@@ -126,12 +176,21 @@ class ResultadoBorrado {
     required this.observacionesBorradas,
     required this.misteriosBorrados,
     required this.sitSpotsBorrados,
+    this.preguntasDelNinoBorradas = 0,
   });
 
   final int observacionesBorradas;
   final int misteriosBorrados;
   final int sitSpotsBorrados;
 
+  /// Default 0 para no romper a los callers de tests u otras suites que
+  /// instancian un [ResultadoBorrado] sin tocar preguntas del niño. La
+  /// implementación real del repo siempre lo rellena.
+  final int preguntasDelNinoBorradas;
+
   int get total =>
-      observacionesBorradas + misteriosBorrados + sitSpotsBorrados;
+      observacionesBorradas +
+      misteriosBorrados +
+      sitSpotsBorrados +
+      preguntasDelNinoBorradas;
 }

@@ -12,18 +12,23 @@ import '../../datos/repositorio_historico_resumenes.dart';
 import '../../datos/repositorio_mapa_online_opt_in.dart';
 import '../../datos/repositorio_presentacion_sit_spot.dart';
 import '../../datos/sincronizador_agregados.dart';
+import '../../dominio/eco_temporal.dart';
 import '../../dominio/exportador_cuaderno.dart';
 import '../../dominio/exportador_cuaderno_pdf.dart';
 import '../../dominio/fenologia.dart';
 import '../../dominio/geolocalizacion_privacy_first.dart';
 import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
+import '../../dominio/pregunta_del_nino.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../pantalla_ajustes/pantalla_ajustes.dart';
 import '../pantalla_observacion/pantalla_detalle_observacion.dart';
 import '../pantalla_observacion/pantalla_observacion.dart';
 import '../pantalla_observaciones/pantalla_lista_observaciones.dart';
+import '../pantalla_atlas/pantalla_atlas.dart';
+import '../pantalla_pregunta/pantalla_formular_pregunta.dart';
+import '../pantalla_pregunta/pantalla_pagina_pregunta.dart';
 import '../pantalla_profesor/pantalla_login_profesor.dart';
 import '../pantalla_sit_spot/pantalla_crear_sit_spot.dart';
 import '../pantalla_sit_spot/pantalla_pagina_sit_spot.dart';
@@ -260,6 +265,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               alCrearSitSpot: _abrirCrearSitSpot,
               alJubilarSitSpot: _jubilarSitSpot,
               alAbrirListaObservaciones: _abrirListaObservaciones,
+              alAbrirAtlas: _abrirAtlas,
               alAbrirMisterio: _abrirPaginaMisterio,
               alAbrirPaginaSitSpot: _abrirPaginaSitSpot,
               alAbrirDetalleObservacion: _abrirDetalleObservacion,
@@ -278,6 +284,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
             _VistaMisterios(
               estado: widget.estado,
               alAbrirMisterio: _abrirPaginaMisterio,
+              alAbrirPregunta: _abrirPaginaPregunta,
             ),
             PantallaTutor(
               repositorio: widget.repositorio,
@@ -286,14 +293,7 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           ],
         ),
       ),
-      floatingActionButton: _indicePestana == 0
-          ? FloatingActionButton(
-              onPressed: _abrirNuevaObservacion,
-              backgroundColor: esquema.primary,
-              foregroundColor: esquema.onPrimary,
-              child: const Icon(Icons.edit_outlined),
-            )
-          : null,
+      floatingActionButton: _floatingActionButtonParaPestana(textos, esquema),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _indicePestana,
         onDestinationSelected: (indice) =>
@@ -332,11 +332,28 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
         builder: (_) => PantallaListaObservaciones(
           repositorio: widget.repositorio,
           alAbrirDetalle: _abrirDetalleObservacion,
+          almacenadorMedios: widget.almacenadorMedios,
         ),
       ),
     );
     if (mounted) {
       // Tras volver, una observación pudo borrarse desde el detalle.
+      await widget.estado.cargar();
+    }
+  }
+
+  Future<void> _abrirAtlas() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaAtlas(
+          repositorio: widget.repositorio,
+          alAbrirDetalle: _abrirDetalleObservacion,
+        ),
+      ),
+    );
+    if (mounted) {
+      // Tras volver, una observación pudo borrarse desde el detalle
+      // del atlas — recargamos por si toca actualizar el home.
       await widget.estado.cargar();
     }
   }
@@ -418,6 +435,26 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
     }
   }
 
+  Future<void> _abrirObservacionParaPregunta(String preguntaId) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaObservacion(
+          repositorio: widget.repositorio,
+          misteriosAbiertos: widget.estado.misteriosAbiertos,
+          sitSpotActivo: widget.estado.sitSpot,
+          preguntaDelNinoPreseleccionadaId: preguntaId,
+          alGuardarObservacion: widget.alGuardarObservacion,
+          selectorImagen: widget.selectorImagen,
+          almacenadorMedios: widget.almacenadorMedios,
+          servicioGeolocalizacion: widget.servicioGeolocalizacion,
+        ),
+      ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
   Future<void> _abrirPaginaMisterio(Misterio misterio) async {
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
@@ -457,9 +494,69 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
           repositorio: widget.repositorio,
           observacion: observacion,
           almacenadorMedios: widget.almacenadorMedios,
+          nombrePerfilActivo: widget.nombrePerfilActivo,
+          cargarMedioParaPdf: widget.cargarMedioParaPdf,
         ),
       ),
     );
+  }
+
+  Future<void> _formularPregunta() async {
+    await Navigator.of(context).push<PreguntaDelNino?>(
+      MaterialPageRoute(
+        builder: (_) => PantallaFormularPregunta(
+          repositorio: widget.repositorio,
+        ),
+      ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
+  Future<void> _abrirPaginaPregunta(PreguntaDelNino pregunta) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaPaginaPregunta(
+          repositorio: widget.repositorio,
+          pregunta: pregunta,
+          alAbrirNuevaObservacion: _abrirObservacionParaPregunta,
+        ),
+      ),
+    );
+    if (mounted) {
+      await widget.estado.cargar();
+    }
+  }
+
+  /// FAB que cambia según la pestaña activa: en Cuaderno (0) abre nueva
+  /// observación; en Misterios (2) formula pregunta del niño. Mapa y
+  /// Tutor no muestran FAB.
+  Widget? _floatingActionButtonParaPestana(
+    TextosApp textos,
+    ColorScheme esquema,
+  ) {
+    if (_indicePestana == 0) {
+      return FloatingActionButton.extended(
+        onPressed: _abrirNuevaObservacion,
+        backgroundColor: esquema.primary,
+        foregroundColor: esquema.onPrimary,
+        tooltip: textos.homeFabAnotarTooltip,
+        icon: const Icon(Icons.edit_outlined),
+        label: Text(textos.homeFabAnotar),
+      );
+    }
+    if (_indicePestana == 2) {
+      return FloatingActionButton.extended(
+        onPressed: _formularPregunta,
+        backgroundColor: esquema.primary,
+        foregroundColor: esquema.onPrimary,
+        tooltip: textos.preguntaFabFormular,
+        icon: const Icon(Icons.add_outlined),
+        label: Text(textos.preguntaFabFormular),
+      );
+    }
+    return null;
   }
 
   Future<void> _abrirAjustes() async {
@@ -519,6 +616,7 @@ class _VistaCuaderno extends StatelessWidget {
     required this.alCrearSitSpot,
     required this.alJubilarSitSpot,
     required this.alAbrirListaObservaciones,
+    required this.alAbrirAtlas,
     required this.alAbrirMisterio,
     required this.alAbrirPaginaSitSpot,
     required this.alAbrirDetalleObservacion,
@@ -530,6 +628,7 @@ class _VistaCuaderno extends StatelessWidget {
   final VoidCallback alCrearSitSpot;
   final VoidCallback alJubilarSitSpot;
   final VoidCallback alAbrirListaObservaciones;
+  final VoidCallback alAbrirAtlas;
   final void Function(Misterio misterio) alAbrirMisterio;
   final VoidCallback alAbrirPaginaSitSpot;
   final void Function(Observacion observacion) alAbrirDetalleObservacion;
@@ -553,6 +652,8 @@ class _VistaCuaderno extends StatelessWidget {
         final misteriosAMostrar =
             estado.misteriosAbiertos.take(3).toList(growable: false);
 
+        final hayMisteriosVisibles = misteriosAMostrar.isNotEmpty;
+
         return ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
           children: [
@@ -565,6 +666,17 @@ class _VistaCuaderno extends StatelessWidget {
               ),
             ),
             ..._tipFenologico(estado),
+            if (hayMisteriosVisibles) ...[
+              const SizedBox(height: 12),
+              Text(
+                textos.homeOrientacionConMisterios,
+                style: TipografiaCuaderno.serif(
+                  color: PaletaCuaderno.tintaTenue,
+                  tamano: TipografiaCuaderno.tamano13,
+                  altoLinea: 1.5,
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
             _Cabecera(textos.seccionSitSpot),
             const SizedBox(height: 8),
@@ -598,6 +710,18 @@ class _VistaCuaderno extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
               ],
+            if (estado.ecos.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              _Cabecera(textos.seccionEcos),
+              const SizedBox(height: 8),
+              for (final eco in estado.ecos) ...[
+                _TarjetaEco(
+                  eco: eco,
+                  alPulsar: () => alAbrirDetalleObservacion(eco.observacion),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ],
             const SizedBox(height: 16),
             _Cabecera(textos.seccionUltimaPagina),
             const SizedBox(height: 8),
@@ -607,12 +731,18 @@ class _VistaCuaderno extends StatelessWidget {
             ),
             if (estado.ultimasObservaciones.isNotEmpty) ...[
               const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: alAbrirListaObservaciones,
-                  child: const Text('ver todas tus páginas'),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: alAbrirAtlas,
+                    child: Text(textos.atlasEnlaceDesdeCuaderno),
+                  ),
+                  TextButton(
+                    onPressed: alAbrirListaObservaciones,
+                    child: const Text('ver todas tus páginas'),
+                  ),
+                ],
               ),
             ],
           ],
@@ -936,10 +1066,12 @@ class _VistaMisterios extends StatelessWidget {
   const _VistaMisterios({
     required this.estado,
     required this.alAbrirMisterio,
+    required this.alAbrirPregunta,
   });
 
   final EstadoCuaderno estado;
   final void Function(Misterio misterio) alAbrirMisterio;
+  final void Function(PreguntaDelNino pregunta) alAbrirPregunta;
 
   @override
   Widget build(BuildContext context) {
@@ -963,10 +1095,45 @@ class _VistaMisterios extends StatelessWidget {
                 : textos.misteriosVacio)
             : null;
         final cerrados = estado.misteriosCerrados;
+        final preguntasAbiertas = estado.preguntasDelNinoAbiertas;
+        final preguntasCerradas = estado.preguntasDelNinoCerradas;
         return ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
           children: [
-            _Cabecera(textos.seccionMisteriosAbiertos),
+            // Sección "Tus preguntas" PRIMERO — el oficio del niño se
+            // antepone al catálogo del adulto (biblia §3.4
+            // hipotetizar y contrastar).
+            _Cabecera(textos.seccionTusPreguntas),
+            const SizedBox(height: 12),
+            if (preguntasAbiertas.isEmpty)
+              Text(
+                textos.tusPreguntasVacio,
+                style: TipografiaCuaderno.serif(
+                  color: PaletaCuaderno.tintaTenue,
+                  tamano: TipografiaCuaderno.tamano13,
+                  altoLinea: 1.5,
+                ),
+              )
+            else
+              for (final pregunta in preguntasAbiertas) ...[
+                _TarjetaPreguntaDelNino(
+                  pregunta: pregunta,
+                  alPulsar: () => alAbrirPregunta(pregunta),
+                ),
+                const SizedBox(height: 8),
+              ],
+            if (preguntasCerradas.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              for (final pregunta in preguntasCerradas) ...[
+                _TarjetaPreguntaDelNinoCerrada(
+                  pregunta: pregunta,
+                  alPulsar: () => alAbrirPregunta(pregunta),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ],
+            const SizedBox(height: 28),
+            _Cabecera(textos.seccionMisteriosDelCuaderno),
             const SizedBox(height: 12),
             if (mensajeVacio != null)
               Text(
@@ -1007,6 +1174,120 @@ class _VistaMisterios extends StatelessWidget {
   }
 }
 
+/// Tarjeta minimalista para una pregunta abierta del niño en la pestaña
+/// Misterios. Sin contador de evidencias por ahora — Slice 4 lo añade
+/// junto al anclaje. Chevron discreto a la derecha como las
+/// `TarjetaMisterio`, coherente con el resto del cuaderno.
+class _TarjetaPreguntaDelNino extends StatelessWidget {
+  const _TarjetaPreguntaDelNino({
+    required this.pregunta,
+    required this.alPulsar,
+  });
+
+  final PreguntaDelNino pregunta;
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = Theme.of(context).colorScheme;
+    return Material(
+      color: esquema.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  pregunta.pregunta,
+                  style: TipografiaCuaderno.serif(
+                    color: esquema.onSurface,
+                    tamano: TipografiaCuaderno.tamano14,
+                    peso: TipografiaCuaderno.pesoMedio,
+                    altoLinea: 1.4,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Padding(
+                padding: EdgeInsets.only(top: 2),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 22,
+                  color: PaletaCuaderno.tintaTenue,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tarjeta minimalista para una pregunta del niño cerrada — paralela a
+/// [_TarjetaMisterioCerrado]. Más discreta que la de abierta: sin
+/// chevron, sólo pregunta serif + fecha de cierre.
+class _TarjetaPreguntaDelNinoCerrada extends StatelessWidget {
+  const _TarjetaPreguntaDelNinoCerrada({
+    required this.pregunta,
+    required this.alPulsar,
+  });
+
+  final PreguntaDelNino pregunta;
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = Theme.of(context).colorScheme;
+    final fecha = pregunta.cerradaEn!;
+    final fechaFormateada =
+        '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
+    return Material(
+      color: esquema.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                pregunta.pregunta,
+                style: TipografiaCuaderno.serif(
+                  color: esquema.onSurface,
+                  tamano: TipografiaCuaderno.tamano14,
+                  altoLinea: 1.35,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'cerrada el $fechaFormateada',
+                style: TipografiaCuaderno.sans(
+                  color: esquema.tertiary,
+                  tamano: TipografiaCuaderno.tamano11,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _Cabecera extends StatelessWidget {
   const _Cabecera(this.texto);
 
@@ -1021,6 +1302,80 @@ class _Cabecera extends StatelessWidget {
         color: esquema.tertiary,
         tamano: TipografiaCuaderno.tamano12,
         peso: TipografiaCuaderno.pesoMedio,
+      ),
+    );
+  }
+}
+
+/// Tarjeta del bloque "Hace un tiempo, por aquí" del home. Muestra una
+/// observación de hace ~1 mes / 6 meses / 1 año (±3 días), con la
+/// cabecera de la ventana en sans gris ceniza y un fragmento del
+/// `queVio` en serif. Pulsar abre el detalle. Sin huella visual fuerte:
+/// es un guiño, no una notificación. Biblia §3.5: *"si vuelves al
+/// mismo sitio, ves cómo cambia"*.
+class _TarjetaEco extends StatelessWidget {
+  const _TarjetaEco({required this.eco, required this.alPulsar});
+
+  final Eco eco;
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext context) {
+    final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
+    final cabecera = switch (eco.ventana) {
+      VentanaEco.haceUnMes => textos.ecoCabeceraUnMes,
+      VentanaEco.haceSeisMeses => textos.ecoCabeceraSeisMeses,
+      VentanaEco.haceUnAno => textos.ecoCabeceraUnAno,
+    };
+    final fecha = eco.observacion.cuandoOcurrio;
+    final fechaFormateada =
+        '${fecha.day.toString().padLeft(2, '0')}/'
+        '${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
+    return Material(
+      color: esquema.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: esquema.outline, width: 0.5),
+      ),
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                cabecera,
+                style: TipografiaCuaderno.sans(
+                  color: esquema.tertiary,
+                  tamano: TipografiaCuaderno.tamano11,
+                  peso: TipografiaCuaderno.pesoMedio,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                eco.observacion.queVio,
+                style: TipografiaCuaderno.serif(
+                  color: esquema.onSurface,
+                  tamano: TipografiaCuaderno.tamano14,
+                  altoLinea: 1.4,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                fechaFormateada,
+                style: TipografiaCuaderno.sans(
+                  color: PaletaCuaderno.tintaTenue,
+                  tamano: TipografiaCuaderno.tamano11,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

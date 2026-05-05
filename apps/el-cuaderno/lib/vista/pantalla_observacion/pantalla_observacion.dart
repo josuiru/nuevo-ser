@@ -30,6 +30,7 @@ class PantallaObservacion extends StatefulWidget {
     required this.misteriosAbiertos,
     required this.sitSpotActivo,
     this.misterioPreseleccionadoId,
+    this.preguntaDelNinoPreseleccionadaId,
     this.alGuardarObservacion,
     this.selectorImagen,
     this.almacenadorMedios,
@@ -46,6 +47,14 @@ class PantallaObservacion extends StatefulWidget {
   final List<Misterio> misteriosAbiertos;
   final SitSpot? sitSpotActivo;
   final String? misterioPreseleccionadoId;
+
+  /// Si el niño abre la observación desde la página de una pregunta
+  /// suya, el id se preselecciona aquí — paralelo a
+  /// [misterioPreseleccionadoId] pero apuntando a la pregunta del
+  /// niño en lugar del catálogo del adulto. Tras guardar, la pantalla
+  /// llama a `repositorio.anclarObservacionAPregunta` para mantener
+  /// sincronizado [PreguntaDelNino.observacionesIds].
+  final String? preguntaDelNinoPreseleccionadaId;
 
   /// Invocado tras persistir la observación en el repositorio. El
   /// orquestador lo cablea a la cola de sync para que la observación
@@ -551,6 +560,7 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
           ? NivelConfianza.hipotesisActiva
           : _confianza,
       misterioId: _misterioId,
+      preguntaDelNinoId: widget.preguntaDelNinoPreseleccionadaId,
       fotoRutaLocal: rutaFotoRelativa,
       dibujoRutaLocal: rutaDibujoRelativa,
     );
@@ -560,6 +570,12 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
       await widget.repositorio.anclarObservacionAMisterio(
         observacion.id,
         _misterioId!,
+      );
+    }
+    if (widget.preguntaDelNinoPreseleccionadaId != null) {
+      await widget.repositorio.anclarObservacionAPregunta(
+        observacion.id,
+        widget.preguntaDelNinoPreseleccionadaId!,
       );
     }
     // Si la observación va contra el sit spot activo, registramos la

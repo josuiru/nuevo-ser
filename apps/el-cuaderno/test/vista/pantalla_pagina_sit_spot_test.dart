@@ -26,6 +26,7 @@ void main() {
     WidgetTester tester, {
     required SitSpot sitSpot,
     Future<void> Function()? alAbrirNuevaObservacion,
+    DateTime Function()? proveedorAhora,
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(MaterialApp(
@@ -37,6 +38,7 @@ void main() {
         repositorio: repositorio,
         sitSpot: sitSpot,
         alAbrirNuevaObservacion: alAbrirNuevaObservacion,
+        proveedorAhora: proveedorAhora,
       ),
     ));
     await tester.pumpAndSettle();
@@ -168,4 +170,127 @@ void main() {
       expect(find.text('1 observación guardada'), findsOneWidget);
     },
   );
+
+  group('bloque "Este mes aquí"', () {
+    DateTime ahora() => DateTime(2026, 5, 15);
+
+    testWidgets(
+      'sin observaciones del mes en curso → bloque no se muestra',
+      (tester) async {
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'algo de abril',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 4, 20),
+        );
+        await bombear(
+          tester,
+          sitSpot: crearSitSpot(),
+          proveedorAhora: ahora,
+        );
+        expect(find.text('Este mes aquí'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'con una sola visita del mes → bloque tampoco se muestra '
+      '(empieza a partir de la segunda)',
+      (tester) async {
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'primera',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 5, 5),
+        );
+        await bombear(
+          tester,
+          sitSpot: crearSitSpot(),
+          proveedorAhora: ahora,
+        );
+        expect(find.text('Este mes aquí'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'con dos visitas del mes en días distintos → bloque visible '
+      'con plural "dos veces" y fechas DD/MM',
+      (tester) async {
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'primera',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 5, 3),
+        );
+        await sembrarObservacion(
+          id: 'obs-2',
+          queVio: 'última',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 5, 12),
+        );
+        await bombear(
+          tester,
+          sitSpot: crearSitSpot(),
+          proveedorAhora: ahora,
+        );
+        expect(find.text('Este mes aquí'), findsOneWidget);
+        expect(find.text('Has venido dos veces este mes.'), findsOneWidget);
+        expect(
+          find.text('La primera fue el 03/05. La última, el 12/05.'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'con cinco visitas del mes → plural "5 veces" cae en la rama other',
+      (tester) async {
+        for (var dia = 1; dia <= 5; dia++) {
+          await sembrarObservacion(
+            id: 'obs-$dia',
+            queVio: 'cosa $dia',
+            sitSpotId: 'ss-1',
+            cuandoOcurrio: DateTime(2026, 5, dia * 2),
+          );
+        }
+        await bombear(
+          tester,
+          sitSpot: crearSitSpot(),
+          proveedorAhora: ahora,
+        );
+        expect(find.text('Has venido 5 veces este mes.'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'tres anotaciones en dos días distintos → bloque dice "dos veces", '
+      'no "tres veces" (la unidad pedagógica es la visita, no la '
+      'observación)',
+      (tester) async {
+        await sembrarObservacion(
+          id: 'obs-1',
+          queVio: 'mañana',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 5, 5, 9),
+        );
+        await sembrarObservacion(
+          id: 'obs-2',
+          queVio: 'tarde',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 5, 5, 17),
+        );
+        await sembrarObservacion(
+          id: 'obs-3',
+          queVio: 'al día siguiente',
+          sitSpotId: 'ss-1',
+          cuandoOcurrio: DateTime(2026, 5, 6),
+        );
+        await bombear(
+          tester,
+          sitSpot: crearSitSpot(),
+          proveedorAhora: ahora,
+        );
+        expect(find.text('Has venido dos veces este mes.'), findsOneWidget);
+      },
+    );
+  });
 }

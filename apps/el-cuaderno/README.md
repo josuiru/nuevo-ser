@@ -8,6 +8,8 @@ Anclaje filosófico: *La Tierra que Despierta*. La palabra *naturaleza* presupon
 
 Documentación canónica: `../../docs/el-cuaderno/`. Cerebro persistente del proyecto: `CLAUDE.md` de este directorio.
 
+**La documentación para usuarios (niño, adulto, maestra) vive dentro de la app**, en *Ajustes → Cómo se usa este cuaderno*. Esa pantalla (`PantallaAcercaDe`) es la fuente canónica para usuarios reales: explica qué es, cómo anotar, qué viaja al servidor y qué no, cómo acompañar el ritmo y qué ve la persona docente. Los markdown en `docs/` (`GUIA-NINO.md`, `GUIA-PADRES-Y-CUIDADORES.md`) son una versión imprimible del mismo contenido para piloto y reuniones del equipo.
+
 Licencia: código AGPL-3.0, contenido CC-BY-SA 4.0.
 
 ## Sprint 1 — qué cubre este código

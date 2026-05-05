@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../datos/almacenador_medios.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
+import '../pantalla_lectura/pantalla_lectura_cuaderno.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
@@ -22,6 +24,8 @@ class PantallaListaObservaciones extends StatefulWidget {
     super.key,
     required this.repositorio,
     this.alAbrirDetalle,
+    this.almacenadorMedios,
+    this.constructorImagenLectura,
   });
 
   final RepositorioLocal repositorio;
@@ -30,6 +34,17 @@ class PantallaListaObservaciones extends StatefulWidget {
   /// null, las tarjetas del listado son lectura simple — modo S1 /
   /// tests aislados.
   final void Function(Observacion observacion)? alAbrirDetalle;
+
+  /// Pasado al modo lectura para que pueda mostrar fotos y dibujos
+  /// embebidos. Si es null, el botón de modo lectura sigue mostrándose
+  /// (las páginas de texto puro se leen sin imágenes — modo degradado
+  /// honesto).
+  final AlmacenadorMedios? almacenadorMedios;
+
+  /// Constructor de imagen inyectable para el modo lectura — los
+  /// tests del listado pueden usar un stub para evitar el decode
+  /// async de `Image.file`.
+  final ConstructorImagenLectura? constructorImagenLectura;
 
   @override
   State<PantallaListaObservaciones> createState() =>
@@ -70,6 +85,22 @@ class _EstadoPantallaListaObservaciones
     cb(observacion);
     // Tras volver del detalle el niño puede haber borrado la
     // observación; recargamos para que la lista refleje el estado.
+    if (mounted) await _cargar();
+  }
+
+  Future<void> _abrirLectura() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaLecturaCuaderno(
+          repositorio: widget.repositorio,
+          almacenadorMedios: widget.almacenadorMedios,
+          constructorImagen: widget.constructorImagenLectura,
+        ),
+      ),
+    );
+    // El modo lectura es estricto: no se borra ni se edita desde
+    // ahí. Aun así recargamos por consistencia con el resto de
+    // navegación de esta pantalla.
     if (mounted) await _cargar();
   }
 
@@ -141,7 +172,17 @@ class _EstadoPantallaListaObservaciones
     final filtradas = _filtradas;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Todas tus páginas')),
+      appBar: AppBar(
+        title: const Text('Todas tus páginas'),
+        actions: [
+          if (_todas.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.menu_book_outlined),
+              tooltip: textos.lecturaTooltip,
+              onPressed: _abrirLectura,
+            ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [

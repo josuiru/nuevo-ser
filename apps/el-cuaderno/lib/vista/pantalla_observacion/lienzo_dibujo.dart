@@ -72,16 +72,37 @@ class _EstadoPantallaLienzoDibujo extends State<PantallaLienzoDibujo> {
 
   bool get _hayTrazos => _trazos.isNotEmpty;
 
-  void _alIniciarTrazo(DragStartDetails detalles) {
+  /// Punto inicial del trazo en curso. Lo guardamos al PointerDown
+  /// para insertarlo solo si el usuario llega a moverse (PointerMove)
+  /// — así un tap suelto sin movimiento no deja un puntito en la
+  /// pantalla.
+  Offset? _puntoInicialPendiente;
+
+  void _alPunteroPresionar(PointerDownEvent evento) {
+    _puntoInicialPendiente = evento.localPosition;
+  }
+
+  void _alPunteroMover(PointerMoveEvent evento) {
     setState(() {
-      _trazos.add(_Trazo(ancho: _anchoActual)..puntos.add(detalles.localPosition));
+      // Si llega el primer move sin trazo abierto, abrimos uno con
+      // el punto inicial guardado (o con la posición actual si el
+      // PointerDown no pasó por aquí — caso raro de tester).
+      if (_puntoInicialPendiente != null) {
+        final trazo = _Trazo(ancho: _anchoActual)
+          ..puntos.add(_puntoInicialPendiente!);
+        _trazos.add(trazo);
+        _puntoInicialPendiente = null;
+      }
+      if (_trazos.isNotEmpty) {
+        _trazos.last.puntos.add(evento.localPosition);
+      }
     });
   }
 
-  void _alContinuarTrazo(DragUpdateDetails detalles) {
-    setState(() {
-      _trazos.last.puntos.add(detalles.localPosition);
-    });
+  void _alPunteroLevantar(PointerUpEvent evento) {
+    // Tap sin movimiento → sin trazo. El niño no quería dibujar nada
+    // y no le dejamos un punto huérfano.
+    _puntoInicialPendiente = null;
   }
 
   void _borrarTodo() {
@@ -156,10 +177,21 @@ class _EstadoPantallaLienzoDibujo extends State<PantallaLienzoDibujo> {
                   key: _claveRepaint,
                   child: Container(
                     color: PaletaCuaderno.papelClaro,
-                    child: GestureDetector(
+                    child: Listener(
                       key: const ValueKey('superficie-lienzo'),
-                      onPanStart: _alIniciarTrazo,
-                      onPanUpdate: _alContinuarTrazo,
+                      // Listener capta eventos del puntero RAW, sin
+                      // pasar por la gesture arena. Antes esto era un
+                      // GestureDetector con onPanStart/onPanUpdate,
+                      // pero en MIUI (y otros Android con gestos de
+                      // navegación por borde) la arena se llevaba el
+                      // pan a "pop de pantalla" y el lienzo no
+                      // recibía nada — el niño veía la pantalla pero
+                      // no podía dibujar. Listener no compite, recibe
+                      // todos los eventos.
+                      behavior: HitTestBehavior.opaque,
+                      onPointerDown: _alPunteroPresionar,
+                      onPointerMove: _alPunteroMover,
+                      onPointerUp: _alPunteroLevantar,
                       child: CustomPaint(
                         painter: _PintorLienzo(_trazos),
                         size: Size.infinite,

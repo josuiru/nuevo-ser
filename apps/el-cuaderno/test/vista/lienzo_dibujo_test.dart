@@ -92,6 +92,22 @@ void main() {
     expect(tester.widget<TextButton>(botonGuardar()).onPressed, isNotNull);
   });
 
+  testWidgets(
+      'la superficie del lienzo es opaca al hit-test (regresión: en '
+      'dispositivo físico el primer trazo no se registraba sin esto). '
+      'Y captura por Listener, no GestureDetector — la gesture arena '
+      'de MIUI se llevaba el pan y el niño no podía dibujar.',
+      (tester) async {
+    await bombearLienzo(tester);
+
+    final listener = tester.widget<Listener>(
+      find.byKey(const ValueKey('superficie-lienzo')),
+    );
+    expect(listener.behavior, HitTestBehavior.opaque);
+    expect(listener.onPointerDown, isNotNull);
+    expect(listener.onPointerMove, isNotNull);
+  });
+
   testWidgets('"borrar y empezar otra vez" vacía los trazos', (tester) async {
     await bombearLienzo(tester);
 

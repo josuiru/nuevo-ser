@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 
 import '../../dominio/misterio.dart';
 import '../../dominio/observacion.dart';
+import '../../dominio/pregunta_del_nino.dart';
 import '../../dominio/repositorio_local.dart';
 import '../../dominio/sit_spot.dart';
 import 'modelos_isar.dart';
@@ -50,19 +51,36 @@ class RepositorioIsar implements RepositorioLocal {
           .findFirst();
       if (observacionModelo == null) return;
       final misterioId = observacionModelo.misterioId;
+      final preguntaId = observacionModelo.preguntaDelNinoId;
       await _isar.observacionIsars.delete(observacionModelo.isarId);
-      if (misterioId == null) return;
-      final misterioModelo = await _isar.misterioIsars
-          .where()
-          .idDominioEqualTo(misterioId)
-          .findFirst();
-      if (misterioModelo == null) return;
-      if (!misterioModelo.observacionesIds.contains(id)) return;
-      misterioModelo.observacionesIds = [
-        for (final ref in misterioModelo.observacionesIds)
-          if (ref != id) ref,
-      ];
-      await _isar.misterioIsars.put(misterioModelo);
+      if (misterioId != null) {
+        final misterioModelo = await _isar.misterioIsars
+            .where()
+            .idDominioEqualTo(misterioId)
+            .findFirst();
+        if (misterioModelo != null &&
+            misterioModelo.observacionesIds.contains(id)) {
+          misterioModelo.observacionesIds = [
+            for (final ref in misterioModelo.observacionesIds)
+              if (ref != id) ref,
+          ];
+          await _isar.misterioIsars.put(misterioModelo);
+        }
+      }
+      if (preguntaId != null) {
+        final preguntaModelo = await _isar.preguntaDelNinoIsars
+            .where()
+            .idDominioEqualTo(preguntaId)
+            .findFirst();
+        if (preguntaModelo != null &&
+            preguntaModelo.observacionesIds.contains(id)) {
+          preguntaModelo.observacionesIds = [
+            for (final ref in preguntaModelo.observacionesIds)
+              if (ref != id) ref,
+          ];
+          await _isar.preguntaDelNinoIsars.put(preguntaModelo);
+        }
+      }
     });
   }
 
@@ -70,6 +88,7 @@ class RepositorioIsar implements RepositorioLocal {
   Future<List<Observacion>> obtenerObservaciones({
     int? limite,
     String? misterioId,
+    String? preguntaDelNinoId,
     String? sitSpotId,
   }) async {
     QueryBuilder<ObservacionIsar, ObservacionIsar, QAfterFilterCondition>
@@ -77,6 +96,9 @@ class RepositorioIsar implements RepositorioLocal {
 
     if (misterioId != null) {
       filtro = filtro.misterioIdEqualTo(misterioId);
+    }
+    if (preguntaDelNinoId != null) {
+      filtro = filtro.preguntaDelNinoIdEqualTo(preguntaDelNinoId);
     }
     if (sitSpotId != null) {
       filtro = filtro.sitSpotIdEqualTo(sitSpotId);
@@ -200,16 +222,162 @@ class RepositorioIsar implements RepositorioLocal {
     final observacionesAntes = await _isar.observacionIsars.count();
     final misteriosAntes = await _isar.misterioIsars.count();
     final sitSpotsAntes = await _isar.sitSpotIsars.count();
+    final preguntasAntes = await _isar.preguntaDelNinoIsars.count();
     await _isar.writeTxn(() async {
       await _isar.observacionIsars.clear();
       await _isar.misterioIsars.clear();
       await _isar.sitSpotIsars.clear();
+      await _isar.preguntaDelNinoIsars.clear();
     });
     return ResultadoBorrado(
       observacionesBorradas: observacionesAntes,
       misteriosBorrados: misteriosAntes,
       sitSpotsBorrados: sitSpotsAntes,
+      preguntasDelNinoBorradas: preguntasAntes,
     );
+  }
+
+  @override
+  Future<void> guardarPreguntaDelNino(PreguntaDelNino pregunta) async {
+    final modelo = PreguntaDelNinoIsar.desdeDominio(pregunta);
+    final existente = await _isar.preguntaDelNinoIsars
+        .where()
+        .idDominioEqualTo(pregunta.id)
+        .findFirst();
+    if (existente != null) {
+      modelo.isarId = existente.isarId;
+    }
+    await _isar.writeTxn(() async {
+      await _isar.preguntaDelNinoIsars.put(modelo);
+    });
+  }
+
+  @override
+  Future<void> anclarObservacionAPregunta(
+    String observacionId,
+    String preguntaId,
+  ) async {
+    await _isar.writeTxn(() async {
+      final observacionModelo = await _isar.observacionIsars
+          .where()
+          .idDominioEqualTo(observacionId)
+          .findFirst();
+      if (observacionModelo == null) {
+        throw StateError(
+          'no hay observación con id $observacionId — '
+          'guárdala antes de anclarla',
+        );
+      }
+      final preguntaModelo = await _isar.preguntaDelNinoIsars
+          .where()
+          .idDominioEqualTo(preguntaId)
+          .findFirst();
+      if (preguntaModelo == null) {
+        throw StateError(
+          'no hay pregunta del niño con id $preguntaId',
+        );
+      }
+      observacionModelo.preguntaDelNinoId = preguntaId;
+      await _isar.observacionIsars.put(observacionModelo);
+      if (!preguntaModelo.observacionesIds.contains(observacionId)) {
+        preguntaModelo.observacionesIds = [
+          ...preguntaModelo.observacionesIds,
+          observacionId,
+        ];
+        await _isar.preguntaDelNinoIsars.put(preguntaModelo);
+      }
+    });
+  }
+
+  @override
+  Future<PreguntaDelNino?> obtenerPreguntaDelNinoPorId(String id) async {
+    final modelo = await _isar.preguntaDelNinoIsars
+        .where()
+        .idDominioEqualTo(id)
+        .findFirst();
+    return modelo?.aDominio();
+  }
+
+  @override
+  Future<List<PreguntaDelNino>> obtenerPreguntasDelNinoAbiertas() async {
+    final modelos = await _isar.preguntaDelNinoIsars
+        .filter()
+        .cerradaEnIsNull()
+        .sortByFormuladaEnDesc()
+        .findAll();
+    return [for (final modelo in modelos) modelo.aDominio()];
+  }
+
+  @override
+  Future<List<PreguntaDelNino>> obtenerPreguntasDelNinoCerradas() async {
+    final modelos = await _isar.preguntaDelNinoIsars
+        .filter()
+        .cerradaEnIsNotNull()
+        .sortByCerradaEnDesc()
+        .findAll();
+    return [for (final modelo in modelos) modelo.aDominio()];
+  }
+
+  @override
+  Future<void> borrarPreguntaDelNino(String id) async {
+    await _isar.writeTxn(() async {
+      final modelo = await _isar.preguntaDelNinoIsars
+          .where()
+          .idDominioEqualTo(id)
+          .findFirst();
+      if (modelo == null) return;
+      await _isar.preguntaDelNinoIsars.delete(modelo.isarId);
+    });
+  }
+
+  @override
+  Future<void> cerrarPreguntaDelNino(
+    String preguntaId,
+    String respuesta,
+  ) async {
+    if (respuesta.trim().isEmpty) {
+      throw ArgumentError.value(
+        respuesta,
+        'respuesta',
+        'cerrar una pregunta exige una respuesta no vacía',
+      );
+    }
+    await _isar.writeTxn(() async {
+      final modelo = await _isar.preguntaDelNinoIsars
+          .where()
+          .idDominioEqualTo(preguntaId)
+          .findFirst();
+      if (modelo == null) {
+        throw StateError('no hay pregunta del niño con id $preguntaId');
+      }
+      if (modelo.cerradaEn != null) {
+        throw StateError(
+          'la pregunta $preguntaId ya está cerrada — reábrela antes',
+        );
+      }
+      modelo
+        ..cerradaEn = DateTime.now()
+        ..respuestaDelNino = respuesta;
+      await _isar.preguntaDelNinoIsars.put(modelo);
+    });
+  }
+
+  @override
+  Future<void> reabrirPreguntaDelNino(String preguntaId) async {
+    await _isar.writeTxn(() async {
+      final modelo = await _isar.preguntaDelNinoIsars
+          .where()
+          .idDominioEqualTo(preguntaId)
+          .findFirst();
+      if (modelo == null) {
+        throw StateError('no hay pregunta del niño con id $preguntaId');
+      }
+      if (modelo.cerradaEn == null) return;
+      modelo
+        ..cerradaEn = null
+        ..respuestaDelNino = null;
+      await _isar.preguntaDelNinoIsars.put(modelo);
+    });
   }
 
   /// Persiste un Misterio del catálogo. No es parte de la interfaz del

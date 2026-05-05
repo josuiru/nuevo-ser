@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../dominio/observacion.dart';
 import '../../dominio/repositorio_local.dart';
+import '../../dominio/resumen_mes_sit_spot.dart';
 import '../../dominio/sit_spot.dart';
 import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
+import 'pantalla_comparar_visitas.dart';
 
 /// Página del sit spot activo. Hermana de `PantallaPaginaSitSpotJubilado`
 /// pero con dos diferencias estructurales:
@@ -27,6 +29,7 @@ class PantallaPaginaSitSpot extends StatefulWidget {
     required this.repositorio,
     required this.sitSpot,
     this.alAbrirNuevaObservacion,
+    this.proveedorAhora,
   });
 
   final RepositorioLocal repositorio;
@@ -38,12 +41,24 @@ class PantallaPaginaSitSpot extends StatefulWidget {
   /// el botón no se monta.
   final Future<void> Function()? alAbrirNuevaObservacion;
 
+  /// Proveedor de la fecha "ahora" para calcular el bloque "Este mes
+  /// aquí". Default `DateTime.now`. Inyectable para tests deterministas
+  /// — si no se inyecta y la suite corre en otro mes que el de los
+  /// datos, el bloque del resumen no se mostraría aunque hubiera
+  /// observaciones (por diseño: filtra al mes calendárico en curso).
+  final DateTime Function()? proveedorAhora;
+
   @override
   State<PantallaPaginaSitSpot> createState() => _EstadoPantallaPaginaSitSpot();
 }
 
 class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
   List<Observacion> _observaciones = const [];
+  ResumenMesSitSpot _resumenMes = const ResumenMesSitSpot(
+    visitas: 0,
+    primera: null,
+    ultima: null,
+  );
   bool _cargando = true;
 
   @override
@@ -56,8 +71,14 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
     final lista = await widget.repositorio
         .obtenerObservaciones(sitSpotId: widget.sitSpot.id);
     if (!mounted) return;
+    final ahora = (widget.proveedorAhora ?? DateTime.now)();
     setState(() {
       _observaciones = lista;
+      _resumenMes = ResumenMesSitSpot.calcular(
+        observaciones: lista,
+        sitSpotId: widget.sitSpot.id,
+        ahora: ahora,
+      );
       _cargando = false;
     });
   }
@@ -67,6 +88,17 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
     if (cb == null) return;
     await cb();
     if (mounted) await _cargar();
+  }
+
+  Future<void> _abrirComparador() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PantallaCompararVisitas(
+          repositorio: widget.repositorio,
+          sitSpot: widget.sitSpot,
+        ),
+      ),
+    );
   }
 
   @override
@@ -86,6 +118,18 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
                     sitSpot: widget.sitSpot,
                     esquema: esquema,
                   ),
+                  // Bloque "Este mes aquí" — sólo se monta a partir de
+                  // dos visitas. Con una visita sola, articular
+                  // "primera" y "última" es vacío; con cero, el bloque
+                  // sería ruido.
+                  if (_resumenMes.visitas >= 2) ...[
+                    const SizedBox(height: 16),
+                    _BloqueResumenMes(
+                      resumen: _resumenMes,
+                      textos: textos,
+                      esquema: esquema,
+                    ),
+                  ],
                   if (widget.alAbrirNuevaObservacion != null) ...[
                     const SizedBox(height: 20),
                     SizedBox(
@@ -94,6 +138,23 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
                         onPressed: _anotar,
                         icon: const Icon(Icons.edit_outlined),
                         label: const Text('anotar observación aquí'),
+                      ),
+                    ),
+                  ],
+                  // El botón del comparador se monta a partir de la
+                  // segunda observación. Antes no tiene sentido
+                  // ofrecerlo: comparar uno consigo mismo es vacío.
+                  // El sit spot recién creado no lleva al niño a un
+                  // botón gris desactivado, sino a un cuaderno
+                  // limpio.
+                  if (_observaciones.length >= 2) ...[
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _abrirComparador,
+                        icon: const Icon(Icons.compare_arrows_outlined),
+                        label: Text(textos.compararVisitasEnlace),
                       ),
                     ),
                   ],
@@ -192,6 +253,80 @@ class _CabeceraSitSpotActivo extends StatelessWidget {
     final dd = cuando.day.toString().padLeft(2, '0');
     final mm = cuando.month.toString().padLeft(2, '0');
     return '$dd/$mm/${cuando.year}';
+  }
+}
+
+/// Bloque "Este mes aquí" — resumen cualitativo del mes en curso para
+/// el sit spot activo. Cabecera sans gris ceniza + dos líneas serif
+/// con el conteo plural y la pareja primera/última visita. Sin barras,
+/// sin contadores duros: el oficio del lugar narrado en frases cortas.
+class _BloqueResumenMes extends StatelessWidget {
+  const _BloqueResumenMes({
+    required this.resumen,
+    required this.textos,
+    required this.esquema,
+  });
+
+  final ResumenMesSitSpot resumen;
+  final TextosApp textos;
+  final ColorScheme esquema;
+
+  @override
+  Widget build(BuildContext context) {
+    final primera = resumen.primera!;
+    final ultima = resumen.ultima!;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: esquema.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: esquema.outline, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            textos.paginaSitSpotResumenMesCabecera,
+            style: TipografiaCuaderno.sans(
+              color: esquema.tertiary,
+              tamano: TipografiaCuaderno.tamano12,
+              peso: TipografiaCuaderno.pesoMedio,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            textos.paginaSitSpotResumenMesVisitas(resumen.visitas),
+            style: TipografiaCuaderno.serif(
+              color: esquema.onSurface,
+              tamano: TipografiaCuaderno.tamano14,
+              altoLinea: 1.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            textos.paginaSitSpotResumenMesPrimeraUltima(
+              _formatearFechaCorta(primera.cuandoOcurrio),
+              _formatearFechaCorta(ultima.cuandoOcurrio),
+            ),
+            style: TipografiaCuaderno.serif(
+              color: PaletaCuaderno.tintaTenue,
+              tamano: TipografiaCuaderno.tamano13,
+              altoLinea: 1.45,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Formato corto DD/MM (sin año) — el bloque ya está acotado al mes
+  /// en curso, repetir el año dilataría la frase. Si el operador
+  /// alguna vez quiere mostrar el resumen del mes anterior, este
+  /// helper crece a DD/MM/YYYY sin dolor.
+  static String _formatearFechaCorta(DateTime cuando) {
+    final dd = cuando.day.toString().padLeft(2, '0');
+    final mm = cuando.month.toString().padLeft(2, '0');
+    return '$dd/$mm';
   }
 }
 

@@ -52,6 +52,7 @@ class Observacion {
     this.fotoRutaLocal,
     this.dibujoRutaLocal,
     this.misterioId,
+    this.preguntaDelNinoId,
     this.sitSpotId,
   }) {
     if (queVio.isEmpty) {
@@ -129,6 +130,14 @@ class Observacion {
   /// muchas observaciones se acumulen en torno a un Misterio abierto.
   final String? misterioId;
 
+  /// Anclaje opcional a una pregunta formulada por el niño. Paralelo a
+  /// [misterioId] pero apuntando al catálogo del niño en lugar del
+  /// catálogo del adulto. Una observación puede tener uno, otro, los
+  /// dos o ninguno — el oficio admite anclar la misma observación a
+  /// una pregunta del niño Y a un Misterio del catálogo cuando ambos
+  /// son relevantes.
+  final String? preguntaDelNinoId;
+
   /// Si la observación se hizo dentro del radio del sit spot, este
   /// campo apunta al SitSpot. La página del sit spot del cuaderno se
   /// alimenta de aquí.
@@ -147,6 +156,7 @@ class Observacion {
     String? fotoRutaLocal,
     String? dibujoRutaLocal,
     String? misterioId,
+    String? preguntaDelNinoId,
     String? sitSpotId,
   }) {
     return Observacion(
@@ -162,6 +172,7 @@ class Observacion {
       fotoRutaLocal: fotoRutaLocal ?? this.fotoRutaLocal,
       dibujoRutaLocal: dibujoRutaLocal ?? this.dibujoRutaLocal,
       misterioId: misterioId ?? this.misterioId,
+      preguntaDelNinoId: preguntaDelNinoId ?? this.preguntaDelNinoId,
       sitSpotId: sitSpotId ?? this.sitSpotId,
     );
   }
@@ -179,6 +190,7 @@ class Observacion {
         'fotoRutaLocal': fotoRutaLocal,
         'dibujoRutaLocal': dibujoRutaLocal,
         'misterioId': misterioId,
+        if (preguntaDelNinoId != null) 'preguntaDelNinoId': preguntaDelNinoId,
         'sitSpotId': sitSpotId,
       };
 
@@ -198,6 +210,7 @@ class Observacion {
       fotoRutaLocal: json['fotoRutaLocal'] as String?,
       dibujoRutaLocal: json['dibujoRutaLocal'] as String?,
       misterioId: json['misterioId'] as String?,
+      preguntaDelNinoId: json['preguntaDelNinoId'] as String?,
       sitSpotId: json['sitSpotId'] as String?,
     );
   }
@@ -217,6 +230,7 @@ class Observacion {
         other.fotoRutaLocal == fotoRutaLocal &&
         other.dibujoRutaLocal == dibujoRutaLocal &&
         other.misterioId == misterioId &&
+        other.preguntaDelNinoId == preguntaDelNinoId &&
         other.sitSpotId == sitSpotId;
   }
 
@@ -234,6 +248,7 @@ class Observacion {
         fotoRutaLocal,
         dibujoRutaLocal,
         misterioId,
+        preguntaDelNinoId,
         sitSpotId,
       ]);
 }

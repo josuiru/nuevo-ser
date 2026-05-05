@@ -45,6 +45,7 @@ class PantallaTutor extends StatefulWidget {
 
 class _EstadoPantallaTutor extends State<PantallaTutor> {
   late final TextEditingController _controlador;
+  late final ScrollController _controladorScroll;
   final List<_Turno> _conversacion = [];
   bool _esperando = false;
 
@@ -52,12 +53,29 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
   void initState() {
     super.initState();
     _controlador = TextEditingController();
+    _controladorScroll = ScrollController();
   }
 
   @override
   void dispose() {
     _controlador.dispose();
+    _controladorScroll.dispose();
     super.dispose();
+  }
+
+  /// Mueve el ListView al fondo en el siguiente frame, después de que
+  /// el `setState` haya pintado el turno o la burbuja "pensando" recién
+  /// añadidos. Si el controller aún no tiene clientes (la pestaña Tutor
+  /// no se ha llegado a montar este frame), salta sin error.
+  void _scrollAlFinal() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_controladorScroll.hasClients) return;
+      _controladorScroll.animateTo(
+        _controladorScroll.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   @override
@@ -82,6 +100,7 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
           ),
           Expanded(
             child: ListView.builder(
+              controller: _controladorScroll,
               itemCount: _conversacion.length + (_esperando ? 1 : 0),
               itemBuilder: (context, indice) {
                 if (_esperando && indice == _conversacion.length) {
@@ -144,27 +163,37 @@ class _EstadoPantallaTutor extends State<PantallaTutor> {
       _conversacion.add(_Turno.deNino(pregunta));
       _controlador.clear();
     });
+    _scrollAlFinal();
     final canalPregunta = widget.enviarPregunta;
     if (canalPregunta == null) {
+      // Caso "sin token vinculado": cliente pasa null como `enviarPregunta`.
+      // No es un error de red — el adulto no ha vinculado cuenta todavía.
       setState(() {
         _conversacion.add(_Turno.deTutor(textos.tutorRespuestaCanned));
       });
+      _scrollAlFinal();
       return;
     }
     setState(() => _esperando = true);
+    _scrollAlFinal();
     String respuesta;
     try {
       respuesta = await canalPregunta(pregunta);
     } on CuotaTutorAgotada catch (excepcion) {
       respuesta = excepcion.mensaje;
     } catch (_) {
-      respuesta = textos.tutorRespuestaCanned;
+      // Hay token vinculado pero la llamada falló (red caída, 5xx, JSON
+      // malformado, timeout). No equivale a "no está conectado" — la
+      // cuenta sí lo está, ahora mismo no llega la respuesta. Voz adulta
+      // amable que nombra la situación sin culpar al niño.
+      respuesta = textos.tutorErrorRed;
     }
     if (!mounted) return;
     setState(() {
       _conversacion.add(_Turno.deTutor(respuesta));
       _esperando = false;
     });
+    _scrollAlFinal();
   }
 }
 
