@@ -13,8 +13,11 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 ```
 .
 ├── apps/
-│   ├── uno-roto/         juego de matemáticas 9-12 (en producción, fase ~8-9 MVP)
-│   └── las-versiones/    juego de pensamiento histórico 10-14 (esqueleto cableado a la plataforma, Fase 10 arrancada)
+│   ├── uno-roto/         juego de matemáticas 9-12 (Kids, en producción, fase ~8-9 MVP)
+│   ├── las-versiones/    juego de pensamiento histórico 10-14 (Kids, Fase 10 arrancada)
+│   ├── el-cuaderno/      cuaderno de campo digital 9-13 (Kids, Bloque B en curso)
+│   ├── fosiles/          cuaderno de campo de fósiles para adulto aficionado (operador)
+│   └── naturaleza/       cuaderno de campo de naturaleza para adulto aficionado (operador)
 │
 ├── packages/
 │   ├── nuevo_ser_core/        plataforma compartida (motor maestría, sync, audio, cinemáticas)
@@ -91,7 +94,18 @@ Primer trozo del paquete `nuevo_ser_companion` que sale del estado vacío y se c
 - **Smoke PHP** `cuaderno.php` (27), `mosaicos.php` (38), `aulas.php` (13), `agregados.php` (28: validación + hash determinista + parsear_respuesta_llm con JSON estricto/markdown/anidado/inválido/vacío + generar_resumen con stub OK/PII rechazada/cliente que lanza).
 - **Pendientes acoplados a auth de profesor/cuidador** (no decidida): `POST /classrooms`, `GET /classrooms/{id}/aggregates` y los 3 de cuidadores. JWT actual sólo lleva `nino_id`.
 
-Plugin WP en v0.9.0. Tests: 325 (uno-roto) + 497 (las-versiones) + 134 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 8 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, paridad_calibracion, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
+Plugin WP en v0.9.0. Tests: 325 (uno-roto) + 596 (las-versiones) + 134 (nuevo_ser_core) + 19 (nuevo_ser_tutor) + 34 (nuevo_ser_companion) Dart + 8 PHP smoke (filtro_tutor, jwt_tutor, paridad_motor, paridad_calibracion, companion_cuaderno, companion_mosaicos, companion_aulas, companion_agregados). `flutter analyze` limpio en los 6 paquetes.
+
+## Apps del operador (no Kids)
+
+`apps/fosiles/` y `apps/naturaleza/` son apps **del operador (Josu) para adulto aficionado**, traídas al monorepo desde `~/Projects/{fosiles,naturaleza}-flutter/` para reutilizar plataforma compartida (`nuevo_ser_core`: storage cifrado, gestor de perfiles, sync, mapas offline). **No son juegos Kids** y por tanto:
+
+- NO aplica la voz adulta amable de la biblia del cuaderno.
+- NO aplican los hard limits §2 del cuaderno (sin XP/quiz/estadísticas) — estas apps tienen `pantalla_quiz.dart` y `pantalla_estadisticas.dart` legítimamente.
+- SÍ se respeta privacidad estructural cuando se sincronicen al backend: coords precisas en local, metadata + zona NUTS-3 al servidor.
+- NO se fusionan con el cuaderno. Si el cuaderno necesita identificar algo, el adulto lanza esta app desde su Android — no se replica la guía de identificación dentro del cuaderno.
+
+Catálogos curados (`datos_guia.dart`, `datos_minerales.dart`, `cronoestratigrafia.dart`, `yacimientos_curados.dart`) son candidatos a moverse a `content/` del monorepo cuando el comité científico (B1 del cuaderno, decisión humana) los audite y extienda. Hasta entonces, viven dentro de cada app.
 
 ## Decisiones cerradas
 
