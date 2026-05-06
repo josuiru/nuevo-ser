@@ -291,6 +291,19 @@ class _PantallaCombateState extends State<PantallaCombate>
     });
   }
 
+  /// Reposiciona un radio confirmado: el niño arrastró encima de él y el
+  /// lienzo nos pasa el nuevo ángulo. El radio mantiene su posición en la
+  /// lista; sólo cambia su valor angular. Si el resultado anterior estaba
+  /// pintado, se invalida para que el evaluador no muestre datos viejos.
+  void _moverRadio(int indice, RadioTrazado nuevo) {
+    if (_fase != _FaseSesion.dibujando) return;
+    if (indice < 0 || indice >= _radiosConfirmados.length) return;
+    setState(() {
+      _radiosConfirmados[indice] = nuevo;
+      _ultimoResultado = null;
+    });
+  }
+
   void _reiniciarIntento() {
     if (_fase != _FaseSesion.dibujando) return;
     setState(() {
@@ -482,6 +495,7 @@ class _PantallaCombateState extends State<PantallaCombate>
                                     onAgregarRadio: _agregarRadio,
                                     onActualizarRadioEnCurso:
                                         _actualizarRadioEnCurso,
+                                    onMoverRadio: _moverRadio,
                                   );
                                 },
                               )

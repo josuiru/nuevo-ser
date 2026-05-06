@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -27,7 +29,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get tutorBotonPreguntar => 'galdetu';
 
   @override
-  String get tutorEstadoVacio => 'Esadazu zerk traba egin dizun.\nZeure hitzekin.';
+  String get tutorEstadoVacio =>
+      'Esadazu zerk traba egin dizun.\nZeure hitzekin.';
 
   @override
   String get tutorOfertaTitulo => 'Iradokizuna nahi duzu?';
@@ -80,6 +83,19 @@ class AppLocalizationsEu extends AppLocalizations {
   String get mapaBotonEntrenar => 'Entrenatu';
 
   @override
+  String get mapaBotonInstrucciones => 'Nola jokatu';
+
+  @override
+  String get tituloInstrucciones => 'NOLA JOKATU';
+
+  @override
+  String get demoPuzzleTocaResultado =>
+      'Erantzuna jakitean,\nukitu aukera egokia.';
+
+  @override
+  String get demoPuzzleTocaSiNo => 'Erabaki eta ukitu BAI edo EZ.';
+
+  @override
   String get cazaBotonMapa => '‹ mapa';
 
   @override
@@ -95,7 +111,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get sonidoPaqueteTitulo => 'SOINU PAKETEA';
 
   @override
-  String get sonidoPaqueteNoInstalado => 'Instalatu gabe. Efektu laburrak baino ez dira entzuten.';
+  String get sonidoPaqueteNoInstalado =>
+      'Instalatu gabe. Efektu laburrak baino ez dira entzuten.';
 
   @override
   String sonidoPaqueteVersion(int version, String tamano) {
@@ -103,7 +120,8 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get sonidoPaqueteExplicacion => 'Giro-soinua, musika eta narratiboak zerbitzaritik deskargatzen dira aplikazioaren tamaina ez puzteko.';
+  String get sonidoPaqueteExplicacion =>
+      'Giro-soinua, musika eta narratiboak zerbitzaritik deskargatzen dira aplikazioaren tamaina ez puzteko.';
 
   @override
   String get sonidoPaqueteBotonDescargar => 'Paketea deskargatu';
@@ -167,10 +185,12 @@ class AppLocalizationsEu extends AppLocalizations {
   String get comparacionMismoNumero => 'zati kopuru bera';
 
   @override
-  String get simetriaPreguntaVertical => 'ardatz bertikalarekiko simetrikoa al da?';
+  String get simetriaPreguntaVertical =>
+      'ardatz bertikalarekiko simetrikoa al da?';
 
   @override
-  String get simetriaPreguntaHorizontal => 'ardatz horizontalarekiko simetrikoa al da?';
+  String get simetriaPreguntaHorizontal =>
+      'ardatz horizontalarekiko simetrikoa al da?';
 
   @override
   String barrasPreguntaValor(String etiqueta) {
@@ -216,7 +236,8 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get habSyncSesionCaduco => 'Saioak iraungi du. Ireki «Kontua»-tik eta hasi saioa berriro.';
+  String get habSyncSesionCaduco =>
+      'Saioak iraungi du. Ireki «Kontua»-tik eta hasi saioa berriro.';
 
   @override
   String habApiError(int codigo, String mensaje) {
@@ -232,13 +253,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get habReiniciarTitulo => 'Aurrerapena berrabiarazi';
 
   @override
-  String get habReiniciarCuerpo => 'Ikusitako eszenak, trebetasunak, ezpalak eta maila ezabatuko ditu. Aplikazioa berriz irekitzean, hasieratik abiatuko zara.';
+  String get habReiniciarCuerpo =>
+      'Ikusitako eszenak, trebetasunak, ezpalak eta maila ezabatuko ditu. Aplikazioa berriz irekitzean, hasieratik abiatuko zara.';
 
   @override
   String get habReiniciarBoton => 'berrabiarazi';
 
   @override
-  String get habReiniciarHecho => 'Aurrerapena berrabiarazi da. Itxi aplikazioa eta ireki berriro.';
+  String get habReiniciarHecho =>
+      'Aurrerapena berrabiarazi da. Itxi aplikazioa eta ireki berriro.';
 
   @override
   String habEsquirlasResumen(int n) {
@@ -283,7 +306,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuentaCerrarSesionTitulo => 'Saioa itxi';
 
   @override
-  String get cuentaCerrarSesionCuerpo => 'Tokiko aurrerapena oso-osorik mantentzen da, zerbitzaritik soilik deskonektatzen da.';
+  String get cuentaCerrarSesionCuerpo =>
+      'Tokiko aurrerapena oso-osorik mantentzen da, zerbitzaritik soilik deskonektatzen da.';
 
   @override
   String get cuentaBotonCerrar => 'itxi';
@@ -292,7 +316,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuentaSinCuentaTitulo => 'Konturik gabe';
 
   @override
-  String get cuentaSinCuentaCuerpo => 'Lineaz kanpo jolasten jarraitu dezakezu. Kontu bat lotzen baduzu, aurrerapena zerbitzarian gordeko da eta tutorea desblokeatuko da trabatzen zarenerako.';
+  String get cuentaSinCuentaCuerpo =>
+      'Lineaz kanpo jolasten jarraitu dezakezu. Kontu bat lotzen baduzu, aurrerapena zerbitzarian gordeko da eta tutorea desblokeatuko da trabatzen zarenerako.';
 
   @override
   String get cuentaBotonCrear => 'kontua sortu';
@@ -304,7 +329,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuentaVinculadaTitulo => 'Kontua lotuta';
 
   @override
-  String get cuentaVinculadaCuerpo => 'Aurrerapena zerbitzariarekin sinkronizatzen da eta tutorea eskuragarri dago trabatzen zarenean.';
+  String get cuentaVinculadaCuerpo =>
+      'Aurrerapena zerbitzariarekin sinkronizatzen da eta tutorea eskuragarri dago trabatzen zarenean.';
 
   @override
   String get cuentaBotonCerrarSesion => 'saioa itxi';
@@ -333,7 +359,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuentaCampoNombreNino => 'umearen izena';
 
   @override
-  String get cuentaErrorCamposRegistro => 'Idatzi e-posta, pasahitza (gutxienez 8 karaktere) eta umearen izena.';
+  String get cuentaErrorCamposRegistro =>
+      'Idatzi e-posta, pasahitza (gutxienez 8 karaktere) eta umearen izena.';
 
   @override
   String get cuentaErrorCamposLogin => 'Idatzi e-posta eta pasahitza.';
@@ -354,13 +381,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuentaResetEmailInvalido => 'Idatzi baliozko email bat.';
 
   @override
-  String get cuentaResetErrorRed => 'Ezin izan da konektatu. Saiatu beranduago.';
+  String get cuentaResetErrorRed =>
+      'Ezin izan da konektatu. Saiatu beranduago.';
 
   @override
   String get cuentaResetTagline => 'Ez da ezer gertatzen.';
 
   @override
-  String get cuentaResetIntro => 'Jarri zure emaila eta esteka bat bidaliko dizugu pasahitz berri bat sortzeko. 30 minutuan iraungitzen da.';
+  String get cuentaResetIntro =>
+      'Jarri zure emaila eta esteka bat bidaliko dizugu pasahitz berri bat sortzeko. 30 minutuan iraungitzen da.';
 
   @override
   String get cuentaResetCampoEmail => 'Emaila';
@@ -369,7 +398,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuentaResetBoton => 'BIDALI ESTEKA';
 
   @override
-  String get cuentaResetEnviadoCuerpo => 'Helbide hori erregistratuta badago,\nesteka bat iritsiko zaizu minutu batzuetan.';
+  String get cuentaResetEnviadoCuerpo =>
+      'Helbide hori erregistratuta badago,\nesteka bat iritsiko zaizu minutu batzuetan.';
 
   @override
   String get cuentaResetEnviadoSpam => 'Begiratu spam karpeta ere.';
@@ -395,13 +425,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get panelTutorErrorRed => 'Ezin izan da zerbitzarira konektatu.';
 
   @override
-  String get panelTutorErrorProgreso => 'Ezin izan da aurrerapena kargatu (tokena iraungita).';
+  String get panelTutorErrorProgreso =>
+      'Ezin izan da aurrerapena kargatu (tokena iraungita).';
 
   @override
   String get panelTutorTagline => 'Zuretzat, ez txikiarentzat.';
 
   @override
-  String get panelTutorIntro => 'Sartu zure emaila eta pasahitza benetako aurrerapena ikusteko.';
+  String get panelTutorIntro =>
+      'Sartu zure emaila eta pasahitza benetako aurrerapena ikusteko.';
 
   @override
   String get panelTutorCampoEmail => 'Emaila';
@@ -416,7 +448,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get panelTutorSinNinos => 'Kontu honek oraindik ez du haurrik.';
 
   @override
-  String get panelTutorElegirNino => 'Aukeratu haur bat haren aurrerapena ikusteko.';
+  String get panelTutorElegirNino =>
+      'Aukeratu haur bat haren aurrerapena ikusteko.';
 
   @override
   String panelTutorSaludoConNombre(String nombre) {
@@ -424,7 +457,8 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get panelTutorSubtituloSaludo => 'Hemen duzu benetako aurrerapena, apaingarririk gabe.';
+  String get panelTutorSubtituloSaludo =>
+      'Hemen duzu benetako aurrerapena, apaingarririk gabe.';
 
   @override
   String get sonidoTitulo => 'soinua';
@@ -436,7 +470,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get sonidoModoSilencioTitulo => 'Soinurik gabeko modua';
 
   @override
-  String get sonidoModoSilencioSubtitulo => 'jokoa erabat jolastu daiteke isiltasunean';
+  String get sonidoModoSilencioSubtitulo =>
+      'jokoa erabat jolastu daiteke isiltasunean';
 
   @override
   String get sonidoCapaAmbient => 'haizea, ura, munduko zarata';
@@ -451,7 +486,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get sonidoCapaNarrativos => 'motibo eta efektu bereziak';
 
   @override
-  String get sonidoNotaAccesibilidad => 'Doiketak profilean gordetzen dira. Bere profilarekin jolasten den ume bakoitzak bere bolumen-konfigurazioa izango du.';
+  String get sonidoNotaAccesibilidad =>
+      'Doiketak profilean gordetzen dira. Bere profilarekin jolasten den ume bakoitzak bere bolumen-konfigurazioa izango du.';
 
   @override
   String get perfHeaderQuienEres => 'NOR ZARA?';
@@ -501,7 +537,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cuadernoTitulo => 'koadernoa';
 
   @override
-  String get cuadernoVacio => 'Oraindik ez duzu sarrerarik desblokeatu.\nJolasten jarraitu — ezagutzen duzun pertsona edo leku bakoitzak orri bat irekitzen du.';
+  String get cuadernoVacio =>
+      'Oraindik ez duzu sarrerarik desblokeatu.\nJolasten jarraitu — ezagutzen duzun pertsona edo leku bakoitzak orri bat irekitzen du.';
 
   @override
   String cuadernoResumen(int leidas, int desbloqueadas, int total) {
@@ -549,13 +586,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get ritmoExigente => 'Eskakizun handikoa';
 
   @override
-  String get ritmoTranquiloDesc => 'Hitzak mantsoago agertzen dira. Borrokek denbora gehiago ematen dute.';
+  String get ritmoTranquiloDesc =>
+      'Hitzak mantsoago agertzen dira. Borrokek denbora gehiago ematen dute.';
 
   @override
   String get ritmoEstandarDesc => 'Jokoaren oinarrizko abiadura.';
 
   @override
-  String get ritmoExigenteDesc => 'Dena bizkorrago doa. Borrokek bizkortasun handiagoa eskatzen dute.';
+  String get ritmoExigenteDesc =>
+      'Dena bizkorrago doa. Borrokek bizkortasun handiagoa eskatzen dute.';
 
   @override
   String get capaAmbient => 'Giroa';
@@ -568,6 +607,9 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get capaNarrativos => 'Narratiboak';
+
+  @override
+  String get catCuadernoBitacora => 'Egunkaria';
 
   @override
   String get catCuadernoPersonajes => 'Pertsonaiak';
@@ -591,67 +633,85 @@ class AppLocalizationsEu extends AppLocalizations {
   String get puzzleHeaderAmplificar => 'ANPLIFIKATU';
 
   @override
-  String get puzzleInstrAmplificar => 'osatu baliokidetza';
+  String get puzzleInstrAmplificar => 'osatu: ukitu falta den zenbakia';
+
+  @override
+  String get puzzleHeaderSumaBasica => 'BATU';
+
+  @override
+  String get puzzleInstrSumaBasica => 'zenbat batzen dute?';
+
+  @override
+  String get puzzleHeaderEcuacionLineal => 'X-A ASKATU';
+
+  @override
+  String get puzzleInstrEcuacionLineal =>
+      'zer x-balioarekin betetzen da ekuazioa?';
 
   @override
   String get puzzleHeaderAngulo => 'ANGELUA';
 
   @override
-  String get puzzleInstrAngulo => 'identifikatu mota';
+  String get puzzleInstrAngulo => 'ukitu marraztutako angeluaren izena';
 
   @override
-  String get puzzleInstrAreaRectangulo => 'azalera = oinarria × altuera';
+  String get puzzleInstrAreaRectangulo =>
+      'azalera = oinarria × altuera. Ukitu emaitza';
 
   @override
   String get puzzleHeaderTriangulo => 'TRIANGELUA';
 
   @override
-  String get puzzleInstrAreaTriangulo => 'azalera = oinarria × altuera ÷ 2';
+  String get puzzleInstrAreaTriangulo =>
+      'azalera = oinarria × altuera ÷ 2. Ukitu emaitza';
 
   @override
-  String get puzzleInstrCirculoPi => 'erabili π ≈ 3,14';
+  String get puzzleInstrCirculoPi =>
+      'erabili formula (π ≈ 3,14) eta ukitu emaitza';
 
   @override
   String get puzzleHeaderComparar => 'ALDERATU';
 
   @override
-  String get puzzleInstrCualEsMayor => 'zein da handiena?';
+  String get puzzleInstrCualEsMayor => 'ukitu frakzio handiena';
 
   @override
-  String get puzzleInstrLeerCifras => 'irakurri zifrak, ez kontatu';
+  String get puzzleInstrLeerCifras =>
+      'ukitu hamartar handiena (zifra gehiago ez da gehiago)';
 
   @override
-  String get puzzleInstrMiraValor => 'begiratu balioari, ez zifrei';
+  String get puzzleInstrMiraValor =>
+      'ukitu hamartar handiena (zifra gehiago ez da gehiago)';
 
   @override
   String get puzzleHeaderContraMitad => '1/2-AREN AURKA';
 
   @override
-  String get puzzleInstrContraMitad => '1/2-rekin alderatuta?';
+  String get puzzleInstrContraMitad => 'ukitu <, =, > 1/2-rekin alderatuta';
 
   @override
   String get puzzleHeaderContraUno => '1-AREN AURKA';
 
   @override
-  String get puzzleInstrContraUno => 'alderatu 1-ekin';
+  String get puzzleInstrContraUno => 'ukitu <, =, > 1ekin alderatuta';
 
   @override
   String get puzzleHeaderDecimal => 'HAMARTARRA';
 
   @override
-  String get puzzleInstrQueDecimal => 'zein hamartarrak balio du berdin?';
+  String get puzzleInstrQueDecimal => 'ukitu balio bera duen hamartarra';
 
   @override
   String get puzzleHeaderDivisores => 'ZATITZAILEAK';
 
   @override
-  String get puzzleInstrCualNoDivisor => 'zein EZ da zatitzailea?';
+  String get puzzleInstrCualNoDivisor => 'hiru zatitzaile dira. Ukitu ez dena';
 
   @override
   String get puzzleHeaderDual => 'BIKOITZA';
 
   @override
-  String get puzzleInstrDual => 'bildu biak bakarrean';
+  String get puzzleInstrDual => 'kalkulatu eragiketa eta ukitu emaitza';
 
   @override
   String get puzzleHeaderEscala => 'ESKALA';
@@ -674,7 +734,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get puzzleHeaderParte => 'ZATIA';
 
   @override
-  String get puzzleInstrCalcula => 'kalkulatu';
+  String get puzzleInstrCalcula => 'kalkulatu eta ukitu emaitza';
 
   @override
   String get puzzleHeaderGrafico => 'GRAFIKOA';
@@ -686,84 +746,91 @@ class AppLocalizationsEu extends AppLocalizations {
   String get puzzleHeaderImpropio => 'INPROPIOA';
 
   @override
-  String get puzzleInstrImpropio => 'idatzi zatia mistu gisa';
+  String get puzzleInstrImpropio => 'ukitu balio bera duen zenbaki mistoa';
 
   @override
   String get puzzleHeaderJerarquia => 'HIERARKIA';
 
   @override
-  String get puzzleInstrJerarquiaPrimero => 'lehenik × eta ÷, gero + eta −';
+  String get puzzleInstrJerarquiaPrimero =>
+      'lehenik × eta ÷, gero + eta −. Ukitu emaitza';
 
   @override
-  String get puzzleInstrJerarquiaRecuerda => 'gogoratu × eta ÷ + eta − baino lehenago';
+  String get puzzleInstrJerarquiaRecuerda =>
+      '× eta ÷ + eta − baino lehen. Ukitu emaitza';
 
   @override
   String get puzzleHeaderLeer => 'IRAKURRI';
 
   @override
-  String get puzzleInstrQueNumero => 'zein zenbaki da?';
+  String get puzzleInstrQueNumero => 'irakurri testua eta ukitu zenbaki egokia';
 
   @override
-  String get puzzleInstrQueFraccion => 'zein zatiki da?';
+  String get puzzleInstrQueFraccion =>
+      'irakurri testua eta ukitu frakzio egokia';
 
   @override
   String get puzzleHeaderLongitud => 'LUZERA';
 
   @override
-  String get puzzleInstrConvierteMedida => 'bihurtu neurria';
+  String get puzzleInstrConvierteMedida => 'bihurtu eta ukitu emaitza';
 
   @override
   String get puzzleHeaderMedia => 'BATEZBESTEKOA';
 
   @override
-  String get puzzleInstrCalculaMedia => 'kalkulatu batezbestekoa';
+  String get puzzleInstrCalculaMedia => 'batu eta zatitu. Ukitu batezbestekoa';
 
   @override
   String get puzzleHeaderConvertir => 'BIHURTU';
 
   @override
-  String get puzzleInstrConvertirImpropia => 'zein zatiki inpropio da?';
+  String get puzzleInstrConvertirImpropia =>
+      'ukitu frakzio inpropio baliokidea';
 
   @override
   String puzzleInstrCualEsModa(String modo) {
-    return 'zein da $modo?';
+    return 'ukitu $modo-ren balioa';
   }
 
   @override
   String get puzzleHeaderOpDecimal => 'ERAG. HAMARTARRA';
 
   @override
-  String get puzzleInstrCuantoValeOp => 'zenbat balio du eragiketak';
+  String get puzzleInstrCuantoValeOp => 'kalkulatu eta ukitu emaitza';
 
   @override
   String get puzzleHeaderDecimalFraccion => 'HAMARTARRA ETA ZATIKIA';
 
   @override
-  String get puzzleInstrFraccionDecimal => 'zatikia eta hamartarra gauza bera dira';
+  String get puzzleInstrFraccionDecimal =>
+      'kalkulatu eragiketa mistoa eta ukitu emaitza';
 
   @override
   String get puzzleHeaderOrdenar => 'ORDENATU';
 
   @override
-  String get puzzleInstrOrdenar => 'txikienetik handienera';
+  String get puzzleInstrOrdenar =>
+      'ukitu txikienetik handienera ordenatutako lerroa';
 
   @override
   String get puzzleHeaderPerimetro => 'PERIMETROA';
 
   @override
-  String get puzzleInstrPerimetro => 'batu alde guztiak';
+  String get puzzleInstrPerimetro => 'batu aldeak eta ukitu perimetroa';
 
   @override
   String get puzzleHeaderPoligono => 'POLIGONOA';
 
   @override
-  String get puzzleInstrPoligono => 'zenbatu aldeak';
+  String get puzzleInstrPoligono => 'ukitu marraztutako poligonoaren izena';
 
   @override
   String get puzzleHeaderPorcentaje => 'EHUNEKOA';
 
   @override
-  String get puzzleInstrPorcentajeFraccion => 'zein zatik balio du berdin?';
+  String get puzzleInstrPorcentajeFraccion =>
+      'ukitu ehunekoaren frakzio baliokidea';
 
   @override
   String puzzleInstrPorcentajeDe(int porcentaje, int cantidad) {
@@ -774,13 +841,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get puzzleHeaderQuePorcentaje => 'ZE %?';
 
   @override
-  String get puzzleInstrQuePorcentaje => 'ze ehuneko da';
+  String get puzzleInstrQuePorcentaje => 'ukitu ehuneko egokia';
 
   @override
   String get puzzleHeaderPrimos => 'LEHENAK';
 
   @override
-  String get puzzleInstrEsPrimo => 'lehena al da?';
+  String get puzzleInstrEsPrimo => 'ukitu BAI lehena bada, EZ ez bada';
 
   @override
   String get puzzleHeaderProbabilidad => 'PROBABILITATEA';
@@ -791,7 +858,8 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get puzzleInstrProbabilidadFormula => 'P(gorria atera) = ?';
+  String get puzzleInstrProbabilidadFormula =>
+      'ukitu probabilitatea ematen duen frakzioa';
 
   @override
   String get puzzleHeaderPProb => 'P → %';
@@ -802,13 +870,14 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get puzzleInstrComoPorcentaje => 'ehuneko gisa adierazita';
+  String get puzzleInstrComoPorcentaje =>
+      'ukitu frakzioaren ehuneko baliokidea';
 
   @override
   String get puzzleHeaderProporcion => 'PROPORTZIOA';
 
   @override
-  String get puzzleInstrCompletaProporcion => 'osatu proportzioa';
+  String get puzzleInstrCompletaProporcion => 'osatu: ukitu falta den zenbakia';
 
   @override
   String get puzzleInstrSiEsto => 'hau izanda, orduan…';
@@ -817,13 +886,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get puzzleHeaderRazon => 'ARRAZOIA';
 
   @override
-  String get puzzleInstrRazon => 'zein arrazoik lotzen ditu?';
+  String get puzzleInstrRazon => 'ukitu arrazoi murriztua';
 
   @override
   String get puzzleHeaderRedondear => 'BIRIBILDU';
 
   @override
-  String get puzzleInstrRedondear => 'biribildu hamarrenera';
+  String get puzzleInstrRedondear => 'ukitu hamarrenerako biribilketa';
 
   @override
   String get puzzleHeaderSimetria => 'SIMETRIA';
@@ -832,25 +901,26 @@ class AppLocalizationsEu extends AppLocalizations {
   String get puzzleHeaderSimplificar => 'SOILDU';
 
   @override
-  String get puzzleInstrSimplificar => 'soildu ahalik eta gehien';
+  String get puzzleInstrSimplificar => 'ukitu ahal beste murriztutako frakzioa';
 
   @override
   String get puzzleHeaderSuperficie => 'AZALERA';
 
   @override
-  String get puzzleInstrSuperficie => 'bihurtu azalera';
+  String get puzzleInstrSuperficie => 'bihurtu azalera. Ukitu emaitza';
 
   @override
   String get puzzleHeaderTiempo => 'DENBORA';
 
   @override
-  String get puzzleInstrTiempo => 'pasa adierazitako helbururantz';
+  String get puzzleInstrTiempo => 'bihurtu eta ukitu emaitza';
 
   @override
   String get puzzleHeaderVolumen => 'BOLUMENA';
 
   @override
-  String get puzzleInstrVolumenFormula => 'B = luzera × zabalera × altuera';
+  String get puzzleInstrVolumenFormula =>
+      'B = luzera × zabalera × altuera. Ukitu bolumena';
 
   @override
   String get estadisticoModa => 'moda';

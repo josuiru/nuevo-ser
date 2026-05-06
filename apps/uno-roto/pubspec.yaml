@@ -107,6 +107,7 @@ flutter:
 
   assets:
     - assets/data/skills.json
+    - assets/data/faro_banco_v0_2.json
     # Carpetas de sonido (doc 12). Pueden estar vacías: el motor
     # sonoro tolera assets ausentes y la app no falla.
     - assets/sonido/ambient/

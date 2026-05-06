@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../dominio/contador_intentos_puzzle.dart';
 import '../dominio/fragmento.dart';
 import '../dominio/resolucion_corte.dart';
 import '../l10n/app_localizations.dart';
@@ -136,6 +137,18 @@ class _PantallaCombateEnfoqueState extends State<PantallaCombateEnfoque>
     });
   }
 
+  /// Reposiciona un radio confirmado: el niño arrastró encima de él y el
+  /// lienzo nos pasa el nuevo ángulo. Mantiene su índice; sólo cambia el
+  /// valor angular. Coexiste con Deshacer.
+  void _moverRadio(int indice, RadioTrazado nuevo) {
+    if (_fase != _FaseEnfoque.dibujando) return;
+    if (indice < 0 || indice >= _radiosConfirmados.length) return;
+    setState(() {
+      _radiosConfirmados[indice] = nuevo;
+      _ultimoResultado = null;
+    });
+  }
+
   void _reiniciarIntento() {
     if (_fase != _FaseEnfoque.dibujando) return;
     setState(() {
@@ -161,6 +174,11 @@ class _PantallaCombateEnfoqueState extends State<PantallaCombateEnfoque>
         ..forward();
     } else {
       HapticFeedback.vibrate();
+      // Cada Cortar fallido cuenta como un intento del puzzle. Sin esto
+      // el niño puede equivocarse infinitas veces y, al acertar al fin,
+      // ganar las esquirlas como si fuera a la primera. El cazadero usa
+      // `intentosPuzzleActual` para descontar la recompensa al cerrar.
+      contarFalloPuzzle();
     }
   }
 
@@ -229,6 +247,7 @@ class _PantallaCombateEnfoqueState extends State<PantallaCombateEnfoque>
                               particulasRotura: _particulasRotura,
                               onAgregarRadio: _agregarRadio,
                               onActualizarRadioEnCurso: _actualizarRadioEnCurso,
+                              onMoverRadio: _moverRadio,
                             );
                           },
                         ),
@@ -291,9 +310,9 @@ class _BarraEnfoque extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                                AppLocalizations.of(contexto).puzzleBotonHuir,
+                AppLocalizations.of(contexto).puzzleBotonHuir,
                 style: const TextStyle(
-                  color: PaletaNeon.textoTenue,
+                  color: PaletaNeon.textoPrincipal,
                   fontSize: 13,
                   letterSpacing: 1.5,
                 ),

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../datos/banco_ediciones_faro.dart';
+import '../datos/repositorio_faro.dart';
 import '../datos/repositorio_progreso.dart';
 import '../dominio/catalogo_distritos.dart';
 import '../dominio/cuaderno.dart';
 import '../dominio/distrito.dart';
+import '../dominio/faro_de_azula.dart';
 import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
 import '../l10n/app_localizations.dart';
@@ -15,7 +18,9 @@ import 'escenario.dart';
 import 'pantalla_ajustes_sonido.dart';
 import 'pantalla_caza.dart';
 import 'pantalla_entrenamiento.dart';
+import 'pantalla_faro.dart';
 import 'pantalla_habilidades.dart';
+import 'pantalla_instrucciones.dart';
 import 'pantalla_mi_cuaderno.dart';
 
 /// Mapa de la ciudad. Muestra los distritos del catálogo posicionados
@@ -49,6 +54,8 @@ class _PantallaMapaState extends State<PantallaMapa>
   int _escenasDelArcoVistas = 0;
   int _entradasCuadernoDisponibles = 0;
   bool _cargado = false;
+  bool _hayEdicionFaroNueva = false;
+  List<EdicionFaro>? _bancoFaroCacheado;
 
   @override
   void initState() {
@@ -78,6 +85,7 @@ class _PantallaMapaState extends State<PantallaMapa>
     final entradas = await CatalogoCuaderno.disponibles(
       widget.repositorio.flagNarrativoActivo,
     );
+    final hayFaroNuevo = await _hayEdicionFaroNoLeida();
     if (!mounted) return;
     setState(() {
       _esquirlas = total;
@@ -85,9 +93,40 @@ class _PantallaMapaState extends State<PantallaMapa>
       _arcoMostrado = arco;
       _escenasDelArcoVistas = vistas;
       _entradasCuadernoDisponibles = entradas.length;
+      _hayEdicionFaroNueva = hayFaroNuevo;
       _cargado = true;
     });
     _quizasSugerirDescargaAudio();
+  }
+
+  /// `true` cuando hay un número del Faro que el niño todavía no ha
+  /// abierto en este perfil. La regla concreta vive en la función
+  /// pura `tieneEdicionFaroNoLeida`; aquí sólo cargamos los valores
+  /// del repositorio + el banco y delegamos.
+  Future<bool> _hayEdicionFaroNoLeida() async {
+    final repo = widget.repositorio.faro;
+    final primeraVistaMs = await repo.cargarPrimeraVistaMs();
+    final ultimaVista = await repo.cargarUltimaEdicionVista();
+    if (primeraVistaMs == null || ultimaVista == null) return true;
+    final banco = await _cargarBancoFaroSiHaceFalta();
+    final semana = calcularNumeroSemanaActual(
+      ahora: DateTime.now(),
+      primeraVistaMs: primeraVistaMs,
+      totalEdiciones: banco.length,
+    );
+    return tieneEdicionFaroNoLeida(
+      primeraVistaMs: primeraVistaMs,
+      ultimaEdicionVista: ultimaVista,
+      semanaActual: semana,
+    );
+  }
+
+  Future<List<EdicionFaro>> _cargarBancoFaroSiHaceFalta() async {
+    final cacheado = _bancoFaroCacheado;
+    if (cacheado != null) return cacheado;
+    final banco = await cargarBancoEdicionesFaro();
+    _bancoFaroCacheado = banco;
+    return banco;
   }
 
   /// Una sola vez por instalación: si el paquete de sonido aún no se
@@ -159,6 +198,32 @@ class _PantallaMapaState extends State<PantallaMapa>
     await _cargar();
   }
 
+  Future<void> _abrirInstrucciones() async {
+    HapticFeedback.selectionClick();
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const PantallaInstrucciones(),
+      ),
+    );
+  }
+
+  Future<void> _abrirFaro() async {
+    HapticFeedback.selectionClick();
+    final banco = await _cargarBancoFaroSiHaceFalta();
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaFaro(
+          repositorioFaro: widget.repositorio.faro,
+          banco: banco,
+        ),
+      ),
+    );
+    // La pantalla del Faro marca su edición como vista al abrirla,
+    // así que al volver el badge debería desaparecer.
+    await _cargar();
+  }
+
 
   Future<void> _entrarADistrito(Distrito distrito) async {
     HapticFeedback.selectionClick();
@@ -213,8 +278,11 @@ class _PantallaMapaState extends State<PantallaMapa>
                         arco: _arcoMostrado,
                         escenasVistasDelArco: _escenasDelArcoVistas,
                         entradasCuaderno: _entradasCuadernoDisponibles,
+                        hayFaroNuevo: _hayEdicionFaroNueva,
                         alAbrirCuaderno: _abrirMiCuaderno,
                         alAbrirEntrenamiento: _abrirEntrenamiento,
+                        alAbrirFaro: _abrirFaro,
+                        alAbrirInstrucciones: _abrirInstrucciones,
                       ),
                     ),
                     Expanded(
@@ -245,8 +313,11 @@ class _Encabezado extends StatelessWidget {
   final ProgresoArco arco;
   final int escenasVistasDelArco;
   final int entradasCuaderno;
+  final bool hayFaroNuevo;
   final VoidCallback alAbrirCuaderno;
   final VoidCallback alAbrirEntrenamiento;
+  final VoidCallback alAbrirFaro;
+  final VoidCallback alAbrirInstrucciones;
 
   const _Encabezado({
     required this.esquirlas,
@@ -254,8 +325,11 @@ class _Encabezado extends StatelessWidget {
     required this.arco,
     required this.escenasVistasDelArco,
     required this.entradasCuaderno,
+    required this.hayFaroNuevo,
     required this.alAbrirCuaderno,
     required this.alAbrirEntrenamiento,
+    required this.alAbrirFaro,
+    required this.alAbrirInstrucciones,
   });
 
   @override
@@ -330,10 +404,25 @@ class _Encabezado extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           _ChipAccion(
+            icono: Icons.newspaper,
+            color: PaletaNeon.ambarCanales,
+            badge: hayFaroNuevo ? '·' : null,
+            alPulsar: alAbrirFaro,
+            tooltip: 'El Faro de Azula',
+          ),
+          const SizedBox(width: 8),
+          _ChipAccion(
             icono: Icons.fitness_center,
             color: PaletaNeon.violetaNeon,
             alPulsar: alAbrirEntrenamiento,
             tooltip: AppLocalizations.of(contexto).mapaBotonEntrenar,
+          ),
+          const SizedBox(width: 8),
+          _ChipAccion(
+            icono: Icons.help_outline,
+            color: PaletaNeon.textoTenue,
+            alPulsar: alAbrirInstrucciones,
+            tooltip: AppLocalizations.of(contexto).mapaBotonInstrucciones,
           ),
           const SizedBox(width: 8),
           Tooltip(

@@ -7,6 +7,7 @@
 /// naturaleza, mitos. Pensadas para extender el mundo más allá de las
 /// matemáticas sin cambiar el foco del juego.
 enum CategoriaCuaderno {
+  bitacora,
   personajes,
   fragmentos,
   lugares,
@@ -18,6 +19,8 @@ enum CategoriaCuaderno {
 extension NombreCategoriaCuaderno on CategoriaCuaderno {
   String get nombreVisible {
     switch (this) {
+      case CategoriaCuaderno.bitacora:
+        return 'Bitácora';
       case CategoriaCuaderno.personajes:
         return 'Personajes';
       case CategoriaCuaderno.fragmentos:
@@ -58,6 +61,110 @@ class EntradaCuaderno {
 /// es narrativamente significativo (personajes en orden de aparición).
 class CatalogoCuaderno {
   static const List<EntradaCuaderno> todas = [
+    // ------- Bitácora -------
+    // Entradas autogeneradas por hitos del propio recorrido del niño.
+    // Cada una se desbloquea con un flag que el sistema activa de
+    // forma natural (combates ganados/perdidos, rangos alcanzados,
+    // arcos cerrados). Voz en segunda persona, sobria — sin palmadita.
+    EntradaCuaderno(
+      id: 'bitacora_primer_pleno',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'El primer Pleno',
+      texto:
+          'Sora te enseñó el gesto en el tejado del Edificio. El Pleno '
+          'se rompe limpio cuando el corte va al centro. Lo entendiste '
+          'enseguida — más rápido de lo que ella esperaba, aunque no lo '
+          'va a decir.',
+      flagDesbloqueo: 'escena_1_2_vista',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_kurz_primera_vez',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Kurz, primera vez',
+      texto:
+          'Te ganó. Era lo que tocaba — Sora ya te lo había avisado: '
+          'la primera vez con Kurz se pierde, la segunda también. Lo '
+          'que importa es cómo pierdes. Lo que dijiste al levantarte, '
+          'no lo recuerdas. Sora sí.',
+      flagDesbloqueo: 'combate_kurz_1_completado',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_aprendiz_ii',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Aprendiz II',
+      texto:
+          'La marca cambia. Plata desgastada → plata nueva. Irune '
+          'asintió una vez sin más. Es lo más cerca de un elogio que '
+          'se permite. La gente del Mercado no nota la diferencia, pero '
+          'tú sí.',
+      flagDesbloqueo: 'rango_aprendiz_ii_alcanzado',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_cierre_arco_1',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Bajar a los Canales',
+      texto:
+          'Primera vez con permiso. Sora te miró antes de soltarte y '
+          'solo dijo "cae mejor". La frase volverá. Las farolas ámbar '
+          'vistas desde abajo se sienten distintas — más bajas, más '
+          'cercanas. Anota esto.',
+      flagDesbloqueo: 'escena_1_14_vista',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_zafran',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Zafrán, herido pero no derrotado',
+      texto:
+          'Lo dejaste herido, no derrotado. Volverá. Eso fue lo que '
+          'dijo Rexán mientras se frotaba la pierna sin darse cuenta. '
+          'Te llevaste su mirada larga al final — la que no acompaña '
+          'palabras.',
+      flagDesbloqueo: 'victoria_zafran',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_aprendiz_iii',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Aprendiz III',
+      texto:
+          'Cuarta marca. La gente del Mercado te saluda primero ahora. '
+          'Antes saludabas tú. Te incomoda un poco — es buena señal. '
+          'Naini fingió no fijarse, pero dejó dos manzanas en tu '
+          'mochila al pasar.',
+      flagDesbloqueo: 'rango_aprendiz_iii_alcanzado',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_eco_callejon',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'El día que viste a Eco',
+      texto:
+          'Eco te habló y luego desapareció en silencio. Sora no quiso '
+          'comentar. Irune dijo "algún día". Anótalo: lo dijeron las '
+          'dos. Eso significa algo, aunque tú aún no sepas qué.',
+      flagDesbloqueo: 'escena_3_9_vista',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_iniciado',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Iniciado',
+      texto:
+          'Ceremonia corta. Cinco Maestros, cinco "bien". Dos "gracias" '
+          'de Sora — no eran para ti, eran para los otros, pero te '
+          'llegaron también. Saliste sin saber bien qué sentir. Está '
+          'bien así. La marca pesa más que las anteriores.',
+      flagDesbloqueo: 'escena_4_10_vista',
+    ),
+    EntradaCuaderno(
+      id: 'bitacora_hasta_entonces',
+      categoria: CategoriaCuaderno.bitacora,
+      titulo: 'Hasta entonces',
+      texto:
+          'Sora se va a Kir. La Montaña sigue ahí. La Montaña siempre '
+          'estuvo ahí — pero esta noche se ve distinta. Mañana volverás '
+          'al cazadero, claro. Y a los Canales, y al Mercado. Pero algo '
+          'cambió esta noche, y no se desanda.',
+      flagDesbloqueo: 'escena_4_14_vista',
+    ),
+
     // ------- Personajes -------
     EntradaCuaderno(
       id: 'personaje_sora',

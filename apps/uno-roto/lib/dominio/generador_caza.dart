@@ -31,6 +31,8 @@ import 'problema_comparacion_distinta.dart'
     show GeneradorComparacionDistinta;
 import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
+import 'problema_suma_basica.dart' show GeneradorSumaBasica;
+import 'problema_ecuacion_lineal.dart' show GeneradorEcuacionLineal;
 import 'problema_angulo.dart' show GeneradorAngulo;
 import 'problema_media.dart' show GeneradorMedia;
 import 'problema_moda_mediana.dart'
@@ -85,7 +87,18 @@ class GeneradorCaza {
   /// sesgo fuerte. Si es null, cae al reparto general por dificultad.
   final Distrito? distrito;
 
-  GeneradorCaza({int? semilla, this.distrito}) : _azar = math.Random(semilla);
+  /// Offset que se suma al nivel calculado por esquirlas. Sirve al modo
+  /// experto: un niño avanzado parte unos peldaños más arriba en lugar
+  /// de tener que recorrer los casos triviales para llegar a los
+  /// interesantes. 0 = comportamiento normal (default). 2 = modo
+  /// experto canónico (salta los tiers más fáciles).
+  final int offsetDificultad;
+
+  GeneradorCaza({
+    int? semilla,
+    this.distrito,
+    this.offsetDificultad = 0,
+  }) : _azar = math.Random(semilla);
 
   /// Variante dirigida por skill_id: el motor adaptativo decide qué
   /// habilidad tocar y este generador produce un Fragmento del tipo
@@ -142,6 +155,47 @@ class GeneradorCaza {
     String? modoMcmMcdPreferido,
     bool segundoOperandoNatural = false,
   }) {
+
+    if (tipo == TipoFragmentoEnTejado.ecuacionLineal) {
+      final problema = GeneradorEcuacionLineal(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // Reusamos numerador/denominador como (a, c). El Fragmento del
+        // cazadero solo necesita identificarse visualmente; la pantalla
+        // genera su propio problema desde dificultad.
+        numerador: problema.a,
+        denominador: problema.c.abs(),
+        tipo: tipo,
+        etiquetaDecimal: problema.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.sumaBasica) {
+      final problema = GeneradorSumaBasica(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // Reusamos numerador/denominador como sumandos a/b para no
+        // inflar el modelo del Fragmento.
+        numerador: problema.a,
+        denominador: problema.b,
+        tipo: tipo,
+        etiquetaDecimal: '${problema.a}+${problema.b}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
 
     if (tipo == TipoFragmentoEnTejado.lecturaDecimal) {
       final problema = GeneradorLecturaDecimal(
@@ -1589,6 +1643,14 @@ class GeneradorCaza {
         // EST.02 entra justo después de EST.01 — Iniciado II. Pide
         // soltura visual con la idea de porcentaje.
         return dificultad >= 3;
+      case TipoFragmentoEnTejado.sumaBasica:
+        // ARI.01 — disponible siempre. Es la base. Si el motor la
+        // ofrece es porque el niño la necesita.
+        return true;
+      case TipoFragmentoEnTejado.ecuacionLineal:
+        // ALG.01 — solo desde dificultad alta o desde modo
+        // Entrenamiento explícito. Es entrada a álgebra.
+        return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;
       case TipoFragmentoEnTejado.decimal:
@@ -1701,7 +1763,19 @@ class GeneradorCaza {
   /// Nivel de dificultad creciente sin tope. Cada "tier" mete
   /// denominadores más grandes, primos más frecuentes y compuestos
   /// más cerca de 1 (7/8, 11/12) para el niño avanzado.
+  ///
+  /// Se le suma `offsetDificultad` para que el modo experto pueda
+  /// arrancar más arriba. El máximo se mantiene en 7 — los tiers
+  /// superiores no existen.
   int _nivelDificultadSegunEsquirlas(int esquirlas) {
+    final base = _nivelBasePorEsquirlas(esquirlas);
+    final ajustado = base + offsetDificultad;
+    if (ajustado < 0) return 0;
+    if (ajustado > 7) return 7;
+    return ajustado;
+  }
+
+  int _nivelBasePorEsquirlas(int esquirlas) {
     if (esquirlas < 4) return 0;
     if (esquirlas < 10) return 1;
     if (esquirlas < 20) return 2;

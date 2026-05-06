@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../dominio/fragmento.dart';
 import 'particulas_rotura.dart';
@@ -23,6 +24,14 @@ class LienzoCombate extends StatefulWidget {
   final ValueChanged<RadioTrazado> onAgregarRadio;
   final ValueChanged<RadioTrazado?> onActualizarRadioEnCurso;
 
+  /// Si el niño empieza a arrastrar encima de un radio ya confirmado, en
+  /// lugar de iniciar un trazo nuevo se reposiciona ese radio: cada update
+  /// llama a este callback con el índice y el nuevo ángulo. Opcional: si
+  /// la pantalla no lo cablea, el arrastre encima de un radio cae en el
+  /// flujo normal (trazo nuevo) y el botón Deshacer sigue siendo la única
+  /// vía para corregir.
+  final void Function(int indice, RadioTrazado nuevo)? onMoverRadio;
+
   const LienzoCombate({
     super.key,
     required this.fragmento,
@@ -37,6 +46,7 @@ class LienzoCombate extends StatefulWidget {
     required this.particulasRotura,
     required this.onAgregarRadio,
     required this.onActualizarRadioEnCurso,
+    this.onMoverRadio,
   });
 
   @override
@@ -48,6 +58,9 @@ class _LienzoCombateState extends State<LienzoCombate>
   final GlobalKey _claveLienzo = GlobalKey();
   late AnimationController _controladorLatido;
   Offset? _puntoDedo;
+  // Si el gesto actual está reposicionando un radio existente, guardamos
+  // su índice. null = trazo nuevo (comportamiento clásico).
+  int? _indiceMoviendo;
 
   @override
   void initState() {
@@ -110,22 +123,73 @@ class _LienzoCombateState extends State<LienzoCombate>
     return RadioTrazado(_snapAMarcaSiCerca(math.atan2(dy, dx)));
   }
 
+  /// Umbral angular para "agarrar" un radio existente al iniciar arrastre.
+  /// Generoso (12°) porque los dedos de los niños no son precisos sobre
+  /// una línea fina. Si el dedo arranca a más de 12° de cualquier radio
+  /// confirmado, se interpreta como trazo nuevo.
+  static const double _radAgarre = 12 * math.pi / 180;
+
+  /// Devuelve el índice del radio confirmado más cercano al punto, o null
+  /// si ninguno está dentro del umbral angular de agarre.
+  int? _indiceRadioCerca(Offset punto) {
+    if (widget.radiosConfirmados.isEmpty) return null;
+    final centro = _centroDelLienzo();
+    final anguloPunto = math.atan2(punto.dy - centro.dy, punto.dx - centro.dx);
+    int? mejorIndice;
+    var mejorDistancia = double.infinity;
+    for (var i = 0; i < widget.radiosConfirmados.length; i++) {
+      var delta = (anguloPunto - widget.radiosConfirmados[i].anguloRad).abs() %
+          (2 * math.pi);
+      if (delta > math.pi) delta = 2 * math.pi - delta;
+      if (delta < mejorDistancia) {
+        mejorDistancia = delta;
+        mejorIndice = i;
+      }
+    }
+    return mejorDistancia <= _radAgarre ? mejorIndice : null;
+  }
+
   void _alIniciarTrazo(DragStartDetails detalle) {
     setState(() => _puntoDedo = detalle.localPosition);
+    // Primero: ¿el dedo arranca encima de un radio existente? Si sí y la
+    // pantalla cablea onMoverRadio, agarramos ese radio para reposicionar
+    // (no se crea un trazo nuevo). Esto funciona incluso con el objetivo
+    // ya cubierto, porque mover no añade radios.
+    final alMover = widget.onMoverRadio;
+    if (alMover != null) {
+      final indice = _indiceRadioCerca(detalle.localPosition);
+      if (indice != null) {
+        HapticFeedback.lightImpact();
+        setState(() => _indiceMoviendo = indice);
+        return;
+      }
+    }
     if (!widget.aceptaNuevosTrazos) return;
     widget.onActualizarRadioEnCurso(_anguloDesdePunto(detalle.localPosition));
   }
 
   void _alActualizarTrazo(DragUpdateDetails detalle) {
     setState(() => _puntoDedo = detalle.localPosition);
+    final indiceMov = _indiceMoviendo;
+    if (indiceMov != null) {
+      widget.onMoverRadio?.call(
+        indiceMov,
+        _anguloDesdePunto(detalle.localPosition),
+      );
+      return;
+    }
     if (!widget.aceptaNuevosTrazos) return;
     widget.onActualizarRadioEnCurso(_anguloDesdePunto(detalle.localPosition));
   }
 
   void _alTerminarTrazo(DragEndDetails detalle) {
+    setState(() => _puntoDedo = null);
+    if (_indiceMoviendo != null) {
+      setState(() => _indiceMoviendo = null);
+      return;
+    }
     final radio = widget.radioEnCurso;
     widget.onActualizarRadioEnCurso(null);
-    setState(() => _puntoDedo = null);
     if (radio == null) return;
     if (!widget.aceptaNuevosTrazos) return;
     widget.onAgregarRadio(radio);

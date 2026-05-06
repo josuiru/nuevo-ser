@@ -91,6 +91,14 @@ class GeneradorDual {
           a.denominador * b.denominador,
         ).reducida();
       case OperadorAritmetico.division:
+        // Defensa contra dividir entre fracción de numerador 0 (no
+        // debería llegar aquí desde el juego — los Fragmentos del
+        // cazadero traen num>0 — pero si llegase produciría
+        // Fraccion(_, 0) y el assert del constructor lo cazaría en
+        // debug y daría comportamiento indefinido en release).
+        if (b.numerador == 0) {
+          return Fraccion(a.numerador, a.denominador);
+        }
         return Fraccion(
           a.numerador * b.denominador,
           a.denominador * b.numerador,

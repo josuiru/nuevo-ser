@@ -2,6 +2,7 @@ import 'catalogo_escenas.dart';
 import 'desafio_kurz.dart';
 import 'escena_cinematica.dart';
 import 'variantes_entrenamiento.dart';
+import 'variantes_era_dos.dart';
 import 'variantes_maquinas.dart';
 import 'variantes_puentes.dart';
 
@@ -46,8 +47,9 @@ class IrAlMapa extends DecisionOrquestador {
 }
 
 /// Identifica de qué arco proviene una variante recurrente, para que
-/// el caller sepa qué store de "usadas" persistir.
-enum ArcoConVariantes { arco1, arco2, arco3 }
+/// el caller sepa qué store de "usadas" persistir. `eraDos` cubre el
+/// pool latente que se activa tras cerrar el Arco 4 (escena 4.14).
+enum ArcoConVariantes { arco1, arco2, arco3, eraDos }
 
 /// Cada combate jugable se desbloquea por una pareja
 /// `(flag-disparador, flag-completado)`. La pareja vive aquí para que
@@ -121,6 +123,7 @@ class OrquestadorEscenas {
     required Set<String> variantesArco1Usadas,
     required Set<String> variantesArco2Usadas,
     required Set<String> variantesArco3Usadas,
+    required Set<String> variantesEraDosUsadas,
     required bool varianteYaDisparadaEnEstaTransicion,
   }) {
     // 1. Combate jugable pendiente.
@@ -142,6 +145,7 @@ class OrquestadorEscenas {
         arco1Usadas: variantesArco1Usadas,
         arco2Usadas: variantesArco2Usadas,
         arco3Usadas: variantesArco3Usadas,
+        eraDosUsadas: variantesEraDosUsadas,
       );
       if (variante != null) return variante;
     }
@@ -163,6 +167,7 @@ class OrquestadorEscenas {
     required Set<String> arco1Usadas,
     required Set<String> arco2Usadas,
     required Set<String> arco3Usadas,
+    required Set<String> eraDosUsadas,
   }) {
     // Arco 3 — máquinas con Vadic — entre 3.6 y 3.18.
     final arco3Empezado = flagsActivos.contains('escena_3_6_vista');
@@ -194,6 +199,19 @@ class OrquestadorEscenas {
         usadas: arco1Usadas,
         elegir: VariantesEntrenamiento.elegirSiguiente,
         arco: ArcoConVariantes.arco1,
+      );
+    }
+
+    // Era 2 — pool latente post-MVP. Activo desde el cierre del Arco 4
+    // (4.14 vista) y sin horizonte de cierre: el niño puede recibir
+    // estas variantes indefinidamente. Por orden de prioridad cae al
+    // final, así que solo entra si los arcos 1/2/3 ya no aplican.
+    final arco4Cerrado = flagsActivos.contains('escena_4_14_vista');
+    if (arco4Cerrado) {
+      return _elegirVarianteDePool(
+        usadas: eraDosUsadas,
+        elegir: VariantesEraDos.elegirSiguiente,
+        arco: ArcoConVariantes.eraDos,
       );
     }
 

@@ -181,6 +181,56 @@ class VariantesEntrenamiento {
     ],
   );
 
+  /// 1.8f — Sora ve la pila del Faro al bajar. Presenta la
+  /// sub-mecánica del periódico de forma diegética: Maren Olbéa
+  /// (directora del Faro) ya aparece firmando la crónica de la
+  /// edición 8 del banco, y Rexán/Brina/Naini/Oryn/Irune se
+  /// mencionan a lo largo de las 10 ediciones — esta variante
+  /// engancha al niño con la lectura sin romper el tono.
+  static const EscenaCinematica miraElFaro = EscenaCinematica(
+    id: '1.8f',
+    titulo: 'Entrenar — la pila del Faro',
+    flagDeSalida: 'variante_1_8_f_usada',
+    esCierreAmable: true,
+    ambiente: AmbienteCielo.nocheDespejada,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1800),
+        textoLectura:
+            'Bajan por la escalera. Junto a la puerta del Edificio hay una pila baja de papeles ordenados.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Eso es el Faro.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Sale los viernes. Lo deja la redacción.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Coge uno si te apetece. No es obligatorio.',
+        pausaPrevia: Duration(milliseconds: 900),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(milliseconds: 1500),
+        textoLectura: 'Sora se queda un momento mirando la pila.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Maren no escribe mal.',
+        pausaPrevia: Duration(milliseconds: 800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.sora,
+        texto: 'Hasta mañana.',
+        pausaPrevia: Duration(milliseconds: 700),
+      ),
+    ],
+  );
+
   /// 1.8e — Tras buen entrenamiento. Sora casi amable.
   static const EscenaCinematica buenEntrenamiento = EscenaCinematica(
     id: '1.8e',
@@ -225,6 +275,7 @@ class VariantesEntrenamiento {
     nocheDespejada,
     niebla,
     lluviaLigera,
+    miraElFaro,
     preguntaMontana,
     buenEntrenamiento,
   ];

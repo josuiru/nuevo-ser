@@ -1,0 +1,995 @@
+{
+  "version": "0.1",
+  "ediciones": [
+    {
+      "numeroSemana": 1,
+      "anioOrden": 412,
+      "numeroEdicion": 1234,
+      "portada": [
+        {
+          "titulo": "Tres lunas previstas para el equinoccio",
+          "firma": "Por la redacción.",
+          "cuerpo": "Los astrónomos del observatorio de las Afueras anuncian que en el equinoccio de este año (próximas seis semanas) Azula podrá ver **tres lunas a la vez** durante una sola noche. Es un fenómeno que ocurre, según los registros, una vez cada 31 años.\n\nBrina Saiz, maestra Fraccionista responsable del observatorio, ha confirmado a este periódico que las tres lunas serán visibles desde las nueve de la noche hasta las cuatro y media de la madrugada. *“Recomendamos que vayan en grupo,”* añadió. *“Los espacios despejados de las Afueras son seguros pero está prohibido llevar luces fuertes que perturben la observación.”*\n\nQuien quiera asistir debe inscribirse en el observatorio antes del último viernes del mes. Hay capacidad para 200 personas. La entrada es gratuita."
+        }
+      ],
+      "cronica": {
+        "titulo": "Estampas de mi mostrador",
+        "firma": "por Liana Verde",
+        "introduccion": "Liana Verde es vendedora de fruta en el Mercado de la Luz desde hace treinta años. Su puesto está en la plaza central, en la planta baja.",
+        "cuerpo": "Treinta años en el mismo sitio enseñan algunas cosas. La primera es que la gente que viene los lunes no es la que viene los jueves. Los lunes vienen los que cocinan para la semana. Los jueves vienen los que cocinan para visitas. Los lunes piden manzanas, los jueves piden uvas. Es ley.\n\nLa segunda es que no hay fruta más sincera que la pera. La pera no se disfraza. Si está dura, lo notas en cuanto la tocas. Si está madura, lo notas también. La manzana es más mentirosa — puede parecer perfecta y estar harinosa por dentro. Por eso a los Fraccionistas viejos les gusta más la pera. La gente que pasa muchas horas pensando se cansa de las cosas que mienten.\n\nLa tercera es que los niños siempre piden fruta de un color que no es el de la fruta. Si el limón es amarillo, lo quieren morado. Si la manzana es roja, la quieren azul. He aprendido a no contradecirles. Les digo que vuelvan dentro de seis meses, que entonces tendré la que ellos quieren. Ninguno ha vuelto a por su limón morado, pero todos siguen viniendo. La paciencia es una fruta que también vendo."
+      },
+      "cartas": [
+        {
+          "pregunta": "Hola, redacción del Faro. Vivo en el barrio de los Canales y desde hace dos meses oigo música por la noche viniendo del puente nuevo. Una guitarra suave, despacio, siempre la misma melodía. He preguntado a los vecinos y nadie sabe quién toca. ¿Saben ustedes algo?",
+          "firmante": "D. de Canales",
+          "respuesta": "A D. de Canales: hemos consultado con el Maestro Rexán, que conoce el barrio mejor que nadie. Nos dice que sí, que hay alguien que toca, pero que prefiere no dar el nombre. Solo añade: *“Si la música no molesta, no es asunto nuestro saber quién toca.”* Comprendemos."
+        },
+        {
+          "pregunta": "Llevo cuatro semanas perdiendo monedas. No mucho, una al día, dos como mucho. Las dejo en una cajita de la entrada y se van. ¿Es posible que sea un Fragmento?",
+          "firmante": "Familia O., Industria",
+          "respuesta": "A la familia O.: es muy posible. Recomendamos que abran las ventanas del cuarto durante una hora al amanecer. Los Fragmentos pequeños se disuelven solos cuando hay luz directa. Si en una semana sigue ocurriendo, escríbannos otra vez."
+        },
+        {
+          "pregunta": "Mi hijo de doce años ha empezado a entrenar con los Fraccionistas. ¿Es seguro?",
+          "firmante": "Una madre",
+          "respuesta": "A la madre preocupada: es seguro. La orden tiene reglas estrictas sobre los entrenamientos de los Aprendices. Si tiene dudas concretas, puede acudir al Edificio de los Tejados los miércoles por la mañana, cuando atiende la Maestra Irune."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El reparto de las naranjas",
+        "enunciado": "Naini ha vendido **la mitad** de sus naranjas por la mañana. **Un cuarto** del total a un solo cliente al mediodía. Y al cerrar le quedan **5 naranjas**.\n\n¿Cuántas naranjas tenía al empezar el día?",
+        "pista": null,
+        "solucionCanonica": "20",
+        "explicacionSolucion": "1/2 + 1/4 = 3/4 vendido. Las 5 que quedan son el cuarto restante, así que el total son 20.",
+        "dificultad": "aprendizI"
+      }
+    },
+    {
+      "numeroSemana": 2,
+      "anioOrden": 412,
+      "numeroEdicion": 1235,
+      "portada": [
+        {
+          "titulo": "Aciertos de la semana",
+          "firma": "Por la redacción.",
+          "cuerpo": "El acertijo del reparto de las naranjas tenía solución **20**. Han acertado:\n\n- *Tova de los Canales.*\n- *El joven O. de la Plaza Pequeña.*\n- *Una lectora que firma como “la del jueves”.*\n- *Marko, de las Afueras.*\n- *Y un Aprendiz de los Tejados que prefiere no dar nombre.*\n\nFelicidades. Recordamos que las respuestas pueden enviarse a través de los buzones que la redacción tiene en cada distrito."
+        },
+        {
+          "titulo": "El puente del Mercado vuelve a abrir",
+          "firma": "Por la redacción.",
+          "cuerpo": "El **puente del Mercado**, cerrado desde hace tres semanas por reparaciones del piso de madera, vuelve a abrir esta noche. Los carpinteros dirigidos por **Toren Igal** han terminado las obras antes del plazo previsto. El puente es seguro y volverá a seguir su horario habitual: cerrado de medianoche a seis de la madrugada.\n\nEl Maestro Rexán de los Canales ha agradecido a los carpinteros la rapidez del trabajo. *“Mientras estaba cerrado, la gente tenía que dar la vuelta de seis minutos por el puente del Norte. No es mucho, pero seis minutos seis veces al día son media hora. Vale la pena tener el puente.”*"
+        }
+      ],
+      "cronica": {
+        "titulo": "Diez años en la grúa",
+        "firma": "por Bel Toral",
+        "introduccion": "Bel Toral es operario de la grúa número 7 del puerto industrial. Tiene 39 años y lleva diez en el mismo puesto.",
+        "cuerpo": "La grúa número 7 mide veintiocho metros de altura. Cuando subí por primera vez, hace diez años, pensé que iba a vomitar. Ahora ya no. Ahora pienso que la gente que vive abajo no sabe lo bonita que es Azula desde aquí arriba.\n\nDesde mi cabina veo siete distritos. Veo el Mercado encendido como un farol grande. Veo los Canales en niebla casi siempre. Veo el Edificio de los Tejados, que parece pequeño desde aquí pero no lo es. Veo la silueta de la Montaña, que está lejísimos pero parece que pudieras tocarla con la mano si extendieras el brazo lo suficiente.\n\nHe calculado, una vez, cuántos kilos paso del barco al muelle en un día. La grúa coge cargas de mil quinientos kilos. Hago entre veinte y veinticinco viajes en una jornada. Eso son entre treinta mil y treinta y siete mil kilos al día. Cuando lo pensé por primera vez me dieron escalofríos. Treinta toneladas. Yo solo. Bueno, yo y la grúa.\n\nAhora me da igual. Me sirve más pensar en el café de las cinco. Mi mujer me lo trae caliente. Por una escalera muy larga."
+      },
+      "cartas": [
+        {
+          "pregunta": "He oído que la Maestra Naini va a abrir un puesto los domingos. ¿Es cierto?",
+          "firmante": "V. del Mercado",
+          "respuesta": "A V. del Mercado: hemos preguntado a la Maestra Naini directamente. Su respuesta textual: *“No, los domingos descanso. Pero gracias por pensar en mí.”*"
+        },
+        {
+          "pregunta": "¿Por qué los Fragmentos no se ven en las Afueras? Vivo allí y nunca he visto uno.",
+          "firmante": "Niña curiosa, 9 años",
+          "respuesta": "A la niña curiosa: sí se ven, pero hay menos. Los Fragmentos prefieren las zonas con muchos edificios. En las Afueras tienen menos donde esconderse. Si quieres ver alguno, ve a una calle estrecha del centro al anochecer. Pero ve con un adulto la primera vez."
+        },
+        {
+          "pregunta": "He encontrado en la calle un papel viejo con un símbolo extraño — un círculo con cuatro líneas saliendo. ¿Es de los Opacos?",
+          "firmante": "Anónimo",
+          "respuesta": "A Anónimo: sí lo es. Recomendamos que no lo guardes ni lo lleves a casa. Si vuelves a encontrar otro, comunícalo a un Fraccionista. La Maestra Brina o el Maestro Rexán pueden darte instrucciones concretas."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El reloj parado",
+        "enunciado": "En una plaza de los Canales hay un reloj parado. Sus manecillas marcan las **3 y cuarto**.\n\n¿Qué ángulo forman entre sí en ese momento?",
+        "pista": "La manecilla de las horas no apunta exactamente al 3 si son las 3 y cuarto. Se ha movido un cuarto de la distancia entre el 3 y el 4.",
+        "solucionCanonica": "7,5 grados",
+        "explicacionSolucion": "La manecilla pequeña ha avanzado un cuarto de los 30 grados que separan las horas; los minutos están en el 3, así que la diferencia es 7,5°.",
+        "dificultad": "aprendizI"
+      }
+    },
+    {
+      "numeroSemana": 3,
+      "anioOrden": 412,
+      "numeroEdicion": 1236,
+      "portada": [
+        {
+          "titulo": "Aciertos del reloj parado",
+          "firma": "Por la redacción.",
+          "cuerpo": "El acertijo del reloj parado tenía solución **7,5 grados** (la manecilla pequeña ha avanzado un cuarto de los 30 grados que separan las horas). Han acertado seis lectores. Casi todos olvidaban que la manecilla de las horas se mueve también. Felicidades a quienes lo supieron ver."
+        },
+        {
+          "titulo": "La procesión del miércoles",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "El miércoles de la próxima semana se celebra en Azula la **procesión de los Setenta y Tres**. Es una de las tradiciones más antiguas de la ciudad, aunque mucha gente joven no la conoce.\n\nHace 73 generaciones (la cuenta exacta es discutible, pero es la cifra que se ha mantenido), un grupo de habitantes de un pueblo cercano se refugió en Azula durante una época difícil. La ciudad les acogió. Y desde entonces, cada año, el Cónclave organiza una procesión silenciosa por el centro para recordar que **toda ciudad ha sido una vez refugio para alguien**.\n\nLa procesión sale de la plaza del Edificio de los Tejados a las once de la noche. Recorre el centro, baja a los Canales, y termina en el muelle del Puerto. No hay discursos. Solo silencio y velas.\n\nRecomendamos asistencia. La Maestra Irune y el Maestro Oryn estarán presentes."
+        }
+      ],
+      "cronica": {
+        "titulo": "Mi gato cojo",
+        "firma": "por Niko Adari",
+        "introduccion": "Niko Adari tiene 11 años. Vive en las Afueras. Esta es su primera carta al Faro.",
+        "cuerpo": "Tengo un gato que se llama Cuatro porque tiene tres patas. Mi padre dice que el nombre es ofensivo pero el gato no se queja. Los gatos no se quejan.\n\nCuatro perdió la pata de atrás antes de venir a vivir con nosotros. No sabemos cómo. Los vecinos lo encontraron así en una caja al lado de los contenedores. Mi padre dice que probablemente fue un accidente con una bicicleta. Mi madre dice que probablemente fue una pelea con otro gato. Yo digo que probablemente fue un Fragmento, porque hay Fragmentos que comen partes y partes y partes hasta que no queda nada.\n\nBrina, la Maestra de las Afueras, me dijo que mi teoría es interesante pero poco probable, porque los Fragmentos no comen partes de animales. Eso me alivió.\n\nAhora Cuatro corre con sus tres patas tan rápido como yo con las dos. Lo he medido. Yo tardo veintidós segundos en cruzar el patio. Él tarda veintiuno. Es injusto. Pero los gatos siempre hacen un poco de injusticia.\n\nVoy a ser Aprendiz cuando cumpla doce. Solo me quedan ocho meses. Mi padre dice que aún no, pero mi madre dice que sí. Cuando lo sea, le voy a contar a los Maestros lo de Cuatro. A ver qué dicen."
+      },
+      "cartas": [
+        {
+          "pregunta": "La crónica del señor Toral de la semana pasada me hizo llorar. Yo también soy operario de grúa, en el muelle 4. Me identifiqué mucho. Si lee esto, señor Toral, le invito al café.",
+          "firmante": "Otro operario",
+          "respuesta": "A “Otro operario”: le pasamos su mensaje. El señor Toral nos ha dicho que acepta y que prefiere los miércoles a media mañana. Pasen ustedes los detalles por nuestro buzón si lo desean."
+        },
+        {
+          "pregunta": "¿Por qué se llama “Faro de Azula” si Azula no tiene faro grande? El faro del Puerto es pequeño.",
+          "firmante": "A.K.",
+          "respuesta": "A A.K.: el nombre es viejo. La ciudad sí tuvo un faro grande, hace dos siglos, en el cabo norte. Una tormenta lo derribó. El Cónclave decidió no reconstruirlo porque el Puerto Silencioso ya tenía el suyo, más pequeño pero más útil. El nombre del periódico se mantiene en su honor."
+        },
+        {
+          "pregunta": "Mi madre me ha prohibido leer el Faro porque dice que tiene “ideas raras”. Pero a mí me gusta. ¿Qué hago?",
+          "firmante": "Aprendiz preocupado",
+          "respuesta": "A Aprendiz preocupado: háznos caso a tu madre. Si ella prefiere que no leas el Faro ahora, espera unos meses y vuelve a hablar con ella. Las prohibiciones de los padres suelen tener razones que entenderás más tarde. El Faro estará aquí cuando puedas volver."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Los tres aprendices",
+        "enunciado": "Tres Aprendices Fraccionistas se reúnen en la azotea. Sus rangos suman **7**. El producto de sus rangos es **8**. Ninguno tiene el mismo rango que otro.\n\n¿Qué rangos tienen los tres?",
+        "pista": "Los rangos van de Aprendiz I = 1 a Aprendiz III = 3, Iniciado I = 4, Iniciado II = 5, etc.",
+        "solucionCanonica": "1, 2 y 4",
+        "explicacionSolucion": "La única terna de enteros distintos positivos que suma 7 es {1, 2, 4}, y su producto es 8.",
+        "dificultad": "aprendizII"
+      }
+    },
+    {
+      "numeroSemana": 4,
+      "anioOrden": 412,
+      "numeroEdicion": 1237,
+      "portada": [
+        {
+          "titulo": "Aciertos de los tres aprendices",
+          "firma": "Por la redacción.",
+          "cuerpo": "El acertijo de los tres aprendices tenía como solución única **rangos 1, 2 y 4** (es decir, dos Aprendices y un Iniciado I). Felicidades a los nueve lectores que han acertado esta semana — récord de aciertos del trimestre."
+        },
+        {
+          "titulo": "Reapertura del muelle 2 del Puerto",
+          "firma": "Por la redacción.",
+          "cuerpo": "El muelle 2 del Puerto, cerrado durante seis meses por reparaciones submarinas, vuelve a estar operativo. El Maestro Oryn ha confirmado que las reformas han sido necesarias: los pilotes de madera estaban en peor estado del que se creía.\n\nDurante el cierre, la actividad del muelle 2 se trasladó a los muelles 1 y 3, que han trabajado a más capacidad. Los estibadores de los muelles 1 y 3 han pedido a la redacción que se mencione el esfuerzo. Lo mencionamos: **gracias, estibadores**. Sin ustedes, la ciudad come menos pescado."
+        }
+      ],
+      "cronica": {
+        "titulo": "Tres reglas de mi padre",
+        "firma": "por Leila Sorin",
+        "introduccion": "Leila Sorin es panadera del barrio del Centro. Su padre fue panadero antes que ella, y el padre de su padre antes.",
+        "cuerpo": "Mi padre me dejó tres reglas cuando me dio el horno.\n\nLa primera regla: la masa no engaña. Si está bien hidratada, sube. Si no, no sube. No hay trampa posible. Si la masa no sube, la culpa es del panadero, nunca de la masa.\n\nLa segunda regla: el horno tiene su carácter. Cada horno es una persona. Hay que conocerlo durante meses antes de fiarse del todo. Mi padre tardó cuatro años en fiarse del horno que ahora yo uso. Yo llevo doce años con él y todavía me sorprende a veces.\n\nLa tercera regla: nunca le digas a un cliente que el pan está caliente. Que se queme la mano él. Si tú le avisas y se quema igual, te culpa. Si no le avisas y se quema, se culpa a sí mismo. Esto no es crueldad — es respeto. Los adultos tienen derecho a tomar sus propias decisiones, incluso las malas.\n\nLlevo doce años cumpliendo las tres. Y los doce años he sido feliz. Lo cual demuestra que mi padre era más sabio de lo que yo creía cuando le contestaba mal con dieciséis años."
+      },
+      "cartas": [
+        {
+          "pregunta": "Llevo seis semanas leyendo el Faro y todavía no he resuelto ningún acertijo. ¿Estoy haciendo algo mal?",
+          "firmante": "Lectora frustrada",
+          "respuesta": "A Lectora frustrada: no, no está haciendo nada mal. Los acertijos son difíciles a propósito — no se resuelven todos. Si lee la solución de la semana siguiente y entiende cómo se llegó, está aprovechando bien el ejercicio. Resolver no es lo importante; pensar sí."
+        },
+        {
+          "pregunta": "He encontrado un Fragmento muy raro en mi habitación. Es muy pequeño, muy rojo, y no se mueve. ¿Es peligroso?",
+          "firmante": "Niño curioso, 10 años",
+          "respuesta": "A Niño curioso: hay Fragmentos que parecen no moverse pero respiran muy lento. Si está rojo, casi seguro es de la familia G (decimales, valor entre 0 y 1). No es peligroso si es pequeño. Pero pide a un adulto que llame a un Fraccionista. Ellos lo desfragmentan en tres minutos. No lo toques."
+        },
+        {
+          "pregunta": "¿Por qué los Fraccionistas no cobran? Eso no puede ser sostenible.",
+          "firmante": "Comerciante escéptico",
+          "respuesta": "A Comerciante escéptico: la orden se mantiene de donaciones voluntarias y de mecenas históricos. Lo cierto es que económicamente es frágil. Esa fragilidad es parte de su ética: si cobraran, atenderían primero a quien paga más, y eso traicionaría su voto. Es un equilibrio incómodo. Muchos Fraccionistas tienen otros trabajos también."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Las manzanas y las uvas",
+        "enunciado": "Naini compra para su puesto **20 kilos** de fruta. Una parte son manzanas, otra son uvas. Las manzanas las compra a **2 monedas el kilo**. Las uvas, a **3 monedas el kilo**.\n\nEn total se gasta **48 monedas**.\n\n¿Cuántos kilos de manzanas y cuántos de uvas ha comprado?",
+        "pista": null,
+        "solucionCanonica": "12 kg manzanas, 8 kg uvas",
+        "explicacionSolucion": "12×2 + 8×3 = 24 + 24 = 48 monedas; total 20 kilos.",
+        "dificultad": "aprendizII"
+      }
+    },
+    {
+      "numeroSemana": 5,
+      "anioOrden": 412,
+      "numeroEdicion": 1238,
+      "portada": [
+        {
+          "titulo": "Aciertos de las manzanas y las uvas",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo anterior: **12 kilos de manzanas y 8 kilos de uvas**. (12×2 + 8×3 = 24 + 24 = 48 monedas, total 20 kilos.)\n\nHan acertado siete lectores. La carta más curiosa la escribió una niña de diez años que dice haber resuelto el problema usando una balanza imaginaria. *“Si las manzanas pesan menos de monedas, son menos por kilo, así que de las que pesan menos hay más kilos.”* Es un razonamiento bonito y nos parece más interesante que el cálculo directo."
+        },
+        {
+          "titulo": "Naini estrena variedad",
+          "firma": "Por la redacción.",
+          "cuerpo": "La Maestra Naini, comerciante y Fraccionista del Mercado de la Luz, ha incorporado a su puesto principal una nueva variedad de fruta: **el dátil rojo de las islas del sur**, que hasta ahora no había llegado regularmente a Azula.\n\nNaini explica que el dátil rojo es más dulce que el moreno, contiene **un 40% más de azúcar**, y se conserva más tiempo. *“Es excelente para los Fraccionistas Mayores que entrenan muchas horas. Da energía y no llena el estómago.”*\n\nEl precio inicial es de **8 monedas el cuarto kilo**. Naini avisa que probablemente bajará a las pocas semanas, cuando la oferta se estabilice."
+        }
+      ],
+      "cronica": {
+        "titulo": "Lo que oye el botero",
+        "firma": "por Tobi Cera",
+        "introduccion": "Tobi Cera es botero del canal mayor de los Canales. Lleva 22 años trabajando en el mismo recorrido.",
+        "cuerpo": "La gente que sube a mi barca habla. Habla mucho. Yo, no. Yo solo remo.\n\nHe oído de todo. Confesiones. Discusiones de pareja. Niños que cuentan a sus abuelos cosas que no contarían a sus padres. Adultos que repasan su día en voz alta sin pensar que yo estoy un metro detrás. Casi siempre me callo.\n\nSolo una vez interrumpí. Iba una pareja muy joven, los dos tendrían dieciséis o diecisiete años. Discutían fuerte. Él le decía a ella que lo dejara. Ella le decía que ya lo había dejado. Él le decía que volviera. Ella le decía que no. Después de cinco minutos, le dije a él, sin girarme: *“Joven. Si una persona te dice que no tres veces, deja de preguntarle.”* Él se calló. Ella me miró y asintió. Bajaron tres puentes después en silencio.\n\nMe dejaron buena propina aquella vez. No sé si fue por el remo o por la frase.\n\nHace dos años perdí mi anillo de boda en el canal. Se cayó haciendo un giro fuerte. No lo busqué. Mi mujer me preguntó por qué no lo buscaba y le dije que el agua se queda con lo que necesita. Ella se rió. *“Lo que el agua necesita son anillos baratos como el tuyo.”* Pero no he vuelto a llevarlo. Y mi mujer ya no me lo pide."
+      },
+      "cartas": [
+        {
+          "pregunta": "¿Pueden los Fragmentos volverse buenos?",
+          "firmante": "Niño de 8 años",
+          "respuesta": "A Niño de 8 años: los Fragmentos no son malos para empezar. Son pedazos sueltos del Uno. Algunos hacen daño porque son grandes. Otros son muy pequeños y no hacen nada. Si por “buenos” preguntas si pueden vivir con la gente sin causar problemas, sí, los pequeños pueden. Hay zonas del Mercado donde los Fragmentos pequeños conviven con la gente desde hace décadas y nadie sufre."
+        },
+        {
+          "pregunta": "Mi vecina se quedó parada en la cocina la semana pasada durante diez minutos y luego dijo “¿qué hora es?” y se fue sin desayunar. ¿Es Fragmento?",
+          "firmante": "Vecina preocupada",
+          "respuesta": "A Vecina preocupada: puede ser, puede no ser. Los Fragmentos pequeños causan ese tipo de despistes pasajeros. Pero también lo causa el cansancio, el estrés y la edad. Si su vecina tiene más de 60 años, probablemente es solo cansancio. Si es más joven y le pasa más veces, sería razonable que pidiera ayuda en el cuartel de los Tejados."
+        },
+        {
+          "pregunta": "La crónica del señor Cera me hizo pensar en mi propio anillo perdido hace cinco años. Tampoco lo he buscado. ¿Hay un significado oculto en eso?",
+          "firmante": "Lectora pensativa",
+          "respuesta": "A Lectora pensativa: posiblemente. Pero el significado se lo pones tú, no nosotros. Algunas pérdidas son alivios disfrazados."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El pago al constructor",
+        "enunciado": "Vantor, el empresario, ha hecho una reforma en su mansión. Ha pagado al constructor **el 36% del total** del coste por adelantado. Lo que falta por pagar son **128 monedas**.\n\n¿Cuánto cuesta la reforma completa?",
+        "pista": null,
+        "solucionCanonica": "200 monedas",
+        "explicacionSolucion": "Lo pagado fue 72 monedas (36% de 200). Lo que faltaba, 128 monedas, es el 64% del total.",
+        "dificultad": "aprendizII"
+      }
+    },
+    {
+      "numeroSemana": 6,
+      "anioOrden": 412,
+      "numeroEdicion": 1239,
+      "portada": [
+        {
+          "titulo": "Aciertos del 36%",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución de la semana pasada: **200 monedas**. Lo pagado fue 72 monedas (36% de 200). Lo que faltaba, 128 monedas, era el 64% del total. Han acertado once lectores — segundo récord del trimestre. Felicidades."
+        },
+        {
+          "titulo": "El faro distraído",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "Esta semana llegan a la redacción **tres cartas distintas** sobre algo que considerábamos casual: el **faro lejano del Puerto** ha estado parpadeando con un patrón inusual durante varias noches.\n\nHemos consultado al Maestro Oryn, que es la voz más autorizada en cuestiones del Puerto. Su respuesta ha sido escueta: *“El faro lleva años haciendo eso. No es la primera vez. Pasará.”*\n\nCuando hemos insistido, ha añadido: *“Si están preocupados, no lo estén. Si están curiosos, lo entiendo, pero tampoco hace falta. El faro es del faro.”*\n\nTomamos nota. La redacción no investigará más sobre el faro. Si algún lector tiene información que considere relevante, nuestros buzones siguen abiertos."
+        }
+      ],
+      "cronica": {
+        "titulo": "Veintidós años en el observatorio",
+        "firma": "por Talin Mar",
+        "introduccion": "Talin Mar es astrónomo del observatorio de las Afueras. Trabaja con la Maestra Brina pero es funcionario civil, no Fraccionista.",
+        "cuerpo": "Mi trabajo es contar estrellas. Lo digo en serio. Cada noche, durante 22 años, he hecho recuento de las estrellas visibles en cada constelación. Anoto. Comparo con la noche anterior. Comparo con la misma noche del año anterior. Comparo con la misma noche de hace cinco años, diez, quince.\n\nLas estrellas, claro, no se mueven en escalas humanas. Lo que cambia es lo que se interpone entre ellas y nosotros: nubes, polvo, niebla baja, humedad. Mi recuento mide en realidad la limpieza del cielo de Azula.\n\nEn 22 años he documentado tres tendencias:\n\nPrimera: el cielo de invierno es más limpio. Hay más estrellas visibles entre noviembre y febrero. Esto lo sabe cualquier astrónomo aficionado.\n\nSegunda: el cielo del Puerto es más limpio que el del centro. La altura ayuda y la humedad marina filtra el polvo. Esto también es conocido.\n\nTercera, y esta es mía y nadie me la ha contradicho aún: el cielo de Azula es **más limpio cada año**. Las medias trimestrales del último decenio muestran un aumento progresivo del 1,2% en la cuenta media. Cada trimestre se ven más estrellas.\n\nBrina y yo discutimos lo que significa. Ella cree que es la regulación contra el humo de las fábricas. Yo creo que es algo más profundo, pero no sé qué. Algunos colegas en el continente ven lo contrario en sus ciudades. Solo Azula muestra esta tendencia. Los datos están publicados en los archivos del observatorio. Cualquiera puede consultarlos.\n\nA veces, cuando hago el recuento, me pregunto si las estrellas mismas son distintas aquí. No lo digo en voz alta. Pero lo pienso."
+      },
+      "cartas": [
+        {
+          "pregunta": "¿Es cierto que el faro habla? Mi abuelo me contaba historias de niño y siempre decía que el faro decía cosas.",
+          "firmante": "Nieta del marinero",
+          "respuesta": "A Nieta del marinero: tu abuelo conocía cosas que la redacción no conoce. No podemos confirmar ni desmentir. Solo podemos decir que tu abuelo sabía algo, y que probablemente nos haría falta saber más. Si guardas alguna historia suya por escrito, nos encantaría leerla."
+        },
+        {
+          "pregunta": "Mi hijo de 11 años ha empezado a leer el Faro y se sabe los nombres de todos los Maestros y de varios comerciantes. ¿Es normal?",
+          "firmante": "Padre orgulloso",
+          "respuesta": "A Padre orgulloso: muy normal. Y muy bonito. La memoria de los nombres es la primera forma de respeto a un lugar. Felicidades a los dos."
+        },
+        {
+          "pregunta": "He empezado a entrenar con la Maestra Brina y voy fatal en estadística. ¿Hay esperanza?",
+          "firmante": "Aprendiz desesperado",
+          "respuesta": "A Aprendiz desesperado: hay esperanza. La estadística es la materia que más tarde “hace clic”. Sigue practicando con calma. Y prueba a llevar un cuaderno propio donde anotes datos cualesquiera de tu vida diaria — peso de la mochila cada mañana, hora de salida del sol, lo que sea. Cuando empieces a ver patrones en tus propios datos, la estadística dejará de parecerte abstracta."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Las cuatro piedras",
+        "enunciado": "En un tablero hay **cuatro piedras** alineadas, cada una con un valor. La suma de las cuatro es **30**. La primera es **el doble** de la segunda. La tercera es **el triple** de la primera. La cuarta es **igual** a la segunda.\n\n¿Cuáles son los cuatro valores?",
+        "pista": null,
+        "solucionCanonica": "6, 3, 18, 3",
+        "explicacionSolucion": "Si la segunda es x, la primera es 2x, la tercera es 3·2x = 6x, y la cuarta es x. Suman 2x + x + 6x + x = 10x = 30, así que x = 3.",
+        "dificultad": "aprendizIII"
+      }
+    },
+    {
+      "numeroSemana": 7,
+      "anioOrden": 412,
+      "numeroEdicion": 1240,
+      "portada": [
+        {
+          "titulo": "Aciertos de las cuatro piedras",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo: **6, 3, 18, 3**. Si la segunda es x, la primera es 2x, la tercera es 3·2x = 6x, y la cuarta es x. Suman 2x + x + 6x + x = 10x = 30, así que x = 3. Los cuatro valores son 6, 3, 18, 3. Han acertado cinco lectores."
+        },
+        {
+          "titulo": "El equinoccio",
+          "firma": "Por la redacción.",
+          "cuerpo": "El **equinoccio de las tres lunas** se celebró el viernes pasado. La Maestra Brina nos ha entregado el balance:\n\n- Asistencia oficial: **183 personas**.\n- Tres turnos de observación de **dos horas** cada uno.\n- Diecisiete personas no pudieron acceder por falta de espacio (se ha prometido prioridad para la próxima vez, dentro de 31 años).\n- Un único incidente: una cría de gato perdida que apareció maullando en el observatorio. El animal está bien y ha sido entregado a una familia que lo reclamó.\n\nLas tres lunas fueron visibles entre las **22:14 y las 04:33**. El Maestro Oryn comentó al cierre: *“Una bonita noche.”* Brina, más expansiva, añadió: *“Lo que más me ha gustado ha sido el silencio de la gente. Doscientas personas mirando el cielo sin hablar durante seis horas. Es lo más cerca de la perfección que he visto este año.”*"
+        }
+      ],
+      "cronica": {
+        "titulo": "La biblioteca del Maestro",
+        "firma": "por Ena Solis",
+        "introduccion": "Ena Solis es ayudante de archivero en el Edificio de los Tejados. Lleva 14 años en el puesto.",
+        "cuerpo": "La gente cree que el Archivo es un sitio polvoriento. No lo es. Lo limpiamos los martes y los viernes, y el aire está más sano que en muchas casas. La gente cree que el Archivo es aburrido. No lo es. Hay cosas en esos estantes que no se han leído en setenta años.\n\nMi tarea principal es catalogar. Cuando un Fraccionista entrega un informe — y lo hacen cada semana — yo lo numero, lo fecho, lo guardo. Es tedioso pero importante. Los informes de hace tres siglos que conservamos hoy fueron catalogados un día por alguien como yo. Si yo no hago bien mi trabajo, dentro de tres siglos faltará algo.\n\nTengo una manía secreta: en los días que el guardián no está, leo los informes nuevos antes de catalogarlos. No debería. Pero no puedo evitarlo.\n\nEsta semana he leído un informe del Maestro Vadic sobre las máquinas de la fábrica de aceite. Las máquinas llevan diez años funcionando con precisión irregular. Vadic ha medido los desajustes durante seis meses y los ha cruzado con las apariciones de Fragmentos en el distrito. La correlación es del 0,73. No es perfecta pero es alta. Eso significa, probablemente, que los desajustes vienen de Fragmentos.\n\nHe cruzado este informe con uno mío personal — yo también llevo registros — sobre las cucharas que desaparecen del comedor de Aprendices del Edificio. La correlación con apariciones de Fragmentos es del 0,84. Más alta que la de Vadic. Si presento mi informe formalmente, puede que me reciban. Estoy pensándomelo.\n\nSoy ayudante de archivero. Pero quizá un día sea Fraccionista de las Afueras. La Maestra Brina dice que aún estoy a tiempo. Tengo cuarenta y un años. Eso me parece tarde. Pero ella dice que no, que justamente."
+      },
+      "cartas": [
+        {
+          "pregunta": "¿Qué es la “Montaña” que se ve siempre al horizonte?",
+          "firmante": "Niño de 10 años, primera vez en Azula",
+          "respuesta": "A Niño de 10 años: la Montaña es lo que se ve al fondo. Lleva ahí siempre. No tiene nombre oficial — se la llama “la Montaña” sin más. Es alta. Hay leyendas. No hay caminos para subirla — al menos no para gente común. Si te interesa, pregunta a los Fraccionistas. Algunos saben más que nosotros."
+        },
+        {
+          "pregunta": "Mi padre dice que los Opacos tienen razón en todo. ¿Es seguro pensar eso?",
+          "firmante": "Adolescente confuso",
+          "respuesta": "A Adolescente confuso: pensar es siempre seguro. Decir lo que se piensa, a veces, no. Te recomendamos que escuches con calma a tu padre, que escuches con calma a otros que piensen distinto, y que vayas formando tu propio criterio. No hay prisa. El mundo no se va a estropear porque tú te tomes diez años en decidir qué pensar."
+        },
+        {
+          "pregunta": "Quiero suscribirme al Faro pero no encuentro dónde se hace.",
+          "firmante": "Suscriptor potencial",
+          "respuesta": "A Suscriptor potencial: no hay suscripción. El Faro es gratuito y se distribuye en los siete distritos. Si en tu distrito no llega bien, escríbenos y haremos llegar más copias. Si quieres apoyar al periódico, recomienda a tus vecinos que lo lean. Es nuestro mejor combustible."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El reparto de la herencia",
+        "enunciado": "Un comerciante muere y deja una herencia de **1200 monedas** a sus tres hijos. La reparte así, según su testamento:\n\n- El primer hijo recibe **el doble** que el segundo.\n- El tercer hijo recibe **300 monedas más** que el segundo.\n\n¿Cuánto recibe cada hijo?",
+        "pista": null,
+        "solucionCanonica": "450, 225, 525",
+        "explicacionSolucion": "Si el segundo es x, el primero es 2x y el tercero es x + 300. Suman 4x + 300 = 1200, así que x = 225.",
+        "dificultad": "aprendizIII"
+      }
+    },
+    {
+      "numeroSemana": 8,
+      "anioOrden": 412,
+      "numeroEdicion": 1241,
+      "portada": [
+        {
+          "titulo": "Aciertos de la herencia",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo: **primer hijo 450, segundo hijo 225, tercer hijo 525**. (Si el segundo es x, el primero es 2x, el tercero es x + 300. Suman 4x + 300 = 1200, así que x = 225.) Aciertos: ocho lectores."
+        },
+        {
+          "titulo": "Anuncio del observatorio",
+          "firma": "Por la redacción.",
+          "cuerpo": "La Maestra Brina ha hecho llegar a la redacción un anuncio para los Fraccionistas jóvenes:\n\n*“Quien quiera colaborar en el conteo trimestral de Fragmentos del distrito de las Afueras puede inscribirse en el observatorio. Necesitamos cinco voluntarios entre Aprendices II e Iniciados II. La tarea consiste en llevar el cuaderno con los Fragmentos vistos durante un mes en una zona asignada. No es difícil pero requiere constancia. Es voluntario y no tiene contraprestación, salvo el aprendizaje. Quien quiera apuntarse, que venga el sábado a las 21:00.”*\n\nRecordamos que la Maestra Brina lleva años recopilando datos de Fragmentos. Sus análisis se publican en el archivo del observatorio."
+        }
+      ],
+      "cronica": {
+        "titulo": "Cómo aprendí a no hablar",
+        "firma": "por Maren Olbéa",
+        "introduccion": "Maren Olbéa es la directora del Faro de Azula. Excepcionalmente, esta semana firma la crónica.",
+        "cuerpo": "Llevo 23 años dirigiendo este periódico. Antes era escritora. Antes de escribir, era lectora. Antes de leer, era una niña. Como cualquier niño, hablaba mucho.\n\nAprendí a no hablar a los 19 años. Mi mejor amigo me dijo una cosa que me dolió. Le respondí. Le respondí más. Hubo una tarde de seis horas de respuestas. Al final, mi mejor amigo se fue de mi vida. Veintidós años después no hemos vuelto a vernos. No sé si está vivo. Algunas veces busco su nombre en el archivo de defunciones. No aparece. Eso me conforta.\n\nAquella tarde aprendí que cada palabra que dices tiene precio. No siempre el precio se cobra inmediatamente. A veces tarda años. Pero se cobra.\n\nComo directora, he repasado este periódico 1240 veces. Ahora vamos por el 1241. En los primeros años quitaba lo bonito. *“Es exagerado,”* me decía mi padre. Y yo lo quitaba. Con el tiempo aprendí lo contrario: no hay que quitar lo bonito sino lo cruel. Lo cruel siempre está oculto bajo la apariencia de la objetividad. Yo busco lo cruel y lo quito. Lo bonito se queda — o al menos no estorba.\n\nHe cumplido 60 años. Probablemente dirigiré el Faro durante 10 o 15 años más. Después habrá que buscar a alguien. He pensado mucho en quién. He pensado en cinco personas. No diré quiénes. Si alguna de ellas lee esto, espero que se sienta aludida.\n\nMientras tanto: mi consejo para todos. Hablen menos de lo que pueden. Escriban más. Escuchen lo máximo. Y si alguna vez su mejor amigo les dice algo que les duele, **no contesten ese mismo día**. Esperen a la mañana. Casi todo lo que parece urgente, no lo es."
+      },
+      "cartas": [
+        {
+          "pregunta": "La crónica de la semana pasada me ha hecho pensar en cuándo entrar a la orden. Tengo 38 años. ¿Es muy tarde?",
+          "firmante": "Lectora indecisa",
+          "respuesta": "A Lectora indecisa: la orden recibe gente de todas las edades. La Maestra Brina entró a los 27. El Maestro Vadic, a los 40. Si tienes interés sincero, ve al Edificio de los Tejados un miércoles por la mañana y habla con la Maestra Irune. Ella te dirá si y cómo."
+        },
+        {
+          "pregunta": "He encontrado tres pintadas con un círculo roto en distintos sitios de la ciudad. ¿Las recoge alguien?",
+          "firmante": "Lector observador",
+          "respuesta": "A Lector observador: la Maestra Brina está documentando esas pintadas. Si nos das las direcciones exactas y la fecha aproximada, las pasamos a su archivo. Gracias por estar atento."
+        },
+        {
+          "pregunta": "El anuncio de Brina sobre el conteo de Fragmentos: ¿es competitivo o se puede entrar al sábado sin más?",
+          "firmante": "Aprendiz interesado",
+          "respuesta": "A Aprendiz interesado: vete al sábado sin más. Brina hará una breve entrevista — solo para saber si tienes el carácter constante necesario. No te preocupes por preparar nada."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El intercambio (mal planteado — ver edición siguiente)",
+        "enunciado": "Sora cambia con Kai algunos cromos. Sora le da a Kai **3/8 de su colección**. Kai le da a Sora **2/5 de su colección**.\n\nDespués del intercambio, los dos tienen exactamente **el mismo número de cromos**: **24** cada uno.\n\n¿Cuántos cromos tenía cada uno al principio?",
+        "pista": null,
+        "solucionCanonica": "(Mal planteado: con esos porcentajes los dos no podían terminar con 24 cromos cada uno. Ver edición 9.)",
+        "explicacionSolucion": "El sistema 5S/8 + 2K/5 = 24 y 3K/5 + 3S/8 = 24 da S = 192/9, no entero. La redacción reconoce el error en la edición 9 y propone una versión corregida.",
+        "dificultad": "iniciadoI"
+      }
+    },
+    {
+      "numeroSemana": 9,
+      "anioOrden": 412,
+      "numeroEdicion": 1242,
+      "portada": [
+        {
+          "titulo": "Disculpas por el acertijo de la semana pasada",
+          "firma": "Por la redacción.",
+          "cuerpo": "El acertijo del intercambio de la semana pasada estaba mal planteado: con esos porcentajes, los dos no podían terminar con 24 cromos cada uno. Quien intentó resolverlo y le salieron números raros — no era usted, éramos nosotros. Pedimos disculpas. Al final de este número proponemos una versión corregida del acertijo."
+        },
+        {
+          "titulo": "Los Canales tendrán nuevo alumbrado",
+          "firma": "Por la redacción.",
+          "cuerpo": "El Cónclave ha aprobado la sustitución del alumbrado del Barrio de los Canales. Las farolas actuales, instaladas hace 47 años, se reemplazarán por modelos nuevos durante los próximos seis meses.\n\nEl Maestro Rexán ha pedido una sola cosa: *“Que la luz sea del mismo color. La gente del barrio se ha acostumbrado a ese ámbar. Cualquier otro color sería traición.”*\n\nLas nuevas farolas conservan el color ámbar pero consumen un 35% menos de energía. La instalación se hará por tramos, comenzando por las calles principales y avanzando hacia los callejones."
+        }
+      ],
+      "cronica": {
+        "titulo": "El silencio de las ocho menos cuarto",
+        "firma": "por Vil Ortís",
+        "introduccion": "Vil Ortís es enfermera del hospital del Mercado. Trabaja el turno de noche.",
+        "cuerpo": "Trabajo de las nueve a las nueve. Doce horas. Cuando llegué hace ocho años, pensaba que el turno de noche sería más tranquilo que el de día. Estaba equivocada. El turno de noche tiene su propia agitación. Las urgencias nocturnas son distintas — más raras, más graves, más solitarias. La gente se cae de un puente, se intoxica con setas, se desmaya en el bar. La urgencia diurna es banal. La nocturna no.\n\nPero hay un momento, cada noche, que se llama “**el silencio de las ocho menos cuarto**”. Es el cuarto de hora antes de que cambien los turnos por la mañana. Las urgencias se han calmado. Los pacientes ingresados duermen. Los que no, descansan. La cocina aún no ha empezado los desayunos. El relevo aún no ha llegado.\n\nEn ese cuarto de hora, el hospital está más silencioso que en cualquier otro momento. Es un silencio raro porque es un silencio **lleno**: hay personas vivas y personas heridas en cada habitación, hay máquinas que respiran, hay la luz cambiando del azul violeta al azul claro fuera. Pero está callado.\n\nLas primeras veces me daba miedo. Pensaba que algo iba a pasar. Llevo ocho años y nunca ha pasado nada. Es solo silencio.\n\nAhora, cuando algún día estoy de vacaciones, me doy cuenta de que echo de menos las ocho menos cuarto. La gente que duerme en su cama no sabe lo bonito que es estar despierta dentro de un hospital silencioso. Es el momento más limpio que conozco."
+      },
+      "cartas": [
+        {
+          "pregunta": "Mi hijo dice que el faro le habló en sueños. ¿Es preocupante?",
+          "firmante": "Madre con preguntas",
+          "respuesta": "A Madre con preguntas: los sueños no son preocupantes. Son sueños. Si su hijo está bien por lo demás, déjelo soñar. Si los sueños le quitan el sueño o le angustian, hable con la Maestra Irune. Pero probablemente no es nada. Los niños sueñan grandes cosas y no es problema nuestro entenderlas."
+        },
+        {
+          "pregunta": "Las pintadas que estoy documentando para Brina ya son once. ¿Cuándo deja de ser pasatiempo y empieza a ser preocupante?",
+          "firmante": "Lector observador (otra vez)",
+          "respuesta": "A Lector observador: once pintadas en pocas semanas no son normales. Hace dos años, en este distrito, había una al mes. Algo está cambiando. Continúa documentando con calma, no las toques, y pasa la información a Brina cada semana. Tu trabajo es valioso."
+        },
+        {
+          "pregunta": "¿Saben si Vantor, el empresario, ha hecho algún trato con los Coleccionistas?",
+          "firmante": "Anónimo",
+          "respuesta": "A Anónimo: no podemos publicar acusaciones sin pruebas. Si tiene información concreta y verificable, escríbanos por carta firmada y la analizaremos. Las acusaciones anónimas, por importantes que parezcan, no se publican aquí."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El intercambio simplificado",
+        "enunciado": "Sora y Kai juegan a intercambiar cromos. Sora le da a Kai exactamente **un cuarto** de los suyos. Después del intercambio, Sora tiene **18 cromos** y Kai tiene **30 cromos**. (Asumimos que Kai no le da nada a cambio en este caso.)\n\n¿Cuántos cromos tenía cada uno antes del intercambio?",
+        "pista": null,
+        "solucionCanonica": "Sora 24, Kai 24",
+        "explicacionSolucion": "Sora le dio 6 (un cuarto de 24) y le quedaron 18; Kai recibió 6 y quedó con 30.",
+        "dificultad": "iniciadoI"
+      }
+    },
+    {
+      "numeroSemana": 10,
+      "anioOrden": 412,
+      "numeroEdicion": 1243,
+      "portada": [
+        {
+          "titulo": "Aciertos del intercambio",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución: **Sora tenía 24 cromos, Kai tenía 24**. (Sora le dio 6 — un cuarto de 24 — y le quedaron 18; Kai recibió 6 y quedó con 30.) Han acertado nueve lectores. La carta más conmovedora la envió un niño de 8 años que dice haberlo resuelto “con palillos sobre la mesa”. A veces los métodos antiguos son los mejores."
+        },
+        {
+          "titulo": "El equinoccio menor",
+          "firma": "Por la redacción.",
+          "cuerpo": "Este sábado se celebra el **equinoccio menor**: el día del año en que la noche es más corta. Aún así, en Azula, la diferencia es modesta — apenas 35 minutos menos de oscuridad que la media anual.\n\nAlgunos comerciantes del Mercado mantienen una pequeña tradición: dejan una vela encendida toda la noche para “compensar” la escasez. La Maestra Naini participa cada año desde su puesto. Si pasan por el Mercado el sábado por la noche, verán que hay velas en cada planta."
+        }
+      ],
+      "cronica": {
+        "titulo": "Mi hija ya es Aprendiz",
+        "firma": "por Tora Berlin",
+        "introduccion": "Tora Berlin es panadera del barrio del Centro. Su hija acaba de pasar a Aprendiz I.",
+        "cuerpo": "Hace tres días, mi hija de 9 años cruzó la puerta del Edificio de los Tejados con una mochila pequeña y la cara seria. *“Vuelvo cuando sea Aprendiz I,”* me dijo. La acompañé hasta la entrada y la dejé ir sola.\n\nYo sabía que iba a ser Aprendiz I. Lo sabía desde hace meses. La Maestra Irune ya la había aceptado en una conversación previa — antes de la edad habitual, que son los doce años, porque mi hija había mostrado disposición y maneras de las que se ven pocas veces. La ceremonia de entrada es formal pero corta — apenas unos minutos. Lo que pasa es que mi hija no lo sabía. Para ella era un examen. Y los exámenes, cuando tienes 9 años, son enormes.\n\nVolvió tres horas después con una marca pequeña al cuello. Una marca de plata desgastada — todas las marcas de Aprendiz I son desgastadas porque pasan de niño en niño según se gradúan. Cuando un Aprendiz I asciende a Aprendiz II, devuelve la marca y la siguiente generación la usa. La que mi hija lleva ahora la han llevado quizás veinte niños antes que ella.\n\nLe pregunté qué tal había ido. *“Bien,”* me dijo. Y se fue a su cuarto a leer. Pasaron dos horas. Bajó a cenar. Le pregunté qué tal estaba. *“Bien,”* me dijo otra vez. Después de cenar, me preguntó si podía cortarse el pelo más corto. Le dije que sí. Le corté el pelo.\n\nFue cuando vi su nuca, ya pelada, cuando me di cuenta de que mi hija ya no es la misma. Llevaba 9 años siendo niña. Ahora es niña Aprendiz. Y aunque parezca lo mismo, no lo es.\n\nEsta carta la escribo porque mañana mi hija leerá el Faro como cada viernes y verá esta crónica firmada con mi nombre. Verá que la describo con respeto. Yo quería que ella lo supiera. Que su madre la trata como adulta cuando lo merece. Que ahora lo merece.\n\nHija: bienvenida a la orden. Y a estar tú sola un poco más, cada año, hasta que un día seas tú la que aceptas a otra."
+      },
+      "cartas": [
+        {
+          "pregunta": "Mi padre se ha ido de casa. Tengo 11 años. ¿Pueden los Fraccionistas ayudar?",
+          "firmante": "Niño que no firma",
+          "respuesta": "A Niño que no firma: los Fraccionistas no se ocupan de problemas familiares directamente, pero las Maestras Irune, Naini y Brina son personas a las que puedes acudir si necesitas hablar con un adulto que no sea de tu familia. Ve al Edificio de los Tejados o al Mercado y pregunta. Te recibirán. Mientras tanto, sé valiente y cuídate. Lo que está pasando no es culpa tuya. Y se va a arreglar — quizás no como esperas, pero se va a arreglar."
+        },
+        {
+          "pregunta": "Quería felicitar a la directora por la crónica de la semana pasada. Era hermosa.",
+          "firmante": "Lectora agradecida",
+          "respuesta": "A Lectora agradecida: la directora le agradece. Y se sonroja un poco, según indica la redacción."
+        },
+        {
+          "pregunta": "¿Cuál es el sentido de leer un periódico de una ciudad ficticia?",
+          "firmante": "Filósofo de café",
+          "respuesta": "A Filósofo de café: mire usted, no sabemos. Pero llevamos haciéndolo 1243 semanas y la gente sigue leyendo. Quizás el sentido es solo el de mirar la ciudad con paciencia, una vez por semana, como quien mira a un amigo. Si encuentra otra respuesta, escríbanos."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Las tres recetas",
+        "enunciado": "Naini está preparando tres recetas distintas con un mismo ingrediente: el **azafrán**.\n\n- La receta A usa **2/3 de cucharada**.\n- La receta B usa **1/4 de cucharada**.\n- La receta C usa **5/12 de cucharada**.\n\nNaini quiere preparar **dos veces** la receta A, **tres veces** la receta B y **una vez** la receta C.\n\n¿Cuántas cucharadas de azafrán necesita en total?",
+        "pista": null,
+        "solucionCanonica": "5/2 cucharadas",
+        "explicacionSolucion": "2·(2/3) + 3·(1/4) + 5/12 = 16/12 + 9/12 + 5/12 = 30/12 = 5/2 cucharadas.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 11,
+      "anioOrden": 412,
+      "numeroEdicion": 1244,
+      "portada": [
+        {
+          "titulo": "Solución de las tres recetas y el equinoccio menor",
+          "firma": "Por la redacción.",
+          "cuerpo": "El acertijo de las tres recetas tenía solución **5/2 cucharadas** (es decir, dos cucharadas y media). El cálculo es 2·(2/3) + 3·(1/4) + 5/12, que con denominador común da 16/12 + 9/12 + 5/12 = 30/12 = 5/2. Han acertado **cuatro lectores**, lo cual es récord a la baja del trimestre. Era un acertijo difícil. No se desanimen los demás — eran fracciones con tres denominadores distintos, y eso pone a prueba a Iniciados.\n\nEl **equinoccio menor** del sábado pasado pasó sin incidentes. Los puestos del Mercado mantuvieron la tradición de las velas. La Maestra Naini contó **180 velas** encendidas entre todos los puestos a lo largo de la noche. *“Más que el año pasado,”* nos dijo. *“Igual la gente está volviendo a las cosas pequeñas.”*"
+        },
+        {
+          "titulo": "El faro vuelve a parpadear",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "Vuelvo a tomar la pluma para algo que la redacción había dejado en pausa. Lectores que recuerdan la edición 1239 sabrán de qué hablo: el **faro lejano del Puerto** ha vuelto a parpadear con un patrón inusual. Llevamos **doce noches seguidas** documentándolo. El Maestro Oryn nos ha devuelto la misma respuesta de hace cinco semanas: *“El faro es del faro.”*\n\nHemos consultado, esta vez, con un viejo marinero retirado (firma como J. C. del Cabo) que escribió a la redacción tras nuestra primera nota. J. C. dice que vio el mismo patrón siendo joven, *“hace muchos años, justo antes de un equinoccio raro.”* No recuerda la fecha. La redacción ha ido al archivo y el archivo no es categórico, pero la semana del equinoccio anterior con tres lunas — hace 31 años — sí hay un parte del Cónclave que menciona, sin extenderse, “irregularidades del faro lejano”. Queda en el aire.\n\nNo insistimos. El Maestro Oryn ya ha dicho lo que tenía que decir. Pero dejamos constancia: doce noches."
+        }
+      ],
+      "cronica": {
+        "titulo": "Once años con la misma silla",
+        "firma": "por Adis Pelot",
+        "introduccion": "Adis Pelot es zapatera del Mercado de la Luz. Su puesto es de los pequeños, en la planta tercera. Lleva 11 años con la misma silla baja desde la que repara los zapatos.",
+        "cuerpo": "La silla la heredé de mi suegra cuando murió. Tenía once años cuando me la dio. *“Esta silla sabe estar callada,”* me dijo entonces. No la entendí. Ahora sí.\n\nLa silla se ha deformado. La parte del asiento se hunde un poco a la derecha, donde apoyo el peso al coser. La pata izquierda está más gastada que las otras tres porque arrastro la silla cada tarde para barrer. El respaldo tiene la curva de mi columna. Si se sentara otra persona, no estaría cómoda. Si me siento yo, no la siento.\n\nEsto que cuento de la silla pasa con todo lo demás también. La gente que más quieres te marca igual. Te dejan zonas hundidas, gastadas, curvadas a su forma. Y a veces no te das cuenta hasta que ya no están. Mi suegra estuvo en mi vida durante 22 años. Cuando murió pensé: *“Bueno, una persona menos.”* Tres meses después me di cuenta de que también pensaba menos en general. Que la había usado como respaldo de mi propia cabeza sin saberlo.\n\nSigo con la silla. Sigo con los zapatos. Pero ya no creo que las cosas sean solo cosas. Mi silla es media suegra. Mis zapatos son medio cliente. Y yo, probablemente, soy media zapatera y media todas las personas que se han sentado al otro lado del mostrador a esperar que les arreglara los suyos.\n\nA veces los Fraccionistas vienen al puesto. Entran callados. Me dan los zapatos. Esperan. No hablan. Yo no hablo. Me parece que ellos saben de qué hablo en esta crónica. Si la leen, que disculpen si he dicho de más."
+      },
+      "cartas": [
+        {
+          "pregunta": "Soy nuevo en Azula. Me han dicho que la próxima procesión de los Setenta y Tres es muy importante. ¿Es seguro asistir si llevo solo dos meses en la ciudad? ¿Hay reglas que deba conocer?",
+          "firmante": "Recién llegado",
+          "respuesta": "A Recién llegado: bienvenido. La procesión es absolutamente segura y muy abierta. La única regla, no escrita, es **el silencio** durante el recorrido. Camine con los demás sin hablar. Si lleva una vela, manténgala recta. Si no la lleva, mejor — habrá quien le pase una al pasar. Al final, en el muelle, la gente se separa también en silencio. La conversación, si quiere conversar, es de la mañana siguiente."
+        },
+        {
+          "pregunta": "¿Es verdad que el alumbrado nuevo de los Canales ya está parcialmente instalado? Vivo en el barrio del puente del Norte y aún no lo veo.",
+          "firmante": "Vecina curiosa",
+          "respuesta": "A Vecina curiosa: sí, el primer tramo (calles principales del eje central) está terminado y los vecinos confirman que el ámbar se ha respetado. Los callejones secundarios, incluido su puente del Norte, vienen en el siguiente tramo. Probablemente verá el cambio dentro de tres o cuatro semanas."
+        },
+        {
+          "pregunta": "Llevo dos semanas perdiendo lápices. Aparecen y desaparecen. Cuando los busco, no están; cuando dejo de buscarlos, los encuentro en otro sitio. ¿Es un Fragmento?",
+          "firmante": "Aprendiz despistada",
+          "respuesta": "A Aprendiz despistada: probablemente sí, pero pequeño y juguetón. Los Fragmentos de la familia D (orden y secuencia) dan ese tipo de molestia. Pruebe a guardar todos los lápices en una caja con tapa durante una semana. Si las pérdidas paran, era el Fragmento. Si siguen, es despiste suyo (sin ofender). Si era el Fragmento, abra la caja al sol unos minutos al día durante esa semana — los pequeños se aburren cuando ya no pueden esconderse."
+        },
+        {
+          "pregunta": "¿Por qué nunca publican malas noticias en el Faro?",
+          "firmante": "Lector exigente",
+          "respuesta": "A Lector exigente: publicamos las que nos parecen útiles. Las que no aportan más que sobresalto, las dejamos en el archivo o no las recogemos. La diferencia entre informar y alarmar es uno de los oficios silenciosos de un periódico. Llevamos 1244 ediciones puliéndolo y aún no nos sale del todo bien — pero al menos sabemos que es un oficio."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Las velas del equinoccio menor",
+        "enunciado": "Los puestos del Mercado encendieron en total **180 velas** la noche del equinoccio menor. **Una tercera parte** del total fueron del puesto de la Maestra Naini. **Una cuarta parte** del total fueron del puesto de Liana Verde. **El resto** se repartió **a partes iguales** entre los **15 puestos** restantes.\n\n¿Cuántas velas puso cada uno de los 15 puestos restantes?",
+        "pista": null,
+        "solucionCanonica": "5 velas por puesto",
+        "explicacionSolucion": "Naini puso 180·1/3 = 60 velas. Liana puso 180·1/4 = 45. Restaban 180 − 60 − 45 = 75 entre 15 puestos: 75÷15 = 5 velas por puesto.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 12,
+      "anioOrden": 412,
+      "numeroEdicion": 1245,
+      "portada": [
+        {
+          "titulo": "Aciertos de las velas y la procesión salió bien",
+          "firma": "Por la redacción.",
+          "cuerpo": "El acertijo de las velas tenía solución **5 velas por puesto**. (Naini puso 60, Liana 45, restaban 75 entre 15 puestos, 75÷15 = 5.) Han acertado **diez lectores** — récord absoluto del trimestre, gracias a un cálculo que es parecido al del reparto de las naranjas de la edición 1234. La memoria del periódico ayuda al lector con paciencia.\n\nLa **procesión de los Setenta y Tres** del miércoles pasado salió, según nos confirma el Cónclave, sin un solo incidente. Asistieron unas **setecientas personas**. El silencio se mantuvo desde la salida del Edificio de los Tejados hasta el muelle del Puerto. La Maestra Irune, que abre la procesión cada año, nos ha pasado un mensaje breve: *“Gracias a quien vino. Gracias también a quien no pudo venir y pensó en venir. Es lo mismo.”*"
+        },
+        {
+          "titulo": "Brina recibe siete voluntarios",
+          "firma": "Por la redacción.",
+          "cuerpo": "La Maestra Brina pidió cinco voluntarios para el conteo trimestral de Fragmentos en las Afueras (edición 1241). El sábado pasado se presentaron **siete personas**. Brina aceptó a las siete. Su explicación, textual: *“No podía decir que no a las dos extra. Tenían cara de quererlo más que las otras cinco.”*\n\nLos voluntarios empezarán esta semana. La redacción les desea constancia."
+        }
+      ],
+      "cronica": {
+        "titulo": "El correo y los muros",
+        "firma": "por Daro Tek",
+        "introduccion": "Daro Tek es repartidor de correo del distrito de los Canales. Tiene 38 años y lleva 16 en la ruta del eje principal del barrio.",
+        "cuerpo": "La gente cree que los carteros somos los que más conocen una ciudad. La gente cree mal. Los que más conocen una ciudad son los muros. Yo lo que hago es leerlos.\n\nCada mañana paso por delante de unos doscientos muros distintos. Los buenos carteros vamos despacio. Si vas deprisa, te quedas con la dirección de las cartas, y eso es muy poco. Si vas despacio, te quedas con los muros, y eso es lo de verdad.\n\nLos muros enseñan cuándo una pareja se ha mudado (la jardinera nueva), cuándo alguien ha muerto (la persiana cerrada del cuarto que da a la calle), cuándo unos vecinos se llevan mal (ramas rotas de un lado de un seto), cuándo va a haber boda (cubo blanco de pintura entrado por la puerta sin disimulo). Yo no chismorreo. Solo paso y leo. Es un oficio.\n\nEn las últimas semanas — y me lo callaba pero ya no — he visto **catorce nuevas pintadas** del círculo roto en mi ruta. Casi todas cerca del puente del norte. He pensado en decírselo a un Fraccionista pero los Fraccionistas no tienen tiempo para muros. Maren Olbéa sí tiene tiempo. Por eso le he pasado las direcciones a la redacción. Y por eso esta crónica.\n\nLa gente joven que pinta los círculos no los pinta por la noche. Eso es importante. Yo paso a las seis de la mañana y los círculos ya están secos. Eso significa que se pintan **al atardecer**. La diferencia importa: pintar de noche es esconderse; pintar al atardecer es ser visto sin querer ser identificado. Es otra cosa.\n\nNo sé qué quieren. Sospecho que ellos tampoco. La juventud que pinta, casi nunca, sabe lo que pinta. Pinta porque hay que pintar. Algún día sabrán. Yo sigo haciendo mi ruta despacio. Eso sí lo sé."
+      },
+      "cartas": [
+        {
+          "pregunta": "Hace meses publicaron mi mensaje al señor Toral del muelle 7. Aquí informo, por si interesa: tomamos el café juntos un miércoles a media mañana, como él pidió. Hablamos dos horas. Volveremos.",
+          "firmante": "Otro operario",
+          "respuesta": "A Otro operario: gracias por el seguimiento. La redacción se alegra. Los cafés que duran dos horas son de los buenos."
+        },
+        {
+          "pregunta": "Mi hijo de 7 años me ha preguntado si los Fragmentos pueden tener nombre propio. ¿Es una idea suya o eso pasa?",
+          "firmante": "Madre con preguntas otra vez",
+          "respuesta": "A Madre con preguntas otra vez: pasa. Los Fraccionistas Mayores ponen nombre a algunos Fragmentos especialmente persistentes — nombres operativos, no de cariño. Sirven para coordinar entre Maestros. Pero no se nombran los pequeños. Su hijo está pensando bien: nombrar es una decisión seria."
+        },
+        {
+          "pregunta": "Doy mi enhorabuena a Brina por los voluntarios. Yo me apunté el sábado pero llegué tarde y ya estaban hechos los grupos. ¿Tendré otra oportunidad?",
+          "firmante": "Aprendiz constante",
+          "respuesta": "A Aprendiz constante: sí. Brina ha dicho que abrirá un segundo turno el trimestre que viene si los datos del primero lo merecen. Si quiere, puede ir igualmente al observatorio cualquier sábado a las 21:00 — Brina es de las que recuerdan a quien insiste con buena cara."
+        },
+        {
+          "pregunta": "El faro vuelve a parpadear. ¿Tenemos que preocuparnos esta vez?",
+          "firmante": "Lector inquieto",
+          "respuesta": "A Lector inquieto: el Maestro Oryn dice que no. La redacción no insiste — pero tampoco oculta. Si descubrimos algo concreto, lo publicaremos. Mientras tanto, lo mejor que puede hacer es lo que hacen los marineros viejos: mirar el faro de vez en cuando, no todo el rato."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El correo de Daro",
+        "enunciado": "El cartero Daro Tek reparte cartas en **tres tramos** de su ruta cada mañana.\n\n- En el **primer tramo** entrega exactamente **un cuarto** de las cartas que llevaba al salir.\n- En el **segundo tramo** entrega exactamente **tres octavos** de las que le quedaban después del primero.\n- En el **tercer tramo** entrega las **30 cartas restantes**.\n\n¿Cuántas cartas llevaba al empezar la mañana?",
+        "pista": null,
+        "solucionCanonica": "64 cartas",
+        "explicacionSolucion": "Si N son las cartas iniciales, tras el primer tramo le quedan 3N/4. Tras entregar 3/8 de esas en el segundo, le queda 5/8 · 3N/4 = 15N/32. Si esas son 30, N = 30·32/15 ... no entero. Mejor: con N=64, primer tramo deja 48; segundo entrega 18 y deja 30 — que es el tercer tramo. Solución: 64.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 13,
+      "anioOrden": 412,
+      "numeroEdicion": 1246,
+      "portada": [
+        {
+          "titulo": "La solución de Daro y el faro se calló",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo del cartero: **64 cartas**. (Tras el primer tramo entregó 16 y le quedaron 48; en el segundo entregó 18 y le quedaron 30, que repartió en el tercero.) Aciertos: ocho lectores. Una niña de 11 años escribe que lo resolvió “yendo hacia atrás”, lo cual es un atajo elegante y digno de mención."
+        },
+        {
+          "titulo": "El faro se calló",
+          "firma": "Por la redacción.",
+          "cuerpo": "Tras **diecisiete noches seguidas** de patrón inusual, el **faro lejano del Puerto** ha vuelto a su pulso normal el martes pasado. La redacción lo confirma con dos lectores y con el Maestro Oryn, que dice solo: *“Ya.”*\n\nHemos recibido una carta de una **niña de 9 años** del Puerto que firma como L. de la Costa. Su abuelo, ya fallecido, fue marinero retirado. Le contaba a ella, cuando era pequeña, que los faros parpadean *“cuando se acuerdan de algo grande.”* La niña escribe: *“Quizá el faro se ha acordado de las tres lunas. Y por eso ha parpadeado tres veces tres veces.”* No es un cálculo exacto pero es una idea bonita. La publicamos.\n\nA partir de aquí, la redacción retira el tema del faro del seguimiento. Si vuelve a parpadear, lo notaremos. Mientras tanto, el faro hace su trabajo y lo que el faro recuerde es asunto suyo."
+        }
+      ],
+      "cronica": {
+        "titulo": "Las tres lluvias",
+        "firma": "por Mire Cordo",
+        "introduccion": "Mire Cordo es vendedora ambulante de paraguas. Recorre los siete distritos con un carrito tapado de hule. Tiene 47 años y lleva 19 en el oficio.",
+        "cuerpo": "Yo no vendo paraguas. Yo vendo predicciones. El paraguas es la excusa.\n\nPara vender paraguas hay que saber dónde lloverá antes de que llueva. Si llegas tarde con el carrito, ya nadie te compra: o están dentro de un portal o han comprado uno mojado. Llevo 19 años aprendiendo a llegar a tiempo. Y llevo 19 años entendiendo que **cada distrito de Azula tiene su propia lluvia**.\n\nEn los Tejados llueve **ruidoso**. Los tejados son inclinados y antiguos y la lluvia los toca como a un tambor. La gente de los Tejados odia la lluvia porque los obliga a hablar más alto en casa. En los Tejados vendo paraguas grandes para que protejan también un poco el oído.\n\nEn los Canales llueve **humilde**. La lluvia cae sobre el agua y desaparece sin ruido. Los canales tragan la lluvia como tragan todo. La gente de los Canales no compra muchos paraguas — están acostumbrados a mojarse la cabeza un poco.\n\nEn el Mercado llueve **molesto**. La lluvia atraviesa los toldos, los moja, y desde dentro empieza a gotear sobre los puestos. Los comerciantes me reciben como una salvación. En el Mercado he vendido más paraguas que en el resto de los distritos juntos.\n\nEn la Industria llueve **negra**. La lluvia atraviesa el humo de las chimeneas y baja con polvillo. Los habitantes lo saben y solo salen con paraguas oscuros — los míos blancos no me los compran nunca. Mi cliente fijo de la Industria, Vadic, me pidió uno gris pizarra hace dos años. Sigue siendo el único.\n\nEn el Puerto llueve **salada**. La lluvia se mezcla con la espuma y baja con un punto de sal. Los pescadores no la usan. Los comerciantes del muelle, sí.\n\nEn las Afueras casi no llueve. Cuando llueve, es **breve y elegante**. Diez minutos, fuerte, y se va. Yo allí casi no vendo. Pero cuando llueve, se compran tres a la vez. La gente que casi nunca usa paraguas no quiere que le pille otra vez.\n\nEl séptimo distrito — el Centro — no tiene lluvia propia. La lluvia del Centro es **prestada**: viene de los otros distritos, según cómo soplen los vientos. Cuando llueve en el Centro, es porque le ha tocado la lluvia de algún vecino. No es despectivo decirlo. Es el destino del Centro: ser la suma de los otros.\n\nHe pensado escribir un libro con esto. Pero los libros son secos como manuales — y mis lluvias son lluvias. Me conformo con esta crónica."
+      },
+      "cartas": [
+        {
+          "pregunta": "¿Hay alguna actualización del conteo de Fragmentos? Empecé como voluntaria de Brina y todavía no sé si los datos son interesantes.",
+          "firmante": "Voluntaria primeriza",
+          "respuesta": "A Voluntaria primeriza: Brina ha pasado a la redacción que los datos parciales son aún incompletos pero **prometedores**. Publicará el primer informe sólido la semana que viene. Su consejo, textual: *“Sigan apuntando con cuidado. Datos parciales no son resultados parciales — son aún todos los datos.”*"
+        },
+        {
+          "pregunta": "La crónica de Niko Adari sobre su gato Cuatro me la sé de memoria. ¿Sabemos si ya es Aprendiz?",
+          "firmante": "Lectora cariñosa",
+          "respuesta": "A Lectora cariñosa: Niko escribió a la redacción la semana pasada. Aún no es Aprendiz — le faltan algunos meses. Cuatro está bien. Niko nos ha pedido que le mandemos un saludo: *“Cuando sea Aprendiz, escribiré otra crónica.”* Quedan emplazados los lectores."
+        },
+        {
+          "pregunta": "Mi hijo de 12 años se aburre con las matemáticas. ¿Cómo se le quita el aburrimiento sin quitarle la matemática?",
+          "firmante": "Padre frustrado",
+          "respuesta": "A Padre frustrado: las matemáticas se aburren cuando la pregunta no es interesante. Pruebe a hacerle pregunta sobre **algo concreto que él use cada día**: cuántos pasos hay desde su cama hasta el baño, cuánto tarda en cruzar un puente caminando despacio y caminando rápido, cuántos vasos de agua se beben en su casa en una semana. Si la pregunta es de su mundo, las matemáticas se vuelven herramienta, no peaje. Lo decía ya el doc 01 del Cónclave de Educación, hace décadas."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El cumpleaños de Naini",
+        "enunciado": "La Maestra Naini cumple años pronto. La Maestra dice, riendo: *“Dentro de **9 años** tendré exactamente **el doble** de la edad que tenía hace **15 años**.”*\n\n¿Cuántos años tiene la Maestra Naini ahora?",
+        "pista": "Pon su edad actual como x y plantea una ecuación con las dos referencias temporales.",
+        "solucionCanonica": "39 años",
+        "explicacionSolucion": "Si x es la edad actual: x + 9 = 2·(x − 15). Resolviendo: x + 9 = 2x − 30, así que x = 39.",
+        "dificultad": "aprendizIII"
+      }
+    },
+    {
+      "numeroSemana": 14,
+      "anioOrden": 412,
+      "numeroEdicion": 1247,
+      "portada": [
+        {
+          "titulo": "Aciertos del cumpleaños y primer informe de Brina",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo: **39 años**. (Si x es la edad ahora, x+9 = 2·(x−15), de donde x = 39.) Aciertos: doce lectores. Una carta especialmente afectuosa pregunta si la Maestra puede confirmar el dato. La Maestra confirma con humor: *“Treinta y nueve los del año pasado y los del que viene también. Yo me he plantado.”*"
+        },
+        {
+          "titulo": "Brina publica el primer informe trimestral",
+          "firma": "Por la redacción.",
+          "cuerpo": "La Maestra Brina ha hecho llegar el primer informe del trimestre con los datos del conteo de Fragmentos por distrito. Las cifras, por orden:\n\n- **Tejados**: 18 (–2 respecto al trimestre anterior).\n- **Canales**: 33 (+6).\n- **Mercado**: 21 (=).\n- **Industria**: 30 (=).\n- **Puerto**: 12 (–1).\n- **Afueras**: 8 (=).\n- **Centro**: 14 (+1).\n\nTotal: 136 Fragmentos contados, frente a los 126 del trimestre anterior. Un aumento del **8%** del total, casi todo concentrado en los Canales.\n\nBrina, fiel a su voz, no interpreta. Su mensaje, textual: *“Datos. Solo datos. Yo no interpreto, eso lo hace el Cónclave. Si alguien quiere especular, que especule en su cabeza, no en mi informe.”* La redacción respeta. Los lectores pueden consultar el informe completo en el archivo del observatorio durante la próxima semana."
+        },
+        {
+          "titulo": "Alumbrado de los Canales: 60% terminado",
+          "firma": null,
+          "cuerpo": "El cambio de alumbrado del Barrio de los Canales avanza según calendario. Los carpinteros y electricistas dirigidos por Toren Igal han terminado el **60%** de las farolas. El Maestro Rexán confirma que el ámbar se conserva idéntico. *“Ya están molestando a los gatos otra vez,”* nos dice. *“Es la mejor señal de que las farolas funcionan.”*"
+        }
+      ],
+      "cronica": {
+        "titulo": "La esquina que no usa nadie",
+        "firma": "por Tomas Vix",
+        "introduccion": "Tomas Vix es jubilado. Vive en los Tejados. Tiene 71 años. Era profesor de geometría antes de retirarse.",
+        "cuerpo": "En el Edificio de los Tejados — donde tienen su sede los Maestros — hay una esquina, en el ala oeste de la primera planta, donde la luz cae de cierta manera. Lleva quince años cayendo así para mí. Probablemente lleva más años cayendo así para todos, pero los demás no la han mirado.\n\nYo voy a esa esquina cada tarde a las cuatro. Llevo un libro. Me siento en una banqueta vieja que me dejé olvidada un día y nadie ha quitado. Leo de cuatro a cinco. La luz cambia de blanco amarillento a oro suave. A las cuatro y media empieza a hacerse menos. A las cinco menos cuarto ya no se puede leer. Cierro el libro y me voy.\n\nHe calculado, con mi paciencia de geómetra retirado, que la luz se mueve sobre el suelo a **18 centímetros cada cuarto de hora** durante esa hora. Es un dato que no le sirve a nadie. Pero a mí me consuela. Me hace sentir que la luz también es ordenada, aunque tan poca gente la mire.\n\nLa esquina no es secreta. Cualquier Aprendiz que pase por allí podría usarla. Pero no la usan. La gente joven busca esquinas más vistosas, esquinas con vistas, esquinas para ser vistos. Esta no se ve. Es solo una esquina interior con una banqueta vieja y un señor mayor leyendo.\n\nHe pensado, alguna vez, regalar la esquina. Que un día venga otro y la herede. No sé cómo se hereda una esquina. Probablemente no se hereda — se la encuentra otro por casualidad, como me la encontré yo. Mientras tanto, la uso. Y le digo, al lector que esté leyendo esto: en esta ciudad hay muchas esquinas que no usa nadie. Si encuentras una, no la cuentes a todo el mundo. Las esquinas se estropean cuando se conocen.\n\nEsta crónica la escribo porque es la única forma de honrar la esquina sin estropearla. La nombro pero no la sitúo. Si alguien lee esto y reconoce la esquina, que la honre también con su silencio."
+      },
+      "cartas": [
+        {
+          "pregunta": "He visto las cifras de Brina. ¿No es el aumento de los Canales motivo de alarma?",
+          "firmante": "Lector preocupado",
+          "respuesta": "A Lector preocupado: Brina ha pedido a la redacción que diga lo siguiente, textual: *“Un aumento del 8% no es una crisis. Es una tendencia que hay que observar. Las crisis son del 30% en una semana. Esto no lo es.”* Confiamos en su criterio."
+        },
+        {
+          "pregunta": "He oído que ahora a las pintadas las llaman “círculos rotos” en vez de “símbolos del Opaco”. ¿Por qué?",
+          "firmante": "Lector atento",
+          "respuesta": "A Lector atento: el cambio de nombre lo ha decidido Brina, y nos parece sensato. Llamar a algo “símbolo del Opaco” asume que sabemos lo que significa. “Círculo roto” es lo que vemos. La diferencia parece pequeña pero no lo es: pensar bien empieza por nombrar bien."
+        },
+        {
+          "pregunta": "¿Existe la palabra “Maestra” o es un invento del Faro?",
+          "firmante": "Curiosa",
+          "respuesta": "A Curiosa: existe y es antigua. Lo que pasa es que durante muchos años la gente decía “Maestro” para todo, y eso confundía. Hoy decimos Maestra cuando es maestra y Maestro cuando es maestro. La asimetría del lenguaje desaparece con uso, no con ley. Llevamos veinte años usando ambas y no se ha caído el periódico."
+        },
+        {
+          "pregunta": "Mi hija de ocho años quiere mandar un acertijo al Faro. ¿Aceptan acertijos de niños?",
+          "firmante": "Madre aspirante",
+          "respuesta": "A Madre aspirante: aceptamos. Que lo envíe firmado o anónimo, como prefiera. Si es bueno, lo publicamos. Si es flojo, lo agradecemos y guardamos. Que su hija no se desanime si tarda en aparecer — los acertijos esperan en la cola con paciencia."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Las cestas de Liana",
+        "enunciado": "Liana Verde tiene **5 cestas idénticas**, cada una llena de manzanas y peras mezcladas. Cada cesta pesa exactamente **12 kilos** llena.\n\n- Una manzana pesa **80 gramos**.\n- Una pera pesa **120 gramos**.\n- En cada cesta hay **20 manzanas más que peras**.\n\n¿Cuántas piezas de fruta — manzanas y peras juntas — hay en cada cesta?",
+        "pista": null,
+        "solucionCanonica": "124 piezas (52 peras y 72 manzanas)",
+        "explicacionSolucion": "Si p es el número de peras, hay (p+20) manzanas. El peso de la cesta: 80(p+20) + 120p = 12000 g. Resolviendo: 200p + 1600 = 12000, así que p = 52 peras y 72 manzanas. Total por cesta: 124 piezas.",
+        "dificultad": "iniciadoI"
+      }
+    },
+    {
+      "numeroSemana": 15,
+      "anioOrden": 412,
+      "numeroEdicion": 1248,
+      "portada": [
+        {
+          "titulo": "Solución de las cestas y un muro borrado",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo: **52 peras y 72 manzanas, total 124 piezas por cesta**. (Si p es el número de peras, las manzanas son p+20; planteando 80(p+20) + 120p = 12000 sale p = 52.) Aciertos: nueve lectores."
+        },
+        {
+          "titulo": "Un muro borrado",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "Esta semana he caminado por la calle de la Higuera, en los Canales, y me he encontrado al **dueño del muro** del número 14 borrando con un cubo y una brocha el círculo roto que llevaba cuatro meses pintado en su pared.\n\nHe preguntado al dueño, que es un hombre mayor llamado Pol Arán y que vive en esa casa desde hace 31 años. Su respuesta no la apunto literal porque Pol Arán es de los que hablan poco, pero el sentido fue claro: *“Treinta años cuidando este muro y ya está. No quiero dejarlo así otros treinta. Sea lo que sea, no es cosa mía.”*\n\nLe he pedido permiso para publicar esto. Me ha dicho que sí, que mejor. Y me ha pedido que añada una cosa: *“Que el que lo pintó sepa que no me ha enfadado. Pero que también sepa que me ha hecho trabajar.”*\n\nLo añado.\n\nA nadie le falta razón en este caso. La persona que pinta tiene su razón — la que sea. La persona que borra tiene la suya. Son las dos razones de lo mismo: el muro es de quien lo cuida, y la pintura es de quien la pinta. No siempre se ponen de acuerdo. La ciudad va aprendiendo a vivir con las dos."
+        }
+      ],
+      "cronica": {
+        "titulo": "Los doce relojes de mi padre",
+        "firma": "por Yorin Tale",
+        "introduccion": "Yorin Tale es relojera del barrio del Centro. Su padre fue relojero antes que ella, y su abuelo antes. Tiene 44 años. Heredó el taller hace dos años, cuando murió su padre.",
+        "cuerpo": "Mi padre, antes de morir, paró doce relojes idénticos a horas distintas. Los dejó en una vitrina del taller. No me dijo qué significaban. Me dijo solo: *“Hija, no los toques.”*\n\nHan pasado dos años. No los he tocado. Pero todos los días paso por delante de la vitrina y los miro. He aprendido sus horas de memoria. Son: las **12 y 17**, las **3 y 04**, las **8 y 41**, las **5 y 33**, las **10 y 09**, las **2 y 28**, las **7 y 53**, las **11 y 36**, las **4 y 21**, las **9 y 12**, las **1 y 47** y las **6 y 50**.\n\nHe intentado ver si forman un patrón. He sumado las horas. He buscado si son las horas de momentos de mi vida. He buscado si son fechas. He buscado si son horas de meridianos remotos. Nada. O quizás sí algo que aún no he visto.\n\nMi mejor pista la tengo desde hace seis meses. Una clienta del barrio del Mercado, ya muy mayor, me dijo casualmente: *“Tu padre era de los que disfrutaban con los acertijos sin solución. Quizá los relojes son justo eso.”* Lo pensé tres meses. Decidí, finalmente, aceptar la idea. No siempre lo que hereda uno es algo que descifrar. A veces es algo que **mantener parado**. Que mantener parado es también un acto de respeto.\n\nHe decidido seguir el ejemplo de Tomas Vix de la semana pasada — **honrar sin descifrar**. Anoto cada año, en un cuaderno aparte, las doce horas exactas. Si emerge algún patrón, lo veré. Si no emerge ninguno, los relojes seguirán parados a las mismas horas. Y mi padre, dondequiera que esté, sabrá que he respetado su petición.\n\nA los lectores que lo necesiten: no todo lo heredado es para resolver. Lo heredado es, sobre todo, para llevarlo encima."
+      },
+      "cartas": [
+        {
+          "pregunta": "¿Cómo va la hija de Tora Berlin, la Aprendiz I de 9 años?",
+          "firmante": "Lectora atenta",
+          "respuesta": "A Lectora atenta: Tora nos ha pasado una nota corta. Su hija sigue bien. Lleva la marca al cuello todos los días. No habla mucho del Edificio en casa — lo cual, dice Tora, es buena señal. *“Las cosas serias se cuentan con cuentagotas.”* La redacción respeta y no insiste."
+        },
+        {
+          "pregunta": "He empezado a leer el Faro hace 4 ediciones y ya lo espero los viernes. ¿Cuál es la edición más recordada de los últimos años?",
+          "firmante": "Lector reciente",
+          "respuesta": "A Lector reciente: gracias por preguntar. Sin recurrir al archivo: la edición 1198 trajo la crónica de la maestra Voria Lim sobre los Aprendices de los años setenta. Mucha gente la cita aún. Y la 1212, con el reportaje del muelle 4. Si quiere indagar, ambas se pueden consultar en el archivo del observatorio."
+        },
+        {
+          "pregunta": "Tengo un pariente en el continente. ¿Cómo le envío una carta?",
+          "firmante": "Familiar lejana",
+          "respuesta": "A Familiar lejana: las cartas al continente se entregan en el Buzón Postal del Puerto, no en los nuestros. Hay que pagar el franqueo según peso (hasta 100 g cuesta 4 monedas; hasta 250 g, 10 monedas). El barco-correo sale los miércoles y los sábados. Nuestros buzones son solo para cartas al Faro."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Los relojes de Yorin",
+        "enunciado": "De los doce relojes parados de Yorin Tale, **siete** marcan horas en la **mitad de la tarde y la noche** (entre las 12:00 y las 24:00). Los otros **cinco** marcan horas en la **mitad de la mañana** (entre las 00:00 y las 12:00).\n\nSi las horas que marcan los siete primeros — sumadas como números enteros entre 12 y 24 — son **el triple** de la suma de las horas de los cinco últimos (entre 0 y 12), y la **suma total** de los doce relojes es **132**, ¿cuánto suman, en horas enteras, los **cinco** últimos?",
+        "pista": "Ignora los minutos, que son los que dificultan. Solo cuenta las horas enteras como número.",
+        "solucionCanonica": "33 horas",
+        "explicacionSolucion": "Si la suma de los cinco últimos es x, la de los siete primeros es 3x. Total: x + 3x = 4x = 132, de donde x = 33.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 16,
+      "anioOrden": 412,
+      "numeroEdicion": 1249,
+      "portada": [
+        {
+          "titulo": "Aciertos de los relojes y Vadic publica con Ena",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo de los relojes: **33 horas**. (Si la suma de los cinco últimos es x, la de los siete primeros es 3x; total 4x = 132, así que x = 33.) Aciertos: trece lectores — un nuevo récord trimestral. Felicidades."
+        },
+        {
+          "titulo": "Vadic publica con Ena Solis",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "El Maestro Vadic, de Industria, ha entregado al Cónclave un **informe sobre las máquinas de la fábrica de aceite** — un trabajo del que la redacción tenía noticia desde hacía meses (la edición 1240 mencionaba una correlación inicial del 0,73 entre desajustes y apariciones de Fragmentos en el distrito). La sorpresa, esta semana, es que el informe está firmado **por dos personas**: Vadic y **Ena Solis**, ayudante de archivero del Edificio de los Tejados.\n\nEna, lectores recordarán, escribió aquella crónica preciosa de la edición 1240 sobre los informes que cataloga. Mencionaba entonces, casi como confesión, que llevaba un registro propio de las cucharas que desaparecían del comedor de Aprendices del Edificio, y que la correlación era del 0,84 — más alta que la de Vadic.\n\nVadic ha hecho lo bonito. Ha leído la crónica de Ena, ha ido a verla al archivo, ha cruzado los datos de ella con los suyos. La correlación combinada, según el informe, es de **0,89**. Y ha pedido al Cónclave que el informe lleve los dos nombres. Vadic, textual: *“Ella tiene mejor archivo que yo. Sería injusto firmarlo solo.”*\n\nBrina, consultada, confirma con sequedad afectuosa: *“Le dije a Ena que aún estaba a tiempo. Tenía razón yo. Le ha pasado a los cuarenta y dos años, no a los catorce. Da igual.”*\n\nEna no ha hecho declaraciones. Sigue catalogando, los martes y los viernes."
+        }
+      ],
+      "cronica": {
+        "titulo": "El cuarto de mi abuela",
+        "firma": "por Lis Verán",
+        "introduccion": "Lis Verán tiene 12 años. Es Aprendiz I desde hace cuatro meses. Pidió a la redacción permiso para escribir esta crónica. La redacción dudó (es la primera vez que aceptamos a una cronista de esa edad) pero al leer el texto entendimos que había que publicarlo. La voz es suya.",
+        "cuerpo": "Mi abuela se murió hace ocho meses. Tenía 78 años y estaba bien — me visitaba los domingos. Una mañana se quedó dormida y ya no se despertó. Mi madre dice que es la mejor manera de morirse. Yo no sé si hay manera buena.\n\nMe ha tocado a mí — porque mi madre no quería entrar — vaciar el cuarto de mi abuela. He estado tres semanas yendo todas las tardes después del Edificio. He llenado **once cajas grandes** y **cuatro pequeñas**.\n\nLas cosas raras que tenía mi abuela:\n\n- Un montón de **botones sueltos** en una caja de hojalata. Conté 312. Eran de blusas, abrigos, pantalones. Algunos eran preciosos. Algunos eran de plástico viejo. No tiraré ninguno.\n- **Cuarenta y siete fichas de juego** distintas — peones, caballos, dados, fichas de colores. Casi ninguna del mismo juego. Probablemente perdió las suyas y guardaba las de otros pensando que algún día se las devolvería.\n- **Treinta y dos llaves** que ya no abren nada. Mi abuela cambió de casa cinco veces en su vida. Cada cambio dejó tres o cuatro llaves huérfanas. Las guardó todas. Pesan dos kilos juntas.\n- **Cuadernos** con listas. Mi abuela hacía listas de todo: días que llovió en una semana, comidas que cocinó, gente con la que cruzó saludos. Hay 23 cuadernos. Llevan un orden cronológico de los últimos 41 años.\n\nLa Maestra Brina me ha dicho que las “cosas que sobran” son a veces lo más útil para una Fraccionista. *“Un Fragmento que se cuela en una casa,”* me dijo, *“se entera por las cosas raras que la gente guarda. Si no guardas nada, no aparece. Si guardas mucho, ahí está su escondite.”*\n\nEso me asustó al principio. Pensé que mi abuela había vivido con Fragmentos sin saberlo. Pero después he pensado lo contrario: **mi abuela los aceptaba sin saber que los aceptaba**. Convivía con ellos. Por eso vivió tanto y bien.\n\nVoy a quedarme las once cajas grandes y las cuatro pequeñas. Las pondré en mi cuarto. Mi madre dice que ocupan demasiado. Pero yo voy a ser Iniciada algún día. Y los Iniciados tienen casa propia. Cuando la tenga, las llevaré allí.\n\nHasta entonces, mi cuarto será un poco más cuarto de abuela. Y me parece bien."
+      },
+      "cartas": [
+        {
+          "pregunta": "He estado pensando mucho sobre los Opacos después de leer el Faro varias semanas. ¿Qué piensa la redacción?",
+          "firmante": "Lector con curiosidad",
+          "respuesta": "A Lector con curiosidad: la redacción no toma posición. Pero recordamos lo que ya escribimos en la edición 1242, y que sigue siendo cierto: **pensar es siempre seguro. Decir lo que se piensa, a veces, no.** Le invitamos a leer materiales del Cónclave, conversaciones de calle, opiniones distintas. Cada uno se forma su criterio. Nosotros publicamos lo que vemos, no lo que pensamos."
+        },
+        {
+          "pregunta": "¿Hay novedades sobre la tendencia del cielo más limpio del señor Talin Mar?",
+          "firmante": "Lector pendiente",
+          "respuesta": "A Lector pendiente: sí. Talin Mar nos pasa el dato de cierre del último trimestre: **+1,3%** sobre la cuenta media respecto al mismo trimestre del año pasado. La tendencia continúa, ya van veintitrés años seguidos. Talin lo dice así: *“Esta vez no me cabe en la cabeza pensar que sea coincidencia. Pero también es cierto que aún no he encontrado a quién atribuirlo. Sigo contando.”*"
+        },
+        {
+          "pregunta": "¿Cómo se firma una carta como “anónimo”? Lo intenté y siento que estoy haciendo trampa.",
+          "firmante": "Lector con escrúpulos",
+          "respuesta": "A Lector con escrúpulos: se firma no firmando. Es lícito. La redacción decide si publica o no, según el contenido. Si la duda persiste, firme con un seudónimo: una palabra cualquiera que le represente sin identificarle. Es una solución intermedia con larga tradición en periódicos serios."
+        },
+        {
+          "pregunta": "Mi nieta de doce años acaba de ser Aprendiz I. Quería decirles que la veo cambiar y no sé si me alegro o me da pena.",
+          "firmante": "Abuela sincera",
+          "respuesta": "A Abuela sincera: las dos cosas, probablemente. Es lo que sentía Tora Berlin la edición 1243. Cambiar es lo que hacen los niños sanos — y mirar el cambio es lo que hacen los abuelos sanos. Las dos partes están haciendo bien su trabajo. Felicidades."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El cuaderno de Ena",
+        "enunciado": "Ena Solis, ahora co-autora de informes con Vadic, ha llevado durante **8 semanas seguidas** un registro de las pintadas nuevas del círculo roto que aparecen en su distrito. Sus números, una cifra por semana:\n\n**3, 5, 2, 7, 4, 1, 6, 4.**\n\nCalcula la **mediana** y la **media** del registro. ¿Cómo se relacionan?",
+        "pista": "La mediana es el valor central cuando ordenas los datos. La media es la suma dividida entre el número de datos.",
+        "solucionCanonica": "Mediana 4 y media 4 (coinciden)",
+        "explicacionSolucion": "Datos ordenados: 1, 2, 3, 4, 4, 5, 6, 7. La mediana es la media de los dos centrales (4 y 4) = 4. La media es la suma 32 dividida entre 8 = 4. Coinciden, lo que indica datos bien centrados sin valores extremos.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 17,
+      "anioOrden": 412,
+      "numeroEdicion": 1250,
+      "portada": [
+        {
+          "titulo": "Solución del cuaderno de Ena",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución: **mediana 4 y media 4**. Los datos ordenados (1, 2, 3, 4, 4, 5, 6, 7) tienen como valor central la media de los dos del medio (4 y 4), que es 4. La suma es 32, dividida entre 8 da también 4. **Coinciden** — lo cual no siempre ocurre, pero indica que los datos están bien centrados sin valores extremos. Aciertos: once lectores."
+        },
+        {
+          "titulo": "Mil doscientas cincuenta semanas",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "Esta es la **edición 1250**. Es un número redondo. Lo señalo aquí, en la portada, porque hay quien necesita que las cosas se señalen. Yo no soy de esas — pero el Faro es, en parte, también un servicio público.\n\nMil doscientas cincuenta semanas son **veinticuatro años**. Cuando empecé a dirigir este periódico, hace 23 años, me lo entregó **Heli Oren**, mi predecesora, que llevaba quince años en el puesto. Heli había heredado a su vez el periódico de **Beda Quil**, que llevaba dieciocho. Y Beda lo había recibido de **Yano Erra**, que fue la primera directora con voz reconocida — antes de Yano hubo dos hombres y una situación borrosa de la que el archivo no se ha dejado ordenar.\n\nAntes de mí, las redactoras y redactores del Faro fueron diecisiete. Después de mí seguramente serán muchas más. El periódico no es de la directora. La directora es del periódico, durante un rato. Heli me lo dijo el primer día: *“Tú no haces el Faro. El Faro te hace a ti.”* Veinticuatro años después confirmo que tenía razón.\n\nEsta edición no la celebraremos con nada extraordinario. Mantenemos la crónica habitual, las cartas, el acertijo. La normalidad es nuestra mejor forma de honrar el aniversario. Los periódicos que se celebran demasiado a sí mismos suelen olvidar a quienes los leen.\n\nGracias, lectoras y lectores, por seguir aquí. La ciudad no se hace sola. Ustedes son la mitad del trabajo. La otra mitad es esta redacción, que solo recoge."
+        }
+      ],
+      "cronica": {
+        "titulo": "El pacto de los lunes",
+        "firma": "por Mark Olda",
+        "introduccion": "Mark Olda es estibador del muelle 3 del Puerto. Tiene 41 años y lleva 19 en el muelle. Es vecino de Bel Toral (grúa 7).",
+        "cuerpo": "En el muelle 3 tenemos un pacto. Lo llamamos el **pacto de los lunes**. Lleva existiendo más años que yo en el muelle. Mi padre, que también fue estibador, me contó que ya estaba cuando él entró, hace 50 años. Probablemente lleva más.\n\nEl pacto es así: el lunes por la mañana, cuando preparamos el primer café del día — y somos doce hombres en el muelle 3, hervimos café para todos en una cafetera grande —, **nadie se sirve a sí mismo**. Cada uno sirve a quien tiene a su izquierda. El último sirve al primero. Doce tazas, todas servidas por otra mano. Después se bebe.\n\nNo se hace los martes. No se hace los miércoles. Solo los lunes. Yo he preguntado por qué muchas veces. La respuesta más larga me la dio un compañero ya jubilado, hace siete años. Su explicación: *“Mark, la semana es larga. Si el lunes te lo sirve otro, sabes que estás con otros. Si te lo sirves tú, ya estás solo desde el principio.”*\n\nCuando entró un compañero nuevo el año pasado — un chico joven, de 19 años — le explicamos el pacto. Él dijo, sin maldad: *“Pero, ¿no es perder tiempo?”* Le explicamos que sí, que perder un poco el tiempo es justo lo que el pacto **defiende**. Hay cosas que valen la pena perder para no perder otras. Aceptó. Sirvió bien la primera vez. Ya lleva 47 lunes.\n\nA los Aprendices que lean esto: las matemáticas se hacen solos. La vida se hace en mesas de doce. El pacto que tengáis no tiene que ser de café. Pero tened uno. Y no lo justifiquéis. Las cosas que duran no se justifican cada lunes — se hacen cada lunes."
+      },
+      "cartas": [
+        {
+          "pregunta": "Felicidades por las 1250 ediciones. He leído el Faro durante 31 años seguidos.",
+          "firmante": "Lector con calendario",
+          "respuesta": "A Lector con calendario: gracias. Treinta y un años son muchos viernes. La redacción se inclina con respeto. Y celebra que su lealtad coincida — quizá por casualidad, quizá no — con los 31 años entre tres lunas."
+        },
+        {
+          "pregunta": "Felicidades por las 1250. Adjunto un dibujo.",
+          "firmante": "Niño de 9 años",
+          "respuesta": "A Niño de 9 años: hemos recibido el dibujo y nos ha gustado. La redacción no publica dibujos en papel. Pero lo hemos enmarcado y colgado en la pared del archivo. Tu dibujo es ahora parte del Faro. Gracias."
+        },
+        {
+          "pregunta": "¿Cómo va el alumbrado de los Canales?",
+          "firmante": "Vecino del puente del Norte",
+          "respuesta": "A Vecino del puente del Norte: **90% terminado**. Falta solo el último callejón — el que da al puente del norte, su zona — y será la próxima semana. El Maestro Rexán dice que duerme tranquilo."
+        },
+        {
+          "pregunta": "Felicidades por las 1250 con humor seco. ¿Va a salir Niko Adari pronto?",
+          "firmante": "Lectora de Niko",
+          "respuesta": "A Lectora de Niko: nos ha escrito hace dos semanas. Sigue en las Afueras. El gato Cuatro está en plena forma. Niko cumple 12 en primavera y tiene plan: una crónica de “lo que pensaba a los 11 y no pensaré a los 12”. Le hemos dicho que la esperamos. *“Tranquilos,”* nos respondió, *“se la estoy escribiendo en la cabeza.”* Felicidades a los lectores constantes — y a Niko también."
+        }
+      ],
+      "acertijo": {
+        "titulo": "La edición 1250",
+        "enunciado": "El número **1250** se puede escribir como producto de **dos factores primos** elevados a potencias.\n\n¿Cuál es la descomposición en factores primos de 1250?",
+        "pista": "Empieza dividiendo por el primo más pequeño que entre exacto. Después continúa con el cociente.",
+        "solucionCanonica": "1250 = 2 × 5⁴",
+        "explicacionSolucion": "1250 ÷ 2 = 625, que es 5×5×5×5 = 5⁴. Así que 1250 = 2 × 5⁴ = 2 × 5 × 5 × 5 × 5.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 18,
+      "anioOrden": 412,
+      "numeroEdicion": 1251,
+      "portada": [
+        {
+          "titulo": "La edición 1250 era 2 × 5⁴ y una pintada distinta",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo: **1250 = 2 × 5⁴ = 2 × 5 × 5 × 5 × 5**. Aciertos: nueve lectores. Una de las cartas, especialmente bonita, descomponía el número observando que 1250 es la mitad de 2500 (que a su vez es 50 al cuadrado), y partiendo de ahí. Es un atajo elegante. Felicidades a todos."
+        },
+        {
+          "titulo": "Una pintada distinta",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "En la madrugada del lunes pasado apareció en la **fachada de un almacén del distrito Industria** una pintada que la redacción ha decidido publicar — no para alarmar, sino para que la información llegue al archivo y al Cónclave.\n\nLa pintada es un **círculo roto** — ya conocido — pero por **primera vez** aparece **acompañado de letras**. Tres letras, en mayúscula y muy pequeñas, justo debajo del círculo:\n\n**K. R. T.**\n\nLa Maestra Brina ha ido a documentarla. Su comentario, breve: *“Es la primera vez. Eso es lo único que sé. Cualquier cosa más sería especulación.”*\n\nLas hipótesis que circulan en el distrito son tres: una persona, dos personas, o tres palabras. La redacción no se inclina por ninguna. Si los lectores tienen información concreta — ojo, **información concreta**, no rumores — pueden hacérnosla llegar a través de los buzones. La trataremos con discreción. Lo importante en estos casos es no inventar."
+        },
+        {
+          "titulo": "Alumbrado de los Canales: terminado",
+          "firma": null,
+          "cuerpo": "El cambio de alumbrado del Barrio de los Canales **se completó el lunes**. Toren Igal nos confirma que las 217 farolas del distrito tienen ya el modelo nuevo y conservan el ámbar característico. *“Los gatos siguen molestos,”* añade Rexán. *“Es la mejor señal.”*"
+        }
+      ],
+      "cronica": {
+        "titulo": "Once años cuidando un huerto",
+        "firma": "por Sara Olit",
+        "introduccion": "Sara Olit cuida un pequeño huerto comunitario del distrito de los Canales. Tiene 56 años. Lleva 11 años cuidándolo, después de heredar la responsabilidad de una vecina mayor que se mudó al continente.",
+        "cuerpo": "El huerto del que me ocupo no es mío. Pero he aprendido más de él que de mi propia casa.\n\nEl huerto tiene **24 metros de largo y 18 de ancho**. Cuatro cuartas partes, cuatro estaciones, cuatro paciencias distintas. Lo divido cada año en cuatro parcelas: tomates, lechugas, perejil, zanahorias. Las proporciones varían según el año — algunos años los tomates piden más sitio, otros años no quieren tanto.\n\nLa primera cosa que aprendí, hace once años, fue que **las plantas no se enfadan**. La gente se enfada — yo me enfadaba al principio, cuando una mata no rendía. Pensaba: *“Mala planta.”* Pero la planta no es mala. La planta es la planta. Si no rinde, la culpa está en otra parte: en el agua, en la tierra, en el sol que no le llega, en el ácido del invierno pasado. La planta solo te lo señala.\n\nLa segunda cosa fue que **escuchar a las plantas** es lo mismo que escucharte a ti. Si no riegas tres días, no es la planta la que sufre — eres tú que estás distraída. La planta solo lo señala. Si te das cuenta el cuarto día, has aprendido a vivir contigo. Si te das cuenta el séptimo, has aprendido por las malas.\n\nLa tercera cosa, esta más extraña, es sobre **las malas hierbas**. Las malas hierbas no son malas en sí. Son el síntoma de algo que pasó antes — un invierno con poca lluvia, un verano con sombra excesiva, una rotación de cultivos saltada. La mala hierba que aparece en marzo te está hablando del enero anterior. Cuando le coges el oído, las malas hierbas son un diario. Lo malo no es ellas, lo malo es no leerlas.\n\nHe aprendido, con calma, que la jardinería **no es jardinería**. Es **paciencia con cosas que están vivas**. Y como mucho de lo que importa en una vida también está vivo, lo que aprendes en el huerto te sirve fuera. Yo lo uso con mi marido, con mi hija, con mis tres nietos. Funciona casi siempre.\n\nA los Aprendices que pasen por los Canales: el huerto tiene una verja baja en la entrada del pasaje sin nombre que va al puente del este. La verja no está cerrada. Pasen si quieren. No toquen las plantas. Pero quédense un rato. La voz que no oyen los demás está a la espera."
+      },
+      "cartas": [
+        {
+          "pregunta": "Mi padre se aleja de mí desde que su hija — yo — sabe más matemáticas que él. Tengo 14 años y ya sé. Pero no quiero que se aleje. ¿Qué hago?",
+          "firmante": "Hija con conflicto",
+          "respuesta": "A Hija con conflicto: lo que pasa es bonito y duro. Tu padre no se aleja por vergüenza — se aleja porque no sabe cómo acompañar lo que no entiende. Habla con él en otro terreno, no en el de las matemáticas. Pídele que te enseñe algo que él sí domine — un oficio, un recuerdo de su infancia, una receta que sabe hacer él. Si te enseña, vuelve. Las matemáticas no son lo único que une a una familia."
+        },
+        {
+          "pregunta": "Soy mayor y no sé cómo se manda una carta al Faro. ¿Pueden los buzones del Mercado recibir mis cartas? Tengo 73 años y no salgo de mi distrito.",
+          "firmante": "Mayor del Mercado",
+          "respuesta": "A Mayor del Mercado: por supuesto. Hay un buzón del Faro en la planta baja del Mercado, justo al lado del puesto de la Maestra Naini. Si no encuentra el buzón, pregunte a Naini directamente y ella le ayudará. Y si quiere, escriba a la redacción más a menudo. Las cartas de gente con 73 años son las que más nos gustan publicar — son cartas de gente con experiencia."
+        },
+        {
+          "pregunta": "Sara Olit dice que el huerto no está cerrado. ¿Es verdad que cualquiera puede entrar?",
+          "firmante": "Curioso",
+          "respuesta": "A Curioso: verdad. Hemos confirmado con Sara y con dos vecinos. La verja está abierta. Solo se pide respeto: no tocar plantas, no llevarse nada, no fumar. La cesta de Sara para herramientas la dejan algunos vecinos al lado de la entrada — a veces alguien se lleva una pala prestada y la devuelve. Funciona desde hace once años. Es un sistema de honor que no se ha roto nunca."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El reparto del huerto",
+        "enunciado": "Sara Olit quiere dividir el huerto comunitario de **24 m × 18 m** en **cuatro parcelas rectangulares** que cubran exactamente toda la superficie. Las parcelas serán de tomates, lechugas, perejil y zanahorias. Sara tiene tres condiciones:\n\n- La parcela de **tomates** debe ser **el doble** que la de **lechugas**.\n- La parcela de **perejil** debe ser **igual** a la de **zanahorias**.\n- Las parcelas de **tomates y lechugas juntas** deben ocupar **3/4 del huerto**.\n\n¿Cuántos metros cuadrados tendrá cada una de las cuatro parcelas?",
+        "pista": null,
+        "solucionCanonica": "Tomates 216 m², lechugas 108 m², perejil 54 m², zanahorias 54 m²",
+        "explicacionSolucion": "Total: 24·18 = 432 m². Tomates+Lechugas = 3/4·432 = 324 m². Como tomates = 2·lechugas, 3·lechugas = 324, así lechugas 108 y tomates 216. Perejil y zanahorias se reparten los 432−324 = 108 m² restantes a partes iguales: 54 m² cada una.",
+        "dificultad": "iniciadoII"
+      }
+    },
+    {
+      "numeroSemana": 19,
+      "anioOrden": 412,
+      "numeroEdicion": 1252,
+      "portada": [
+        {
+          "titulo": "Solución del huerto y el equinoccio mayor",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo del huerto: **tomates 216 m², lechugas 108 m², perejil 54 m², zanahorias 54 m²**. (El total es 432 m². Tomates+lechugas son 3/4 = 324 m²; con tomates = 2·lechugas, 3·lechugas = 324 → lechugas 108, tomates 216. Perejil y zanahorias se reparten los 108 m² restantes a partes iguales.) Aciertos: ocho lectores."
+        },
+        {
+          "titulo": "El equinoccio mayor en cuatro semanas",
+          "firma": "Por la redacción.",
+          "cuerpo": "El **equinoccio mayor** del año — el equinoccio ordinario, no el de las tres lunas — se celebra en cuatro semanas. El Cónclave nos confirma las fechas y horarios habituales, y añade una pequeña novedad astronómica este año:\n\nTalin Mar, astrónomo del observatorio, anuncia que la **luna pequeña** — la menos visible de las tres — pasará especialmente cerca del **horizonte sur** la noche del equinoccio. *“No es espectacular,”* aclara Talin con su sequedad habitual. *“Es delicado. Se verá rosa pálido durante unos veinte minutos, justo después del crepúsculo.”* Brina recomienda asistencia desde las Afueras o desde el Puerto si se quiere disfrutar bien — la altura ayuda.\n\nNo habrá inscripción, no habrá límite. Es un evento abierto. La Maestra Brina solo pide que se respete el silencio durante los primeros diez minutos del paso de la luna pequeña: *“La luna pequeña es tímida. No grita. Si gritamos nosotros, no la oímos.”*"
+        }
+      ],
+      "cronica": {
+        "titulo": "El miedo a los lunes",
+        "firma": "por Vera Halt",
+        "introduccion": "Vera Halt tiene 20 años. Está en formación para Iniciada I. La redacción ha aceptado por primera vez una cronista de su edad porque su carta nos pareció directa y útil para muchos lectores jóvenes.",
+        "cuerpo": "Tengo veinte años. Llevo trece años con miedo a los lunes. Empezó cuando tenía siete y mi maestra de entonces me hizo pasar al frente de la clase a leer en voz alta — me bloqueé y la clase se rió. Era un lunes. Mi cabeza decidió, sola, que los lunes eran peligrosos.\n\nTrece años más tarde, ya como casi-Iniciada, sigo notándolo. Los lunes me despierto con el estómago raro. Si tengo examen ese día, peor. Si no lo tengo, igual de raro. Mi cuerpo se ha hecho un calendario propio que no coincide con el mío.\n\nEsta semana hice mi tercer examen para Iniciada I. Era un lunes — claro. Lo pasé fatal. No por el contenido: sé hacer las cosas que pidieron. Lo pasé fatal **porque era lunes**. Las matemáticas estaban bien; mi cabeza, no.\n\nHablé con la Maestra Irune al día siguiente. Le conté el calendario propio de mi cuerpo. Pensé que iba a reírse. No se rió. Me dijo: *“Vera, los miedos a los días son comunes. Los miedos a los lunes especialmente. La cabeza se atasca con los inicios — y los lunes son inicios continuos.”* Después me preguntó qué cosas hago los domingos por la noche que puedan estar contribuyendo. Repasé. Veo que: ceno mucho, no preparo el lunes, me acuesto tarde. Tres pequeñas costumbres que probablemente le están dando comida al miedo. Esta noche voy a probar lo contrario.\n\nEsta crónica la escribo para los **niños lectores** del Faro. Si tenéis miedo a un día — el lunes, el martes, da igual cuál — os lo diré claro: **no estáis solos**. Llevo trece años con el mismo miedo y ya estoy casi siendo Iniciada. El miedo no me ha impedido llegar. Lo que me ha hecho daño es haber tardado **doce años** en hablar de él. No tardéis tanto.\n\nEscribo también porque a partir del lunes que viene voy a probar una rutina nueva: cenar ligero los domingos, preparar todo para el lunes, acostarme temprano. Si funciona, escribiré otra crónica con los resultados. Si no funciona, también escribiré. La gente necesita saber qué sí funciona y qué no — los dos son útiles.\n\nA la Maestra Irune: gracias. A los lectores jóvenes con miedo a un día: ánimo. La cabeza se cura despacio, pero se cura."
+      },
+      "cartas": [
+        {
+          "pregunta": "Mi hijo de 6 años tiene pesadillas en las que el faro le habla. Ya hace un par de meses que las tiene. ¿Es preocupante?",
+          "firmante": "Madre con preguntas (cuarta vez que escribo)",
+          "respuesta": "A Madre con preguntas: gracias por escribir otra vez. Lo que dijimos en la edición 1242 sigue siendo válido — los sueños no son preocupantes en sí. Pero cuando un sueño se repite durante meses, vale la pena tomarlo en serio. Le sugerimos hablar con la Maestra Irune o con la Maestra Naini, que tienen práctica con niños. No para alarmar al niño — solo para que tenga compañía adulta en el sueño."
+        },
+        {
+          "pregunta": "La crónica de Bel Toral sigue siendo mi favorita. Le sigo trayendo el café por la escalera larga. Hoy me ha dicho que le encantó la crónica de Vera Halt.",
+          "firmante": "Mujer de Bel",
+          "respuesta": "A Mujer de Bel: gracias por la nota. La redacción se alegra de saber que los cafés siguen subiendo. Salude al señor Toral."
+        },
+        {
+          "pregunta": "La pintada con las letras KRT, ¿se ha entendido ya?",
+          "firmante": "Lector pendiente",
+          "respuesta": "A Lector pendiente: aún no. Brina sigue investigando con calma. La redacción no especulará. Si hay novedad, será en la próxima edición. Mientras tanto, gracias por su paciencia."
+        }
+      ],
+      "acertijo": {
+        "titulo": "El examen de Vera",
+        "enunciado": "Vera Halt hizo **3 exámenes** en el último mes. Las **tres notas suman 22** sobre 30.\n\n- En el **primer examen** sacó **el triple** que en el tercero.\n- En el **segundo examen** sacó **dos puntos más** que en el tercero.\n\n¿Qué nota sacó Vera en cada uno de los tres exámenes?",
+        "pista": null,
+        "solucionCanonica": "12, 6 y 4",
+        "explicacionSolucion": "Si el tercero es c, el primero es 3c y el segundo c+2. Suma 3c + (c+2) + c = 5c + 2 = 22, así c = 4. Primero 12, segundo 6, tercero 4.",
+        "dificultad": "iniciadoI"
+      }
+    },
+    {
+      "numeroSemana": 20,
+      "anioOrden": 412,
+      "numeroEdicion": 1253,
+      "portada": [
+        {
+          "titulo": "Aciertos del examen de Vera y un padre con tres iniciales",
+          "firma": "Por la redacción.",
+          "cuerpo": "Solución del acertijo de Vera: **primero 12, segundo 6, tercero 4**. (Si el tercero es c, el primero es 3c y el segundo c+2. Suma 5c + 2 = 22, de donde c = 4.) Aciertos: catorce lectores. Vera nos manda un saludo: *“Si os ha salido bien, dadle las gracias a mi maestra de los siete años. Sin ella no habríais tenido este acertijo.”* Tiene humor, esta Vera."
+        },
+        {
+          "titulo": "Las tres iniciales",
+          "firma": "Por Maren Olbéa, directora.",
+          "cuerpo": "La pintada de **K. R. T.** del distrito Industria, mencionada en la edición 1251, ha sido finalmente comprendida. Doy la noticia con cuidado, porque la historia es de las que hay que respetar.\n\nLa Maestra Brina recibió, hace cuatro días, la visita en el observatorio de una **mujer mayor del distrito Industria**, llamada Beni Otal. Beni vive a tres calles del almacén donde apareció la pintada. La conversación fue breve. Beni le dijo a Brina: *“Yo sé quién pinta los círculos. Es mi vecino. Y K. R. T. son los nombres de sus tres niños.”*\n\nBrina fue a hablar con el vecino — un hombre de **74 años**, viudo, llamado Iren Tov — y la conversación fue como deben ser estas conversaciones: con paciencia y sin juicio. Lo que Iren Tov contó (y nos da permiso, con condiciones, para publicar):\n\nHace **20 años**, en el invierno frío del 392 de la Orden, hubo una pequeña epidemia en una calle del distrito Industria. Murieron once personas en cuatro semanas. Iren Tov perdió a sus **tres niños** — **Kelo, Rasi y Tene**, K. R. T. — todos antes de cumplir los 12 años. Su mujer, que era panadera del barrio, falleció dos años después.\n\nIren Tov no tiene relación con los Opacos. *“Los Opacos no me importan,”* dijo a Brina. *“Yo pinto un círculo. El círculo es como ellos eran — sin terminar. Y dejo las tres iniciales como ofrenda. Era para que K., R. y T. supieran, donde estén, que su padre se acuerda. No quería decírselo a nadie. Pero ahora que lo saben, no me molesta. Que sepan.”*\n\nBrina le ha pedido — con la suavidad que es suya — que considere otras formas de honrar a sus hijos. No para imponer, dice, sino para no confundir a los Fraccionistas que peinan el distrito buscando símbolos hostiles. Iren Tov ha aceptado pintar **una vez al año**, no más, en un solo muro: el de su propia casa.\n\nLa redacción publica esto con el permiso explícito de Iren Tov. Y añade lo que importa, **subrayado**: este caso es de él. Las **otras pintadas** — y son muchas, en muchos distritos — pueden tener orígenes muy distintos. **No deduzcan**. Cada círculo roto es de quien lo pintó. La conclusión sobre uno no se aplica a los demás.\n\nA Iren Tov, en nombre del periódico: lo lamentamos. A K., R. y T., dondequiera que estén: su padre los recuerda con dignidad. Y ahora también la ciudad."
+        }
+      ],
+      "cronica": {
+        "titulo": "Una vez al año, el silencio del faro",
+        "firma": "por Maren Olbéa",
+        "introduccion": "Excepcionalmente — y para cerrar la tanda de ediciones que han recogido el faro lejano del Puerto — la directora firma de nuevo la crónica.",
+        "cuerpo": "Cuando empezamos a escribir sobre el parpadeo del faro lejano del Puerto, en la edición 1239, no sabíamos lo que sabemos ahora. La redacción tampoco lo sabía cuando volvió al tema en la edición 1244 ni cuando lo dejó en la 1246 sin resolver. Hoy ya sabemos algo. Lo cuento despacio.\n\nHe hablado con **dos viejos marineros retirados** durante las últimas semanas. Uno se firmó como J. C. del Cabo en una carta a la redacción. La otra es **Olen Cira**, **89 años**, viuda de marinero, vive en una casita en el muelle 1 con vistas al faro.\n\nAmbos confirmaron lo mismo: **el faro parpadea cada 31 años**, aproximadamente, durante **tres semanas**, y siempre **antes de un equinoccio con tres lunas**. Olen me dijo, con calma: *“La primera vez que recuerdo fue cuando yo tenía 27. La segunda, cuando tenía 58. Y esta es la tercera. Ya no me preocupa.”*\n\nHe cruzado este testimonio con el archivo del Cónclave. Me costó tres semanas de búsqueda — el archivo no está pensado para preguntas como estas — pero he encontrado **siete menciones**, separadas más o menos 31 años entre sí, de “irregularidades del faro lejano”. La primera de las siete es de hace **186 años**.\n\nLe he llevado la lista a Oryn. Me ha mirado. Ha asentido despacio. Ha dicho una sola frase: *“El faro y el equinoccio son amigos.”* Y se ha quedado callado.\n\nHe decidido no preguntar más. Hay tipos de saber que **se cuidan callando**. Lo que tenemos es esto: cada 31 años, antes de las tres lunas, el faro lejano parpadea durante 17 noches o así. Lleva haciéndolo **al menos 186 años**. Probablemente mucho más. La razón nadie la sabe — o si alguien la sabe, no quiere decirla. Y eso me parece bien.\n\nHay una hipótesis que circula desde hace siglos en círculos discretos: que algunos faros, los más viejos, **se acuerdan** de las cosas que han visto. Que el faro lejano vio las tres lunas hace 186 años por primera vez (o quizá antes) y que cada 31 años se acuerda. La hipótesis no es probable pero es bonita. Y si fuera cierta, sería un consuelo: que también las cosas mecánicas tienen memoria — que el universo no olvida del todo.\n\nCierro este tema, esta vez sí, con una nota personal. He sentido durante estas semanas, mientras investigaba, que el faro me observaba a mí también. No se lo digo a nadie del Cónclave — me reñirían por exagerada. Lo digo aquí, donde estamos en confianza: he tenido la sensación, dos noches, de que el faro miraba mi ventana. No he tenido miedo. He tenido un cariño raro. He pensado: “Faro, ya lo sé. No voy a contarlo. Sigue tú.”\n\nHace tres días el faro volvió a parpadear normal. Le he agradecido, en voz baja, que me dejara saber un poco. Y he dejado el tema cerrado.\n\nPróxima vez: dentro de 31 años. Si vivo, lo cuento desde la otra orilla de mis 91 años. Si no vivo, espero que la directora del Faro de entonces — alguna de las cinco personas en las que ya he pensado — recoja el hilo. Le dejo aquí la información ordenada: que la encuentre rápido cuando le toque."
+      },
+      "cartas": [
+        {
+          "pregunta": "Lo de las iniciales me ha conmovido. ¿Pueden pasar mi nota a Iren Tov?",
+          "firmante": "Lectora con corazón",
+          "respuesta": "A Lectora con corazón: con su permiso, la haremos llegar. Iren Tov no quiere visitas, pero acepta cartas. Háganosla llegar a la redacción y nosotros la entregaremos cerrada."
+        },
+        {
+          "pregunta": "La luna pequeña del equinoccio. ¿Hay buen sitio en las Afueras para verla con un niño?",
+          "firmante": "Padre con plan",
+          "respuesta": "A Padre con plan: Talin Mar nos ha pasado un consejo. La **terraza superior del observatorio** estará abierta al público desde las 19:00 hasta medianoche el día del equinoccio. Hay sitio para unas 100 personas. No hace falta inscripción. Lleve abrigo — la luna pequeña es tímida pero la noche, en marzo, no."
+        },
+        {
+          "pregunta": "Veintidós ediciones leídas y mi café del viernes ya no es café sin Faro. Gracias.",
+          "firmante": "Lectora fiel",
+          "respuesta": "A Lectora fiel: gracias a usted. La redacción no lo dirá nunca por orgullo, pero las cartas como la suya nos ayudan a seguir. Que su café del viernes le dure muchos viernes."
+        }
+      ],
+      "acertijo": {
+        "titulo": "Las estrellas de Talin",
+        "enunciado": "Esta semana Talin Mar ha contado **240 estrellas** desde la terraza del observatorio. Su clasificación habitual:\n\n- **5/8** del total son estrellas que ve **cualquier semana** (sus “fijas”).\n- **1/6** del total son estrellas que **había visto antes** pero que no aparecían esta temporada.\n- **El resto** son estrellas **nuevas para él** — nunca antes anotadas.\n\n¿Cuántas estrellas son nuevas para Talin Mar esta semana?",
+        "pista": null,
+        "solucionCanonica": "50 estrellas",
+        "explicacionSolucion": "240·5/8 = 150 fijas. 240·1/6 = 40 reaparecidas. Las nuevas son 240 − 150 − 40 = 50.",
+        "dificultad": "iniciadoII"
+      }
+    }
+  ]
+}

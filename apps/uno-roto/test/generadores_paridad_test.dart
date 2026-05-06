@@ -8,9 +8,15 @@ import 'package:uno_roto/dominio/problema_area_rectangulo.dart';
 import 'package:uno_roto/dominio/problema_area_triangulo.dart';
 import 'package:uno_roto/dominio/problema_aumento_descuento.dart';
 import 'package:uno_roto/dominio/problema_circulo.dart';
+import 'package:uno_roto/dominio/problema_decimal.dart';
 import 'package:uno_roto/dominio/problema_dual.dart';
+import 'package:uno_roto/dominio/problema_ecuacion_lineal.dart';
 import 'package:uno_roto/dominio/fragmento_en_tejado.dart' show OperadorAritmetico;
 import 'package:uno_roto/dominio/problema_escala.dart';
+import 'package:uno_roto/dominio/problema_impropio.dart';
+import 'package:uno_roto/dominio/problema_operacion_decimal.dart';
+import 'package:uno_roto/dominio/problema_porcentaje.dart';
+import 'package:uno_roto/dominio/problema_proporcional.dart';
 import 'package:uno_roto/dominio/problema_espejo.dart';
 import 'package:uno_roto/dominio/problema_fraccion_de_cantidad.dart';
 import 'package:uno_roto/dominio/problema_grafico_barras.dart';
@@ -30,6 +36,7 @@ import 'package:uno_roto/dominio/problema_probabilidad_porcentaje.dart';
 import 'package:uno_roto/dominio/problema_razon.dart';
 import 'package:uno_roto/dominio/problema_regla_de_tres.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
+import 'package:uno_roto/dominio/problema_suma_basica.dart';
 import 'package:uno_roto/dominio/problema_volumen.dart';
 
 /// Verifica las invariantes de un problema con candidatos:
@@ -525,6 +532,150 @@ void main() {
           indiceCorrecto: p.indiceCorrecto,
           sonIgualesPorValor: listaFraccionMismoOrden,
           contexto: 'ordenar fracciones semilla=$s',
+        );
+      }
+    });
+
+    // Cubre los generadores que faltaban (con fallbacks `while` o
+    // listas curadas) — la pareja del bug "tres respuestas iguales,
+    // pulsé la correcta y dio error" descubierto en pruebas con niño.
+
+    test('simplificar dif 1 — 200 semillas sin tarjetas duplicadas', () {
+      for (var s = 0; s < 200; s++) {
+        final p = GeneradorSimplificar(semilla: s).generar(dificultad: 1);
+        verificarParidad(
+          candidatos: p.candidatos,
+          indiceCorrecto: p.indiceCorrecto,
+          sonIgualesPorValor: (a, b) =>
+              a.numerador == b.numerador && a.denominador == b.denominador,
+          contexto: 'simplificar dif 1 semilla=$s',
+        );
+      }
+    });
+
+    test('simplificar generarDesde — toda la base reducible', () {
+      // Recorre denominadores 2..6 y numeradores propios, multiplica
+      // por factores 2..4 y verifica el problema generado desde el
+      // cazadero (donde el Fragmento trae datos concretos).
+      for (var den = 2; den <= 6; den++) {
+        for (var num = 1; num < den; num++) {
+          for (var factor = 2; factor <= 4; factor++) {
+            final p = GeneradorSimplificar(semilla: 1).generarDesde(
+              numerador: num * factor,
+              denominador: den * factor,
+            );
+            verificarParidad(
+              candidatos: p.candidatos,
+              indiceCorrecto: p.indiceCorrecto,
+              sonIgualesPorValor: (a, b) =>
+                  a.numerador == b.numerador &&
+                  a.denominador == b.denominador,
+              contexto:
+                  'simplificar desde ${num * factor}/${den * factor}',
+            );
+          }
+        }
+      }
+    });
+
+    test('impropio — 200 semillas sin tarjetas duplicadas', () {
+      for (var s = 0; s < 200; s++) {
+        final azar = math.Random(s);
+        final den = 2 + azar.nextInt(8); // 2..9
+        final num = den + 1 + azar.nextInt(20); // > den
+        final p =
+            GeneradorImpropio(semilla: s).generarDesde(
+          numerador: num,
+          denominador: den,
+        );
+        verificarParidad(
+          candidatos: p.candidatos,
+          indiceCorrecto: p.indiceCorrecto,
+          sonIgualesPorValor: (a, b) => a.esIgualA(b),
+          contexto: 'impropio semilla=$s objetivo=$num/$den',
+        );
+      }
+    });
+
+    test('decimal — 200 semillas sin etiquetas duplicadas', () {
+      for (var s = 0; s < 200; s++) {
+        final p = GeneradorDecimal(semilla: s).generar();
+        verificarParidad(
+          candidatos: p.candidatos,
+          indiceCorrecto: p.indiceCorrecto,
+          sonIgualesPorValor: stringIguales,
+          contexto: 'decimal semilla=$s',
+        );
+      }
+    });
+
+    test('porcentaje — todo el pool curado', () {
+      for (final objetivo in porcentajesConocidos) {
+        final p =
+            GeneradorPorcentaje(semilla: 1).generarDesde(objetivo);
+        verificarParidad(
+          candidatos: p.candidatos,
+          indiceCorrecto: p.indiceCorrecto,
+          sonIgualesPorValor: fraccionEquivalente,
+          contexto: 'porcentaje objetivo=${objetivo.etiqueta}',
+        );
+      }
+    });
+
+    test('operacion_decimal — 200 semillas sin etiquetas duplicadas', () {
+      for (var s = 0; s < 200; s++) {
+        final p = GeneradorOperacionDecimal(semilla: s).generar();
+        verificarParidad(
+          candidatos: p.candidatos,
+          indiceCorrecto: p.indiceCorrecto,
+          sonIgualesPorValor: stringIguales,
+          contexto: 'operacion_decimal semilla=$s',
+        );
+      }
+    });
+
+    test('ecuacion_lineal — 200 semillas × 4 dificultades sin colisión', () {
+      for (var dif = 1; dif <= 4; dif++) {
+        for (var s = 0; s < 200; s++) {
+          final p = GeneradorEcuacionLineal(semilla: s)
+              .generar(dificultad: dif);
+          verificarParidad(
+            candidatos: p.candidatos,
+            indiceCorrecto: p.indiceCorrecto,
+            sonIgualesPorValor: intIguales,
+            contexto:
+                'ecuacion_lineal dif=$dif semilla=$s ${p.etiqueta} → x=${p.correcto}',
+          );
+        }
+      }
+    });
+
+    test('suma_basica — 200 semillas × 4 dificultades sin colisión', () {
+      for (var dif = 1; dif <= 4; dif++) {
+        for (var s = 0; s < 200; s++) {
+          final p = GeneradorSumaBasica(semilla: s).generar(dificultad: dif);
+          verificarParidad(
+            candidatos: p.candidatos,
+            indiceCorrecto: p.indiceCorrecto,
+            sonIgualesPorValor: intIguales,
+            contexto:
+                'suma_basica dif=$dif semilla=$s ${p.a}+${p.b}=${p.correcto}',
+          );
+        }
+      }
+    });
+
+    test('proporcional — 200 pares aleatorios sin colisión', () {
+      for (var s = 0; s < 200; s++) {
+        final azar = math.Random(s);
+        final a = 1 + azar.nextInt(15);
+        final b = 1 + azar.nextInt(15);
+        final p = GeneradorProporcional(semilla: s).generarDesde(a: a, b: b);
+        verificarParidad(
+          candidatos: p.candidatos,
+          indiceCorrecto: p.indiceCorrecto,
+          sonIgualesPorValor: intIguales,
+          contexto: 'proporcional semilla=$s a=$a b=$b',
         );
       }
     });

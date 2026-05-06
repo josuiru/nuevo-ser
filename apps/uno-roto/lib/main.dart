@@ -245,12 +245,15 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
         await _repositorio.cargarVariantesPuentesUsadas();
     final variantesArco3Usadas =
         await _repositorio.cargarVariantesMaquinasUsadas();
+    final variantesEraDosUsadas =
+        await _repositorio.cargarVariantesEraDosUsadas();
 
     final decision = _orquestador.decidir(
       flagsActivos: flagsActivos,
       variantesArco1Usadas: variantesArco1Usadas,
       variantesArco2Usadas: variantesArco2Usadas,
       variantesArco3Usadas: variantesArco3Usadas,
+      variantesEraDosUsadas: variantesEraDosUsadas,
       varianteYaDisparadaEnEstaTransicion:
           _varianteYaDisparadaEnEstaTransicion,
     );
@@ -310,6 +313,11 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
           await _repositorio.resetearVariantesMaquinas();
         }
         await _repositorio.marcarVarianteMaquinaUsada(variante.id);
+      case ArcoConVariantes.eraDos:
+        if (poolReseteado) {
+          await _repositorio.resetearVariantesEraDos();
+        }
+        await _repositorio.marcarVarianteEraDosUsada(variante.id);
     }
   }
 

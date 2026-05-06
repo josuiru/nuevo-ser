@@ -70,12 +70,20 @@ class GeneradorImpropio {
       if (distractores.any((d) => d.esIgualA(candidato))) continue;
       distractores.add(candidato);
     }
-    while (distractores.length < 3) {
-      distractores.add(NumeroMixto(
-        entera: enteraCorrecta + distractores.length + 1,
+    // Fallback ultra defensivo — varía k y verifica que no colisione
+    // con el correcto ni con distractores ya añadidos. Sin esto, dos
+    // pasadas del bucle podrían añadir el mismo NumeroMixto.
+    var k = 1;
+    while (distractores.length < 3 && k < 50) {
+      final candidato = NumeroMixto(
+        entera: enteraCorrecta + k,
         numerador: numeradorRestante,
         denominador: denominador,
-      ));
+      );
+      k++;
+      if (candidato.esIgualA(correcto)) continue;
+      if (distractores.any((d) => d.esIgualA(candidato))) continue;
+      distractores.add(candidato);
     }
 
     final candidatos = <NumeroMixto>[correcto, ...distractores];

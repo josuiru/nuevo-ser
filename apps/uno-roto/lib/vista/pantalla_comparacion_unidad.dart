@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_comparacion_unidad.dart';
 import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import 'estado_pista_puzzle.dart';
+import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle FR.04: el niño ve una fracción grande y elige si es menor,
@@ -23,9 +26,12 @@ class PantallaComparacionUnidad extends StatefulWidget {
 class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controladorCielo;
+  late final EstadoPistaPuzzle _pista;
   late ProblemaComparacionUnidad _problema;
   RelacionConUnidad? _respuestaDada;
   bool _revelado = false;
+  bool _mostrandoDemo = false;
+  static const _idDemo = 'comparacion_unidad';
 
   @override
   void initState() {
@@ -34,12 +40,28 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
       vsync: this,
       duration: const Duration(seconds: 16),
     )..repeat();
+    _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
         GeneradorComparacionUnidad().generar(dificultad: 1);
+    _decidirSiMostrarDemo();
+  }
+
+  Future<void> _decidirSiMostrarDemo() async {
+    final repositorio = RepositorioProgreso();
+    final vistos = await repositorio.cargarDemosPuzzlesVistos();
+    if (!mounted || vistos.contains(_idDemo)) return;
+    setState(() => _mostrandoDemo = true);
+  }
+
+  Future<void> _cerrarDemo() async {
+    if (!_mostrandoDemo) return;
+    setState(() => _mostrandoDemo = false);
+    await RepositorioProgreso().marcarDemoPuzzleVisto(_idDemo);
   }
 
   @override
   void dispose() {
+    _pista.dispose();
     _controladorCielo.dispose();
     super.dispose();
   }
@@ -56,6 +78,7 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
     });
     if (_problema.esCorrecta(opcion)) {
       HapticFeedback.heavyImpact();
+      _pista.registrarAcierto();
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -63,9 +86,11 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
     } else {
       HapticFeedback.vibrate();
       contarFalloPuzzle();
+      _pista.registrarFallo();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
+        _pista.mostrarSiToca();
       });
     }
   }
@@ -112,7 +137,7 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                               child: Text(
                                 AppLocalizations.of(contexto).puzzleBotonHuir,
                                 style: const TextStyle(
-                                  color: PaletaNeon.textoTenue,
+                                  color: PaletaNeon.textoPrincipal,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
                                 ),
@@ -144,6 +169,7 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                       const SizedBox(height: 18),
                       Text(
                         AppLocalizations.of(contexto).puzzleInstrContraUno,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: PaletaNeon.textoPrincipal,
                           fontSize: 20,
@@ -163,6 +189,9 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                               revelado: _revelado,
                               esCorrecta: _problema.esCorrecta(
                                   RelacionConUnidad.menor),
+                              marcarPista: _pista.activa &&
+                                  _problema.esCorrecta(
+                                      RelacionConUnidad.menor),
                               alTocar: () =>
                                   _responder(RelacionConUnidad.menor),
                             ),
@@ -177,6 +206,9 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                               revelado: _revelado,
                               esCorrecta: _problema.esCorrecta(
                                   RelacionConUnidad.igual),
+                              marcarPista: _pista.activa &&
+                                  _problema.esCorrecta(
+                                      RelacionConUnidad.igual),
                               alTocar: () =>
                                   _responder(RelacionConUnidad.igual),
                             ),
@@ -191,6 +223,9 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                               revelado: _revelado,
                               esCorrecta: _problema.esCorrecta(
                                   RelacionConUnidad.mayor),
+                              marcarPista: _pista.activa &&
+                                  _problema.esCorrecta(
+                                      RelacionConUnidad.mayor),
                               alTocar: () =>
                                   _responder(RelacionConUnidad.mayor),
                             ),
@@ -202,6 +237,13 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                   ),
                 ),
               ),
+              if (_mostrandoDemo)
+                OverlayDemoPuzzle(
+                  mensaje: AppLocalizations.of(contexto)
+                      .demoPuzzleTocaResultado,
+                  alCerrar: _cerrarDemo,
+                  posicionRelativa: const Alignment(0, 0.55),
+                ),
             ],
           );
         },
@@ -217,6 +259,7 @@ class _BotonOpcion extends StatelessWidget {
   final RelacionConUnidad? respuestaDada;
   final bool revelado;
   final bool esCorrecta;
+  final bool marcarPista;
   final VoidCallback alTocar;
 
   const _BotonOpcion({
@@ -227,6 +270,7 @@ class _BotonOpcion extends StatelessWidget {
     required this.revelado,
     required this.esCorrecta,
     required this.alTocar,
+    this.marcarPista = false,
   });
 
   @override
@@ -240,7 +284,9 @@ class _BotonOpcion extends StatelessWidget {
             ? PaletaNeon.rosaAcento
             : seleccionado
                 ? colorPrincipal
-                : colorPrincipal.withOpacity(0.55);
+                : marcarPista
+                    ? PaletaNeon.exitoSuave.withOpacity(0.6)
+                    : colorPrincipal.withOpacity(0.55);
     final brilloIntenso = marcarCorrecto || marcarIncorrecto || seleccionado;
     return GestureDetector(
       onTap: alTocar,
@@ -258,7 +304,14 @@ class _BotonOpcion extends StatelessWidget {
                     blurRadius: 22,
                   ),
                 ]
-              : const [],
+              : marcarPista
+                  ? [
+                      BoxShadow(
+                        color: PaletaNeon.exitoSuave.withOpacity(0.35),
+                        blurRadius: 16,
+                      ),
+                    ]
+                  : const [],
         ),
         child: Center(
           child: Text(

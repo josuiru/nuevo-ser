@@ -208,6 +208,8 @@ enum TipoFragmentoEnTejado {
   simetria,
   graficoBarras,
   graficoCircular,
+  sumaBasica,
+  ecuacionLineal,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

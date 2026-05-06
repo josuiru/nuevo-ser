@@ -71,6 +71,8 @@ const Set<String> skillsConPuzzleImplementado = {
   'GEO.07',
   'EST.01',
   'EST.02',
+  'ARI.01',
+  'ALG.01',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -113,6 +115,8 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'GEO.07') return TipoFragmentoEnTejado.simetria;
   if (skillId == 'EST.01') return TipoFragmentoEnTejado.graficoBarras;
   if (skillId == 'EST.02') return TipoFragmentoEnTejado.graficoCircular;
+  if (skillId == 'ARI.01') return TipoFragmentoEnTejado.sumaBasica;
+  if (skillId == 'ALG.01') return TipoFragmentoEnTejado.ecuacionLineal;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -255,6 +259,10 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
   switch (fragmento.tipo) {
     case TipoFragmentoEnTejado.unitario:
       return 'FR.01';
+    case TipoFragmentoEnTejado.sumaBasica:
+      return 'ARI.01';
+    case TipoFragmentoEnTejado.ecuacionLineal:
+      return 'ALG.01';
     case TipoFragmentoEnTejado.espejo:
       return 'FR.09';
     case TipoFragmentoEnTejado.decimal:
@@ -413,6 +421,13 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
 /// Dificultad aproximada entre 0.5 y 2.0 para las métricas del motor.
 double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
   switch (fragmento.tipo) {
+    case TipoFragmentoEnTejado.sumaBasica:
+      // Suma básica — la habilidad más fácil del catálogo. Peso bajo.
+      return 0.5;
+    case TipoFragmentoEnTejado.ecuacionLineal:
+      // Álgebra inicial — peso alto: requiere abstracción de la
+      // incógnita y manipulación inversa.
+      return 1.6;
     case TipoFragmentoEnTejado.unitario:
       final n = fragmento.numerador;
       final d = fragmento.denominador;

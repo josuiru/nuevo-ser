@@ -5,6 +5,16 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Carga key.properties si existe — firma de release reproducible para
+// que `adb install -r` preserve los datos del niño entre builds. Si no
+// existe el fichero, las builds release siguen funcionando con la
+// debug key (útil para entornos de CI sin secretos).
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.unoroto.uno_roto"
     compileSdk = flutter.compileSdkVersion
@@ -30,11 +40,22 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        release {
+            if (keystoreProperties.containsKey('storeFile')) {
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig = keystoreProperties.containsKey('storeFile')
+                ? signingConfigs.release
+                : signingConfigs.debug
         }
     }
 }

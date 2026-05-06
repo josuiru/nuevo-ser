@@ -1,7 +1,9 @@
 {
-  "version": "0.1",
-  "total_skills": 66,
+  "version": "0.3",
+  "total_skills": 68,
   "domains": {
+    "ARI": "Aritmética básica",
+    "ALG": "Álgebra",
     "FR": "Fracciones",
     "DEC": "Decimales",
     "PROP": "Proporcionalidad y porcentajes",
@@ -1419,6 +1421,39 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        8,
+        18
+      ]
+    },
+    {
+      "id": "ARI.01",
+      "name": "Suma básica de enteros pequeños",
+      "domain": "ARI",
+      "deps": [],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Aprendiz_I",
+      "required_rank": "Aprendiz_I",
+      "precision_threshold": 0.9,
+      "time_median_seconds": [
+        2,
+        5
+      ]
+    },
+    {
+      "id": "ALG.01",
+      "name": "Resolver ecuación lineal simple",
+      "domain": "ALG",
+      "deps": [
+        "FR.05",
+        "DEC.04"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_II",
       "required_rank": "Fraccionista",
       "precision_threshold": 0.75,
       "time_median_seconds": [

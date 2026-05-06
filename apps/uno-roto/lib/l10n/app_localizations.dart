@@ -63,7 +63,8 @@ import 'app_localizations_eu.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,7 +72,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,7 +85,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -234,6 +237,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Entrenar'**
   String get mapaBotonEntrenar;
+
+  /// No description provided for @mapaBotonInstrucciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo se juega'**
+  String get mapaBotonInstrucciones;
+
+  /// No description provided for @tituloInstrucciones.
+  ///
+  /// In es, this message translates to:
+  /// **'CÓMO SE JUEGA'**
+  String get tituloInstrucciones;
+
+  /// No description provided for @demoPuzzleTocaResultado.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuando sepas la respuesta,\ntoca la opción correcta.'**
+  String get demoPuzzleTocaResultado;
+
+  /// No description provided for @demoPuzzleTocaSiNo.
+  ///
+  /// In es, this message translates to:
+  /// **'Decide y toca SÍ o NO.'**
+  String get demoPuzzleTocaSiNo;
 
   /// No description provided for @cazaBotonMapa.
   ///
@@ -1135,6 +1162,12 @@ abstract class AppLocalizations {
   /// **'Narrativos'**
   String get capaNarrativos;
 
+  /// No description provided for @catCuadernoBitacora.
+  ///
+  /// In es, this message translates to:
+  /// **'Bitácora'**
+  String get catCuadernoBitacora;
+
   /// No description provided for @catCuadernoPersonajes.
   ///
   /// In es, this message translates to:
@@ -1180,8 +1213,32 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrAmplificar.
   ///
   /// In es, this message translates to:
-  /// **'completa la equivalencia'**
+  /// **'completa: toca el número que falta'**
   String get puzzleInstrAmplificar;
+
+  /// No description provided for @puzzleHeaderSumaBasica.
+  ///
+  /// In es, this message translates to:
+  /// **'SUMAR'**
+  String get puzzleHeaderSumaBasica;
+
+  /// No description provided for @puzzleInstrSumaBasica.
+  ///
+  /// In es, this message translates to:
+  /// **'¿cuánto suman?'**
+  String get puzzleInstrSumaBasica;
+
+  /// No description provided for @puzzleHeaderEcuacionLineal.
+  ///
+  /// In es, this message translates to:
+  /// **'DESPEJA X'**
+  String get puzzleHeaderEcuacionLineal;
+
+  /// No description provided for @puzzleInstrEcuacionLineal.
+  ///
+  /// In es, this message translates to:
+  /// **'¿qué valor de x hace cierta la ecuación?'**
+  String get puzzleInstrEcuacionLineal;
 
   /// No description provided for @puzzleHeaderAngulo.
   ///
@@ -1192,13 +1249,13 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrAngulo.
   ///
   /// In es, this message translates to:
-  /// **'identifica el tipo'**
+  /// **'toca el nombre del ángulo dibujado'**
   String get puzzleInstrAngulo;
 
   /// No description provided for @puzzleInstrAreaRectangulo.
   ///
   /// In es, this message translates to:
-  /// **'área = base × altura'**
+  /// **'área = base × altura. Toca el resultado'**
   String get puzzleInstrAreaRectangulo;
 
   /// No description provided for @puzzleHeaderTriangulo.
@@ -1210,13 +1267,13 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrAreaTriangulo.
   ///
   /// In es, this message translates to:
-  /// **'área = base × altura ÷ 2'**
+  /// **'área = base × altura ÷ 2. Toca el resultado'**
   String get puzzleInstrAreaTriangulo;
 
   /// No description provided for @puzzleInstrCirculoPi.
   ///
   /// In es, this message translates to:
-  /// **'usa π ≈ 3,14'**
+  /// **'usa la fórmula (π ≈ 3,14) y toca el resultado'**
   String get puzzleInstrCirculoPi;
 
   /// No description provided for @puzzleHeaderComparar.
@@ -1228,19 +1285,19 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrCualEsMayor.
   ///
   /// In es, this message translates to:
-  /// **'¿cuál es mayor?'**
+  /// **'toca la fracción mayor'**
   String get puzzleInstrCualEsMayor;
 
   /// No description provided for @puzzleInstrLeerCifras.
   ///
   /// In es, this message translates to:
-  /// **'lee las cifras, no las cuentes'**
+  /// **'toca el decimal mayor (más cifras no es más)'**
   String get puzzleInstrLeerCifras;
 
   /// No description provided for @puzzleInstrMiraValor.
   ///
   /// In es, this message translates to:
-  /// **'mira el valor, no las cifras'**
+  /// **'toca el decimal mayor (más cifras no es más)'**
   String get puzzleInstrMiraValor;
 
   /// No description provided for @puzzleHeaderContraMitad.
@@ -1252,7 +1309,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrContraMitad.
   ///
   /// In es, this message translates to:
-  /// **'¿comparada con 1/2?'**
+  /// **'toca <, =, > comparándola con 1/2'**
   String get puzzleInstrContraMitad;
 
   /// No description provided for @puzzleHeaderContraUno.
@@ -1264,7 +1321,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrContraUno.
   ///
   /// In es, this message translates to:
-  /// **'compárala con 1'**
+  /// **'toca <, =, > comparándola con 1'**
   String get puzzleInstrContraUno;
 
   /// No description provided for @puzzleHeaderDecimal.
@@ -1276,7 +1333,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrQueDecimal.
   ///
   /// In es, this message translates to:
-  /// **'¿qué decimal vale igual?'**
+  /// **'toca el decimal que vale lo mismo'**
   String get puzzleInstrQueDecimal;
 
   /// No description provided for @puzzleHeaderDivisores.
@@ -1288,7 +1345,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrCualNoDivisor.
   ///
   /// In es, this message translates to:
-  /// **'¿cuál NO es divisor?'**
+  /// **'tres son divisores. Toca el que NO'**
   String get puzzleInstrCualNoDivisor;
 
   /// No description provided for @puzzleHeaderDual.
@@ -1300,7 +1357,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrDual.
   ///
   /// In es, this message translates to:
-  /// **'funde los dos en uno solo'**
+  /// **'calcula la operación y toca el resultado'**
   String get puzzleInstrDual;
 
   /// No description provided for @puzzleHeaderEscala.
@@ -1330,7 +1387,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrEspejo.
   ///
   /// In es, this message translates to:
-  /// **'busca su equivalente'**
+  /// **'toca la fracción equivalente'**
   String get puzzleInstrEspejo;
 
   /// No description provided for @puzzleHeaderParte.
@@ -1342,7 +1399,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrCalcula.
   ///
   /// In es, this message translates to:
-  /// **'calcula'**
+  /// **'calcula y toca el resultado'**
   String get puzzleInstrCalcula;
 
   /// No description provided for @puzzleHeaderGrafico.
@@ -1366,7 +1423,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrImpropio.
   ///
   /// In es, this message translates to:
-  /// **'escribe este Fragmento como mixto'**
+  /// **'toca el número mixto que vale igual'**
   String get puzzleInstrImpropio;
 
   /// No description provided for @puzzleHeaderJerarquia.
@@ -1378,13 +1435,13 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrJerarquiaPrimero.
   ///
   /// In es, this message translates to:
-  /// **'primero × y ÷, después + y −'**
+  /// **'primero × y ÷, después + y −. Toca el resultado'**
   String get puzzleInstrJerarquiaPrimero;
 
   /// No description provided for @puzzleInstrJerarquiaRecuerda.
   ///
   /// In es, this message translates to:
-  /// **'recuerda × y ÷ antes que + y −'**
+  /// **'× y ÷ antes que + y −. Toca el resultado'**
   String get puzzleInstrJerarquiaRecuerda;
 
   /// No description provided for @puzzleHeaderLeer.
@@ -1396,13 +1453,13 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrQueNumero.
   ///
   /// In es, this message translates to:
-  /// **'¿qué número es?'**
+  /// **'lee el texto y toca el número correcto'**
   String get puzzleInstrQueNumero;
 
   /// No description provided for @puzzleInstrQueFraccion.
   ///
   /// In es, this message translates to:
-  /// **'¿qué fracción es?'**
+  /// **'lee el texto y toca la fracción correcta'**
   String get puzzleInstrQueFraccion;
 
   /// No description provided for @puzzleHeaderLongitud.
@@ -1414,7 +1471,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrConvierteMedida.
   ///
   /// In es, this message translates to:
-  /// **'convierte la medida'**
+  /// **'convierte y toca el resultado'**
   String get puzzleInstrConvierteMedida;
 
   /// No description provided for @puzzleHeaderMedia.
@@ -1426,7 +1483,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrCalculaMedia.
   ///
   /// In es, this message translates to:
-  /// **'calcula la media'**
+  /// **'suma y divide. Toca la media'**
   String get puzzleInstrCalculaMedia;
 
   /// No description provided for @puzzleHeaderConvertir.
@@ -1438,13 +1495,13 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrConvertirImpropia.
   ///
   /// In es, this message translates to:
-  /// **'¿qué fracción impropia es?'**
+  /// **'toca la fracción impropia equivalente'**
   String get puzzleInstrConvertirImpropia;
 
   /// No description provided for @puzzleInstrCualEsModa.
   ///
   /// In es, this message translates to:
-  /// **'¿cuál es la {modo}?'**
+  /// **'toca el valor de la {modo}'**
   String puzzleInstrCualEsModa(String modo);
 
   /// No description provided for @puzzleHeaderOpDecimal.
@@ -1456,7 +1513,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrCuantoValeOp.
   ///
   /// In es, this message translates to:
-  /// **'cuánto vale la operación'**
+  /// **'calcula y toca el resultado'**
   String get puzzleInstrCuantoValeOp;
 
   /// No description provided for @puzzleHeaderDecimalFraccion.
@@ -1468,7 +1525,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrFraccionDecimal.
   ///
   /// In es, this message translates to:
-  /// **'la fracción y el decimal son lo mismo'**
+  /// **'calcula la operación mixta y toca el resultado'**
   String get puzzleInstrFraccionDecimal;
 
   /// No description provided for @puzzleHeaderOrdenar.
@@ -1480,7 +1537,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrOrdenar.
   ///
   /// In es, this message translates to:
-  /// **'de menor a mayor'**
+  /// **'toca la fila ordenada de menor a mayor'**
   String get puzzleInstrOrdenar;
 
   /// No description provided for @puzzleHeaderPerimetro.
@@ -1492,7 +1549,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrPerimetro.
   ///
   /// In es, this message translates to:
-  /// **'suma todos los lados'**
+  /// **'suma los lados y toca el perímetro'**
   String get puzzleInstrPerimetro;
 
   /// No description provided for @puzzleHeaderPoligono.
@@ -1504,7 +1561,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrPoligono.
   ///
   /// In es, this message translates to:
-  /// **'cuenta los lados'**
+  /// **'toca el nombre del polígono dibujado'**
   String get puzzleInstrPoligono;
 
   /// No description provided for @puzzleHeaderPorcentaje.
@@ -1516,7 +1573,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrPorcentajeFraccion.
   ///
   /// In es, this message translates to:
-  /// **'¿qué fracción vale igual?'**
+  /// **'toca la fracción equivalente al porcentaje'**
   String get puzzleInstrPorcentajeFraccion;
 
   /// No description provided for @puzzleInstrPorcentajeDe.
@@ -1534,7 +1591,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrQuePorcentaje.
   ///
   /// In es, this message translates to:
-  /// **'qué porcentaje representa'**
+  /// **'toca el porcentaje correcto'**
   String get puzzleInstrQuePorcentaje;
 
   /// No description provided for @puzzleHeaderPrimos.
@@ -1546,7 +1603,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrEsPrimo.
   ///
   /// In es, this message translates to:
-  /// **'¿es primo?'**
+  /// **'toca SÍ si es primo, NO si no lo es'**
   String get puzzleInstrEsPrimo;
 
   /// No description provided for @puzzleHeaderProbabilidad.
@@ -1564,7 +1621,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrProbabilidadFormula.
   ///
   /// In es, this message translates to:
-  /// **'P(sacar roja) = ?'**
+  /// **'toca la fracción que da la probabilidad'**
   String get puzzleInstrProbabilidadFormula;
 
   /// No description provided for @puzzleHeaderPProb.
@@ -1582,7 +1639,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrComoPorcentaje.
   ///
   /// In es, this message translates to:
-  /// **'expresada como porcentaje'**
+  /// **'toca el porcentaje equivalente a la fracción'**
   String get puzzleInstrComoPorcentaje;
 
   /// No description provided for @puzzleHeaderProporcion.
@@ -1594,7 +1651,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrCompletaProporcion.
   ///
   /// In es, this message translates to:
-  /// **'completa la proporción'**
+  /// **'completa: toca el número que falta'**
   String get puzzleInstrCompletaProporcion;
 
   /// No description provided for @puzzleInstrSiEsto.
@@ -1612,7 +1669,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrRazon.
   ///
   /// In es, this message translates to:
-  /// **'¿qué razón los relaciona?'**
+  /// **'toca la razón ya reducida'**
   String get puzzleInstrRazon;
 
   /// No description provided for @puzzleHeaderRedondear.
@@ -1624,7 +1681,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrRedondear.
   ///
   /// In es, this message translates to:
-  /// **'redondea a la décima'**
+  /// **'toca el redondeo a la décima'**
   String get puzzleInstrRedondear;
 
   /// No description provided for @puzzleHeaderSimetria.
@@ -1642,7 +1699,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrSimplificar.
   ///
   /// In es, this message translates to:
-  /// **'redúcela al máximo'**
+  /// **'toca la fracción reducida al máximo'**
   String get puzzleInstrSimplificar;
 
   /// No description provided for @puzzleHeaderSuperficie.
@@ -1654,7 +1711,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrSuperficie.
   ///
   /// In es, this message translates to:
-  /// **'convierte la superficie'**
+  /// **'convierte la superficie. Toca el resultado'**
   String get puzzleInstrSuperficie;
 
   /// No description provided for @puzzleHeaderTiempo.
@@ -1666,7 +1723,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrTiempo.
   ///
   /// In es, this message translates to:
-  /// **'pasa al destino indicado'**
+  /// **'convierte y toca el resultado'**
   String get puzzleInstrTiempo;
 
   /// No description provided for @puzzleHeaderVolumen.
@@ -1678,7 +1735,7 @@ abstract class AppLocalizations {
   /// No description provided for @puzzleInstrVolumenFormula.
   ///
   /// In es, this message translates to:
-  /// **'V = largo × ancho × alto'**
+  /// **'V = largo × ancho × alto. Toca el volumen'**
   String get puzzleInstrVolumenFormula;
 
   /// No description provided for @estadisticoModa.
@@ -1724,7 +1781,8 @@ abstract class AppLocalizations {
   String sonidoDescargaInstalando(int actual, int total);
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1733,26 +1791,27 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ca', 'es', 'eu'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ca', 'es', 'eu'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ca': return AppLocalizationsCa();
-    case 'es': return AppLocalizationsEs();
-    case 'eu': return AppLocalizationsEu();
+    case 'ca':
+      return AppLocalizationsCa();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'eu':
+      return AppLocalizationsEu();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

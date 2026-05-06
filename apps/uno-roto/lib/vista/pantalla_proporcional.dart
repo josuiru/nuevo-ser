@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_proporcional.dart';
 import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
+import 'estado_pista_puzzle.dart';
+import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
 
 /// Puzzle de Familia I (Proporcionales). Se muestra una razón a:b y
@@ -27,9 +30,12 @@ class PantallaProporcional extends StatefulWidget {
 class _PantallaProporcionalState extends State<PantallaProporcional>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controladorCielo;
+  late final EstadoPistaPuzzle _pista;
   late ProblemaProporcional _problema;
   int? _indiceSeleccionado;
   bool _revelado = false;
+  bool _mostrandoDemo = false;
+  static const _idDemo = 'proporcional';
 
   @override
   void initState() {
@@ -38,14 +44,30 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
       vsync: this,
       duration: const Duration(seconds: 16),
     )..repeat();
+    _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = GeneradorProporcional().generarDesde(
       a: widget.a,
       b: widget.b,
     );
+    _decidirSiMostrarDemo();
+  }
+
+  Future<void> _decidirSiMostrarDemo() async {
+    final repositorio = RepositorioProgreso();
+    final vistos = await repositorio.cargarDemosPuzzlesVistos();
+    if (!mounted || vistos.contains(_idDemo)) return;
+    setState(() => _mostrandoDemo = true);
+  }
+
+  Future<void> _cerrarDemo() async {
+    if (!_mostrandoDemo) return;
+    setState(() => _mostrandoDemo = false);
+    await RepositorioProgreso().marcarDemoPuzzleVisto(_idDemo);
   }
 
   @override
   void dispose() {
+    _pista.dispose();
     _controladorCielo.dispose();
     super.dispose();
   }
@@ -58,6 +80,7 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
     });
     if (indice == _problema.indiceCorrecto) {
       HapticFeedback.heavyImpact();
+      _pista.registrarAcierto();
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -65,9 +88,11 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
     } else {
       HapticFeedback.vibrate();
       contarFalloPuzzle();
+      _pista.registrarFallo();
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
+        _pista.mostrarSiToca();
       });
     }
   }
@@ -114,7 +139,7 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
                               child: Text(
                                 AppLocalizations.of(contexto).puzzleBotonHuir,
                                 style: const TextStyle(
-                                  color: PaletaNeon.textoTenue,
+                                  color: PaletaNeon.textoPrincipal,
                                   fontSize: 13,
                                   letterSpacing: 1.5,
                                 ),
@@ -169,6 +194,8 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
                                 marcarIncorrecto: _revelado &&
                                     _indiceSeleccionado == indice &&
                                     indice != _problema.indiceCorrecto,
+                                marcarPista: _pista.activa &&
+                                    indice == _problema.indiceCorrecto,
                                 alTocar: () => _elegir(indice),
                               ),
                           ],
@@ -178,6 +205,13 @@ class _PantallaProporcionalState extends State<PantallaProporcional>
                   ),
                 ),
               ),
+              if (_mostrandoDemo)
+                OverlayDemoPuzzle(
+                  mensaje: AppLocalizations.of(contexto)
+                      .demoPuzzleTocaResultado,
+                  alCerrar: _cerrarDemo,
+                  posicionRelativa: const Alignment(0, 0.4),
+                ),
             ],
           );
         },
@@ -253,6 +287,7 @@ class _TarjetaCandidato extends StatelessWidget {
   final bool seleccionado;
   final bool marcarCorrecto;
   final bool marcarIncorrecto;
+  final bool marcarPista;
   final VoidCallback alTocar;
 
   const _TarjetaCandidato({
@@ -261,6 +296,7 @@ class _TarjetaCandidato extends StatelessWidget {
     required this.marcarCorrecto,
     required this.marcarIncorrecto,
     required this.alTocar,
+    this.marcarPista = false,
   });
 
   @override
@@ -271,7 +307,9 @@ class _TarjetaCandidato extends StatelessWidget {
             ? PaletaNeon.rosaAcento
             : seleccionado
                 ? PaletaNeon.azulNeon
-                : PaletaNeon.violetaBase;
+                : marcarPista
+                    ? PaletaNeon.exitoSuave.withOpacity(0.6)
+                    : PaletaNeon.violetaBase;
     final brilloIntenso = marcarCorrecto || marcarIncorrecto || seleccionado;
     return GestureDetector(
       onTap: alTocar,
@@ -288,7 +326,14 @@ class _TarjetaCandidato extends StatelessWidget {
                     blurRadius: 18,
                   ),
                 ]
-              : const [],
+              : marcarPista
+                  ? [
+                      BoxShadow(
+                        color: PaletaNeon.exitoSuave.withOpacity(0.35),
+                        blurRadius: 16,
+                      ),
+                    ]
+                  : const [],
         ),
         child: Center(
           child: Text(

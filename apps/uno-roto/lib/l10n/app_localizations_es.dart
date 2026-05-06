@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -27,7 +29,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tutorBotonPreguntar => 'preguntar';
 
   @override
-  String get tutorEstadoVacio => 'Cuéntame qué te ha trabado.\nCon tus palabras.';
+  String get tutorEstadoVacio =>
+      'Cuéntame qué te ha trabado.\nCon tus palabras.';
 
   @override
   String get tutorOfertaTitulo => '¿Quieres una pista?';
@@ -80,6 +83,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mapaBotonEntrenar => 'Entrenar';
 
   @override
+  String get mapaBotonInstrucciones => 'Cómo se juega';
+
+  @override
+  String get tituloInstrucciones => 'CÓMO SE JUEGA';
+
+  @override
+  String get demoPuzzleTocaResultado =>
+      'Cuando sepas la respuesta,\ntoca la opción correcta.';
+
+  @override
+  String get demoPuzzleTocaSiNo => 'Decide y toca SÍ o NO.';
+
+  @override
   String get cazaBotonMapa => '‹ mapa';
 
   @override
@@ -95,7 +111,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sonidoPaqueteTitulo => 'PAQUETE SONORO';
 
   @override
-  String get sonidoPaqueteNoInstalado => 'No instalado. Solo suenan los efectos cortos.';
+  String get sonidoPaqueteNoInstalado =>
+      'No instalado. Solo suenan los efectos cortos.';
 
   @override
   String sonidoPaqueteVersion(int version, String tamano) {
@@ -103,7 +120,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get sonidoPaqueteExplicacion => 'Ambient, música y narrativos se descargan del servidor para no inflar el tamaño de la app.';
+  String get sonidoPaqueteExplicacion =>
+      'Ambient, música y narrativos se descargan del servidor para no inflar el tamaño de la app.';
 
   @override
   String get sonidoPaqueteBotonDescargar => 'Descargar paquete';
@@ -167,10 +185,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get comparacionMismoNumero => 'el mismo número de trozos';
 
   @override
-  String get simetriaPreguntaVertical => '¿es simétrica respecto al eje vertical?';
+  String get simetriaPreguntaVertical =>
+      '¿es simétrica respecto al eje vertical?';
 
   @override
-  String get simetriaPreguntaHorizontal => '¿es simétrica respecto al eje horizontal?';
+  String get simetriaPreguntaHorizontal =>
+      '¿es simétrica respecto al eje horizontal?';
 
   @override
   String barrasPreguntaValor(String etiqueta) {
@@ -205,7 +225,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get habSyncFaltaToken => 'Vincula primero una cuenta desde el icono de perfil.';
+  String get habSyncFaltaToken =>
+      'Vincula primero una cuenta desde el icono de perfil.';
 
   @override
   String get habSyncEnProgreso => 'Sincronizando…';
@@ -216,7 +237,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get habSyncSesionCaduco => 'La sesión caducó. Ábrela desde \"Cuenta\" e inicia sesión otra vez.';
+  String get habSyncSesionCaduco =>
+      'La sesión caducó. Ábrela desde \"Cuenta\" e inicia sesión otra vez.';
 
   @override
   String habApiError(int codigo, String mensaje) {
@@ -232,13 +254,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get habReiniciarTitulo => 'Reiniciar progreso';
 
   @override
-  String get habReiniciarCuerpo => 'Borra escenas vistas, habilidades, esquirlas y rango. La próxima vez que abras la app, empezarás desde la apertura.';
+  String get habReiniciarCuerpo =>
+      'Borra escenas vistas, habilidades, esquirlas y rango. La próxima vez que abras la app, empezarás desde la apertura.';
 
   @override
   String get habReiniciarBoton => 'reiniciar';
 
   @override
-  String get habReiniciarHecho => 'Progreso reiniciado. Cierra la app y vuélvela a abrir.';
+  String get habReiniciarHecho =>
+      'Progreso reiniciado. Cierra la app y vuélvela a abrir.';
 
   @override
   String habEsquirlasResumen(int n) {
@@ -283,7 +307,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuentaCerrarSesionTitulo => 'Cerrar sesión';
 
   @override
-  String get cuentaCerrarSesionCuerpo => 'El progreso local sigue intacto, solo se desconecta del servidor.';
+  String get cuentaCerrarSesionCuerpo =>
+      'El progreso local sigue intacto, solo se desconecta del servidor.';
 
   @override
   String get cuentaBotonCerrar => 'cerrar';
@@ -292,7 +317,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuentaSinCuentaTitulo => 'Sin cuenta vinculada';
 
   @override
-  String get cuentaSinCuentaCuerpo => 'Puedes seguir jugando offline. Si vinculas una cuenta, el progreso se guarda en el servidor y se desbloquea el tutor para cuando te atasques.';
+  String get cuentaSinCuentaCuerpo =>
+      'Puedes seguir jugando offline. Si vinculas una cuenta, el progreso se guarda en el servidor y se desbloquea el tutor para cuando te atasques.';
 
   @override
   String get cuentaBotonCrear => 'crear cuenta';
@@ -304,7 +330,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuentaVinculadaTitulo => 'Cuenta vinculada';
 
   @override
-  String get cuentaVinculadaCuerpo => 'El progreso se sincroniza con el servidor y el tutor está disponible cuando te atascas.';
+  String get cuentaVinculadaCuerpo =>
+      'El progreso se sincroniza con el servidor y el tutor está disponible cuando te atascas.';
 
   @override
   String get cuentaBotonCerrarSesion => 'cerrar sesión';
@@ -333,7 +360,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuentaCampoNombreNino => 'nombre del niño';
 
   @override
-  String get cuentaErrorCamposRegistro => 'Pon email, contraseña (mínimo 8 caracteres) y nombre del niño.';
+  String get cuentaErrorCamposRegistro =>
+      'Pon email, contraseña (mínimo 8 caracteres) y nombre del niño.';
 
   @override
   String get cuentaErrorCamposLogin => 'Pon el email y la contraseña.';
@@ -360,7 +388,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuentaResetTagline => 'No pasa nada.';
 
   @override
-  String get cuentaResetIntro => 'Pon tu email y te mandamos un enlace para crear una contraseña nueva. Caduca en 30 minutos.';
+  String get cuentaResetIntro =>
+      'Pon tu email y te mandamos un enlace para crear una contraseña nueva. Caduca en 30 minutos.';
 
   @override
   String get cuentaResetCampoEmail => 'Email';
@@ -369,7 +398,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuentaResetBoton => 'ENVIAR ENLACE';
 
   @override
-  String get cuentaResetEnviadoCuerpo => 'Si esa dirección está registrada,\nte llegará un enlace en unos minutos.';
+  String get cuentaResetEnviadoCuerpo =>
+      'Si esa dirección está registrada,\nte llegará un enlace en unos minutos.';
 
   @override
   String get cuentaResetEnviadoSpam => 'Revisa también la carpeta de spam.';
@@ -395,13 +425,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get panelTutorErrorRed => 'No se pudo conectar al servidor.';
 
   @override
-  String get panelTutorErrorProgreso => 'No se pudo cargar el progreso (token caducado).';
+  String get panelTutorErrorProgreso =>
+      'No se pudo cargar el progreso (token caducado).';
 
   @override
   String get panelTutorTagline => 'Para ti, no para el peque.';
 
   @override
-  String get panelTutorIntro => 'Entra con tu email y contraseña para ver el progreso real.';
+  String get panelTutorIntro =>
+      'Entra con tu email y contraseña para ver el progreso real.';
 
   @override
   String get panelTutorCampoEmail => 'Email';
@@ -424,7 +456,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get panelTutorSubtituloSaludo => 'Aquí tienes el progreso real, sin adornos.';
+  String get panelTutorSubtituloSaludo =>
+      'Aquí tienes el progreso real, sin adornos.';
 
   @override
   String get sonidoTitulo => 'sonido';
@@ -436,7 +469,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sonidoModoSilencioTitulo => 'Modo sin sonido';
 
   @override
-  String get sonidoModoSilencioSubtitulo => 'el juego es completamente jugable en silencio';
+  String get sonidoModoSilencioSubtitulo =>
+      'el juego es completamente jugable en silencio';
 
   @override
   String get sonidoCapaAmbient => 'viento, agua, ruido rosa del mundo';
@@ -451,7 +485,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sonidoCapaNarrativos => 'motivos y efectos únicos';
 
   @override
-  String get sonidoNotaAccesibilidad => 'Los ajustes se guardan por perfil. Cada niño que juegue con su perfil tendrá su propia configuración de volúmenes.';
+  String get sonidoNotaAccesibilidad =>
+      'Los ajustes se guardan por perfil. Cada niño que juegue con su perfil tendrá su propia configuración de volúmenes.';
 
   @override
   String get perfHeaderQuienEres => '¿QUIÉN ERES?';
@@ -501,7 +536,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cuadernoTitulo => 'cuaderno';
 
   @override
-  String get cuadernoVacio => 'Aún no has desbloqueado entradas.\nSigue jugando — cada persona o lugar que conozcas abre una página.';
+  String get cuadernoVacio =>
+      'Aún no has desbloqueado entradas.\nSigue jugando — cada persona o lugar que conozcas abre una página.';
 
   @override
   String cuadernoResumen(int leidas, int desbloqueadas, int total) {
@@ -549,13 +585,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ritmoExigente => 'Exigente';
 
   @override
-  String get ritmoTranquiloDesc => 'Las palabras aparecen más despacio. Los combates dan más tiempo.';
+  String get ritmoTranquiloDesc =>
+      'Las palabras aparecen más despacio. Los combates dan más tiempo.';
 
   @override
   String get ritmoEstandarDesc => 'La velocidad base del juego.';
 
   @override
-  String get ritmoExigenteDesc => 'Todo va más rápido. Los combates piden más agilidad.';
+  String get ritmoExigenteDesc =>
+      'Todo va más rápido. Los combates piden más agilidad.';
 
   @override
   String get capaAmbient => 'Ambiente';
@@ -568,6 +606,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get capaNarrativos => 'Narrativos';
+
+  @override
+  String get catCuadernoBitacora => 'Bitácora';
 
   @override
   String get catCuadernoPersonajes => 'Personajes';
@@ -591,67 +632,85 @@ class AppLocalizationsEs extends AppLocalizations {
   String get puzzleHeaderAmplificar => 'AMPLIFICAR';
 
   @override
-  String get puzzleInstrAmplificar => 'completa la equivalencia';
+  String get puzzleInstrAmplificar => 'completa: toca el número que falta';
+
+  @override
+  String get puzzleHeaderSumaBasica => 'SUMAR';
+
+  @override
+  String get puzzleInstrSumaBasica => '¿cuánto suman?';
+
+  @override
+  String get puzzleHeaderEcuacionLineal => 'DESPEJA X';
+
+  @override
+  String get puzzleInstrEcuacionLineal =>
+      '¿qué valor de x hace cierta la ecuación?';
 
   @override
   String get puzzleHeaderAngulo => 'ÁNGULO';
 
   @override
-  String get puzzleInstrAngulo => 'identifica el tipo';
+  String get puzzleInstrAngulo => 'toca el nombre del ángulo dibujado';
 
   @override
-  String get puzzleInstrAreaRectangulo => 'área = base × altura';
+  String get puzzleInstrAreaRectangulo =>
+      'área = base × altura. Toca el resultado';
 
   @override
   String get puzzleHeaderTriangulo => 'TRIÁNGULO';
 
   @override
-  String get puzzleInstrAreaTriangulo => 'área = base × altura ÷ 2';
+  String get puzzleInstrAreaTriangulo =>
+      'área = base × altura ÷ 2. Toca el resultado';
 
   @override
-  String get puzzleInstrCirculoPi => 'usa π ≈ 3,14';
+  String get puzzleInstrCirculoPi =>
+      'usa la fórmula (π ≈ 3,14) y toca el resultado';
 
   @override
   String get puzzleHeaderComparar => 'COMPARAR';
 
   @override
-  String get puzzleInstrCualEsMayor => '¿cuál es mayor?';
+  String get puzzleInstrCualEsMayor => 'toca la fracción mayor';
 
   @override
-  String get puzzleInstrLeerCifras => 'lee las cifras, no las cuentes';
+  String get puzzleInstrLeerCifras =>
+      'toca el decimal mayor (más cifras no es más)';
 
   @override
-  String get puzzleInstrMiraValor => 'mira el valor, no las cifras';
+  String get puzzleInstrMiraValor =>
+      'toca el decimal mayor (más cifras no es más)';
 
   @override
   String get puzzleHeaderContraMitad => 'CONTRA 1/2';
 
   @override
-  String get puzzleInstrContraMitad => '¿comparada con 1/2?';
+  String get puzzleInstrContraMitad => 'toca <, =, > comparándola con 1/2';
 
   @override
   String get puzzleHeaderContraUno => 'CONTRA 1';
 
   @override
-  String get puzzleInstrContraUno => 'compárala con 1';
+  String get puzzleInstrContraUno => 'toca <, =, > comparándola con 1';
 
   @override
   String get puzzleHeaderDecimal => 'DECIMAL';
 
   @override
-  String get puzzleInstrQueDecimal => '¿qué decimal vale igual?';
+  String get puzzleInstrQueDecimal => 'toca el decimal que vale lo mismo';
 
   @override
   String get puzzleHeaderDivisores => 'DIVISORES';
 
   @override
-  String get puzzleInstrCualNoDivisor => '¿cuál NO es divisor?';
+  String get puzzleInstrCualNoDivisor => 'tres son divisores. Toca el que NO';
 
   @override
   String get puzzleHeaderDual => 'DUAL';
 
   @override
-  String get puzzleInstrDual => 'funde los dos en uno solo';
+  String get puzzleInstrDual => 'calcula la operación y toca el resultado';
 
   @override
   String get puzzleHeaderEscala => 'ESCALA';
@@ -668,13 +727,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get puzzleHeaderEspejo => 'ESPEJO';
 
   @override
-  String get puzzleInstrEspejo => 'busca su equivalente';
+  String get puzzleInstrEspejo => 'toca la fracción equivalente';
 
   @override
   String get puzzleHeaderParte => 'PARTE';
 
   @override
-  String get puzzleInstrCalcula => 'calcula';
+  String get puzzleInstrCalcula => 'calcula y toca el resultado';
 
   @override
   String get puzzleHeaderGrafico => 'GRÁFICO';
@@ -686,84 +745,90 @@ class AppLocalizationsEs extends AppLocalizations {
   String get puzzleHeaderImpropio => 'IMPROPIO';
 
   @override
-  String get puzzleInstrImpropio => 'escribe este Fragmento como mixto';
+  String get puzzleInstrImpropio => 'toca el número mixto que vale igual';
 
   @override
   String get puzzleHeaderJerarquia => 'JERARQUÍA';
 
   @override
-  String get puzzleInstrJerarquiaPrimero => 'primero × y ÷, después + y −';
+  String get puzzleInstrJerarquiaPrimero =>
+      'primero × y ÷, después + y −. Toca el resultado';
 
   @override
-  String get puzzleInstrJerarquiaRecuerda => 'recuerda × y ÷ antes que + y −';
+  String get puzzleInstrJerarquiaRecuerda =>
+      '× y ÷ antes que + y −. Toca el resultado';
 
   @override
   String get puzzleHeaderLeer => 'LEER';
 
   @override
-  String get puzzleInstrQueNumero => '¿qué número es?';
+  String get puzzleInstrQueNumero => 'lee el texto y toca el número correcto';
 
   @override
-  String get puzzleInstrQueFraccion => '¿qué fracción es?';
+  String get puzzleInstrQueFraccion =>
+      'lee el texto y toca la fracción correcta';
 
   @override
   String get puzzleHeaderLongitud => 'LONGITUD';
 
   @override
-  String get puzzleInstrConvierteMedida => 'convierte la medida';
+  String get puzzleInstrConvierteMedida => 'convierte y toca el resultado';
 
   @override
   String get puzzleHeaderMedia => 'MEDIA';
 
   @override
-  String get puzzleInstrCalculaMedia => 'calcula la media';
+  String get puzzleInstrCalculaMedia => 'suma y divide. Toca la media';
 
   @override
   String get puzzleHeaderConvertir => 'CONVERTIR';
 
   @override
-  String get puzzleInstrConvertirImpropia => '¿qué fracción impropia es?';
+  String get puzzleInstrConvertirImpropia =>
+      'toca la fracción impropia equivalente';
 
   @override
   String puzzleInstrCualEsModa(String modo) {
-    return '¿cuál es la $modo?';
+    return 'toca el valor de la $modo';
   }
 
   @override
   String get puzzleHeaderOpDecimal => 'OP. DECIMAL';
 
   @override
-  String get puzzleInstrCuantoValeOp => 'cuánto vale la operación';
+  String get puzzleInstrCuantoValeOp => 'calcula y toca el resultado';
 
   @override
   String get puzzleHeaderDecimalFraccion => 'DECIMAL Y FRACCIÓN';
 
   @override
-  String get puzzleInstrFraccionDecimal => 'la fracción y el decimal son lo mismo';
+  String get puzzleInstrFraccionDecimal =>
+      'calcula la operación mixta y toca el resultado';
 
   @override
   String get puzzleHeaderOrdenar => 'ORDENAR';
 
   @override
-  String get puzzleInstrOrdenar => 'de menor a mayor';
+  String get puzzleInstrOrdenar => 'toca la fila ordenada de menor a mayor';
 
   @override
   String get puzzleHeaderPerimetro => 'PERÍMETRO';
 
   @override
-  String get puzzleInstrPerimetro => 'suma todos los lados';
+  String get puzzleInstrPerimetro => 'suma los lados y toca el perímetro';
 
   @override
   String get puzzleHeaderPoligono => 'POLÍGONO';
 
   @override
-  String get puzzleInstrPoligono => 'cuenta los lados';
+  String get puzzleInstrPoligono => 'toca el nombre del polígono dibujado';
 
   @override
   String get puzzleHeaderPorcentaje => 'PORCENTAJE';
 
   @override
-  String get puzzleInstrPorcentajeFraccion => '¿qué fracción vale igual?';
+  String get puzzleInstrPorcentajeFraccion =>
+      'toca la fracción equivalente al porcentaje';
 
   @override
   String puzzleInstrPorcentajeDe(int porcentaje, int cantidad) {
@@ -774,13 +839,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get puzzleHeaderQuePorcentaje => '¿QUÉ %?';
 
   @override
-  String get puzzleInstrQuePorcentaje => 'qué porcentaje representa';
+  String get puzzleInstrQuePorcentaje => 'toca el porcentaje correcto';
 
   @override
   String get puzzleHeaderPrimos => 'PRIMOS';
 
   @override
-  String get puzzleInstrEsPrimo => '¿es primo?';
+  String get puzzleInstrEsPrimo => 'toca SÍ si es primo, NO si no lo es';
 
   @override
   String get puzzleHeaderProbabilidad => 'PROBABILIDAD';
@@ -791,7 +856,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get puzzleInstrProbabilidadFormula => 'P(sacar roja) = ?';
+  String get puzzleInstrProbabilidadFormula =>
+      'toca la fracción que da la probabilidad';
 
   @override
   String get puzzleHeaderPProb => 'P → %';
@@ -802,13 +868,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get puzzleInstrComoPorcentaje => 'expresada como porcentaje';
+  String get puzzleInstrComoPorcentaje =>
+      'toca el porcentaje equivalente a la fracción';
 
   @override
   String get puzzleHeaderProporcion => 'PROPORCIÓN';
 
   @override
-  String get puzzleInstrCompletaProporcion => 'completa la proporción';
+  String get puzzleInstrCompletaProporcion =>
+      'completa: toca el número que falta';
 
   @override
   String get puzzleInstrSiEsto => 'si esto, entonces…';
@@ -817,13 +885,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get puzzleHeaderRazon => 'RAZÓN';
 
   @override
-  String get puzzleInstrRazon => '¿qué razón los relaciona?';
+  String get puzzleInstrRazon => 'toca la razón ya reducida';
 
   @override
   String get puzzleHeaderRedondear => 'REDONDEAR';
 
   @override
-  String get puzzleInstrRedondear => 'redondea a la décima';
+  String get puzzleInstrRedondear => 'toca el redondeo a la décima';
 
   @override
   String get puzzleHeaderSimetria => 'SIMETRÍA';
@@ -832,25 +900,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get puzzleHeaderSimplificar => 'SIMPLIFICAR';
 
   @override
-  String get puzzleInstrSimplificar => 'redúcela al máximo';
+  String get puzzleInstrSimplificar => 'toca la fracción reducida al máximo';
 
   @override
   String get puzzleHeaderSuperficie => 'SUPERFICIE';
 
   @override
-  String get puzzleInstrSuperficie => 'convierte la superficie';
+  String get puzzleInstrSuperficie =>
+      'convierte la superficie. Toca el resultado';
 
   @override
   String get puzzleHeaderTiempo => 'TIEMPO';
 
   @override
-  String get puzzleInstrTiempo => 'pasa al destino indicado';
+  String get puzzleInstrTiempo => 'convierte y toca el resultado';
 
   @override
   String get puzzleHeaderVolumen => 'VOLUMEN';
 
   @override
-  String get puzzleInstrVolumenFormula => 'V = largo × ancho × alto';
+  String get puzzleInstrVolumenFormula =>
+      'V = largo × ancho × alto. Toca el volumen';
 
   @override
   String get estadisticoModa => 'moda';

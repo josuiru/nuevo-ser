@@ -205,6 +205,11 @@ void main() {
     test('LRU expulsa la más vieja al pasar el tamaño máximo', () async {
       final cache = CacheTutor(tamanoMaximo: 2);
       final t0 = DateTime(2026, 4, 1);
+      // Las recuperaciones se hacen con `ahora` explícito para no
+      // depender del reloj real del sistema: si la fecha actual cae
+      // a ≥ 30 días de t0 (TTL por defecto), las entradas se
+      // considerarían caducadas y el test daría falso negativo.
+      final tConsulta = t0.add(const Duration(minutes: 3));
       await cache.guardar(
         idHabilidad: 'A',
         pregunta: 'a',
@@ -224,9 +229,21 @@ void main() {
         ahora: t0.add(const Duration(minutes: 2)),
       );
       // La más vieja (A) fue expulsada.
-      expect(await cache.recuperar(idHabilidad: 'A', pregunta: 'a'), isNull);
-      expect(await cache.recuperar(idHabilidad: 'B', pregunta: 'b'), 'media');
-      expect(await cache.recuperar(idHabilidad: 'C', pregunta: 'c'), 'la nueva');
+      expect(
+        await cache.recuperar(
+            idHabilidad: 'A', pregunta: 'a', ahora: tConsulta),
+        isNull,
+      );
+      expect(
+        await cache.recuperar(
+            idHabilidad: 'B', pregunta: 'b', ahora: tConsulta),
+        'media',
+      );
+      expect(
+        await cache.recuperar(
+            idHabilidad: 'C', pregunta: 'c', ahora: tConsulta),
+        'la nueva',
+      );
     });
 
     test('persistencia: instancia nueva recupera lo guardado', () async {

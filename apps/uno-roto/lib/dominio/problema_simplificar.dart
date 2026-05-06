@@ -112,12 +112,25 @@ class GeneradorSimplificar {
       distractores.add(candidato);
     }
 
-    // Fallback ultra defensivo — nunca debería dispararse, pero
-    // garantiza 3 distractores.
-    while (distractores.length < 3) {
-      distractores.add(
-        Fraccion(correcto.numerador + 1, correcto.denominador + 1),
+    // Fallback ultra defensivo — varía k para garantizar unicidad y
+    // que ningún distractor coincida con el correcto, el objetivo o
+    // entre sí. Sin esto, dos llamadas seguidas añadirían el mismo
+    // valor y el niño podría tocar un duplicado del correcto y verlo
+    // marcado como error.
+    var k = 1;
+    while (distractores.length < 3 && k < 200) {
+      final candidato = Fraccion(
+        correcto.numerador + k,
+        correcto.denominador + k,
       );
+      k++;
+      if (candidato.esEquivalenteA(correcto)) continue;
+      if (candidato.esEquivalenteA(objetivo)) continue;
+      if (_yaEsta(candidato, distractores) ||
+          _mismaFraccion(candidato, correcto)) {
+        continue;
+      }
+      distractores.add(candidato);
     }
 
     final candidatos = <Fraccion>[correcto, ...distractores];

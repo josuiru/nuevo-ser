@@ -67,6 +67,8 @@ extension CapaAudioTextos on CapaAudio {
 extension CategoriaCuadernoTextos on CategoriaCuaderno {
   String nombreLocalizado(AppLocalizations textos) {
     switch (this) {
+      case CategoriaCuaderno.bitacora:
+        return textos.catCuadernoBitacora;
       case CategoriaCuaderno.personajes:
         return textos.catCuadernoPersonajes;
       case CategoriaCuaderno.fragmentos:

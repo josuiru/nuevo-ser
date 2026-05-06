@@ -70,4 +70,15 @@ class AmbienteCielo implements AmbienteEscenaContrato {
     mostrarLunas: true,
     claridadMontana: 1.45,
   );
+
+  /// Niebla suave — intermedia entre [neutro] y [niebla]. Estrellas
+  /// algo apagadas pero las dos lunas siguen visibles. Útil para el
+  /// clima dinámico de Tejados y Mercado, donde la niebla aparece de
+  /// vez en cuando sin tomar la noche por completo.
+  static const AmbienteCielo nieblaSuave = AmbienteCielo(
+    densidadEstrellas: 0.75,
+    mostrarLunas: true,
+    intensidadNiebla: 0.30,
+    claridadMontana: 0.65,
+  );
 }

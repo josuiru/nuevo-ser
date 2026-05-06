@@ -4173,7 +4173,7 @@ void main() {
   );
 
   testWidgets(
-    'Si todas las escenas del Arco 1 abierto están vistas, va al mapa',
+    'Con los 4 arcos cerrados, arranca una variante latente de Era 2',
     (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({
         'uroto.idioma_app': 'es',
@@ -4255,8 +4255,15 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
       await tester.pump(const Duration(milliseconds: 400));
 
-      expect(find.text('UNO ROTO'), findsOneWidget);
-      expect(find.text('LA MONTAÑA'), findsOneWidget);
+      // Con `escena_4_14_vista` activa y el resto del catálogo cerrado,
+      // el orquestador dispara la primera variante latente de Era 2
+      // (E2.a, "El primer despertar") en lugar de ir directo al mapa.
+      // Es la red de seguridad post-MVP que mantiene contenido cuando
+      // el niño vuelve a jugar tras cerrar el Arco 4.
+      expect(find.textContaining('marca de Iniciado'), findsOneWidget);
+      // El header del mapa NO debe aparecer todavía: la cinemática
+      // está delante.
+      expect(find.text('UNO ROTO'), findsNothing);
     },
   );
 

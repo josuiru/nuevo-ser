@@ -5,6 +5,7 @@ import '../dominio/progreso_arco.dart';
 import '../dominio/rango_narrativo.dart';
 import '../dominio/ritmo_juego.dart';
 import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
+import 'repositorio_faro.dart';
 
 // Re-exporta PerfilInfo para que la pantalla de selección no necesite
 // importar nuevo_ser_core directamente — la API histórica del
@@ -39,7 +40,10 @@ class RepositorioProgreso {
       'variantes_entrenamiento_usadas';
   static const _sufVariantesPuentesUsadas = 'variantes_puentes_usadas';
   static const _sufVariantesMaquinasUsadas = 'variantes_maquinas_usadas';
+  static const _sufVariantesEraDosUsadas = 'variantes_era_dos_usadas';
+  static const _sufDemosPuzzlesVistos = 'demos_puzzles_vistos';
   static const _sufRitmoJuego = 'ritmo_juego';
+  static const _sufModoExperto = 'modo_experto';
   static const _sufRutaAvatar = 'avatar.ruta';
   static const _prefijoCuadernoLeida = 'cuaderno.leida.';
   static const _prefijoDistritoVisitado = 'distrito_visitado.';
@@ -75,6 +79,11 @@ class RepositorioProgreso {
   /// los call-sites lo pasan al constructor del servicio.
   late final RepositorioEstadoTutor estadoTutor =
       RepositorioEstadoTutor(gestor: _gestor);
+
+  /// Persistencia del Faro de Azula del perfil activo (primera vista,
+  /// última edición leída, respuestas a los acertijos). Expuesto para
+  /// la pantalla del Faro y el HUD del mapa.
+  late final RepositorioFaro faro = RepositorioFaro(gestor: _gestor);
 
   /// Preferencias de audio del perfil activo (modo silencio + volumen
   /// por capa). Sufijo y prefijo conservan el shape histórico.
@@ -338,6 +347,50 @@ class RepositorioProgreso {
     await prefs.remove(await _clave(_sufVariantesMaquinasUsadas));
   }
 
+  Future<Set<String>> cargarVariantesEraDosUsadas() async {
+    final prefs = await _prefs();
+    final lista =
+        prefs.getStringList(await _clave(_sufVariantesEraDosUsadas)) ?? [];
+    return lista.toSet();
+  }
+
+  Future<void> marcarVarianteEraDosUsada(String id) async {
+    final prefs = await _prefs();
+    final usadas = await cargarVariantesEraDosUsadas();
+    if (usadas.contains(id)) return;
+    usadas.add(id);
+    await prefs.setStringList(
+      await _clave(_sufVariantesEraDosUsadas),
+      usadas.toList(),
+    );
+  }
+
+  Future<void> resetearVariantesEraDos() async {
+    final prefs = await _prefs();
+    await prefs.remove(await _clave(_sufVariantesEraDosUsadas));
+  }
+
+  /// Conjunto de IDs de familias de puzzle cuyo demo gestual ya se le
+  /// mostró al niño en este perfil. Sirve para que el overlay-tutorial
+  /// aparezca solo la primera vez. IDs como 'amplificar', 'comparacion'…
+  Future<Set<String>> cargarDemosPuzzlesVistos() async {
+    final prefs = await _prefs();
+    final lista =
+        prefs.getStringList(await _clave(_sufDemosPuzzlesVistos)) ?? [];
+    return lista.toSet();
+  }
+
+  Future<void> marcarDemoPuzzleVisto(String idDemo) async {
+    final prefs = await _prefs();
+    final vistos = await cargarDemosPuzzlesVistos();
+    if (vistos.contains(idDemo)) return;
+    vistos.add(idDemo);
+    await prefs.setStringList(
+      await _clave(_sufDemosPuzzlesVistos),
+      vistos.toList(),
+    );
+  }
+
   Future<RitmoJuego> cargarRitmo() async {
     final prefs = await _prefs();
     final guardado = prefs.getInt(await _clave(_sufRitmoJuego)) ??
@@ -349,6 +402,21 @@ class RepositorioProgreso {
   Future<void> guardarRitmo(RitmoJuego ritmo) async {
     final prefs = await _prefs();
     await prefs.setInt(await _clave(_sufRitmoJuego), ritmo.valor);
+  }
+
+  /// Modo experto: si está activo el `GeneradorCaza` parte unos peldaños
+  /// de dificultad más arriba (offset +2), saltándose los tiers más
+  /// triviales. Pensado para niños que ya dominan rápido y se aburren
+  /// con los casos de calentamiento. Persistido por-perfil — cada hijo
+  /// puede tenerlo activo o no según su nivel.
+  Future<bool> cargarModoExperto() async {
+    final prefs = await _prefs();
+    return prefs.getBool(await _clave(_sufModoExperto)) ?? false;
+  }
+
+  Future<void> guardarModoExperto(bool activo) async {
+    final prefs = await _prefs();
+    await prefs.setBool(await _clave(_sufModoExperto), activo);
   }
 
   /// Preferencias de audio del perfil activo. El volumen de cada capa

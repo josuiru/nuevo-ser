@@ -8,7 +8,10 @@ import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import '../datos/catalogo_habilidades.dart';
 import '../datos/config_api.dart';
 import '../datos/repositorio_progreso.dart';
+import '../dominio/ambiente_cielo.dart';
 import '../dominio/bonus_remonte.dart';
+import '../dominio/calendario_eventos.dart';
+import '../dominio/clima_distrito.dart';
 import '../dominio/contador_intentos_puzzle.dart';
 import '../dominio/distrito.dart';
 import '../dominio/fragmento_en_tejado.dart';
@@ -81,6 +84,8 @@ import 'pantalla_espejo.dart';
 import 'pantalla_impropio.dart';
 import 'pantalla_operacion_decimal.dart';
 import 'pantalla_amplificar.dart';
+import 'pantalla_suma_basica.dart';
+import 'pantalla_ecuacion_lineal.dart';
 import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_divisores.dart';
@@ -164,7 +169,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   static const int _maxFragmentosEnTejado = 3;
   static const Duration _tickPeriodo = Duration(milliseconds: 120);
 
-  late final GeneradorCaza _generador;
+  late GeneradorCaza _generador;
   MotorMaestria? _motorMaestria;
   SelectorHabilidades? _selectorHabilidades;
   ServicioTutor? _servicioTutor;
@@ -184,6 +189,18 @@ class _PantallaCazaState extends State<PantallaCaza>
   DateTime _ahoraRef = DateTime.now();
 
   late final AnimationController _controladorCielo;
+  late final AnimationController _controladorLluvia;
+
+  /// Ambiente atmosférico del cazadero en este día concreto. Resuelto
+  /// una vez en `initState` para que las cinco lluvias del distrito
+  /// (doc Faro E13) varíen día a día sin parpadear durante una sesión.
+  /// Si hoy hay un [EventoCalendario] activo, gana sobre el clima.
+  late final AmbienteCielo _ambienteHoy;
+
+  /// Mensaje del evento del calendario activo (si lo hay) pendiente
+  /// de mostrarse tras el primer frame. Una vez disparado se queda
+  /// en `null` para no repetirse en posteriores `setState`.
+  String? _mensajeEventoPendiente;
 
   @override
   void initState() {
@@ -193,9 +210,32 @@ class _PantallaCazaState extends State<PantallaCaza>
       vsync: this,
       duration: const Duration(seconds: 16),
     )..repeat();
+    _controladorLluvia = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat();
+    final ahora = DateTime.now();
+    final eventoHoy = CalendarioEventos.deHoy(
+      ahora: ahora,
+      idDistrito: widget.distrito.identificador,
+    );
+    _ambienteHoy = eventoHoy?.ambiente ??
+        ClimaDistrito.delDia(
+          idDistrito: widget.distrito.identificador,
+          ahora: ahora,
+        );
+    _mensajeEventoPendiente = eventoHoy?.mensajeAlEntrar;
     _cargarEstadoInicial();
     _inicializarMotorMaestria();
     _inicializarTutor();
+    if (_mensajeEventoPendiente != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final mensaje = _mensajeEventoPendiente;
+        _mensajeEventoPendiente = null;
+        if (mensaje != null) _mostrarLineaAmbienteSora(mensaje);
+      });
+    }
   }
 
   /// Construye el `ServicioTutor` solo si hay token de backend
@@ -240,7 +280,18 @@ class _PantallaCazaState extends State<PantallaCaza>
     final total = await widget.repositorio.cargarEsquirlas();
     final yaVisitado = await widget.repositorio
         .distritoVisitado(widget.distrito.identificador);
+    final modoExperto = await widget.repositorio.cargarModoExperto();
     if (!mounted) return;
+    if (modoExperto) {
+      // Reconstruimos el generador con offset +2 — niños avanzados
+      // arrancan unos peldaños más arriba en lugar de recorrer los
+      // tiers triviales. Reconstruir es seguro porque el spawn aún
+      // no se ha disparado (lo programamos justo después).
+      _generador = GeneradorCaza(
+        distrito: widget.distrito,
+        offsetDificultad: 2,
+      );
+    }
     setState(() => _esquirlasTotal = total);
     _programarSiguienteSpawn();
     _arrancarTickDeEscapes();
@@ -270,6 +321,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   @override
   void dispose() {
     _controladorCielo.dispose();
+    _controladorLluvia.dispose();
     _temporizadorSpawn?.cancel();
     _temporizadorTick?.cancel();
     _temporizadorLineaSora?.cancel();
@@ -391,6 +443,8 @@ class _PantallaCazaState extends State<PantallaCaza>
     if (!mounted) return;
     if (capturado == true) {
       final esquirlasBase = switch (fragmento.tipo) {
+        TipoFragmentoEnTejado.sumaBasica => 1,
+        TipoFragmentoEnTejado.ecuacionLineal => 4,
         TipoFragmentoEnTejado.espejo => 2,
         TipoFragmentoEnTejado.decimal => 2,
         TipoFragmentoEnTejado.porcentaje => 2,
@@ -479,6 +533,37 @@ class _PantallaCazaState extends State<PantallaCaza>
       } else {
         _comentarTrasCaptura();
       }
+      // Feedback honesto del descuento por intentos: solo aparece
+      // cuando el niño tardó más de un intento en acertar. Si fue a
+      // la primera, el comentario de Sora se queda solo (sin números).
+      // No es castigo: es información — "podrías haber ganado más".
+      if (intentos > 1) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                '+$esquirlasFinales (de $esquirlasBase posibles)',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: PaletaNeon.textoPrincipal,
+                  fontSize: 14,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              backgroundColor: PaletaNeon.fondoMedio,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(milliseconds: 1800),
+              margin: const EdgeInsets.fromLTRB(60, 0, 60, 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: PaletaNeon.violetaBase.withOpacity(0.6),
+                ),
+              ),
+            ),
+          );
+      }
     } else {
       _mostrarLineaAmbienteSora('Ya volverá otro.');
     }
@@ -513,6 +598,21 @@ class _PantallaCazaState extends State<PantallaCaza>
               numerador: fragmento.numerador,
               denominador: fragmento.denominador,
             ),
+          ),
+        );
+      case TipoFragmentoEnTejado.sumaBasica:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => PantallaSumaBasica(
+              aPredeterminado: fragmento.numerador,
+              bPredeterminado: fragmento.denominador,
+            ),
+          ),
+        );
+      case TipoFragmentoEnTejado.ecuacionLineal:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaEcuacionLineal(),
           ),
         );
       case TipoFragmentoEnTejado.decimal:
@@ -1450,7 +1550,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   Widget build(BuildContext contexto) {
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _controladorCielo,
+        animation: Listenable.merge([_controladorCielo, _controladorLluvia]),
         builder: (_, __) {
           return Stack(
             fit: StackFit.expand,
@@ -1458,9 +1558,11 @@ class _PantallaCazaState extends State<PantallaCaza>
               CustomPaint(
                 painter: PintorEscenario(
                   fasePulso: _controladorCielo.value,
+                  fasePulsoLluvia: _controladorLluvia.value,
                   nivelRestauracion:
                       (_esquirlasTotal / 30).clamp(0.0, 1.0),
                   idDistrito: widget.distrito.identificador,
+                  ambiente: _ambienteHoy,
                 ),
               ),
               SafeArea(

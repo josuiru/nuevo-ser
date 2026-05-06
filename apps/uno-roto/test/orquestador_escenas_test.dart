@@ -22,6 +22,7 @@ void main() {
     Set<String> variantesArco1Usadas = const {},
     Set<String> variantesArco2Usadas = const {},
     Set<String> variantesArco3Usadas = const {},
+    Set<String> variantesEraDosUsadas = const {},
     bool varianteYaDisparadaEnEstaTransicion = false,
   }) =>
       orquestador.decidir(
@@ -29,6 +30,7 @@ void main() {
         variantesArco1Usadas: variantesArco1Usadas,
         variantesArco2Usadas: variantesArco2Usadas,
         variantesArco3Usadas: variantesArco3Usadas,
+        variantesEraDosUsadas: variantesEraDosUsadas,
         varianteYaDisparadaEnEstaTransicion:
             varianteYaDisparadaEnEstaTransicion,
       );
@@ -147,11 +149,14 @@ void main() {
       }
     });
 
-    test('todas las escenas accesibles vistas y arcos cerrados → al mapa', () {
+    test(
+        'catálogo cerrado y arco 4 cerrado → variante recurrente de Era 2',
+        () {
       // Cargamos como vistas todas las del catálogo principal y todos
-      // los combates cerrados. Como `escena_1_14_vista` /
-      // `escena_2_16_vista` / `escena_3_18_vista` están en flags, los
-      // arcos están cerrados → no hay variante posible → mapa.
+      // los combates cerrados. `escena_4_14_vista` está incluido (es
+      // el flagDeSalida del cierre del Arco 4) — eso activa el pool
+      // latente de Era 2, que mantiene al niño con contenido aunque
+      // la línea principal del MVP haya terminado.
       final flags = <String>{
         for (final e in CatalogoEscenas.todas) e.flagDeSalida,
         'combate_kurz_1_completado',
@@ -162,6 +167,28 @@ void main() {
         'combate_vorax_completado',
       };
       final decision = decidir(flagsActivos: flags);
+      expect(decision, isA<VariantePendiente>(),
+          reason: 'Con Arco 4 cerrado, Era 2 sigue ofreciendo variantes.');
+      final variante = decision as VariantePendiente;
+      expect(variante.arco, ArcoConVariantes.eraDos);
+    });
+
+    test('catálogo cerrado + variante ya disparada → al mapa', () {
+      // Mismo escenario pero con la variante ya disparada en la
+      // transición actual: no se encadenan dos variantes seguidas.
+      final flags = <String>{
+        for (final e in CatalogoEscenas.todas) e.flagDeSalida,
+        'combate_kurz_1_completado',
+        'combate_kurz_2_completado',
+        'combate_kurz_3_completado',
+        'combate_zafran_completado',
+        'combate_duel_kai_completado',
+        'combate_vorax_completado',
+      };
+      final decision = decidir(
+        flagsActivos: flags,
+        varianteYaDisparadaEnEstaTransicion: true,
+      );
       expect(decision, isA<IrAlMapa>());
     });
   });
@@ -178,6 +205,7 @@ void main() {
         arco1Usadas: const {},
         arco2Usadas: const {},
         arco3Usadas: const {},
+        eraDosUsadas: const {},
       );
       expect(variante, isNotNull);
       expect(variante!.arco, ArcoConVariantes.arco1);
@@ -193,19 +221,21 @@ void main() {
         arco1Usadas: const {},
         arco2Usadas: const {},
         arco3Usadas: const {},
+        eraDosUsadas: const {},
       );
       expect(variante, isNull);
     });
 
     test('pool agotado → reset implícito y poolReseteado=true', () {
-      // Los 5 IDs reales del pool del Arco 1 (variantes 1.8a..1.8e
-      // del Doc 07). Si todos están "usados", el orquestador debe
-      // devolver la primera del pool reseteado.
+      // Los 6 IDs reales del pool del Arco 1 (variantes 1.8a..1.8f
+      // del Doc 07 + la del Faro de Azula). Si todos están "usados",
+      // el orquestador debe devolver la primera del pool reseteado.
       final variante = orquestador.elegirVarianteRecurrente(
         flagsActivos: const {'escena_1_7_vista'},
-        arco1Usadas: const {'1.8a', '1.8b', '1.8c', '1.8d', '1.8e'},
+        arco1Usadas: const {'1.8a', '1.8b', '1.8c', '1.8d', '1.8e', '1.8f'},
         arco2Usadas: const {},
         arco3Usadas: const {},
+        eraDosUsadas: const {},
       );
       expect(variante, isNotNull);
       expect(variante!.poolReseteado, isTrue,
@@ -253,6 +283,7 @@ void main() {
         arco1Usadas: const {},
         arco2Usadas: const {},
         arco3Usadas: const {},
+        eraDosUsadas: const {},
       );
       expect(variante, isNotNull);
       expect(variante!.arco, ArcoConVariantes.arco3);
@@ -267,6 +298,7 @@ void main() {
         arco1Usadas: const {},
         arco2Usadas: const {},
         arco3Usadas: const {},
+        eraDosUsadas: const {},
       );
       expect(variante, isNotNull);
       expect(variante!.arco, ArcoConVariantes.arco2);
@@ -281,10 +313,59 @@ void main() {
         arco1Usadas: const {},
         arco2Usadas: const {},
         arco3Usadas: const {},
+        eraDosUsadas: const {},
       );
       expect(variante, isNull,
           reason: 'Sin arcos 1/2 abiertos y arco 3 cerrado, no hay pool '
-              'de variantes activo.');
+              'de variantes activo (sin Era 2).');
+    });
+
+    test('arco 4 cerrado activa el pool latente de Era 2', () {
+      final variante = orquestador.elegirVarianteRecurrente(
+        flagsActivos: const {'escena_4_14_vista'},
+        arco1Usadas: const {},
+        arco2Usadas: const {},
+        arco3Usadas: const {},
+        eraDosUsadas: const {},
+      );
+      expect(variante, isNotNull);
+      expect(variante!.arco, ArcoConVariantes.eraDos);
+      expect(variante.poolReseteado, isFalse);
+    });
+
+    test('Era 2 con pool agotado → reset implícito y poolReseteado=true', () {
+      // Las 6 IDs reales del pool de Era 2 (variantes E2.a..E2.f). Si
+      // todos están "usados", el orquestador debe devolver la primera
+      // del pool reseteado.
+      final variante = orquestador.elegirVarianteRecurrente(
+        flagsActivos: const {'escena_4_14_vista'},
+        arco1Usadas: const {},
+        arco2Usadas: const {},
+        arco3Usadas: const {},
+        eraDosUsadas: const {'E2.a', 'E2.b', 'E2.c', 'E2.d', 'E2.e', 'E2.f'},
+      );
+      expect(variante, isNotNull);
+      expect(variante!.arco, ArcoConVariantes.eraDos);
+      expect(variante.poolReseteado, isTrue);
+    });
+
+    test('arcos 1/2/3 abiertos prevalecen sobre Era 2 latente', () {
+      // Si por la razón que sea el flag escena_4_14_vista convive con
+      // un arco previo aún abierto (no debería ocurrir narrativamente,
+      // pero la lógica debe ser robusta), la prioridad sigue siendo el
+      // arco más reciente abierto. Era 2 es la red de seguridad final.
+      final variante = orquestador.elegirVarianteRecurrente(
+        flagsActivos: const {
+          'escena_3_6_vista', // arco 3 abierto
+          'escena_4_14_vista',
+        },
+        arco1Usadas: const {},
+        arco2Usadas: const {},
+        arco3Usadas: const {},
+        eraDosUsadas: const {},
+      );
+      expect(variante, isNotNull);
+      expect(variante!.arco, ArcoConVariantes.arco3);
     });
   });
 

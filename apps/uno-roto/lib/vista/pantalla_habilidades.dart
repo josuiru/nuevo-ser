@@ -127,6 +127,8 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
               switch (id) {
                 case 'ritmo':
                   _abrirDialogoRitmo();
+                case 'experto':
+                  _abrirDialogoModoExperto();
                 case 'idioma':
                   _abrirDialogoIdioma();
                 case 'acerca':
@@ -144,6 +146,11 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
                 id: 'ritmo',
                 icono: Icons.speed,
                 etiqueta: textos.habTooltipRitmo,
+              ),
+              _itemMenu(
+                id: 'experto',
+                icono: Icons.trending_up,
+                etiqueta: 'Modo experto',
               ),
               _itemMenu(
                 id: 'idioma',
@@ -230,6 +237,67 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
       MaterialPageRoute(
         builder: (_) => PantallaAjustesSonido(
           repositorio: widget.repositorio,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _abrirDialogoModoExperto() async {
+    final actual = await widget.repositorio.cargarModoExperto();
+    if (!mounted) return;
+    final cambiar = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: const Text(
+          'Modo experto',
+          style: TextStyle(color: PaletaNeon.textoPrincipal),
+        ),
+        content: Text(
+          actual
+              ? 'El modo experto está activo. Los Fragmentos parten de un nivel '
+                  'más alto: denominadores mayores, casos más exigentes, menos '
+                  'tiempo. ¿Quitarlo?'
+              : 'Salta los casos más fáciles. Los Fragmentos arrancan ya con '
+                  'denominadores grandes y casos cercanos a 1. Para niños que '
+                  'dominan rápido y se aburren con el calentamiento. ¿Activar?',
+          style: const TextStyle(
+            color: PaletaNeon.textoTenue,
+            fontSize: 13,
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(color: PaletaNeon.textoTenue),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              actual ? 'Quitar' : 'Activar',
+              style: const TextStyle(color: PaletaNeon.violetaNeon),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (cambiar != true) return;
+    final nuevoValor = !actual;
+    await widget.repositorio.guardarModoExperto(nuevoValor);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: PaletaNeon.fondoMedio,
+        duration: const Duration(seconds: 3),
+        content: Text(
+          nuevoValor
+              ? 'Modo experto activo. Volverá a aplicarse al entrar a un distrito.'
+              : 'Modo experto desactivado.',
+          style: const TextStyle(color: PaletaNeon.textoTenue),
         ),
       ),
     );
