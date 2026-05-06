@@ -299,6 +299,16 @@ class NS_Endpoints {
 
 		register_rest_route(
 			$namespace,
+			'/auth/anadir-nino',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'anadir_nino' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		register_rest_route(
+			$namespace,
 			'/progress',
 			array(
 				'methods'             => 'GET',
@@ -551,6 +561,7 @@ class NS_Endpoints {
 	public static function iniciar_sesion( WP_REST_Request $request ) {
 		$email    = sanitize_email( (string) $request->get_param( 'email' ) );
 		$password = (string) $request->get_param( 'password' );
+		$nino_id_pedido = $request->get_param( 'nino_id' );
 
 		$usuario = NS_Repositorio::buscar_usuario_por_email( $email );
 		if ( ! $usuario || ! password_verify( $password, $usuario['password_hash'] ) ) {
@@ -567,14 +578,98 @@ class NS_Endpoints {
 				404
 			);
 		}
+
+		// Si se pidió un nino_id concreto, verificamos que pertenece a este
+		// tutor. Si no, devolvemos el más antiguo (ninos[0]) — comportamiento
+		// retro-compatible con clientes que aún no envían `nino_id`.
 		$nino_id = (int) $ninos[0]['id'];
+		if ( null !== $nino_id_pedido && '' !== $nino_id_pedido ) {
+			$pedido = (int) $nino_id_pedido;
+			$pertenece = false;
+			foreach ( $ninos as $candidato ) {
+				if ( (int) $candidato['id'] === $pedido ) {
+					$pertenece = true;
+					break;
+				}
+			}
+			if ( ! $pertenece ) {
+				return new WP_REST_Response(
+					array( 'error' => 'El niño solicitado no pertenece a esta cuenta.' ),
+					403
+				);
+			}
+			$nino_id = $pedido;
+		}
+
+		// Lista pública de niños del tutor — útil al cliente para mostrar un
+		// selector cuando hay varios. Solo id + nombre, no datos sensibles.
+		$lista_ninos = array_map(
+			static function ( array $n ): array {
+				return array(
+					'id'             => (int) $n['id'],
+					'nombre_mostrar' => (string) $n['nombre_mostrar'],
+				);
+			},
+			$ninos
+		);
+
+		return new WP_REST_Response(
+			array(
+				'token'   => NS_JWT::firmar( array( 'nino_id' => $nino_id ) ),
+				'nino_id' => $nino_id,
+				'ninos'   => $lista_ninos,
+			),
+			200
+		);
+	}
+
+	// -------------------------------------------------------------
+	// POST /auth/anadir-nino
+	//
+	// Añade un niño nuevo a un tutor que ya existe. Autentica con email +
+	// password (no con JWT, porque el dispositivo que llama puede no haber
+	// hecho login todavía — caso típico: segundo móvil del mismo padre).
+	// Devuelve token JWT del niño recién creado, listo para usar como
+	// sesión activa en este dispositivo.
+	// -------------------------------------------------------------
+
+	public static function anadir_nino( WP_REST_Request $request ) {
+		$email       = sanitize_email( (string) $request->get_param( 'email' ) );
+		$password    = (string) $request->get_param( 'password' );
+		$nombre_nino = sanitize_text_field(
+			(string) $request->get_param( 'nombre_nino' )
+		);
+		$locale      = sanitize_text_field(
+			(string) ( $request->get_param( 'locale' ) ?: 'es' )
+		);
+
+		if ( ! is_email( $email ) || '' === $password || '' === $nombre_nino ) {
+			return new WP_REST_Response(
+				array( 'error' => 'Datos inválidos.' ),
+				400
+			);
+		}
+
+		$usuario = NS_Repositorio::buscar_usuario_por_email( $email );
+		if ( ! $usuario || ! password_verify( $password, $usuario['password_hash'] ) ) {
+			return new WP_REST_Response(
+				array( 'error' => 'Credenciales incorrectas.' ),
+				401
+			);
+		}
+
+		$nino_id = NS_Repositorio::crear_nino(
+			(int) $usuario['id'],
+			$nombre_nino,
+			$locale
+		);
 
 		return new WP_REST_Response(
 			array(
 				'token'   => NS_JWT::firmar( array( 'nino_id' => $nino_id ) ),
 				'nino_id' => $nino_id,
 			),
-			200
+			201
 		);
 	}
 

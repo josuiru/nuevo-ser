@@ -65,6 +65,16 @@ class _EstadoPantallaCuenta extends State<PantallaCuenta> {
     if (ok == true) await _cargar();
   }
 
+  Future<void> _abrirAnadirNino() async {
+    final ok = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => _PantallaAnadirNino(
+        repositorio: widget.repositorio,
+        emailSugerido: _email,
+      ),
+    ));
+    if (ok == true) await _cargar();
+  }
+
   Future<void> _confirmarCerrarSesion() async {
     final textos = AppLocalizations.of(context);
     final confirmar = await showDialog<bool>(
@@ -146,6 +156,7 @@ class _EstadoPantallaCuenta extends State<PantallaCuenta> {
     return _ModoSinCuenta(
       alRegistrarse: _abrirRegistro,
       alIniciarSesion: _abrirInicioSesion,
+      alAnadirNino: _abrirAnadirNino,
     );
   }
 }
@@ -153,10 +164,12 @@ class _EstadoPantallaCuenta extends State<PantallaCuenta> {
 class _ModoSinCuenta extends StatelessWidget {
   final VoidCallback alRegistrarse;
   final VoidCallback alIniciarSesion;
+  final VoidCallback alAnadirNino;
 
   const _ModoSinCuenta({
     required this.alRegistrarse,
     required this.alIniciarSesion,
+    required this.alAnadirNino,
   });
 
   @override
@@ -194,6 +207,12 @@ class _ModoSinCuenta extends StatelessWidget {
           texto: textos.cuentaBotonIniciar,
           color: PaletaNeon.azulNeon,
           alPulsar: alIniciarSesion,
+        ),
+        const SizedBox(height: 12),
+        _BotonGrande(
+          texto: 'Añadir niño a cuenta existente',
+          color: PaletaNeon.azulNeon,
+          alPulsar: alAnadirNino,
         ),
       ],
     );
@@ -528,6 +547,59 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
     super.dispose();
   }
 
+  Future<NinoBackend?> _mostrarSelectorNino(
+    List<NinoBackend> ninos,
+    int ninoIdPredeterminado,
+  ) async {
+    return showDialog<NinoBackend>(
+      context: context,
+      barrierDismissible: false,
+      builder: (contexto) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: const Text(
+          '¿QUIÉN JUEGA AQUÍ?',
+          style: TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 14,
+            letterSpacing: 3,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: ninos
+              .map(
+                (n) => ListTile(
+                  leading: Icon(
+                    n.id == ninoIdPredeterminado
+                        ? Icons.person
+                        : Icons.person_outline,
+                    color: PaletaNeon.violetaNeon,
+                  ),
+                  title: Text(
+                    n.nombreMostrar,
+                    style: const TextStyle(
+                      color: PaletaNeon.textoPrincipal,
+                    ),
+                  ),
+                  onTap: () => Navigator.of(contexto).pop(n),
+                ),
+              )
+              .toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(),
+            child: Text(
+              AppLocalizations.of(contexto).comunCancelar,
+              style: const TextStyle(color: PaletaNeon.textoTenue),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _iniciar() async {
     if (_enviando) return;
     final email = _email.text.trim();
@@ -548,7 +620,26 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
     try {
       final resp =
           await api.iniciarSesion(email: email, password: password);
-      await widget.repositorio.guardarTokenBackend(resp.token);
+      String tokenAUsar = resp.token;
+      // Si el tutor tiene más de un niño, dejamos que elija cuál usar en
+      // este dispositivo. Si elige uno distinto al que el backend devolvió
+      // por defecto (el más antiguo), pedimos un token específico para él.
+      if (resp.ninos.length > 1) {
+        final elegido = await _mostrarSelectorNino(resp.ninos, resp.ninoId);
+        if (elegido == null) {
+          if (mounted) setState(() => _enviando = false);
+          return;
+        }
+        if (elegido.id != resp.ninoId) {
+          final respConcreto = await api.iniciarSesion(
+            email: email,
+            password: password,
+            ninoId: elegido.id,
+          );
+          tokenAUsar = respConcreto.token;
+        }
+      }
+      await widget.repositorio.guardarTokenBackend(tokenAUsar);
       await widget.repositorio.guardarEmailBackend(email);
       if (!mounted) return;
       Navigator.of(context).pop(true);
@@ -642,6 +733,171 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
                     decoration: TextDecoration.underline,
                   ),
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ═══ Subpantalla añadir niño a cuenta existente ═════════════════════
+//
+// Caso típico: segundo móvil del mismo padre, que quiere registrar a
+// otro hijo bajo el mismo email tutor. Pide email + password + nombre
+// del niño, pega a `/auth/anadir-nino` y persiste el token devuelto.
+
+class _PantallaAnadirNino extends StatefulWidget {
+  final RepositorioProgreso repositorio;
+  final String? emailSugerido;
+
+  const _PantallaAnadirNino({
+    required this.repositorio,
+    this.emailSugerido,
+  });
+
+  @override
+  State<_PantallaAnadirNino> createState() => _EstadoPantallaAnadirNino();
+}
+
+class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _nombreNino = TextEditingController();
+  String? _mensajeError;
+  bool _enviando = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.emailSugerido != null) {
+      _email.text = widget.emailSugerido!;
+    }
+    widget.repositorio.cargarNombreJugador().then((nombre) {
+      if (!mounted || nombre == null) return;
+      _nombreNino.text = nombre;
+    });
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    _nombreNino.dispose();
+    super.dispose();
+  }
+
+  Future<void> _anadir() async {
+    if (_enviando) return;
+    final email = _email.text.trim();
+    final password = _password.text;
+    final nombreNino = _nombreNino.text.trim();
+    if (email.isEmpty || password.isEmpty || nombreNino.isEmpty) {
+      setState(() => _mensajeError =
+          AppLocalizations.of(context).cuentaErrorCamposLogin);
+      return;
+    }
+    setState(() {
+      _enviando = true;
+      _mensajeError = null;
+    });
+    final api = ClienteApi(
+      urlBase: ConfigApi.urlBase,
+      hostOverride: ConfigApi.hostOverride,
+    );
+    try {
+      final resp = await api.anadirNinoACuentaExistente(
+        email: email,
+        password: password,
+        nombreNino: nombreNino,
+      );
+      await widget.repositorio.guardarTokenBackend(resp.token);
+      await widget.repositorio.guardarEmailBackend(email);
+      if (!mounted) return;
+      Navigator.of(context).pop(true);
+    } on ExcepcionApi catch (e) {
+      if (!mounted) return;
+      setState(() => _mensajeError = e.mensaje);
+    } catch (e, st) {
+      // ignore: avoid_print
+      print('[uroto.cuenta] excepción anadirNino: $e');
+      // ignore: avoid_print
+      print(st);
+      if (!mounted) return;
+      setState(() =>
+          _mensajeError = AppLocalizations.of(context).cuentaErrorRed);
+    } finally {
+      api.cerrar();
+      if (mounted) setState(() => _enviando = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Scaffold(
+      backgroundColor: PaletaNeon.fondoProfundo,
+      appBar: AppBar(
+        backgroundColor: PaletaNeon.fondoMedio,
+        title: const Text(
+          'AÑADIR NIÑO',
+          style: TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 16,
+            letterSpacing: 4,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: PaletaNeon.textoTenue),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Mete el email y la contraseña del tutor que ya tiene '
+                'cuenta. Añadiremos a este niño bajo esa misma cuenta.',
+                style: TextStyle(
+                  color: PaletaNeon.textoTenue,
+                  fontSize: 13,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _Campo(
+                controlador: _email,
+                etiqueta: AppLocalizations.of(contexto).cuentaCampoEmail,
+                tecladoEmail: true,
+              ),
+              const SizedBox(height: 16),
+              _Campo(
+                controlador: _password,
+                etiqueta: AppLocalizations.of(contexto).cuentaCampoPassword,
+                obscure: true,
+              ),
+              const SizedBox(height: 16),
+              _Campo(
+                controlador: _nombreNino,
+                etiqueta:
+                    AppLocalizations.of(contexto).cuentaCampoNombreNino,
+              ),
+              if (_mensajeError != null) ...[
+                const SizedBox(height: 16),
+                Text(
+                  _mensajeError!,
+                  style: const TextStyle(
+                    color: PaletaNeon.rosaAcento,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
+              _BotonGrande(
+                texto: _enviando ? 'AÑADIENDO…' : 'AÑADIR NIÑO',
+                color: PaletaNeon.azulNeon,
+                alPulsar: _enviando ? () {} : _anadir,
               ),
             ],
           ),

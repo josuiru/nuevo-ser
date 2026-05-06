@@ -94,15 +94,58 @@ class ClienteApi {
   }
 
   /// POST /login. Devuelve token válido ~30 días.
+  ///
+  /// Si el tutor tiene varios niños, [ninoId] selecciona cuál; si se omite,
+  /// el backend devuelve el más antiguo. La respuesta incluye la lista de
+  /// niños del tutor — el cliente la usa para mostrar un selector cuando
+  /// hay más de uno.
   Future<RespuestaAuth> iniciarSesion({
     required String email,
     required String password,
+    int? ninoId,
   }) async {
+    final cuerpoPeticion = <String, dynamic>{
+      'email': email,
+      'password': password,
+    };
+    if (ninoId != null) {
+      cuerpoPeticion['nino_id'] = ninoId;
+    }
     final r = await _cliente
         .post(
           _uri('/login'),
           headers: _cabeceras(),
-          body: jsonEncode({'email': email, 'password': password}),
+          body: jsonEncode(cuerpoPeticion),
+        )
+        .timeout(tiempoEspera);
+    final cuerpo = _decodificar(r);
+    return RespuestaAuth(
+      token: cuerpo['token'] as String,
+      ninoId: (cuerpo['nino_id'] as num).toInt(),
+      ninos: _parsearNinos(cuerpo['ninos']),
+    );
+  }
+
+  /// POST /auth/anadir-nino. Añade un niño nuevo a un tutor que ya
+  /// existe. El dispositivo que llama no necesita JWT — autentica con
+  /// email + password directamente. Caso típico: segundo móvil del
+  /// mismo padre que quiere usar otro hijo bajo la misma cuenta.
+  Future<RespuestaAuth> anadirNinoACuentaExistente({
+    required String email,
+    required String password,
+    required String nombreNino,
+    String locale = 'es',
+  }) async {
+    final r = await _cliente
+        .post(
+          _uri('/auth/anadir-nino'),
+          headers: _cabeceras(),
+          body: jsonEncode({
+            'email': email,
+            'password': password,
+            'nombre_nino': nombreNino,
+            'locale': locale,
+          }),
         )
         .timeout(tiempoEspera);
     final cuerpo = _decodificar(r);
@@ -196,11 +239,37 @@ class RespuestaAuth {
   final int ninoId;
   final int? usuarioId;
 
+  /// Niños que comparten el mismo tutor. Solo `/login` la rellena —
+  /// `/register` y `/auth/anadir-nino` la dejan vacía porque en esos
+  /// flujos solo hay un niño relevante (el recién creado).
+  final List<NinoBackend> ninos;
+
   const RespuestaAuth({
     required this.token,
     required this.ninoId,
     this.usuarioId,
+    this.ninos = const [],
   });
+}
+
+/// Identidad mínima de un niño tal y como la expone el backend al
+/// listar los niños de un tutor (selector multi-niño tras login).
+class NinoBackend {
+  final int id;
+  final String nombreMostrar;
+
+  const NinoBackend({required this.id, required this.nombreMostrar});
+}
+
+List<NinoBackend> _parsearNinos(Object? crudo) {
+  if (crudo is! List) return const [];
+  return crudo
+      .whereType<Map>()
+      .map((e) => NinoBackend(
+            id: (e['id'] as num).toInt(),
+            nombreMostrar: (e['nombre_mostrar'] as String?) ?? '',
+          ))
+      .toList(growable: false);
 }
 
 /// Error del cliente API. El orquestador decide si reintentar, mostrar
