@@ -36,26 +36,25 @@ class PantallaBrecha extends StatelessWidget {
   /// y libera la cinemática 1.1.7.
   final VoidCallback alCompletarBrecha;
 
-  /// Callback opcional para abrir el Cuaderno mientras se trabaja
-  /// la Brecha — la Cronista puede consultar entradas anteriores
-  /// en cualquier momento.
-  final VoidCallback? alAbrirCuaderno;
+  /// Callback opcional para abrir el Menú principal mientras se
+  /// trabaja la Brecha — el Cuaderno, los Avances, los Resúmenes,
+  /// el cambio de idioma y todas las acciones meta están a un toque
+  /// de aquí. Sustituye al antiguo `alAbrirCuaderno` que sólo abría
+  /// una de las superficies.
+  final VoidCallback? alAbrirMenu;
 
-  /// Repositorio de preguntas inyectable. Lo usa la Fase 1 jugable
-  /// para persistir lo que la Cronista escribe. Inyectable para tests.
+  /// Repositorio de preguntas. Lo usa la Fase 1 jugable.
   final RepositorioPreguntasBrecha repoPreguntas;
 
   /// Repositorio de fuentes recogidas. Lo usa la Fase 2 jugable.
-  /// Inyectable para tests.
   final RepositorioRecoleccionFuentes repoRecoleccion;
 
   /// Repositorio de respuestas a la evaluación. Lo usa la Fase 3.
-  /// Inyectable para tests.
   final RepositorioEvaluacionFuente repoEvaluacion;
 
   /// Repositorio de la reconstrucción. Lo usa la Fase 4 para
   /// persistir las afirmaciones declaradas y sus niveles de
-  /// confianza. Inyectable para tests.
+  /// confianza.
   final RepositorioReconstruccion repoReconstruccion;
 
   const PantallaBrecha({
@@ -64,11 +63,11 @@ class PantallaBrecha extends StatelessWidget {
     required this.faseActiva,
     required this.alAvanzarFase,
     required this.alCompletarBrecha,
-    this.alAbrirCuaderno,
-    this.repoPreguntas = const RepositorioPreguntasBrecha(),
-    this.repoRecoleccion = const RepositorioRecoleccionFuentes(),
-    this.repoEvaluacion = const RepositorioEvaluacionFuente(),
-    this.repoReconstruccion = const RepositorioReconstruccion(),
+    required this.repoPreguntas,
+    required this.repoRecoleccion,
+    required this.repoEvaluacion,
+    required this.repoReconstruccion,
+    this.alAbrirMenu,
   });
 
   bool get _esFaseFinal => faseActiva == FaseBrecha.concilio;
@@ -89,47 +88,53 @@ class PantallaBrecha extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                _HeaderBrecha(brecha: brecha, faseActiva: faseActiva),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    child: _CuerpoDeFase(
-                      brecha: brecha,
-                      faseActiva: faseActiva,
-                      alAvanzarFase: alAvanzarFase,
-                      repoPreguntas: repoPreguntas,
-                      repoRecoleccion: repoRecoleccion,
-                      repoEvaluacion: repoEvaluacion,
-                      repoReconstruccion: repoReconstruccion,
+            // Positioned.fill garantiza que la Column toma TODO el
+            // espacio del Stack — sin esto, en la primera medición de
+            // Linux desktop (1×1 antes de que GTK ajuste) la Column
+            // intenta tomar su tamaño natural y desborda.
+            Positioned.fill(
+              child: Column(
+                children: [
+                  _HeaderBrecha(brecha: brecha, faseActiva: faseActiva),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      child: _CuerpoDeFase(
+                        brecha: brecha,
+                        faseActiva: faseActiva,
+                        alAvanzarFase: alAvanzarFase,
+                        repoPreguntas: repoPreguntas,
+                        repoRecoleccion: repoRecoleccion,
+                        repoEvaluacion: repoEvaluacion,
+                        repoReconstruccion: repoReconstruccion,
+                      ),
                     ),
                   ),
-                ),
-                if (!_faseTienePantallaPropia)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-                    child: _BotonSiguienteFase(
-                      fase: faseActiva,
-                      esFaseFinal: _esFaseFinal,
-                      alAvanzar: alAvanzarFase,
-                      alCompletar: alCompletarBrecha,
-                    ),
-                  )
-                else
-                  const SizedBox(height: 16),
-              ],
+                  if (!_faseTienePantallaPropia)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                      child: _BotonSiguienteFase(
+                        fase: faseActiva,
+                        esFaseFinal: _esFaseFinal,
+                        alAvanzar: alAvanzarFase,
+                        alCompletar: alCompletarBrecha,
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 16),
+                ],
+              ),
             ),
-            if (alAbrirCuaderno != null)
+            if (alAbrirMenu != null)
               Positioned(
                 top: 4,
                 right: 4,
                 child: IconButton(
-                  tooltip: 'Cuaderno',
-                  icon: const Icon(Icons.menu_book_outlined,
+                  tooltip: 'Menú',
+                  icon: const Icon(Icons.settings_outlined,
                       color: PaletaArchivo.ambarLacre),
-                  onPressed: alAbrirCuaderno,
+                  onPressed: alAbrirMenu,
                 ),
               ),
           ],

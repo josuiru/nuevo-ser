@@ -1,34 +1,31 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Persiste las preguntas que la Cronista ha formulado en la Fase 1
-/// de una Brecha. Vive aquí (no en `RepositorioEstadoBrecha`) porque
-/// el conjunto de preguntas crece y mengua, mientras que el estado
-/// de fase es un valor escalar.
+/// de una Brecha. Por perfil.
 ///
-/// Namespace: `nuevoser.lasversiones.brecha.<id>.preguntas` — un
-/// JSON con la lista de strings tal como las escribió la Cronista.
-/// Si el JSON se corrompe (formato inesperado), [cargar] devuelve
-/// lista vacía en lugar de propagar la excepción: una corrupción
-/// puntual no debe bloquear la fase y la Cronista podrá reformularlas.
+/// Namespace: `<prefijoPerfilActivo>brecha.<id>.preguntas` — un JSON
+/// con la lista de strings. Si el JSON se corrompe, [cargar] devuelve
+/// lista vacía.
 class RepositorioPreguntasBrecha {
-  static const String _prefijo = 'nuevoser.lasversiones.brecha.';
-  static const String _sufijo = '.preguntas';
+  static const String _sufijoBase = 'brecha.';
+  static const String _sufijoFinal = '.preguntas';
 
-  final Future<SharedPreferences> Function() _prefs;
+  final GestorPerfiles _gestor;
 
-  const RepositorioPreguntasBrecha({
-    Future<SharedPreferences> Function() prefs = SharedPreferences.getInstance,
-  }) : _prefs = prefs;
+  const RepositorioPreguntasBrecha({required GestorPerfiles gestor})
+      : _gestor = gestor;
 
-  String _clave(String idBrecha) => '$_prefijo$idBrecha$_sufijo';
+  Future<String> _clave(String idBrecha) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijoBase$idBrecha$_sufijoFinal';
+  }
 
   /// Devuelve la lista de preguntas guardadas para esta Brecha.
-  /// Lista vacía si nunca se guardó nada o si el blob está corrupto.
   Future<List<String>> cargar(String idBrecha) async {
-    final prefs = await _prefs();
-    final crudo = prefs.getString(_clave(idBrecha));
+    final prefs = await _gestor.prefsInicializadas();
+    final crudo = prefs.getString(await _clave(idBrecha));
     if (crudo == null || crudo.isEmpty) return const [];
     try {
       final decodificado = jsonDecode(crudo);
@@ -39,18 +36,15 @@ class RepositorioPreguntasBrecha {
     }
   }
 
-  /// Sobreescribe la lista completa. Idempotente: si la lista no
-  /// cambió respecto a lo persistido, igualmente reescribe sin
-  /// efectos secundarios.
+  /// Sobreescribe la lista completa. Idempotente.
   Future<void> guardar(String idBrecha, List<String> preguntas) async {
-    final prefs = await _prefs();
-    await prefs.setString(_clave(idBrecha), jsonEncode(preguntas));
+    final prefs = await _gestor.prefsInicializadas();
+    await prefs.setString(await _clave(idBrecha), jsonEncode(preguntas));
   }
 
-  /// Borra el blob de preguntas. Útil para tests + futuro "empezar
-  /// de nuevo" desde Ajustes.
+  /// Borra el blob de preguntas del perfil activo.
   Future<void> borrar(String idBrecha) async {
-    final prefs = await _prefs();
-    await prefs.remove(_clave(idBrecha));
+    final prefs = await _gestor.prefsInicializadas();
+    await prefs.remove(await _clave(idBrecha));
   }
 }

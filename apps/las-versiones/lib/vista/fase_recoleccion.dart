@@ -32,7 +32,7 @@ class FaseRecoleccion extends StatefulWidget {
     super.key,
     required this.brecha,
     required this.alAvanzarFase,
-    this.repoRecoleccion = const RepositorioRecoleccionFuentes(),
+    required this.repoRecoleccion,
   });
 
   @override

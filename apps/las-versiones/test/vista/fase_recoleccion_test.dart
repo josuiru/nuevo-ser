@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_recoleccion_fuentes.dart';
 import 'package:las_versiones/dominio/brecha.dart';
 import 'package:las_versiones/dominio/catalogo_brechas.dart';
 import 'package:las_versiones/vista/fase_recoleccion.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   setUp(() {
@@ -24,6 +36,9 @@ void main() {
             child: FaseRecoleccion(
               brecha: brecha,
               alAvanzarFase: alAvanzar,
+              repoRecoleccion: RepositorioRecoleccionFuentes(
+                gestor: _gestorDePrueba(),
+              ),
             ),
           ),
         ),
@@ -96,8 +111,12 @@ void main() {
   testWidgets('fuentes recogidas en sesión previa aparecen ya marcadas',
       (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.fuente.restos_oseos_in_situ': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.toponimo_local': true,
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.'
+          'restos_oseos_in_situ': true,
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.'
+          'toponimo_local': true,
     });
     await bombearFase(
       tester,

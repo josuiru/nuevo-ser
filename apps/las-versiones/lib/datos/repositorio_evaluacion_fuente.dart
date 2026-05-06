@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../dominio/brecha.dart';
 import '../dominio/evaluacion_fuente.dart';
@@ -10,24 +10,26 @@ import '../dominio/evaluacion_fuente.dart';
 /// codificada como JSON con los nombres de los enums (lo que devuelve
 /// `Enum.name`).
 ///
-/// Namespace: `nuevoser.lasversiones.brecha.<id>.evaluacion.<idFuente>`
-/// con string. El blob es pequeño (dos campos) — JSON por extensibilidad
-/// futura cuando la rúbrica crezca.
+/// Namespace: `<prefijoPerfilActivo>brecha.<id>.evaluacion.<idFuente>`
+/// — el prefijo de perfil viene del [GestorPerfiles] del core.
 class RepositorioEvaluacionFuente {
-  static const String _prefijo = 'nuevoser.lasversiones.brecha.';
+  static const String _sufijoBrecha = 'brecha.';
   static const String _separador = '.evaluacion.';
 
-  final Future<SharedPreferences> Function() _prefs;
+  final GestorPerfiles _gestor;
 
-  const RepositorioEvaluacionFuente({
-    Future<SharedPreferences> Function() prefs = SharedPreferences.getInstance,
-  }) : _prefs = prefs;
+  const RepositorioEvaluacionFuente({required GestorPerfiles gestor})
+      : _gestor = gestor;
 
-  String _clave(String idBrecha, String idFuente) =>
-      '$_prefijo$idBrecha$_separador$idFuente';
+  Future<String> _clave(String idBrecha, String idFuente) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijoBrecha$idBrecha$_separador$idFuente';
+  }
 
-  String _prefijoBrecha(String idBrecha) =>
-      '$_prefijo$idBrecha$_separador';
+  Future<String> _prefijoBrecha(String idBrecha) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijoBrecha$idBrecha$_separador';
+  }
 
   /// Carga la respuesta para esta fuente. `null` si no hay nada
   /// guardado o si el blob no se puede deserializar.
@@ -35,8 +37,8 @@ class RepositorioEvaluacionFuente {
     String idBrecha,
     String idFuente,
   ) async {
-    final prefs = await _prefs();
-    final crudo = prefs.getString(_clave(idBrecha, idFuente));
+    final prefs = await _gestor.prefsInicializadas();
+    final crudo = prefs.getString(await _clave(idBrecha, idFuente));
     if (crudo == null || crudo.isEmpty) return null;
     try {
       final mapa = jsonDecode(crudo);
@@ -56,24 +58,25 @@ class RepositorioEvaluacionFuente {
     String idFuente,
     RespuestaEvaluacionFuente respuesta,
   ) async {
-    final prefs = await _prefs();
+    final prefs = await _gestor.prefsInicializadas();
     final mapa = <String, String>{
       if (respuesta.tipoElegido != null) 'tipo': respuesta.tipoElegido!.name,
       if (respuesta.sesgoElegido != null)
         'sesgo': respuesta.sesgoElegido!.name,
     };
-    await prefs.setString(_clave(idBrecha, idFuente), jsonEncode(mapa));
+    await prefs.setString(
+      await _clave(idBrecha, idFuente),
+      jsonEncode(mapa),
+    );
   }
 
   /// Mapa idFuente → respuesta para todas las fuentes evaluadas en
-  /// esta Brecha. La pantalla la usa para pintar de inicio el estado
-  /// de cada tarjeta. Las fuentes sin evaluación no aparecen en el
-  /// mapa.
+  /// esta Brecha.
   Future<Map<String, RespuestaEvaluacionFuente>> cargarTodasDeBrecha(
     String idBrecha,
   ) async {
-    final prefs = await _prefs();
-    final prefijoBrecha = _prefijoBrecha(idBrecha);
+    final prefs = await _gestor.prefsInicializadas();
+    final prefijoBrecha = await _prefijoBrecha(idBrecha);
     final claves = prefs.getKeys();
     final resultado = <String, RespuestaEvaluacionFuente>{};
     for (final clave in claves) {
@@ -87,11 +90,10 @@ class RepositorioEvaluacionFuente {
     return resultado;
   }
 
-  /// Borra todas las evaluaciones de una Brecha. Tests + futuro
-  /// "rehacer la Brecha" desde Ajustes.
+  /// Borra todas las evaluaciones de una Brecha del perfil actual.
   Future<void> borrar(String idBrecha) async {
-    final prefs = await _prefs();
-    final prefijoBrecha = _prefijoBrecha(idBrecha);
+    final prefs = await _gestor.prefsInicializadas();
+    final prefijoBrecha = await _prefijoBrecha(idBrecha);
     final claves =
         prefs.getKeys().where((k) => k.startsWith(prefijoBrecha)).toList();
     for (final clave in claves) {

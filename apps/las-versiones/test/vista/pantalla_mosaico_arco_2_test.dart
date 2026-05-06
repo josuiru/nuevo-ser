@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_mosaico.dart';
 import 'package:las_versiones/dominio/mosaico_arco_2.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_2.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   setUp(() {
@@ -14,8 +26,6 @@ void main() {
     WidgetTester tester, {
     required Future<void> Function() alEntregar,
   }) async {
-    // Viewport amplio para que los 8 fragmentos del ListView entren
-    // sin scroll en la prueba.
     tester.view.physicalSize = const Size(800, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -25,7 +35,10 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: PantallaMosaicoArco2(alEntregar: alEntregar),
+        home: PantallaMosaicoArco2(
+          alEntregar: alEntregar,
+          repoMosaico: RepositorioMosaico(gestor: _gestorDePrueba()),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -118,7 +131,7 @@ void main() {
     expect(entregasInvocadas, 1);
 
     final prefs = await SharedPreferences.getInstance();
-    final blob = prefs.getString('nuevoser.lasversiones.mosaico.arco_2');
+    final blob = prefs.getString('nuevoser.lasversiones.perfil.principal.mosaico.arco_2');
     expect(
       blob,
       isNotNull,
@@ -132,7 +145,9 @@ void main() {
   testWidgets('marcas persistidas reaparecen al volver a abrir',
       (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.mosaico.arco_2':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.mosaico.arco_2':
           '{"pompelo_ara_dos_caras":"solido",'
           '"calagurris_lo_que_quintiliano_omite":"probable",'
           '"domus_la_familia_que_no_aparece":"solido"}',
@@ -162,7 +177,7 @@ void main() {
 
     final prefs = await SharedPreferences.getInstance();
     expect(
-      prefs.getString('nuevoser.lasversiones.mosaico.arco_2'),
+      prefs.getString('nuevoser.lasversiones.perfil.principal.mosaico.arco_2'),
       isNotNull,
     );
     expect(

@@ -4,6 +4,7 @@ import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import 'package:las_versiones/dominio/ambiente_archivo.dart';
 import 'package:las_versiones/dominio/voz_personaje.dart';
+import 'package:las_versiones/vista/avatar_personaje.dart';
 import 'package:las_versiones/vista/pantalla_cinematica.dart';
 
 void main() {
@@ -96,6 +97,63 @@ void main() {
 
         // Drenar timers pendientes para que el test termine limpio.
         await tester.pumpAndSettle(const Duration(seconds: 2));
+      },
+    );
+  });
+
+  group('PantallaCinematica — avatar del hablante', () {
+    testWidgets(
+      'PlanoDialogo con voz nombrada muestra el AvatarPersonaje junto '
+      'al nombre del hablante',
+      (tester) async {
+        const escena = EscenaCinematica(
+          id: 'test_avatar_dialogo',
+          titulo: 'test',
+          flagDeSalida: 'test_visto',
+          ambiente: AmbienteArchivo.aticoArchivo,
+          planos: [
+            PlanoDialogo(
+              voz: VozPersonaje.maren,
+              texto: 'Hola.',
+              pausaPrevia: Duration.zero,
+            ),
+          ],
+        );
+
+        await tester.pumpWidget(MaterialApp(
+          home: PantallaCinematica(escena: escena, alTerminar: () {}),
+        ));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        expect(find.byType(AvatarPersonaje), findsOneWidget);
+        expect(find.text('MAREN'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'PlanoDialogo con voz narrador (sin nombre) no muestra cabecera '
+      'de voz — ni avatar ni nombre',
+      (tester) async {
+        const escena = EscenaCinematica(
+          id: 'test_avatar_narrador',
+          titulo: 'test',
+          flagDeSalida: 'test_visto',
+          ambiente: AmbienteArchivo.aticoArchivo,
+          planos: [
+            PlanoDialogo(
+              voz: VozPersonaje.narrador,
+              texto: 'Acotación sin atribución.',
+              pausaPrevia: Duration.zero,
+            ),
+          ],
+        );
+
+        await tester.pumpWidget(MaterialApp(
+          home: PantallaCinematica(escena: escena, alTerminar: () {}),
+        ));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        expect(find.byType(AvatarPersonaje), findsNothing);
       },
     );
   });

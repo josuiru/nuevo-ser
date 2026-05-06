@@ -11,10 +11,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'datos/repositorio_cuaderno.dart';
 import 'datos/repositorio_estado_brecha.dart';
+import 'datos/repositorio_evaluacion_fuente.dart';
 import 'datos/repositorio_flags_narrativos.dart';
 import 'datos/repositorio_mosaico.dart';
+import 'datos/repositorio_preguntas_brecha.dart';
+import 'datos/repositorio_recoleccion_fuentes.dart';
+import 'datos/repositorio_reconstruccion.dart';
 import 'datos/reseteo_archivo.dart';
 import 'datos/sincronizador_mosaico.dart';
+import 'dominio/avances.dart';
 import 'dominio/brecha.dart';
 import 'dominio/catalogo_brechas.dart';
 import 'dominio/cuaderno.dart';
@@ -24,15 +29,19 @@ import 'dominio/escenas_arco_3.dart';
 import 'dominio/mosaico_arco_1.dart';
 import 'dominio/mosaico_arco_2.dart';
 import 'nucleo/paleta_archivo.dart';
-import 'vista/pantalla_ajustes.dart';
+import 'vista/pantalla_avances.dart';
 import 'vista/pantalla_brecha.dart';
 import 'vista/pantalla_cinematica.dart';
 import 'vista/pantalla_configuracion_inicial.dart';
 import 'vista/pantalla_cuaderno.dart';
 import 'vista/pantalla_esqueleto.dart';
 import 'vista/pantalla_login.dart';
+import 'vista/pantalla_ajustes_audio.dart';
+import 'vista/pantalla_menu.dart';
+import 'vista/pantalla_perfiles.dart';
 import 'vista/pantalla_mosaico_arco_1.dart';
 import 'vista/pantalla_mosaico_arco_2.dart';
+import 'vista/pantalla_resumenes.dart';
 
 /// Clave global del idioma elegido por la Cronista en el primer
 /// arranque. Sigue el namespace `nuevoser.<juego>.*` que el CLAUDE.md
@@ -93,21 +102,45 @@ void main() async {
     claveEmail: _claveEmailBackend,
   );
 
-  // Reset total del Archivo desde la PantallaAjustes. Borra todas las
-  // claves del namespace `nuevoser.lasversiones.*` — cubre cualquier
-  // repositorio del juego que respete la convención sin tener que
-  // listarlos uno a uno.
+  // Gestor multi-perfil del juego (F2-26). El namespace concentra
+  // todas las claves del juego (`nuevoser.lasversiones.*`); las
+  // claves globales (idioma, cuenta backend) se declaran como
+  // `clavesGlobalesNoMigrables` para que la migración silenciosa
+  // a `perfil.principal.*` del primer arranque no las toque. La
+  // pantalla de Configuración Inicial sigue mostrando el selector
+  // trilingüe sólo cuando no hay idioma persistido — el cambio a
+  // multi-perfil no afecta ese flujo.
+  final gestorPerfiles = GestorPerfiles(
+    namespace: 'nuevoser.lasversiones',
+    sufijoNombreVisible: 'nombre_jugador',
+    clavesGlobalesNoMigrables: const {
+      _claveIdiomaApp,
+      _claveTokenBackend,
+      _claveEmailBackend,
+    },
+  );
+
+  // Reset total del Archivo. Borra todas las claves del namespace
+  // `nuevoser.lasversiones.*` — incluidos perfiles, idioma y cuenta —
+  // cubre cualquier repositorio del juego que respete la convención
+  // sin tener que listarlos uno a uno.
   const reseteoArchivo = ReseteoArchivo(
     prefs: SharedPreferences.getInstance,
   );
 
   runApp(AppLasVersiones(
     repoIdioma: repoIdioma,
-    repoFlags: const RepositorioFlagsNarrativos(),
-    repoEstadoBrecha: const RepositorioEstadoBrecha(),
-    repoCuaderno: const RepositorioCuaderno(),
-    repoMosaico: const RepositorioMosaico(),
+    repoFlags: RepositorioFlagsNarrativos(gestor: gestorPerfiles),
+    repoEstadoBrecha: RepositorioEstadoBrecha(gestor: gestorPerfiles),
+    repoCuaderno: RepositorioCuaderno(gestor: gestorPerfiles),
+    repoMosaico: RepositorioMosaico(gestor: gestorPerfiles),
+    repoPreguntas: RepositorioPreguntasBrecha(gestor: gestorPerfiles),
+    repoRecoleccion: RepositorioRecoleccionFuentes(gestor: gestorPerfiles),
+    repoEvaluacion: RepositorioEvaluacionFuente(gestor: gestorPerfiles),
+    repoReconstruccion: RepositorioReconstruccion(gestor: gestorPerfiles),
+    repoAudio: RepositorioPreferenciasAudio(gestor: gestorPerfiles),
     repoCuenta: repoCuenta,
+    gestorPerfiles: gestorPerfiles,
     reseteoArchivo: reseteoArchivo,
   ));
 }
@@ -118,7 +151,13 @@ class AppLasVersiones extends StatelessWidget {
   final RepositorioEstadoBrecha repoEstadoBrecha;
   final RepositorioCuaderno repoCuaderno;
   final RepositorioMosaico repoMosaico;
+  final RepositorioPreguntasBrecha repoPreguntas;
+  final RepositorioRecoleccionFuentes repoRecoleccion;
+  final RepositorioEvaluacionFuente repoEvaluacion;
+  final RepositorioReconstruccion repoReconstruccion;
+  final RepositorioPreferenciasAudio repoAudio;
   final RepositorioCuentaBackend repoCuenta;
+  final GestorPerfiles gestorPerfiles;
   final ReseteoArchivo reseteoArchivo;
 
   const AppLasVersiones({
@@ -128,7 +167,13 @@ class AppLasVersiones extends StatelessWidget {
     required this.repoEstadoBrecha,
     required this.repoCuaderno,
     required this.repoMosaico,
+    required this.repoPreguntas,
+    required this.repoRecoleccion,
+    required this.repoEvaluacion,
+    required this.repoReconstruccion,
+    required this.repoAudio,
     required this.repoCuenta,
+    required this.gestorPerfiles,
     required this.reseteoArchivo,
   });
 
@@ -173,7 +218,13 @@ class AppLasVersiones extends StatelessWidget {
             repoEstadoBrecha: repoEstadoBrecha,
             repoCuaderno: repoCuaderno,
             repoMosaico: repoMosaico,
+            repoPreguntas: repoPreguntas,
+            repoRecoleccion: repoRecoleccion,
+            repoEvaluacion: repoEvaluacion,
+            repoReconstruccion: repoReconstruccion,
+            repoAudio: repoAudio,
             repoCuenta: repoCuenta,
+            gestorPerfiles: gestorPerfiles,
             reseteoArchivo: reseteoArchivo,
           ),
         );
@@ -213,7 +264,13 @@ class Orquestador extends StatefulWidget {
   final RepositorioEstadoBrecha repoEstadoBrecha;
   final RepositorioCuaderno repoCuaderno;
   final RepositorioMosaico repoMosaico;
+  final RepositorioPreguntasBrecha repoPreguntas;
+  final RepositorioRecoleccionFuentes repoRecoleccion;
+  final RepositorioEvaluacionFuente repoEvaluacion;
+  final RepositorioReconstruccion repoReconstruccion;
+  final RepositorioPreferenciasAudio repoAudio;
   final RepositorioCuentaBackend repoCuenta;
+  final GestorPerfiles gestorPerfiles;
   final ReseteoArchivo reseteoArchivo;
 
   const Orquestador({
@@ -223,7 +280,13 @@ class Orquestador extends StatefulWidget {
     required this.repoEstadoBrecha,
     required this.repoCuaderno,
     required this.repoMosaico,
+    required this.repoPreguntas,
+    required this.repoRecoleccion,
+    required this.repoEvaluacion,
+    required this.repoReconstruccion,
+    required this.repoAudio,
     required this.repoCuenta,
+    required this.gestorPerfiles,
     required this.reseteoArchivo,
   });
 
@@ -235,6 +298,7 @@ class _OrquestadorState extends State<Orquestador> {
   bool _cargando = true;
   bool _idiomaElegido = false;
   bool _sesionIniciada = false;
+  String? _nombrePerfilActivo;
   Set<String> _flagsActivos = const {};
   EscenaCinematica? _escenaEnReproduccion;
   Brecha? _brechaAbierta;
@@ -274,10 +338,14 @@ class _OrquestadorState extends State<Orquestador> {
     final codigo = await widget.repoIdioma.cargar();
     final flags = await widget.repoFlags.activos();
     final token = await widget.repoCuenta.cargarToken();
+    final perfilesInfo = await widget.gestorPerfiles.listarPerfilesConInfo();
     if (!mounted) return;
     _flagsActivos = flags;
     _idiomaElegido = codigo != null;
     _sesionIniciada = token != null && token.isNotEmpty;
+    final activo = perfilesInfo.where((p) => p.esActivo).toList();
+    _nombrePerfilActivo =
+        activo.isNotEmpty ? activo.first.nombreVisible : null;
     final brecha = _proximaBrechaPendiente();
     FaseBrecha faseInicial = FaseBrecha.formulacionPreguntas;
     if (brecha != null) {
@@ -585,22 +653,150 @@ class _OrquestadorState extends State<Orquestador> {
     await widget.repoCuenta.cerrarSesion();
   }
 
-  /// Abre la pantalla de ajustes como ruta superpuesta. La pantalla
-  /// expone el botón de reset y delega en [_resetearArchivo] cuando
-  /// la Cronista confirma. Tras volver de la pantalla recargamos el
-  /// estado completo del orquestador para reflejar lo que haya pasado
-  /// (típicamente: vuelta a la configuración inicial si se reseteó).
-  Future<void> _alAbrirAjustes() async {
+  /// Abre el Menú principal — la única superficie de meta-navegación
+  /// del esqueleto desde F2-24. Consolida los antiguos botones
+  /// CUADERNO/SESIÓN/AJUSTES en un solo engranaje. Tras volver
+  /// recargamos el estado completo del orquestador para reflejar lo
+  /// que haya pasado (reset → vuelta a configuración inicial; cambio
+  /// de idioma → la app se reconstruye al cambiar el `localeApp`).
+  Future<void> _alAbrirMenu() async {
     if (!mounted) return;
     await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => PantallaAjustes(
+      MaterialPageRoute<void>(
+        builder: (_) => PantallaMenu(
+          alAbrirCuaderno: () {
+            Navigator.of(context).pop();
+            _alAbrirCuaderno();
+          },
+          alAbrirAvances: () {
+            Navigator.of(context).pop();
+            _alAbrirAvances();
+          },
+          alAbrirResumenes: () {
+            Navigator.of(context).pop();
+            _alAbrirResumenes();
+          },
+          alAbrirCuenta: () {
+            Navigator.of(context).pop();
+            _alAbrirSesion();
+          },
+          alAbrirPerfiles: () {
+            Navigator.of(context).pop();
+            _alAbrirPerfiles();
+          },
+          alAbrirAjustesAudio: () {
+            Navigator.of(context).pop();
+            _alAbrirAjustesAudio();
+          },
+          nombrePerfilActivo: _nombrePerfilActivo,
+          sesionIniciada: _sesionIniciada,
+          alCambiarIdioma: (codigo) async {
+            await widget.repoIdioma.guardar(codigo);
+            localeAppLasVersiones.value = Locale(codigo);
+          },
+          idiomaActivo: localeAppLasVersiones.value?.languageCode,
           alResetearArchivo: _resetearArchivo,
         ),
       ),
     );
     if (!mounted) return;
     setState(() => _cargando = true);
+    await _cargarEstadoInicial();
+  }
+
+  /// Abre la pantalla de Avances con el estado agregado del juego.
+  Future<void> _alAbrirAvances() async {
+    if (!mounted) return;
+    final idsCuaderno = await widget.repoCuaderno.idsRegistrados();
+    if (!mounted) return;
+    final avances = calcularAvances(
+      flagsActivos: _flagsActivos,
+      idsCuadernoRegistrados: idsCuaderno,
+      mosaicoArco1Entregado:
+          _flagsActivos.contains('mosaico_arco_1_entregado'),
+      mosaicoArco2Entregado:
+          _flagsActivos.contains('mosaico_arco_2_entregado'),
+    );
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PantallaAvances(avances: avances),
+      ),
+    );
+  }
+
+  /// Abre la pantalla de Resúmenes con los Mosaicos entregados y sus
+  /// marcas tal como las dejó la Cronista.
+  Future<void> _alAbrirResumenes() async {
+    if (!mounted) return;
+    final pantalla = await PantallaResumenes.cargandoDesde(
+      repoMosaico: widget.repoMosaico,
+      mosaicoArco1Entregado:
+          _flagsActivos.contains('mosaico_arco_1_entregado'),
+      mosaicoArco2Entregado:
+          _flagsActivos.contains('mosaico_arco_2_entregado'),
+    );
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => pantalla),
+    );
+  }
+
+  /// Abre la pantalla de ajustes de audio. Estos ajustes son
+  /// **por perfil** (cada Cronista tiene su modo silencio y sus
+  /// volúmenes por capa). El cambio toma efecto al instante en el
+  /// repo; cuando entren los assets sonoros del juego, el
+  /// servicio sonoro los respetará.
+  Future<void> _alAbrirAjustesAudio() async {
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PantallaAjustesAudio(repoAudio: widget.repoAudio),
+      ),
+    );
+  }
+
+  /// Abre la pantalla de gestión de perfiles. Tras volver, el
+  /// orquestador recarga su estado por si hubo cambio de perfil
+  /// activo (cada Cronista tiene su progreso aislado).
+  Future<void> _alAbrirPerfiles() async {
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PantallaPerfiles(
+          gestor: widget.gestorPerfiles,
+          alCambiarAPerfil: _cambiarAPerfil,
+        ),
+      ),
+    );
+    if (!mounted) return;
+    setState(() => _cargando = true);
+    await _cargarEstadoInicial();
+  }
+
+  /// Cambia el perfil activo y re-despacha el orquestador desde el
+  /// arranque. El nuevo perfil tiene su propio idioma elegido (o
+  /// no), así que reaparece la `PantallaConfiguracionInicial` si la
+  /// nueva Cronista todavía no eligió. El idioma de la app es
+  /// global del dispositivo, así que **no** se borra el `Locale`;
+  /// se recarga del repo por si el perfil destino tiene uno
+  /// distinto guardado (en caso futuro de idioma por-perfil).
+  Future<void> _cambiarAPerfil(String idPerfil) async {
+    await widget.gestorPerfiles.cambiarAPerfil(idPerfil);
+    if (!mounted) return;
+    final codigo = await widget.repoIdioma.cargar();
+    if (!mounted) return;
+    localeAppLasVersiones.value =
+        codigo != null ? Locale(codigo) : null;
+    _flagsActivos = const {};
+    _idiomaElegido = false;
+    _escenaEnReproduccion = null;
+    _brechaAbierta = null;
+    _faseBrechaActiva = FaseBrecha.formulacionPreguntas;
+    setState(() {
+      _cargando = true;
+    });
+    Navigator.of(context).popUntil((ruta) => ruta.isFirst);
     await _cargarEstadoInicial();
   }
 
@@ -670,39 +866,44 @@ class _OrquestadorState extends State<Orquestador> {
         faseActiva: _faseBrechaActiva,
         alAvanzarFase: _alAvanzarFaseBrecha,
         alCompletarBrecha: _alCompletarBrecha,
-        alAbrirCuaderno: _alAbrirCuaderno,
+        alAbrirMenu: _alAbrirMenu,
+        repoPreguntas: widget.repoPreguntas,
+        repoRecoleccion: widget.repoRecoleccion,
+        repoEvaluacion: widget.repoEvaluacion,
+        repoReconstruccion: widget.repoReconstruccion,
       );
     }
     final escena = _escenaEnReproduccion;
     if (escena != null) {
       // Key por id de escena para que el StatefulWidget se reinicie
-      // limpio al cambiar de escena. Durante la cinemática el
-      // Cuaderno NO está accesible: distrae del momento narrativo y
-      // las cinemáticas son cortas.
+      // limpio al cambiar de escena. El menú principal está siempre
+      // accesible vía engranaje arriba-derecha (F2-25) para que la
+      // Cronista pueda salir o consultar el Cuaderno sin terminar
+      // la cinemática primero.
       return PantallaCinematica(
         key: ValueKey(escena.id),
         escena: escena,
         alEstablecerFlag: _alEstablecerFlag,
         alTerminar: () => _alTerminarEscena(escena),
+        alAbrirMenu: _alAbrirMenu,
       );
     }
     if (_mosaicoArco1Pendiente) {
       return PantallaMosaicoArco1(
         alEntregar: _alEntregarMosaicoArco1,
         repoMosaico: widget.repoMosaico,
+        alAbrirMenu: _alAbrirMenu,
       );
     }
     if (_mosaicoArco2Pendiente) {
       return PantallaMosaicoArco2(
         alEntregar: _alEntregarMosaicoArco2,
         repoMosaico: widget.repoMosaico,
+        alAbrirMenu: _alAbrirMenu,
       );
     }
     return PantallaEsqueleto(
-      alAbrirCuaderno: _alAbrirCuaderno,
-      alAbrirSesion: _alAbrirSesion,
-      sesionIniciada: _sesionIniciada,
-      alAbrirAjustes: _alAbrirAjustes,
+      alAbrirMenu: _alAbrirMenu,
     );
   }
 }

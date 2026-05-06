@@ -1,7 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:las_versiones/datos/repositorio_recoleccion_fuentes.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   setUp(() {
@@ -10,7 +21,8 @@ void main() {
 
   group('RepositorioRecoleccionFuentes', () {
     test('tieneFuente devuelve false en almacén limpio', () async {
-      const repositorio = RepositorioRecoleccionFuentes();
+      final repositorio =
+          RepositorioRecoleccionFuentes(gestor: _gestorDePrueba());
       expect(
         await repositorio.tieneFuente('1.1', 'restos_oseos_in_situ'),
         isFalse,
@@ -18,7 +30,8 @@ void main() {
     });
 
     test('registrarFuente y leer la marca', () async {
-      const repositorio = RepositorioRecoleccionFuentes();
+      final repositorio =
+          RepositorioRecoleccionFuentes(gestor: _gestorDePrueba());
       await repositorio.registrarFuente('1.1', 'restos_oseos_in_situ');
       expect(
         await repositorio.tieneFuente('1.1', 'restos_oseos_in_situ'),
@@ -27,7 +40,8 @@ void main() {
     });
 
     test('aislamiento entre brechas distintas', () async {
-      const repositorio = RepositorioRecoleccionFuentes();
+      final repositorio =
+          RepositorioRecoleccionFuentes(gestor: _gestorDePrueba());
       await repositorio.registrarFuente('1.1', 'restos_oseos_in_situ');
       expect(
         await repositorio.tieneFuente('1.2', 'restos_oseos_in_situ'),
@@ -39,11 +53,14 @@ void main() {
     test('idsFuentesRecogidas devuelve sólo las activas para la brecha pedida',
         () async {
       SharedPreferences.setMockInitialValues({
-        'nuevoser.lasversiones.brecha.1.1.fuente.A': true,
-        'nuevoser.lasversiones.brecha.1.1.fuente.B': true,
-        'nuevoser.lasversiones.brecha.1.2.fuente.X': true,
+        'nuevoser.lasversiones.perfil_activo_id': 'principal',
+        'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+        'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.A': true,
+        'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.B': true,
+        'nuevoser.lasversiones.perfil.principal.brecha.1.2.fuente.X': true,
       });
-      const repositorio = RepositorioRecoleccionFuentes();
+      final repositorio =
+          RepositorioRecoleccionFuentes(gestor: _gestorDePrueba());
       expect(
         await repositorio.idsFuentesRecogidas('1.1'),
         equals({'A', 'B'}),
@@ -54,14 +71,18 @@ void main() {
       );
     });
 
-    test('clave persistida sigue el namespace '
-        'nuevoser.lasversiones.brecha.<id>.fuente.<idFuente>', () async {
-      const repositorio = RepositorioRecoleccionFuentes();
+    test(
+        'clave persistida sigue el namespace '
+        'nuevoser.lasversiones.perfil.principal.brecha.<id>.fuente.<idFuente>',
+        () async {
+      final repositorio =
+          RepositorioRecoleccionFuentes(gestor: _gestorDePrueba());
       await repositorio.registrarFuente('1.1', 'restos_oseos_in_situ');
       final prefs = await SharedPreferences.getInstance();
       expect(
         prefs.getBool(
-          'nuevoser.lasversiones.brecha.1.1.fuente.restos_oseos_in_situ',
+          'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.'
+          'restos_oseos_in_situ',
         ),
         isTrue,
       );
@@ -69,11 +90,14 @@ void main() {
 
     test('borrar quita las fuentes de la brecha y respeta otras', () async {
       SharedPreferences.setMockInitialValues({
-        'nuevoser.lasversiones.brecha.1.1.fuente.A': true,
-        'nuevoser.lasversiones.brecha.1.2.fuente.X': true,
-        'nuevoser.lasversiones.flag.escena_1_0_3_vista': true,
+        'nuevoser.lasversiones.perfil_activo_id': 'principal',
+        'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+        'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.A': true,
+        'nuevoser.lasversiones.perfil.principal.brecha.1.2.fuente.X': true,
+        'nuevoser.lasversiones.perfil.principal.flag.escena_1_0_3_vista': true,
       });
-      const repositorio = RepositorioRecoleccionFuentes();
+      final repositorio =
+          RepositorioRecoleccionFuentes(gestor: _gestorDePrueba());
       await repositorio.borrar('1.1');
       expect(await repositorio.idsFuentesRecogidas('1.1'), isEmpty);
       expect(
@@ -83,7 +107,9 @@ void main() {
       );
       final prefs = await SharedPreferences.getInstance();
       expect(
-        prefs.getBool('nuevoser.lasversiones.flag.escena_1_0_3_vista'),
+        prefs.getBool(
+          'nuevoser.lasversiones.perfil.principal.flag.escena_1_0_3_vista',
+        ),
         isTrue,
         reason: 'flags narrativos no se tocan',
       );

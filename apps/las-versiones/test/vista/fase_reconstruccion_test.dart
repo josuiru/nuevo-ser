@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_reconstruccion.dart';
 import 'package:las_versiones/dominio/brecha.dart';
 import 'package:las_versiones/dominio/catalogo_brechas.dart';
 import 'package:las_versiones/vista/fase_reconstruccion.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   setUp(() {
@@ -24,6 +36,9 @@ void main() {
             child: FaseReconstruccion(
               brecha: brecha,
               alAvanzarFase: alAvanzar,
+              repoReconstruccion: RepositorioReconstruccion(
+                gestor: _gestorDePrueba(),
+              ),
             ),
           ),
         ),
@@ -87,7 +102,7 @@ void main() {
     // Persistencia: las 3 declaraciones deben estar en prefs.
     final prefs = await SharedPreferences.getInstance();
     final blob = prefs.getString(
-      'nuevoser.lasversiones.brecha.1.1.reconstruccion',
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.reconstruccion',
     );
     expect(blob, isNotNull);
     expect(blob, contains('solido'));
@@ -125,7 +140,9 @@ void main() {
   testWidgets('declaraciones persistidas reaparecen al abrir la fase',
       (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.reconstruccion':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.reconstruccion':
           '{"es_un_enterramiento":"solido",'
               '"fechado_neolitico":"solido",'
               '"funcion_ritual":"probable"}',

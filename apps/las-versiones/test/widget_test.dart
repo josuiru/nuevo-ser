@@ -5,17 +5,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:las_versiones/datos/repositorio_cuaderno.dart';
 import 'package:las_versiones/datos/repositorio_estado_brecha.dart';
+import 'package:las_versiones/datos/repositorio_evaluacion_fuente.dart';
 import 'package:las_versiones/datos/repositorio_flags_narrativos.dart';
 import 'package:las_versiones/datos/repositorio_mosaico.dart';
+import 'package:las_versiones/datos/repositorio_preguntas_brecha.dart';
+import 'package:las_versiones/datos/repositorio_recoleccion_fuentes.dart';
+import 'package:las_versiones/datos/repositorio_reconstruccion.dart';
 import 'package:las_versiones/datos/reseteo_archivo.dart';
 import 'package:las_versiones/main.dart';
-import 'package:las_versiones/vista/pantalla_ajustes.dart';
 import 'package:las_versiones/vista/pantalla_brecha.dart';
 import 'package:las_versiones/vista/pantalla_cinematica.dart';
 import 'package:las_versiones/vista/pantalla_configuracion_inicial.dart';
 import 'package:las_versiones/vista/pantalla_cuaderno.dart';
 import 'package:las_versiones/vista/pantalla_esqueleto.dart';
 import 'package:las_versiones/vista/pantalla_login.dart';
+import 'package:las_versiones/vista/pantalla_menu.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_1.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_2.dart';
 
@@ -25,27 +29,31 @@ void main() {
     localeAppLasVersiones.value = null;
   });
 
+  GestorPerfiles crearGestorPerfiles() {
+    return GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
+  }
+
+  RepositorioFlagsNarrativos crearRepoFlags([GestorPerfiles? gestor]) {
+    return RepositorioFlagsNarrativos(gestor: gestor ?? crearGestorPerfiles());
+  }
+
+  RepositorioCuaderno crearRepoCuaderno([GestorPerfiles? gestor]) {
+    return RepositorioCuaderno(gestor: gestor ?? crearGestorPerfiles());
+  }
+
   RepositorioIdiomaApp crearRepoIdioma() {
     return RepositorioIdiomaApp(
       prefs: SharedPreferences.getInstance,
       clave: 'nuevoser.lasversiones.idioma_app',
     );
-  }
-
-  RepositorioFlagsNarrativos crearRepoFlags() {
-    return const RepositorioFlagsNarrativos();
-  }
-
-  RepositorioEstadoBrecha crearRepoEstadoBrecha() {
-    return const RepositorioEstadoBrecha();
-  }
-
-  RepositorioCuaderno crearRepoCuaderno() {
-    return const RepositorioCuaderno();
-  }
-
-  RepositorioMosaico crearRepoMosaico() {
-    return const RepositorioMosaico();
   }
 
   RepositorioCuentaBackend crearRepoCuenta() {
@@ -61,13 +69,20 @@ void main() {
   }
 
   AppLasVersiones crearApp() {
+    final gestor = crearGestorPerfiles();
     return AppLasVersiones(
       repoIdioma: crearRepoIdioma(),
-      repoFlags: crearRepoFlags(),
-      repoEstadoBrecha: crearRepoEstadoBrecha(),
-      repoCuaderno: crearRepoCuaderno(),
-      repoMosaico: crearRepoMosaico(),
+      repoFlags: RepositorioFlagsNarrativos(gestor: gestor),
+      repoEstadoBrecha: RepositorioEstadoBrecha(gestor: gestor),
+      repoCuaderno: RepositorioCuaderno(gestor: gestor),
+      repoMosaico: RepositorioMosaico(gestor: gestor),
+      repoPreguntas: RepositorioPreguntasBrecha(gestor: gestor),
+      repoRecoleccion: RepositorioRecoleccionFuentes(gestor: gestor),
+      repoEvaluacion: RepositorioEvaluacionFuente(gestor: gestor),
+      repoReconstruccion: RepositorioReconstruccion(gestor: gestor),
+      repoAudio: RepositorioPreferenciasAudio(gestor: gestor),
       repoCuenta: crearRepoCuenta(),
+      gestorPerfiles: gestor,
       reseteoArchivo: crearReseteoArchivo(),
     );
   }
@@ -197,6 +212,12 @@ void main() {
     'orquestador a la PantallaConfiguracionInicial — escape de '
     'la prueba real que motivó el slice',
     (tester) async {
+      // Viewport más alto para que la fila "Resetear Archivo" del
+      // ListView del menú quede dentro del área pinchable.
+      tester.view.physicalSize = const Size(900, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
       // Sembramos el mismo estado "todo cerrado, esqueleto" que el
       // test anterior, más una clave de un namespace ajeno (uno-roto)
       // que NO debe borrarse en el reset.
@@ -270,13 +291,20 @@ void main() {
       expect(find.byType(PantallaEsqueleto), findsOneWidget,
           reason: 'precondición: arranque cae en el esqueleto');
 
-      // Pulsa AJUSTES — abre la PantallaAjustes superpuesta.
-      await tester.tap(find.text('AJUSTES'));
+      // Pulsa el engranaje top-right — abre la PantallaMenu superpuesta.
+      await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
-      expect(find.byType(PantallaAjustes), findsOneWidget);
+      expect(find.byType(PantallaMenu), findsOneWidget);
 
-      // Pulsa RESETEAR ARCHIVO → diálogo confirmación → SÍ, RESETEAR.
-      await tester.tap(find.text('RESETEAR ARCHIVO'));
+      // Pulsa "Resetear Archivo" en el menú → diálogo confirmación
+      // → SÍ, RESETEAR. La fila puede estar fuera del viewport
+      // (ListView), así que primero hay que scroll-hasta-visible.
+      await tester.scrollUntilVisible(
+        find.text('Resetear Archivo'),
+        80,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Resetear Archivo'));
       await tester.pumpAndSettle();
       expect(find.text('¿Resetear el Archivo?'), findsOneWidget);
       await tester.tap(find.text('SÍ, RESETEAR'));
@@ -287,16 +315,30 @@ void main() {
       // las claves del namespace pero conserva las ajenas.
       expect(find.byType(PantallaConfiguracionInicial), findsOneWidget);
       expect(find.byType(PantallaEsqueleto), findsNothing);
-      expect(find.byType(PantallaAjustes), findsNothing);
+      expect(find.byType(PantallaMenu), findsNothing);
       expect(localeAppLasVersiones.value, isNull,
           reason: 'el Locale global vuelve a null para que la elección '
               'de idioma reaparezca');
 
       final almacen = await SharedPreferences.getInstance();
+      // Tras el reset, el orquestador re-inicializa el GestorPerfiles
+      // al despachar la PantallaConfiguracionInicial — eso recrea
+      // automáticamente la metadata del perfil principal vacío
+      // (`perfil_activo_id` + `perfiles_lista`), pero NO claves de
+      // progreso jugable (flags, brechas, cuaderno, mosaicos, idioma,
+      // token de cuenta).
+      final clavesNamespace = almacen
+          .getKeys()
+          .where((k) => k.startsWith('nuevoser.lasversiones.'))
+          .toSet();
       expect(
-        almacen.getKeys().where((k) => k.startsWith('nuevoser.lasversiones.')),
+        clavesNamespace.difference({
+          'nuevoser.lasversiones.perfil_activo_id',
+          'nuevoser.lasversiones.perfiles_lista',
+        }),
         isEmpty,
-        reason: 'todas las claves del juego se purgan',
+        reason: 'todas las claves de progreso se purgan; sólo queda la '
+            'metadata del perfil que el gestor recrea al inicializarse',
       );
       expect(
         almacen.getString('uroto.perfil.principal.algun_estado'),
@@ -384,13 +426,20 @@ void main() {
   testWidgets('elegir idioma persiste y arranca la cinemática 1.0.1',
       (tester) async {
     final repoIdioma = crearRepoIdioma();
+    final gestor = crearGestorPerfiles();
     await tester.pumpWidget(AppLasVersiones(
       repoIdioma: repoIdioma,
-      repoFlags: crearRepoFlags(),
-      repoEstadoBrecha: crearRepoEstadoBrecha(),
-      repoCuaderno: crearRepoCuaderno(),
-      repoMosaico: crearRepoMosaico(),
+      repoFlags: RepositorioFlagsNarrativos(gestor: gestor),
+      repoEstadoBrecha: RepositorioEstadoBrecha(gestor: gestor),
+      repoCuaderno: RepositorioCuaderno(gestor: gestor),
+      repoMosaico: RepositorioMosaico(gestor: gestor),
+      repoPreguntas: RepositorioPreguntasBrecha(gestor: gestor),
+      repoRecoleccion: RepositorioRecoleccionFuentes(gestor: gestor),
+      repoEvaluacion: RepositorioEvaluacionFuente(gestor: gestor),
+      repoReconstruccion: RepositorioReconstruccion(gestor: gestor),
+      repoAudio: RepositorioPreferenciasAudio(gestor: gestor),
       repoCuenta: crearRepoCuenta(),
+      gestorPerfiles: gestor,
       reseteoArchivo: crearReseteoArchivo(),
     ));
     await tester.pumpAndSettle();
@@ -766,9 +815,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaEsqueleto), findsOneWidget);
-    expect(find.text('CUADERNO'), findsOneWidget);
+    // Desde F2-24: el esqueleto sólo expone un engranaje; el Cuaderno
+    // se abre desde la PantallaMenu superpuesta.
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    expect(find.byType(PantallaMenu), findsOneWidget);
+    expect(find.text('Cuaderno'), findsOneWidget);
 
-    await tester.tap(find.text('CUADERNO'));
+    await tester.tap(find.text('Cuaderno'));
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaCuaderno), findsOneWidget);
@@ -1144,19 +1198,23 @@ void main() {
   }
 
   testWidgets(
-      'esqueleto sin token persistido → botón "INICIAR SESIÓN" visible',
+      'esqueleto sin token persistido → menú muestra fila "Iniciar sesión"',
       (tester) async {
     SharedPreferences.setMockInitialValues(seedEsqueletoCompleto());
     await tester.pumpWidget(crearApp());
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaEsqueleto), findsOneWidget);
-    expect(find.text('INICIAR SESIÓN'), findsOneWidget);
-    expect(find.text('SESIÓN INICIADA'), findsNothing);
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PantallaMenu), findsOneWidget);
+    expect(find.text('Iniciar sesión'), findsOneWidget);
+    expect(find.text('Sesión iniciada'), findsNothing);
   });
 
   testWidgets(
-      'esqueleto con token persistido → botón "SESIÓN INICIADA" visible',
+      'esqueleto con token persistido → menú muestra fila "Sesión iniciada"',
       (tester) async {
     SharedPreferences.setMockInitialValues(
       seedEsqueletoCompleto(tokenBackend: 'token-jwt-de-prueba'),
@@ -1165,16 +1223,23 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaEsqueleto), findsOneWidget);
-    expect(find.text('SESIÓN INICIADA'), findsOneWidget);
-    expect(find.text('INICIAR SESIÓN'), findsNothing);
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sesión iniciada'), findsOneWidget);
+    expect(find.text('Iniciar sesión'), findsNothing);
   });
 
-  testWidgets('tap en "INICIAR SESIÓN" abre la PantallaLogin', (tester) async {
+  testWidgets(
+      'tap en "Iniciar sesión" desde el menú abre la PantallaLogin',
+      (tester) async {
     SharedPreferences.setMockInitialValues(seedEsqueletoCompleto());
     await tester.pumpWidget(crearApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('INICIAR SESIÓN'));
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Iniciar sesión'));
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaLogin), findsOneWidget);
@@ -1182,7 +1247,7 @@ void main() {
   });
 
   testWidgets(
-      'tap en "SESIÓN INICIADA" abre la pantalla en modo cuenta con email',
+      'tap en "Sesión iniciada" abre la pantalla en modo cuenta con email',
       (tester) async {
     final seed = seedEsqueletoCompleto(tokenBackend: 'jwt-de-prueba');
     seed['nuevoser.lasversiones.email_backend'] = 'adulto@example.com';
@@ -1190,7 +1255,9 @@ void main() {
     await tester.pumpWidget(crearApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('SESIÓN INICIADA'));
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sesión iniciada'));
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaLogin), findsOneWidget);
@@ -1207,9 +1274,11 @@ void main() {
     await tester.pumpWidget(crearApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('SESIÓN INICIADA'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    expect(find.text('Sesión iniciada'), findsOneWidget);
 
-    await tester.tap(find.text('SESIÓN INICIADA'));
+    await tester.tap(find.text('Sesión iniciada'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('CERRAR SESIÓN'));
     await tester.pumpAndSettle();
@@ -1217,8 +1286,11 @@ void main() {
     expect(find.byType(PantallaEsqueleto), findsOneWidget,
         reason: 'tras cerrar sesión la pantalla se cierra y volvemos al '
             'esqueleto');
-    expect(find.text('INICIAR SESIÓN'), findsOneWidget);
-    expect(find.text('SESIÓN INICIADA'), findsNothing);
+    // Re-abre el menú para comprobar que la fila volvió a "Iniciar sesión".
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    expect(find.text('Iniciar sesión'), findsOneWidget);
+    expect(find.text('Sesión iniciada'), findsNothing);
 
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getString('nuevoser.lasversiones.token_backend'), isNull);

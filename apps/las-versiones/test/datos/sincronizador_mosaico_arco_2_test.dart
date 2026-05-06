@@ -13,6 +13,16 @@ import 'package:las_versiones/datos/repositorio_mosaico.dart';
 import 'package:las_versiones/datos/sincronizador_mosaico.dart';
 import 'package:las_versiones/dominio/mosaico_arco_2.dart';
 
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
+
 /// Tests del sincronizador del Mosaico del Arco 2 (audio-guía) contra
 /// el endpoint `POST /companion/mosaicos`. Mismo patrón que el del
 /// M1 — opt-in, lee el token al construir el payload, sin reintento
@@ -28,7 +38,7 @@ void main() {
       claveToken: 'nuevoser.lasversiones.token_backend',
       claveEmail: 'nuevoser.lasversiones.email_backend',
     );
-    repoMosaico = const RepositorioMosaico();
+    repoMosaico = RepositorioMosaico(gestor: _gestorDePrueba());
   });
 
   Future<void> sembrarMarcas() async {

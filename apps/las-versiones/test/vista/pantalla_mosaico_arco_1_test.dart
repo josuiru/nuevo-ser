@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_mosaico.dart';
 import 'package:las_versiones/dominio/mosaico_arco_1.dart';
 import 'package:las_versiones/vista/pantalla_mosaico_arco_1.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   setUp(() {
@@ -14,9 +26,6 @@ void main() {
     WidgetTester tester, {
     required Future<void> Function() alEntregar,
   }) async {
-    // Viewport amplio para que las 8 viñetas del GridView entren
-    // sin scroll en la prueba — las 4 filas (2 columnas) caben en
-    // 1200 dp de alto.
     tester.view.physicalSize = const Size(800, 1600);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -26,7 +35,10 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: PantallaMosaicoArco1(alEntregar: alEntregar),
+        home: PantallaMosaicoArco1(
+          alEntregar: alEntregar,
+          repoMosaico: RepositorioMosaico(gestor: _gestorDePrueba()),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -119,7 +131,9 @@ void main() {
     expect(entregasInvocadas, 1);
 
     final prefs = await SharedPreferences.getInstance();
-    final blob = prefs.getString('nuevoser.lasversiones.mosaico.arco_1');
+    final blob = prefs.getString(
+      'nuevoser.lasversiones.perfil.principal.mosaico.arco_1',
+    );
     expect(blob, isNotNull);
     expect(blob, contains('solido'));
     expect(blob, contains('probable'));
@@ -129,7 +143,9 @@ void main() {
   testWidgets('marcas persistidas reaparecen al volver a abrir',
       (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.mosaico.arco_1':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.mosaico.arco_1':
           '{"aralar_dolmen_visita":"solido","cromlech_banquete":'
           '"probable","irulegi_la_mano":"disputado"}',
     });
@@ -146,7 +162,9 @@ void main() {
   testWidgets('valores del shape v1 (texto libre) se descartan '
       'silenciosamente al cargar', (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.mosaico.arco_1':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.mosaico.arco_1':
           '{"que_te_llevas":"Que el oficio empieza con preguntas.",'
           '"que_te_queda":"Por qué el sitio se llamaba así."}',
     });

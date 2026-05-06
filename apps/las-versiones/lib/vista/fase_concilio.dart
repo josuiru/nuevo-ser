@@ -31,7 +31,7 @@ class FaseConcilio extends StatefulWidget {
   const FaseConcilio({
     super.key,
     required this.brecha,
-    this.repoReconstruccion = const RepositorioReconstruccion(),
+    required this.repoReconstruccion,
     this.evaluador = const EvaluadorCalibracion(),
   });
 

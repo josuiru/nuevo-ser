@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_evaluacion_fuente.dart';
+import 'package:las_versiones/datos/repositorio_recoleccion_fuentes.dart';
 import 'package:las_versiones/dominio/brecha.dart';
 import 'package:las_versiones/dominio/catalogo_brechas.dart';
 import 'package:las_versiones/vista/fase_evaluacion.dart';
 
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
+
+const String _prefijoFuentes11 =
+    'nuevoser.lasversiones.perfil.principal.brecha.1.1.fuente.';
+const String _prefijoEvaluaciones11 =
+    'nuevoser.lasversiones.perfil.principal.brecha.1.1.evaluacion.';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({
-      // Las cinco fuentes de la 1.1 ya recogidas en Fase 2.
-      'nuevoser.lasversiones.brecha.1.1.fuente.restos_oseos_in_situ': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.material_litico_entorno': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.informe_excavacion_antiguo':
-          true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.informe_revision_moderno': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.toponimo_local': true,
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      '${_prefijoFuentes11}restos_oseos_in_situ': true,
+      '${_prefijoFuentes11}material_litico_entorno': true,
+      '${_prefijoFuentes11}informe_excavacion_antiguo': true,
+      '${_prefijoFuentes11}informe_revision_moderno': true,
+      '${_prefijoFuentes11}toponimo_local': true,
     });
   });
 
@@ -24,6 +42,7 @@ void main() {
     required Brecha brecha,
     required VoidCallback alAvanzar,
   }) async {
+    final gestor = _gestorDePrueba();
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -32,6 +51,8 @@ void main() {
             child: FaseEvaluacion(
               brecha: brecha,
               alAvanzarFase: alAvanzar,
+              repoRecoleccion: RepositorioRecoleccionFuentes(gestor: gestor),
+              repoEvaluacion: RepositorioEvaluacionFuente(gestor: gestor),
             ),
           ),
         ),
@@ -68,7 +89,6 @@ void main() {
       alAvanzar: () {},
     );
 
-    // La primera fuente: "RESTOS ÓSEOS EN EL HUECO INTERIOR".
     final primariaFinder = find.text('Primaria').first;
     await tester.scrollUntilVisible(primariaFinder, 80);
     await tester.tap(primariaFinder);
@@ -80,7 +100,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Evaluadas: 1 / 5'), findsOneWidget);
-    // La nota del oficio aparece tras evaluar.
     expect(find.text('NOTA DEL OFICIO'), findsOneWidget);
     expect(
       find.textContaining('Aciertos en esta fuente: 2 / 2'),
@@ -91,25 +110,23 @@ void main() {
   testWidgets(
       'evaluar las cinco fuentes desbloquea el CTA "IR A LA RECONSTRUCCIÓN"',
       (tester) async {
-    // Un solo setMockInitialValues con todas las claves: las 5
-    // recogidas y las 5 evaluaciones precargadas, equivalente a
-    // haberlas evaluado en una sesión previa.
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.fuente.restos_oseos_in_situ': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.material_litico_entorno': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.informe_excavacion_antiguo':
-          true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.informe_revision_moderno': true,
-      'nuevoser.lasversiones.brecha.1.1.fuente.toponimo_local': true,
-      'nuevoser.lasversiones.brecha.1.1.evaluacion.restos_oseos_in_situ':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      '${_prefijoFuentes11}restos_oseos_in_situ': true,
+      '${_prefijoFuentes11}material_litico_entorno': true,
+      '${_prefijoFuentes11}informe_excavacion_antiguo': true,
+      '${_prefijoFuentes11}informe_revision_moderno': true,
+      '${_prefijoFuentes11}toponimo_local': true,
+      '${_prefijoEvaluaciones11}restos_oseos_in_situ':
           '{"tipo":"primaria","sesgo":"ninguno"}',
-      'nuevoser.lasversiones.brecha.1.1.evaluacion.material_litico_entorno':
+      '${_prefijoEvaluaciones11}material_litico_entorno':
           '{"tipo":"primaria","sesgo":"ninguno"}',
-      'nuevoser.lasversiones.brecha.1.1.evaluacion.informe_excavacion_antiguo':
+      '${_prefijoEvaluaciones11}informe_excavacion_antiguo':
           '{"tipo":"secundaria","sesgo":"difusionista"}',
-      'nuevoser.lasversiones.brecha.1.1.evaluacion.informe_revision_moderno':
+      '${_prefijoEvaluaciones11}informe_revision_moderno':
           '{"tipo":"secundaria","sesgo":"ninguno"}',
-      'nuevoser.lasversiones.brecha.1.1.evaluacion.toponimo_local':
+      '${_prefijoEvaluaciones11}toponimo_local':
           '{"tipo":"secundaria","sesgo":"ninguno"}',
     });
 

@@ -197,23 +197,19 @@ class EvaluadorPreguntas {
   String _glosaPorTipo(TipoPregunta tipo) {
     switch (tipo) {
       case TipoPregunta.factual:
-        return 'Pregunta factual: pide un dato concreto. Buen punto de '
-            'partida — luego conviene complementarla con preguntas que '
-            'pidan causas o perspectiva.';
+        return 'Pides un dato concreto: qué, cuándo, dónde, quién. '
+            'Buen punto de partida.';
       case TipoPregunta.causal:
-        return 'Pregunta causal: pide explicar por qué. Es de las que '
-            'mueven la investigación adelante.';
+        return 'Pides una causa: el porqué de algo. Estas mueven la '
+            'investigación adelante.';
       case TipoPregunta.perspectiva:
-        return 'Pregunta de perspectiva: sitúa al productor o al silencio. '
-            'Estas son las que distinguen al oficio del cronista del de '
-            'quien sólo cita.';
+        return 'Te fijas en quién cuenta y desde dónde. O en lo que '
+            'falta. Esto distingue al oficio.';
       case TipoPregunta.metodologica:
-        return 'Pregunta metodológica: cuestionas cómo se sabe lo que se '
-            'sabe. Difícil y muy valiosa.';
+        return 'Te preguntas cómo lo sabemos: qué prueba hay detrás. '
+            'Difícil y muy valiosa.';
       case TipoPregunta.indeterminada:
-        return 'Pregunta aceptada — el sistema no la clasifica en sus '
-            'categorías habituales, pero termina con signo de '
-            'interrogación. Sigue.';
+        return 'Aceptada: termina en signo de interrogación. Sigue.';
     }
   }
 
@@ -258,8 +254,8 @@ class PoliticaCierreFormulacion {
     final categorias = validas.map((e) => e.tipo).toSet();
     if (categorias.length < 2) {
       return 'Tus preguntas son todas del mismo tipo. El oficio pide '
-          'variedad: prueba con una pregunta causal (¿por qué?) o '
-          'metodológica (¿cómo lo sabemos?).';
+          'variedad: prueba con una de causa (¿por qué?) o de cómo lo '
+          'sabemos (¿qué evidencia hay?). Toca el "?" si dudas.';
     }
     return null;
   }

@@ -1,48 +1,46 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Persiste qué fuentes de qué Brecha ha recogido la Cronista en la
 /// Fase 2. Una fuente "recogida" pasa a estar disponible en la Mesa
-/// de Trabajo (Fase 3) — el repositorio sólo guarda IDs activos por
-/// brecha, no toca el contenido (que vive en el catálogo).
+/// de Trabajo (Fase 3). Por perfil.
 ///
-/// Namespace: `nuevoser.lasversiones.brecha.<id>.fuente.<idFuente>`
-/// con bool. Una clave por par (brecha, fuente) en lugar de un blob
-/// JSON por brecha — facilita inspección y reactivación individual,
-/// igual que `RepositorioCuaderno`.
+/// Namespace: `<prefijoPerfilActivo>brecha.<id>.fuente.<idFuente>`
+/// con bool — una clave por par para facilitar inspección.
 class RepositorioRecoleccionFuentes {
-  static const String _prefijo = 'nuevoser.lasversiones.brecha.';
+  static const String _sufijoBase = 'brecha.';
   static const String _separador = '.fuente.';
 
-  final Future<SharedPreferences> Function() _prefs;
+  final GestorPerfiles _gestor;
 
-  const RepositorioRecoleccionFuentes({
-    Future<SharedPreferences> Function() prefs = SharedPreferences.getInstance,
-  }) : _prefs = prefs;
+  const RepositorioRecoleccionFuentes({required GestorPerfiles gestor})
+      : _gestor = gestor;
 
-  String _clave(String idBrecha, String idFuente) =>
-      '$_prefijo$idBrecha$_separador$idFuente';
+  Future<String> _clave(String idBrecha, String idFuente) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijoBase$idBrecha$_separador$idFuente';
+  }
 
-  String _prefijoBrecha(String idBrecha) =>
-      '$_prefijo$idBrecha$_separador';
+  Future<String> _prefijoBrecha(String idBrecha) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijoBase$idBrecha$_separador';
+  }
 
-  /// `true` si la fuente está ya recogida.
+  /// `true` si la fuente está ya recogida en el perfil activo.
   Future<bool> tieneFuente(String idBrecha, String idFuente) async {
-    final prefs = await _prefs();
-    return prefs.getBool(_clave(idBrecha, idFuente)) ?? false;
+    final prefs = await _gestor.prefsInicializadas();
+    return prefs.getBool(await _clave(idBrecha, idFuente)) ?? false;
   }
 
   /// Marca la fuente como recogida. Idempotente.
   Future<void> registrarFuente(String idBrecha, String idFuente) async {
-    final prefs = await _prefs();
-    await prefs.setBool(_clave(idBrecha, idFuente), true);
+    final prefs = await _gestor.prefsInicializadas();
+    await prefs.setBool(await _clave(idBrecha, idFuente), true);
   }
 
-  /// IDs de fuentes recogidas para esta Brecha. La pantalla de
-  /// recolección lo cruza con el catálogo `Brecha.fuentes` para
-  /// pintar las que ya están en la Mesa.
+  /// IDs de fuentes recogidas para esta Brecha en el perfil activo.
   Future<Set<String>> idsFuentesRecogidas(String idBrecha) async {
-    final prefs = await _prefs();
-    final prefijoBrecha = _prefijoBrecha(idBrecha);
+    final prefs = await _gestor.prefsInicializadas();
+    final prefijoBrecha = await _prefijoBrecha(idBrecha);
     final claves = prefs.getKeys();
     final ids = <String>{};
     for (final clave in claves) {
@@ -54,11 +52,10 @@ class RepositorioRecoleccionFuentes {
     return ids;
   }
 
-  /// Borra todas las marcas para esta Brecha. Útil para tests +
-  /// futuro "rehacer la Brecha" desde Ajustes.
+  /// Borra todas las marcas para esta Brecha del perfil activo.
   Future<void> borrar(String idBrecha) async {
-    final prefs = await _prefs();
-    final prefijoBrecha = _prefijoBrecha(idBrecha);
+    final prefs = await _gestor.prefsInicializadas();
+    final prefijoBrecha = await _prefijoBrecha(idBrecha);
     final claves =
         prefs.getKeys().where((k) => k.startsWith(prefijoBrecha)).toList();
     for (final clave in claves) {

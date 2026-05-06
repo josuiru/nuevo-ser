@@ -638,7 +638,14 @@ class EscenasArco3 {
     id: '3.1.4',
     titulo: 'Concilio de San Cernin',
     flagDeSalida: 'escena_3_1_4_vista',
-    flagsRequeridos: {'escena_3_1_3_vista'},
+    // F2-28a: la Brecha 3.1 jugable se interpone entre la cinemática
+    // 3.1.3 *El barrio occitano* y este Concilio formal — el doc 09
+    // distingue dos Concilios distintos (la Mesa de Trabajo donde
+    // Maren produce sus 7 afirmaciones jugables y el Concilio formal
+    // con Aitor + Karim que revisa la reconstrucción ya producida).
+    // Cambia la precondición de `escena_3_1_3_vista` a
+    // `brecha_3_1_completada` para preservar esa separación.
+    flagsRequeridos: {'brecha_3_1_completada'},
     ambiente: AmbienteArchivo.salonConcilio,
     planos: [
       PlanoAmbiente(
@@ -1934,11 +1941,15 @@ class EscenasArco3 {
   /// *"Para Aprendiz III, sí"*. Aitor sella pero apunta que Joana
   /// tiene razón: dejar la afirmación 5 abierta para revisión
   /// cuando los paralelos lleguen. Doc 09 §3.3.5.
+  /// F2-28b — la 3.3.5 cinemática *Concilio de Leyre* requiere ahora
+  /// `brecha_3_3_completada` (la Brecha 3.3 jugable se interpone
+  /// entre 3.3.4 *Cuándo se escribió* y 3.3.5). Antes de F2-28b
+  /// requería `escena_3_3_4_vista`.
   static const EscenaCinematica concilioLeyre = EscenaCinematica(
     id: '3.3.5',
     titulo: 'Concilio de Leyre',
     flagDeSalida: 'escena_3_3_5_vista',
-    flagsRequeridos: {'escena_3_3_4_vista'},
+    flagsRequeridos: {'brecha_3_3_completada'},
     ambiente: AmbienteArchivo.salonConcilio,
     planos: [
       PlanoAmbiente(
@@ -2423,11 +2434,16 @@ class EscenasArco3 {
   /// histórica exige no confundirlos, aunque la cultura popular
   /// los haya fundido"* — Sólido como afirmación metodológica.
   /// Doc 09 §3.4.5.
+  /// F2-28c — la 3.4.5 cinemática *Reconstrucción* requiere ahora
+  /// `brecha_3_4_completada` (la Brecha 3.4 jugable se interpone
+  /// entre 3.4.4 *La Chanson* y 3.4.5; la cinemática queda como
+  /// puesta en limpio narrativa de las 8 afirmaciones que la jugable
+  /// produce). Antes de F2-28c requería `escena_3_4_4_vista`.
   static const EscenaCinematica reconstruccionRoncesvalles = EscenaCinematica(
     id: '3.4.5',
     titulo: 'Reconstrucción',
     flagDeSalida: 'escena_3_4_5_vista',
-    flagsRequeridos: {'escena_3_4_4_vista'},
+    flagsRequeridos: {'brecha_3_4_completada'},
     ambiente: AmbienteArchivo.colegiataRoncesvalles,
     planos: [
       PlanoAmbiente(
@@ -2740,11 +2756,17 @@ class EscenasArco3 {
   /// arquitectónicas. Produce 6 afirmaciones todas Sólido o
   /// Probable — Brecha bien acotada, sin disputa metodológica
   /// grande. Doc 09 §3.5.
+  /// F2-28d — la 3.5.2 cinemática *Mesa de Trabajo y Reconstrucción*
+  /// requiere ahora `brecha_3_5_completada` (la Brecha 3.5 jugable
+  /// se interpone entre 3.5.1 *Llegada a Estella* y 3.5.2; la
+  /// cinemática queda como puesta en limpio narrativa de las 6
+  /// afirmaciones que la jugable produce). Antes de F2-28d requería
+  /// `escena_3_5_1_vista`.
   static const EscenaCinematica mesaYReconstruccionEstella = EscenaCinematica(
     id: '3.5.2',
     titulo: 'Mesa de Trabajo y Reconstrucción',
     flagDeSalida: 'escena_3_5_2_vista',
-    flagsRequeridos: {'escena_3_5_1_vista'},
+    flagsRequeridos: {'brecha_3_5_completada'},
     ambiente: AmbienteArchivo.estellaConjuntoRomanico,
     planos: [
       PlanoAmbiente(

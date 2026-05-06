@@ -1,41 +1,38 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../dominio/mosaico_arco_1.dart';
 
 /// Persiste las marcas de confianza del Mosaico v2 de un arco. Una
-/// clave por arco, blob JSON `{idVineta: "solido"|"probable"|"disputado"}`.
-/// Cuando el cliente companion (`POST /companion/mosaicos`) se cablee,
-/// este blob será el `content_meta` que sube al backend; mientras
-/// tanto vive sólo en local.
+/// clave por arco, blob JSON `{idPieza: "solido"|"probable"|"disputado"}`.
+/// El blob es el `content_meta` que sube al endpoint companion
+/// `/companion/mosaicos`.
 ///
-/// Namespace: `nuevoser.lasversiones.mosaico.<idArco>`.
+/// Namespace: `<prefijoPerfilActivo>mosaico.<idArco>` — por perfil.
 ///
-/// **Migración silenciosa de v1 → v2**: el formato v1 (anterior a
-/// F8.7) guardaba un mapa `{idPrompt: textoRespuesta}` con los tres
-/// prompts de texto del Mosaico antiguo. Si al cargar encontramos
-/// valores que no son una clave de `NivelConfianza` reconocible
-/// (porque eran texto libre), descartamos la entrada — la Cronista
-/// arranca con el Mosaico vacío y elige cuántas viñetas marca.
-/// La interfaz no presiona, así que la pérdida no es destructiva.
+/// **Migración silenciosa de v1 → v2**: el formato v1 guardaba un
+/// mapa `{idPrompt: textoRespuesta}`. Si al cargar encontramos
+/// valores que no son una clave de `NivelConfianza` reconocible los
+/// descartamos — la Cronista arranca con el Mosaico vacío.
 class RepositorioMosaico {
-  static const String _prefijo = 'nuevoser.lasversiones.mosaico.';
+  static const String _sufijo = 'mosaico.';
 
-  final Future<SharedPreferences> Function() _prefs;
+  final GestorPerfiles _gestor;
 
-  const RepositorioMosaico({
-    Future<SharedPreferences> Function() prefs = SharedPreferences.getInstance,
-  }) : _prefs = prefs;
+  const RepositorioMosaico({required GestorPerfiles gestor})
+      : _gestor = gestor;
 
-  String _clave(String idArco) => '$_prefijo$idArco';
+  Future<String> _clave(String idArco) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijo$idArco';
+  }
 
-  /// Mapa idVineta → NivelConfianza. Vacío si no hay nada o si el
-  /// blob no se puede deserializar. Las entradas con valor que no
-  /// coincide con una clave de `NivelConfianza` se descartan.
+  /// Mapa idPieza → NivelConfianza. Vacío si no hay nada o si el
+  /// blob no se puede deserializar.
   Future<Map<String, NivelConfianza>> cargar(String idArco) async {
-    final prefs = await _prefs();
-    final crudo = prefs.getString(_clave(idArco));
+    final prefs = await _gestor.prefsInicializadas();
+    final crudo = prefs.getString(await _clave(idArco));
     if (crudo == null || crudo.isEmpty) return const {};
     try {
       final mapa = jsonDecode(crudo);
@@ -52,24 +49,23 @@ class RepositorioMosaico {
     }
   }
 
-  /// Sobreescribe el mapa completo. Idempotente.
+  /// Sobreescribe el mapa completo del Mosaico. Idempotente.
   Future<void> guardar(
     String idArco,
     Map<String, NivelConfianza> marcas,
   ) async {
-    final prefs = await _prefs();
+    final prefs = await _gestor.prefsInicializadas();
     final serializable = <String, String>{
       for (final entrada in marcas.entries)
         entrada.key: _serializarNivel(entrada.value),
     };
-    await prefs.setString(_clave(idArco), jsonEncode(serializable));
+    await prefs.setString(await _clave(idArco), jsonEncode(serializable));
   }
 
-  /// Borra el blob del Mosaico. Tests + futuro "rehacer este
-  /// Mosaico" desde Ajustes.
+  /// Borra el blob del Mosaico del perfil activo.
   Future<void> borrar(String idArco) async {
-    final prefs = await _prefs();
-    await prefs.remove(_clave(idArco));
+    final prefs = await _gestor.prefsInicializadas();
+    await prefs.remove(await _clave(idArco));
   }
 
   static NivelConfianza? _parsearNivel(String crudo) {

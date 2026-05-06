@@ -2263,6 +2263,1414 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// **Brecha 3.1 — San Cernin y las tres lenguas** (Arco 3, primera
+  /// Estación). Maren trabaja en la Mesa de Trabajo del Archivo con
+  /// tres tipos de documentos del Iruña medieval del s. XII-XIII en
+  /// tres lenguas distintas — latín jurídico (el Fuero de Pamplona-
+  /// San Cernin de 1129 otorgado por Alfonso I el Batallador), romance
+  /// navarro (carta de queja del concejo de la Navarrería al rey
+  /// Sancho VI) y occitano gascón (reglamento interno de los burgueses
+  /// de San Cernin) — más el sustrato toponímico vasco del callejero
+  /// y montes circundantes que Isaura le señala paseando por el casco
+  /// viejo. La pedagogía clave: el plurilingüismo estructural del
+  /// Iruña medieval es **Sólido como hecho documentado**, pero la
+  /// presencia oral cotidiana del euskera bajo el trilingüismo
+  /// escrito es **Probable como inferencia indirecta** (toponimia,
+  /// glosas, menciones en otras fuentes — pero no documentación
+  /// directa de uso oral). Maren articula la diferencia metodológica
+  /// en el Concilio (3.1.4) ante la pregunta de Karim, y conecta con
+  /// la 2.4 ("Eso es Wamba otra vez") al detectar que la
+  /// invisibilidad documental del euskera es estructural.
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-02 — formulación de preguntas (¿qué oficios formales
+  ///   produjeron documentación?, ¿qué dominio cubría cada lengua?).
+  /// - HF.01-04 — análisis de fuentes textuales básico.
+  /// - HF.05 — lectura crítica de las tres fuentes textuales.
+  /// - HF.06 — uso de la lengua original como dato.
+  /// - **HF.07** — plurilingüismo documental en su debut jugable
+  ///   expandido a tres lenguas (en el Arco 1 había aparecido con
+  ///   inscripciones bilingües; aquí el plurilingüismo sale de la
+  ///   pieza individual y articula tres dominios institucionales).
+  /// - HF.09 — detección de sesgos: oficialista en el Fuero
+  ///   (favorece la perspectiva franca), invisibilizador en la Carta
+  ///   de la Navarrería (sólo voz vasco-romance).
+  /// - HF.10 — detección de omisiones: el euskera ausente de la
+  ///   producción documental administrativa, presente sólo en
+  ///   sustrato toponímico y glosas.
+  /// - HF.11 — corroboración cruzada entre las tres fuentes
+  ///   textuales y los topónimos.
+  /// - CC.04 — procesos de larga duración (los tres siglos de
+  ///   conflicto entre los burgos hasta 1423).
+  /// - AH.01-03 — anclaje + calibración + niveles de confianza.
+  ///
+  /// **Catálogo**: 5 fuentes y 7 afirmaciones canónicas. Distribución
+  /// pedagógica 4 Sólido + 2 Probable + 1 Disputado. Las cuatro
+  /// Sólidas son hechos documentados o inferibles directamente del
+  /// material trazable (los tres burgos, el Fuero de 1129, la
+  /// fundación franca de San Cernin, la Unión de 1423). Las dos
+  /// Probables son inferencias por sustrato toponímico (la presencia
+  /// oral del euskera + el plurilingüismo estructural por dominios
+  /// institucionales). La Disputada es la pregunta abierta sobre las
+  /// causas concretas de la invisibilidad documental del euskera —
+  /// las cuatro hipótesis (prestigio diferencial, ausencia de
+  /// scriptoria propios, uso oral estamentalmente bajo, elección
+  /// política consciente) son plausibles y la documentación no las
+  /// discrimina.
+  ///
+  /// `minimoAfirmacionesParaConcilio: 5` — declarar al menos 5 de 7
+  /// obliga a tocar al menos una de las inferencias indirectas, que
+  /// es donde el oficio realmente se ejercita en esta Brecha.
+  ///
+  /// **Material trazable preservado**:
+  /// - Fuero de Pamplona-San Cernin de 1129 otorgado por Alfonso I
+  ///   el Batallador.
+  /// - Modelo de los tres burgos medievales de Iruña (Navarrería,
+  ///   San Cernin, San Nicolás).
+  /// - San Saturnino de Tolosa (Cernin/Sernin) como santo titular.
+  /// - Guerra de la Navarrería de 1276 entre los tres burgos.
+  /// - Privilegio de la Unión de 1423 promulgado por Carlos III el
+  ///   Noble.
+  /// - Sustrato toponímico vasco del casco viejo y montes
+  ///   circundantes (atestiguado).
+  ///
+  /// **Sustituciones diegéticas**: la "carta de queja del concejo de
+  /// la Navarrería al rey Sancho VI" y el "fragmento de regla
+  /// interna de los burgueses de San Cernin" son **tipos
+  /// documentales reales** del periodo (cartas de queja al rey,
+  /// reglamentos internos de cofradías y comunidades urbanas son
+  /// géneros bien atestiguados en la cancillería navarra y en la
+  /// documentación urbana medieval) pero **sin afirmar piezas
+  /// concretas catalogadas**, a diferencia del Fuero de Pamplona-San
+  /// Cernin que sí es pieza individual identificable. Los "estudios
+  /// filológicos modernos sobre plurilingüismo navarro medieval" se
+  /// citan como cuerpo bibliográfico genérico sin atribuir a autor
+  /// concreto. Registro completo en `BLOQUEOS-PENDIENTES.md`.
+  static const Brecha brecha31 = Brecha(
+    id: '3.1',
+    titulo: 'San Cernin y las tres lenguas',
+    ubicacionVisible: 'IRUÑA — CASCO VIEJO + MESA DE TRABAJO',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.05',
+      'HF.06',
+      'HF.07',
+      'HF.09',
+      'HF.10',
+      'HF.11',
+      'CC.04',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha31,
+    afirmacionesCanonicas: _afirmacionesBrecha31,
+    flagDeCompletado: 'brecha_3_1_completada',
+    minimoAfirmacionesParaConcilio: 5,
+  );
+
+  static const List<Fuente> _fuentesBrecha31 = [
+    Fuente(
+      id: 'fuero_pamplona_san_cernin_1129',
+      tipoVisible: 'Fuero de Pamplona-San Cernin (1129)',
+      descripcion:
+          'Texto fundacional del barrio franco de San Cernin, otorgado '
+          'por Alfonso I el Batallador en 1129. Redactado en latín '
+          'jurídico medieval, lengua canónica de los oficios solemnes '
+          'del periodo. Establece privilegios de los pobladores francos '
+          '(régimen judicial propio, exenciones fiscales, derechos '
+          'comerciales en el Camino de Santiago), regula las relaciones '
+          'con la Navarrería preexistente y fija los límites del '
+          'amurallado del barrio. Fuente principal sobre la fundación '
+          'franca y el modelo de los tres burgos.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'La cancillería real de Alfonso I el Batallador',
+        fecha: '1129 d.C.',
+        publico: 'Pobladores francos de San Cernin (uso jurídico '
+            'interno) + autoridades regias e institucionales',
+        intereses: 'Atraer y fijar población franca para activar el '
+            'tramo navarro del Camino de Santiago; establecer un '
+            'régimen jurídico paralelo a la Navarrería que favoreciera '
+            'la actividad comercial',
+        omisiones: 'No menciona la población vasco-romance preexistente '
+            'salvo para fijar fronteras de jurisdicción; no contempla '
+            'la lengua oral cotidiana de los pobladores; presupone '
+            'la autoridad real sobre el territorio sin justificarla',
+        corroboraOContradice: 'Es la fuente principal sobre la '
+            'fundación franca y el origen institucional del barrio. '
+            'Su sesgo oficialista pro-franco hay que separarlo de la '
+            'información factual sobre fechas, fronteras y régimen '
+            'jurídico que sí aporta',
+        sesgo: SesgoFuente.oficialista,
+      ),
+    ),
+    Fuente(
+      id: 'carta_concejo_navarreria_sancho_vi',
+      tipoVisible: 'Carta de queja del concejo de la Navarrería al '
+          'rey Sancho VI (s. XII)',
+      descripcion:
+          'Carta tipológica de queja del concejo de la Navarrería al '
+          'rey Sancho VI sobre el trato real diferenciado a los burgos '
+          'francos. Redactada en romance navarro, lengua del concejo y '
+          'del rey en correspondencia interna con sus súbditos no '
+          'francos. Las cartas de queja al monarca son género bien '
+          'atestiguado en la cancillería navarra del s. XII. Articula '
+          'la voz vasco-romance del barrio antiguo en su propia lengua '
+          'escrita, complementaria al latín jurídico del Fuero franco.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'El concejo de la Navarrería (cabezas de casa del '
+            'barrio antiguo vasco-romance)',
+        fecha: 'Segunda mitad del s. XII d.C.',
+        publico: 'El rey Sancho VI y su cancillería',
+        intereses: 'Reclamar paridad de trato con los pobladores '
+            'francos; defender los derechos consuetudinarios de la '
+            'Navarrería frente a los privilegios escritos de San '
+            'Cernin',
+        omisiones: 'Sólo ofrece la voz del barrio antiguo — no recoge '
+            'la perspectiva del concejo de San Cernin ni del de San '
+            'Nicolás; no menciona las relaciones cotidianas no '
+            'conflictivas entre las tres comunidades',
+        corroboraOContradice: 'Confirma la existencia de los conflictos '
+            'inter-burgos como hecho persistente de la vida urbana '
+            'medieval; complementa la perspectiva del Fuero al '
+            'introducir la voz del agraviado',
+        sesgo: SesgoFuente.invisibilizador,
+      ),
+    ),
+    Fuente(
+      id: 'reglamento_burgueses_san_cernin',
+      tipoVisible: 'Reglamento interno de los burgueses de San Cernin '
+          '(s. XIII)',
+      descripcion:
+          'Fragmento tipológico de regla interna de la comunidad de '
+          'cabezas de casa del barrio franco. Redactado en occitano '
+          'gascón, lengua cotidiana del barrio. Los reglamentos '
+          'internos de cofradías y comunidades urbanas son género '
+          'común en la documentación urbana medieval europea — '
+          'regulan obligaciones mutuas, contribuciones colectivas a '
+          'gastos comunes (muralla, puentes, mantenimiento), '
+          'jurisdicción interna de litigios menores. Confirma la '
+          'autonomía administrativa del barrio franco respecto a las '
+          'otras dos comunidades.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'La asamblea de cabezas de casa del barrio franco de '
+            'San Cernin',
+        fecha: 's. XIII d.C.',
+        publico: 'Uso interno del barrio franco — no destinado a '
+            'circulación más amplia',
+        intereses: 'Cohesión interna de la comunidad franca; '
+            'autorregulación de obligaciones mutuas; preservación de '
+            'los privilegios fundacionales',
+        omisiones: 'Sólo perspectiva interna del barrio franco — no '
+            'menciona a vecinos vasco-romances ni a los burgueses de '
+            'San Nicolás salvo en cláusulas de relación externa',
+        corroboraOContradice: 'Confirma el dominio del occitano gascón '
+            'como lengua interna del barrio franco, complementaria al '
+            'latín jurídico del Fuero hacia fuera. Triangula con el '
+            'Fuero y la Carta para sostener el plurilingüismo '
+            'estructural por dominios institucionales',
+      ),
+    ),
+    Fuente(
+      id: 'toponimos_vascos_iruna',
+      tipoVisible: 'Topónimos vascos del callejero del casco viejo y '
+          'montes circundantes',
+      descripcion:
+          'Sustrato toponímico vasco preservado en el callejero del '
+          'casco viejo y en los nombres de los montes que rodean la '
+          'ciudad — formas castellanizadas o catalanizadas con base '
+          'lingüística vasca subyacente reconocible. Atestiguado por '
+          'la filología histórica como capa de uso oral cotidiano '
+          'que no produjo documentación administrativa propia en el '
+          'periodo. Materia documental muda — la presencia del '
+          'euskera no se afirma con voz, se infiere por la huella '
+          'que dejó en los nombres.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Las personas vasco-hablantes que habitaron el '
+            'territorio antes y durante el medievo',
+        fecha: 'Pre-medieval y medieval (capa toponímica acumulada '
+            'durante siglos)',
+        publico: 'En su origen: la propia comunidad de hablantes. Hoy: '
+            'la filología histórica que reconstruye sustratos',
+        intereses: 'Nombrar el paisaje habitado — sin intención '
+            'historiográfica',
+        omisiones: 'No hay producción textual ni epigráfica propia en '
+            'el periodo. El sustrato no recoge formas escritas, '
+            'glosarios bilingües sistemáticos ni instrumentos '
+            'jurídicos en euskera',
+        corroboraOContradice: 'Documenta indirectamente la presencia '
+            'oral del euskera en el medievo navarro sin permitir '
+            'afirmaciones directas sobre su uso cotidiano. La '
+            'asimetría documental — invisible en la administración, '
+            'visible en el paisaje — es ella misma el dato',
+      ),
+    ),
+    Fuente(
+      id: 'estudios_filologicos_plurilinguismo',
+      tipoVisible: 'Estudios filológicos modernos sobre el '
+          'plurilingüismo navarro medieval',
+      descripcion:
+          'Cuerpo bibliográfico de filología histórica del s. XX-XXI '
+          'sobre el plurilingüismo navarro medieval. Reconstruye los '
+          'dominios institucionales de cada lengua escrita (latín '
+          'jurídico, romance navarro, occitano gascón), discute la '
+          'presencia oral del euskera bajo el trilingüismo escrito, '
+          'cataloga el sustrato toponímico, analiza glosas y formas '
+          'de transición. Edición moderna con aparato crítico y '
+          'bibliografía especializada.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Filólogos e historiadores del s. XX-XXI especializados '
+            'en romance y lenguas peninsulares medievales',
+        fecha: 's. XX-XXI',
+        publico: 'Especialistas universitarios y estudiantado avanzado '
+            'de filología románica e historia medieval',
+        intereses: 'Reconstrucción rigurosa del paisaje lingüístico; '
+            'identificación de sustratos y superestratos; '
+            'periodización del cambio',
+        omisiones: 'No agotan las preguntas abiertas sobre causas '
+            'institucionales de la invisibilidad documental del '
+            'euskera ni la dinámica social cotidiana entre las cuatro '
+            'lenguas en contacto',
+        corroboraOContradice: 'Es el marco interpretativo que permite '
+            'leer las otras cuatro fuentes con criterios filológicos '
+            'consensuados; aporta la categoría "plurilingüismo '
+            'estructural por dominios institucionales" que articula '
+            'la afirmación 5',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha31 = [
+    AfirmacionCanonica(
+      id: 'tres_burgos_administrativos',
+      texto: 'El Iruña medieval estaba dividido en tres burgos '
+          'administrativamente independientes — Navarrería, San Cernin '
+          'y San Nicolás — cada uno con sus propios fueros, murallas y '
+          'concejo, separados físicamente y enfrentados periódicamente.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'fuero_pamplona_san_cernin_1129',
+        'carta_concejo_navarreria_sancho_vi',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'fuero_san_cernin_1129',
+      texto: 'El Fuero de Pamplona-San Cernin fue otorgado por Alfonso '
+          'I el Batallador en 1129 y se redactó en latín jurídico '
+          'medieval, lengua canónica de los oficios solemnes del '
+          'periodo en la cancillería real navarra.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'fuero_pamplona_san_cernin_1129',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'fundacion_franca_san_cernin',
+      texto: 'El barrio de San Cernin fue fundado por francos del '
+          'Camino de Santiago, mayoritariamente occitano-hablantes; el '
+          'santo titular (Saturnino de Tolosa de Francia, en '
+          'pronunciación occitana Sernin/Cernin) y el régimen jurídico '
+          'paralelo del Fuero reflejan ese origen.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'fuero_pamplona_san_cernin_1129',
+        'reglamento_burgueses_san_cernin',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'union_carlos_iii_1423',
+      texto: 'Los conflictos seculares entre los tres burgos — armados '
+          'en al menos tres ocasiones, de los cuales la guerra de la '
+          'Navarrería de 1276 fue el más grave — se resolvieron '
+          'formalmente por el Privilegio de la Unión de 1423 promulgado '
+          'por Carlos III el Noble, que unificó las tres comunidades '
+          'en un solo municipio de Iruña.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'carta_concejo_navarreria_sancho_vi',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'plurilinguismo_estructural_por_dominios',
+      texto: 'El plurilingüismo escrito del Iruña medieval era '
+          'estructural y no accidental: cada lengua correspondía '
+          'sistemáticamente a un dominio institucional (latín '
+          'jurídico para textos solemnes y régimen judicial, romance '
+          'navarro como lengua del rey y del concejo de la Navarrería '
+          'en correspondencia con sus súbditos no francos, occitano '
+          'gascón como lengua interna del barrio franco). La '
+          'documentación trilingüe es Sólida; la inferencia de '
+          'estructuralidad por dominios se sostiene en la triangulación '
+          'pero no es afirmación directa de las fuentes.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'fuero_pamplona_san_cernin_1129',
+        'carta_concejo_navarreria_sancho_vi',
+        'reglamento_burgueses_san_cernin',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'euskera_oral_sustrato',
+      texto: 'El euskera era lengua oral cotidiana de buena parte de '
+          'la población urbana y suburbana del Iruña medieval — '
+          'especialmente en la Navarrería y en el entorno rural — '
+          'según se infiere del sustrato toponímico del callejero y '
+          'de los montes circundantes, de glosas en documentos romance '
+          'y de menciones en otras fuentes. Declararlo Sólido sería '
+          'afirmar como hecho documentado un uso oral cotidiano que '
+          'las fuentes escritas del periodo no preservan directamente; '
+          'declararlo Disputado sería minimizar la convergencia de '
+          'evidencias indirectas que sí señalan su presencia.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'toponimos_vascos_iruna',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'causas_invisibilidad_euskera',
+      texto: 'Las causas concretas por las que el euskera quedó fuera '
+          'de la documentación administrativa formal del Iruña '
+          'medieval — ¿prestigio diferencial frente al latín y al '
+          'occitano del Camino?, ¿ausencia de tradición scriptoria '
+          'propia?, ¿uso oral estamentalmente bajo de hablantes sin '
+          'acceso a escritura?, ¿elección política consciente de las '
+          'autoridades de los tres burgos? — no pueden cerrarse con '
+          'las fuentes disponibles. Las cuatro hipótesis son '
+          'plausibles, se relacionan entre sí, y la documentación no '
+          'las discrimina.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'toponimos_vascos_iruna',
+        'estudios_filologicos_plurilinguismo',
+      ],
+    ),
+  ];
+
+  /// **Brecha 3.3 — Leyre y la leyenda del abad Virila** (Arco 3,
+  /// tercera Estación). Maren viaja con Marina a San Salvador de
+  /// Leyre y trabaja sobre la leyenda del abad Virila — un abad que
+  /// salió a pasear por el bosque del monasterio escuchando un
+  /// pájaro y, cuando volvió, habían pasado trescientos años. La
+  /// pedagogía clave de la Estación inaugura **PH.10 perspectiva
+  /// histórica plena**: la leyenda no es sobre el s. IX que dice
+  /// contar, es sobre el s. XIII en que se escribió. Leyre del s.
+  /// XIII estaba en declive — había perdido importancia política,
+  /// los reyes ya no se enterraban allí, las reformas cluniacenses
+  /// habían transformado la liturgia, la memoria del esplendor
+  /// pasado se estaba perdiendo. Los trescientos años del milagro
+  /// coinciden aproximadamente con los que separan la fundación de
+  /// Leyre del momento de redacción de la leyenda. *"La leyenda de
+  /// Virila no cuenta lo que pasó en el s. IX. Cuenta cómo Leyre
+  /// del s. XIII se sentía mirando al s. IX."* La Estación cierra
+  /// con la lección integradora del Cuaderno: *"Las leyendas no
+  /// mienten. Desplazan."*
+  ///
+  /// Habilidades ejercitadas según doc 02:
+  /// - PR.01-02 — formulación de preguntas (¿cuándo se escribió?,
+  ///   ¿qué cuenta el momento de redacción?).
+  /// - HF.01-04 — análisis de fuentes textuales básico.
+  /// - HF.05 — lectura crítica del códice y de las versiones
+  ///   posteriores.
+  /// - HF.06 — uso de la lengua original (los códices están en
+  ///   latín medieval).
+  /// - HF.10 — detección de omisiones: qué oculta la leyenda al
+  ///   traducir el s. XIII como s. IX.
+  /// - HF.11 — corroboración entre las distintas versiones del
+  ///   relato (s. XIII, s. XV, s. XVII).
+  /// - **PH.06** — detección de anacronismos: proyectar el s. IX
+  ///   en un relato producido por la espiritualidad del s. XIII.
+  /// - **PH.10** — la fuente como producto de su tiempo, en su
+  ///   debut narrativo pleno articulado por la voz del Cuaderno.
+  /// - AH.01-03 — anclaje + calibración + niveles de confianza.
+  ///
+  /// **Catálogo**: 5 fuentes y **6 afirmaciones canónicas según el
+  /// doc 09 §3.3.4** — distribución pedagógica explícita 3 Sólido
+  /// + 3 Probable, sin Disputado. La Estación no abre preguntas
+  /// epistémicas grandes; la pedagogía es PH.10 (que las Probables
+  /// ya recogen como inferencia desde el contexto de redacción).
+  /// La afirmación 3 lleva el matiz textual *"Sólido (la
+  /// incertidumbre)"* — el matiz vive en el texto, no en el enum
+  /// (preserva la paridad Dart/PHP del core).
+  ///
+  /// `minimoAfirmacionesParaConcilio: 4` — declarar 4 de 6 obliga
+  /// a tocar al menos una de las tres Probables, donde la Estación
+  /// realmente ejercita PH.10.
+  ///
+  /// **Material trazable preservado**:
+  /// - Monasterio de San Salvador de Leyre (real, Navarra).
+  /// - Cripta románica del s. XI con capiteles tallados (real,
+  ///   atestiguada).
+  /// - Listas de abades de Leyre del s. IX-X con mención de un
+  ///   abad Virila (atestiguadas en documentación monástica).
+  /// - Reyes de Pamplona Sancho I, García Sánchez I, Sancho II,
+  ///   García Sánchez II enterrados en Leyre durante siglos
+  ///   (documentado).
+  /// - La leyenda de Virila documentada por primera vez en códice
+  ///   del s. XIII (estado consensuado de la hagiografía local).
+  /// - Reformas cluniacenses del s. XI-XII como contexto que
+  ///   transforma la liturgia leyrense (atestiguadas).
+  /// - Declive político relativo de Leyre en el s. XIII frente al
+  ///   esplendor altomedieval (estado historiográfico
+  ///   consensuado).
+  ///
+  /// **Sustituciones diegéticas**: las "versiones del s. XV y XVII"
+  /// son **tipos documentales reales** del género hagiográfico
+  /// (recopilaciones de vidas de santos, *mirabilia monasterii*,
+  /// florilegios devocionales — todos géneros bien atestiguados en
+  /// la producción monástica bajomedieval y moderna) pero **sin
+  /// afirmar ediciones individuales catalogadas**. Los "estudios
+  /// hagiográficos modernos" se citan como cuerpo bibliográfico
+  /// genérico sin atribuir a autor concreto. Si el comité valida
+  /// piezas concretas, sustituir. Registro en
+  /// `BLOQUEOS-PENDIENTES.md`.
+  static const Brecha brecha33 = Brecha(
+    id: '3.3',
+    titulo: 'Leyre y la leyenda del abad Virila',
+    ubicacionVisible: 'LEYRE — MONASTERIO + SCRIPTORIUM',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.05',
+      'HF.06',
+      'HF.10',
+      'HF.11',
+      'PH.06',
+      'PH.10',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha33,
+    afirmacionesCanonicas: _afirmacionesBrecha33,
+    flagDeCompletado: 'brecha_3_3_completada',
+    minimoAfirmacionesParaConcilio: 4,
+  );
+
+  static const List<Fuente> _fuentesBrecha33 = [
+    Fuente(
+      id: 'codice_leyenda_virila_s_xiii',
+      tipoVisible: 'Códice del s. XIII de Leyre con la leyenda de '
+          'Virila — primera versión documentada',
+      descripcion:
+          'Primera versión documentada de la leyenda del abad Virila, '
+          'preservada en un códice hagiográfico del scriptorium de '
+          'Leyre datable en el s. XIII. Recoge el milagro completo: '
+          'el abad sale a pasear por el bosque del monasterio '
+          'preguntándose por la eternidad de Dios, escucha un pájaro '
+          'cantar, se sienta a escucharlo, y cuando vuelve han pasado '
+          'trescientos años. Producido en un monasterio que en el s. '
+          'XIII vivía un declive político relativo respecto al '
+          'esplendor altomedieval. Las reproducciones se conservan en '
+          'el monasterio actual.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Un monje del scriptorium de Leyre del s. XIII (sin '
+            'firma individual)',
+        fecha: 's. XIII d.C.',
+        publico: 'La propia comunidad monástica de Leyre + visitantes '
+            'devotos del monasterio en su época',
+        intereses: 'Conservar y transmitir la memoria espiritual de '
+            'la casa; consolidar el carisma del lugar en un momento '
+            'de declive político relativo; ofrecer al lector una '
+            'meditación sobre la eternidad de Dios en formato '
+            'narrativo accesible',
+        omisiones: 'No menciona las condiciones contextuales de su '
+            'redacción (declive político de Leyre, reformas '
+            'cluniacenses recientes, traslados regios a otros '
+            'panteones); no aporta evidencia interna sobre la '
+            'identidad concreta del Virila histórico que la '
+            'tradición vincula al relato',
+        corroboraOContradice: 'Es la fuente principal sobre la '
+            'leyenda. Su lectura crítica permite separar lo que dice '
+            '(el milagro narrado) de lo que muestra (la '
+            'espiritualidad y la auto-percepción del s. XIII en su '
+            'momento de redacción)',
+      ),
+    ),
+    Fuente(
+      id: 'listas_abades_leyre_s_ix_x',
+      tipoVisible: 'Listas de abades de Leyre de los s. IX-X',
+      descripcion:
+          'Documentación administrativa del monasterio que registra '
+          'la sucesión de abades en los siglos altomedievales. En una '
+          'de las listas aparece un abad llamado Virila — sin gestas '
+          'reseñadas, sin contexto narrativo, simplemente nombrado '
+          'en su lugar dentro de la sucesión. La documentación '
+          'monástica administrativa de Leyre del periodo es '
+          'atestiguada y accesible a través de las ediciones del '
+          'archivo. Material trazable real.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'La administración monástica de Leyre de los s. IX-X',
+        fecha: 'Siglos IX-X d.C.',
+        publico: 'Uso interno administrativo del monasterio',
+        intereses: 'Registro institucional de la sucesión de abades '
+            'para preservar la cadena de autoridad y los actos '
+            'jurídicos de cada periodo',
+        omisiones: 'No aporta información personal ni narrativa '
+            'sobre el Virila listado; no permite determinar si el '
+            'abad histórico tuvo alguna gesta extraordinaria que '
+            'pudiera haber inspirado posteriormente la leyenda, ni '
+            'si la elección del nombre fue puramente tradicional',
+        corroboraOContradice: 'Confirma la existencia histórica de '
+            'un abad llamado Virila en Leyre durante los s. IX o '
+            'principios del X, pero no establece conexión directa '
+            'con la leyenda del s. XIII salvo la coincidencia '
+            'nominal',
+      ),
+    ),
+    Fuente(
+      id: 'versiones_leyenda_s_xv_xvii',
+      tipoVisible: 'Versiones posteriores de la leyenda (s. XV y '
+          's. XVII)',
+      descripcion:
+          'Versiones bajomedievales y modernas de la leyenda recogidas '
+          'en recopilaciones hagiográficas y *mirabilia monasterii* — '
+          'una del s. XV (durante la observancia benedictina) y otra '
+          'del s. XVII (en plena Contrarreforma). Las dos amplían el '
+          'relato del códice del s. XIII con detalles devocionales '
+          'distintos según la espiritualidad de su momento — la del '
+          's. XV insiste en la regla y la observancia, la del s. XVII '
+          'enfatiza la dulzura mística del milagro. La comparación '
+          'entre las tres versiones permite leer cómo cada época '
+          'reapropia el relato según sus propias preocupaciones '
+          'espirituales.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Hagiógrafos monásticos de los s. XV y XVII (sin firma '
+            'individual identificable en este nivel de cita)',
+        fecha: 'Siglos XV y XVII d.C.',
+        publico: 'Comunidades monásticas y lectores devotos de cada '
+            'periodo',
+        intereses: 'Reapropiar el relato según la espiritualidad '
+            'vigente; mantener viva la memoria del lugar; en el s. '
+            'XV consolidar la observancia, en el XVII responder al '
+            'horizonte contrarreformista',
+        omisiones: 'Igual que el códice fundacional: no contextualizan '
+            'su propio momento de redacción ni explicitan las razones '
+            'de la reapropiación',
+        corroboraOContradice: 'Triangulan con el códice del s. XIII '
+            'permitiendo distinguir el núcleo narrativo estable (el '
+            'paseo, el pájaro, los trescientos años) de las capas de '
+            'reapropiación devocional añadidas en cada momento',
+      ),
+    ),
+    Fuente(
+      id: 'contexto_monastico_leyre_s_xiii',
+      tipoVisible: 'Documentación arqueológica e histórica sobre el '
+          'estado de Leyre en el s. XIII',
+      descripcion:
+          'Documentación contextual sobre el estado del monasterio '
+          'de Leyre en el s. XIII: declive político relativo respecto '
+          'al esplendor altomedieval, traslados regios a otros '
+          'panteones (los reyes de Pamplona ya no se enterraban en '
+          'Leyre), las reformas cluniacenses que habían transformado '
+          'la liturgia y la observancia en los siglos previos, '
+          'pérdida de la centralidad institucional. Documentación '
+          'arqueológica de la fábrica del monasterio (la cripta '
+          'románica del s. XI permanece como pieza monumental clave) '
+          '+ documentación histórica sobre el patronazgo regio y los '
+          'movimientos de las cortes navarras.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Historiografía e historia del arte modernas '
+            'especializadas en monacato hispano-medieval',
+        fecha: 's. XX-XXI',
+        publico: 'Especialistas en historia monástica medieval e '
+            'historiadores del arte hispano-románico',
+        intereses: 'Reconstrucción rigurosa del contexto institucional '
+            'de Leyre en el s. XIII; identificación de los factores '
+            'estructurales del declive relativo',
+        omisiones: 'No agotan las preguntas internas sobre la '
+            'experiencia espiritual subjetiva de la comunidad '
+            'monástica del s. XIII ni la dinámica concreta de '
+            'producción de la leyenda',
+        corroboraOContradice: 'Aporta el marco contextual que permite '
+            'leer la leyenda como producto del s. XIII y no del s. '
+            'IX que dice contar; sostiene la afirmación 4 (contexto '
+            'monástico de declive relativo) y la 5 (significancia '
+            'no casual de la cifra "trescientos años")',
+      ),
+    ),
+    Fuente(
+      id: 'estudios_hagiograficos_medievales',
+      tipoVisible: 'Estudios modernos de hagiografía monástica '
+          'medieval',
+      descripcion:
+          'Cuerpo bibliográfico de hagiografía e historia de la '
+          'espiritualidad monástica medieval del s. XX-XXI. Permite '
+          'leer la leyenda de Virila dentro del género hagiográfico — '
+          'identificar paralelos con otras leyendas monásticas que '
+          'usan cifras simbólicas vinculadas a fundaciones (la '
+          '"Joana objection" del Concilio 3.3.5: declarar Probable '
+          'la coincidencia exigiría buscar paralelos sistemáticos). '
+          'Aporta el marco interpretativo para detectar el género '
+          '"meditación monástica sobre la eternidad" como matriz '
+          'literaria del relato.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Historiadores de la espiritualidad medieval y '
+            'medievalistas especializados en hagiografía',
+        fecha: 's. XX-XXI',
+        publico: 'Especialistas universitarios y estudiantado avanzado '
+            'de historia medieval y filología',
+        intereses: 'Reconstrucción rigurosa del género hagiográfico, '
+            'identificación de tópicos recurrentes, periodización '
+            'de las reapropiaciones devocionales',
+        omisiones: 'No agotan los paralelos concretos entre la '
+            'leyenda de Virila y otros relatos monásticos con cifras '
+            'simbólicas — esa búsqueda es trabajo abierto que Joana '
+            'pide para Aprendiz III',
+        corroboraOContradice: 'Es el marco que permite categorizar '
+            'la leyenda dentro del género; sostiene la afirmación 6 '
+            '(la leyenda informa sobre la espiritualidad del s. XIII '
+            'más que sobre el s. IX) al mostrar que el género '
+            'hagiográfico medieval funciona sistemáticamente como '
+            'espejo de su propio momento',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha33 = [
+    AfirmacionCanonica(
+      id: 'leyenda_documentada_s_xiii',
+      texto: 'La leyenda del abad Virila — el paseo por el bosque, el '
+          'pájaro y los trescientos años — aparece documentada por '
+          'primera vez en un códice hagiográfico del s. XIII '
+          'producido en el scriptorium del propio monasterio de '
+          'Leyre.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'codice_leyenda_virila_s_xiii',
+        'estudios_hagiograficos_medievales',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'virila_historico_s_ix',
+      texto: 'Un abad llamado Virila aparece nombrado en una de las '
+          'listas de abades de Leyre de los s. IX o principios del X, '
+          'sin gestas reseñadas y sin contexto narrativo asociado. '
+          'Su existencia histórica es independiente de la leyenda.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'listas_abades_leyre_s_ix_x',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'conexion_virila_historico_legendario',
+      texto: 'La conexión entre el Virila histórico (atestiguado en '
+          'las listas administrativas) y el Virila legendario (del '
+          'códice del s. XIII) no puede establecerse con certeza a '
+          'partir de las fuentes disponibles: pueden ser la misma '
+          'persona reapropiada por la tradición monástica, o el '
+          'redactor del s. XIII puede haber elegido un nombre real '
+          'de la lista por mera tradición. La incertidumbre misma es '
+          'el dato. **Sólido (la incertidumbre)** — la imposibilidad '
+          'de cerrar la conexión es factualmente atestiguable.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'codice_leyenda_virila_s_xiii',
+        'listas_abades_leyre_s_ix_x',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'leyenda_producto_s_xiii',
+      texto: 'La leyenda en su forma plenamente desarrollada (paseo, '
+          'pájaro, trescientos años) es producto del contexto '
+          'monástico del s. XIII en un Leyre que vivía un declive '
+          'político relativo: los reyes de Pamplona ya no se '
+          'enterraban allí, las reformas cluniacenses habían '
+          'transformado la liturgia y la observancia, la memoria del '
+          'esplendor altomedieval se estaba perdiendo. La leyenda '
+          'sostiene espiritualmente al monasterio en su momento de '
+          'declive — la inferencia es plausible y se basa en la '
+          'documentación contextual, pero no es afirmación directa '
+          'del códice.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'codice_leyenda_virila_s_xiii',
+        'contexto_monastico_leyre_s_xiii',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'trescientos_anos_significantes',
+      texto: 'La cifra "trescientos años" del milagro coincide '
+          'aproximadamente con el tiempo transcurrido entre la '
+          'fundación de Leyre (núcleo monástico altomedieval) y el '
+          'momento de redacción de la leyenda (s. XIII). La '
+          'coincidencia es probablemente significativa, no casual: '
+          'el monasterio del s. XIII mira hacia atrás trescientos '
+          'años de su propia historia y narra una historia de '
+          'trescientos años de eternidad. La declaración es '
+          'interpretativa — Joana lo señala explícitamente en el '
+          'Concilio (3.3.5) y pide buscar paralelos en otras '
+          'leyendas monásticas con cifras simbólicas vinculadas a '
+          'fundaciones para sostenerla más firmemente.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'codice_leyenda_virila_s_xiii',
+        'contexto_monastico_leyre_s_xiii',
+        'estudios_hagiograficos_medievales',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'leyenda_informa_sobre_s_xiii',
+      texto: 'La leyenda nos informa más sobre la espiritualidad y '
+          'la auto-percepción del Leyre del s. XIII que sobre el '
+          'Leyre del s. IX que dice contar. *"La leyenda de Virila '
+          'no cuenta lo que pasó en el s. IX. Cuenta cómo Leyre del '
+          's. XIII se sentía mirando al s. IX."* Es la lección '
+          'integradora del PH.10 — la fuente como producto de su '
+          'tiempo, no de la época que narra.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'codice_leyenda_virila_s_xiii',
+        'versiones_leyenda_s_xv_xvii',
+        'contexto_monastico_leyre_s_xiii',
+        'estudios_hagiograficos_medievales',
+      ],
+    ),
+  ];
+
+  /// 3.4 — Roncesvalles. Tercera Brecha jugable del Arco 3 (F2-28c),
+  /// paralela a la 3.1 y la 3.3. El núcleo pedagógico es **PH.10
+  /// ampliado a su forma más completa** — la leyenda no sólo desplaza
+  /// temporalmente como Virila en la 3.3, sino que *reescribe
+  /// identidades enteras* (vascones → moros, emboscada → traición,
+  /// conflicto político → conflicto religioso) para servir a una
+  /// agenda contemporánea de su redacción (las Cruzadas predicadas en
+  /// 1095, *Chanson* escrita en torno a 1100). Las 8 afirmaciones
+  /// canónicas vienen literalmente del doc 09 §3.4.5 — no son
+  /// inferencia del implementador. Distribución 5 Sólido + 3 Probable
+  /// + 0 Disputado: los 5 Sólido incluyen el matiz **"Sólido como
+  /// afirmación metodológica"** de la afirmación 8 (*"Roncesvalles
+  /// como evento es uno y la Chanson como obra literaria es otra: la
+  /// honestidad histórica exige no confundirlos, aunque la cultura
+  /// popular los haya fundido"*) que vive en el texto canónico, no
+  /// como nivel nuevo del enum (preserva paridad Dart/PHP del core,
+  /// mismo patrón que "Sólido (la incertidumbre)" del 3.3 y "Sólido
+  /// (la ausencia)" del Arco 2). `minimoAfirmacionesParaConcilio: 5`
+  /// — declarar 5 de 8 obliga a tocar al menos una de las 3 Probables
+  /// (las inferencias contextuales sobre el motivo vascón, el
+  /// contexto cruzado de la sustitución y la fijación de la memoria
+  /// popular legendaria), donde el oficio se ejercita en pleno.
+  static const Brecha brecha34 = Brecha(
+    id: '3.4',
+    titulo: 'Roncesvalles',
+    ubicacionVisible: 'RONCESVALLES — COLEGIATA + MESA DE TRABAJO',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.05',
+      'HF.06',
+      'HF.10',
+      'CC.01',
+      'CC.05',
+      'PH.06',
+      'PH.10',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha34,
+    afirmacionesCanonicas: _afirmacionesBrecha34,
+    flagDeCompletado: 'brecha_3_4_completada',
+    minimoAfirmacionesParaConcilio: 5,
+  );
+
+  static const List<Fuente> _fuentesBrecha34 = [
+    Fuente(
+      id: 'vita_karoli_eginardo',
+      tipoVisible: '*Vita Karoli* de Eginardo (s. IX) — cronista de '
+          'la corte carolingia',
+      descripcion:
+          'Biografía oficial de Carlomagno escrita por Eginardo a '
+          'mediados del s. IX, una de las fuentes carolingias '
+          'contemporáneas que mencionan la emboscada del 778 en el '
+          'Pirineo. Identifica a los atacantes como vascones — sin '
+          'mención de musulmanes — y refiere la muerte de varios '
+          'oficiales carolingios (entre ellos Rolando, conde de la '
+          'Marca de Bretaña). Fuente próxima al evento (escrita '
+          'probablemente entre 817 y 836, una generación después) y '
+          'producida en el entorno cortesano que tenía interés en '
+          'preservar la memoria del episodio.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Eginardo (Einhard), cronista carolingio',
+        fecha: 'h. 817-836 d.C.',
+        publico: 'Élites letradas del Imperio carolingio',
+        intereses: 'Preservar la memoria oficial del reinado de '
+            'Carlomagno; sostener el prestigio dinástico carolingio '
+            'frente a un episodio militar adverso minimizándolo',
+        omisiones: 'Atenúa la magnitud del descalabro (lo refiere '
+            'como un episodio menor); no profundiza en motivos '
+            'concretos del ataque vascón ni en posibles represalias '
+            'previas del ejército carolingio sobre el territorio',
+        corroboraOContradice: 'Identifica con claridad a los '
+            'atacantes como vascones; ancla la afirmación 1 (la '
+            'emboscada destruyó la retaguardia) y la 2 (los '
+            'atacantes son vascones según las fuentes contemporáneas)',
+      ),
+    ),
+    Fuente(
+      id: 'annales_regni_francorum',
+      tipoVisible: '*Annales Regni Francorum* — anales oficiales del '
+          'reino franco (s. VIII-IX)',
+      descripcion:
+          'Compilación oficial de la cronología del reino franco que '
+          'recoge los acontecimientos militares y políticos por años. '
+          'En la entrada del 778 menciona la campaña hispana de '
+          'Carlomagno aliado de Sulayman al-Arabi de Zaragoza, la '
+          'retirada frustrada y la emboscada vascona en el paso. La '
+          'redacción es seca, administrativa, sin embellecimiento '
+          'épico — completamente distinta de la Chanson posterior.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Compiladores anónimos de la cancillería carolingia',
+        fecha: 'Redacción contemporánea o casi contemporánea (s. '
+            'VIII-IX)',
+        publico: 'Uso oficial del reino franco',
+        intereses: 'Registro institucional ordenado de la sucesión '
+            'de hechos militares y políticos del reino',
+        omisiones: 'No detalla las motivaciones del ataque vascón ni '
+            'la composición concreta del ejército emboscado; tampoco '
+            'menciona musulmanes entre los atacantes',
+        corroboraOContradice: 'Confirma la identificación vascona de '
+            'los atacantes y sitúa el episodio en el contexto de la '
+            'campaña hispana aliada con Sulayman al-Arabi; ancla las '
+            'afirmaciones 1 y 2 y permite triangular contra la *Vita '
+            'Karoli*',
+      ),
+    ),
+    Fuente(
+      id: 'menciones_breves_fuentes_carolingias',
+      tipoVisible: 'Menciones breves del episodio en otras fuentes '
+          'carolingias del s. VIII-IX',
+      descripcion:
+          'Cuerpo de menciones breves del episodio del 778 en '
+          'distintas fuentes carolingias contemporáneas o casi '
+          'contemporáneas — anales menores, cronicones, biografías '
+          'episcopales — que aportan detalles puntuales (el lugar, '
+          'los oficiales caídos, la imposibilidad de represalia) sin '
+          'desarrollar el episodio narrativamente. Su valor es la '
+          'triangulación: ninguna menciona musulmanes entre los '
+          'atacantes, y todas coinciden con el cuadro de las dos '
+          'fuentes principales.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Cronistas y compiladores diversos del entorno '
+            'carolingio',
+        fecha: 'Siglos VIII-IX',
+        publico: 'Lectores cultos del Imperio carolingio',
+        intereses: 'Registro histórico-eclesiástico variable según '
+            'la obra; ninguno con interés cruzado anacrónico',
+        omisiones: 'Brevedad — no desarrollan motivaciones, '
+            'composición de fuerzas ni consecuencias políticas',
+        corroboraOContradice: 'Triangulan con la *Vita Karoli* y los '
+            '*Annales Regni Francorum* sosteniendo la identificación '
+            'vascona uniforme y la ausencia de musulmanes entre los '
+            'atacantes',
+      ),
+    ),
+    Fuente(
+      id: 'chanson_de_roland_h_1100',
+      tipoVisible: '*Chanson de Roland* (h. 1100) — cantar de gesta '
+          'en francés antiguo',
+      descripcion:
+          'Cantar de gesta del francés antiguo redactado en torno a '
+          '1100, en pleno auge cruzado tras la predicación de la '
+          'primera Cruzada en 1095. Reescribe el episodio de '
+          'Roncesvalles del 778 sustituyendo a los vascones atacantes '
+          'por sarracenos musulmanes, añade el motor narrativo de la '
+          'traición de Ganelón (ausente de las fuentes contemporáneas '
+          'del s. VIII-IX), introduce la espada Durendal y el '
+          'olifante de Rolando, y convierte un episodio militar '
+          'menor de hace 320 años en epopeya de cristianos contra '
+          'musulmanes — exactamente el tipo de relato que el aire '
+          'cruzado del momento de redacción demandaba. **Es '
+          'propaganda cruzada, no por manipulación deliberada sino '
+          'por aire respirado**: el episodio se reescribe en el aire '
+          'cruzado del s. XI-XII tardío sin que los redactores '
+          'tengan conciencia plena de estar manipulando.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Redactor o redactores anónimos del cantar (la '
+            'tradición atribuye una mano a Turoldo en el verso final, '
+            'sin certeza)',
+        fecha: 'h. 1100 d.C. — redacción del manuscrito de Oxford '
+            'fechada en torno a esa fecha',
+        publico: 'Auditorio cortesano francés y europeo de la época '
+            'cruzada',
+        intereses: 'Servir como arenga cristiana frente a los '
+            'musulmanes; sostener el ideal caballeresco; convertir '
+            'a Carlomagno en figura epopéyica fundadora de la '
+            'cristiandad armada',
+        omisiones: 'Borra a los vascones como atacantes; suprime el '
+            'contexto político real de la campaña hispana (alianza '
+            'con Sulayman al-Arabi de Zaragoza); no menciona la '
+            'frustración de la campaña previa a la emboscada',
+        corroboraOContradice: 'Es la fuente *legendaria* — '
+            'completamente independiente de las fuentes históricas '
+            'del s. VIII-IX. Su lectura crítica permite separar el '
+            'plano del evento del 778 (ancla afirmaciones 1-3) del '
+            'plano de la *Chanson* como obra literaria del s. XII '
+            '(ancla afirmaciones 4-7); la afirmación 8 es la '
+            'distinción metodológica entre los dos planos',
+      ),
+    ),
+    Fuente(
+      id: 'estudios_contexto_cruzado_s_xi_xii',
+      tipoVisible: 'Estudios modernos sobre la *Chanson de Roland* '
+          'y el contexto cruzado del s. XI-XII',
+      descripcion:
+          'Cuerpo bibliográfico de medievalística e historia '
+          'literaria del s. XX-XXI sobre la *Chanson de Roland* en '
+          'su contexto histórico de redacción: la primera Cruzada '
+          'predicada por Urbano II en 1095, las cruzadas hispánicas '
+          'paralelas del Reino de Castilla y de Aragón, el imaginario '
+          'cruzado europeo, la identificación literaria del enemigo '
+          'sarraceno como figura ideológica unificadora. Permite '
+          'leer la sustitución vascones→moros de la *Chanson* como '
+          'producto del contexto cruzado y no como simple '
+          'corrupción narrativa.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Medievalistas e historiadores de la literatura '
+            'europea medieval',
+        fecha: 's. XX-XXI',
+        publico: 'Especialistas universitarios en historia y '
+            'filología medieval',
+        intereses: 'Reconstrucción rigurosa del contexto literario '
+            'e ideológico de la épica cruzada; identificación de '
+            'mecanismos sistemáticos de reescritura legendaria del '
+            'pasado bajo lentes contemporáneas',
+        omisiones: 'No agotan la pregunta sobre la pervivencia '
+            'popular de la versión legendaria en los siglos '
+            'siguientes — eso queda fuera de la Brecha (lo que Aitor '
+            'señala en el Concilio 3.4.6 como tema propio de '
+            'Aprendiz III)',
+        corroboraOContradice: 'Sostienen la afirmación 5 (la '
+            'sustitución refleja el contexto de las Cruzadas) y '
+            'aportan el marco interpretativo para la afirmación 7 '
+            '(la *Chanson* fijó la versión legendaria como memoria '
+            'popular durante siglos)',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha34 = [
+    AfirmacionCanonica(
+      id: 'emboscada_vascona_destruyo_retaguardia',
+      texto: 'En 778, una emboscada vascona destruyó la retaguardia '
+          'del ejército de Carlomagno en el paso pirenaico de '
+          'Roncesvalles cuando volvía frustrada de la campaña '
+          'hispana aliada con Sulayman al-Arabi de Zaragoza.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'vita_karoli_eginardo',
+        'annales_regni_francorum',
+        'menciones_breves_fuentes_carolingias',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'fuentes_carolingias_identifican_vascones',
+      texto: 'Las fuentes carolingias contemporáneas (siglos VIII-IX) '
+          'identifican uniformemente a los atacantes como vascones, '
+          'sin mención de musulmanes en ninguna de ellas.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'vita_karoli_eginardo',
+        'annales_regni_francorum',
+        'menciones_breves_fuentes_carolingias',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'emboscada_respondia_represalias',
+      texto: 'La emboscada vascona respondía probablemente a '
+          'represalias por daños del ejército carolingio en su paso '
+          'previo por territorio vascón. Las fuentes no detallan las '
+          'motivaciones concretas, pero el patrón de comportamiento '
+          'militar del periodo y la inmediatez de la respuesta lo '
+          'sostienen como inferencia plausible.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'annales_regni_francorum',
+        'menciones_breves_fuentes_carolingias',
+        'estudios_contexto_cruzado_s_xi_xii',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'chanson_reescribe_vascones_por_musulmanes',
+      texto: 'La *Chanson de Roland* (redactada en torno a 1100) '
+          'reescribe el episodio del 778 sustituyendo a los vascones '
+          'por musulmanes como atacantes. La sustitución es completa '
+          'y constitutiva del cantar — no un detalle marginal.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'chanson_de_roland_h_1100',
+        'estudios_contexto_cruzado_s_xi_xii',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'sustitucion_refleja_contexto_cruzado',
+      texto: 'Esta sustitución refleja el contexto de las Cruzadas '
+          'del momento de redacción (la primera Cruzada predicada '
+          'en 1095, la *Chanson* compuesta en torno a 1100), no la '
+          'realidad histórica del 778. Es **propaganda cruzada — no '
+          'manipulación deliberada, sino aire respirado**: el '
+          'episodio se reescribe en el aire cruzado del s. XI-XII '
+          'tardío. Es el corazón pedagógico de la Brecha — Karim lo '
+          'aprueba con énfasis en el Concilio (3.4.6).',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'chanson_de_roland_h_1100',
+        'estudios_contexto_cruzado_s_xi_xii',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'chanson_anade_traicion_ganelon',
+      texto: 'La *Chanson* añade el motor narrativo de la traición '
+          'de Ganelón, completamente ausente de las fuentes '
+          'carolingias contemporáneas del s. VIII-IX. La traición '
+          'no es elemento de la historia documentada sino estructura '
+          'literaria del cantar.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'chanson_de_roland_h_1100',
+        'vita_karoli_eginardo',
+        'annales_regni_francorum',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'chanson_fijo_memoria_popular',
+      texto: 'La popularidad de la *Chanson* en la Europa medieval '
+          'fijó su versión legendaria — sarracenos, traición de '
+          'Ganelón, espada Durendal — como "memoria popular" del '
+          'episodio durante siglos, desplazando la versión histórica '
+          'documentada en las fuentes carolingias del culto popular '
+          'pero no del archivo crítico.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'chanson_de_roland_h_1100',
+        'estudios_contexto_cruzado_s_xi_xii',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'evento_y_chanson_planos_distintos',
+      texto: 'Roncesvalles como evento es uno y la *Chanson* como '
+          'obra literaria es otra: la honestidad histórica exige no '
+          'confundirlos, aunque la cultura popular los haya fundido. '
+          'La distinción entre los dos planos — el evento del 778 '
+          'documentado por las fuentes carolingias y la *Chanson* '
+          'del s. XII como objeto literario propio — es la condición '
+          'metodológica para sostener cualquier afirmación sobre '
+          'cualquiera de los dos. **Sólido como afirmación '
+          'metodológica** — no es afirmación factual sobre el pasado '
+          'sino sobre el oficio mismo de leer las fuentes.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'vita_karoli_eginardo',
+        'annales_regni_francorum',
+        'chanson_de_roland_h_1100',
+        'estudios_contexto_cruzado_s_xi_xii',
+      ],
+    ),
+  ];
+
+  /// 3.5 — Estella en su esplendor. Cuarta y última Brecha jugable
+  /// implementada del Arco 3 (F2-28d). Es la única **Brecha de
+  /// respiro** del Arco — el doc 09 §3.5 deliberadamente la deja
+  /// breve: *"Brecha más serena, casi de respiro"*. Las 6
+  /// afirmaciones canónicas vienen literalmente del doc 09 §3.5.2 —
+  /// no son inferencia del implementador. Distribución 4 Sólido + 2
+  /// Probable + 0 Disputado: la Brecha está bien acotada, sin disputa
+  /// metodológica grande, contraste deliberado con las Estaciones
+  /// anteriores del Arco 3 (3.1 trilingüismo + 3.3 leyenda
+  /// desplazada + 3.4 propaganda cruzada). `minimoAfirmacionesPara
+  /// Concilio: 4` — declarar 4 de 6 toca al menos una afirmación,
+  /// con la Brecha bien calibrada y sin disputa metodológica grande
+  /// el oficio se ejercita en limpio. La lección pedagógica clave de
+  /// la Estación es la del **oficio sostenible** articulada por
+  /// Aitor en el Concilio (3.5.3): *"Bien. Ya sabes que se pueden
+  /// hacer Brechas que no acaban contigo"* — contrapunto al *"Lo
+  /// bonito miente"* de la 3.4.7 y al *"No sé qué hacer"* de la
+  /// 3.D.1.
+  static const Brecha brecha35 = Brecha(
+    id: '3.5',
+    titulo: 'Estella en su esplendor',
+    ubicacionVisible: 'ESTELLA — CONJUNTO ROMÁNICO + MESA DE TRABAJO',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.05',
+      'HF.07',
+      'CC.01',
+      'CC.05',
+      'GH.04',
+      'PH.06',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+    ],
+    fuentes: _fuentesBrecha35,
+    afirmacionesCanonicas: _afirmacionesBrecha35,
+    flagDeCompletado: 'brecha_3_5_completada',
+    minimoAfirmacionesParaConcilio: 4,
+  );
+
+  static const List<Fuente> _fuentesBrecha35 = [
+    Fuente(
+      id: 'carta_puebla_estella_1090',
+      tipoVisible: 'Carta puebla de Estella (1090) otorgada por '
+          'Sancho Ramírez',
+      descripcion:
+          'Carta puebla fundacional de Estella, otorgada por Sancho '
+          'Ramírez en 1090 para fundar la villa-Camino con privilegios '
+          'concretos (fueros, exenciones fiscales, derechos de '
+          'mercado) destinados a atraer población franca a un trazado '
+          'urbano nuevo, en el contexto del auge del Camino de '
+          'Santiago en el último cuarto del s. XI. Pieza fundacional '
+          'documentada y trazable, ampliamente estudiada por la '
+          'historiografía urbana medieval navarra.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Cancillería del rey Sancho Ramírez de Pamplona-Aragón',
+        fecha: '1090 d.C.',
+        publico: 'Población franca destinataria del proyecto + '
+            'autoridades reales y eclesiásticas',
+        intereses: 'Fundar la villa-Camino como proyecto político '
+            'real; asegurar tráfico jacobeo + ingresos fiscales + '
+            'red de fidelidades urbanas en el camino jacobeo; atraer '
+            'población franca con privilegios atractivos',
+        omisiones: 'No describe la población vasco-romance '
+            'preexistente del valle (presupone su continuidad sin '
+            'tematizarla); no detalla las relaciones cotidianas '
+            'entre los recién llegados francos y los preexistentes',
+        corroboraOContradice: 'Es la fuente principal de la Brecha. '
+            'Ancla las afirmaciones 1 (fundación en 1090 por Sancho '
+            'Ramírez), 2 (proyecto político vinculado al Camino de '
+            'Santiago) y 3 (privilegios atrayendo población franca '
+            'occitano-hablante)',
+      ),
+    ),
+    Fuente(
+      id: 'documentacion_municipal_estella_s_xii',
+      tipoVisible: 'Documentación municipal de Estella del s. XII',
+      descripcion:
+          'Cuerpo de documentación municipal y eclesiástica de '
+          'Estella del s. XII — fueros sucesivos, regulaciones del '
+          'mercado, contratos de hospederías, ordenanzas relativas a '
+          'peregrinos y mercaderes. Permite reconstruir la economía '
+          'de ciudad-paso del primer siglo de la villa: peregrinos, '
+          'cambistas, hospederías, mercados regulares.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Concejo de Estella + cancillería real + clero local',
+        fecha: 'Siglo XII d.C.',
+        publico: 'Uso administrativo interno de la villa + auditorio '
+            'real para confirmaciones de privilegios',
+        intereses: 'Regular la vida económica y jurídica de la villa '
+            'en el primer siglo de su fundación; consolidar el '
+            'estatuto franco; mantener el orden del flujo jacobeo',
+        omisiones: 'Predominantemente perspectiva del concejo franco; '
+            'la presencia vasco-romance del entorno aparece sólo '
+            'transversalmente en los registros',
+        corroboraOContradice: 'Sostiene la afirmación 5 (economía '
+            'de ciudad-paso del s. XII) y triangula con la carta '
+            'puebla y los monumentos para sostener la imagen del '
+            'esplendor del primer siglo',
+      ),
+    ),
+    Fuente(
+      id: 'conjunto_romanico_estella',
+      tipoVisible: 'Conjunto románico de Estella (Santo Sepulcro, '
+          'San Pedro de la Rúa, palacio de los Reyes, San Miguel)',
+      descripcion:
+          'Conjunto monumental románico conservado de Estella — '
+          'iglesia del Santo Sepulcro, San Pedro de la Rúa con su '
+          'claustro, palacio de los Reyes (uno de los pocos palacios '
+          'civiles románicos conservados de Europa), iglesia de San '
+          'Miguel. Datado mayoritariamente entre los s. XII y XIII, '
+          'refleja arquitectónicamente el esplendor de la villa en '
+          'su primer siglo y medio de existencia. Fuente material '
+          'muda complementaria a la documentación textual.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Talleres constructivos y escultóricos de los s. XII '
+            'y XIII de tradición románica europea',
+        fecha: 'Siglos XII-XIII d.C.',
+        publico: 'Población urbana medieval de la villa + peregrinos '
+            'jacobeos + autoridades eclesiásticas y reales',
+        intereses: 'Materializar el prestigio de la fundación como '
+            'enclave del Camino; sostener la liturgia y el culto '
+            'jacobeo; representar el patronazgo regio (palacio de '
+            'los Reyes)',
+        omisiones: 'Como toda fuente material, no explicita las '
+            'condiciones sociales concretas de su producción ni las '
+            'jerarquías internas de la población urbana medieval',
+        corroboraOContradice: 'Ancla la afirmación 6 (el conjunto '
+            'románico conservado refleja el esplendor de la villa '
+            'en su primer siglo) y triangula con la documentación '
+            'textual para sostener la imagen general de la Estación',
+      ),
+    ),
+    Fuente(
+      id: 'estudios_fundaciones_camino_santiago',
+      tipoVisible: 'Estudios modernos sobre las fundaciones urbanas '
+          'del Camino de Santiago en los s. XI-XII',
+      descripcion:
+          'Cuerpo bibliográfico moderno (s. XX-XXI) sobre las '
+          'fundaciones urbanas del Camino de Santiago en los s. '
+          'XI-XII — el patrón de fundación de villas con carta '
+          'puebla y privilegios francos por reyes hispanos en pleno '
+          'auge jacobeo (Estella, Logroño, Sangüesa, Puente la Reina, '
+          'Pamplona-San Cernin, etc.), las dinámicas de población '
+          'franca occitano-hablante en estas villas, la convivencia '
+          'con poblaciones vasco-romances preexistentes, y la '
+          'economía de ciudad-paso característica del s. XII jacobeo.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Historiadores urbanistas y medievalistas hispano-'
+            'navarros del s. XX-XXI',
+        fecha: 's. XX-XXI',
+        publico: 'Especialistas universitarios y estudiantado '
+            'avanzado de historia urbana medieval',
+        intereses: 'Reconstrucción rigurosa del fenómeno de las '
+            'fundaciones jacobeas en su contexto político y '
+            'económico; identificación de patrones sistemáticos en '
+            'el modelo de villa-Camino',
+        omisiones: 'No agotan los detalles individuales de cada '
+            'fundación ni las dinámicas microhistóricas de cada '
+            'villa concreta',
+        corroboraOContradice: 'Aportan el marco interpretativo que '
+            'permite leer la fundación de Estella como caso del '
+            'patrón general de villa-Camino del s. XI-XII; sostienen '
+            'las afirmaciones 2 (proyecto político vinculado al '
+            'Camino), 3 (atracción de población franca) y 4 '
+            '(continuidad de la población vasco-romance preexistente)',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha35 = [
+    AfirmacionCanonica(
+      id: 'estella_fundada_1090_carta_puebla',
+      texto: 'Estella se funda en 1090 por carta puebla de Sancho '
+          'Ramírez. La fundación es acto político concreto, '
+          'documentado en la pieza fundacional, y separa un antes '
+          '(valle con población vasco-romance dispersa) de un '
+          'después (villa con trazado urbano nuevo y fueros '
+          'francos).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'carta_puebla_estella_1090',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'fundacion_proyecto_politico_camino_santiago',
+      texto: 'La fundación de Estella es proyecto político vinculado '
+          'al auge del Camino de Santiago en el último cuarto del '
+          's. XI — la villa-Camino se diseña para servir el flujo '
+          'jacobeo y para ofrecer a la corona un enclave urbano '
+          'nuevo en el camino jacobeo navarro.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'carta_puebla_estella_1090',
+        'estudios_fundaciones_camino_santiago',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'privilegios_atraen_poblacion_franca',
+      texto: 'Los privilegios concretos de la carta puebla de 1090 '
+          'atraen población franca, principalmente occitano-hablante, '
+          'a la nueva villa. La presencia franca dominante en el '
+          'concejo y en el habla cotidiana del primer siglo está '
+          'documentada por la documentación municipal y por la '
+          'toponimia urbana.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'carta_puebla_estella_1090',
+        'documentacion_municipal_estella_s_xii',
+        'estudios_fundaciones_camino_santiago',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'continuidad_poblacion_vasco_romance',
+      texto: 'La población vasco-romance preexistente del valle '
+          'permanece, pero la villa-Camino es trazado urbano nuevo '
+          'con sus propios fueros — la continuidad de los '
+          'preexistentes es inferencia plausible por la falta de '
+          'evidencia de despoblación previa y por el marco general '
+          'de las fundaciones jacobeas, pero no es afirmación '
+          'directa de las fuentes de la Estación. La presencia '
+          'preexistente aparece transversalmente en los registros '
+          'sin ser tematizada.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'documentacion_municipal_estella_s_xii',
+        'estudios_fundaciones_camino_santiago',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'economia_ciudad_paso_s_xii',
+      texto: 'La economía de Estella en el s. XII es economía de '
+          'ciudad-paso — peregrinos jacobeos, mercaderes, '
+          'hospederías, cambistas, mercados regulares. La '
+          'documentación municipal del s. XII y los estudios sobre '
+          'el modelo villa-Camino sostienen el cuadro económico con '
+          'detalle.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'documentacion_municipal_estella_s_xii',
+        'estudios_fundaciones_camino_santiago',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'conjunto_romanico_refleja_esplendor',
+      texto: 'El conjunto románico conservado (Santo Sepulcro, San '
+          'Pedro de la Rúa, palacio de los Reyes, San Miguel) refleja '
+          'el esplendor de la villa en su primer siglo y medio. La '
+          'datación arquitectónica del conjunto se sitúa entre los '
+          's. XII y XIII; la inferencia de "esplendor" es '
+          'interpretativa — los monumentos son el dato sólido, leerlos '
+          'como esplendor económico-cultural es lectura plausible '
+          'pero no afirmación directa de la piedra.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'conjunto_romanico_estella',
+        'estudios_fundaciones_camino_santiago',
+      ],
+    ),
+  ];
+
   static const List<Brecha> todas = [
     brecha11,
     brecha12,
@@ -2272,6 +3680,10 @@ class CatalogoBrechas {
     brecha22,
     brecha23,
     brecha24,
+    brecha31,
+    brecha33,
+    brecha34,
+    brecha35,
   ];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
@@ -2334,5 +3746,53 @@ class CatalogoBrechas {
     // requiere ahora `brecha_2_4_completada` en lugar del previo
     // `escena_2_4_5_vista`.
     'silencio_es_dato_aprendido': brecha24,
+    // 3.1 se dispara con `toponimos_occitanos_aprendidos` (cierre de
+    // la cinemática 3.1.3 *El barrio occitano* — ahí Isaura le señala
+    // a Maren las huellas occitanas en el callejero y le explica el
+    // sustrato vasco como lengua del paisaje no escrita formalmente,
+    // cerrando el material que Maren tiene que articular en la Mesa
+    // de Trabajo). La 3.1.4 cinemática *Concilio de San Cernin*
+    // (formal, Aitor revisor + Karim) requiere ahora
+    // `brecha_3_1_completada` en lugar del previo `escena_3_1_3_vista`
+    // — F2-28a sigue el mismo patrón que F2-10a/b/c/d en el Arco 2.
+    'toponimos_occitanos_aprendidos': brecha31,
+    // 3.3 se dispara con `leyenda_virila_estudiada` (cierre de la
+    // cinemática 3.3.4 *Cuándo se escribió* — la voz del Cuaderno
+    // articula la lección PH.10 en pleno y el monje del scriptorium
+    // ya ha desplegado el material que Maren tiene que articular en
+    // la Mesa de Trabajo del propio monasterio: la leyenda como
+    // fuente del s. XIII no del s. IX). La 3.3.5 cinemática
+    // *Concilio de Leyre* (formal, una semana después en Iruña con
+    // Aitor revisor + Joana) requiere ahora `brecha_3_3_completada`
+    // en lugar del previo `escena_3_3_4_vista` — F2-28b sigue el
+    // mismo patrón que F2-28a / F2-10a/b/c/d en los Arcos 2-3.
+    'leyenda_virila_estudiada': brecha33,
+    // 3.4 se dispara con `chanson_como_propaganda_aprendida` (cierre
+    // de la cinemática 3.4.4 *La Chanson* — Maren analiza la *Chanson
+    // de Roland* en su contexto cruzado, articula que la sustitución
+    // vascones→sarracenos es propaganda cruzada respirada por los
+    // redactores en torno a 1100, y queda lista para producir las 8
+    // afirmaciones canónicas en la Mesa de Trabajo). La 3.4.5
+    // cinemática *Reconstrucción* (puesta en limpio narrativa de las
+    // 8 afirmaciones que la jugable produce) requiere ahora
+    // `brecha_3_4_completada` en lugar del previo
+    // `escena_3_4_4_vista` — F2-28c sigue el mismo patrón que F2-28a
+    // / F2-28b en este Arco.
+    'chanson_como_propaganda_aprendida': brecha34,
+    // 3.5 se dispara con `estella_conjunto_visitado` (cierre de la
+    // cinemática 3.5.1 *Llegada a Estella* — Aitor le ha explicado a
+    // Maren que la villa es proyecto político de Sancho Ramírez de
+    // 1090 con carta puebla específica para atraer población franca
+    // al Camino de Santiago, y le ha señalado los cuatro monumentos
+    // del conjunto románico como fuentes arquitectónicas). La 3.5.2
+    // cinemática *Mesa de Trabajo y Reconstrucción* (puesta en
+    // limpio narrativa de las 6 afirmaciones que la jugable produce)
+    // requiere ahora `brecha_3_5_completada` en lugar del previo
+    // `escena_3_5_1_vista` — F2-28d sigue el mismo patrón que F2-28a
+    // / F2-28b / F2-28c en este Arco. Cierre del set de Brechas
+    // jugables del Arco 3 (la 3.2 sigue bloqueada por validación
+    // BANU-QASI; la 3.6 TUDELA-1378 sigue bloqueada por validación
+    // del comité provisional).
+    'estella_conjunto_visitado': brecha35,
   };
 }

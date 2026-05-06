@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../nucleo/paleta_archivo.dart';
+import 'avatar_personaje.dart';
+import 'fondo_ambiente.dart';
 
 /// Reproductor mínimo de cinemáticas para Las Versiones. Recorre los
 /// planos genéricos de [EscenaCinematica] uno a uno:
@@ -37,11 +39,17 @@ class PantallaCinematica extends StatefulWidget {
   /// escena — típicamente lo persiste el orquestador.
   final ValueChanged<String>? alEstablecerFlag;
 
+  /// Callback opcional para abrir el Menú principal mientras una
+  /// cinemática está en pantalla. Se muestra como engranaje pequeño
+  /// arriba-derecha, fuera del área de tap-para-avanzar.
+  final VoidCallback? alAbrirMenu;
+
   const PantallaCinematica({
     super.key,
     required this.escena,
     required this.alTerminar,
     this.alEstablecerFlag,
+    this.alAbrirMenu,
   });
 
   @override
@@ -225,8 +233,29 @@ class _PantallaCinematicaState extends State<PantallaCinematica> {
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _alPulsar,
-        child: SafeArea(
-          child: _construirContenidoDePlano(),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: FondoAmbiente(ambiente: widget.escena.ambiente),
+            ),
+            SafeArea(child: _construirContenidoDePlano()),
+            if (widget.alAbrirMenu != null)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: SafeArea(
+                  child: IconButton(
+                    tooltip: 'Menú',
+                    iconSize: 22,
+                    icon: const Icon(
+                      Icons.settings_outlined,
+                      color: PaletaArchivo.ambarLacre,
+                    ),
+                    onPressed: widget.alAbrirMenu,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -322,16 +351,7 @@ class _VistaDialogo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (nombre.isNotEmpty)
-            Text(
-              nombre.toUpperCase(),
-              style: TextStyle(
-                fontSize: 11,
-                letterSpacing: 4,
-                color: voz.colorNombre,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+          if (nombre.isNotEmpty) _CabeceraVoz(voz: voz),
           const SizedBox(height: 10),
           Text(textoRevelado, style: voz.estiloTextoCuerpo()),
           const SizedBox(height: 18),
@@ -379,16 +399,7 @@ class _VistaEleccion extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (textoPrompt.isNotEmpty) ...[
-            if (nombre.isNotEmpty)
-              Text(
-                nombre.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 4,
-                  color: voz.colorNombre,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+            if (nombre.isNotEmpty) _CabeceraVoz(voz: voz),
             const SizedBox(height: 10),
             Text(textoPrompt, style: voz.estiloTextoCuerpo()),
             const SizedBox(height: 22),
@@ -444,6 +455,37 @@ class _BotonOpcion extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Cabecera del bloque de diálogo: avatar procedural a la izquierda +
+/// nombre del hablante en versalitas a la derecha. Se usa para
+/// `PlanoDialogo` y para el prompt de un `PlanoEleccion`.
+class _CabeceraVoz extends StatelessWidget {
+  final VozPersonajeContrato voz;
+
+  const _CabeceraVoz({required this.voz});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        AvatarPersonaje(voz: voz),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            voz.nombreVisible.toUpperCase(),
+            style: TextStyle(
+              fontSize: 11,
+              letterSpacing: 4,
+              color: voz.colorNombre,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

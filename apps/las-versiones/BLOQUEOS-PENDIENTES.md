@@ -95,6 +95,134 @@ referencias y revertir la sustitución.
 
 ---
 
+## Brecha 3.1 jugable — San Cernin y las tres lenguas (F2-28a)
+
+**Estado**: catálogo jugable abierto. La narrativa del Arco 3 Estación 1 está preservada con material trazable real (Fuero de Pamplona-San Cernin de 1129, modelo de los tres burgos medievales, Privilegio de la Unión de 1423 de Carlos III el Noble, San Saturnino de Tolosa, sustrato toponímico vasco) — ningún ítem requiere validación crítica del comité asesor.
+
+**Sustituciones diegéticas leves**:
+- **`carta_concejo_navarreria_sancho_vi`** — Tipo documental real (cartas reales de queja de concejos al rey son género bien atestiguado en la cancillería navarra del s. XII), pero **sin afirmar pieza concreta catalogada y trazable**. Si el comité valida una pieza específica de la cancillería real navarra del s. XII en romance navarro con queja del concejo de la Navarrería, sustituir el id y el descriptor.
+- **`reglamento_burgueses_san_cernin`** — Tipo documental real (reglamentos internos de cofradías y comunidades urbanas son género común en la documentación urbana medieval europea), pero **sin afirmar pieza concreta catalogada**. Si el comité valida un reglamento occitano gascón concreto del s. XIII con normas internas del barrio de San Cernin, sustituir.
+- **`estudios_filologicos_plurilinguismo`** — Cuerpo bibliográfico genérico de filología histórica del s. XX-XXI sobre plurilingüismo navarro medieval, **sin atribuir a autores concretos**. Si el comité prefiere fijar referencias bibliográficas concretas (p. ej. trabajos de Frago Gracia, Martínez Pasamar, González Ollé, Ciérvide), añadirlas como subcategorías o reemplazar la fuente genérica.
+
+**Material trazable preservado sin necesidad de validación**:
+- Fuero de Pamplona-San Cernin de 1129 otorgado por Alfonso I el Batallador (pieza individual catalogada, ampliamente estudiada).
+- Modelo de los tres burgos medievales de Iruña (Navarrería, San Cernin, San Nicolás).
+- Saturnino de Tolosa como santo titular y la genealogía fonética Saturnino → Sernin → Cernin.
+- Guerra de la Navarrería de 1276 entre los tres burgos.
+- Privilegio de la Unión de 1423 promulgado por Carlos III el Noble.
+- Sustrato toponímico vasco del casco viejo y montes circundantes (atestiguado por filología histórica).
+
+**Decisiones pedagógicas tomadas**:
+- 7 afirmaciones canónicas, distribución 4 Sólido + 2 Probable + 1 Disputado, `minimoAfirmacionesParaConcilio: 5`.
+- La presencia oral del euskera bajo el trilingüismo escrito es **Probable**, no Sólida — la documentación trilingüe es Sólida pero la inferencia oral por sustrato toponímico + glosas + menciones es indirecta. Es la lección clave de la Estación articulada por Maren ante Karim en el Concilio (3.1.4).
+- Las causas concretas de la invisibilidad documental del euskera son **Disputado** — cuatro hipótesis (prestigio diferencial, ausencia de scriptoria propios, uso oral estamentalmente bajo, elección política consciente) plausibles y la documentación no las discrimina.
+- HF.07 (plurilingüismo documental) hace su debut jugable expandido a tres lenguas + HF.10 (detección de omisiones del euskera) en su segundo uso jugable tras el Arco 2.
+
+**Pendiente de revisión humana** (no bloquea el slice):
+- Si el comité prefiere fijar referencias bibliográficas concretas de filología histórica navarra, sustituir la fuente genérica `estudios_filologicos_plurilinguismo` por entradas más específicas.
+- Si el comité valida piezas concretas de la cancillería navarra del s. XII (cartas reales de queja) y de la documentación urbana medieval del s. XIII (reglamentos occitanos), sustituir las dos sustituciones diegéticas leves.
+- Si la "guerra de la Navarrería de 1276" requiere matización en la afirmación 4 sobre el número exacto de conflictos armados, ajustar el texto canónico.
+
+---
+
+## Brecha 3.3 jugable — Leyre y la leyenda del abad Virila (F2-28b)
+
+**Estado**: catálogo jugable abierto. La narrativa del Arco 3 Estación 3 (cinemáticas 3.3.1–3.3.6 + latente 3.C.1) está preservada con material trazable real (monasterio de San Salvador de Leyre, cripta románica del s. XI, reyes de Pamplona enterrados allí — Sancho I, García Sánchez I, Sancho II, García Sánchez II, leyenda de Virila documentada por primera vez en códice del s. XIII, abad Virila atestiguado en listas de abades del s. IX/principios del X) — ningún ítem requiere validación crítica del comité asesor.
+
+**Sustituciones diegéticas leves**:
+- **`codice_leyenda_virila_s_xiii`** — La existencia de un códice del s. XIII de Leyre con la primera versión documentada de la leyenda de Virila es ampliamente atestiguada por la tradición historiográfica del monacato hispanomedieval, pero **sin fijar la signatura concreta del manuscrito ni la edición específica**. Si el comité valida una pieza individual concreta (signatura archivística + edición de referencia del texto medieval), sustituir el descriptor.
+- **`versiones_leyenda_s_xv_xvii`** — La existencia de versiones bajomedievales y modernas de la leyenda en recopilaciones hagiográficas y *mirabilia monasterii* es género ampliamente atestiguado, pero **sin afirmar piezas individuales concretas catalogadas con autoría y fecha de edición**. Si el comité valida obras específicas (p. ej. crónicas concretas del s. XV y s. XVII que incluyan la leyenda), sustituir.
+- **`estudios_hagiograficos_medievales`** — Cuerpo bibliográfico genérico del s. XX-XXI sobre hagiografía y espiritualidad monástica medieval, **sin atribuir a autores concretos**. Si el comité prefiere fijar referencias bibliográficas concretas (medievalistas de hagiografía hispana, especialistas en monacato benedictino), añadirlas o reemplazar la fuente genérica.
+- **`contexto_monastico_leyre_s_xiii`** — Documentación contextual sobre el declive político relativo de Leyre en el s. XIII (traslados regios a otros panteones, reformas cluniacenses, pérdida de centralidad institucional) — el cuerpo de literatura especializada sobre el monasterio existe, **sin fijar referencias bibliográficas concretas** en el descriptor. Si el comité prefiere precisar autores y obras (p. ej. trabajos de Goñi Gaztambide, García de Cortázar, especialistas en monacato navarro), sustituir.
+
+**Material trazable preservado sin necesidad de validación**:
+- Monasterio de San Salvador de Leyre como entidad histórica.
+- Cripta románica del s. XI atestiguada arqueológicamente.
+- Reyes de Pamplona enterrados en Leyre — Sancho I, García Sánchez I, Sancho II, García Sánchez II — documentados en cronística medieval.
+- Leyenda del abad Virila documentada en códice del s. XIII (fecha de la primera versión documentada).
+- Abad Virila atestiguado en listas de abades de Leyre del s. IX o principios del X.
+- Reformas cluniacenses como factor de transformación litúrgica monástica.
+
+**Decisiones pedagógicas tomadas**:
+- 6 afirmaciones canónicas extraídas literalmente del doc 09 §3.3.4 — la cinemática las lista explícitamente, no son inferencia del implementador.
+- Distribución pedagógica 3 Sólido + 3 Probable + 0 Disputado, `minimoAfirmacionesParaConcilio: 4`. La Brecha 3.3 deliberadamente no tiene Disputadas — el oficio en esta Estación se ejercita en el matiz Probable, no en la duda metodológica abierta. Las afirmaciones 4 (la leyenda como producto del s. XIII), 5 (los trescientos años significantes) y 6 (la leyenda informa sobre la espiritualidad del s. XIII) son las inferencias contextuales del PH.10.
+- La afirmación 3 `conexion_virila_historico_legendario` declara el matiz **"Sólido (la incertidumbre)"** en el texto canónico, no como nivel nuevo del enum (preserva paridad Dart/PHP del core).
+- La afirmación 5 `trescientos_anos_significantes` se declara Probable — la coincidencia entre los trescientos años del milagro y los trescientos años entre fundación y redacción del códice es interpretativa; Joana lo cuestiona explícitamente en el Concilio (3.3.5) y pide buscar paralelos en otras leyendas monásticas con cifras simbólicas para sostenerla más firmemente.
+- La afirmación 6 `leyenda_informa_sobre_s_xiii` articula la lección integradora **PH.10 — la fuente como producto de su tiempo**: *"La leyenda de Virila no cuenta lo que pasó en el s. IX. Cuenta cómo Leyre del s. XIII se sentía mirando al s. IX."* (cita literal del doc 09).
+- HF.10 (detección de omisiones — el códice no contextualiza su propio momento de redacción) en uso jugable continuado tras Arco 2 + Brecha 3.1.
+
+**Pendiente de revisión humana** (no bloquea el slice):
+- Si el comité valida la signatura concreta del manuscrito del s. XIII y la edición de referencia, fijarlas en el descriptor de `codice_leyenda_virila_s_xiii`.
+- Si el comité valida obras específicas para las versiones del s. XV y s. XVII de la leyenda, sustituir el descriptor genérico de `versiones_leyenda_s_xv_xvii`.
+- Si el comité prefiere fijar bibliografía concreta sobre monacato hispano-medieval e hagiografía, sustituir las dos fuentes secundarias genéricas.
+- Si la datación del Virila histórico (s. IX o principios del X) requiere precisión adicional, ajustar la afirmación 2.
+
+---
+
+## Brecha 3.4 jugable — Roncesvalles (F2-28c)
+
+**Estado**: catálogo jugable abierto. La narrativa del Arco 3 Estación 4 (cinemáticas 3.4.1–3.4.7 + latente 3.D.1) está preservada con material trazable real (paso pirenaico de Roncesvalles, colegiata real de Santa María, emboscada del 778 documentada, Carlomagno, Sulayman al-Arabi de Zaragoza, retaguardia carolingia, vascones como atacantes en las fuentes contemporáneas, Rolando conde de la Marca de Bretaña, *Vita Karoli* de Eginardo, *Annales Regni Francorum*, *Chanson de Roland* h. 1100, primera Cruzada predicada en 1095) — ningún ítem requiere validación crítica del comité asesor.
+
+**Sustituciones diegéticas leves**:
+- **`menciones_breves_fuentes_carolingias`** — Cuerpo bibliográfico genérico de menciones del episodio del 778 en otras fuentes carolingias del s. VIII-IX (anales menores, cronicones, biografías episcopales), **sin afirmar piezas individuales identificables con autoría/fecha de redacción concretas**. Si el comité valida fuentes específicas (p. ej. el *Chronicon Moissiacense*, los *Annales Mettenses Priores*, las *Vitae* de obispos contemporáneos), fijarlas en el descriptor.
+- **`estudios_contexto_cruzado_s_xi_xii`** — Cuerpo bibliográfico genérico del s. XX-XXI sobre la *Chanson de Roland* y su contexto cruzado (medievalística e historia literaria), **sin atribuir a autores concretos**. Si el comité prefiere fijar referencias bibliográficas concretas (p. ej. trabajos clásicos de Joseph Bédier, Cesare Segre, o medievalistas contemporáneos sobre la Cruzada y su huella literaria), añadirlas o reemplazar la fuente genérica.
+
+**Material trazable preservado sin necesidad de validación**:
+- Paso pirenaico de Roncesvalles real (frontera entre Navarra y Francia).
+- Colegiata real de Santa María de Roncesvalles.
+- Emboscada del 778 documentada en las fuentes carolingias contemporáneas.
+- Carlomagno, su campaña hispana del 778 aliada con Sulayman al-Arabi de Zaragoza.
+- Retaguardia carolingia emboscada por **vascones** en las fuentes contemporáneas (no por sarracenos como dice la *Chanson*).
+- Rolando, conde de la Marca de Bretaña, oficial caído en la emboscada según la *Vita Karoli*.
+- *Vita Karoli* de Eginardo (h. 817-836).
+- *Annales Regni Francorum* (s. VIII-IX).
+- *Chanson de Roland* manuscrito de Oxford fechado en torno a 1100.
+- Primera Cruzada predicada por Urbano II en 1095.
+
+**Decisiones pedagógicas tomadas**:
+- 8 afirmaciones canónicas extraídas literalmente del doc 09 §3.4.5 — la cinemática las lista explícitamente, no son inferencia del implementador.
+- Distribución pedagógica 5 Sólido + 3 Probable + 0 Disputado, `minimoAfirmacionesParaConcilio: 5`. Los 5 Sólido incluyen el matiz **"Sólido como afirmación metodológica"** de la afirmación 8 sobre la distinción entre el evento del 778 y la *Chanson* como obra literaria del s. XII (igual que el matiz de la 2.4 sobre el techo metodológico de la reconstrucción del silencio vascón).
+- La afirmación 8 `evento_y_chanson_planos_distintos` declara **Sólido como afirmación metodológica** en el texto canónico — la distinción entre los dos planos es la condición metodológica para sostener cualquier afirmación; vive en el texto, no como nivel nuevo del enum (preserva paridad Dart/PHP del core).
+- La afirmación 5 `sustitucion_refleja_contexto_cruzado` se declara Probable y articula el corazón pedagógico de la Brecha: *"propaganda cruzada — no manipulación deliberada, sino aire respirado"*. Karim la aprueba con énfasis en el Concilio (3.4.6).
+- **PH.10 ampliado a su forma más completa** hace su debut narrativo pleno: si en el Arco 2 la lección era el silencio vascón como dato y en la 3.3 el desplazamiento legendario (la leyenda como producto del s. XIII no del s. IX), aquí PH.10 se amplía a *"la leyenda reescribe identidades enteras para servir a una agenda contemporánea de su redacción"* — propaganda cruzada respirada, no manipulación deliberada.
+- HF.10 (detección de omisiones — la *Chanson* borra el contexto político real de la campaña hispana y a los vascones como atacantes) en uso jugable continuado tras Arco 2 + Brechas 3.1 + 3.3.
+
+**Pendiente de revisión humana** (no bloquea el slice):
+- Si el comité valida fuentes carolingias específicas adicionales del s. VIII-IX que mencionen el episodio (más allá de la *Vita Karoli* y los *Annales*), fijarlas en el descriptor de `menciones_breves_fuentes_carolingias`.
+- Si el comité prefiere bibliografía concreta sobre la *Chanson* y el contexto cruzado, sustituir el descriptor genérico de `estudios_contexto_cruzado_s_xi_xii`.
+- Si la atribución a Turoldo (única en el verso final del manuscrito de Oxford) merece tratamiento específico en una afirmación adicional, expandir el catálogo.
+
+---
+
+## Brecha 3.5 jugable — Estella en su esplendor (F2-28d)
+
+**Estado**: catálogo jugable abierto. Cuarta y última Brecha jugable implementada del Arco 3 — la única **Brecha de respiro** del Arco según el doc 09 §3.5 (*"Brecha más serena, casi de respiro"*). La narrativa del Arco 3 Estación 5 (cinemáticas 3.5.1–3.5.4) está preservada con material trazable real (Estella/Lizarra real, conjunto románico real, fundación de 1090 por Sancho Ramírez con carta puebla documentada, Camino de Santiago, palacio de los Reyes como uno de los pocos palacios civiles románicos europeos conservados) — ningún ítem requiere validación crítica del comité asesor.
+
+**Sustituciones diegéticas leves**:
+- **`documentacion_municipal_estella_s_xii`** — Cuerpo de documentación municipal real de Estella en el s. XII (fueros sucesivos, regulaciones del mercado, contratos de hospederías, ordenanzas de peregrinos y mercaderes), **sin afirmar piezas individuales identificables con autoría/fecha de redacción concretas**. Si el comité valida documentos específicos del Archivo Municipal de Estella o del Archivo General de Navarra, fijarlos en el descriptor.
+- **`estudios_fundaciones_camino_santiago`** — Cuerpo bibliográfico moderno (s. XX-XXI) sobre las fundaciones urbanas del Camino de Santiago en los s. XI-XII, **sin atribuir a autores concretos**. Si el comité prefiere fijar referencias bibliográficas concretas (p. ej. Pascual Martínez Sopena, José Ángel García de Cortázar, Eloísa Ramírez Vaquero, Juan Carrasco Pérez sobre urbanismo medieval navarro), añadirlas o reemplazar la fuente genérica.
+
+**Material trazable preservado sin necesidad de validación**:
+- Estella/Lizarra como villa real navarra.
+- Carta puebla de 1090 otorgada por Sancho Ramírez (pieza fundacional documentada).
+- Conjunto románico de Estella con sus cuatro monumentos: iglesia del Santo Sepulcro, San Pedro de la Rúa con su claustro, palacio de los Reyes (uno de los pocos palacios civiles románicos conservados de Europa), iglesia de San Miguel.
+- Modelo villa-Camino del s. XI-XII como patrón general de fundaciones jacobeas en pleno auge del Camino de Santiago.
+- Población franca occitano-hablante atraída a las villas-Camino navarras por privilegios fiscales y jurídicos concretos.
+- Convivencia con la población vasco-romance preexistente del valle.
+
+**Decisiones pedagógicas tomadas**:
+- 6 afirmaciones canónicas extraídas literalmente del doc 09 §3.5.2 — la cinemática las lista explícitamente.
+- Distribución pedagógica 4 Sólido + 2 Probable + **0 Disputado**, `minimoAfirmacionesParaConcilio: 4`. La Brecha 3.5 deliberadamente **no tiene Disputadas ni matices metodológicos especiales** — es contraste con las Estaciones anteriores del Arco 3 (3.1 trilingüismo + 3.3 leyenda desplazada + 3.4 propaganda cruzada). Las dos Probables son las inferencias contextuales razonables (continuidad de la población vasco-romance preexistente + lectura del esplendor económico-cultural desde los monumentos). El oficio se ejercita en limpio sin disputa metodológica grande.
+- **Lección pedagógica del oficio sostenible**: la 3.5.3 (Concilio) lo articula con Aitor *"Bien. Ya sabes que se pueden hacer Brechas que no acaban contigo"* y la 3.5.4 (Calle de la Rúa al anochecer) lo cierra con la voz del Cuaderno *"Hoy no hay nada que decir. Por una vez la Brecha era simple. Ha sido un alivio"* — contrapunto al *"Lo bonito miente"* de la 3.4.7 y al *"No sé qué hacer"* de la 3.D.1. La Brecha jugable encarna mecánicamente esta lección: la calibración limpia sin matices metodológicos especiales y el catálogo más simple del Arco 3 (4 fuentes vs 5 de las anteriores Brechas del Arco 3).
+- **GH.04 — geografía urbana y trazado de villa-Camino, debut jugable en el Arco 3**: la Brecha 3.5 incorpora por primera vez el dominio de Geografía Histórica como habilidad ejercitada en el Arco 3. HF.07 (plurilingüismo: francos occitano-hablantes vs vasco-romance preexistente) en uso continuado tras Brecha 3.1.
+
+**Pendiente de revisión humana** (no bloquea el slice):
+- Si el comité valida documentación municipal específica de Estella del s. XII, fijar piezas individuales en el descriptor.
+- Si el comité prefiere bibliografía concreta sobre fundaciones jacobeas del s. XI-XII, sustituir el descriptor genérico.
+- Si la atribución del palacio de los Reyes (datación específica + función original) merece precisión adicional en una afirmación, expandir el catálogo.
+
+---
+
 ## BANU-QASI — Estación 3.2 (Tudela y los Banu Qasi) (F2-20b)
 
 **Tracker doc 17**: Prioridad 2 del comité provisional, **sin validar**. La validación crítica TUDELA-1378 (Estación 3.6) tiene prioridad sobre ésta.
@@ -657,3 +785,74 @@ El payload incluye:
 `paleta_archivo.dart` es **provisional** — sepia/papel/tinta + ámbar
 lacre. Cuando se cierre el doc 11 (guía visual del Archivo), se
 revisan colores de personajes, ambientes y UI.
+
+---
+
+## Atmósferas fotográficas — coberturas pendientes
+
+A partir de F2-22 las cinemáticas usan fotos libres de Wikimedia
+Commons como fondo atmosférico (capa al ~45% de opacidad, veladura
+oscura encima). 18 ficheros cubren ~30 ambientes. Quedan huecos
+donde sigue el motivo procedural — apuntados como mejoras pendientes
+para evaluar cuando entre la fase visual del juego (doc 11):
+
+- ~~**Coches en viaje** (`coche_isaura`, `coche_aitor`, `coche_marina`).
+  Sin foto. El procedural neutro (gradiente radial sutil) cumple,
+  pero podría mejorarse con un interior de coche en movimiento /
+  paisaje a través de ventana lateral.~~ **Cerrado en F2-29** con un
+  motivo procedural específico `interiorCoche` (ventanilla lateral
+  derecha con marco ámbar + horizonte tenue + tres cumbres lejanas
+  + cuatro postes verticales sugiriendo paisaje desplazándose). No
+  reemplaza una foto real, pero diferencia ya visualmente el coche
+  del resto de espacios neutros. Si llega fase visual con
+  presupuesto, se puede sustituir por foto encargada/stock sin
+  romper el call-site.
+
+- **`yacimiento_vascon_norte`**. Deliberadamente sin lugar concreto
+  por validación pendiente del comité asesor (la Estación 2.4
+  trabaja con un yacimiento vascón altomedieval del norte sin nombre
+  histórico hasta que el comité valide candidato). Wikimedia no
+  cubre bien "yacimiento vascón altomedieval anónimo" — se queda en
+  procedural `paisajeMontana` hasta validación. Cuando el comité
+  elija el yacimiento concreto, se descarga foto del lugar real.
+
+- **`iglesia_san_cernin`**. Hoy usa la Plaza Consistorial de
+  Pamplona como sustituto (la iglesia tiene torres altas y todas
+  las tomas en Commons son verticales). Si aparece foto horizontal
+  de la fachada de San Saturnino con calidad suficiente, sustituir.
+
+- **`cuarto_casa_maren`**. Hoy usa un dormitorio de la Casa-Museo
+  de Manuel de Falla — funciona bajo el velo pero no es literal de
+  cuarto de adolescente con escritorio. Mejora pendiente si entra
+  fase visual con presupuesto para foto encargada o ilustración.
+
+- **Avatares de personaje**. ~~Hoy procedurales (CustomPainter con
+  inicial + color + estilo de borde por estamento)~~ **F2-30 abre el
+  modo ilustrado dual**: `AvatarPersonaje` ahora soporta retrato
+  ilustrado por voz vía mapping `_avataresIlustrados` indexado por
+  `nombreVisible`. Las voces con PNG/JPEG en `assets/personajes/`
+  más entrada en el mapping pasan al modo `Image.asset` recortada
+  con `ClipOval` y borde por estamento superpuesto. Las voces sin
+  retrato siguen cayendo al procedural sin tocar nada del
+  call-site. Generadas con OpenAI ChatGPT (DALL-E 3) bajo prompts
+  coherentes con la PaletaArchivo (acuarela sepia + halo ámbar
+  lacre). Migración progresiva: 4 retratos cableados de inicio
+  (Maren, Isaura, Aitor, Karim); el resto siguen procedurales hasta
+  que se generen y se añada una sola línea al mapping. Atribución y
+  política de licencias en `PantallaCreditos`. Pendiente todavía:
+  (a) generar y cablear los 12 personajes restantes de la rejilla
+  maestra `assets/personajes/master/todos.png`, (b) validación
+  pedagógica humana de cada retrato (ningún parecido identificable
+  con persona real), (c) si en algún momento llega ilustración
+  humana encargada, sustituir reemplazando los JPEG sin tocar
+  código.
+
+- ~~**Atribuciones GFDL adicional en `cueva_pindal.jpg`**. La foto
+  del Pindal está doble-licenciada CC-BY 3.0 + GFDL 1.2+. La
+  PantallaCreditos sólo nombra CC-BY 3.0~~ **Cerrado en F2-29**: la
+  ficha de la cueva del Pindal en `PantallaCreditos` ahora declara
+  `CC-BY 3.0 / GFDL 1.2+` con nota explicativa *"Imagen
+  doble-licenciada por su autor: cumple bajo cualquiera de las dos
+  licencias"*. El inventario de `CREDITOS.md` ya reflejaba la doble
+  licencia.
+

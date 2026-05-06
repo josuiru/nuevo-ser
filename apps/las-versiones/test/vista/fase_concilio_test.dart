@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:las_versiones/datos/repositorio_reconstruccion.dart';
 import 'package:las_versiones/dominio/brecha.dart';
 import 'package:las_versiones/dominio/catalogo_brechas.dart';
 import 'package:las_versiones/vista/fase_concilio.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   Future<void> bombearFase(
@@ -16,7 +28,12 @@ void main() {
         home: Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16),
-            child: FaseConcilio(brecha: brecha),
+            child: FaseConcilio(
+              brecha: brecha,
+              repoReconstruccion: RepositorioReconstruccion(
+                gestor: _gestorDePrueba(),
+              ),
+            ),
           ),
         ),
       ),
@@ -36,7 +53,9 @@ void main() {
       'tres afirmaciones todas con calibración correcta → score 100 + '
       'mensaje de buen oficio', (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.reconstruccion':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.reconstruccion':
           '{"es_un_enterramiento":"solido",'
               '"fechado_neolitico":"solido",'
               '"funcion_ritual":"probable"}',
@@ -55,12 +74,10 @@ void main() {
   testWidgets(
       'todas mal calibradas → score 0 + mensaje de aprender del desencaje',
       (tester) async {
-    // Tres afirmaciones declaradas con el nivel opuesto al canónico.
-    // numero_personas_enterradas y origen_atlantico son Disputado;
-    // las marco como Sólido. funcion_ritual es Probable; la marco
-    // como Disputado.
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.reconstruccion':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.reconstruccion':
           '{"numero_personas_enterradas":"solido",'
               '"origen_atlantico":"solido",'
               '"funcion_ritual":"disputado"}',
@@ -78,10 +95,10 @@ void main() {
   testWidgets(
       'aciertos parciales (2 de 3 — score ~67%) → mensaje "vas en el oficio"',
       (tester) async {
-    // 2 aciertos: es_un_enterramiento (solido), fechado_neolitico (solido)
-    // 1 fallo: numero_personas_enterradas (disputado, declaro solido)
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.reconstruccion':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.reconstruccion':
           '{"es_un_enterramiento":"solido",'
               '"fechado_neolitico":"solido",'
               '"numero_personas_enterradas":"solido"}',
@@ -92,14 +109,15 @@ void main() {
       find.textContaining('Acertaste el nivel de confianza en 2 de 3'),
       findsOneWidget,
     );
-    // 2/3 ≈ 0.667 → rango medio
     expect(find.textContaining('Vas en el oficio'), findsOneWidget);
   });
 
   testWidgets('cada afirmación declarada aparece con su línea de comparación',
       (tester) async {
     SharedPreferences.setMockInitialValues({
-      'nuevoser.lasversiones.brecha.1.1.reconstruccion':
+      'nuevoser.lasversiones.perfil_activo_id': 'principal',
+      'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+      'nuevoser.lasversiones.perfil.principal.brecha.1.1.reconstruccion':
           '{"es_un_enterramiento":"solido"}',
     });
     await bombearFase(tester, brecha: CatalogoBrechas.brecha11);

@@ -52,3 +52,25 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Atmósferas fotográficas opcionales por ambiente. Cada foto del
+  # bundle es CC-BY-SA / CC-BY / dominio público — los créditos
+  # individuales viven en `assets/atmosferas/CREDITOS.md`. Si un
+  # ambiente no tiene foto asociada, `FondoAmbiente` cae al motivo
+  # procedural por categoría. El bundle es opt-in: añadir o quitar
+  # fotos no rompe nada.
+  assets:
+    - assets/atmosferas/
+    # Retratos ilustrados de personajes — JPEG 512×512 calidad 90.
+    # Generados con OpenAI ChatGPT (DALL-E 3) — ver atribución y
+    # licencia en `PantallaCreditos`. Migración progresiva: cada voz
+    # sin retrato sigue cayendo al avatar procedural por estamento.
+    # `assets/personajes/master/` (rejilla maestra de referencia + PNGs
+    # originales sin redimensionar) NO entra al bundle por ser un
+    # subdirectorio.
+    - assets/personajes/
+    # Logo de la Colección Nuevo Ser (línea madre, compartido por los
+    # juegos Kids). Cableado al icono Android via mipmaps generados
+    # desde aquí. También disponible como asset en runtime para la
+    # pantalla de inicio del juego.
+    - assets/marca/

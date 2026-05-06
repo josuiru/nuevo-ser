@@ -28,10 +28,15 @@ class PantallaMosaicoArco1 extends StatefulWidget {
   /// Repositorio de persistencia. Inyectable para tests.
   final RepositorioMosaico repoMosaico;
 
+  /// Callback opcional para abrir el Menú principal mientras la
+  /// Cronista trabaja el Mosaico — engranaje arriba-derecha.
+  final VoidCallback? alAbrirMenu;
+
   const PantallaMosaicoArco1({
     super.key,
     required this.alEntregar,
-    this.repoMosaico = const RepositorioMosaico(),
+    required this.repoMosaico,
+    this.alAbrirMenu,
   });
 
   @override
@@ -100,9 +105,34 @@ class _PantallaMosaicoArco1State extends State<PantallaMosaicoArco1> {
     return Scaffold(
       backgroundColor: PaletaArchivo.fondoProfundo,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-          child: Column(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+              child: _construirCuerpoMosaico(puedeEntregar),
+            ),
+            if (widget.alAbrirMenu != null)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  tooltip: 'Menú',
+                  iconSize: 22,
+                  icon: const Icon(
+                    Icons.settings_outlined,
+                    color: PaletaArchivo.ambarLacre,
+                  ),
+                  onPressed: widget.alAbrirMenu,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _construirCuerpoMosaico(bool puedeEntregar) {
+    return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
@@ -193,10 +223,7 @@ class _PantallaMosaicoArco1State extends State<PantallaMosaicoArco1> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   String _textoContador(int cantidadMarcadas) {

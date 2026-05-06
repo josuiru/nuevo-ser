@@ -1,9 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:las_versiones/datos/repositorio_evaluacion_fuente.dart';
 import 'package:las_versiones/dominio/brecha.dart';
 import 'package:las_versiones/dominio/evaluacion_fuente.dart';
+
+GestorPerfiles _gestorDePrueba() => GestorPerfiles(
+      namespace: 'nuevoser.lasversiones',
+      sufijoNombreVisible: 'nombre_jugador',
+      clavesGlobalesNoMigrables: const {
+        'nuevoser.lasversiones.idioma_app',
+        'nuevoser.lasversiones.token_backend',
+        'nuevoser.lasversiones.email_backend',
+      },
+    );
 
 void main() {
   setUp(() {
@@ -12,12 +23,14 @@ void main() {
 
   group('RepositorioEvaluacionFuente', () {
     test('cargar en almacén limpio devuelve null', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       expect(await repositorio.cargar('1.1', 'A'), isNull);
     });
 
     test('guardar y cargar conserva tipo y sesgo', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       const respuesta = RespuestaEvaluacionFuente(
         tipoElegido: TipoFuente.secundaria,
         sesgoElegido: SesgoFuente.difusionista,
@@ -30,7 +43,8 @@ void main() {
     });
 
     test('guardar respuesta parcial — sólo tipo', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       const respuesta = RespuestaEvaluacionFuente(
         tipoElegido: TipoFuente.primaria,
       );
@@ -41,9 +55,11 @@ void main() {
       expect(cargada.estaCompleta, isFalse);
     });
 
-    test('clave persistida sigue el namespace '
-        'nuevoser.lasversiones.brecha.<id>.evaluacion.<idFuente>', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+    test(
+        'clave persistida sigue el namespace nuevoser.lasversiones.perfil.'
+        'principal.brecha.<id>.evaluacion.<idFuente>', () async {
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       await repositorio.guardar(
         '1.1',
         'A',
@@ -51,13 +67,16 @@ void main() {
       );
       final prefs = await SharedPreferences.getInstance();
       expect(
-        prefs.getString('nuevoser.lasversiones.brecha.1.1.evaluacion.A'),
+        prefs.getString(
+          'nuevoser.lasversiones.perfil.principal.brecha.1.1.evaluacion.A',
+        ),
         isNotNull,
       );
     });
 
     test('aislamiento entre brechas y entre fuentes', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       await repositorio.guardar(
         '1.1',
         'A',
@@ -68,7 +87,8 @@ void main() {
     });
 
     test('cargarTodasDeBrecha mapea las evaluaciones por idFuente', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       await repositorio.guardar(
         '1.1',
         'A',
@@ -98,14 +118,19 @@ void main() {
 
     test('blob corrupto → null sin propagar excepción', () async {
       SharedPreferences.setMockInitialValues({
-        'nuevoser.lasversiones.brecha.1.1.evaluacion.A': '{ no es JSON }',
+        'nuevoser.lasversiones.perfil_activo_id': 'principal',
+        'nuevoser.lasversiones.perfiles_lista': <String>['principal'],
+        'nuevoser.lasversiones.perfil.principal.brecha.1.1.evaluacion.A':
+            '{ no es JSON }',
       });
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       expect(await repositorio.cargar('1.1', 'A'), isNull);
     });
 
     test('borrar quita las evaluaciones de la brecha', () async {
-      const repositorio = RepositorioEvaluacionFuente();
+      final repositorio =
+          RepositorioEvaluacionFuente(gestor: _gestorDePrueba());
       await repositorio.guardar(
         '1.1',
         'A',

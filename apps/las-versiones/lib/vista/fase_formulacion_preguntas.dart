@@ -41,7 +41,7 @@ class FaseFormulacionPreguntas extends StatefulWidget {
     super.key,
     required this.brecha,
     required this.alAvanzarFase,
-    this.repoPreguntas = const RepositorioPreguntasBrecha(),
+    required this.repoPreguntas,
     this.evaluador = const EvaluadorPreguntas(),
     this.politicaCierre = const PoliticaCierreFormulacion(),
   });
@@ -109,6 +109,13 @@ class _FaseFormulacionPreguntasState extends State<FaseFormulacionPreguntas> {
     _persistir();
   }
 
+  Future<void> _abrirAyudaTipos(BuildContext contexto) async {
+    await showDialog<void>(
+      context: contexto,
+      builder: (_) => const _DialogoAyudaTipos(),
+    );
+  }
+
   @override
   Widget build(BuildContext contexto) {
     if (_cargando) {
@@ -120,7 +127,7 @@ class _FaseFormulacionPreguntasState extends State<FaseFormulacionPreguntas> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _IntroFase1(),
+        _IntroFase1(alAbrirAyuda: () => _abrirAyudaTipos(contexto)),
         const SizedBox(height: 16),
         _CajaEntrada(
           controlador: _controlador,
@@ -186,19 +193,217 @@ class _FaseFormulacionPreguntasState extends State<FaseFormulacionPreguntas> {
 }
 
 class _IntroFase1 extends StatelessWidget {
-  const _IntroFase1();
+  final VoidCallback alAbrirAyuda;
+
+  const _IntroFase1({required this.alAbrirAyuda});
 
   @override
   Widget build(BuildContext contexto) {
-    return Text(
-      'Antes de tocar nada, formula tus preguntas. ¿Qué quieres saber? '
-      '¿Qué se puede saber? Mínimo tres preguntas, y conviene que sean '
-      'de tipos distintos (factual, causal, perspectiva, metodológica).',
-      style: TextStyle(
-        fontSize: 14,
-        color: PaletaArchivo.textoPrincipal.withOpacity(0.9),
-        height: 1.55,
-        fontWeight: FontWeight.w300,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              'Antes de tocar nada, hazte preguntas. Mínimo 3, y de 2 '
+              'tipos distintos. Toca el "?" para ver los tipos.',
+              style: TextStyle(
+                fontSize: 14,
+                color: PaletaArchivo.textoPrincipal.withOpacity(0.95),
+                height: 1.5,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        IconButton(
+          tooltip: 'Tipos de pregunta',
+          icon: const Icon(
+            Icons.help_outline,
+            color: PaletaArchivo.ambarLacre,
+            size: 22,
+          ),
+          onPressed: alAbrirAyuda,
+        ),
+      ],
+    );
+  }
+}
+
+/// Diálogo con los cuatro tipos de pregunta del oficio. Muestra
+/// nombre claro, una frase corta y dos ejemplos por tipo. La idea es
+/// que la Cronista pueda volver aquí cuando dude — el sistema no le
+/// dice qué pregunta hacer, le enseña los tipos para que ella elija.
+class _DialogoAyudaTipos extends StatelessWidget {
+  const _DialogoAyudaTipos();
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Dialog(
+      backgroundColor: PaletaArchivo.fondoProfundo,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 480),
+        padding: const EdgeInsets.fromLTRB(24, 22, 24, 18),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'TIPOS DE PREGUNTA',
+                style: TextStyle(
+                  fontSize: 12,
+                  letterSpacing: 4,
+                  color: PaletaArchivo.ambarLacre.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'El oficio del cronista usa cuatro tipos de pregunta. '
+                'Una buena investigación los combina.',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: PaletaArchivo.textoPrincipal.withOpacity(0.9),
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 18),
+              const _BloqueTipo(
+                titulo: 'PREGUNTA DE DATO',
+                pista: 'qué, cuándo, dónde, quién, cuántos…',
+                explicacion:
+                    'Pides algo concreto que se puede comprobar. Es un '
+                    'buen punto de partida.',
+                ejemplos: [
+                  '¿Quién construyó este dolmen?',
+                  '¿Cuándo se hizo?',
+                ],
+              ),
+              const _BloqueTipo(
+                titulo: 'PREGUNTA DE CAUSA',
+                pista: 'por qué, a qué se debe, qué provocó…',
+                explicacion:
+                    'Pides el porqué. Conectas hechos: por qué pasó '
+                    'esto y no otra cosa.',
+                ejemplos: [
+                  '¿Por qué eligieron este sitio y no otro?',
+                  '¿Qué provocó que dejaran de usarlo?',
+                ],
+              ),
+              const _BloqueTipo(
+                titulo: 'PREGUNTA DE QUIÉN MIRA',
+                pista:
+                    'desde qué perspectiva, qué intereses, qué se omite…',
+                explicacion:
+                    'Te fijas en quién cuenta la historia, desde dónde '
+                    'la cuenta, o en lo que no aparece. Esto distingue '
+                    'al oficio.',
+                ejemplos: [
+                  '¿Quién escribió esta crónica y para quién?',
+                  '¿Qué voces faltan en estos documentos?',
+                ],
+              ),
+              const _BloqueTipo(
+                titulo: 'PREGUNTA DE CÓMO LO SABEMOS',
+                pista: 'qué evidencia, qué prueba, qué fuente, cómo se sabe…',
+                explicacion:
+                    'Pones a prueba lo que damos por sabido. Difícil y '
+                    'muy valiosa.',
+                ejemplos: [
+                  '¿Qué prueba hay de que vivieron aquí?',
+                  '¿Cómo sabemos la fecha de este resto?',
+                ],
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => Navigator.of(contexto).maybePop(),
+                  child: const Text(
+                    'CERRAR',
+                    style: TextStyle(
+                      fontSize: 12,
+                      letterSpacing: 3,
+                      color: PaletaArchivo.ambarLacre,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BloqueTipo extends StatelessWidget {
+  final String titulo;
+  final String pista;
+  final String explicacion;
+  final List<String> ejemplos;
+
+  const _BloqueTipo({
+    required this.titulo,
+    required this.pista,
+    required this.explicacion,
+    required this.ejemplos,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titulo,
+            style: const TextStyle(
+              fontSize: 11,
+              letterSpacing: 3,
+              color: PaletaArchivo.ambarLacre,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Empieza por: $pista',
+            style: TextStyle(
+              fontSize: 12,
+              color: PaletaArchivo.textoTenue.withOpacity(0.85),
+              fontStyle: FontStyle.italic,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            explicacion,
+            style: const TextStyle(
+              fontSize: 13,
+              color: PaletaArchivo.textoPrincipal,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          for (final ejemplo in ejemplos)
+            Padding(
+              padding: const EdgeInsets.only(left: 12, top: 2),
+              child: Text(
+                '· $ejemplo',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
+                  height: 1.45,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -362,13 +567,13 @@ class _TarjetaPregunta extends StatelessWidget {
     if (!esValida) return 'no admitida';
     switch (tipo) {
       case TipoPregunta.factual:
-        return 'Factual';
+        return 'Dato';
       case TipoPregunta.causal:
-        return 'Causal';
+        return 'Causa';
       case TipoPregunta.perspectiva:
-        return 'Perspectiva';
+        return 'Quién mira';
       case TipoPregunta.metodologica:
-        return 'Método';
+        return 'Cómo lo sabemos';
       case TipoPregunta.indeterminada:
         return 'Aceptada';
     }
@@ -384,12 +589,13 @@ class _ListaPreguntasVacia extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Text(
-          'Aún no has formulado ninguna pregunta. Empieza por la que '
-          'más te tira: probablemente sea factual, y está bien.',
+          'Aún no has formulado ninguna pregunta. Empieza por lo que '
+          'más te llama la atención: ¿qué quieres saber? ¿quién? '
+          '¿por qué?',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 13,
-            color: PaletaArchivo.textoTenue.withOpacity(0.8),
+            color: PaletaArchivo.textoTenue.withOpacity(0.85),
             fontStyle: FontStyle.italic,
             height: 1.5,
           ),

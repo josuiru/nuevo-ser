@@ -27,7 +27,7 @@ class FaseReconstruccion extends StatefulWidget {
     super.key,
     required this.brecha,
     required this.alAvanzarFase,
-    this.repoReconstruccion = const RepositorioReconstruccion(),
+    required this.repoReconstruccion,
   });
 
   @override
@@ -67,6 +67,13 @@ class _FaseReconstruccionState extends State<FaseReconstruccion> {
     setState(() => _declaraciones = nuevas);
   }
 
+  Future<void> _abrirAyuda(BuildContext contexto) async {
+    await showDialog<void>(
+      context: contexto,
+      builder: (_) => const _DialogoAyudaReconstruccion(),
+    );
+  }
+
   @override
   Widget build(BuildContext contexto) {
     if (_cargando) {
@@ -78,7 +85,7 @@ class _FaseReconstruccionState extends State<FaseReconstruccion> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _IntroFase4(),
+        _IntroFase4(alAbrirAyuda: () => _abrirAyuda(contexto)),
         const SizedBox(height: 6),
         _ContadorReconstruccion(
           declaradas: declaradas,
@@ -143,20 +150,205 @@ class _FaseReconstruccionState extends State<FaseReconstruccion> {
 }
 
 class _IntroFase4 extends StatelessWidget {
-  const _IntroFase4();
+  final VoidCallback alAbrirAyuda;
+
+  const _IntroFase4({required this.alAbrirAyuda});
 
   @override
   Widget build(BuildContext contexto) {
-    return Text(
-      'Construye tu versión. Marca cada afirmación que sostienes y '
-      'declara con qué nivel de confianza: Sólido, Probable o '
-      'Disputado. Lo que el oficio premia no es tener razón — es '
-      'haber juzgado bien con lo que tenías.',
-      style: TextStyle(
-        fontSize: 14,
-        color: PaletaArchivo.textoPrincipal.withOpacity(0.9),
-        height: 1.55,
-        fontWeight: FontWeight.w300,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              'Construye tu versión. Para cada afirmación que sostienes '
+              'declara con qué confianza: Sólido, Probable o Disputado. '
+              'Toca el "?" para entender los tres niveles.',
+              style: TextStyle(
+                fontSize: 14,
+                color: PaletaArchivo.textoPrincipal.withOpacity(0.9),
+                height: 1.5,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        IconButton(
+          tooltip: 'Niveles de confianza',
+          icon: const Icon(
+            Icons.help_outline,
+            color: PaletaArchivo.ambarLacre,
+            size: 22,
+          ),
+          onPressed: alAbrirAyuda,
+        ),
+      ],
+    );
+  }
+}
+
+/// Diálogo que explica los tres niveles de confianza con tono cercano
+/// y ejemplos. Es el corazón pedagógico del juego (AH.03, perfil P4
+/// Brier): la honestidad sobre lo que sé y lo que no sé. La idea
+/// clave que el diálogo pone por delante: el oficio NO premia tener
+/// razón, premia juzgar bien con lo que se tiene.
+class _DialogoAyudaReconstruccion extends StatelessWidget {
+  const _DialogoAyudaReconstruccion();
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Dialog(
+      backgroundColor: PaletaArchivo.fondoProfundo,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 480),
+        padding: const EdgeInsets.fromLTRB(24, 22, 24, 18),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'NIVELES DE CONFIANZA',
+                style: TextStyle(
+                  fontSize: 12,
+                  letterSpacing: 4,
+                  color: PaletaArchivo.ambarLacre.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'El oficio no premia tener razón. Premia juzgar bien '
+                'con lo que tienes. Por cada cosa que sostienes, dices '
+                'qué tan segura estás.',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: PaletaArchivo.textoPrincipal.withOpacity(0.92),
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 18),
+              const _BloqueAyudaNivel(
+                titulo: 'SÓLIDO',
+                explicacion:
+                    'Hay pruebas claras y varias fuentes que apuntan a '
+                    'lo mismo. Pondrías la mano en el fuego.',
+                ejemplo:
+                    'Ej.: "Aquí hubo una ciudad romana" — porque hay '
+                    'restos físicos, monedas, inscripciones.',
+              ),
+              _BloqueAyudaNivel(
+                titulo: 'PROBABLE',
+                explicacion:
+                    'Hay pistas que apuntan a esto, pero no es seguro '
+                    'del todo. Es la opción más razonable, no la '
+                    'única posible.',
+                ejemplo:
+                    'Ej.: "Probablemente esta domus era de una familia '
+                    'rica" — porque los mosaicos son caros, pero no '
+                    'hay un letrero que lo confirme.',
+              ),
+              _BloqueAyudaNivel(
+                titulo: 'DISPUTADO',
+                explicacion:
+                    'Hay opiniones distintas, las pruebas chocan o no '
+                    'bastan para decidir. La honestidad pide '
+                    'reconocerlo.',
+                ejemplo:
+                    'Ej.: "Está disputado quién mandó esta inscripción" '
+                    '— porque las fuentes dan dos personas distintas.',
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Si pones Sólido a algo que en realidad es Disputado, '
+                'el Concilio te lo dirá. No es para que aciertes — es '
+                'para que te entrenes en ser honesta con lo que sabes '
+                'y lo que no sabes.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: PaletaArchivo.textoTenue.withOpacity(0.85),
+                  fontStyle: FontStyle.italic,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => Navigator.of(contexto).maybePop(),
+                  child: const Text(
+                    'CERRAR',
+                    style: TextStyle(
+                      fontSize: 12,
+                      letterSpacing: 3,
+                      color: PaletaArchivo.ambarLacre,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BloqueAyudaNivel extends StatelessWidget {
+  final String titulo;
+  final String explicacion;
+  final String ejemplo;
+
+  const _BloqueAyudaNivel({
+    required this.titulo,
+    required this.explicacion,
+    required this.ejemplo,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titulo,
+            style: const TextStyle(
+              fontSize: 11,
+              letterSpacing: 3,
+              color: PaletaArchivo.ambarLacre,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            explicacion,
+            style: const TextStyle(
+              fontSize: 13,
+              color: PaletaArchivo.textoPrincipal,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 2),
+            child: Text(
+              ejemplo,
+              style: TextStyle(
+                fontSize: 12,
+                color: PaletaArchivo.textoPrincipal.withOpacity(0.82),
+                fontStyle: FontStyle.italic,
+                height: 1.45,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -5,45 +5,26 @@ import '../nucleo/paleta_archivo.dart';
 /// Pantalla provisional para mientras el juego está en construcción.
 ///
 /// Se muestra cuando la configuración inicial ya está hecha (idioma
-/// elegido) pero todavía no hay Brechas, Mesa de Trabajo, Concilio,
-/// ni Cuaderno cableados. Su única función es indicarle a quien abra
-/// la app antes de tiempo que la cosa avanza.
+/// elegido) pero todavía no hay Brechas pendientes ni cinemáticas
+/// activas. Su única función es indicarle a quien abra la app antes
+/// de tiempo que la cosa avanza, y exponer un único engranaje a la
+/// derecha que abre la `PantallaMenu` con todas las acciones
+/// (Cuaderno, Avances, Resúmenes, Cuenta, Idioma, Instrucciones,
+/// Créditos, Resetear y Salir).
 ///
 /// Esta pantalla desaparece en cuanto haya un primer flujo jugable
-/// — típicamente la primera Brecha del Arco 1 (ver doc 07).
+/// permanente — típicamente cuando todas las Brechas implementadas
+/// estén abiertas y el orquestador despliegue otro tipo de superficie
+/// principal.
 class PantallaEsqueleto extends StatelessWidget {
-  /// Callback opcional para abrir el Cuaderno desde el esqueleto.
-  /// Si es `null` no se muestra el botón de acceso al Cuaderno —
-  /// útil para pantallas de pre-cinemática donde aún no hay nada
-  /// que leer ahí.
-  final VoidCallback? alAbrirCuaderno;
-
-  /// Callback opcional para abrir la pantalla de inicio de sesión
-  /// del adulto acompañante. Si es `null` no se muestra el botón —
-  /// útil para superficies donde el botón aún no debería aparecer
-  /// (configuración inicial, cinemáticas).
-  final VoidCallback? alAbrirSesion;
-
-  /// `true` si ya hay una sesión iniciada (token JWT presente). El
-  /// botón cambia su etiqueta ("INICIAR SESIÓN" → "SESIÓN INICIADA")
-  /// para que el adulto acompañante sepa el estado sin tener que
-  /// abrir la pantalla. No mostramos el email en pantalla — es PII y
-  /// el dispositivo puede ser compartido con la Cronista.
-  final bool sesionIniciada;
-
-  /// Callback opcional para abrir la pantalla de ajustes — superficie
-  /// mínima de escape (resetear el Archivo). Si es `null` no se
-  /// muestra el botón. Se añade en F2-21 después de que una prueba
-  /// real expusiera que la Cronista podía quedarse sin camino para
-  /// volver atrás desde dentro del juego.
-  final VoidCallback? alAbrirAjustes;
+  /// Callback obligatorio para abrir el Menú principal — la única
+  /// superficie de meta-navegación del esqueleto. Si es `null`
+  /// el botón no se muestra (caso de tests aislados).
+  final VoidCallback? alAbrirMenu;
 
   const PantallaEsqueleto({
     super.key,
-    this.alAbrirCuaderno,
-    this.alAbrirSesion,
-    this.sesionIniciada = false,
-    this.alAbrirAjustes,
+    this.alAbrirMenu,
   });
 
   @override
@@ -100,67 +81,18 @@ class PantallaEsqueleto extends StatelessWidget {
                 ],
               ),
             ),
-            if (alAbrirCuaderno != null)
+            if (alAbrirMenu != null)
               Positioned(
-                top: 8,
-                right: 8,
-                child: TextButton.icon(
-                  onPressed: alAbrirCuaderno,
-                  icon: const Icon(Icons.menu_book_outlined,
-                      color: PaletaArchivo.ambarLacre),
-                  label: Text(
-                    'CUADERNO',
-                    style: TextStyle(
-                      fontSize: 11,
-                      letterSpacing: 3,
-                      color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            if (alAbrirSesion != null)
-              Positioned(
-                top: 8,
-                left: 8,
-                child: TextButton.icon(
-                  onPressed: alAbrirSesion,
-                  icon: Icon(
-                    sesionIniciada
-                        ? Icons.lock_outlined
-                        : Icons.lock_open_outlined,
-                    color: PaletaArchivo.ambarLacre,
-                  ),
-                  label: Text(
-                    sesionIniciada ? 'SESIÓN INICIADA' : 'INICIAR SESIÓN',
-                    style: TextStyle(
-                      fontSize: 11,
-                      letterSpacing: 3,
-                      color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            if (alAbrirAjustes != null)
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: TextButton.icon(
-                  onPressed: alAbrirAjustes,
+                top: 4,
+                right: 4,
+                child: IconButton(
+                  tooltip: 'Menú',
+                  iconSize: 26,
                   icon: const Icon(
                     Icons.settings_outlined,
                     color: PaletaArchivo.ambarLacre,
                   ),
-                  label: Text(
-                    'AJUSTES',
-                    style: TextStyle(
-                      fontSize: 11,
-                      letterSpacing: 3,
-                      color: PaletaArchivo.textoPrincipal.withOpacity(0.85),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  onPressed: alAbrirMenu,
                 ),
               ),
           ],

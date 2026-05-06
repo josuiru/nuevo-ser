@@ -1,60 +1,61 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 /// Flags narrativos persistidos del juego — los hitos de cinemática
 /// vistos, las elecciones tomadas, los rangos alcanzados. Cada flag
-/// es un booleano global (no por-perfil): el dispositivo guarda lo
-/// que la Cronista de este aparato ha vivido.
+/// es un booleano por perfil: dos hermanos que comparten el aparato
+/// cada uno tiene los suyos.
 ///
-/// Cuando llegue el sistema de perfiles (decisión pendiente, ver
-/// `apps/las-versiones/CLAUDE.md`) los flags pasarán a vivir bajo
-/// el prefijo del perfil activo, igual que en Uno Roto. Hoy son
-/// globales para mantener el esqueleto pequeño.
-///
-/// El namespace `nuevoser.lasversiones.flag.<nombre>` sigue la
-/// convención del CLAUDE.md raíz para juegos nuevos.
+/// Namespace: `<prefijoPerfilActivo>flag.<nombre>` — el prefijo lo
+/// resuelve el [GestorPerfiles] del core.
 class RepositorioFlagsNarrativos {
-  static const String _prefijo = 'nuevoser.lasversiones.flag.';
+  static const String _sufijo = 'flag.';
 
-  final Future<SharedPreferences> Function() _prefs;
+  final GestorPerfiles _gestor;
 
-  const RepositorioFlagsNarrativos({
-    Future<SharedPreferences> Function() prefs = SharedPreferences.getInstance,
-  }) : _prefs = prefs;
+  const RepositorioFlagsNarrativos({required GestorPerfiles gestor})
+      : _gestor = gestor;
 
-  String _clave(String flag) => '$_prefijo$flag';
+  Future<String> _claveDe(String flag) async {
+    final prefijo = await _gestor.prefijoActivo();
+    return '$prefijo$_sufijo$flag';
+  }
 
-  /// `true` si el flag está activo en este dispositivo.
+  /// `true` si el flag está activo para el perfil actual.
   Future<bool> estaActivo(String flag) async {
-    final prefs = await _prefs();
-    return prefs.getBool(_clave(flag)) ?? false;
+    final prefs = await _gestor.prefsInicializadas();
+    return prefs.getBool(await _claveDe(flag)) ?? false;
   }
 
-  /// Activa el flag. Idempotente.
+  /// Activa el flag para el perfil actual. Idempotente.
   Future<void> activar(String flag) async {
-    final prefs = await _prefs();
-    await prefs.setBool(_clave(flag), true);
+    final prefs = await _gestor.prefsInicializadas();
+    await prefs.setBool(await _claveDe(flag), true);
   }
 
-  /// Conjunto de flags actualmente activos. Útil para que el
-  /// orquestador resuelva precondiciones (`flagsRequeridos` de
-  /// `EscenaCinematica`).
+  /// Conjunto de flags actualmente activos del perfil actual. Útil
+  /// para que el orquestador resuelva precondiciones
+  /// (`flagsRequeridos` de `EscenaCinematica`).
   Future<Set<String>> activos() async {
-    final prefs = await _prefs();
-    final claves = prefs.getKeys();
+    final prefs = await _gestor.prefsInicializadas();
+    final prefijoCompleto = '${await _gestor.prefijoActivo()}$_sufijo';
     final activos = <String>{};
-    for (final clave in claves) {
-      if (clave.startsWith(_prefijo) && (prefs.getBool(clave) ?? false)) {
-        activos.add(clave.substring(_prefijo.length));
+    for (final clave in prefs.getKeys()) {
+      if (clave.startsWith(prefijoCompleto) &&
+          (prefs.getBool(clave) ?? false)) {
+        activos.add(clave.substring(prefijoCompleto.length));
       }
     }
     return activos;
   }
 
-  /// Borra todos los flags activos. Útil para tests y, en el futuro,
-  /// para una opción de "empezar de nuevo" desde Ajustes.
+  /// Borra todos los flags activos del perfil actual.
   Future<void> borrarTodos() async {
-    final prefs = await _prefs();
-    final claves = prefs.getKeys().where((k) => k.startsWith(_prefijo)).toList();
+    final prefs = await _gestor.prefsInicializadas();
+    final prefijoCompleto = '${await _gestor.prefijoActivo()}$_sufijo';
+    final claves = prefs
+        .getKeys()
+        .where((k) => k.startsWith(prefijoCompleto))
+        .toList();
     for (final clave in claves) {
       await prefs.remove(clave);
     }
