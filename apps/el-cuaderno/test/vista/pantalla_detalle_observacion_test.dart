@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:el_cuaderno/datos/almacenador_medios.dart';
 import 'package:el_cuaderno/dominio/misterio.dart';
 import 'package:el_cuaderno/dominio/nivel_confianza.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
@@ -10,6 +12,12 @@ import 'package:el_cuaderno/vista/pantalla_observacion/pantalla_detalle_observac
 import 'package:el_cuaderno/vista/tema/tema.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+/// Almacenador con dirRaiz fija a `/fake-medios` para que las rutas
+/// resueltas en tests sean predecibles sin tocar filesystem real.
+AlmacenadorMedios _AlmacenadorMediosFake() => AlmacenadorMedios(
+      proveedorDirRaiz: () async => Directory('/fake-medios'),
+    );
 
 void main() {
   late RepositorioMemoria repositorio;
@@ -538,6 +546,90 @@ void main() {
       expect(despues, isNull);
     },
   );
+
+  group('compartir foto a tu adulto', () {
+    testWidgets(
+      'sin foto anclada → la opción NO aparece en el menú overflow',
+      (tester) async {
+        await bombear(tester, crear()); // sin fotoRutaLocal
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+        expect(find.text('compartir foto a tu adulto'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'con foto anclada y AlmacenadorMedios → la opción aparece',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(800, 1200));
+        await tester.pumpWidget(MaterialApp(
+          theme: TemaCuaderno.claro(),
+          localizationsDelegates: TextosApp.localizationsDelegates,
+          supportedLocales: TextosApp.supportedLocales,
+          locale: const Locale('es'),
+          home: PantallaDetalleObservacion(
+            repositorio: repositorio,
+            observacion: crear(fotoRutaLocal: 'medios/o1_foto.jpg'),
+            almacenadorMedios: _AlmacenadorMediosFake(),
+            constructorMiniatura: (_) =>
+                const SizedBox(key: ValueKey('mini-stub')),
+          ),
+        ));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+        expect(find.text('compartir foto a tu adulto'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'pulsar la opción invoca el lanzador con la ruta absoluta y el '
+      'texto pedagógico de acompañamiento',
+      (tester) async {
+        String? rutaRecibida;
+        String? textoRecibido;
+        await tester.binding.setSurfaceSize(const Size(800, 1200));
+        await tester.pumpWidget(MaterialApp(
+          theme: TemaCuaderno.claro(),
+          localizationsDelegates: TextosApp.localizationsDelegates,
+          supportedLocales: TextosApp.supportedLocales,
+          locale: const Locale('es'),
+          home: PantallaDetalleObservacion(
+            repositorio: repositorio,
+            observacion: crear(fotoRutaLocal: 'medios/o1_foto.jpg'),
+            almacenadorMedios: _AlmacenadorMediosFake(),
+            constructorMiniatura: (_) =>
+                const SizedBox(key: ValueKey('mini-stub')),
+            lanzadorCompartirFoto: ({
+              required String rutaAbsolutaFoto,
+              required String texto,
+            }) async {
+              rutaRecibida = rutaAbsolutaFoto;
+              textoRecibido = texto;
+            },
+          ),
+        ));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('compartir foto a tu adulto'));
+        await tester.pumpAndSettle();
+
+        expect(
+          rutaRecibida,
+          '/fake-medios/medios/o1_foto.jpg',
+          reason: 'el lanzador recibe la ruta absoluta resuelta por '
+              'AlmacenadorMedios, no la relativa',
+        );
+        expect(
+          textoRecibido,
+          'Mira lo que he visto en mi cuaderno. ¿Sabes qué es?',
+        );
+      },
+    );
+  });
 
   group('compartir esta página como PDF', () {
     testWidgets(

@@ -449,6 +449,14 @@
   "@ajustesMapaOnlineCuerpo": {
     "description": "Microcopia honesta del bloque del mapa en Ajustes (biblia §2.9 sin extracción + §2.8 offline-first). Explica al adulto qué implica encender el switch sin tecnicismos — no menciona \"OpenStreetMap\" ni \"servidor de tiles\" porque el adulto medio no necesita esos términos para decidir."
   },
+  "detalleCompartirFotoOpcion": "compartir foto a tu adulto",
+  "@detalleCompartirFotoOpcion": {
+    "description": "Opción del menú overflow de PantallaDetalleObservacion, sólo visible cuando la observación tiene foto anclada. Encarna el principio del CLAUDE.md raíz §\"Apps del operador\": el cuaderno NO replica la guía de identificación dentro — si el niño necesita ayuda, comparte la foto con el adulto que tiene su app naturalista. Voz adulta amable, minúscula."
+  },
+  "detalleCompartirFotoTextoAdjunto": "Mira lo que he visto en mi cuaderno. ¿Sabes qué es?",
+  "@detalleCompartirFotoTextoAdjunto": {
+    "description": "Texto que acompaña a la foto en el sheet de compartir del SO. Voz del niño preguntando al adulto. Frase corta, abierta, sin presión. La identificación final la da el adulto desde su app de naturaleza/fósiles, no el cuaderno."
+  },
   "compararVisitasTitulo": "Comparar dos visitas",
   "@compararVisitasTitulo": {
     "description": "Título del AppBar de la pantalla \"comparar dos visitas\" del sit spot. Sentence case, voz adulta amable. Encarna la mecánica del corazón pedagógico de la biblia §3.5: ver cómo cambia el lugar."

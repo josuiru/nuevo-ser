@@ -110,6 +110,16 @@ dependencies:
   pdf: ^3.11.1
   printing: ^5.13.0
 
+  # Puente niño↔adulto: el detalle de una observación con foto ofrece
+  # "compartir foto a tu adulto" que dispara el sheet del SO. El
+  # adulto la abre con la app de identificación que tenga
+  # (`apps/fosiles`, `apps/naturaleza`, iNaturalist, una app de aves…)
+  # SIN que el cuaderno replique la guía dentro. Encarna la regla
+  # pedagógica documentada en CLAUDE.md raíz §"Apps del operador":
+  # el oficio se aprende al lado de alguien, no copiando la herramienta
+  # del adulto dentro del juguete del niño.
+  share_plus: ^10.1.2
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

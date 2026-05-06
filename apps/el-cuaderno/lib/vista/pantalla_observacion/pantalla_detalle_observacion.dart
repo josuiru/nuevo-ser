@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../datos/almacenador_medios.dart';
 import '../../dominio/atlas.dart';
@@ -59,6 +60,7 @@ class PantallaDetalleObservacion extends StatefulWidget {
     this.nombrePerfilActivo,
     this.cargarMedioParaPdf,
     this.lanzadorPdf,
+    this.lanzadorCompartirFoto,
   });
 
   final RepositorioLocal repositorio;
@@ -82,6 +84,15 @@ class PantallaDetalleObservacion extends StatefulWidget {
   /// los bytes del PDF y los lleva al SO. Si null, usa
   /// `Printing.layoutPdf` real.
   final Future<void> Function(Uint8List bytes)? lanzadorPdf;
+
+  /// Inyectable para tests del flujo "compartir foto al adulto".
+  /// Recibe la ruta absoluta de la foto y dispara el sheet del SO.
+  /// Si null, usa `SharePlus.instance.share` real con la microcopia
+  /// del cuaderno como texto acompañante.
+  final Future<void> Function({
+    required String rutaAbsolutaFoto,
+    required String texto,
+  })? lanzadorCompartirFoto;
 
   @override
   State<PantallaDetalleObservacion> createState() =>
@@ -159,6 +170,28 @@ class _EstadoPantallaDetalleObservacion
 
   Future<void> _lanzadorPdfPorDefecto(Uint8List bytes) async {
     await Printing.layoutPdf(onLayout: (_) async => bytes);
+  }
+
+  Future<void> _compartirFotoConAdulto() async {
+    final ruta = _rutaFotoAbsoluta;
+    if (ruta == null) return;
+    final textos = TextosApp.of(context);
+    final lanzador =
+        widget.lanzadorCompartirFoto ?? _lanzadorCompartirFotoPorDefecto;
+    await lanzador(
+      rutaAbsolutaFoto: ruta,
+      texto: textos.detalleCompartirFotoTextoAdjunto,
+    );
+  }
+
+  Future<void> _lanzadorCompartirFotoPorDefecto({
+    required String rutaAbsolutaFoto,
+    required String texto,
+  }) async {
+    await Share.shareXFiles(
+      [XFile(rutaAbsolutaFoto)],
+      text: texto,
+    );
   }
 
   Future<void> _confirmarBorrar() async {
@@ -330,18 +363,24 @@ class _EstadoPantallaDetalleObservacion
             onSelected: (valor) {
               if (valor == 'editar') _editar();
               if (valor == 'compartir') _compartirComoPdf();
+              if (valor == 'compartir-foto') _compartirFotoConAdulto();
               if (valor == 'borrar') _confirmarBorrar();
             },
-            itemBuilder: (_) => const [
-              PopupMenuItem<String>(
+            itemBuilder: (_) => [
+              const PopupMenuItem<String>(
                 value: 'editar',
                 child: Text('editar este registro'),
               ),
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'compartir',
                 child: Text('compartir esta página como PDF'),
               ),
-              PopupMenuItem<String>(
+              if (_rutaFotoAbsoluta != null)
+                PopupMenuItem<String>(
+                  value: 'compartir-foto',
+                  child: Text(textos.detalleCompartirFotoOpcion),
+                ),
+              const PopupMenuItem<String>(
                 value: 'borrar',
                 child: Text('borrar este registro'),
               ),

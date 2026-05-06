@@ -139,6 +139,8 @@
   "lecturaVacioCuerpo": "TODO_CA · Aún no has anotado nada. Cuando lo hagas, podrás abrir tu cuaderno como un libro.",
   "ajustesMapaOnlineEtiqueta": "TODO_CA · Activar el mapa",
   "ajustesMapaOnlineCuerpo": "TODO_CA · Si lo activas, el dispositivo se conectará a internet para mostrar la zona del mundo donde estés. La pestaña \"mapa\" sólo funciona con esto encendido. Más adelante el mapa podrá descargarse una vez y dejará de salir a internet.",
+  "detalleCompartirFotoOpcion": "TODO_CA · compartir foto a tu adulto",
+  "detalleCompartirFotoTextoAdjunto": "TODO_CA · Mira lo que he visto en mi cuaderno. ¿Sabes qué es?",
   "compararVisitasTitulo": "TODO_CA · Comparar dos visitas",
   "compararVisitasEnlace": "TODO_CA · comparar dos visitas",
   "compararVisitasIntro": "TODO_CA · elige dos momentos. mira qué cambia.",

@@ -365,6 +365,14 @@ class TextosAppCa extends TextosApp {
       'TODO_CA · Si lo activas, el dispositivo se conectará a internet para mostrar la zona del mundo donde estés. La pestaña \"mapa\" sólo funciona con esto encendido. Más adelante el mapa podrá descargarse una vez y dejará de salir a internet.';
 
   @override
+  String get detalleCompartirFotoOpcion =>
+      'TODO_CA · compartir foto a tu adulto';
+
+  @override
+  String get detalleCompartirFotoTextoAdjunto =>
+      'TODO_CA · Mira lo que he visto en mi cuaderno. ¿Sabes qué es?';
+
+  @override
   String get compararVisitasTitulo => 'TODO_CA · Comparar dos visitas';
 
   @override

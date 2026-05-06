@@ -705,6 +705,18 @@ abstract class TextosApp {
   /// **'Si lo activas, el dispositivo se conectará a internet para mostrar la zona del mundo donde estés. La pestaña \"mapa\" sólo funciona con esto encendido. Más adelante el mapa podrá descargarse una vez y dejará de salir a internet.'**
   String get ajustesMapaOnlineCuerpo;
 
+  /// Opción del menú overflow de PantallaDetalleObservacion, sólo visible cuando la observación tiene foto anclada. Encarna el principio del CLAUDE.md raíz §"Apps del operador": el cuaderno NO replica la guía de identificación dentro — si el niño necesita ayuda, comparte la foto con el adulto que tiene su app naturalista. Voz adulta amable, minúscula.
+  ///
+  /// In es, this message translates to:
+  /// **'compartir foto a tu adulto'**
+  String get detalleCompartirFotoOpcion;
+
+  /// Texto que acompaña a la foto en el sheet de compartir del SO. Voz del niño preguntando al adulto. Frase corta, abierta, sin presión. La identificación final la da el adulto desde su app de naturaleza/fósiles, no el cuaderno.
+  ///
+  /// In es, this message translates to:
+  /// **'Mira lo que he visto en mi cuaderno. ¿Sabes qué es?'**
+  String get detalleCompartirFotoTextoAdjunto;
+
   /// Título del AppBar de la pantalla "comparar dos visitas" del sit spot. Sentence case, voz adulta amable. Encarna la mecánica del corazón pedagógico de la biblia §3.5: ver cómo cambia el lugar.
   ///
   /// In es, this message translates to:
