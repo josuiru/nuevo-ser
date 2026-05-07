@@ -58,7 +58,7 @@ class PantallaPaginaSitSpotJubilado extends StatelessWidget {
                 const SizedBox(height: 24),
                 if (observaciones.isEmpty)
                   Text(
-                    'No hay observaciones guardadas en esta página.',
+                    TextosApp.of(context).sitSpotJubiladoPaginaVacia,
                     style: TipografiaCuaderno.serif(
                       color: PaletaCuaderno.tintaTenue,
                       tamano: TipografiaCuaderno.tamano13,
@@ -68,8 +68,10 @@ class PantallaPaginaSitSpotJubilado extends StatelessWidget {
                 else ...[
                   Text(
                     observaciones.length == 1
-                        ? '1 observación guardada'
-                        : '${observaciones.length} observaciones guardadas',
+                        ? TextosApp.of(context).sitSpotJubiladoUnaObservacion
+                        : TextosApp.of(context)
+                            .sitSpotJubiladoVariasObservaciones(
+                                observaciones.length),
                     style: TipografiaCuaderno.sans(
                       color: esquema.tertiary,
                       tamano: TipografiaCuaderno.tamano12,
@@ -144,7 +146,7 @@ class _CabeceraSitSpot extends StatelessWidget {
           ],
           const SizedBox(height: 8),
           Text(
-            _periodoActivo(sitSpot),
+            _periodoActivo(context, sitSpot),
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
@@ -155,11 +157,12 @@ class _CabeceraSitSpot extends StatelessWidget {
     );
   }
 
-  static String _periodoActivo(SitSpot sitSpot) {
+  static String _periodoActivo(BuildContext context, SitSpot sitSpot) {
+    final textos = TextosApp.of(context);
     final desde = _formatearFecha(sitSpot.creadoEn);
     final hasta = sitSpot.retiradoEn;
-    if (hasta == null) return 'Creado el $desde.';
-    return 'Estuvo activo del $desde al ${_formatearFecha(hasta)}.';
+    if (hasta == null) return textos.sitSpotJubiladoPeriodoCreado(desde);
+    return textos.sitSpotJubiladoPeriodoActivo(desde, _formatearFecha(hasta));
   }
 
   static String _formatearFecha(DateTime cuando) {

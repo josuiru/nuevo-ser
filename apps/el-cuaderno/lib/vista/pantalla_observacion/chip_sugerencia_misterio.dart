@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../dominio/misterio.dart';
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
@@ -29,6 +30,7 @@ class ChipSugerenciaMisterio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Material(
       color: esquema.surface,
       shape: RoundedRectangleBorder(
@@ -49,7 +51,7 @@ class ChipSugerenciaMisterio extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              misterioSugerido.pregunta,
+              misterioSugerido.preguntaEn(textos.localeName),
               style: TipografiaCuaderno.serif(
                 color: esquema.onSurface,
                 tamano: TipografiaCuaderno.tamano14,
@@ -62,12 +64,12 @@ class ChipSugerenciaMisterio extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: alRechazar,
-                  child: const Text('no'),
+                  child: Text(textos.chipSugerenciaMisterioNo),
                 ),
                 const SizedBox(width: 8),
                 FilledButton.tonal(
                   onPressed: alAnclar,
-                  child: const Text('anclar'),
+                  child: Text(textos.chipSugerenciaMisterioAnclar),
                 ),
               ],
             ),

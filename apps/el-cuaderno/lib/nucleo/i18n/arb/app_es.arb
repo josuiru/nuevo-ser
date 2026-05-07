@@ -704,5 +704,303 @@
   "cuidadorResumenCabecera": "Esta semana, en una frase",
   "@cuidadorResumenCabecera": {
     "description": "Cabecera del párrafo cualitativo que el LLM server-side genera. Solo se muestra si el sync trae un texto no vacío."
-  }
+  },
+
+  "crearSitSpotPermisoDenegadoPermanente": "No se ha podido pedir permiso. Si quieres anclar la posición, cámbialo en los ajustes del teléfono.",
+  "crearSitSpotSinPermisoUbicacion": "Sin permiso de ubicación. Puedes seguir sin él.",
+  "crearSitSpotErrorLocalizar": "No se ha podido localizar la posición. Puedes seguir sin ella.",
+  "crearSitSpotPrePermisoTitulo": "Anclar la posición a tu sit spot",
+  "crearSitSpotPrePermisoMensaje": "La posición se queda en este cuaderno y no sale a internet. No la ve el adulto. Es opcional — el sit spot funciona sin ella.",
+  "crearSitSpotPrePermisoCancelar": "cancelar",
+  "crearSitSpotPrePermisoAnclar": "anclar",
+  "sitSpotsJubiladosTitulo": "Sit spots de antes",
+
+  "misterioPaginaTitulo": "Misterio",
+  "misterioBotonEvidencia": "anotar evidencia para este misterio",
+  "misterioBotonCerrar": "ya tengo mi respuesta sobre este Misterio",
+  "misterioCabeceraEvidencia": "Lo que ya has anotado",
+  "misterioPaginaEvidenciaVacia": "Todavía no has anotado nada para este misterio. Cuando lo hagas, aparecerá aquí.",
+  "misterioBloqueRespuesta": "Tu respuesta",
+  "misterioCerradoEl": "Cerrado el {fecha}",
+  "@misterioCerradoEl": {
+    "placeholders": {
+      "fecha": {"type": "String"}
+    }
+  },
+  "misterioReabrir": "reabrir este Misterio",
+  "misterioReabrirTitulo": "Reabrir este Misterio",
+  "misterioReabrirMensaje": "Si lo reabres, tu respuesta se borra y el Misterio vuelve a la lista de abiertos. Las anotaciones que ya tenías se conservan.",
+  "misterioReabrirCancelar": "No",
+  "misterioReabrirConfirmar": "Reabrir",
+  "misterioCerrarTitulo": "Tu respuesta",
+  "misterioCerrarCabeceraMisterio": "El Misterio",
+  "misterioCerrarIntro": "Cuenta con tus palabras lo que has aprendido sobre este Misterio. No hay respuesta correcta — esto no se corrige ni se nota; sólo se guarda en tu cuaderno.",
+  "misterioCerrarPlaceholder": "Lo que he aprendido sobre este Misterio...",
+  "misterioCerrarBotonGuardar": "guardar mi respuesta",
+  "misterioCerrarBotonGuardando": "guardando...",
+  "misterioCerrarErrorGuardar": "No se ha podido guardar la respuesta. Vuelve a probar.",
+
+  "observacionPrePermisoTitulo": "Anclar la posición a esta página",
+  "observacionPrePermisoMensaje": "La posición se queda en este cuaderno y no sale a internet. No la ve el adulto. Es opcional — puedes guardar la página sin ella.",
+  "observacionPrePermisoCancelar": "cancelar",
+  "observacionPrePermisoAnclar": "anclar",
+
+  "detalleObservacionTitulo": "Página del cuaderno",
+  "detalleObservacionTooltipOpciones": "opciones de la página",
+  "detalleObservacionMenuEditar": "editar este registro",
+  "detalleObservacionMenuCompartirPdf": "compartir esta página como PDF",
+  "detalleObservacionMenuBorrar": "borrar este registro",
+  "detalleObservacionBorrarTitulo": "Borrar este registro",
+  "detalleObservacionBorrarMensaje": "Vas a borrar esta página del cuaderno. La foto y el dibujo, si los tenía, también se borrarán. No se puede deshacer.",
+  "detalleObservacionBorrarCancelar": "cancelar",
+  "detalleObservacionBorrarConfirmar": "borrar",
+
+  "listaObservacionesTitulo": "Todas tus páginas",
+  "listaObservacionesPlaceholderBusqueda": "busca por algo que recuerdes",
+  "listaObservacionesLimpiarBusqueda": "limpiar búsqueda",
+  "listaObservacionesBusquedaSinResultados": "Ninguna página guarda eso. Prueba con otra palabra.",
+
+  "sitSpotJubilarTitulo": "Jubilar este sit spot",
+  "sitSpotJubilarMensaje": "Vas a jubilar \"{nombre}\". La página seguirá guardada en el cuaderno. No podrás añadir más observaciones a este sit spot, pero sí crear otro nuevo cuando quieras.",
+  "@sitSpotJubilarMensaje": {
+    "placeholders": {
+      "nombre": {"type": "String"}
+    }
+  },
+  "sitSpotJubilarCancelar": "cancelar",
+  "sitSpotJubilarConfirmar": "jubilar",
+  "sitSpotExplicacionCerrar": "Cerrar",
+
+  "preguntaReabrirCancelar": "No",
+  "preguntaReabrirConfirmar": "Reabrir",
+  "preguntaBorrarCancelar": "cancelar",
+  "preguntaBorrarConfirmar": "borrar",
+
+  "loginProfesorTitulo": "Acceso del profesor",
+  "loginProfesorIntro": "Esta pantalla es para el adulto que acompaña a la clase. No se enseña al niño. La cuenta de profesor se crea desde la web; aquí solo se vincula.",
+  "loginProfesorPlaceholderEmail": "correo del profesor",
+  "loginProfesorPlaceholderPassword": "contraseña",
+  "loginProfesorBotonEntrar": "Iniciar sesión",
+  "loginProfesorEntrando": "Entrando…",
+  "loginProfesorErrorVacio": "Escribe el correo y la contraseña antes de continuar.",
+  "loginProfesorErrorCredenciales": "El correo o la contraseña no coinciden con ninguna cuenta de profesor.",
+  "loginProfesorErrorSinRol": "Esta cuenta no tiene perfil de profesor. Si eres cuidador, busca ese acceso aparte.",
+  "loginProfesorErrorRolInvalido": "El servidor no aceptó la petición. Avisa al equipo.",
+  "loginProfesorErrorRed": "No se ha podido conectar con el servidor. Inténtalo en un momento.",
+
+  "aulaProfesorTitulo": "Aula",
+  "aulaProfesorTooltipCerrarSesion": "cerrar sesión",
+  "aulaProfesorCrearTitulo": "Crea tu primera aula",
+  "aulaProfesorCrearIntro": "El servidor te dará un código que repartes a la clase. Cada niño se une desde su cuaderno con ese código.",
+  "aulaProfesorPlaceholderNombre": "nombre del aula",
+  "aulaProfesorHintNombre": "p. ej., 6º A · curso 2026/27",
+  "aulaProfesorJuegosCabecera": "Juegos del aula",
+  "aulaProfesorBotonCrear": "Crear aula",
+  "aulaProfesorCreando": "Creando…",
+  "aulaProfesorErrorVacio": "Pon un nombre al aula y elige al menos un juego.",
+  "aulaProfesorErrorSesionCaducadaCrear": "La sesión ha caducado. Vuelve a iniciar sesión.",
+  "aulaProfesorErrorDatosInvalidos": "Algún dato del aula no es válido. Revisa el nombre y los juegos seleccionados.",
+  "aulaProfesorErrorCodigoUnico": "No se pudo generar un código único para el aula. Inténtalo en un momento.",
+  "aulaProfesorErrorGenerico": "No se ha podido crear el aula (HTTP {codigo}).",
+  "@aulaProfesorErrorGenerico": {
+    "placeholders": {
+      "codigo": {"type": "int"}
+    }
+  },
+  "aulaProfesorMensajeKMinimo": "El aula necesita al menos cinco niños con datos esta semana para que se vean los agregados. Eso protege la privacidad de la clase. Vuelve cuando haya más actividad.",
+  "aulaProfesorErrorSesionCaducadaCargar": "La sesión ha caducado. Cierra sesión y vuelve a entrar.",
+  "aulaProfesorErrorCargarAgregados": "No se han podido cargar los agregados ({error}).",
+  "@aulaProfesorErrorCargarAgregados": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "aulaProfesorCodigoEtiqueta": "Código del aula: {code}",
+  "@aulaProfesorCodigoEtiqueta": {
+    "placeholders": {
+      "code": {"type": "String"}
+    }
+  },
+  "aulaProfesorSemanaResumen": "Semana {iso} · {reporting} de {total} con datos",
+  "@aulaProfesorSemanaResumen": {
+    "placeholders": {
+      "iso": {"type": "String"},
+      "reporting": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+
+  "preguntaCenaCuadernoEnReposo": "Esta semana el cuaderno descansó. ¿Hay algo del lugar que os apetezca volver a mirar despacio?",
+  "preguntaCenaObservacionesSinAnclajes": "¿Qué cosa pequeña ha aparecido esta semana en el cuaderno que no estaba antes?",
+  "preguntaCenaRegresoAlSitSpot": "Esta semana ha vuelto al lugar de regreso. ¿Qué le ha sonado distinto allí?",
+  "preguntaCenaUnaPreguntaActiva": "Esta semana ha quedado dándole vueltas a una pregunta. ¿Cuál cuenta hoy?",
+  "preguntaCenaVariasPreguntasActivas": "Esta semana ha tenido varias preguntas a la vez. ¿Cuál de todas le tiene más enganchada ahora mismo?",
+
+  "configuracionInicialEnlacePolitica": "lee cómo se cuida tu cuaderno",
+  "configuracionInicialPoliticaTitulo": "cómo se cuida tu cuaderno",
+
+  "crearSitSpotTitulo": "Tu sit spot",
+  "crearSitSpotQuitarPosicion": "quitar posición",
+
+  "paginaSitSpotBotonAnotar": "anotar observación aquí",
+
+  "lienzoDibujoBotonGuardar": "guardar dibujo",
+
+  "tarjetaSitSpotQueEs": "qué es un sit spot",
+  "tarjetaSitSpotJubilarOpcion": "jubilar este sit spot",
+
+  "editarObservacionTitulo": "editar página",
+  "editarObservacionBotonGuardar": "guardar cambios",
+
+  "chipSugerenciaMisterioNo": "no",
+  "chipSugerenciaMisterioAnclar": "anclar",
+
+  "homeBotonVerTodasPaginas": "ver todas tus páginas",
+  "mapaBotonAbrirAjustes": "abrir Ajustes",
+  "mapaBotonEncender": "encender el mapa",
+  "mapaConfirmarEncenderEncender": "encender",
+  "mapaConfirmarEncenderCancelar": "cancelar",
+  "mapaBotonConfigurarSitSpot": "configurar sit spot",
+
+  "observacionQuitarPosicion": "quitar posición",
+
+  "sitSpotsJubiladosVacio": "Aquí aparecerán los sit spots que jubiles. Sus páginas seguirán guardadas con sus observaciones.",
+  "sitSpotJubiladoPeriodoCreado": "Creado el {desde}.",
+  "@sitSpotJubiladoPeriodoCreado": {
+    "placeholders": {"desde": {"type": "String"}}
+  },
+  "sitSpotJubiladoPeriodoActivo": "Estuvo activo del {desde} al {hasta}.",
+  "@sitSpotJubiladoPeriodoActivo": {
+    "placeholders": {
+      "desde": {"type": "String"},
+      "hasta": {"type": "String"}
+    }
+  },
+  "sitSpotJubiladoSinObservaciones": "Sin observaciones guardadas.",
+  "sitSpotJubiladoUnaObservacion": "1 observación guardada",
+  "sitSpotJubiladoVariasObservaciones": "{cuenta} observaciones guardadas",
+  "@sitSpotJubiladoVariasObservaciones": {
+    "placeholders": {"cuenta": {"type": "int"}}
+  },
+  "sitSpotJubiladoPaginaVacia": "No hay observaciones guardadas en esta página.",
+
+  "paginaSitSpotLoQueAnotaste": "Lo que ya has anotado aquí",
+  "paginaSitSpotVacio": "Todavía no has anotado nada en este sit spot. Cuando lo hagas, aparecerá aquí.",
+  "paginaSitSpotActivoDesde": "Activo desde el {desde}.",
+  "@paginaSitSpotActivoDesde": {
+    "placeholders": {"desde": {"type": "String"}}
+  },
+
+  "crearSitSpotIntro": "Un sit spot es un lugar al que vuelves. Lo ves cambiar con el tiempo.",
+  "crearSitSpotEtiquetaNombre": "cómo se llama tu sit spot",
+  "crearSitSpotHintNombre": "el roble grande, mi banco, donde fui con la abuela…",
+  "crearSitSpotEtiquetaDonde": "dónde está, para acordarte (opcional)",
+  "crearSitSpotHintDonde": "al final del parque, junto al pino más alto",
+  "crearSitSpotBotonGuardar": "guardar sit spot",
+  "crearSitSpotGuardando": "guardando…",
+  "crearSitSpotPosicionNoAnclada": "Posición no anclada",
+  "crearSitSpotPosicionAnclada": "Posición anclada al sit spot",
+  "crearSitSpotPosicionPrivada": "La posición se queda en este cuaderno y no sale a internet.",
+  "crearSitSpotBotonAnclar": "anclar mi posición",
+  "crearSitSpotLocalizando": "localizando…",
+
+  "presentacionSitSpotTitulo": "Un sitio que conoces",
+  "presentacionSitSpotParrafo1": "En este cuaderno hay un sitio especial. Lo eliges tú: un banco del parque, una piedra junto al río, un rincón del jardín, una ventana.",
+  "presentacionSitSpotParrafo2": "Lo importante no es que sea bonito. Es que puedas volver. Si vuelves muchas veces, lo verás cambiar — las hojas, los pájaros, la luz, los bichos. El cuaderno se llenará de lo que pase allí.",
+  "presentacionSitSpotParrafo3": "Cuando lo encuentres, le pones nombre. No tiene que ser un nombre serio.",
+  "presentacionSitSpotBotonTengoSitio": "ya pienso en uno",
+  "presentacionSitSpotBotonTodaviaNo": "todavía no",
+
+  "acercaCabeceraNombre": "El Cuaderno",
+  "acercaCabeceraSubtitulo": "un cuaderno de campo digital — para 9-13 años",
+  "acercaCierre": "el monte espera",
+
+  "acercaQueEsTitulo": "qué es esto",
+  "acercaQueEsCuerpo": "Un cuaderno de campo. Es tuyo. Lo que escribas aquí no se borra solo y nadie lo lee a tus espaldas.\n\nNo es un juego para ganar. No tiene puntos, ni rachas, ni nada que celebre nada. Es un sitio donde dejar lo que ves cuando sales a mirar.",
+
+  "acercaPestanasTitulo": "las cuatro pestañas",
+  "acercaPestanasCuerpo": "**Cuaderno** — el saludo, el sit spot, los Misterios abiertos y la última página.\n\n**Mapa** — sólo si la persona adulta lo enciende en Ajustes.\n\n**Misterios** — tus preguntas y los Misterios del cuaderno. Aquí formulas las tuyas con el botón *\"formular pregunta\"*.\n\n**Tutor** — alguien con quien hablar cuando no entiendes algo. No es un buscador de internet y no da la respuesta hecha.",
+
+  "acercaAnotarTitulo": "anotar una observación",
+  "acercaAnotarCuerpo": "Cuando ves algo que merece la pena, lo anotas. Una página tiene tres campos importantes:\n\n**Qué viste** — lo que vieron tus ojos. *\"Una mariposa blanca con manchas marrones\"* es mejor que *\"una pieris\"*. La identificación viene después.\n\n**Crees que es** — si crees que sabes qué era. Si no, lo dejas vacío. Decir *\"no sé\"* es información: significa que volverás a mirar.\n\n**Nivel de confianza** — tres opciones: *consenso* (estás seguro), *hipótesis activa* (crees que sabes pero te haría falta volver a mirar), *no segura* (viste algo, no sabes qué).",
+
+  "acercaSitSpotTitulo": "tu sit spot",
+  "acercaSitSpotCuerpo": "El lugar al que vuelves muchas veces. No tiene que ser bonito. Tiene que ser tuyo: un banco del parque, una piedra junto al río, una rama gruesa de un árbol del patio.\n\nSi vas siempre a sitios distintos, ves cosas distintas. Si vuelves al mismo sitio, ves **cómo cambia**.\n\nNo tienes prisa por elegirlo. La presentación del cuaderno deja explícito que se puede dejar para después.",
+
+  "acercaMisteriosTitulo": "misterios y preguntas",
+  "acercaMisteriosCuerpo": "Hay dos tipos de preguntas en la pestaña Misterios:\n\nLos **Misterios del cuaderno** los propone el cuaderno, contextualizados a tu zona y a la estación. No tienes que resolverlos todos.\n\n**Tus preguntas** las formulas tú. Si no se te ocurre cómo empezar, hay un *\"necesito ideas\"* con cinco maneras posibles.\n\nCuando creas que tienes tu respuesta — no la respuesta correcta del libro de ciencias, **tu respuesta** — la guardas. Aquí no hay respuesta correcta: hay tu respuesta.",
+
+  "acercaNoHaceTitulo": "lo que este cuaderno NO hace",
+  "acercaNoHaceCuerpo": "No tiene puntos, niveles, rachas, premios.\n\nNo envía notificaciones. Cuando te apetezca, abres tú.\n\nNo celebra cuando anotas algo. Tu observación es la celebración.\n\nNo te compara con otros niños. No hay rankings.\n\nNo te dice si algo está bien o mal. Lo que ves está bien por ser visto.",
+
+  "acercaPrivacidadTitulo": "para tu adulto: privacidad",
+  "acercaPrivacidadCuerpo": "Esto es un hard limit no negociable: el cuaderno es del niño.\n\n**Sólo se queda en el dispositivo, nunca cruza red:**\n· el texto libre de las observaciones\n· las fotos\n· los dibujos del lienzo\n· las coordenadas precisas\n· las preguntas que formula\n· las respuestas al cerrar Misterios\n· el nombre que ha elegido\n\n**Sólo viaja al servidor con sincronización opt-in:**\n· un *hash* de la observación (no el texto)\n· el código de región provincial (no la posición)\n· un agregado semanal con conteos por tipo, sin contenido\n· las preguntas al Tutor IA, si está activado, con cuota diaria + ZDR + lista negra\n\n**Lo que la persona adulta puede ver:**\n· un párrafo cualitativo resumiendo la semana, sin texto literal\n· una pregunta sugerida para la cena\n\n**Lo que la persona adulta no puede ver:** ninguna observación literal, ninguna foto, ningún dibujo, ninguna coordenada, ninguna conversación con el Tutor.",
+
+  "acercaAcompanarTitulo": "para tu adulto: cómo acompañar",
+  "acercaAcompanarCuerpo": "El sit spot es lo más importante. Si la niña no se lo ha apropiado, no volverá. Que lo elija ella. Si todavía no encuentra ninguno, no tiene prisa.\n\nUna observación a la semana es buen ritmo. Hay semanas con cero observaciones — eso también está bien. La biblia del proyecto: *cierre amable y ritmo respetuoso.*\n\nSi activas el resumen semanal en Ajustes, recibirás una pregunta sugerida para la cena. Está pensada para que sea más fácil empezar conversación, no para auditar.\n\n**Lo que es mejor no hacer:**\n· leer su cuaderno por encima del hombro\n· pedir que demuestre lo que ha aprendido\n· corregir si identifica mal — la próxima vez comparará y se corregirá sola\n· felicitar efusivamente cuando anota — convierte el oficio en performance",
+
+  "acercaTutorTitulo": "para tu adulto: el Tutor",
+  "acercaTutorCuerpo": "Asistente conversacional limitado por reglas. La biblia del proyecto le pone cinco bumpers:\n\n**ZDR** — el proveedor del modelo no entrena con las conversaciones ni las retiene.\n\n**Sin memoria entre conversaciones.** Cada apertura empieza limpia.\n\n**Lista negra de temas.** Hay temas (sexualidad, violencia, drogas, autolesión, datos personales) que el Tutor no continúa. Redirige amable y al cabo de pocos turnos cierra.\n\n**Cuota de 30 turnos al día.** Cuando se llega, el Tutor responde *\"hablamos mañana\"*. Bumper deliberado contra el efecto adictivo.\n\n**No da respuestas hechas.** Está prompted para devolver la pregunta al lugar.",
+
+  "acercaAulaTitulo": "para el aula: vista del docente",
+  "acercaAulaCuerpo": "Cuando este cuaderno se usa en clase, la persona docente accede a un panel agregado desde Ajustes → *\"Acceder como profesor\"*. Lo que ve:\n\n· recuento agregado de la actividad de su aula\n· distribución por dominios (presencia, observación, registro, identificación, relaciones, ciclos, hábitats, hipótesis, tejido)\n\n**Nunca el contenido literal de las observaciones de ningún niño.**\n\nUmbral mínimo: **k≥5**. Si en un dominio hay menos de 5 alumnas con datos, ese dato se oculta para que no sea posible deducir el comportamiento de una niña concreta.\n\nEsta parte está pendiente de cerrar la policy escolar definitiva con la regulación europea para menores en aulas.",
+
+  "acercaIdiomasTitulo": "idiomas",
+  "acercaIdiomasCuerpo": "Castellano, euskera y catalán desde el primer arranque. La traducción de euskera y catalán está pendiente de revisión por hablantes nativas con criterio terminológico naturalista.",
+
+  "acercaLicenciaTitulo": "licencia",
+  "acercaLicenciaCuerpo": "Código AGPL-3.0. Contenido (textos, ilustraciones, catálogo de Misterios) CC-BY-SA 4.0. Sin tracking, sin anuncios, sin monetización. Privacidad por diseño.",
+
+  "tarjetaMisterioContadorVacio": "todavía no has anotado nada",
+  "tarjetaMisterioContadorUna": "1 evidencia anotada",
+  "tarjetaMisterioContadorVarias": "{n} evidencias anotadas",
+  "@tarjetaMisterioContadorVarias": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "tarjetaMisterioPrefijoCaliente": "estos días · {base}",
+  "@tarjetaMisterioPrefijoCaliente": {
+    "placeholders": {"base": {"type": "String"}}
+  },
+  "tarjetaSitSpotOpcionesTooltip": "opciones del sit spot",
+  "editarObservacionEtiquetaDonde": "dónde estabas",
+
+  "lienzoTooltipDeshacer": "deshacer",
+  "lienzoTooltipBorrar": "borrar y empezar otra vez",
+  "lienzoAnchoFino": "trazo fino",
+  "lienzoAnchoMedio": "trazo medio",
+  "lienzoAnchoGrueso": "trazo grueso",
+  "lienzoHerramientaPlumilla": "plumilla",
+  "lienzoHerramientaLapicero": "lapicero",
+  "lienzoHerramientaCarboncillo": "carboncillo",
+  "lienzoHerramientaGoma": "goma",
+  "lienzoColorTinta": "tinta",
+  "lienzoColorSanguina": "sanguina",
+  "lienzoColorSepia": "sepia",
+  "lienzoColorOcre": "ocre",
+  "lienzoColorVerdeBotanico": "verde botánico",
+
+  "pdfPlantillaTituloCabecera": "Cuaderno de campo",
+  "pdfPlantillaTituloCabeceraConNombre": "Cuaderno de campo · {nombre}",
+  "@pdfPlantillaTituloCabeceraConNombre": {
+    "placeholders": {"nombre": {"type": "String"}}
+  },
+  "pdfPlantillaAutorAnonimo": "El Cuaderno",
+  "pdfPlantillaPagina": "pág. {numero} de {total}",
+  "@pdfPlantillaPagina": {
+    "placeholders": {
+      "numero": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "pdfPlantillaSitSpot": "Sit spot: {nombre}",
+  "@pdfPlantillaSitSpot": {
+    "placeholders": {"nombre": {"type": "String"}}
+  },
+  "pdfPlantillaDiaHora": "Día y hora",
+  "pdfPlantillaDondeEstabas": "Dónde estabas",
+  "pdfPlantillaQueViste": "Qué viste",
+  "pdfPlantillaCreesQueEs": "Crees que es",
+  "pdfPlantillaDibuja": "Dibuja",
+
+  "configuracionInicialPoliticaCuerpo": "Tu cuaderno es tuyo. Lo que escribes, las fotos y los dibujos que añades, viven solo en tu dispositivo. No salen al servidor.\n\nNo hay anuncios. No se vende lo que escribes a nadie. No hay rachas, niveles ni recompensas que te empujen a volver: vuelve si quieres, cuando quieras.\n\nSi una persona adulta quiere ayudarte a usar el Tutor real, o quiere recibir un resumen para hablar contigo, tiene que entrar a Ajustes y darle a un botón cada vez. Nunca pasa solo. Nunca avisa a nadie sin que tú lo sepas.\n\nCuando quieras, en Ajustes puedes exportar todo tu cuaderno como un archivo y borrarlo del todo de este dispositivo.\n\nEsta es una versión provisional escrita por el equipo que está haciendo el cuaderno. Antes de que lo use mucha gente, una persona experta en leyes va a revisarla."
 }

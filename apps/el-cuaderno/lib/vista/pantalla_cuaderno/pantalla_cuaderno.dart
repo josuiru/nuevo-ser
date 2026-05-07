@@ -280,6 +280,10 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
               alAbrirCrearSitSpot: _abrirCrearSitSpot,
               alAbrirPaginaSitSpot: _abrirPaginaSitSpot,
               alAbrirDetalleObservacion: _abrirDetalleObservacion,
+              alOptInCambiado: () {
+                if (!mounted) return;
+                setState(() => _versionMapaOptIn++);
+              },
             ),
             _VistaMisterios(
               estado: widget.estado,
@@ -382,24 +386,21 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
   Future<void> _jubilarSitSpot() async {
     final actual = widget.estado.sitSpot;
     if (actual == null) return;
+    final textos = TextosApp.of(context);
     final navigator = Navigator.of(context);
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (dialogo) => AlertDialog(
-        title: const Text('Jubilar este sit spot'),
-        content: Text(
-          'Vas a jubilar "${actual.nombre}". La página seguirá guardada '
-          'en el cuaderno. No podrás añadir más observaciones a este '
-          'sit spot, pero sí crear otro nuevo cuando quieras.',
-        ),
+        title: Text(textos.sitSpotJubilarTitulo),
+        content: Text(textos.sitSpotJubilarMensaje(actual.nombre)),
         actions: [
           TextButton(
             onPressed: () => navigator.pop(false),
-            child: const Text('cancelar'),
+            child: Text(textos.sitSpotJubilarCancelar),
           ),
           FilledButton(
             onPressed: () => navigator.pop(true),
-            child: const Text('jubilar'),
+            child: Text(textos.sitSpotJubilarConfirmar),
           ),
         ],
       ),
@@ -740,7 +741,7 @@ class _VistaCuaderno extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: alAbrirListaObservaciones,
-                    child: const Text('ver todas tus páginas'),
+                    child: Text(textos.homeBotonVerTodasPaginas),
                   ),
                 ],
               ),
@@ -855,6 +856,7 @@ class _VistaMapa extends StatefulWidget {
     required this.alAbrirCrearSitSpot,
     required this.alAbrirPaginaSitSpot,
     required this.alAbrirDetalleObservacion,
+    this.alOptInCambiado,
   });
 
   final RepositorioLocal repositorio;
@@ -866,6 +868,7 @@ class _VistaMapa extends StatefulWidget {
   final void Function() alAbrirCrearSitSpot;
   final void Function() alAbrirPaginaSitSpot;
   final void Function(Observacion observacion) alAbrirDetalleObservacion;
+  final VoidCallback? alOptInCambiado;
 
   @override
   State<_VistaMapa> createState() => _EstadoVistaMapa();
@@ -905,13 +908,53 @@ class _EstadoVistaMapa extends State<_VistaMapa> {
     });
   }
 
+  /// Atajo del adulto: AlertDialog inline con el copy del bloque y
+  /// botón "encender". Evita que tenga que bucear hasta el final de
+  /// Ajustes para encontrar el switch. Si confirma, activa el repo,
+  /// avisa al padre (`alOptInCambiado`) y recarga la vista para que
+  /// pase del aviso al mapa real (o al aviso "ancla tu lugar" si no
+  /// hay coordenadas todavía).
+  Future<void> _confirmarEncender() async {
+    final repo = widget.repoMapaOnline;
+    if (repo == null) return;
+    final textos = TextosApp.of(context);
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(textos.ajustesMapaOnlineEtiqueta),
+          content: Text(textos.ajustesMapaOnlineCuerpo),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(textos.mapaConfirmarEncenderCancelar),
+            ),
+            FilledButton.tonal(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(textos.mapaConfirmarEncenderEncender),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmado != true) return;
+    await repo.activar();
+    if (!mounted) return;
+    widget.alOptInCambiado?.call();
+    await _cargar();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_cargando) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
     if (!_optInActivo) {
-      return _AvisoMapaInactivo(alAbrirAjustes: widget.alAbrirAjustes);
+      return _AvisoMapaInactivo(
+        alAbrirAjustes: widget.alAbrirAjustes,
+        alEncender:
+            widget.repoMapaOnline == null ? null : _confirmarEncender,
+      );
     }
     return ListenableBuilder(
       listenable: widget.estado,
@@ -959,13 +1002,18 @@ class _EstadoVistaMapa extends State<_VistaMapa> {
 }
 
 class _AvisoMapaInactivo extends StatelessWidget {
-  const _AvisoMapaInactivo({required this.alAbrirAjustes});
+  const _AvisoMapaInactivo({
+    required this.alAbrirAjustes,
+    this.alEncender,
+  });
 
   final VoidCallback? alAbrirAjustes;
+  final VoidCallback? alEncender;
 
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -983,7 +1031,7 @@ class _AvisoMapaInactivo extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'El adulto que te acompaña puede encenderlo desde Ajustes. '
+              'El adulto que te acompaña puede encenderlo. '
               'Mientras esté apagado, este cuaderno no le pide al servidor '
               'de mapas qué zona del mundo estás mirando.',
               textAlign: TextAlign.center,
@@ -993,11 +1041,18 @@ class _AvisoMapaInactivo extends StatelessWidget {
                 altoLinea: 1.5,
               ),
             ),
-            if (alAbrirAjustes != null) ...[
+            if (alEncender != null) ...[
               const SizedBox(height: 20),
-              FilledButton.tonal(
+              FilledButton(
+                onPressed: alEncender,
+                child: Text(textos.mapaBotonEncender),
+              ),
+            ],
+            if (alAbrirAjustes != null) ...[
+              const SizedBox(height: 12),
+              TextButton(
                 onPressed: alAbrirAjustes,
-                child: const Text('abrir Ajustes'),
+                child: Text(textos.mapaBotonAbrirAjustes),
               ),
             ],
           ],
@@ -1015,6 +1070,7 @@ class _AvisoSinCoordenadas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -1045,7 +1101,7 @@ class _AvisoSinCoordenadas extends StatelessWidget {
             const SizedBox(height: 20),
             FilledButton.tonal(
               onPressed: alAbrirCrearSitSpot,
-              child: const Text('configurar sit spot'),
+              child: Text(textos.mapaBotonConfigurarSitSpot),
             ),
           ],
         ),

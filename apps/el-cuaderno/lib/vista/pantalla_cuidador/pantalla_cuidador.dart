@@ -393,7 +393,18 @@ class _Pregunta extends StatelessWidget {
   Widget build(BuildContext context) {
     final pregunta = promptBackend.isNotEmpty
         ? promptBackend
-        : preguntaParaLaCenaOffline(agregado);
+        : preguntaParaLaCenaOffline(
+            agregado,
+            plantillas: PlantillasPreguntaCena(
+              cuadernoEnReposo: textos.preguntaCenaCuadernoEnReposo,
+              observacionesSinAnclajes:
+                  textos.preguntaCenaObservacionesSinAnclajes,
+              regresoAlSitSpot: textos.preguntaCenaRegresoAlSitSpot,
+              unaPreguntaActiva: textos.preguntaCenaUnaPreguntaActiva,
+              variasPreguntasActivas:
+                  textos.preguntaCenaVariasPreguntasActivas,
+            ),
+          );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -137,7 +137,7 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
                       child: FilledButton.icon(
                         onPressed: _anotar,
                         icon: const Icon(Icons.edit_outlined),
-                        label: const Text('anotar observación aquí'),
+                        label: Text(textos.paginaSitSpotBotonAnotar),
                       ),
                     ),
                   ],
@@ -161,8 +161,8 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
                   const SizedBox(height: 28),
                   Text(
                     _observaciones.isEmpty
-                        ? 'Lo que ya has anotado aquí'
-                        : _contadorEtiqueta(_observaciones.length),
+                        ? textos.paginaSitSpotLoQueAnotaste
+                        : _contadorEtiqueta(textos, _observaciones.length),
                     style: TipografiaCuaderno.sans(
                       color: esquema.tertiary,
                       tamano: TipografiaCuaderno.tamano12,
@@ -172,8 +172,7 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
                   const SizedBox(height: 12),
                   if (_observaciones.isEmpty)
                     Text(
-                      'Todavía no has anotado nada en este sit spot. '
-                      'Cuando lo hagas, aparecerá aquí.',
+                      textos.paginaSitSpotVacio,
                       style: TipografiaCuaderno.serif(
                         color: PaletaCuaderno.tintaTenue,
                         tamano: TipografiaCuaderno.tamano13,
@@ -195,8 +194,10 @@ class _EstadoPantallaPaginaSitSpot extends State<PantallaPaginaSitSpot> {
     );
   }
 
-  static String _contadorEtiqueta(int n) =>
-      n == 1 ? '1 observación guardada' : '$n observaciones guardadas';
+  static String _contadorEtiqueta(TextosApp textos, int n) =>
+      n == 1
+          ? textos.sitSpotJubiladoUnaObservacion
+          : textos.sitSpotJubiladoVariasObservaciones(n);
 }
 
 class _CabeceraSitSpotActivo extends StatelessWidget {
@@ -238,7 +239,8 @@ class _CabeceraSitSpotActivo extends StatelessWidget {
           ],
           const SizedBox(height: 8),
           Text(
-            'Activo desde el ${_formatearFecha(sitSpot.creadoEn)}.',
+            TextosApp.of(context)
+                .paginaSitSpotActivoDesde(_formatearFecha(sitSpot.creadoEn)),
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,

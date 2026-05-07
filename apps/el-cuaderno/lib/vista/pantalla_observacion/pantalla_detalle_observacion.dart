@@ -196,22 +196,20 @@ class _EstadoPantallaDetalleObservacion
 
   Future<void> _confirmarBorrar() async {
     final navegador = Navigator.of(context);
+    final textos = TextosApp.of(context);
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (dialogo) => AlertDialog(
-        title: const Text('Borrar este registro'),
-        content: const Text(
-          'Vas a borrar esta página del cuaderno. La foto y el dibujo, '
-          'si los tenía, también se borrarán. No se puede deshacer.',
-        ),
+        title: Text(textos.detalleObservacionBorrarTitulo),
+        content: Text(textos.detalleObservacionBorrarMensaje),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogo).pop(false),
-            child: const Text('cancelar'),
+            child: Text(textos.detalleObservacionBorrarCancelar),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogo).pop(true),
-            child: const Text('borrar'),
+            child: Text(textos.detalleObservacionBorrarConfirmar),
           ),
         ],
       ),
@@ -355,10 +353,10 @@ class _EstadoPantallaDetalleObservacion
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Página del cuaderno'),
+        title: Text(textos.detalleObservacionTitulo),
         actions: [
           PopupMenuButton<String>(
-            tooltip: 'opciones de la página',
+            tooltip: textos.detalleObservacionTooltipOpciones,
             icon: const Icon(Icons.more_vert),
             onSelected: (valor) {
               if (valor == 'editar') _editar();
@@ -367,22 +365,22 @@ class _EstadoPantallaDetalleObservacion
               if (valor == 'borrar') _confirmarBorrar();
             },
             itemBuilder: (_) => [
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'editar',
-                child: Text('editar este registro'),
+                child: Text(textos.detalleObservacionMenuEditar),
               ),
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'compartir',
-                child: Text('compartir esta página como PDF'),
+                child: Text(textos.detalleObservacionMenuCompartirPdf),
               ),
               if (_rutaFotoAbsoluta != null)
                 PopupMenuItem<String>(
                   value: 'compartir-foto',
                   child: Text(textos.detalleCompartirFotoOpcion),
                 ),
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'borrar',
-                child: Text('borrar este registro'),
+                child: Text(textos.detalleObservacionMenuBorrar),
               ),
             ],
           ),
@@ -556,11 +554,13 @@ class _SeccionAnclajes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textos = TextosApp.of(context);
     final filas = <Widget>[];
     if (misterio != null) {
       filas.add(_Fila(
         icono: Icons.help_outline,
-        texto: 'anclada al misterio: ${misterio!.pregunta}',
+        texto:
+            'anclada al misterio: ${misterio!.preguntaEn(textos.localeName)}',
         esquema: esquema,
         subtexto: proximaEstacionMisterio != null
             ? 'vuelve en ${_nombreEstacion(proximaEstacionMisterio!)}'

@@ -120,7 +120,7 @@ class _TarjetaInvitacion extends StatelessWidget {
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                child: const Text('qué es un sit spot'),
+                child: Text(textos.tarjetaSitSpotQueEs),
               ),
             ),
           ),
@@ -130,17 +130,18 @@ class _TarjetaInvitacion extends StatelessWidget {
   }
 
   Future<void> _mostrarExplicacion(BuildContext context) {
+    final textos = TextosApp.of(context);
     return showDialog<void>(
       context: context,
       builder: (contextoDialogo) => AlertDialog(
-        title: const Text(tituloPresentacionSitSpot),
+        title: Text(textos.presentacionSitSpotTitulo),
         content: const SingleChildScrollView(
           child: ExplicacionSitSpot(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(contextoDialogo).pop(),
-            child: const Text('Cerrar'),
+            child: Text(textos.sitSpotExplicacionCerrar),
           ),
         ],
       ),
@@ -186,15 +187,15 @@ class _TarjetaActiva extends StatelessWidget {
             ),
             if (alJubilar != null)
               PopupMenuButton<String>(
-                tooltip: 'opciones del sit spot',
+                tooltip: textos.tarjetaSitSpotOpcionesTooltip,
                 icon: const Icon(Icons.more_vert),
                 onSelected: (valor) {
                   if (valor == 'jubilar') alJubilar!();
                 },
-                itemBuilder: (_) => const [
+                itemBuilder: (_) => [
                   PopupMenuItem<String>(
                     value: 'jubilar',
-                    child: Text('jubilar este sit spot'),
+                    child: Text(textos.tarjetaSitSpotJubilarOpcion),
                   ),
                 ],
               ),

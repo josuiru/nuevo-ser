@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
@@ -46,6 +47,7 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textos = TextosApp.of(context);
     return Scaffold(
       backgroundColor: PaletaCuaderno.papelClaro,
       body: SafeArea(
@@ -55,10 +57,10 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              const Text(
-                tituloPresentacionSitSpot,
+              Text(
+                textos.presentacionSitSpotTitulo,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
                   color: PaletaCuaderno.tinta,
@@ -68,13 +70,13 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
               const ExplicacionSitSpot(),
               const Spacer(flex: 2),
               _Boton(
-                etiqueta: 'ya pienso en uno',
+                etiqueta: textos.presentacionSitSpotBotonTengoSitio,
                 primario: true,
                 alPulsar: () => alContinuar(tieneUnSitioPensado: true),
               ),
               const SizedBox(height: 14),
               _Boton(
-                etiqueta: 'todavía no',
+                etiqueta: textos.presentacionSitSpotBotonTodaviaNo,
                 primario: false,
                 alPulsar: () => alContinuar(tieneUnSitioPensado: false),
               ),
@@ -87,42 +89,27 @@ class PantallaPresentacionSitSpot extends StatelessWidget {
   }
 }
 
-/// Título de la presentación pedagógica. Expuesto como const para que
-/// la tarjeta-invitación del home lo reuse en su diálogo sin duplicar
-/// el string.
-const String tituloPresentacionSitSpot = 'Un sitio que conoces';
-
 /// Tres párrafos pedagógicos que explican qué es un sit spot. Se
 /// muestran en `PantallaPresentacionSitSpot` (primer arranque) y en
 /// el diálogo "qué es un sit spot" accesible desde la tarjeta-
 /// invitación del home (cuando el niño pulsó "todavía no" en su día y
-/// quiere releerlo). Mismo texto en los dos sitios — refactorizado a
-/// widget público para que un cambio de copy sólo toque un fichero.
+/// quiere releerlo). Mismo texto en los dos sitios — los párrafos viven
+/// en `app_*.arb` (`presentacionSitSpotParrafo1..3`) para que un cambio
+/// de copy sólo toque los ARB.
 class ExplicacionSitSpot extends StatelessWidget {
   const ExplicacionSitSpot({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final textos = TextosApp.of(context);
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Parrafo(
-          'En este cuaderno hay un sitio especial. Lo eliges tú: '
-          'un banco del parque, una piedra junto al río, un rincón '
-          'del jardín, una ventana.',
-        ),
-        SizedBox(height: 14),
-        _Parrafo(
-          'Lo importante no es que sea bonito. Es que puedas '
-          'volver. Si vuelves muchas veces, lo verás cambiar — '
-          'las hojas, los pájaros, la luz, los bichos. El '
-          'cuaderno se llenará de lo que pase allí.',
-        ),
-        SizedBox(height: 14),
-        _Parrafo(
-          'Cuando lo encuentres, le pones nombre. No tiene que ser '
-          'un nombre serio.',
-        ),
+        _Parrafo(textos.presentacionSitSpotParrafo1),
+        const SizedBox(height: 14),
+        _Parrafo(textos.presentacionSitSpotParrafo2),
+        const SizedBox(height: 14),
+        _Parrafo(textos.presentacionSitSpotParrafo3),
       ],
     );
   }

@@ -3,6 +3,70 @@ import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+/// Etiquetas localizables que el [GeneradorPlantillaPdf] necesita
+/// para imprimir las páginas en blanco.
+///
+/// El generador vive en `dominio/` (puro, sin Flutter), así que no
+/// puede llamar a `TextosApp.of(context)` directamente. La pantalla
+/// que lanza la impresión las construye desde `TextosApp` y se las
+/// pasa al generador. Los tests de dominio pueden usar
+/// [EtiquetasPlantillaPdf.castellano] como fallback determinista.
+class EtiquetasPlantillaPdf {
+  const EtiquetasPlantillaPdf({
+    required this.tituloCabecera,
+    required this.autorAnonimo,
+    required this.diaHora,
+    required this.dondeEstabas,
+    required this.queViste,
+    required this.creesQueEs,
+    required this.dibuja,
+    required this.confianzaConsenso,
+    required this.confianzaHipotesisActiva,
+    required this.confianzaNoSegura,
+    required this.tituloCabeceraConNombre,
+    required this.pagina,
+    required this.sitSpot,
+  });
+
+  final String tituloCabecera;
+  final String autorAnonimo;
+  final String diaHora;
+  final String dondeEstabas;
+  final String queViste;
+  final String creesQueEs;
+  final String dibuja;
+  final String confianzaConsenso;
+  final String confianzaHipotesisActiva;
+  final String confianzaNoSegura;
+
+  /// Devuelve la cabecera de la página, ya rellenada con el nombre
+  /// del niño si lo hay.
+  final String Function(String nombre) tituloCabeceraConNombre;
+
+  /// Numeración "pág. 3 de 8".
+  final String Function(int numero, int total) pagina;
+
+  /// "Sit spot: <nombre>".
+  final String Function(String nombre) sitSpot;
+
+  /// Fallback castellano para tests del dominio puro.
+  static final EtiquetasPlantillaPdf castellano = EtiquetasPlantillaPdf(
+    tituloCabecera: 'Cuaderno de campo',
+    autorAnonimo: 'El Cuaderno',
+    diaHora: 'Día y hora',
+    dondeEstabas: 'Dónde estabas',
+    queViste: 'Qué viste',
+    creesQueEs: 'Crees que es',
+    dibuja: 'Dibuja',
+    confianzaConsenso: 'consenso',
+    confianzaHipotesisActiva: 'hipótesis activa',
+    confianzaNoSegura: 'no estoy segura',
+    tituloCabeceraConNombre: (nombre) => 'Cuaderno de campo · $nombre',
+    pagina: (numero, total) => 'pág. $numero de $total',
+    sitSpot: (nombre) => 'Sit spot: $nombre',
+  );
+}
+
 /// Genera un PDF con páginas en blanco listas para llevar al campo
 /// con el cuaderno **en papel**. El campo no tiene wifi (biblia §2.8
 /// offline-first) y a veces el aparato distrae más que ayuda — la
@@ -24,7 +88,7 @@ class GeneradorPlantillaPdf {
   /// Genera los bytes del PDF.
   ///
   /// [nombreNino] aparece en la cabecera de cada página. Si está
-  /// vacío, la cabecera dice sólo "Cuaderno de campo".
+  /// vacío, la cabecera dice sólo el [EtiquetasPlantillaPdf.tituloCabecera].
   ///
   /// [nombreSitSpot] aparece en la cabecera bajo el nombre del niño.
   /// Si es null, la cabecera no muestra ese línea.
@@ -32,10 +96,15 @@ class GeneradorPlantillaPdf {
   /// [paginas] es el número de páginas en blanco a generar (1..32 —
   /// más arriba la impresión doméstica empieza a dolerle al cartucho
   /// y al planeta; el operador puede subir el cap si lo necesita).
+  ///
+  /// [etiquetas] son las etiquetas localizables que la pantalla que
+  /// dispara la impresión construye desde `TextosApp.of(context)`.
+  /// Por defecto cae al castellano para tests de dominio puro.
   static Future<Uint8List> generar({
     required int paginas,
     String nombreNino = '',
     String? nombreSitSpot,
+    EtiquetasPlantillaPdf? etiquetas,
   }) async {
     if (paginas < 1 || paginas > 32) {
       throw ArgumentError.value(
@@ -45,13 +114,16 @@ class GeneradorPlantillaPdf {
       );
     }
 
+    final etiquetasResueltas = etiquetas ?? EtiquetasPlantillaPdf.castellano;
     final tituloCabecera = nombreNino.trim().isEmpty
-        ? 'Cuaderno de campo'
-        : 'Cuaderno de campo · $nombreNino';
+        ? etiquetasResueltas.tituloCabecera
+        : etiquetasResueltas.tituloCabeceraConNombre(nombreNino);
 
     final documento = pw.Document(
       title: tituloCabecera,
-      author: nombreNino.trim().isEmpty ? 'El Cuaderno' : nombreNino,
+      author: nombreNino.trim().isEmpty
+          ? etiquetasResueltas.autorAnonimo
+          : nombreNino,
     );
 
     for (var indice = 0; indice < paginas; indice++) {
@@ -64,6 +136,7 @@ class GeneradorPlantillaPdf {
             nombreSitSpot: nombreSitSpot,
             numeroPagina: indice + 1,
             totalPaginas: paginas,
+            etiquetas: etiquetasResueltas,
           ),
         ),
       );
@@ -77,6 +150,7 @@ class GeneradorPlantillaPdf {
     required String? nombreSitSpot,
     required int numeroPagina,
     required int totalPaginas,
+    required EtiquetasPlantillaPdf etiquetas,
   }) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.stretch,
@@ -96,7 +170,7 @@ class GeneradorPlantillaPdf {
               ),
             ),
             pw.Text(
-              'pág. $numeroPagina de $totalPaginas',
+              etiquetas.pagina(numeroPagina, totalPaginas),
               style: const pw.TextStyle(
                 fontSize: 9,
                 color: PdfColors.grey600,
@@ -107,7 +181,7 @@ class GeneradorPlantillaPdf {
         if (nombreSitSpot != null && nombreSitSpot.trim().isNotEmpty) ...[
           pw.SizedBox(height: 2),
           pw.Text(
-            'Sit spot: $nombreSitSpot',
+            etiquetas.sitSpot(nombreSitSpot),
             style: const pw.TextStyle(
               fontSize: 10,
               color: PdfColors.grey700,
@@ -122,24 +196,24 @@ class GeneradorPlantillaPdf {
         pw.SizedBox(height: 14),
 
         // Línea de fecha y lugar — dos huecos pequeños lado a lado.
-        _filaCampoLinea(['Día y hora', 'Dónde estabas']),
+        _filaCampoLinea([etiquetas.diaHora, etiquetas.dondeEstabas]),
         pw.SizedBox(height: 14),
 
         // Bloque "qué viste" — recuadro grande con su título.
-        _bloqueRecuadro('Qué viste', altura: 130),
+        _bloqueRecuadro(etiquetas.queViste, altura: 130),
         pw.SizedBox(height: 12),
 
         // Bloque "crees que es" + casillas de confianza.
-        _bloqueRecuadro('Crees que es', altura: 56),
+        _bloqueRecuadro(etiquetas.creesQueEs, altura: 56),
         pw.SizedBox(height: 8),
-        _filaConfianza(),
+        _filaConfianza(etiquetas),
         pw.SizedBox(height: 14),
 
         // Bloque dibujo — el resto del espacio disponible. Como
         // pw.Page no permite Expanded de Column directamente,
         // usamos un recuadro de altura calculada que ocupe el
         // espacio razonable.
-        _bloqueRecuadro('Dibuja', altura: 320),
+        _bloqueRecuadro(etiquetas.dibuja, altura: 320),
       ],
     );
   }
@@ -203,14 +277,14 @@ class GeneradorPlantillaPdf {
 
   /// Tres casillas de confianza con su etiqueta a la derecha. Las
   /// casillas son cuadritos vacíos que la niña marca a mano.
-  static pw.Widget _filaConfianza() {
+  static pw.Widget _filaConfianza(EtiquetasPlantillaPdf etiquetas) {
     return pw.Row(
       children: [
-        _casillaConEtiqueta('consenso'),
+        _casillaConEtiqueta(etiquetas.confianzaConsenso),
         pw.SizedBox(width: 14),
-        _casillaConEtiqueta('hipótesis activa'),
+        _casillaConEtiqueta(etiquetas.confianzaHipotesisActiva),
         pw.SizedBox(width: 14),
-        _casillaConEtiqueta('no segura'),
+        _casillaConEtiqueta(etiquetas.confianzaNoSegura),
       ],
     );
   }

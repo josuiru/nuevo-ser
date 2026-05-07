@@ -1,6 +1,7 @@
 import 'package:el_cuaderno/dominio/geolocalizacion_privacy_first.dart';
 import 'package:el_cuaderno/dominio/observacion.dart';
 import 'package:el_cuaderno/dominio/sit_spot.dart';
+import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_sit_spot/pantalla_crear_sit_spot.dart';
 import 'package:el_cuaderno/vista/tema/tema.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,9 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     await tester.pumpWidget(MaterialApp(
       theme: TemaCuaderno.claro(),
+      localizationsDelegates: TextosApp.localizationsDelegates,
+      supportedLocales: TextosApp.supportedLocales,
+      locale: const Locale('es'),
       home: PantallaCrearSitSpot(
         alConfirmar: alConfirmar,
         servicioGeolocalizacion: servicio,

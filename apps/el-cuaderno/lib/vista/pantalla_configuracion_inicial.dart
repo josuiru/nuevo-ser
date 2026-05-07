@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../nucleo/i18n/generado/textos_app.dart';
 import 'tema/colores.dart';
 
 /// Pantalla del primer arranque. Pide al niño que elija el idioma del
@@ -90,6 +91,7 @@ class PantallaConfiguracionInicial extends StatelessWidget {
 class _EnlacePolitica extends StatelessWidget {
   @override
   Widget build(BuildContext contexto) {
+    final textos = TextosApp.of(contexto);
     return TextButton(
       onPressed: () => _mostrarDialogoPolitica(contexto),
       style: TextButton.styleFrom(
@@ -100,36 +102,21 @@ class _EnlacePolitica extends StatelessWidget {
           decoration: TextDecoration.underline,
         ),
       ),
-      child: const Text('lee cómo se cuida tu cuaderno'),
+      child: Text(textos.configuracionInicialEnlacePolitica),
     );
   }
 
   Future<void> _mostrarDialogoPolitica(BuildContext contexto) {
+    final textos = TextosApp.of(contexto);
     return showDialog<void>(
       context: contexto,
       builder: (contextoDialogo) => AlertDialog(
         backgroundColor: PaletaCuaderno.papelClaro,
-        title: const Text('cómo se cuida tu cuaderno'),
-        content: const SingleChildScrollView(
+        title: Text(textos.configuracionInicialPoliticaTitulo),
+        content: SingleChildScrollView(
           child: Text(
-            'Tu cuaderno es tuyo. Lo que escribes, las fotos y los '
-            'dibujos que añades, viven solo en tu dispositivo. No '
-            'salen al servidor.\n\n'
-            'No hay anuncios. No se vende lo que escribes a nadie. '
-            'No hay rachas, niveles ni recompensas que te empujen a '
-            'volver: vuelve si quieres, cuando quieras.\n\n'
-            'Si una persona adulta quiere ayudarte a usar el Tutor '
-            'real, o quiere recibir un resumen para hablar contigo, '
-            'tiene que entrar a Ajustes y darle a un botón cada vez. '
-            'Nunca pasa solo. Nunca avisa a nadie sin que tú lo '
-            'sepas.\n\n'
-            'Cuando quieras, en Ajustes puedes exportar todo tu '
-            'cuaderno como un archivo y borrarlo del todo de este '
-            'dispositivo.\n\n'
-            'Esta es una versión provisional escrita por el equipo '
-            'que está haciendo el cuaderno. Antes de que lo use mucha '
-            'gente, una persona experta en leyes va a revisarla.',
-            style: TextStyle(
+            textos.configuracionInicialPoliticaCuerpo,
+            style: const TextStyle(
               fontSize: 14,
               height: 1.5,
               color: PaletaCuaderno.tinta,
@@ -139,7 +126,7 @@ class _EnlacePolitica extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(contextoDialogo).pop(),
-            child: const Text('Cerrar'),
+            child: Text(textos.sitSpotExplicacionCerrar),
           ),
         ],
       ),

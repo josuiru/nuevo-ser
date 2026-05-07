@@ -1,3 +1,4 @@
+import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_sit_spot/pantalla_presentacion_sit_spot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +11,9 @@ void main() {
   }) async {
     await tester.binding.setSurfaceSize(const Size(800, 1400));
     await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: TextosApp.localizationsDelegates,
+      supportedLocales: TextosApp.supportedLocales,
+      locale: const Locale('es'),
       home: PantallaPresentacionSitSpot(alContinuar: alContinuar),
     ));
     await tester.pumpAndSettle();

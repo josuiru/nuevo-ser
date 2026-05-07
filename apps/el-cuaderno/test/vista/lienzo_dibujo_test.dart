@@ -1,3 +1,4 @@
+import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_observacion/lienzo_dibujo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -7,8 +8,11 @@ void main() {
   Future<void> bombearLienzo(WidgetTester tester) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
-      const MaterialApp(
-        home: PantallaLienzoDibujo(tituloAppBar: 'lienzo de prueba'),
+      MaterialApp(
+        localizationsDelegates: TextosApp.localizationsDelegates,
+        supportedLocales: TextosApp.supportedLocales,
+        locale: const Locale('es'),
+        home: const PantallaLienzoDibujo(tituloAppBar: 'lienzo de prueba'),
       ),
     );
     await tester.pumpAndSettle();
@@ -129,6 +133,9 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: TextosApp.localizationsDelegates,
+        supportedLocales: TextosApp.supportedLocales,
+        locale: const Locale('es'),
         home: Builder(
           builder: (contexto) => Scaffold(
             body: Center(
@@ -153,8 +160,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(PantallaLienzoDibujo), findsOneWidget);
 
-    // Pulsar atrás (icono back del AppBar).
-    await tester.tap(find.byTooltip('Back'));
+    // Pulsar atrás (botón back del AppBar — `BackButton` es agnóstico
+    // al idioma; antes buscaba `find.byTooltip('Back')` pero el
+    // tooltip se localiza con el locale del MaterialApp).
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
 
     expect(find.byType(PantallaLienzoDibujo), findsNothing);

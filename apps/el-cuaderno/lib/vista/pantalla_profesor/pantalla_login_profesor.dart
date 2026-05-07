@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'pantalla_aula_profesor.dart';
@@ -69,9 +70,9 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
   Future<void> _entrar() async {
     final email = _controladorEmail.text.trim();
     final password = _controladorPassword.text;
+    final textos = TextosApp.of(context);
     if (email.isEmpty || password.isEmpty) {
-      setState(() => _mensajeError =
-          'Escribe el correo y la contraseña antes de continuar.');
+      setState(() => _mensajeError = textos.loginProfesorErrorVacio);
       return;
     }
     setState(() {
@@ -103,25 +104,22 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
       case companion.LoginAdultoCredencialesIncorrectas():
         setState(() {
           _enviando = false;
-          _mensajeError =
-              'El correo o la contraseña no coinciden con ninguna cuenta de profesor.';
+          _mensajeError = textos.loginProfesorErrorCredenciales;
         });
       case companion.LoginAdultoSinRolAsignado():
         setState(() {
           _enviando = false;
-          _mensajeError =
-              'Esta cuenta no tiene perfil de profesor. Si eres cuidador, busca ese acceso aparte.';
+          _mensajeError = textos.loginProfesorErrorSinRol;
         });
       case companion.LoginAdultoRolInvalido():
         setState(() {
           _enviando = false;
-          _mensajeError = 'El servidor no aceptó la petición. Avisa al equipo.';
+          _mensajeError = textos.loginProfesorErrorRolInvalido;
         });
       case companion.LoginAdultoErrorRed():
         setState(() {
           _enviando = false;
-          _mensajeError =
-              'No se ha podido conectar con el servidor. Inténtalo en un momento.';
+          _mensajeError = textos.loginProfesorErrorRed;
         });
     }
   }
@@ -129,8 +127,9 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Acceso del profesor')),
+      appBar: AppBar(title: Text(textos.loginProfesorTitulo)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -138,7 +137,7 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Acceso del profesor',
+                textos.loginProfesorTitulo,
                 style: TipografiaCuaderno.serif(
                   color: esquema.onSurface,
                   tamano: TipografiaCuaderno.tamano17,
@@ -147,9 +146,7 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Esta pantalla es para el adulto que acompaña a la clase. '
-                'No se enseña al niño. La cuenta de profesor se crea desde '
-                'la web; aquí solo se vincula.',
+                textos.loginProfesorIntro,
                 style: TipografiaCuaderno.serif(
                   color: PaletaCuaderno.tintaTenue,
                   tamano: TipografiaCuaderno.tamano13,
@@ -163,9 +160,9 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
                 keyboardType: TextInputType.emailAddress,
                 autocorrect: false,
                 autofillHints: const [AutofillHints.email],
-                decoration: const InputDecoration(
-                  labelText: 'correo del profesor',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: textos.loginProfesorPlaceholderEmail,
+                  border: const OutlineInputBorder(),
                   isDense: true,
                 ),
               ),
@@ -175,16 +172,18 @@ class _EstadoPantallaLoginProfesor extends State<PantallaLoginProfesor> {
                 enabled: !_enviando,
                 obscureText: true,
                 autofillHints: const [AutofillHints.password],
-                decoration: const InputDecoration(
-                  labelText: 'contraseña',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: textos.loginProfesorPlaceholderPassword,
+                  border: const OutlineInputBorder(),
                   isDense: true,
                 ),
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: _enviando ? null : _entrar,
-                child: Text(_enviando ? 'Entrando…' : 'Iniciar sesión'),
+                child: Text(_enviando
+                    ? textos.loginProfesorEntrando
+                    : textos.loginProfesorBotonEntrar),
               ),
               if (_mensajeError != null) ...[
                 const SizedBox(height: 12),

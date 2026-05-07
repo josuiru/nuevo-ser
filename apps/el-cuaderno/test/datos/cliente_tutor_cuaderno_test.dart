@@ -30,13 +30,15 @@ void main() {
     });
 
     test('serializa todos los campos rellenados', () {
+      // Sin texto libre: la frontera de privacidad prohíbe enviar
+      // observaciones literales al servidor del Tutor (eliminado en
+      // fix de auditoría). Sólo metadatos no-PII.
       final json = const ContextoTutor(
         edad: 11,
         regionCode: 'ES-NA-PA',
         season: 'primavera',
         skillId: 'TAX.05',
         nivelSkill: 2,
-        observacionAdjunta: 'pájaro pequeño marrón',
       ).aJson();
       expect(json, {
         'edad': 11,
@@ -44,7 +46,6 @@ void main() {
         'season': 'primavera',
         'skill_id': 'TAX.05',
         'nivel_skill': 2,
-        'observacion_adjunta': 'pájaro pequeño marrón',
       });
     });
   });

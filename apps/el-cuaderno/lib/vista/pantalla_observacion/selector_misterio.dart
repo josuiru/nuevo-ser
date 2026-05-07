@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../dominio/misterio.dart';
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/tipografia.dart';
 
 /// Selector opcional para anclar la observación a un Misterio. En el
@@ -24,6 +25,7 @@ class SelectorMisterio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
 
     if (misteriosAbiertos.isEmpty) {
       return const SizedBox.shrink();
@@ -60,7 +62,7 @@ class SelectorMisterio extends StatelessWidget {
           DropdownMenuItem<String?>(
             value: misterio.id,
             child: Text(
-              misterio.pregunta,
+              misterio.preguntaEn(textos.localeName),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TipografiaCuaderno.serif(

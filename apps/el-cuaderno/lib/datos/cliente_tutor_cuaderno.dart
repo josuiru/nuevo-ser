@@ -163,6 +163,17 @@ enum FiltroTutor {
 /// inyecta en el system prompt del modelo para personalizar la
 /// respuesta. Todos los campos son opcionales; el envío es solo de
 /// los rellenados.
+///
+/// **Frontera de privacidad estructural** (biblia §2.1, doc 03 §3.3):
+/// los campos sólo cubren metadatos no-PII (edad de tramo, region
+/// code agregada, estación, skill_id, nivel). NO incluye texto libre
+/// del niño. Una versión anterior tenía `observacionAdjunta` (string
+/// libre) que viajaba al servidor — eliminado en fix de auditoría:
+/// aunque truncar server-side limitaba el daño, exponía la API a una
+/// violación futura de la frontera. Si en algún momento hace falta
+/// dar contexto textual al modelo, debe hacerse vía hash sha256
+/// (mismo patrón que `what_seen_hash` de observaciones), no con el
+/// texto crudo.
 class ContextoTutor {
   const ContextoTutor({
     this.edad,
@@ -170,7 +181,6 @@ class ContextoTutor {
     this.season,
     this.skillId,
     this.nivelSkill,
-    this.observacionAdjunta,
   });
 
   const ContextoTutor.vacio()
@@ -178,19 +188,13 @@ class ContextoTutor {
         regionCode = null,
         season = null,
         skillId = null,
-        nivelSkill = null,
-        observacionAdjunta = null;
+        nivelSkill = null;
 
   final int? edad;
   final String? regionCode;
   final String? season;
   final String? skillId;
   final int? nivelSkill;
-
-  /// Texto libre asociado a una observación del niño que da contexto
-  /// a la pregunta. Pasa al backend pero ahí se trunca a 500 chars
-  /// para evitar prompt injection desde un texto largo.
-  final String? observacionAdjunta;
 
   Map<String, Object?> aJson() {
     final json = <String, Object?>{};
@@ -201,9 +205,6 @@ class ContextoTutor {
     if (season != null && season!.isNotEmpty) json['season'] = season;
     if (skillId != null && skillId!.isNotEmpty) json['skill_id'] = skillId;
     if (nivelSkill != null) json['nivel_skill'] = nivelSkill;
-    if (observacionAdjunta != null && observacionAdjunta!.isNotEmpty) {
-      json['observacion_adjunta'] = observacionAdjunta;
-    }
     return json;
   }
 }

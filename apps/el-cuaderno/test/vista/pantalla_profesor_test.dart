@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:el_cuaderno/datos/repositorio_aula_profesor.dart';
+import 'package:el_cuaderno/nucleo/i18n/generado/textos_app.dart';
 import 'package:el_cuaderno/vista/pantalla_profesor/pantalla_aula_profesor.dart';
 import 'package:el_cuaderno/vista/pantalla_profesor/pantalla_login_profesor.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,12 @@ void main() {
   }
 
   Widget envolver(Widget pantalla) {
-    return MaterialApp(home: pantalla);
+    return MaterialApp(
+      localizationsDelegates: TextosApp.localizationsDelegates,
+      supportedLocales: TextosApp.supportedLocales,
+      locale: const Locale('es'),
+      home: pantalla,
+    );
   }
 
   group('PantallaLoginProfesor', () {

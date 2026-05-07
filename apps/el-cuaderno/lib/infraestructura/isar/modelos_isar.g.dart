@@ -4900,6 +4900,11 @@ const MisterioIsarSchema = CollectionSchema(
       id: 10,
       name: r'seasons',
       type: IsarType.stringList,
+    ),
+    r'traduccionesJson': PropertySchema(
+      id: 11,
+      name: r'traduccionesJson',
+      type: IsarType.string,
     )
   },
   estimateSize: _misterioIsarEstimateSize,
@@ -4980,6 +4985,7 @@ int _misterioIsarEstimateSize(
       bytesCount += value.length * 3;
     }
   }
+  bytesCount += 3 + object.traduccionesJson.length * 3;
   return bytesCount;
 }
 
@@ -5000,6 +5006,7 @@ void _misterioIsarSerialize(
   writer.writeString(offsets[8], object.respuestaDelNino);
   writer.writeDateTime(offsets[9], object.retiradoEn);
   writer.writeStringList(offsets[10], object.seasons);
+  writer.writeString(offsets[11], object.traduccionesJson);
 }
 
 MisterioIsar _misterioIsarDeserialize(
@@ -5023,6 +5030,7 @@ MisterioIsar _misterioIsarDeserialize(
   object.respuestaDelNino = reader.readStringOrNull(offsets[8]);
   object.retiradoEn = reader.readDateTimeOrNull(offsets[9]);
   object.seasons = reader.readStringList(offsets[10]) ?? [];
+  object.traduccionesJson = reader.readString(offsets[11]);
   return object;
 }
 
@@ -5057,6 +5065,8 @@ P _misterioIsarDeserializeProp<P>(
       return (reader.readDateTimeOrNull(offset)) as P;
     case 10:
       return (reader.readStringList(offset) ?? []) as P;
+    case 11:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -6910,6 +6920,142 @@ extension MisterioIsarQueryFilter
       );
     });
   }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'traduccionesJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'traduccionesJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'traduccionesJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'traduccionesJson',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'traduccionesJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'traduccionesJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'traduccionesJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'traduccionesJson',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'traduccionesJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterFilterCondition>
+      traduccionesJsonIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'traduccionesJson',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension MisterioIsarQueryObject
@@ -7020,6 +7166,20 @@ extension MisterioIsarQuerySortBy
       sortByRetiradoEnDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'retiradoEn', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      sortByTraduccionesJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'traduccionesJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      sortByTraduccionesJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'traduccionesJson', Sort.desc);
     });
   }
 }
@@ -7140,6 +7300,20 @@ extension MisterioIsarQuerySortThenBy
       return query.addSortBy(r'retiradoEn', Sort.desc);
     });
   }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      thenByTraduccionesJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'traduccionesJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QAfterSortBy>
+      thenByTraduccionesJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'traduccionesJson', Sort.desc);
+    });
+  }
 }
 
 extension MisterioIsarQueryWhereDistinct
@@ -7216,6 +7390,14 @@ extension MisterioIsarQueryWhereDistinct
   QueryBuilder<MisterioIsar, MisterioIsar, QDistinct> distinctBySeasons() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'seasons');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, MisterioIsar, QDistinct>
+      distinctByTraduccionesJson({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'traduccionesJson',
+          caseSensitive: caseSensitive);
     });
   }
 }
@@ -7296,6 +7478,13 @@ extension MisterioIsarQueryProperty
   QueryBuilder<MisterioIsar, List<String>, QQueryOperations> seasonsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'seasons');
+    });
+  }
+
+  QueryBuilder<MisterioIsar, String, QQueryOperations>
+      traduccionesJsonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'traduccionesJson');
     });
   }
 }

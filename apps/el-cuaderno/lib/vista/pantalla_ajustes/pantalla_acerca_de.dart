@@ -16,12 +16,8 @@ import '../tema/tipografia.dart';
 /// `ExpansionTile` para no abrumar — el adulto las despliega cuando
 /// necesita.
 ///
-/// **i18n**: el contenido largo está en castellano hardcoded por
-/// ahora. Los títulos del AppBar y del bloque de Ajustes sí pasan
-/// por ARB. Cuando entre B2 (asesoría de traducción) el contenido
-/// se mueve a claves ARB. Mismo patrón que las guías cualitativas
-/// del resto del cuaderno — equivalente al TODO_EU / TODO_CA por
-/// string del resto del proyecto.
+/// **i18n**: todos los strings vivos viajan por ARB. Las
+/// traducciones eu/ca son fallback de experto pendiente de B2.
 class PantallaAcercaDe extends StatelessWidget {
   const PantallaAcercaDe({super.key});
 
@@ -35,229 +31,79 @@ class PantallaAcercaDe extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
           children: [
-            _Cabecera(esquema: esquema),
+            _Cabecera(esquema: esquema, textos: textos),
             const SizedBox(height: 28),
 
-            const _Seccion(
-              titulo: 'qué es esto',
-              cuerpo:
-                  'Un cuaderno de campo. Es tuyo. Lo que escribas aquí no '
-                  'se borra solo y nadie lo lee a tus espaldas.\n\n'
-                  'No es un juego para ganar. No tiene puntos, ni rachas, '
-                  'ni nada que celebre nada. Es un sitio donde dejar lo '
-                  'que ves cuando sales a mirar.',
+            _Seccion(
+              titulo: textos.acercaQueEsTitulo,
+              cuerpo: textos.acercaQueEsCuerpo,
             ),
-
-            const _Seccion(
-              titulo: 'las cuatro pestañas',
-              cuerpo:
-                  '**Cuaderno** — el saludo, el sit spot, los Misterios '
-                  'abiertos y la última página.\n\n'
-                  '**Mapa** — sólo si la persona adulta lo enciende en '
-                  'Ajustes.\n\n'
-                  '**Misterios** — tus preguntas y los Misterios del '
-                  'cuaderno. Aquí formulas las tuyas con el botón '
-                  '*"formular pregunta"*.\n\n'
-                  '**Tutor** — alguien con quien hablar cuando no '
-                  'entiendes algo. No es un buscador de internet y no '
-                  'da la respuesta hecha.',
+            _Seccion(
+              titulo: textos.acercaPestanasTitulo,
+              cuerpo: textos.acercaPestanasCuerpo,
             ),
-
-            const _Seccion(
-              titulo: 'anotar una observación',
-              cuerpo:
-                  'Cuando ves algo que merece la pena, lo anotas. Una '
-                  'página tiene tres campos importantes:\n\n'
-                  '**Qué viste** — lo que vieron tus ojos. *"Una '
-                  'mariposa blanca con manchas marrones"* es mejor que '
-                  '*"una pieris"*. La identificación viene después.\n\n'
-                  '**Crees que es** — si crees que sabes qué era. Si '
-                  'no, lo dejas vacío. Decir *"no sé"* es información: '
-                  'significa que volverás a mirar.\n\n'
-                  '**Nivel de confianza** — tres opciones: '
-                  '*consenso* (estás seguro), *hipótesis activa* '
-                  '(crees que sabes pero te haría falta volver a '
-                  'mirar), *no segura* (viste algo, no sabes qué).',
+            _Seccion(
+              titulo: textos.acercaAnotarTitulo,
+              cuerpo: textos.acercaAnotarCuerpo,
             ),
-
-            const _Seccion(
-              titulo: 'tu sit spot',
-              cuerpo:
-                  'El lugar al que vuelves muchas veces. No tiene que '
-                  'ser bonito. Tiene que ser tuyo: un banco del parque, '
-                  'una piedra junto al río, una rama gruesa de un árbol '
-                  'del patio.\n\n'
-                  'Si vas siempre a sitios distintos, ves cosas '
-                  'distintas. Si vuelves al mismo sitio, ves **cómo '
-                  'cambia**.\n\n'
-                  'No tienes prisa por elegirlo. La presentación del '
-                  'cuaderno deja explícito que se puede dejar para '
-                  'después.',
+            _Seccion(
+              titulo: textos.acercaSitSpotTitulo,
+              cuerpo: textos.acercaSitSpotCuerpo,
             ),
-
-            const _Seccion(
-              titulo: 'misterios y preguntas',
-              cuerpo:
-                  'Hay dos tipos de preguntas en la pestaña Misterios:\n\n'
-                  'Los **Misterios del cuaderno** los propone el '
-                  'cuaderno, contextualizados a tu zona y a la estación. '
-                  'No tienes que resolverlos todos.\n\n'
-                  '**Tus preguntas** las formulas tú. Si no se te ocurre '
-                  'cómo empezar, hay un *"necesito ideas"* con cinco '
-                  'maneras posibles.\n\n'
-                  'Cuando creas que tienes tu respuesta — no la '
-                  'respuesta correcta del libro de ciencias, **tu '
-                  'respuesta** — la guardas. Aquí no hay respuesta '
-                  'correcta: hay tu respuesta.',
+            _Seccion(
+              titulo: textos.acercaMisteriosTitulo,
+              cuerpo: textos.acercaMisteriosCuerpo,
             ),
-
-            const _Seccion(
-              titulo: 'lo que este cuaderno NO hace',
-              cuerpo:
-                  'No tiene puntos, niveles, rachas, premios.\n\n'
-                  'No envía notificaciones. Cuando te apetezca, '
-                  'abres tú.\n\n'
-                  'No celebra cuando anotas algo. Tu observación es '
-                  'la celebración.\n\n'
-                  'No te compara con otros niños. No hay rankings.\n\n'
-                  'No te dice si algo está bien o mal. Lo que ves '
-                  'está bien por ser visto.',
+            _Seccion(
+              titulo: textos.acercaNoHaceTitulo,
+              cuerpo: textos.acercaNoHaceCuerpo,
             ),
 
             const SizedBox(height: 12),
             const _SeparadorSuave(),
             const SizedBox(height: 12),
 
-            // Las dos secciones siguientes son densas — viven en
+            // Las cuatro secciones siguientes son densas — viven en
             // ExpansionTile para que la niña no las vea al desplegar
             // a no ser que pulse. La persona adulta las desplegará
             // si las necesita.
-            const _SeccionDesplegable(
-              titulo: 'para tu adulto: privacidad',
-              cuerpo:
-                  'Esto es un hard limit no negociable: el cuaderno es '
-                  'del niño.\n\n'
-                  '**Sólo se queda en el dispositivo, nunca cruza red:**\n'
-                  '· el texto libre de las observaciones\n'
-                  '· las fotos\n'
-                  '· los dibujos del lienzo\n'
-                  '· las coordenadas precisas\n'
-                  '· las preguntas que formula\n'
-                  '· las respuestas al cerrar Misterios\n'
-                  '· el nombre que ha elegido\n\n'
-                  '**Sólo viaja al servidor con sincronización opt-in:**\n'
-                  '· un *hash* de la observación (no el texto)\n'
-                  '· el código de región provincial (no la posición)\n'
-                  '· un agregado semanal con conteos por tipo, sin '
-                  'contenido\n'
-                  '· las preguntas al Tutor IA, si está activado, con '
-                  'cuota diaria + ZDR + lista negra\n\n'
-                  '**Lo que la persona adulta puede ver:**\n'
-                  '· un párrafo cualitativo resumiendo la semana, sin '
-                  'texto literal\n'
-                  '· una pregunta sugerida para la cena\n\n'
-                  '**Lo que la persona adulta no puede ver:** ninguna '
-                  'observación literal, ninguna foto, ningún dibujo, '
-                  'ninguna coordenada, ninguna conversación con el '
-                  'Tutor.',
+            _SeccionDesplegable(
+              titulo: textos.acercaPrivacidadTitulo,
+              cuerpo: textos.acercaPrivacidadCuerpo,
             ),
-
             const SizedBox(height: 8),
-
-            const _SeccionDesplegable(
-              titulo: 'para tu adulto: cómo acompañar',
-              cuerpo:
-                  'El sit spot es lo más importante. Si la niña no se '
-                  'lo ha apropiado, no volverá. Que lo elija ella. Si '
-                  'todavía no encuentra ninguno, no tiene prisa.\n\n'
-                  'Una observación a la semana es buen ritmo. Hay '
-                  'semanas con cero observaciones — eso también está '
-                  'bien. La biblia del proyecto: *cierre amable y '
-                  'ritmo respetuoso.*\n\n'
-                  'Si activas el resumen semanal en Ajustes, recibirás '
-                  'una pregunta sugerida para la cena. Está pensada '
-                  'para que sea más fácil empezar conversación, no '
-                  'para auditar.\n\n'
-                  '**Lo que es mejor no hacer:**\n'
-                  '· leer su cuaderno por encima del hombro\n'
-                  '· pedir que demuestre lo que ha aprendido\n'
-                  '· corregir si identifica mal — la próxima vez '
-                  'comparará y se corregirá sola\n'
-                  '· felicitar efusivamente cuando anota — convierte '
-                  'el oficio en performance',
+            _SeccionDesplegable(
+              titulo: textos.acercaAcompanarTitulo,
+              cuerpo: textos.acercaAcompanarCuerpo,
             ),
-
             const SizedBox(height: 8),
-
-            const _SeccionDesplegable(
-              titulo: 'para tu adulto: el Tutor',
-              cuerpo:
-                  'Asistente conversacional limitado por reglas. La '
-                  'biblia del proyecto le pone cinco bumpers:\n\n'
-                  '**ZDR** — el proveedor del modelo no entrena con '
-                  'las conversaciones ni las retiene.\n\n'
-                  '**Sin memoria entre conversaciones.** Cada apertura '
-                  'empieza limpia.\n\n'
-                  '**Lista negra de temas.** Hay temas (sexualidad, '
-                  'violencia, drogas, autolesión, datos personales) que '
-                  'el Tutor no continúa. Redirige amable y al cabo de '
-                  'pocos turnos cierra.\n\n'
-                  '**Cuota de 30 turnos al día.** Cuando se llega, el '
-                  'Tutor responde *"hablamos mañana"*. Bumper '
-                  'deliberado contra el efecto adictivo.\n\n'
-                  '**No da respuestas hechas.** Está prompted para '
-                  'devolver la pregunta al lugar.',
+            _SeccionDesplegable(
+              titulo: textos.acercaTutorTitulo,
+              cuerpo: textos.acercaTutorCuerpo,
             ),
-
             const SizedBox(height: 8),
-
-            const _SeccionDesplegable(
-              titulo: 'para el aula: vista del docente',
-              cuerpo:
-                  'Cuando este cuaderno se usa en clase, la persona '
-                  'docente accede a un panel agregado desde Ajustes → '
-                  '*"Acceder como profesor"*. Lo que ve:\n\n'
-                  '· recuento agregado de la actividad de su aula\n'
-                  '· distribución por dominios (presencia, observación, '
-                  'registro, identificación, relaciones, ciclos, '
-                  'hábitats, hipótesis, tejido)\n\n'
-                  '**Nunca el contenido literal de las observaciones de '
-                  'ningún niño.**\n\n'
-                  'Umbral mínimo: **k≥5**. Si en un dominio hay menos '
-                  'de 5 alumnas con datos, ese dato se oculta para que '
-                  'no sea posible deducir el comportamiento de una '
-                  'niña concreta.\n\n'
-                  'Esta parte está pendiente de cerrar la policy '
-                  'escolar definitiva con la regulación europea para '
-                  'menores en aulas.',
+            _SeccionDesplegable(
+              titulo: textos.acercaAulaTitulo,
+              cuerpo: textos.acercaAulaCuerpo,
             ),
 
             const SizedBox(height: 24),
             const _SeparadorSuave(),
             const SizedBox(height: 24),
 
-            const _Seccion(
-              titulo: 'idiomas',
-              cuerpo:
-                  'Castellano, euskera y catalán desde el primer '
-                  'arranque. La traducción de euskera y catalán está '
-                  'pendiente de revisión por hablantes nativas con '
-                  'criterio terminológico naturalista.',
+            _Seccion(
+              titulo: textos.acercaIdiomasTitulo,
+              cuerpo: textos.acercaIdiomasCuerpo,
             ),
-
-            const _Seccion(
-              titulo: 'licencia',
-              cuerpo:
-                  'Código AGPL-3.0. Contenido (textos, ilustraciones, '
-                  'catálogo de Misterios) CC-BY-SA 4.0. Sin tracking, '
-                  'sin anuncios, sin monetización. Privacidad por '
-                  'diseño.',
+            _Seccion(
+              titulo: textos.acercaLicenciaTitulo,
+              cuerpo: textos.acercaLicenciaCuerpo,
             ),
 
             const SizedBox(height: 24),
             Center(
               child: Text(
-                'el monte espera',
+                textos.acercaCierre,
                 style: TipografiaCuaderno.serif(
                   color: PaletaCuaderno.tintaTenue,
                   tamano: TipografiaCuaderno.tamano14,
@@ -273,9 +119,10 @@ class PantallaAcercaDe extends StatelessWidget {
 }
 
 class _Cabecera extends StatelessWidget {
-  const _Cabecera({required this.esquema});
+  const _Cabecera({required this.esquema, required this.textos});
 
   final ColorScheme esquema;
+  final TextosApp textos;
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +130,7 @@ class _Cabecera extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'El Cuaderno',
+          textos.acercaCabeceraNombre,
           style: TipografiaCuaderno.serif(
             color: esquema.onSurface,
             tamano: TipografiaCuaderno.tamano17,
@@ -292,7 +139,7 @@ class _Cabecera extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'un cuaderno de campo digital — para 9-13 años',
+          textos.acercaCabeceraSubtitulo,
           style: TipografiaCuaderno.serif(
             color: PaletaCuaderno.tintaTenue,
             tamano: TipografiaCuaderno.tamano14,

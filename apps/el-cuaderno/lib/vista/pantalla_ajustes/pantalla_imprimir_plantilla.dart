@@ -72,10 +72,27 @@ class _EstadoPantallaImprimirPlantilla
   Future<void> _generarYImprimir() async {
     setState(() => _generando = true);
     try {
+      final textos = TextosApp.of(context);
+      final etiquetas = EtiquetasPlantillaPdf(
+        tituloCabecera: textos.pdfPlantillaTituloCabecera,
+        autorAnonimo: textos.pdfPlantillaAutorAnonimo,
+        diaHora: textos.pdfPlantillaDiaHora,
+        dondeEstabas: textos.pdfPlantillaDondeEstabas,
+        queViste: textos.pdfPlantillaQueViste,
+        creesQueEs: textos.pdfPlantillaCreesQueEs,
+        dibuja: textos.pdfPlantillaDibuja,
+        confianzaConsenso: textos.confianzaConsenso,
+        confianzaHipotesisActiva: textos.confianzaHipotesisActiva,
+        confianzaNoSegura: textos.confianzaNoSegura,
+        tituloCabeceraConNombre: textos.pdfPlantillaTituloCabeceraConNombre,
+        pagina: textos.pdfPlantillaPagina,
+        sitSpot: textos.pdfPlantillaSitSpot,
+      );
       final bytes = await GeneradorPlantillaPdf.generar(
         paginas: _paginasElegidas,
         nombreNino: widget.nombrePerfilActivo ?? '',
         nombreSitSpot: _sitSpotActivo?.nombre,
+        etiquetas: etiquetas,
       );
       final lanzador =
           widget.lanzadorImpresion ?? _lanzadorImpresionPorDefecto;

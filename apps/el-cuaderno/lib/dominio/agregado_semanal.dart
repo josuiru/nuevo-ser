@@ -147,33 +147,81 @@ String _isoWeekDe(DateTime fecha) {
   return '$anio-W${semana.toString().padLeft(2, '0')}';
 }
 
+/// Plantillas de las cinco ramas que componen la pregunta-para-la-cena
+/// offline. Inyectables para soportar l10n sin contaminar el dominio
+/// con `TextosApp`. La pantalla cuidador resuelve los textos desde
+/// `TextosApp.of(context)` y los pasa a [preguntaParaLaCenaOffline].
+///
+/// Si no se inyecta nada, la función usa el castellano canónico de
+/// referencia (también es el que ejercitan los tests del dominio).
+class PlantillasPreguntaCena {
+  const PlantillasPreguntaCena({
+    required this.cuadernoEnReposo,
+    required this.observacionesSinAnclajes,
+    required this.regresoAlSitSpot,
+    required this.unaPreguntaActiva,
+    required this.variasPreguntasActivas,
+  });
+
+  /// Sin observaciones esta semana.
+  final String cuadernoEnReposo;
+
+  /// Hay observaciones pero ningún Misterio ni regreso al sit spot.
+  final String observacionesSinAnclajes;
+
+  /// Hay regreso al sit spot pero no Misterios distintos.
+  final String regresoAlSitSpot;
+
+  /// Exactamente un Misterio distinto.
+  final String unaPreguntaActiva;
+
+  /// Más de un Misterio distinto.
+  final String variasPreguntasActivas;
+
+  /// Plantillas castellano de referencia. Voz del doc 04 §1: voz adulta
+  /// amable, sin diminutivos, sin "¡bien hecho!", sin moralizar.
+  static const PlantillasPreguntaCena castellano = PlantillasPreguntaCena(
+    cuadernoEnReposo:
+        'Esta semana el cuaderno descansó. ¿Hay algo del lugar que '
+        'os apetezca volver a mirar despacio?',
+    observacionesSinAnclajes:
+        '¿Qué cosa pequeña ha aparecido esta semana en el cuaderno '
+        'que no estaba antes?',
+    regresoAlSitSpot:
+        'Esta semana ha vuelto al lugar de regreso. ¿Qué le ha '
+        'sonado distinto allí?',
+    unaPreguntaActiva:
+        'Esta semana ha quedado dándole vueltas a una pregunta. '
+        '¿Cuál cuenta hoy?',
+    variasPreguntasActivas:
+        'Esta semana ha tenido varias preguntas a la vez. ¿Cuál de '
+        'todas le tiene más enganchada ahora mismo?',
+  );
+}
+
 /// Genera offline una pregunta para la cena (modo cuidador) a partir
-/// del agregado semanal. **Plantillas hardcoded en castellano**
-/// siguiendo la voz del doc 04 §1: voz adulta amable, sin diminutivos,
-/// sin "¡bien hecho!", sin moralizar. Sin red. Sirve como fallback si
+/// del agregado semanal. Sirve como fallback si
 /// `/companion/aggregates/weekly` no está disponible o el niño no ha
 /// dado permiso para compartir.
 ///
 /// Cuando el LLM server-side produce su `conversation_prompt`, ese
 /// texto sustituye a este — pero la API es la misma desde la vista del
 /// cuidador.
-String preguntaParaLaCenaOffline(AgregadoSemanal agregado) {
+String preguntaParaLaCenaOffline(
+  AgregadoSemanal agregado, {
+  PlantillasPreguntaCena plantillas = PlantillasPreguntaCena.castellano,
+}) {
   if (agregado.observacionesTotal == 0) {
-    return 'Esta semana el cuaderno descansó. ¿Hay algo del lugar que '
-        'os apetezca volver a mirar despacio?';
+    return plantillas.cuadernoEnReposo;
   }
   if (agregado.misteriosDistintos == 0 && agregado.sitSpotVisitas == 0) {
-    return '¿Qué cosa pequeña ha aparecido esta semana en el cuaderno '
-        'que no estaba antes?';
+    return plantillas.observacionesSinAnclajes;
   }
   if (agregado.sitSpotVisitas > 0 && agregado.misteriosDistintos == 0) {
-    return 'Esta semana ha vuelto al lugar de regreso. ¿Qué le ha '
-        'sonado distinto allí?';
+    return plantillas.regresoAlSitSpot;
   }
   if (agregado.misteriosDistintos == 1) {
-    return 'Esta semana ha quedado dándole vueltas a una pregunta. '
-        '¿Cuál cuenta hoy?';
+    return plantillas.unaPreguntaActiva;
   }
-  return 'Esta semana ha tenido varias preguntas a la vez. ¿Cuál de '
-      'todas le tiene más enganchada ahora mismo?';
+  return plantillas.variasPreguntasActivas;
 }

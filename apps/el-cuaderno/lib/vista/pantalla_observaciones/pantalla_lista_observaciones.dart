@@ -173,7 +173,7 @@ class _EstadoPantallaListaObservaciones
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todas tus páginas'),
+        title: Text(textos.listaObservacionesTitulo),
         actions: [
           if (_todas.isNotEmpty)
             IconButton(
@@ -191,13 +191,13 @@ class _EstadoPantallaListaObservaciones
               child: TextField(
                 controller: _controladorBusqueda,
                 decoration: InputDecoration(
-                  hintText: 'busca por algo que recuerdes',
+                  hintText: textos.listaObservacionesPlaceholderBusqueda,
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: _controladorBusqueda.text.isEmpty
                       ? null
                       : IconButton(
                           icon: const Icon(Icons.clear),
-                          tooltip: 'limpiar búsqueda',
+                          tooltip: textos.listaObservacionesLimpiarBusqueda,
                           onPressed: _controladorBusqueda.clear,
                         ),
                   filled: true,
@@ -256,7 +256,7 @@ class _Contenido extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
-          'Aún no has anotado nada. Cuando lo hagas, aparecerá aquí.',
+          textos.ultimaPaginaVacia,
           textAlign: TextAlign.center,
           style: TipografiaCuaderno.serif(
             color: PaletaCuaderno.tintaTenue,
@@ -270,7 +270,7 @@ class _Contenido extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
-          'Ninguna página guarda eso. Prueba con otra palabra.',
+          textos.listaObservacionesBusquedaSinResultados,
           textAlign: TextAlign.center,
           style: TipografiaCuaderno.serif(
             color: PaletaCuaderno.tintaTenue,

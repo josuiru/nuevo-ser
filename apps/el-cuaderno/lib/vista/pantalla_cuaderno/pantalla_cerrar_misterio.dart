@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dominio/misterio.dart';
 import '../../dominio/repositorio_local.dart';
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
@@ -45,6 +46,7 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
   Future<void> _guardar() async {
     final respuesta = _controladorRespuesta.text.trim();
     if (respuesta.isEmpty) return;
+    final textos = TextosApp.of(context);
     setState(() => _guardando = true);
     try {
       await widget.repositorio
@@ -55,8 +57,8 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
       if (!mounted) return;
       setState(() => _guardando = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No se ha podido guardar la respuesta. Vuelve a probar.'),
+        SnackBar(
+          content: Text(textos.misterioCerrarErrorGuardar),
         ),
       );
     }
@@ -65,8 +67,9 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Tu respuesta')),
+      appBar: AppBar(title: Text(textos.misterioCerrarTitulo)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -82,7 +85,7 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'El Misterio',
+                    textos.misterioCerrarCabeceraMisterio,
                     style: TipografiaCuaderno.sans(
                       color: esquema.tertiary,
                       tamano: TipografiaCuaderno.tamano12,
@@ -91,7 +94,7 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    widget.misterio.pregunta,
+                    widget.misterio.preguntaEn(textos.localeName),
                     style: TipografiaCuaderno.serif(
                       color: esquema.onSurface,
                       tamano: TipografiaCuaderno.tamano14,
@@ -103,9 +106,7 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Cuenta con tus palabras lo que has aprendido sobre este '
-              'Misterio. No hay respuesta correcta — esto no se corrige '
-              'ni se nota; sólo se guarda en tu cuaderno.',
+              textos.misterioCerrarIntro,
               style: TipografiaCuaderno.serif(
                 color: PaletaCuaderno.tintaTenue,
                 tamano: TipografiaCuaderno.tamano13,
@@ -120,9 +121,9 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
               textInputAction: TextInputAction.newline,
               keyboardType: TextInputType.multiline,
               onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Lo que he aprendido sobre este Misterio...',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: textos.misterioCerrarPlaceholder,
               ),
               style: TipografiaCuaderno.serif(
                 color: esquema.onSurface,
@@ -136,7 +137,9 @@ class _EstadoPantallaCerrarMisterio extends State<PantallaCerrarMisterio> {
               child: FilledButton(
                 onPressed: _puedeGuardar ? _guardar : null,
                 child: Text(
-                  _guardando ? 'guardando...' : 'guardar mi respuesta',
+                  _guardando
+                      ? textos.misterioCerrarBotonGuardando
+                      : textos.misterioCerrarBotonGuardar,
                 ),
               ),
             ),

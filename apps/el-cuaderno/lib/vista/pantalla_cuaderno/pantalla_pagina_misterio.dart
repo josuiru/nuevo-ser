@@ -95,22 +95,20 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
   }
 
   Future<void> _confirmarReabrir() async {
+    final textos = TextosApp.of(context);
     final confirmado = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Reabrir este Misterio'),
-        content: const Text(
-          'Si lo reabres, tu respuesta se borra y el Misterio vuelve a la '
-          'lista de abiertos. Las anotaciones que ya tenías se conservan.',
-        ),
+        title: Text(textos.misterioReabrirTitulo),
+        content: Text(textos.misterioReabrirMensaje),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('No'),
+            child: Text(textos.misterioReabrirCancelar),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Reabrir'),
+            child: Text(textos.misterioReabrirConfirmar),
           ),
         ],
       ),
@@ -131,7 +129,7 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
         !estaCerrado && _observaciones.isNotEmpty;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Misterio')),
+      appBar: AppBar(title: Text(textos.misterioPaginaTitulo)),
       body: SafeArea(
         child: _cargando
             ? const Center(child: CircularProgressIndicator.adaptive())
@@ -144,6 +142,7 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
                     _BloqueRespuestaDelNino(
                       misterio: _misterio,
                       esquema: esquema,
+                      textos: textos,
                       alReabrir: _confirmarReabrir,
                     ),
                   ],
@@ -154,7 +153,7 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
                       child: FilledButton.icon(
                         onPressed: _anotarEvidencia,
                         icon: const Icon(Icons.edit_outlined),
-                        label: const Text('anotar evidencia para este misterio'),
+                        label: Text(textos.misterioBotonEvidencia),
                       ),
                     ),
                   ],
@@ -165,15 +164,13 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
                       child: OutlinedButton.icon(
                         onPressed: _abrirCierre,
                         icon: const Icon(Icons.bookmark_outline),
-                        label: const Text(
-                          'ya tengo mi respuesta sobre este Misterio',
-                        ),
+                        label: Text(textos.misterioBotonCerrar),
                       ),
                     ),
                   ],
                   const SizedBox(height: 28),
                   Text(
-                    'Lo que ya has anotado',
+                    textos.misterioCabeceraEvidencia,
                     style: TipografiaCuaderno.sans(
                       color: esquema.tertiary,
                       tamano: TipografiaCuaderno.tamano12,
@@ -183,8 +180,7 @@ class _EstadoPantallaPaginaMisterio extends State<PantallaPaginaMisterio> {
                   const SizedBox(height: 12),
                   if (_observaciones.isEmpty)
                     Text(
-                      'Todavía no has anotado nada para este misterio. '
-                      'Cuando lo hagas, aparecerá aquí.',
+                      textos.misterioPaginaEvidenciaVacia,
                       style: TipografiaCuaderno.serif(
                         color: PaletaCuaderno.tintaTenue,
                         tamano: TipografiaCuaderno.tamano13,
@@ -227,7 +223,7 @@ class _Cabecera extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            misterio.pregunta,
+            misterio.preguntaEn(textos.localeName),
             style: TipografiaCuaderno.serif(
               color: esquema.onSurface,
               tamano: TipografiaCuaderno.tamano17,
@@ -237,7 +233,7 @@ class _Cabecera extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            misterio.descripcionCorta,
+            misterio.descripcionEn(textos.localeName),
             style: TipografiaCuaderno.serif(
               color: PaletaCuaderno.tintaTenue,
               tamano: TipografiaCuaderno.tamano14,
@@ -262,11 +258,13 @@ class _BloqueRespuestaDelNino extends StatelessWidget {
   const _BloqueRespuestaDelNino({
     required this.misterio,
     required this.esquema,
+    required this.textos,
     required this.alReabrir,
   });
 
   final Misterio misterio;
   final ColorScheme esquema;
+  final TextosApp textos;
   final VoidCallback alReabrir;
 
   @override
@@ -286,7 +284,7 @@ class _BloqueRespuestaDelNino extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Tu respuesta',
+            textos.misterioBloqueRespuesta,
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
@@ -304,7 +302,7 @@ class _BloqueRespuestaDelNino extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Cerrado el $fechaFormateada',
+            textos.misterioCerradoEl(fechaFormateada),
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
@@ -316,7 +314,7 @@ class _BloqueRespuestaDelNino extends StatelessWidget {
             child: TextButton.icon(
               onPressed: alReabrir,
               icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('reabrir este Misterio'),
+              label: Text(textos.misterioReabrir),
             ),
           ),
         ],

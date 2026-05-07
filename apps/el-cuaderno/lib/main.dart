@@ -215,7 +215,13 @@ class AppElCuaderno extends StatelessWidget {
                   darkTheme: TemaCuaderno.oscuro(),
                   // Modo oscuro respetado del sistema (doc 13 §11.5).
                   themeMode: ThemeMode.system,
-                  locale: locale,
+                  // Si el niño todavía no ha elegido idioma (primer
+                  // arranque), caemos a 'es' como base del cuaderno.
+                  // Sin esto, el resolver de Flutter elige el primer
+                  // soportado por orden alfabético — que es 'ca' — y
+                  // los strings localizados aparecen en catalán antes
+                  // de que el niño llegue al selector trilingüe.
+                  locale: locale ?? const Locale('es'),
                   localizationsDelegates: TextosApp.localizationsDelegates,
                   supportedLocales: TextosApp.supportedLocales,
                   home: _decidirHome(locale, nombrePerfil, presentacionVista),

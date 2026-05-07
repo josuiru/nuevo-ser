@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../dominio/geolocalizacion_privacy_first.dart';
 import '../../dominio/observacion.dart';
 import '../../dominio/sit_spot.dart';
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 
@@ -89,6 +90,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
     if (continua != true) return;
     if (!mounted) return;
 
+    final textos = TextosApp.of(context);
     setState(() {
       _solicitandoUbicacion = true;
       _avisoUbicacion = null;
@@ -103,9 +105,8 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
         setState(() {
           _solicitandoUbicacion = false;
           _avisoUbicacion = permiso == PermisoGeo.denegadoPermanente
-              ? 'No se ha podido pedir permiso. Si quieres anclar la posición, '
-                  'cámbialo en los ajustes del teléfono.'
-              : 'Sin permiso de ubicación. Puedes seguir sin él.';
+              ? textos.crearSitSpotPermisoDenegadoPermanente
+              : textos.crearSitSpotSinPermisoUbicacion;
         });
         return;
       }
@@ -114,8 +115,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
       setState(() {
         _solicitandoUbicacion = false;
         if (coords == null) {
-          _avisoUbicacion = 'No se ha podido localizar la posición. '
-              'Puedes seguir sin ella.';
+          _avisoUbicacion = textos.crearSitSpotErrorLocalizar;
         } else {
           _coordenadasAncladas = coords;
           _avisoUbicacion = null;
@@ -125,29 +125,26 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
       if (!mounted) return;
       setState(() {
         _solicitandoUbicacion = false;
-        _avisoUbicacion = 'No se ha podido localizar la posición. '
-            'Puedes seguir sin ella.';
+        _avisoUbicacion = textos.crearSitSpotErrorLocalizar;
       });
     }
   }
 
   Future<bool> _mostrarPrePermisoUbicacion() async {
+    final textos = TextosApp.of(context);
     final continuar = await showDialog<bool>(
       context: context,
       builder: (dialogo) => AlertDialog(
-        title: const Text('Anclar la posición a tu sit spot'),
-        content: const Text(
-          'La posición se queda en este cuaderno y no sale a internet. '
-          'No la ve el adulto. Es opcional — el sit spot funciona sin ella.',
-        ),
+        title: Text(textos.crearSitSpotPrePermisoTitulo),
+        content: Text(textos.crearSitSpotPrePermisoMensaje),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogo).pop(false),
-            child: const Text('cancelar'),
+            child: Text(textos.crearSitSpotPrePermisoCancelar),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogo).pop(true),
-            child: const Text('anclar'),
+            child: Text(textos.crearSitSpotPrePermisoAnclar),
           ),
         ],
       ),
@@ -183,8 +180,9 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Tu sit spot')),
+      appBar: AppBar(title: Text(textos.crearSitSpotTitulo)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -192,8 +190,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Un sit spot es un lugar al que vuelves. '
-                'Lo ves cambiar con el tiempo.',
+                textos.crearSitSpotIntro,
                 style: TipografiaCuaderno.serif(
                   color: esquema.onSurface,
                   tamano: TipografiaCuaderno.tamano14,
@@ -201,7 +198,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
                 ),
               ),
               const SizedBox(height: 24),
-              const _Etiqueta('cómo se llama tu sit spot'),
+              _Etiqueta(textos.crearSitSpotEtiquetaNombre),
               const SizedBox(height: 4),
               TextField(
                 controller: _controladorNombre,
@@ -211,7 +208,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
                   tamano: TipografiaCuaderno.tamano14,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'el roble grande, mi banco, donde fui con la abuela…',
+                  hintText: textos.crearSitSpotHintNombre,
                   hintStyle: TipografiaCuaderno.serif(
                     color: PaletaCuaderno.tintaTenue,
                     tamano: TipografiaCuaderno.tamano13,
@@ -223,7 +220,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
                 ),
               ),
               const SizedBox(height: 16),
-              const _Etiqueta('dónde está, para acordarte (opcional)'),
+              _Etiqueta(textos.crearSitSpotEtiquetaDonde),
               const SizedBox(height: 4),
               TextField(
                 controller: _controladorDonde,
@@ -233,7 +230,7 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
                   tamano: TipografiaCuaderno.tamano14,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'al final del parque, junto al pino más alto',
+                  hintText: textos.crearSitSpotHintDonde,
                   hintStyle: TipografiaCuaderno.serif(
                     color: PaletaCuaderno.tintaTenue,
                     tamano: TipografiaCuaderno.tamano13,
@@ -263,7 +260,9 @@ class _EstadoPantallaCrearSitSpot extends State<PantallaCrearSitSpot> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(_guardando ? 'guardando…' : 'guardar sit spot'),
+                child: Text(_guardando
+                    ? textos.crearSitSpotGuardando
+                    : textos.crearSitSpotBotonGuardar),
               ),
             ],
           ),
@@ -310,6 +309,7 @@ class _BloqueAnclarSitSpot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -322,8 +322,8 @@ class _BloqueAnclarSitSpot extends StatelessWidget {
         children: [
           Text(
             coordenadas == null
-                ? 'Posición no anclada'
-                : 'Posición anclada al sit spot',
+                ? textos.crearSitSpotPosicionNoAnclada
+                : textos.crearSitSpotPosicionAnclada,
             style: TipografiaCuaderno.sans(
               color: esquema.onSurface,
               tamano: TipografiaCuaderno.tamano13,
@@ -332,7 +332,7 @@ class _BloqueAnclarSitSpot extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'La posición se queda en este cuaderno y no sale a internet.',
+            textos.crearSitSpotPosicionPrivada,
             style: TipografiaCuaderno.serif(
               color: PaletaCuaderno.tintaTenue,
               tamano: TipografiaCuaderno.tamano12,
@@ -356,12 +356,14 @@ class _BloqueAnclarSitSpot extends StatelessWidget {
               if (coordenadas == null)
                 TextButton(
                   onPressed: solicitando ? null : alAnclar,
-                  child: Text(solicitando ? 'localizando…' : 'anclar mi posición'),
+                  child: Text(solicitando
+                      ? textos.crearSitSpotLocalizando
+                      : textos.crearSitSpotBotonAnclar),
                 )
               else ...[
                 TextButton(
                   onPressed: alQuitar,
-                  child: const Text('quitar posición'),
+                  child: Text(textos.crearSitSpotQuitarPosicion),
                 ),
                 const SizedBox(width: 8),
                 Text(

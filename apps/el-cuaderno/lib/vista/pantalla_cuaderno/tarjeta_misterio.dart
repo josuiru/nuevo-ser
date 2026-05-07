@@ -65,7 +65,7 @@ class TarjetaMisterio extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      misterio.pregunta,
+                      misterio.preguntaEn(textos.localeName),
                       style: TipografiaCuaderno.serif(
                         color: esquema.onSurface,
                         tamano: TipografiaCuaderno.tamano16,
@@ -75,7 +75,7 @@ class TarjetaMisterio extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      misterio.descripcionCorta,
+                      misterio.descripcionEn(textos.localeName),
                       style: TipografiaCuaderno.serif(
                         color: PaletaCuaderno.tintaTenue,
                         tamano: TipografiaCuaderno.tamano13,
@@ -120,12 +120,14 @@ class TarjetaMisterio extends StatelessWidget {
     final estado = misterio.estado.toLocaleLabel(_idioma(textos));
     final n = evidencias ?? 0;
     final contador = n == 0
-        ? 'todavía no has anotado nada'
+        ? textos.tarjetaMisterioContadorVacio
         : n == 1
-            ? '1 evidencia anotada'
-            : '$n evidencias anotadas';
+            ? textos.tarjetaMisterioContadorUna
+            : textos.tarjetaMisterioContadorVarias(n);
     final base = '$estado · $contador';
-    return enVentanaCaliente ? 'estos días · $base' : base;
+    return enVentanaCaliente
+        ? textos.tarjetaMisterioPrefijoCaliente(base)
+        : base;
   }
 
   static String _idioma(TextosApp textos) => textos.localeName;

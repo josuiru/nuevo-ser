@@ -100,11 +100,11 @@ class _EstadoPantallaPaginaPregunta extends State<PantallaPaginaPregunta> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('No'),
+            child: Text(textos.preguntaReabrirCancelar),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Reabrir'),
+            child: Text(textos.preguntaReabrirConfirmar),
           ),
         ],
       ),
@@ -125,11 +125,11 @@ class _EstadoPantallaPaginaPregunta extends State<PantallaPaginaPregunta> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('cancelar'),
+            child: Text(textos.preguntaBorrarCancelar),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('borrar'),
+            child: Text(textos.preguntaBorrarConfirmar),
           ),
         ],
       ),

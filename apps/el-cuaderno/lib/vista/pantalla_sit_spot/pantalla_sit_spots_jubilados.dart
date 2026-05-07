@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dominio/repositorio_local.dart';
 import '../../dominio/sit_spot.dart';
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'pantalla_pagina_sit_spot_jubilado.dart';
@@ -32,8 +33,9 @@ class PantallaSitSpotsJubilados extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Sit spots de antes')),
+      appBar: AppBar(title: Text(textos.sitSpotsJubiladosTitulo)),
       body: SafeArea(
         child: jubilados.isEmpty
             ? _MensajeVacio(esquema: esquema)
@@ -62,8 +64,7 @@ class _MensajeVacio extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Text(
-          'Aquí aparecerán los sit spots que jubiles. Sus páginas '
-          'seguirán guardadas con sus observaciones.',
+          TextosApp.of(context).sitSpotsJubiladosVacio,
           textAlign: TextAlign.center,
           style: TipografiaCuaderno.serif(
             color: esquema.tertiary,
@@ -116,7 +117,7 @@ class _PaginaSitSpotJubilado extends StatelessWidget {
           ],
           const SizedBox(height: 8),
           Text(
-            _periodoActivo(sitSpot),
+            _periodoActivo(context, sitSpot),
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
@@ -151,11 +152,12 @@ class _PaginaSitSpotJubilado extends StatelessWidget {
   /// "Estuvo activo del DD/MM/AAAA al DD/MM/AAAA". Si no tiene
   /// retiradoEn (no debería ocurrir con esta pantalla, pero por
   /// robustez), muestra sólo la fecha de creación.
-  static String _periodoActivo(SitSpot sitSpot) {
+  static String _periodoActivo(BuildContext context, SitSpot sitSpot) {
+    final textos = TextosApp.of(context);
     final desde = _formatearFecha(sitSpot.creadoEn);
     final hasta = sitSpot.retiradoEn;
-    if (hasta == null) return 'Creado el $desde.';
-    return 'Estuvo activo del $desde al ${_formatearFecha(hasta)}.';
+    if (hasta == null) return textos.sitSpotJubiladoPeriodoCreado(desde);
+    return textos.sitSpotJubiladoPeriodoActivo(desde, _formatearFecha(hasta));
   }
 
   static String _formatearFecha(DateTime cuando) {
@@ -165,7 +167,7 @@ class _PaginaSitSpotJubilado extends StatelessWidget {
   }
 }
 
-class _ContadorObservaciones extends StatelessWidget {
+class _ContadorObservaciones extends StatefulWidget {
   const _ContadorObservaciones({
     required this.sitSpotId,
     required this.repositorio,
@@ -177,23 +179,41 @@ class _ContadorObservaciones extends StatelessWidget {
   final ColorScheme esquema;
 
   @override
+  State<_ContadorObservaciones> createState() => _EstadoContadorObservaciones();
+}
+
+class _EstadoContadorObservaciones extends State<_ContadorObservaciones> {
+  late final Future<int> _futuro;
+
+  @override
+  void initState() {
+    super.initState();
+    // Memoizado en initState: el FutureBuilder anterior construía el
+    // future en `build()` y cada rebuild relanzaba la query a Isar
+    // (`obtenerObservaciones`). Una lista de jubilados con N tarjetas
+    // disparaba N peticiones por rebuild.
+    _futuro = widget.repositorio
+        .obtenerObservaciones(sitSpotId: widget.sitSpotId)
+        .then((lista) => lista.length);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final textos = TextosApp.of(context);
     return FutureBuilder<int>(
-      future: repositorio
-          .obtenerObservaciones(sitSpotId: sitSpotId)
-          .then((lista) => lista.length),
+      future: _futuro,
       builder: (_, snapshot) {
         final cuenta = snapshot.data;
         if (cuenta == null) return const SizedBox.shrink();
         final texto = cuenta == 0
-            ? 'Sin observaciones guardadas.'
+            ? textos.sitSpotJubiladoSinObservaciones
             : cuenta == 1
-                ? '1 observación guardada.'
-                : '$cuenta observaciones guardadas.';
+                ? textos.sitSpotJubiladoUnaObservacion
+                : textos.sitSpotJubiladoVariasObservaciones(cuenta);
         return Text(
           texto,
           style: TipografiaCuaderno.sans(
-            color: esquema.tertiary,
+            color: widget.esquema.tertiary,
             tamano: TipografiaCuaderno.tamano12,
           ),
         );

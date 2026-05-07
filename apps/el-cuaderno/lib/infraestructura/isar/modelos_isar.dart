@@ -232,6 +232,14 @@ class MisterioIsar {
   /// Lo que el niño anotó al cerrar. Vive aquí porque es por-niño.
   String? respuestaDelNino;
 
+  /// Traducciones provisionales del par pregunta + descripcionCorta a
+  /// otros locales (eu, ca). Persistido como JSON string porque Isar 3
+  /// Community no soporta `Map<String, EmbeddedObject>` con tipo de
+  /// valor compuesto. Vacío `'{}'` cuando no hay traducciones —
+  /// retrocompatible con DBs antiguas (Isar inicializa el campo a su
+  /// default, que aquí es `'{}'`).
+  String traduccionesJson = '{}';
+
   static MisterioIsar desdeDominio(Misterio misterio) {
     return MisterioIsar()
       ..idDominio = misterio.id
@@ -244,7 +252,8 @@ class MisterioIsar {
       ..seasons = List.of(misterio.seasons)
       ..regions = List.of(misterio.regions ?? const <String>[])
       ..cerradoPorNino = misterio.cerradoPorNino
-      ..respuestaDelNino = misterio.respuestaDelNino;
+      ..respuestaDelNino = misterio.respuestaDelNino
+      ..traduccionesJson = _serializarTraducciones(misterio.traducciones);
   }
 
   Misterio aDominio() {
@@ -260,7 +269,34 @@ class MisterioIsar {
       regions: regions.isEmpty ? null : List.of(regions),
       cerradoPorNino: cerradoPorNino,
       respuestaDelNino: respuestaDelNino,
+      traducciones: _deserializarTraducciones(traduccionesJson),
     );
+  }
+
+  static String _serializarTraducciones(Map<String, MisterioTexto> mapa) {
+    if (mapa.isEmpty) return '{}';
+    final crudo = mapa.map(
+      (locale, texto) => MapEntry(locale, texto.toJson()),
+    );
+    return jsonEncode(crudo);
+  }
+
+  static Map<String, MisterioTexto> _deserializarTraducciones(String json) {
+    if (json.isEmpty || json == '{}') return const <String, MisterioTexto>{};
+    try {
+      final crudo = jsonDecode(json) as Map<String, dynamic>;
+      return crudo.map(
+        (locale, texto) => MapEntry(
+          locale,
+          MisterioTexto.fromJson(texto as Map<String, dynamic>),
+        ),
+      );
+    } catch (_) {
+      // JSON corrupto en disco → tratar como sin traducciones para no
+      // romper el cuaderno entero. La pregunta canónica castellano
+      // sigue funcionando.
+      return const <String, MisterioTexto>{};
+    }
   }
 }
 

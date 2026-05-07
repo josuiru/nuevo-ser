@@ -6,10 +6,38 @@ import 'modelos_isar.dart';
 /// Apertura de la base Isar del juego. Vive bajo el directorio de
 /// documentos de la app, en una carpeta `el_cuaderno/` propia del
 /// juego — coherente con el patrón ya usado por uno-roto para audio
-/// (`<docs>/uroto/sonido/`). Sprint 5 añadirá cifrado en reposo
-/// (`encryptionKey`) derivado de la cuenta + dispositivo (doc 03
-/// §10.2). En S1 la base abre sin cifrar para no enmascarar la
-/// decisión que aún no se ha tomado a nivel de cuenta.
+/// (`<docs>/uroto/sonido/`).
+///
+/// **Estado del cifrado en reposo (biblia §2.1, doc 03 §10.2):**
+///
+/// Isar 3.x Community NO soporta `encryptionKey` — la API de cifrado
+/// vive en Isar Pro (de pago) y se anuncia para Isar v4 (en preview,
+/// no estable). El paquete instalado (`isar: ^3.1.0+1`) no expone
+/// `encryptionKey` en `Isar.open`. Comprobado contra el fuente del
+/// paquete (no aparece la propiedad).
+///
+/// Mitigación actual (parcial pero real):
+/// - Sandbox de Android: el fichero vive bajo `/data/data/<paquete>/`
+///   y es inaccesible a otras apps salvo con root. Suficiente para
+///   familias del operador en piloto interno.
+/// - Frontera de privacidad estructural: el cliente HTTP del cuaderno
+///   (cliente_el_cuaderno.dart) impide que texto libre/coords/fotos
+///   crucen red — sólo viajan hash + region_code agregado.
+///
+/// Pendiente para piloto público (decisión humana, ver memoria
+/// `project_el_cuaderno_decisiones_humanas_pendientes`):
+/// 1. Migrar a Isar v4 cuando esté estable y pase de preview.
+/// 2. O migrar persistencia a sqflite + sqflite_sqlcipher (mismo
+///    patrón que naturaleza/fosiles, con cifrado nativo).
+/// 3. O cifrar a mano campos sensibles (`queVio`, `creesQueEs`,
+///    `dondeCoordenadas`) con `package:cryptography` y clave en
+///    `flutter_secure_storage` — rompe la búsqueda accent-insensitive
+///    de `PantallaListaObservaciones`.
+/// 4. O pagar licencia Isar Pro.
+///
+/// Decisión: bloquea el piloto público; no bloquea el piloto interno
+/// con familias del operador. Documentado para que la elección sea
+/// consciente.
 class IsarSetup {
   IsarSetup({this.directorioOverride});
 

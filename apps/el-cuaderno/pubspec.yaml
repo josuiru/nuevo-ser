@@ -155,9 +155,9 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "assets/launcher/icon.png"
+  image_path: "assets/logo-cuaderno.png"
   adaptive_icon_background: "#F5EFE2"
-  adaptive_icon_foreground: "assets/launcher/icon_foreground_adaptive.png"
+  adaptive_icon_foreground: "assets/logo-cuaderno.png"
   min_sdk_android: 21
 
 # ---------------------------------------------------------------------
@@ -168,12 +168,12 @@ flutter_launcher_icons:
 flutter_native_splash:
   color: "#F5EFE2"
   color_dark: "#1F1E1A"
-  image: "assets/splash/splash.png"
-  image_dark: "assets/splash/splash.png"
+  image: "assets/logo-cuaderno.png"
+  image_dark: "assets/logo-cuaderno.png"
   android: true
   ios: false
   android_12:
     color: "#F5EFE2"
     color_dark: "#1F1E1A"
-    image: "assets/splash/splash.png"
-    image_dark: "assets/splash/splash.png"
+    image: "assets/logo-cuaderno.png"
+    image_dark: "assets/logo-cuaderno.png"

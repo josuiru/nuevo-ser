@@ -117,7 +117,7 @@ class _EstadoPantallaEditarObservacion
     final mostrarChips = _controladorCreesQueEs.text.trim().isNotEmpty;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('editar página')),
+      appBar: AppBar(title: Text(textos.editarObservacionTitulo)),
       body: SafeArea(
         child: Column(
           children: [
@@ -180,7 +180,7 @@ class _EstadoPantallaEditarObservacion
                           setState(() => _confianza = nuevo),
                     ),
                   const SizedBox(height: 24),
-                  const _Etiqueta('dónde estabas'),
+                  _Etiqueta(textos.editarObservacionEtiquetaDonde),
                   const SizedBox(height: 4),
                   TextField(
                     controller: _controladorDonde,
@@ -224,7 +224,7 @@ class _EstadoPantallaEditarObservacion
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text('guardar cambios'),
+                child: Text(textos.editarObservacionBotonGuardar),
               ),
             ),
           ],

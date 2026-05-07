@@ -149,7 +149,7 @@ void main() {
         repositorio: repo,
       );
 
-      expect(find.text('3 observaciones guardadas.'), findsOneWidget);
+      expect(find.text('3 observaciones guardadas'), findsOneWidget);
       expect(find.text('Sin observaciones guardadas.'), findsOneWidget);
     },
   );

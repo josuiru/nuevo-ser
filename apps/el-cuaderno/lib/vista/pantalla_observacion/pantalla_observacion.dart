@@ -492,22 +492,20 @@ class _EstadoPantallaObservacion extends State<PantallaObservacion> {
   }
 
   Future<bool> _mostrarPrePermisoUbicacion() async {
+    final textos = TextosApp.of(context);
     final continuar = await showDialog<bool>(
       context: context,
       builder: (dialogo) => AlertDialog(
-        title: const Text('Anclar la posición a esta página'),
-        content: const Text(
-          'La posición se queda en este cuaderno y no sale a internet. '
-          'No la ve el adulto. Es opcional — puedes guardar la página sin ella.',
-        ),
+        title: Text(textos.observacionPrePermisoTitulo),
+        content: Text(textos.observacionPrePermisoMensaje),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogo).pop(false),
-            child: const Text('cancelar'),
+            child: Text(textos.observacionPrePermisoCancelar),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogo).pop(true),
-            child: const Text('anclar'),
+            child: Text(textos.observacionPrePermisoAnclar),
           ),
         ],
       ),
@@ -1082,6 +1080,7 @@ class _BloqueAnclarPosicion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1133,7 +1132,7 @@ class _BloqueAnclarPosicion extends StatelessWidget {
               else ...[
                 TextButton(
                   onPressed: alQuitar,
-                  child: const Text('quitar posición'),
+                  child: Text(textos.observacionQuitarPosicion),
                 ),
                 const SizedBox(width: 8),
                 Text(

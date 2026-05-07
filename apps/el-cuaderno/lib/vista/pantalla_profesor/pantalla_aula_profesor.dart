@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nuevo_ser_companion/nuevo_ser_companion.dart' as companion;
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
+import '../../nucleo/i18n/generado/textos_app.dart';
 import '../tema/colores.dart';
 import '../tema/tipografia.dart';
 import 'pantalla_login_profesor.dart';
@@ -96,10 +97,10 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
   }
 
   Future<void> _crearAula() async {
+    final textos = TextosApp.of(context);
     final nombre = _controladorNombre.text.trim();
     if (nombre.isEmpty || _juegosSeleccionados.isEmpty) {
-      setState(() => _mensajeError =
-          'Pon un nombre al aula y elige al menos un juego.');
+      setState(() => _mensajeError = textos.aulaProfesorErrorVacio);
       return;
     }
     setState(() {
@@ -130,21 +131,21 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
       if (!mounted) return;
       setState(() {
         _crearEnVuelo = false;
-        _mensajeError = _mensajeParaCrearError(e);
+        _mensajeError = _mensajeParaCrearError(e, textos);
       });
     }
   }
 
-  String _mensajeParaCrearError(ExcepcionApi e) {
+  String _mensajeParaCrearError(ExcepcionApi e, TextosApp textos) {
     switch (e.codigo) {
       case 401:
-        return 'La sesión ha caducado. Vuelve a iniciar sesión.';
+        return textos.aulaProfesorErrorSesionCaducadaCrear;
       case 422:
-        return 'Algún dato del aula no es válido. Revisa el nombre y los juegos seleccionados.';
+        return textos.aulaProfesorErrorDatosInvalidos;
       case 503:
-        return 'No se pudo generar un código único para el aula. Inténtalo en un momento.';
+        return textos.aulaProfesorErrorCodigoUnico;
       default:
-        return 'No se ha podido crear el aula (HTTP ${e.codigo}).';
+        return textos.aulaProfesorErrorGenerico(e.codigo);
     }
   }
 
@@ -169,12 +170,13 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
   @override
   Widget build(BuildContext context) {
     final esquema = Theme.of(context).colorScheme;
+    final textos = TextosApp.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aula'),
+        title: Text(textos.aulaProfesorTitulo),
         actions: [
           IconButton(
-            tooltip: 'cerrar sesión',
+            tooltip: textos.aulaProfesorTooltipCerrarSesion,
             onPressed: _cerrarSesion,
             icon: const Icon(Icons.logout),
           ),
@@ -184,20 +186,20 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
         child: _cargandoInicial
             ? const Center(child: CircularProgressIndicator.adaptive())
             : _classroomId == 0
-                ? _formularioCrearAula(esquema)
-                : _vistaAulaActiva(esquema),
+                ? _formularioCrearAula(esquema, textos)
+                : _vistaAulaActiva(esquema, textos),
       ),
     );
   }
 
-  Widget _formularioCrearAula(ColorScheme esquema) {
+  Widget _formularioCrearAula(ColorScheme esquema, TextosApp textos) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Crea tu primera aula',
+            textos.aulaProfesorCrearTitulo,
             style: TipografiaCuaderno.serif(
               color: esquema.onSurface,
               tamano: TipografiaCuaderno.tamano17,
@@ -206,8 +208,7 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
           ),
           const SizedBox(height: 8),
           Text(
-            'El servidor te dará un código que repartes a la clase. Cada '
-            'niño se une desde su cuaderno con ese código.',
+            textos.aulaProfesorCrearIntro,
             style: TipografiaCuaderno.serif(
               color: PaletaCuaderno.tintaTenue,
               tamano: TipografiaCuaderno.tamano13,
@@ -218,16 +219,16 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
           TextField(
             controller: _controladorNombre,
             enabled: !_crearEnVuelo,
-            decoration: const InputDecoration(
-              labelText: 'nombre del aula',
-              hintText: 'p. ej., 6º A · curso 2026/27',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: textos.aulaProfesorPlaceholderNombre,
+              hintText: textos.aulaProfesorHintNombre,
+              border: const OutlineInputBorder(),
               isDense: true,
             ),
           ),
           const SizedBox(height: 16),
           Text(
-            'Juegos del aula',
+            textos.aulaProfesorJuegosCabecera,
             style: TipografiaCuaderno.sans(
               color: esquema.tertiary,
               tamano: TipografiaCuaderno.tamano12,
@@ -254,7 +255,9 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
           const SizedBox(height: 16),
           FilledButton(
             onPressed: _crearEnVuelo ? null : _crearAula,
-            child: Text(_crearEnVuelo ? 'Creando…' : 'Crear aula'),
+            child: Text(_crearEnVuelo
+                ? textos.aulaProfesorCreando
+                : textos.aulaProfesorBotonCrear),
           ),
           if (_mensajeError != null) ...[
             const SizedBox(height: 12),
@@ -272,7 +275,7 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
     );
   }
 
-  Widget _vistaAulaActiva(ColorScheme esquema) {
+  Widget _vistaAulaActiva(ColorScheme esquema, TextosApp textos) {
     return FutureBuilder<companion.AgregadosAula>(
       future: _futureAgregados,
       builder: (context, snapshot) {
@@ -280,13 +283,17 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
         if (snapshot.hasError) {
-          return _mensajeKMinimoOError(snapshot.error!, esquema);
+          return _mensajeKMinimoOError(snapshot.error!, esquema, textos);
         }
         final agregados = snapshot.data!;
         return ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            _CabeceraAula(agregados: agregados, esquema: esquema),
+            _CabeceraAula(
+              agregados: agregados,
+              esquema: esquema,
+              textos: textos,
+            ),
             const SizedBox(height: 24),
             for (final entrada in agregados.aggregates.entries) ...[
               _BloqueAgregadoJuego(
@@ -302,20 +309,21 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
     );
   }
 
-  Widget _mensajeKMinimoOError(Object error, ColorScheme esquema) {
+  Widget _mensajeKMinimoOError(
+    Object error,
+    ColorScheme esquema,
+    TextosApp textos,
+  ) {
     String texto;
     if (error is ExcepcionApi && error.codigo == 403) {
       // Reportamos el k mínimo del servidor sin culpar — la voz "no
       // humillar" pide que la presencia o ausencia de niños no se
       // haga visible nominalmente.
-      texto =
-          'El aula necesita al menos cinco niños con datos esta semana '
-          'para que se vean los agregados. Eso protege la privacidad de '
-          'la clase. Vuelve cuando haya más actividad.';
+      texto = textos.aulaProfesorMensajeKMinimo;
     } else if (error is ExcepcionApi && error.codigo == 401) {
-      texto = 'La sesión ha caducado. Cierra sesión y vuelve a entrar.';
+      texto = textos.aulaProfesorErrorSesionCaducadaCargar;
     } else {
-      texto = 'No se han podido cargar los agregados ($error).';
+      texto = textos.aulaProfesorErrorCargarAgregados(error.toString());
     }
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -337,10 +345,15 @@ class _EstadoPantallaAulaProfesor extends State<PantallaAulaProfesor> {
 }
 
 class _CabeceraAula extends StatelessWidget {
-  const _CabeceraAula({required this.agregados, required this.esquema});
+  const _CabeceraAula({
+    required this.agregados,
+    required this.esquema,
+    required this.textos,
+  });
 
   final companion.AgregadosAula agregados;
   final ColorScheme esquema;
+  final TextosApp textos;
 
   @override
   Widget build(BuildContext context) {
@@ -357,7 +370,7 @@ class _CabeceraAula extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Código del aula: ${agregados.code}',
+          textos.aulaProfesorCodigoEtiqueta(agregados.code),
           style: TipografiaCuaderno.sans(
             color: PaletaCuaderno.tintaTenue,
             tamano: TipografiaCuaderno.tamano12,
@@ -365,8 +378,11 @@ class _CabeceraAula extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Semana ${agregados.isoWeek} · '
-          '${agregados.reportingCount} de ${agregados.memberCount} con datos',
+          textos.aulaProfesorSemanaResumen(
+            agregados.isoWeek,
+            agregados.reportingCount,
+            agregados.memberCount,
+          ),
           style: TipografiaCuaderno.sans(
             color: PaletaCuaderno.tintaTenue,
             tamano: TipografiaCuaderno.tamano12,

@@ -1,5 +1,40 @@
 import 'nivel_confianza.dart';
 
+/// Par de textos traducidos de un Misterio para un locale concreto.
+/// La pregunta canónica y la descripción corta viven en castellano en
+/// los campos del propio [Misterio]; las traducciones provisionales a
+/// eu/ca se almacenan en [Misterio.traducciones] como
+/// `Map<String, MisterioTexto>` indexado por código de locale ('eu',
+/// 'ca'). Si el locale activo no está en el mapa, se cae al castellano.
+class MisterioTexto {
+  const MisterioTexto({
+    required this.pregunta,
+    required this.descripcionCorta,
+  });
+
+  final String pregunta;
+  final String descripcionCorta;
+
+  Map<String, dynamic> toJson() => {
+        'pregunta': pregunta,
+        'descripcionCorta': descripcionCorta,
+      };
+
+  static MisterioTexto fromJson(Map<String, dynamic> json) => MisterioTexto(
+        pregunta: json['pregunta'] as String,
+        descripcionCorta: json['descripcionCorta'] as String,
+      );
+
+  @override
+  bool operator ==(Object other) =>
+      other is MisterioTexto &&
+      other.pregunta == pregunta &&
+      other.descripcionCorta == descripcionCorta;
+
+  @override
+  int get hashCode => Object.hash(pregunta, descripcionCorta);
+}
+
 /// Una pregunta sostenida del oficio (biblia §5.3). Equivalente
 /// funcional a los Fragmentos de Uno Roto y a las Brechas de Las
 /// Versiones, pero **sin envoltorio narrativo** — el Cuaderno presenta
@@ -25,6 +60,7 @@ class Misterio {
     this.regions,
     this.cerradoPorNino,
     this.respuestaDelNino,
+    this.traducciones = const <String, MisterioTexto>{},
   }) {
     if (pregunta.isEmpty) {
       throw ArgumentError.value(
@@ -122,6 +158,33 @@ class Misterio {
   /// validación más allá de "no vacío" si [cerradoPorNino] no es null.
   final String? respuestaDelNino;
 
+  /// Traducciones provisionales del par pregunta + descripcionCorta,
+  /// indexadas por código de locale ('eu', 'ca'). El castellano vive
+  /// en [pregunta] y [descripcionCorta] directamente y nunca aparece
+  /// aquí. Si el locale activo no está en el mapa, se cae al castellano
+  /// sin error — la app funciona aunque falten traducciones.
+  ///
+  /// Decisión registrada en
+  /// `docs/el-cuaderno/decisiones-provisionales.md` ítem #7: las
+  /// traducciones eu/ca son provisionales del operador + Claude,
+  /// pendientes de validación nativa naturalista (Elhuyar/Aranzadi/IEC).
+  final Map<String, MisterioTexto> traducciones;
+
+  /// Devuelve la pregunta en el [locale] dado, o el castellano si no
+  /// hay traducción para ese locale. Locale `'es'` siempre devuelve
+  /// el castellano (no se busca en el mapa).
+  String preguntaEn(String locale) {
+    if (locale == 'es') return pregunta;
+    return traducciones[locale]?.pregunta ?? pregunta;
+  }
+
+  /// Devuelve la descripción corta en el [locale] dado, con el mismo
+  /// fallback que [preguntaEn].
+  String descripcionEn(String locale) {
+    if (locale == 'es') return descripcionCorta;
+    return traducciones[locale]?.descripcionCorta ?? descripcionCorta;
+  }
+
   bool get estaVigente => retiradoEn == null;
 
   bool get estaCerradoPorNino => cerradoPorNino != null;
@@ -138,6 +201,7 @@ class Misterio {
     List<String>? regions,
     DateTime? cerradoPorNino,
     String? respuestaDelNino,
+    Map<String, MisterioTexto>? traducciones,
   }) {
     return Misterio(
       id: id ?? this.id,
@@ -151,6 +215,7 @@ class Misterio {
       regions: regions ?? this.regions,
       cerradoPorNino: cerradoPorNino ?? this.cerradoPorNino,
       respuestaDelNino: respuestaDelNino ?? this.respuestaDelNino,
+      traducciones: traducciones ?? this.traducciones,
     );
   }
 
@@ -168,6 +233,7 @@ class Misterio {
       retiradoEn: retiradoEn,
       seasons: seasons,
       regions: regions,
+      traducciones: traducciones,
     );
   }
 
@@ -184,9 +250,14 @@ class Misterio {
         if (cerradoPorNino != null)
           'cerradoPorNino': cerradoPorNino!.toIso8601String(),
         if (respuestaDelNino != null) 'respuestaDelNino': respuestaDelNino,
+        if (traducciones.isNotEmpty)
+          'traducciones': traducciones.map(
+            (locale, texto) => MapEntry(locale, texto.toJson()),
+          ),
       };
 
   static Misterio fromJson(Map<String, dynamic> json) {
+    final traduccionesRaw = json['traducciones'] as Map<String, dynamic>?;
     return Misterio(
       id: json['id'] as String,
       pregunta: json['pregunta'] as String,
@@ -207,6 +278,14 @@ class Misterio {
           ? null
           : DateTime.parse(json['cerradoPorNino'] as String),
       respuestaDelNino: json['respuestaDelNino'] as String?,
+      traducciones: traduccionesRaw == null
+          ? const <String, MisterioTexto>{}
+          : traduccionesRaw.map(
+              (locale, texto) => MapEntry(
+                locale,
+                MisterioTexto.fromJson(texto as Map<String, dynamic>),
+              ),
+            ),
     );
   }
 

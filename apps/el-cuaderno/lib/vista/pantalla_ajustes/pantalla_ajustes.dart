@@ -253,24 +253,14 @@ class PantallaAjustes extends StatelessWidget {
             ],
             // Bloque "Sit spots de antes" — sólo aparece si hay
             // alguno jubilado. Doc 13 §2.6: la página sigue guardada
-            // y el niño debe poder volver a verla.
-            FutureBuilder<List<SitSpot>>(
-              future: repositorio.obtenerSitSpotsJubilados(),
-              builder: (_, snapshot) {
-                final jubilados = snapshot.data ?? const <SitSpot>[];
-                if (jubilados.isEmpty) return const SizedBox.shrink();
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: _BloqueAccion(
-                    titulo: 'Sit spots de antes',
-                    descripcion:
-                        'Páginas de los sit spots que jubilaste. '
-                        'Siguen guardadas en el cuaderno con sus observaciones.',
-                    alPulsar: () => _abrirSitSpotsJubilados(context, jubilados),
-                    esquema: esquema,
-                  ),
-                );
-              },
+            // y el niño debe poder volver a verla. El bloque vive en
+            // un StatefulWidget que memoiza el future en initState
+            // para no relanzar la query a Isar en cada rebuild de la
+            // pantalla.
+            _BloqueSitSpotsJubilados(
+              repositorio: repositorio,
+              esquema: esquema,
+              alPulsar: (jubilados) => _abrirSitSpotsJubilados(context, jubilados),
             ),
             const SizedBox(height: 16),
             _BloqueAccion(
@@ -1061,6 +1051,58 @@ class _EstadoBloqueMapaOnlineOptIn extends State<_BloqueMapaOnlineOptIn> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Bloque "Sit spots de antes" — memoiza la query a Isar en
+/// initState para no relanzar `obtenerSitSpotsJubilados()` en cada
+/// rebuild de [PantallaAjustes].
+class _BloqueSitSpotsJubilados extends StatefulWidget {
+  const _BloqueSitSpotsJubilados({
+    required this.repositorio,
+    required this.esquema,
+    required this.alPulsar,
+  });
+
+  final RepositorioLocal repositorio;
+  final ColorScheme esquema;
+  final void Function(List<SitSpot> jubilados) alPulsar;
+
+  @override
+  State<_BloqueSitSpotsJubilados> createState() =>
+      _EstadoBloqueSitSpotsJubilados();
+}
+
+class _EstadoBloqueSitSpotsJubilados
+    extends State<_BloqueSitSpotsJubilados> {
+  late final Future<List<SitSpot>> _futuro;
+
+  @override
+  void initState() {
+    super.initState();
+    _futuro = widget.repositorio.obtenerSitSpotsJubilados();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<SitSpot>>(
+      future: _futuro,
+      builder: (_, snapshot) {
+        final jubilados = snapshot.data ?? const <SitSpot>[];
+        if (jubilados.isEmpty) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: _BloqueAccion(
+            titulo: 'Sit spots de antes',
+            descripcion:
+                'Páginas de los sit spots que jubilaste. '
+                'Siguen guardadas en el cuaderno con sus observaciones.',
+            alPulsar: () => widget.alPulsar(jubilados),
+            esquema: widget.esquema,
+          ),
+        );
+      },
     );
   }
 }
