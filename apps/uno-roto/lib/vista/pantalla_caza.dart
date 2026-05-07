@@ -86,6 +86,14 @@ import 'pantalla_operacion_decimal.dart';
 import 'pantalla_amplificar.dart';
 import 'pantalla_suma_basica.dart';
 import 'pantalla_ecuacion_lineal.dart';
+import 'pantalla_potencia_natural.dart';
+import 'pantalla_raiz_cuadrada.dart';
+import 'pantalla_ecuacion_ambos_lados.dart';
+import 'pantalla_pitagoras.dart';
+import 'pantalla_entero_signo.dart';
+import 'pantalla_valor_absoluto.dart';
+import 'pantalla_sistema_dos_x_dos.dart';
+import 'pantalla_relacion_lineal.dart';
 import 'pantalla_comparacion_decimal.dart';
 import 'pantalla_divisibilidad.dart';
 import 'pantalla_divisores.dart';
@@ -421,7 +429,13 @@ class _PantallaCazaState extends State<PantallaCaza>
     final precisionPrevia =
         (await _motorMaestria?.cargarEstado(idHabilidad))?.precision;
     if (!mounted) return;
-    _registrarResultadoMaestria(fragmento, capturado == true);
+    // await crítico: el motor adaptativo lee, muta y guarda el estado
+    // de la habilidad. Sin await, dos capturas rápidas de la misma
+    // habilidad pueden disparar dos ciclos read-modify-write
+    // interleavados y la segunda sobrescribir la primera, perdiendo
+    // intentos.
+    await _registrarResultadoMaestria(fragmento, capturado == true);
+    if (!mounted) return;
     // Registramos los fallos PREVIOS al resultado final (intentos-1)
     // para que el contador del tutor refleje cuánto le costó este
     // puzzle, no solo el resultado binario. Así "tres errores aunque
@@ -498,6 +512,14 @@ class _PantallaCazaState extends State<PantallaCaza>
         TipoFragmentoEnTejado.proporcional => 3,
         TipoFragmentoEnTejado.dual => 4,
         TipoFragmentoEnTejado.operacionDecimal => 4,
+        TipoFragmentoEnTejado.potenciaNatural => 3,
+        TipoFragmentoEnTejado.raizCuadrada => 3,
+        TipoFragmentoEnTejado.ecuacionAmbosLados => 5,
+        TipoFragmentoEnTejado.pitagoras => 4,
+        TipoFragmentoEnTejado.enteroSigno => 2,
+        TipoFragmentoEnTejado.valorAbsoluto => 2,
+        TipoFragmentoEnTejado.sistemaDosXDos => 6,
+        TipoFragmentoEnTejado.relacionLineal => 4,
         TipoFragmentoEnTejado.unitario => fragmento.numerador,
       };
       // Escalado motivacional: acertar a la primera da [esquirlasBase];
@@ -613,6 +635,54 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => const PantallaEcuacionLineal(),
+          ),
+        );
+      case TipoFragmentoEnTejado.potenciaNatural:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaPotenciaNatural(),
+          ),
+        );
+      case TipoFragmentoEnTejado.raizCuadrada:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaRaizCuadrada(),
+          ),
+        );
+      case TipoFragmentoEnTejado.ecuacionAmbosLados:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaEcuacionAmbosLados(),
+          ),
+        );
+      case TipoFragmentoEnTejado.pitagoras:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaPitagoras(),
+          ),
+        );
+      case TipoFragmentoEnTejado.enteroSigno:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaEnteroSigno(),
+          ),
+        );
+      case TipoFragmentoEnTejado.valorAbsoluto:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaValorAbsoluto(),
+          ),
+        );
+      case TipoFragmentoEnTejado.sistemaDosXDos:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaSistemaDosXDos(),
+          ),
+        );
+      case TipoFragmentoEnTejado.relacionLineal:
+        return Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => const PantallaRelacionLineal(),
           ),
         );
       case TipoFragmentoEnTejado.decimal:

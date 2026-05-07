@@ -210,6 +210,15 @@ enum TipoFragmentoEnTejado {
   graficoCircular,
   sumaBasica,
   ecuacionLineal,
+  // Era 3 — 12 a 14 años:
+  potenciaNatural,
+  raizCuadrada,
+  pitagoras,
+  ecuacionAmbosLados,
+  enteroSigno,
+  valorAbsoluto,
+  sistemaDosXDos,
+  relacionLineal,
 }
 
 /// Operador aritmético usado por los Fragmentos Duales y los de

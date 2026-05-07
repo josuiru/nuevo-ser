@@ -1,8 +1,8 @@
 {
-  "version": "0.3",
-  "total_skills": 68,
+  "version": "0.4",
+  "total_skills": 76,
   "domains": {
-    "ARI": "Aritmética básica",
+    "ARI": "Aritmética básica e intermedia",
     "ALG": "Álgebra",
     "FR": "Fracciones",
     "DEC": "Decimales",
@@ -11,7 +11,8 @@
     "OP": "Operaciones integradas",
     "MED": "Medida",
     "GEO": "Geometría",
-    "EST": "Estadística y probabilidad"
+    "EST": "Estadística y probabilidad",
+    "FUN": "Funciones"
   },
   "mastery_levels": {
     "0": "Inexplorada",
@@ -1459,6 +1460,139 @@
       "time_median_seconds": [
         8,
         18
+      ]
+    },
+    {
+      "id": "ARI.02",
+      "name": "Potencias de exponente natural",
+      "domain": "ARI",
+      "deps": [],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "ARI.03",
+      "name": "Raíz cuadrada exacta",
+      "domain": "ARI",
+      "deps": [
+        "ARI.02"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.8,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "ALG.02",
+      "name": "Ecuación lineal con incógnita en ambos lados",
+      "domain": "ALG",
+      "deps": [
+        "ALG.01"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Fraccionista",
+      "precision_threshold": 0.7,
+      "time_median_seconds": [
+        12,
+        25
+      ]
+    },
+    {
+      "id": "GEO.08",
+      "name": "Teorema de Pitágoras",
+      "domain": "GEO",
+      "deps": [
+        "ARI.02",
+        "ARI.03"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        15,
+        30
+      ]
+    },
+    {
+      "id": "ARI.04",
+      "name": "Suma y resta de enteros con signo",
+      "domain": "ARI",
+      "deps": [],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        4,
+        10
+      ]
+    },
+    {
+      "id": "ARI.05",
+      "name": "Valor absoluto",
+      "domain": "ARI",
+      "deps": [
+        "ARI.04"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_II",
+      "required_rank": "Iniciado_I",
+      "precision_threshold": 0.85,
+      "time_median_seconds": [
+        3,
+        8
+      ]
+    },
+    {
+      "id": "ALG.03",
+      "name": "Sistema lineal 2×2",
+      "domain": "ALG",
+      "deps": [
+        "ALG.02"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Fraccionista",
+      "required_rank": "Iniciado_III",
+      "precision_threshold": 0.7,
+      "time_median_seconds": [
+        20,
+        40
+      ]
+    },
+    {
+      "id": "FUN.01",
+      "name": "Identificar función lineal a partir de tabla",
+      "domain": "FUN",
+      "deps": [
+        "ALG.01"
+      ],
+      "families": [],
+      "districts": [],
+      "intro_rank": "Iniciado_III",
+      "required_rank": "Iniciado_II",
+      "precision_threshold": 0.75,
+      "time_median_seconds": [
+        12,
+        25
       ]
     }
   ]

@@ -33,6 +33,15 @@ import 'problema_ordenar_decimales.dart' show GeneradorOrdenarDecimales;
 import 'problema_jerarquia.dart' show GeneradorJerarquia;
 import 'problema_suma_basica.dart' show GeneradorSumaBasica;
 import 'problema_ecuacion_lineal.dart' show GeneradorEcuacionLineal;
+import 'problema_potencia_natural.dart' show GeneradorPotenciaNatural;
+import 'problema_raiz_cuadrada.dart' show GeneradorRaizCuadrada;
+import 'problema_ecuacion_ambos_lados.dart'
+    show GeneradorEcuacionAmbosLados;
+import 'problema_pitagoras.dart' show GeneradorPitagoras;
+import 'problema_entero_signo.dart' show GeneradorEnteroSigno;
+import 'problema_valor_absoluto.dart' show GeneradorValorAbsoluto;
+import 'problema_sistema_dos_x_dos.dart' show GeneradorSistemaDosXDos;
+import 'problema_relacion_lineal.dart' show GeneradorRelacionLineal;
 import 'problema_angulo.dart' show GeneradorAngulo;
 import 'problema_media.dart' show GeneradorMedia;
 import 'problema_moda_mediana.dart'
@@ -190,6 +199,156 @@ class GeneradorCaza {
         denominador: problema.b,
         tipo: tipo,
         etiquetaDecimal: '${problema.a}+${problema.b}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.potenciaNatural) {
+      final problema = GeneradorPotenciaNatural(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // (base, exponente) en numerador/denominador.
+        numerador: problema.base,
+        denominador: problema.exponente,
+        tipo: tipo,
+        etiquetaDecimal: problema.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.raizCuadrada) {
+      final problema = GeneradorRaizCuadrada(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.radicando,
+        denominador: 1,
+        tipo: tipo,
+        etiquetaDecimal: problema.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.ecuacionAmbosLados) {
+      final problema = GeneradorEcuacionAmbosLados(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // (a, c) en numerador/denominador — los coeficientes de las x.
+        numerador: problema.a,
+        denominador: problema.c.abs() == 0 ? 1 : problema.c.abs(),
+        tipo: tipo,
+        etiquetaDecimal: problema.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.pitagoras) {
+      final problema = GeneradorPitagoras(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        // (a, hipotenusa) en numerador/denominador.
+        numerador: problema.a,
+        denominador: problema.hipotenusa,
+        tipo: tipo,
+        etiquetaDecimal:
+            '${problema.a}-${problema.b}-${problema.hipotenusa}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.enteroSigno) {
+      final problema = GeneradorEnteroSigno(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.a,
+        denominador: problema.b.abs() == 0 ? 1 : problema.b.abs(),
+        tipo: tipo,
+        etiquetaDecimal: problema.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.valorAbsoluto) {
+      final problema = GeneradorValorAbsoluto(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.a,
+        denominador: problema.b.abs() == 0 ? 1 : problema.b.abs(),
+        tipo: tipo,
+        etiquetaDecimal: problema.etiqueta,
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.sistemaDosXDos) {
+      final problema = GeneradorSistemaDosXDos(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.a,
+        denominador: problema.e.abs() == 0 ? 1 : problema.e.abs(),
+        tipo: tipo,
+        etiquetaDecimal:
+            '${problema.a},${problema.b},${problema.c};'
+            '${problema.d},${problema.e},${problema.f}',
+        xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
+        yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
+        instanteAparicion: ahora,
+        tiempoDeVida: _tiempoDeVida(dificultad),
+      );
+    }
+
+    if (tipo == TipoFragmentoEnTejado.relacionLineal) {
+      final problema = GeneradorRelacionLineal(
+        semilla: _azar.nextInt(1 << 30),
+      ).generar(dificultad: dificultad);
+      return FragmentoEnTejado(
+        identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
+            '${_azar.nextInt(9999)}',
+        numerador: problema.m,
+        denominador: problema.n.abs() == 0 ? 1 : problema.n.abs(),
+        tipo: tipo,
+        etiquetaDecimal: 'm=${problema.m},n=${problema.n}',
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
@@ -1650,6 +1809,30 @@ class GeneradorCaza {
       case TipoFragmentoEnTejado.ecuacionLineal:
         // ALG.01 — solo desde dificultad alta o desde modo
         // Entrenamiento explícito. Es entrada a álgebra.
+        return dificultad >= 4;
+      case TipoFragmentoEnTejado.potenciaNatural:
+        // ARI.02 — potencias. Iniciado II.
+        return dificultad >= 3;
+      case TipoFragmentoEnTejado.raizCuadrada:
+        // ARI.03 — raíces cuadradas exactas. Iniciado III.
+        return dificultad >= 4;
+      case TipoFragmentoEnTejado.ecuacionAmbosLados:
+        // ALG.02 — segundo escalón de álgebra, requiere agrupar.
+        return dificultad >= 5;
+      case TipoFragmentoEnTejado.pitagoras:
+        // GEO.08 — Pitágoras. Iniciado III.
+        return dificultad >= 4;
+      case TipoFragmentoEnTejado.enteroSigno:
+        // ARI.04 — enteros con signo. Iniciado II.
+        return dificultad >= 3;
+      case TipoFragmentoEnTejado.valorAbsoluto:
+        // ARI.05 — valor absoluto. Iniciado II.
+        return dificultad >= 3;
+      case TipoFragmentoEnTejado.sistemaDosXDos:
+        // ALG.03 — sistemas 2×2. Fraccionista / techo.
+        return dificultad >= 5;
+      case TipoFragmentoEnTejado.relacionLineal:
+        // FUN.01 — relación lineal en tabla. Iniciado III.
         return dificultad >= 4;
       case TipoFragmentoEnTejado.espejo:
         return dificultad >= 1;

@@ -73,6 +73,14 @@ const Set<String> skillsConPuzzleImplementado = {
   'EST.02',
   'ARI.01',
   'ALG.01',
+  'ARI.02',
+  'ARI.03',
+  'ALG.02',
+  'GEO.08',
+  'ARI.04',
+  'ARI.05',
+  'ALG.03',
+  'FUN.01',
 };
 
 /// Dado un skill_id, devuelve el tipo de Fragmento que lo ejercita.
@@ -117,6 +125,14 @@ TipoFragmentoEnTejado? tipoParaSkillId(String skillId) {
   if (skillId == 'EST.02') return TipoFragmentoEnTejado.graficoCircular;
   if (skillId == 'ARI.01') return TipoFragmentoEnTejado.sumaBasica;
   if (skillId == 'ALG.01') return TipoFragmentoEnTejado.ecuacionLineal;
+  if (skillId == 'ARI.02') return TipoFragmentoEnTejado.potenciaNatural;
+  if (skillId == 'ARI.03') return TipoFragmentoEnTejado.raizCuadrada;
+  if (skillId == 'ALG.02') return TipoFragmentoEnTejado.ecuacionAmbosLados;
+  if (skillId == 'GEO.08') return TipoFragmentoEnTejado.pitagoras;
+  if (skillId == 'ARI.04') return TipoFragmentoEnTejado.enteroSigno;
+  if (skillId == 'ARI.05') return TipoFragmentoEnTejado.valorAbsoluto;
+  if (skillId == 'ALG.03') return TipoFragmentoEnTejado.sistemaDosXDos;
+  if (skillId == 'FUN.01') return TipoFragmentoEnTejado.relacionLineal;
   if (skillId == 'DIV.03' || skillId == 'DIV.04') {
     return TipoFragmentoEnTejado.divisibilidad;
   }
@@ -263,6 +279,22 @@ String idHabilidadPrincipal(FragmentoEnTejado fragmento) {
       return 'ARI.01';
     case TipoFragmentoEnTejado.ecuacionLineal:
       return 'ALG.01';
+    case TipoFragmentoEnTejado.potenciaNatural:
+      return 'ARI.02';
+    case TipoFragmentoEnTejado.raizCuadrada:
+      return 'ARI.03';
+    case TipoFragmentoEnTejado.ecuacionAmbosLados:
+      return 'ALG.02';
+    case TipoFragmentoEnTejado.pitagoras:
+      return 'GEO.08';
+    case TipoFragmentoEnTejado.enteroSigno:
+      return 'ARI.04';
+    case TipoFragmentoEnTejado.valorAbsoluto:
+      return 'ARI.05';
+    case TipoFragmentoEnTejado.sistemaDosXDos:
+      return 'ALG.03';
+    case TipoFragmentoEnTejado.relacionLineal:
+      return 'FUN.01';
     case TipoFragmentoEnTejado.espejo:
       return 'FR.09';
     case TipoFragmentoEnTejado.decimal:
@@ -427,6 +459,33 @@ double dificultadEstimadaDelPuzzle(FragmentoEnTejado fragmento) {
     case TipoFragmentoEnTejado.ecuacionLineal:
       // Álgebra inicial — peso alto: requiere abstracción de la
       // incógnita y manipulación inversa.
+      return 1.6;
+    case TipoFragmentoEnTejado.potenciaNatural:
+      // Potencias — peso medio-alto. La trampa "base × exponente" es
+      // muy habitual y obliga a entender qué hace la operación.
+      return 1.4;
+    case TipoFragmentoEnTejado.raizCuadrada:
+      // Raíces — peso alto: inversa de potencia, exige tabla mental.
+      return 1.5;
+    case TipoFragmentoEnTejado.ecuacionAmbosLados:
+      // Ecuación con incógnita en ambos lados — peso muy alto: además
+      // de despejar, hay que agrupar las x antes.
+      return 1.9;
+    case TipoFragmentoEnTejado.pitagoras:
+      // Pitágoras — peso alto: lectura visual + cuadrados + raíz.
+      return 1.7;
+    case TipoFragmentoEnTejado.enteroSigno:
+      // Enteros con signo — peso medio: pedagogía del signo.
+      return 1.2;
+    case TipoFragmentoEnTejado.valorAbsoluto:
+      // Valor absoluto — peso medio.
+      return 1.2;
+    case TipoFragmentoEnTejado.sistemaDosXDos:
+      // Sistema 2×2 — peso muy alto: dos incógnitas, dos pasos
+      // (sustitución/reducción) + verificación.
+      return 2.0;
+    case TipoFragmentoEnTejado.relacionLineal:
+      // FUN.01 — peso alto: leer la regla detrás de los datos.
       return 1.6;
     case TipoFragmentoEnTejado.unitario:
       final n = fragmento.numerador;
