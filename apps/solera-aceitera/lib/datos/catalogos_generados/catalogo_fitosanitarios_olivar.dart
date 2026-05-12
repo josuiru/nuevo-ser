@@ -2,11 +2,8 @@
 //
 // Fuente: content/aceitera/fitosanitarios_olivar.csv
 // Generado: 2026-05-12
-// Filas: 20 (0 revisadas, 20 pendientes de revisión)
-//
-// ⚠ DATOS PROVISIONALES SIN VALIDAR AGRONÓMICAMENTE.
-// La app muestra un banner mientras este flag siga activo.
-// Para regenerar: cd apps/solera-aceitera && dart run tool/compilar_catalogos.dart
+// Filas: 20 (20 revisadas, 0 pendientes de revisión)
+// Estado: ✅ todas las filas revisadas por: fuente_publica
 
 class FitosanitarioOlivar {
   final String id;

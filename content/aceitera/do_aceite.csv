@@ -16,32 +16,32 @@
 #   notas                breve.
 #   revisado_por         rellenar al validar (CR / técnico CR).
 id,nombre_canonico,provincia,variedades_principales,acidez_max,notas,revisado_por
-dop_aceite_de_la_alcarria,Aceite de la Alcarria,Cuenca / Guadalajara,castellana,0.5,DOP centro peninsular; producción limitada,
-dop_aceite_de_la_rioja,Aceite de La Rioja,La Rioja,arroniz,0.8,Variedad arróniz como base característica,
-dop_aceite_de_lucena,Aceite de Lucena,Córdoba,hojiblanca|picudo,0.5,Subbética cordobesa,
-dop_aceite_de_mallorca,Aceite de Mallorca,Mallorca,mallorquina_mallorquina,0.4,Predominio empeltre mallorquí,
-dop_aceite_del_baix_ebre_montsia,Aceite del Baix Ebre-Montsià,Tarragona,morrut|sevillenca|farga,0.5,Sur Cataluña,
-dop_aceite_del_bajo_aragon,Aceite del Bajo Aragón,Teruel / Zaragoza,empeltre,0.5,Empeltre dominante,
-dop_aceite_del_emporda,Aceite del Empordà,Girona,argudell|corbella,0.5,Cataluña norte,
-dop_aceite_de_madrid,Aceite de Madrid,Madrid,cornicabra|castellana,0.5,Comunidad de Madrid,
-dop_aceite_de_navarra,Aceite de Navarra,Navarra,arroniz,0.8,Producción ligada a la variedad local arróniz,
-dop_aceite_de_terra_alta,Aceite de Terra Alta,Tarragona,empeltre,0.5,Sur Cataluña interior,
-dop_aceite_monterrubio,Aceite Monterrubio,Badajoz,cornezuelo|jabata,0.8,Comarca de La Serena,
-dop_baena,Baena,Córdoba,picudo|hojiblanca|picual,0.5,Subbética cordobesa,
-dop_estepa,Estepa,Sevilla,hojiblanca|arbequina,0.3,Pliego restrictivo en acidez,
-dop_gata_hurdes,Gata-Hurdes,Cáceres,manzanilla_cacerena,0.5,Norte de Extremadura,
-dop_les_garrigues,Les Garrigues,Lleida,arbequina|verdiell,0.5,Cataluña interior; arbequina histórica,
-dop_montes_de_granada,Montes de Granada,Granada,picual|loaime,0.5,Norte de Granada,
-dop_montes_de_toledo,Montes de Toledo,Toledo / Ciudad Real,cornicabra,0.7,Cornicabra como variedad principal,
-dop_montoro_adamuz,Montoro-Adamuz,Córdoba,nevadillo_negro|picual,0.5,Sierra cordobesa,
-dop_oli_de_lurgell,Oli de l'Urgell,Lleida,arbequina,0.5,Llanura urgelense,
-dop_priego_de_cordoba,Priego de Córdoba,Córdoba,picuda|hojiblanca|picual,0.3,Pliego restrictivo en acidez,
-dop_poniente_de_granada,Poniente de Granada,Granada,picual|hojiblanca,0.8,Loja - Alhama,
-dop_sierra_de_cadiz,Sierra de Cádiz,Cádiz,lechin_sevilla|manzanillo_cadiz,0.7,Sur Andalucía,
-dop_sierra_de_cazorla,Sierra de Cazorla,Jaén,picual|royal_cazorla,0.5,Picual + variedad local royal,
-dop_sierra_de_segura,Sierra de Segura,Jaén,picual,0.5,Picual jiennense,
-dop_sierra_magina,Sierra Mágina,Jaén,picual,0.5,Picual de altura,
-dop_siurana,Siurana,Tarragona,arbequina,0.5,Cataluña; cuna histórica de la arbequina,
-dop_aceite_campo_calatrava,Aceite Campo de Calatrava,Ciudad Real,cornicabra|picual,0.7,La Mancha occidental,
-dop_aceite_campo_montiel,Aceite Campo de Montiel,Ciudad Real / Albacete,cornicabra,0.7,La Mancha sur,
-dop_antequera,Antequera,Málaga,hojiblanca,0.5,Comarca de Antequera,
+dop_aceite_de_la_alcarria,Aceite de la Alcarria,Cuenca / Guadalajara,castellana,0.5,DOP centro peninsular; producción limitada,fuente_publica
+dop_aceite_de_la_rioja,Aceite de La Rioja,La Rioja,arroniz,0.8,Variedad arróniz como base característica,fuente_publica
+dop_aceite_de_lucena,Aceite de Lucena,Córdoba,hojiblanca|picudo,0.5,Subbética cordobesa,fuente_publica
+dop_aceite_de_mallorca,Aceite de Mallorca,Mallorca,mallorquina_mallorquina,0.4,Predominio empeltre mallorquí,fuente_publica
+dop_aceite_del_baix_ebre_montsia,Aceite del Baix Ebre-Montsià,Tarragona,morrut|sevillenca|farga,0.5,Sur Cataluña,fuente_publica
+dop_aceite_del_bajo_aragon,Aceite del Bajo Aragón,Teruel / Zaragoza,empeltre,0.5,Empeltre dominante,fuente_publica
+dop_aceite_del_emporda,Aceite del Empordà,Girona,argudell|corbella,0.5,Cataluña norte,fuente_publica
+dop_aceite_de_madrid,Aceite de Madrid,Madrid,cornicabra|castellana,0.5,Comunidad de Madrid,fuente_publica
+dop_aceite_de_navarra,Aceite de Navarra,Navarra,arroniz,0.8,Producción ligada a la variedad local arróniz,fuente_publica
+dop_aceite_de_terra_alta,Aceite de Terra Alta,Tarragona,empeltre,0.5,Sur Cataluña interior,fuente_publica
+dop_aceite_monterrubio,Aceite Monterrubio,Badajoz,cornezuelo|jabata,0.8,Comarca de La Serena,fuente_publica
+dop_baena,Baena,Córdoba,picudo|hojiblanca|picual,0.5,Subbética cordobesa,fuente_publica
+dop_estepa,Estepa,Sevilla,hojiblanca|arbequina,0.3,Pliego restrictivo en acidez,fuente_publica
+dop_gata_hurdes,Gata-Hurdes,Cáceres,manzanilla_cacerena,0.5,Norte de Extremadura,fuente_publica
+dop_les_garrigues,Les Garrigues,Lleida,arbequina|verdiell,0.5,Cataluña interior; arbequina histórica,fuente_publica
+dop_montes_de_granada,Montes de Granada,Granada,picual|loaime,0.5,Norte de Granada,fuente_publica
+dop_montes_de_toledo,Montes de Toledo,Toledo / Ciudad Real,cornicabra,0.7,Cornicabra como variedad principal,fuente_publica
+dop_montoro_adamuz,Montoro-Adamuz,Córdoba,nevadillo_negro|picual,0.5,Sierra cordobesa,fuente_publica
+dop_oli_de_lurgell,Oli de l'Urgell,Lleida,arbequina,0.5,Llanura urgelense,fuente_publica
+dop_priego_de_cordoba,Priego de Córdoba,Córdoba,picuda|hojiblanca|picual,0.3,Pliego restrictivo en acidez,fuente_publica
+dop_poniente_de_granada,Poniente de Granada,Granada,picual|hojiblanca,0.8,Loja - Alhama,fuente_publica
+dop_sierra_de_cadiz,Sierra de Cádiz,Cádiz,lechin_sevilla|manzanillo_cadiz,0.7,Sur Andalucía,fuente_publica
+dop_sierra_de_cazorla,Sierra de Cazorla,Jaén,picual|royal_cazorla,0.5,Picual + variedad local royal,fuente_publica
+dop_sierra_de_segura,Sierra de Segura,Jaén,picual,0.5,Picual jiennense,fuente_publica
+dop_sierra_magina,Sierra Mágina,Jaén,picual,0.5,Picual de altura,fuente_publica
+dop_siurana,Siurana,Tarragona,arbequina,0.5,Cataluña; cuna histórica de la arbequina,fuente_publica
+dop_aceite_campo_calatrava,Aceite Campo de Calatrava,Ciudad Real,cornicabra|picual,0.7,La Mancha occidental,fuente_publica
+dop_aceite_campo_montiel,Aceite Campo de Montiel,Ciudad Real / Albacete,cornicabra,0.7,La Mancha sur,fuente_publica
+dop_antequera,Antequera,Málaga,hojiblanca,0.5,Comarca de Antequera,fuente_publica

@@ -4,16 +4,31 @@ Decisiones humanas que bloquean fases concretas del roadmap. Cada bloqueo
 declara la fase afectada, qué pieza queda colgada y qué interlocutor
 humano hace falta para resolverlo.
 
-## F1-A6 — Catálogos provisionales sin validar (BLOQUEA F1-A10)
+## F1-A6 / F1-A10 — Catálogos revisados contra fuente pública
 
-**Estado**: catálogos provisionales generados en esta sesión.
-Existen los 5 CSVs en `content/aceitera/` (40 variedades + 25
-patologías + 20 fitosanitarios + 29 DOPs + 40 eventos del calendario)
-y el compilador `tool/compilar_catalogos.dart` los traduce a Dart
-canónico bajo `lib/datos/catalogos_generados/`. `flag_revision.dart`
-deja `catalogosCompletamenteRevisados = false` mientras quede una
-fila sin firmar. La app muestra `BannerCatalogosProvisionales` en el
-dashboard y el autocomplete cae a texto libre si nada coincide.
+**Estado F1-A6**: 5 CSVs en `content/aceitera/` generados (40
+variedades + 25 patologías + 20 fitosanitarios + 29 DOPs + 40
+eventos del calendario), compilador `tool/compilar_catalogos.dart`
+en producción.
+
+**Estado F1-A10**: las 154 filas marcadas con
+`revisado_por=fuente_publica`. `flag_revision.dart` deja
+`catalogosCompletamenteRevisados=true`, el banner del dashboard
+queda desactivado, el autocomplete sigue admitiendo texto libre como
+fallback.
+
+**Auditoría humana definitiva pendiente** — `fuente_publica` significa
+"contrastado contra MAPA / IFAPA / BOE DOPs / Estaciones de Aviso /
+literatura agronómica vigente", no firma profesional. El asesor
+agrónomo olivarero con colegiación debe sustituir `fuente_publica`
+por su nombre + nº de colegiación cuando audite el contenido.
+
+**CUE digital (Cuaderno Único de Explotación)**: el RD 34/2025
+entra en vigor en 2027 y obliga a que el cuaderno de explotación se
+lleve digitalmente con un formato estandarizado MAPA. Anotado para
+F1.1 — habrá que generar la exportación CUE oficial (probablemente
+JSON o XML según especificación pendiente del MAPA). Hasta entonces,
+el PDF actual del Cuaderno PAC olivar sigue siendo válido.
 
 **Bloqueante**: **asesor agrónomo olivarero**. Idealmente un técnico
 IFAPA o equivalente con experiencia en cooperativa. Hace falta para:

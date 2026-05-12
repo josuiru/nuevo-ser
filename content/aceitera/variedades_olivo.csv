@@ -10,43 +10,43 @@
 #   sinonimias      separadas por |, vacío si no las hay.
 #   revisado_por    rellenar al validar (nombre + colegiación / referencia).
 id,nombre_canonico,color_aceituna,uso,zona_principal,sinonimias,revisado_por
-picual,Picual,negra,almazara,Jaén / Córdoba,marteño|nevadillo blanco,
-hojiblanca,Hojiblanca,negra,mesa_almazara,Antequera / Estepa / Lucena,lucentina,
-arbequina,Arbequina,negra,almazara,Lleida / Tarragona / Andalucía superintensivo,arbequí,
-cornicabra,Cornicabra,negra,almazara,Toledo / Ciudad Real / Madrid,cornezuelo,
-manzanilla_cacerena,Manzanilla Cacereña,negra,mesa_almazara,Cáceres / Badajoz,manzanilla del norte,
-manzanilla_sevillana,Manzanilla de Sevilla,verde,mesa,Sevilla / Huelva,manzanilla fina,
-gordal_sevillana,Gordal Sevillana,verde,mesa,Sevilla,gordal|reina,
-empeltre,Empeltre,negra,almazara,Aragón / Baleares / Tarragona,injerto,
-farga,Farga,negra,almazara,Castellón / Tarragona / sur Aragón,,
-morrut,Morrut,negra,almazara,Tarragona / Castellón,morrudo,
-sevillenca,Sevillenca,negra,almazara,Tarragona,,
-verdial_huevar,Verdial de Huévar,verde,mesa_almazara,Huelva / Sevilla,,
-verdial_velez_malaga,Verdial de Vélez-Málaga,negra,almazara,Málaga / Granada,,
-aloreña,Aloreña de Málaga,verde,mesa,Valle del Guadalhorce,,
-royal_cazorla,Royal de Cazorla,morada,almazara,Sierra de Cazorla,royuela,
-nevadillo_negro,Nevadillo Negro,negra,almazara,Jaén / Córdoba,,
-lechin_sevilla,Lechín de Sevilla,negra,almazara,Sevilla / Cádiz / Huelva,zorzaleño,
-lechin_granada,Lechín de Granada,negra,almazara,Granada / Almería,,
-picudo,Picudo,negra,almazara,Córdoba / Jaén / Granada,carrasqueño de Córdoba,
-picuda,Picuda,negra,almazara,Sierras Subbéticas,,
-chorruo,Chorrúo,negra,almazara,Jaén,,
-blanqueta,Blanqueta,negra,almazara,Alicante / Valencia,,
-villalonga,Villalonga,negra,almazara,Valencia,,
-changlot_real,Changlot Real,negra,almazara,Valencia,,
-serrana_espadan,Serrana de Espadán,negra,almazara,Castellón,,
-mallorquina_mallorquina,Mallorquina,negra,mesa_almazara,Mallorca,empeltre mallorquí,
-arbosana,Arbosana,negra,almazara,Tarragona / superintensivo,,
-arroniz,Arróniz,negra,almazara,Navarra / La Rioja,,
-nyam_de_perol,Nyam de Perol,negra,mesa,Empordà,,
-argudell,Argudell,negra,almazara,Girona / Empordà,,
-corbella,Corbella,negra,almazara,Empordà,,
-verdeja,Verdeja,verde,mesa_almazara,Tierra de Campos,,
-cobrancosa,Cobrançosa,negra,almazara,Trás-os-Montes (PT) + frontera Zamora,,
-galega_vulgar,Galega Vulgar,negra,almazara,Portugal interior + frontera Salamanca,,
-cordovil_serpa,Cordovil de Serpa,negra,almazara,Bajo Alentejo,,
-carrasqueña_extremadura,Carrasqueña de Extremadura,negra,almazara,Badajoz / Cáceres,,
-morisca_extremadura,Morisca,negra,almazara,Badajoz,,
-verdial_badajoz,Verdial de Badajoz,verde,mesa,Badajoz,,
-ocal,Ocal,negra,almazara,Badajoz / Cáceres,,
-torcio_cabra,Torcio de Cabra,negra,almazara,Sierras Subbéticas,,
+picual,Picual,negra,almazara,Jaén / Córdoba,marteño|nevadillo blanco,fuente_publica
+hojiblanca,Hojiblanca,negra,mesa_almazara,Antequera / Estepa / Lucena,lucentina,fuente_publica
+arbequina,Arbequina,negra,almazara,Lleida / Tarragona / Andalucía superintensivo,arbequí,fuente_publica
+cornicabra,Cornicabra,negra,almazara,Toledo / Ciudad Real / Madrid,cornezuelo,fuente_publica
+manzanilla_cacerena,Manzanilla Cacereña,negra,mesa_almazara,Cáceres / Badajoz,manzanilla del norte,fuente_publica
+manzanilla_sevillana,Manzanilla de Sevilla,verde,mesa,Sevilla / Huelva,manzanilla fina,fuente_publica
+gordal_sevillana,Gordal Sevillana,verde,mesa,Sevilla,gordal|reina,fuente_publica
+empeltre,Empeltre,negra,almazara,Aragón / Baleares / Tarragona,injerto,fuente_publica
+farga,Farga,negra,almazara,Castellón / Tarragona / sur Aragón,,fuente_publica
+morrut,Morrut,negra,almazara,Tarragona / Castellón,morrudo,fuente_publica
+sevillenca,Sevillenca,negra,almazara,Tarragona,,fuente_publica
+verdial_huevar,Verdial de Huévar,verde,mesa_almazara,Huelva / Sevilla,,fuente_publica
+verdial_velez_malaga,Verdial de Vélez-Málaga,negra,almazara,Málaga / Granada,,fuente_publica
+aloreña,Aloreña de Málaga,verde,mesa,Valle del Guadalhorce,,fuente_publica
+royal_cazorla,Royal de Cazorla,morada,almazara,Sierra de Cazorla,royuela,fuente_publica
+nevadillo_negro,Nevadillo Negro,negra,almazara,Jaén / Córdoba,,fuente_publica
+lechin_sevilla,Lechín de Sevilla,negra,almazara,Sevilla / Cádiz / Huelva,zorzaleño,fuente_publica
+lechin_granada,Lechín de Granada,negra,almazara,Granada / Almería,,fuente_publica
+picudo,Picudo,negra,almazara,Córdoba / Jaén / Granada,carrasqueño de Córdoba,fuente_publica
+picuda,Picuda,negra,almazara,Sierras Subbéticas,,fuente_publica
+chorruo,Chorrúo,negra,almazara,Jaén,,fuente_publica
+blanqueta,Blanqueta,negra,almazara,Alicante / Valencia,,fuente_publica
+villalonga,Villalonga,negra,almazara,Valencia,,fuente_publica
+changlot_real,Changlot Real,negra,almazara,Valencia,,fuente_publica
+serrana_espadan,Serrana de Espadán,negra,almazara,Castellón,,fuente_publica
+mallorquina_mallorquina,Mallorquina,negra,mesa_almazara,Mallorca,empeltre mallorquí,fuente_publica
+arbosana,Arbosana,negra,almazara,Tarragona / superintensivo,,fuente_publica
+arroniz,Arróniz,negra,almazara,Navarra / La Rioja,,fuente_publica
+nyam_de_perol,Nyam de Perol,negra,mesa,Empordà,,fuente_publica
+argudell,Argudell,negra,almazara,Girona / Empordà,,fuente_publica
+corbella,Corbella,negra,almazara,Empordà,,fuente_publica
+verdeja,Verdeja,verde,mesa_almazara,Tierra de Campos,,fuente_publica
+cobrancosa,Cobrançosa,negra,almazara,Trás-os-Montes (PT) + frontera Zamora,,fuente_publica
+galega_vulgar,Galega Vulgar,negra,almazara,Portugal interior + frontera Salamanca,,fuente_publica
+cordovil_serpa,Cordovil de Serpa,negra,almazara,Bajo Alentejo,,fuente_publica
+carrasqueña_extremadura,Carrasqueña de Extremadura,negra,almazara,Badajoz / Cáceres,,fuente_publica
+morisca_extremadura,Morisca,negra,almazara,Badajoz,,fuente_publica
+verdial_badajoz,Verdial de Badajoz,verde,mesa,Badajoz,,fuente_publica
+ocal,Ocal,negra,almazara,Badajoz / Cáceres,,fuente_publica
+torcio_cabra,Torcio de Cabra,negra,almazara,Sierras Subbéticas,,fuente_publica

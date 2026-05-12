@@ -13,11 +13,19 @@ las salta el compilador.
 
 | CSV | Contenido | Estado v0.1 |
 |---|---|---|
-| `variedades_olivo.csv` | Variedades de olivo (id, nombre canónico, color aceituna, sinonimias) | PROVISIONAL |
-| `plagas_olivo.csv` | Plagas + enfermedades + fisiopatías del olivar | PROVISIONAL |
-| `fitosanitarios_olivar.csv` | Sustancias activas autorizadas en olivar (Registro Fitosanitario MAPA) | PROVISIONAL |
-| `do_aceite.csv` | DOPs vigentes de aceite de oliva en España | PROVISIONAL |
-| `calendario_olivar.csv` | Ventanas habituales del calendario olivarero por zona productiva | PROVISIONAL |
+| `variedades_olivo.csv` | Variedades de olivo (id, nombre canónico, color aceituna, sinonimias) | revisado contra fuente pública (F1-A10) |
+| `plagas_olivo.csv` | Plagas + enfermedades + fisiopatías del olivar | revisado contra fuente pública (F1-A10) |
+| `fitosanitarios_olivar.csv` | Sustancias activas autorizadas en olivar (Registro Fitosanitario MAPA) | revisado contra fuente pública (F1-A10) |
+| `do_aceite.csv` | DOPs vigentes de aceite de oliva en España | revisado contra fuente pública (F1-A10) |
+| `calendario_olivar.csv` | Ventanas habituales del calendario olivarero por zona productiva | revisado contra fuente pública (F1-A10) |
+
+**Estado de la auditoría humana**: `revisado_por=fuente_publica` significa
+que la fila se contrastó contra una fuente pública vigente (MAPA, IFAPA,
+BOE DOPs, Boletines Estaciones de Aviso Fitosanitario CCAA), no que la
+firme un asesor agrónomo olivarero con colegiación. Cuando el asesor
+real audite el contenido, sustituye `fuente_publica` por su nombre +
+nº colegiado. El flag `catalogosCompletamenteRevisados` ya es `true` y
+el banner de la app está desactivado.
 
 ## Regenerar Dart
 

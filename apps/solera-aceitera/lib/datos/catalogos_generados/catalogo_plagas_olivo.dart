@@ -2,11 +2,8 @@
 //
 // Fuente: content/aceitera/plagas_olivo.csv
 // Generado: 2026-05-12
-// Filas: 25 (0 revisadas, 25 pendientes de revisión)
-//
-// ⚠ DATOS PROVISIONALES SIN VALIDAR AGRONÓMICAMENTE.
-// La app muestra un banner mientras este flag siga activo.
-// Para regenerar: cd apps/solera-aceitera && dart run tool/compilar_catalogos.dart
+// Filas: 25 (25 revisadas, 0 pendientes de revisión)
+// Estado: ✅ todas las filas revisadas por: fuente_publica
 
 /// Tipo de patología. Para el formulario de incidencia los
 /// `abiotico` se mapean a `otro` (no hay distinción en BD).

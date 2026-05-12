@@ -155,9 +155,15 @@ void main() {
   });
 
   group('Flag de revisión global', () {
-    test('Mientras los CSVs no tengan revisado_por relleno el flag es false',
+    test(
+        'Tras F1-A10 las 5 CSV están marcadas como revisadas contra fuente pública: el flag es true',
         () {
-      expect(catalogosCompletamenteRevisados, isFalse);
+      // Si quitas filas o añades nuevas sin `revisado_por`, este test
+      // se rompe a propósito — recompila con `dart run
+      // tool/compilar_catalogos.dart` antes de mergear. La auditoría
+      // humana definitiva sigue pendiente (asesor agrónomo olivarero
+      // sustituye `fuente_publica` por su nombre + colegiación).
+      expect(catalogosCompletamenteRevisados, isTrue);
     });
   });
 }

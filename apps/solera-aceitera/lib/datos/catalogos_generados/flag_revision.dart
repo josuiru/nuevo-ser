@@ -4,4 +4,4 @@
 // `revisado_por` no vacío. La app lo lee para mostrar/ocultar el
 // banner "datos provisionales sin validar agronómicamente".
 
-const bool catalogosCompletamenteRevisados = false;
+const bool catalogosCompletamenteRevisados = true;

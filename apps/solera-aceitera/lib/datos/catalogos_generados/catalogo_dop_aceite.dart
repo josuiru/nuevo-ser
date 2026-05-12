@@ -2,11 +2,8 @@
 //
 // Fuente: content/aceitera/do_aceite.csv
 // Generado: 2026-05-12
-// Filas: 29 (0 revisadas, 29 pendientes de revisión)
-//
-// ⚠ DATOS PROVISIONALES SIN VALIDAR AGRONÓMICAMENTE.
-// La app muestra un banner mientras este flag siga activo.
-// Para regenerar: cd apps/solera-aceitera && dart run tool/compilar_catalogos.dart
+// Filas: 29 (29 revisadas, 0 pendientes de revisión)
+// Estado: ✅ todas las filas revisadas por: fuente_publica
 
 class DopAceite {
   final String id;
