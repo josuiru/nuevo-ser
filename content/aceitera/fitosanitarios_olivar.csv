@@ -1,0 +1,36 @@
+# Sustancias activas autorizadas en olivar — datos PROVISIONALES.
+# Fuente orientativa: Registro Fitosanitario MAPA (sólo sustancias activas).
+# La app NO recomienda productos comerciales por marca — el catálogo recoge
+# únicamente sustancias activas + tipo de acción, en línea con los hard limits
+# de la suite Solera.
+# Hasta que un agrónomo olivarero firme `revisado_por`, los datos son orientativos.
+# Columnas:
+#   id                          snake_case ASCII de la sustancia activa.
+#   nombre_canonico             nombre comercial / químico canónico.
+#   plagas_objetivo             IDs de plagas_olivo separadas por |.
+#   tipo_accion                 insecticida / fungicida / acaricida / herbicida / biorracional.
+#   plazo_seguridad_orient      días orientativos. ⚠ Verificar etiqueta del producto comercial.
+#   ecologico                   si / no — autorizada en producción ecológica.
+#   notas                       breve. ⚠ Marca comercial NO en este campo.
+#   revisado_por                rellenar al validar.
+id,nombre_canonico,plagas_objetivo,tipo_accion,plazo_seguridad_orient,ecologico,notas,revisado_por
+spinosad,Spinosad,mosca_olivo|prays_olivo,insecticida,7,si,Toxina natural fermentada; uso muy extendido contra mosca con cebos.,
+deltametrina,Deltametrina,mosca_olivo|cochinilla_tizne,insecticida,21,no,Piretroide de uso clásico; revisar restricciones por DOP y residuos.,
+caolin,Caolín en polvo,mosca_olivo,insecticida,0,si,Barrera mineral física; reduce oviposición sin afectar fauna auxiliar.,
+proteina_hidrolizada,Proteína hidrolizada,mosca_olivo,biorracional,0,si,Cebo atrayente combinado con insecticidas en parcheo de pulverización.,
+oxicloruro_cobre,Oxicloruro de cobre,repilo|emplomado|tuberculosis_olivo,fungicida,15,si,Cúpricos de uso histórico; regulación Cu por hectárea/año en producción ecológica.,
+hidroxido_cobre,Hidróxido de cobre,repilo|emplomado,fungicida,15,si,Cúprico alternativo al oxicloruro; mismo límite Cu/ha.,
+sulfato_cobre,Sulfato de cobre,repilo|emplomado,fungicida,15,si,Otro cúprico clásico; precaución por fitotoxicidad en hojas jóvenes.,
+dodina,Dodina,repilo|emplomado,fungicida,21,no,Curativo y preventivo. Posibles restricciones de dosis revisadas por MAPA.,
+mancozeb,Mancozeb,repilo|emplomado,fungicida,28,no,Multisitio. Verificar autorización vigente — ha tenido revisiones UE.,
+azufre_micronizado,Azufre micronizado,arañuela_amarilla|cochinilla_tizne,fungicida,5,si,Acaricida y fungicida físico; precaución con temperaturas altas.,
+piretrinas_naturales,Piretrinas naturales,prays_olivo|cochinilla_tizne,insecticida,3,si,Origen vegetal (Chrysanthemum); fotodegradación rápida — aplicar al atardecer.,
+azadiractina,Azadiractina (neem),prays_olivo|glifodes|algodoncillo,biorracional,7,si,Inhibe crecimiento de larvas; compatible con producción ecológica.,
+bacillus_thuringiensis,Bacillus thuringiensis,prays_olivo|glifodes,biorracional,0,si,Bioinsecticida específico contra orugas; sin efecto sobre fauna auxiliar.,
+beauveria_bassiana,Beauveria bassiana,mosca_olivo|cochinilla_tizne,biorracional,0,si,Hongo entomopatógeno; eficacia dependiente de humedad.,
+glifosato,Glifosato,,herbicida,0,no,Herbicida sistémico para calle/ruedo. Restringido en cubiertas vegetales activas.,
+oxifluorfen,Oxifluorfen,,herbicida,0,no,Herbicida residual de pre-emergencia. Verificar autorización en olivar adulto.,
+mcpa,MCPA,,herbicida,0,no,Herbicida hormonal para dicotiledóneas; usar fuera de viento.,
+acido_pelargonico,Ácido pelargónico,,herbicida,0,si,Herbicida de contacto natural; alternativa al glifosato en cubiertas controladas.,
+aceite_invierno,Aceite parafínico de invierno,cochinilla_tizne|ceratoceria,insecticida,0,si,Asfixia mecánica de cochinillas; aplicar en parada vegetativa.,
+fosfonato_potasico,Fosfonato potásico,repilo,fungicida,7,si,Inductor de defensas; complemento a cúpricos en estrategias preventivas.,

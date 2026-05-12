@@ -1,0 +1,64 @@
+# Calendario olivarero por zona productiva — datos PROVISIONALES.
+# Fuente orientativa: literatura agronómica olivar peninsular + Estaciones de
+# Aviso CCAA. Hay variabilidad alta entre añadas y entre microclimas dentro
+# de la misma zona, así que las ventanas son ORIENTATIVAS.
+# Hasta que un agrónomo olivarero firme `revisado_por`, los datos son orientativos.
+#
+# Zonas:
+#   andalucia_occidental  Sevilla / Huelva / Cádiz / Córdoba sur.
+#   andalucia_oriental    Jaén / Granada / Almería / Málaga / Córdoba norte.
+#   extremadura           Badajoz / Cáceres.
+#   castilla_la_mancha    Toledo / Ciudad Real / Cuenca / Albacete.
+#   levante               Valencia / Castellón / Murcia / Alicante.
+#   nordeste              Aragón / Cataluña / Baleares.
+#   meseta_norte          La Rioja / Navarra / Madrid / Castilla y León.
+#
+# Columnas:
+#   zona               (ver arriba).
+#   evento             id snake_case del evento canónico.
+#   nombre_evento      legible en formulario.
+#   mes_inicio_aprox   mes habitual de inicio (1-12).
+#   mes_fin_aprox      mes habitual de fin (1-12).
+#   notas              breve.
+#   revisado_por       rellenar al validar.
+zona,evento,nombre_evento,mes_inicio_aprox,mes_fin_aprox,notas,revisado_por
+andalucia_occidental,poda_invierno,Poda de invierno,1,3,Poda principal del año en árboles adultos.,
+andalucia_occidental,abonado_primaveral,Abonado primaveral,2,4,Aporte previo al despertar vegetativo.,
+andalucia_occidental,floracion,Floración,4,5,Ventana habitual de floración.,
+andalucia_occidental,fruto_cuajado,Cuajado del fruto,5,6,Caída fisiológica de junio (mayo en zonas tempranas).,
+andalucia_occidental,endurecimiento_hueso,Endurecimiento del hueso,7,8,Fase crítica para riego deficitario.,
+andalucia_occidental,envero,Envero,9,10,Cambio de color verde a morado.,
+andalucia_occidental,recoleccion_temprana,Recolección temprana (verde),10,11,Aceites tempranos de gran intensidad.,
+andalucia_occidental,recoleccion_principal,Recolección principal,11,1,Campaña principal de almazara.,
+andalucia_oriental,poda_invierno,Poda de invierno,1,3,Poda principal en árboles adultos.,
+andalucia_oriental,abonado_primaveral,Abonado primaveral,2,4,Aporte previo al despertar vegetativo.,
+andalucia_oriental,floracion,Floración,4,5,Floración ligeramente más tardía que occidental.,
+andalucia_oriental,fruto_cuajado,Cuajado del fruto,5,6,Caída fisiológica de junio.,
+andalucia_oriental,endurecimiento_hueso,Endurecimiento del hueso,7,9,Fase crítica para riego deficitario.,
+andalucia_oriental,envero,Envero,10,11,Cambio de color tardío por altura/microclima.,
+andalucia_oriental,recoleccion_temprana,Recolección temprana (verde),10,11,Aceites de altura tempranos.,
+andalucia_oriental,recoleccion_principal,Recolección principal,11,2,Campaña principal de almazara.,
+extremadura,poda_invierno,Poda de invierno,1,3,Poda en árboles adultos.,
+extremadura,abonado_primaveral,Abonado primaveral,2,4,Aporte previo al despertar.,
+extremadura,floracion,Floración,4,5,Ventana habitual de floración.,
+extremadura,fruto_cuajado,Cuajado del fruto,5,6,,
+extremadura,envero,Envero,9,10,,
+extremadura,recoleccion_principal,Recolección principal,10,12,Adelanto significativo para variedades de mesa.,
+castilla_la_mancha,poda_invierno,Poda de invierno,1,3,,
+castilla_la_mancha,abonado_primaveral,Abonado primaveral,3,4,,
+castilla_la_mancha,floracion,Floración,5,5,Floración tardía respecto a Andalucía.,
+castilla_la_mancha,fruto_cuajado,Cuajado del fruto,6,6,,
+castilla_la_mancha,envero,Envero,10,11,Envero tardío.,
+castilla_la_mancha,recoleccion_principal,Recolección principal,11,1,Campaña típica cornicabra.,
+levante,poda_invierno,Poda de invierno,2,3,Poda algo más tardía por inviernos suaves.,
+levante,floracion,Floración,4,5,,
+levante,envero,Envero,10,11,,
+levante,recoleccion_principal,Recolección principal,11,1,,
+nordeste,poda_invierno,Poda de invierno,2,3,Poda en árboles adultos.,
+nordeste,floracion,Floración,5,5,Floración tardía respecto a Andalucía.,
+nordeste,envero,Envero,10,11,,
+nordeste,recoleccion_principal,Recolección principal,11,1,Campaña típica arbequina.,
+meseta_norte,poda_invierno,Poda de invierno,2,3,Poda tras evitar heladas tardías.,
+meseta_norte,floracion,Floración,5,6,Floración tardía.,
+meseta_norte,envero,Envero,10,11,,
+meseta_norte,recoleccion_principal,Recolección principal,11,12,Variedades arróniz / cornicabra del norte peninsular.,

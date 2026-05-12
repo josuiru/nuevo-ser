@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../datos/base_datos.dart';
+import '../datos/catalogos_generados/catalogo_variedades_olivo.dart';
 import '../modelos/parcela.dart';
 
 /// Formulario de alta de una parcela nueva. Sin catálogo curado en
@@ -96,13 +97,35 @@ class _PantallaNuevaParcelaState extends State<PantallaNuevaParcela> {
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                controller: _variedadCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Variedad mayoritaria',
-                  hintText: 'picual, hojiblanca, arbequina…',
-                  border: OutlineInputBorder(),
-                ),
+              Autocomplete<VariedadOlivo>(
+                displayStringForOption: (v) => v.nombreCanonico,
+                optionsBuilder: (entrada) {
+                  final texto = entrada.text.trim();
+                  if (texto.isEmpty) return const Iterable.empty();
+                  return buscarVariedadesOlivo(texto).take(8);
+                },
+                onSelected: (v) {
+                  _variedadCtrl.text = v.id;
+                },
+                fieldViewBuilder:
+                    (context, controlador, foco, alEnviar) {
+                  return TextFormField(
+                    controller: controlador,
+                    focusNode: foco,
+                    decoration: const InputDecoration(
+                      labelText: 'Variedad mayoritaria',
+                      hintText: 'picual, hojiblanca, arbequina…',
+                      border: OutlineInputBorder(),
+                      helperText:
+                          'Sugerencias del catálogo provisional (texto libre admitido)',
+                    ),
+                    onChanged: (texto) {
+                      // Si el usuario escribe texto libre que no coincide
+                      // con ninguna sugerencia, lo respetamos tal cual.
+                      _variedadCtrl.text = texto.trim();
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(

@@ -1,0 +1,40 @@
+# Plagas y enfermedades del olivar — datos PROVISIONALES.
+# Fuente orientativa: Boletines de Estaciones de Aviso Fitosanitario de las CCAA
+# olivareras + IFAPA + literatura agronómica canónica.
+# Hasta que un agrónomo olivarero firme `revisado_por`, los datos son orientativos.
+# Columnas:
+#   id                       snake_case ASCII.
+#   nombre_comun             castellano corto y reconocible.
+#   nombre_cientifico        binomial latino. Vacío para fisiopatías sin agente.
+#   tipo                     plaga / enfermedad / fisiologico / abiotico.
+#   sintomas                 1-2 frases. ⚠ Sin reproducir literalmente publicaciones.
+#   condiciones_favorables   humedad/temperatura/sensibilidad varietal en frase corta.
+#   manejo_cultural          orientativo. Producto comercial NUNCA en este CSV.
+#   declaracion_oficial      si / no — patologías de declaración obligatoria UE.
+#   revisado_por             rellenar al validar.
+id,nombre_comun,nombre_cientifico,tipo,sintomas,condiciones_favorables,manejo_cultural,declaracion_oficial,revisado_por
+mosca_olivo,Mosca del olivo,Bactrocera oleae,plaga,Larvas en el interior de la aceituna; galerías y agujeros de salida.,Veranos suaves y húmedos; aceitunas en envero-madurez.,Monitoreo con mosqueros amarillos; trampeo masivo; adelantar recolección.,no,
+prays_olivo,Polilla del olivo,Prays oleae,plaga,Tres generaciones: filófaga (hoja); antófaga (flor); carpófaga (fruto).,Primaveras templadas; floraciones tardías.,Confusión sexual; control biológico (Chrysoperla); favorecer fauna auxiliar.,no,
+repilo,Repilo,Spilocaea oleaginea,enfermedad,Manchas circulares oscuras con halo amarillento en hojas y caída prematura.,Otoños lluviosos; rocíos prolongados; alta densidad de copa.,Aclareo de copa para airear; cosecha higiénica; cubiertas vegetales bajas.,no,
+verticilosis,Verticilosis del olivo,Verticillium dahliae,enfermedad,Marchitez de ramas enteras (apoplejía o defoliación lenta) sin recuperación.,Suelos contaminados; rotación con algodón/solanáceas; encharcamiento.,Variedades tolerantes; certificar plantón libre; eliminar restos vegetales contaminados.,si,
+tuberculosis_olivo,Tuberculosis del olivo,Pseudomonas savastanoi,enfermedad,Tumores leñosos en ramas y tronco que rompen la corteza.,Lluvia y heladas que abren heridas; herramientas sin desinfectar.,Podar en seco; desinfectar tijeras; eliminar madera afectada.,no,
+xylella,Xylella (decaimiento rápido del olivo),Xylella fastidiosa,enfermedad,Decaimiento rápido y muerte progresiva del olivo; necrosis de ramas y secado de hojas.,Vectores chupadores de savia (cercópidos); zonas costeras templadas.,Prospección obligatoria; arranque y destrucción en zona delimitada; vigilancia fitosanitaria oficial.,si,
+cochinilla_tizne,Cochinilla y negrilla,Saissetia oleae,plaga,Cochinillas en hojas + capa negra de hongo saprófito (negrilla).,Copas densas; humedad alta; ausencia de fauna auxiliar.,Aclarar copa; favorecer hormigas y predadores naturales; lavado tras melaza intensa.,no,
+glifodes,Glifodes / barreno del olivo,Palpita unionalis,plaga,Larvas que devoran brotes tiernos y hojas en el extremo.,Otoños cálidos; brotaciones tardías.,Monitoreo con feromonas; control biológico; podas equilibradas.,no,
+algodoncillo,Algodoncillo,Euphyllura olivina,plaga,Masas algodonosas en inflorescencias; aborto floral si la población es alta.,Primaveras secas; inflorescencias prolongadas.,Aclareo de copa; control con auxiliares.,no,
+taladrillo_olivo,Taladrillo del olivo,Phloeotribus scarabaeoides,plaga,Galerías en ramillos; debilitamiento de árboles ya estresados.,Madera de poda sin retirar; sequía prolongada.,Quemar/retirar restos de poda en febrero-marzo (trampas naturales).,no,
+antracnosis_olivo,Antracnosis (aceituna jabonosa),Colletotrichum spp.,enfermedad,Manchas oscuras blandas en aceitunas; aceite turbio con alta acidez.,Aceitunas heridas; humedad en madurez; recolecciones tardías.,Adelantar recolección de fruto afectado; separación en almazara; aclareo de copa.,no,
+emplomado,Emplomado del olivo,Pseudocercospora cladosporioides,enfermedad,Manchas plomizas grisáceas en envés de hojas; defoliación lenta.,Veranos secos seguidos de otoños lluviosos.,Aclareo de copa; cubiertas vegetales bajas; manejo similar al repilo.,no,
+escudete,Escudete,Camarosporium dalmaticum,enfermedad,Manchas necróticas circulares en aceitunas tras lluvias estivales.,Lluvias en verano-otoño con aceituna desarrollada.,Cosecha higiénica; separación en báscula; variedades menos sensibles.,no,
+mosquito_olivo,Mosquito del olivo,Dasineura oleae,plaga,Agallas en hojas y brotes nuevos; deformación de la masa foliar.,Brotaciones primaverales prolongadas.,Control con fauna auxiliar; podas que renueven madera afectada.,no,
+caracoles_olivar,Caracoles en olivar,Cernuella spp.,plaga,Daños en hojas tiernas y partes bajas; obstaculizan la recolección manual.,Otoños y primaveras húmedas; suelos con cubierta densa.,Manejo de cubierta vegetal; siega antes de la subida; trampeo en cuadrillas.,no,
+gusano_blanco,Gusano blanco / gallina ciega,Melolontha spp.,plaga,Larvas que devoran raíces; debilitamiento general del olivo joven.,Suelos arenosos; abundancia de materia orgánica fresca.,Laboreo somero en marzo; control biológico con hongos entomopatógenos.,no,
+helada_invernal,Helada invernal,,abiotico,Necrosis de ramas finas; defoliación; en casos extremos muerte del árbol.,Temperaturas <-7 °C en olivos no aclimatados.,Variedades resistentes; vasos abiertos en zonas frías; podas posteriores a heladas.,no,
+sequia_severa,Sequía severa,,abiotico,Defoliación; aceitunas pequeñas o caída prematura; reducción de rendimiento graso.,Veranos secos prolongados; suelos sin reserva de agua.,Cubiertas vegetales muertas; goteo deficitario; podas de equilibrio.,no,
+viento_levante_olivar,Viento de levante / poniente severo,,abiotico,Caída de aceituna verde; daños mecánicos en ramillos; deshidratación.,Vientos secos con rachas >60 km/h.,Setos cortavientos; recolección anticipada en sectores expuestos.,no,
+clorosis_ferrica,Clorosis férrica,,fisiologico,Hojas jóvenes amarillentas con nervadura verde; reducción de vigor.,Suelos calizos con pH alto; encharcamiento que limita la absorción de Fe.,Quelatos de hierro al suelo; corrección de drenaje; abono foliar específico.,no,
+defoliacion_otoñal,Defoliación otoñal mixta,,fisiologico,Caída masiva de hoja vieja antes de la floración siguiente.,Estrés hídrico/repilo previos; cargas de cosecha elevadas.,Equilibrio entre carga y vigor; aclareo; manejo conjunto de repilo.,no,
+ceratoceria,Cochinilla violeta,Parlatoria oleae,plaga,Costras en ramas y aceitunas; depreciación de fruto de mesa.,Olivares densos con copas no aireadas.,Aclareo de copa; control con auxiliares; aceites de invierno autorizados.,no,
+abigarrado_aceituna,Abigarrado / mancha estrellada,,fisiologico,Manchas estrelladas claras en aceituna verde-envero; sin afectar al aceite.,Cambios bruscos de temperatura tras lluvias en verano.,Sin acción específica — incidencia estética.,no,
+arañuela_amarilla,Arañuela del olivo,Tetranychus urticae,plaga,Punteado clorótico en hojas y telilla fina en envés.,Veranos secos y polvorientos; ausencia de fauna auxiliar.,Riegos por aspersión puntuales que limpien follaje; control con depredadores.,no,
+seca_de_brotes_xilebori,Seca de brotes por escolítidos,Xyleborus spp.,plaga,Galerías muy finas en ramillos; secado puntual de extremos.,Olivos debilitados por estrés hídrico o heladas previas.,Vigilancia tras estrés; retirada y quema de ramillos afectados.,no,

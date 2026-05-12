@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../datos/base_datos.dart';
+import '../datos/catalogos_generados/catalogo_fitosanitarios_olivar.dart';
+import '../datos/catalogos_generados/catalogo_plagas_olivo.dart';
 import '../modelos/tratamiento.dart';
 
 /// Formulario para registrar un tratamiento fitosanitario sobre una
@@ -56,15 +58,36 @@ class _PantallaNuevoTratamientoState extends State<PantallaNuevoTratamiento> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _sustanciaCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Sustancia activa',
-                  hintText: 'deltametrina, dimetoato, cobre…',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Obligatorio' : null,
+              Autocomplete<FitosanitarioOlivar>(
+                displayStringForOption: (f) => f.nombreCanonico,
+                optionsBuilder: (entrada) {
+                  final texto = entrada.text.trim();
+                  if (texto.isEmpty) return const Iterable.empty();
+                  return buscarFitosanitariosOlivar(texto).take(8);
+                },
+                onSelected: (f) {
+                  _sustanciaCtrl.text = f.id;
+                },
+                fieldViewBuilder:
+                    (context, controlador, foco, alEnviar) {
+                  return TextFormField(
+                    controller: controlador,
+                    focusNode: foco,
+                    decoration: const InputDecoration(
+                      labelText: 'Sustancia activa',
+                      hintText: 'deltametrina, spinosad, cobre…',
+                      border: OutlineInputBorder(),
+                      helperText:
+                          'Sugerencias del catálogo provisional (texto libre admitido)',
+                    ),
+                    onChanged: (texto) {
+                      _sustanciaCtrl.text = texto.trim();
+                    },
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? 'Obligatorio'
+                        : null,
+                  );
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -85,13 +108,33 @@ class _PantallaNuevoTratamientoState extends State<PantallaNuevoTratamiento> {
                     const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                controller: _plagaCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Plaga objetivo',
-                  hintText: 'mosca, prays, repilo…',
-                  border: OutlineInputBorder(),
-                ),
+              Autocomplete<PlagaOlivo>(
+                displayStringForOption: (p) => p.nombreComun,
+                optionsBuilder: (entrada) {
+                  final texto = entrada.text.trim();
+                  if (texto.isEmpty) return const Iterable.empty();
+                  return buscarPlagasOlivo(texto).take(8);
+                },
+                onSelected: (p) {
+                  _plagaCtrl.text = p.id;
+                },
+                fieldViewBuilder:
+                    (context, controlador, foco, alEnviar) {
+                  return TextFormField(
+                    controller: controlador,
+                    focusNode: foco,
+                    decoration: const InputDecoration(
+                      labelText: 'Plaga objetivo',
+                      hintText: 'mosca, prays, repilo, verticilosis…',
+                      border: OutlineInputBorder(),
+                      helperText:
+                          'Sugerencias del catálogo provisional (texto libre admitido)',
+                    ),
+                    onChanged: (texto) {
+                      _plagaCtrl.text = texto.trim();
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(

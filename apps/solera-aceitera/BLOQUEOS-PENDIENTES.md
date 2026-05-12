@@ -6,9 +6,14 @@ humano hace falta para resolverlo.
 
 ## F1-A6 — Catálogos provisionales sin validar (BLOQUEA F1-A10)
 
-**Estado**: pendiente arrancar (F1-A1 cierra el esqueleto en esta sesión;
-F1-A2…F1-A5 son ejecutables sin asesor; F1-A6 produce los CSVs
-provisionales que F1-A10 valida).
+**Estado**: catálogos provisionales generados en esta sesión.
+Existen los 5 CSVs en `content/aceitera/` (40 variedades + 25
+patologías + 20 fitosanitarios + 29 DOPs + 40 eventos del calendario)
+y el compilador `tool/compilar_catalogos.dart` los traduce a Dart
+canónico bajo `lib/datos/catalogos_generados/`. `flag_revision.dart`
+deja `catalogosCompletamenteRevisados = false` mientras quede una
+fila sin firmar. La app muestra `BannerCatalogosProvisionales` en el
+dashboard y el autocomplete cae a texto libre si nada coincide.
 
 **Bloqueante**: **asesor agrónomo olivarero**. Idealmente un técnico
 IFAPA o equivalente con experiencia en cooperativa. Hace falta para:
