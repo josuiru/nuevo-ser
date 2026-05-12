@@ -55,19 +55,27 @@ retirarlo silenciosamente — para desbloquear hay que documentar el
 nombre del técnico OCA en este bloqueo y actualizar el test en el
 mismo commit.
 
-## F1-A5 — Libro de movimientos del aceite
+## F1-A5 — Libro de movimientos del aceite (PROVISIONAL desde esta sesión)
 
-**Estado**: pendiente. La BD ya tiene las tablas `lotes_aceite`,
-`molturaciones`, `movimientos` y `ventas` necesarias.
+**Estado**: implementado. `lib/servicios/generador_libro_aceite_pdf.dart`
+produce el PDF firmable con tres tablas (lotes con parámetros
+analíticos + molturaciones + movimientos cronológicos) usando la
+plantilla `informe_periodico` del core. Selector de campaña + lote
+opcional desde `_PantallaExportLibroAceite`, accesible desde el botón
+PDF del AppBar de `PantallaLibroAceite`.
 
-**Bloqueante**: **auditor AICA** para validar que el PDF generado
-pasa una inspección real.
+**Bloqueante**: **auditor AICA humano** para auditar el formato y
+registrar nombre + nº de inspector antes de retirar el sello.
 
-- Conforme RD 760/2021 + requisitos de la Agencia de Información y
-  Control Alimentarios (AICA).
+- Conforme RD 760/2021 + circulares AICA vigentes.
+- Verificar que la trazabilidad lote→molturación→partidas se entiende
+  en una inspección real (puede haber matices regionales).
 
-**Mientras tanto**: cuando se implemente, llevará el mismo patrón
-`PROVISIONAL` que F1-A4 con su propio guardrail.
+**Mientras tanto**: el subtítulo del PDF lleva la palabra `PROVISIONAL`
+literal. El segundo test de `test/sello_provisional_test.dart` impide
+retirarlo silenciosamente — para desbloquear hay que documentar el
+nombre del auditor AICA en este bloqueo y actualizar el test en el
+mismo commit.
 
 ## F1-A9 — Libro ingresos/gastos REAGP olivar
 
