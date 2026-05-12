@@ -70,4 +70,25 @@ void main() {
       );
     },
   );
+
+  test(
+    'generador_extracto_economico.dart conserva el sello PROVISIONAL hasta validación fiscal',
+    () {
+      final fuente =
+          File('lib/servicios/generador_extracto_economico.dart')
+              .readAsStringSync();
+      expect(
+        fuente,
+        contains("PROVISIONAL"),
+        reason:
+            'Si vas a quitar la palabra PROVISIONAL del extracto económico '
+            'olivar, el asesor fiscal agroalimentario debe haber validado '
+            'antes que el desglose por tipo y el modelo 347 implementados '
+            'son correctos para el régimen REAGP del olivar. Documenta el '
+            'commit + nombre del asesor en BLOQUEOS-PENDIENTES.md (bloqueo '
+            'F1-A9) y actualiza este test antes de mergear. Ver auditoría '
+            '2026-05-12 riesgo R1.',
+      );
+    },
+  );
 }

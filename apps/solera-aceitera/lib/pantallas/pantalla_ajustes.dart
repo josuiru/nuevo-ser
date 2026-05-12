@@ -6,7 +6,10 @@ import '../modelos/campania.dart';
 import '../modelos/olivar.dart';
 import '../modelos/titular.dart';
 import 'pantalla_clave_anthropic.dart';
+import 'pantalla_configuracion_fiscal.dart';
 import 'pantalla_cuaderno_pac.dart';
+import 'pantalla_libro_economico.dart';
+import 'pantalla_terceros.dart';
 
 /// Ajustes: datos del titular, del olivar y gestión de campañas.
 /// Pantalla mínima en F1-A3 — F1-A8 añadirá secciones de IA, backup y
@@ -154,6 +157,55 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const PantallaCuadernoPac(),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text('Libro económico',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.book,
+                  color: Color(0xFF5C6B3A)),
+              title: const Text('Libro económico anual'),
+              subtitle: const Text(
+                'Ingresos / gastos / resumen + extracto PDF · PROVISIONAL',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PantallaLibroEconomico(),
+                ),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.account_balance,
+                  color: Color(0xFF5C6B3A)),
+              title: const Text('Configuración fiscal'),
+              subtitle: const Text('Régimen IRPF + IVA + año fiscal activo'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PantallaConfiguracionFiscal(),
+                ),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.people_outline,
+                  color: Color(0xFF5C6B3A)),
+              title: const Text('Terceros (clientes / proveedores)'),
+              subtitle: const Text(
+                'Datos fiscales para asociar a apuntes y al modelo 347',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PantallaTerceros(),
                 ),
               ),
             ),
