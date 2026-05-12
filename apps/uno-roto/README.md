@@ -6,19 +6,22 @@ Parte de la línea **Colección Nuevo Ser Kids**.
 
 ## Estado del proyecto
 
-**MVP prácticamente completo (~90%)**. Catálogo de 66 habilidades implementado en 8 dominios, 4 arcos narrativos con más de 60 escenas, combates jugables, motor adaptativo, backend WordPress y tutor IA.
+**MVP prácticamente completo (~95%)**. Catálogo de **76 habilidades** implementado en 11 dominios, 4 arcos narrativos con más de 60 escenas, combates jugables, motor adaptativo, backend WordPress y tutor IA.
 
 ## Lo que incluye
 
-### 66 habilidades en 8 dominios
-- **FR** — Fracciones: unitario, comparación, simplificar, amplificar, mixto a impropio, fracción de cantidad, ordenar, dual (suma, resta, multiplicación, división)
-- **DEC** — Decimales: lectura, comparación, ordenar, redondeo, operaciones, conversión fracción↔decimal
-- **PROP** — Proporcionalidad: razón, regla de tres, porcentajes, aumentos y descuentos, escala
-- **DIV** — Divisibilidad: múltiplos, divisores, criterios, primos, MCM y MCD
-- **OP** — Jerarquía de operaciones: básica y con fracciones, operación mixta decimal+fracción
-- **MED** — Medidas: longitud, masa y capacidad, tiempo sexagesimal, ángulos, superficie y áreas
-- **GEO** — Geometría: polígonos, perímetro, área de rectángulo y triángulo, círculo, volumen, simetría axial
-- **EST** — Estadística: gráfico de barras, gráfico circular, media, moda y mediana, probabilidad
+### 76 habilidades en 11 dominios
+- **FR** (22) — Fracciones: unitario, comparación, simplificar, amplificar, mixto a impropio, equivalente, fracción de cantidad, ordenar, dual (suma, resta, multiplicación, división)
+- **DEC** (9) — Decimales: lectura, comparación, ordenar, redondeo, operaciones, conversión fracción↔decimal
+- **PROP** (7) — Proporcionalidad: razón, regla de tres, porcentajes, aumentos y descuentos, escala, proporcionalidad directa
+- **DIV** (7) — Divisibilidad: múltiplos, divisores, criterios, primos, MCM y MCD
+- **OP** (3) — Jerarquía de operaciones: básica y con fracciones, operación mixta decimal+fracción
+- **MED** (5) — Medidas: longitud, masa y capacidad, tiempo sexagesimal, ángulos, superficie y áreas
+- **GEO** (8) — Geometría: polígonos, perímetro, área de rectángulo y triángulo, círculo, volumen, simetría axial, ortoedro
+- **EST** (6) — Estadística: gráfico de barras, gráfico circular, media, moda y mediana, probabilidad
+- **ARI** (5) — Aritmética: suma, resta, multiplicación, división, operaciones combinadas
+- **ALG** (3) — Álgebra: ecuaciones lineales, ecuaciones de ambos lados, valor absoluto
+- **FUN** (1) — Funciones: relación lineal
 
 ### Narrativa — 4 arcos completos
 - **Arco 1** (14 escenas): El encuentro con Sora, el primer Fragmento, la ciudad rota. Combates con Kurz.
