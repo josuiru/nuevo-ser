@@ -50,4 +50,24 @@ void main() {
       );
     },
   );
+
+  test(
+    'configuracion_fiscal.dart conserva el sello PROVISIONAL hasta validación fiscal',
+    () {
+      final fuente =
+          File('lib/modelos/configuracion_fiscal.dart').readAsStringSync();
+      expect(
+        fuente,
+        contains("PROVISIONAL"),
+        reason:
+            'Si vas a quitar la palabra PROVISIONAL de la configuración '
+            'fiscal olivar, un asesor fiscal agroalimentario humano debe '
+            'haber validado las reglas de IVA/REAGP para venta de '
+            'aceituna, aceite envasado, aceite a granel y subproductos. '
+            'Documenta el commit + nombre del asesor en '
+            'BLOQUEOS-PENDIENTES.md (bloqueo F1-A9) y actualiza este test '
+            'antes de mergear. Ver auditoría 2026-05-12 riesgo R1.',
+      );
+    },
+  );
 }

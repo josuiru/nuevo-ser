@@ -82,23 +82,34 @@ retirarlo silenciosamente — para desbloquear hay que documentar el
 nombre del auditor AICA en este bloqueo y actualizar el test en el
 mismo commit.
 
-## F1-A9 — Libro ingresos/gastos REAGP olivar
+## F1-A9 — Libro ingresos/gastos REAGP olivar (modelos+BD cerrados, UI pendiente)
 
-**Estado**: planificado tras F1-A8.
+**Estado**: modelos POJO y migración BD v1→v2 cerrados en esta sesión.
+4 entidades (`Tercero`, `ConfiguracionFiscal`, `ApunteIngreso`,
+`ApunteGasto`) con tipologías olivar específicas (venta_aceituna,
+venta_aceite_envasado, venta_aceite_granel, subproducto_alperujo,
+recoleccion como pico anual de mano de obra, cuota_dop, analiticas,
+combustible separado para devolución IH REAGP). Reglas IVA olivar
+documentadas y testeadas en `ConfiguracionFiscal`. Sello `PROVISIONAL`
+custodiado por tercer test en `sello_provisional_test.dart`.
 
-**Bloqueante**: **asesor fiscal agroalimentario humano**. El olivar
-tiene una casuística REAGP más compleja que las otras Solera:
+**Bloqueante**: **asesor fiscal agroalimentario humano** antes de
+retirar el sello provisional. Casuística olivar a confirmar:
 
-- Venta de aceituna a almazara: 12 % REAGP en compensación.
-- Venta de aceite envasado al consumidor final: 4 % IVA / 10 % IVA
-  según categoría (alimentario básico vs gourmet).
-- Venta de aceite a granel a otro envasador / refinador: tratamiento
-  específico distinto del aceite envasado.
-- Cuota DOP, analíticas, alperujo a extractora — categorización
-  contable.
+- Venta de aceituna a almazara/cooperativa: 12 % compensación REAGP
+  vs 4 % IVA en régimen general (implementado tal cual).
+- Venta de aceite envasado al consumidor final: 4 % IVA básico
+  (implementado tal cual) — fuera del REAGP del agricultor.
+- Venta de aceite a granel a envasador/refinador: 4 % vs 10 % según
+  interpretación — implementado al 4 %, el usuario sobrescribe.
+- Subproducto alperujo a orujera: 10 % IVA en uso comercial — el
+  modelo lo marca como categoría aparte para validar.
+- Cuota DOP, analíticas obligatorias, gasoil agrícola (devolución
+  IH en REAGP) — categorías ya en el modelo `ApunteGasto`.
 
-**Mientras tanto**: la pantalla queda escondida del flujo principal o
-con banner "PROVISIONAL" persistente. Mismo patrón que las otras Solera.
+**Pendiente F1-A9b/F2**: pantallas (configuración fiscal + terceros +
+libro económico con tabs ingresos/gastos/resumen + formularios +
+extracto económico anual PDF reusando `informe_periodico` del core).
 
 ## F1-A7 — IA Claude Vision (cableada en esta sesión, caveat)
 

@@ -3,7 +3,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../modelos/analitica.dart';
+import '../modelos/apunte_gasto.dart';
+import '../modelos/apunte_ingreso.dart';
 import '../modelos/campania.dart';
+import '../modelos/configuracion_fiscal.dart';
 import '../modelos/incidencia.dart';
 import '../modelos/lote_aceite.dart';
 import '../modelos/molturacion.dart';
@@ -13,6 +16,7 @@ import '../modelos/olivo.dart';
 import '../modelos/parcela.dart';
 import '../modelos/partida_aceituna.dart';
 import '../modelos/recoleccion.dart';
+import '../modelos/tercero.dart';
 import '../modelos/titular.dart';
 import '../modelos/tratamiento.dart';
 import '../modelos/venta.dart';
@@ -45,7 +49,7 @@ class BaseDatosSoleraAceitera {
     final ruta = path_lib.join(directorio.path, 'solera_aceitera.db');
     _basedatos = await openDatabase(
       ruta,
-      version: 1,
+      version: 2,
       onConfigure: (db) async {
         // Activar Foreign Keys. SQLite las desactiva por defecto en cada
         // conexión — sin esto, las cascadas FK no se respetan.
@@ -53,6 +57,7 @@ class BaseDatosSoleraAceitera {
       },
       onCreate: (db, version) async {
         await _crearEsquemaV1(db);
+        await _aplicarMigracionV2(db);
       },
       onUpgrade: (db, anterior, actual) async {
         await _aplicarMigraciones(db, anterior, actual);
@@ -388,7 +393,109 @@ class BaseDatosSoleraAceitera {
     int versionAnterior,
     int versionActual,
   ) async {
-    // v1 → futuras migraciones aquí.
+    if (versionAnterior < 2) {
+      await _aplicarMigracionV2(db);
+    }
+  }
+
+  /// v1 → v2: libro económico (terceros + configuración fiscal +
+  /// apuntes de ingreso/gasto). PROVISIONAL hasta asesor fiscal —
+  /// las tipologías y reglas IVA están documentadas en los modelos
+  /// y registradas en BLOQUEOS-PENDIENTES.md (F1-A9).
+  Future<void> _aplicarMigracionV2(Database db) async {
+    // ─── Terceros (clientes + proveedores) ───
+    await db.execute('''
+      CREATE TABLE terceros (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nif TEXT NOT NULL DEFAULT '',
+        nombre TEXT NOT NULL DEFAULT '',
+        direccion TEXT NOT NULL DEFAULT '',
+        telefono TEXT NOT NULL DEFAULT '',
+        email TEXT NOT NULL DEFAULT '',
+        tipo TEXT NOT NULL DEFAULT 'ambos',
+        notas TEXT NOT NULL DEFAULT ''
+      )
+    ''');
+    await db.execute('CREATE INDEX idx_terceros_nif ON terceros(nif)');
+    await db.execute('CREATE INDEX idx_terceros_tipo ON terceros(tipo)');
+
+    // ─── Configuración fiscal (single-row) ───
+    await db.execute('''
+      CREATE TABLE configuracion_fiscal (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        regimen_irpf TEXT NOT NULL DEFAULT 'sin_elegir',
+        regimen_iva TEXT NOT NULL DEFAULT 'sin_elegir',
+        anyo_fiscal_activo INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    // ─── Apuntes de ingreso ───
+    await db.execute('''
+      CREATE TABLE apuntes_ingreso (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fecha_ms INTEGER NOT NULL,
+        concepto TEXT NOT NULL DEFAULT '',
+        tipo_ingreso TEXT NOT NULL DEFAULT 'otro',
+        importe_base_centimos INTEGER NOT NULL DEFAULT 0,
+        iva_repercutido_centimos INTEGER NOT NULL DEFAULT 0,
+        compensacion_reagp_centimos INTEGER NOT NULL DEFAULT 0,
+        cantidad REAL,
+        unidad TEXT NOT NULL DEFAULT '',
+        tercero_id INTEGER,
+        parcela_id INTEGER,
+        variedad_id TEXT NOT NULL DEFAULT '',
+        lote_aceite_id INTEGER,
+        ruta_foto_factura TEXT NOT NULL DEFAULT '',
+        numero_factura TEXT NOT NULL DEFAULT '',
+        notas TEXT NOT NULL DEFAULT '',
+        FOREIGN KEY (tercero_id) REFERENCES terceros(id) ON DELETE SET NULL,
+        FOREIGN KEY (parcela_id) REFERENCES parcelas(id) ON DELETE SET NULL,
+        FOREIGN KEY (lote_aceite_id) REFERENCES lotes_aceite(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute(
+        'CREATE INDEX idx_ingresos_fecha ON apuntes_ingreso(fecha_ms)');
+    await db.execute(
+        'CREATE INDEX idx_ingresos_tipo ON apuntes_ingreso(tipo_ingreso)');
+    await db.execute(
+        'CREATE INDEX idx_ingresos_tercero ON apuntes_ingreso(tercero_id)');
+    await db.execute(
+        'CREATE INDEX idx_ingresos_parcela ON apuntes_ingreso(parcela_id)');
+    await db.execute(
+        'CREATE INDEX idx_ingresos_lote ON apuntes_ingreso(lote_aceite_id)');
+
+    // ─── Apuntes de gasto ───
+    await db.execute('''
+      CREATE TABLE apuntes_gasto (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fecha_ms INTEGER NOT NULL,
+        concepto TEXT NOT NULL DEFAULT '',
+        tipo_gasto TEXT NOT NULL DEFAULT 'otro',
+        importe_base_centimos INTEGER NOT NULL DEFAULT 0,
+        iva_soportado_centimos INTEGER NOT NULL DEFAULT 0,
+        imputacion TEXT NOT NULL DEFAULT 'general',
+        parcela_id INTEGER,
+        variedad_id TEXT NOT NULL DEFAULT '',
+        tercero_id INTEGER,
+        ruta_foto_factura TEXT NOT NULL DEFAULT '',
+        numero_factura TEXT NOT NULL DEFAULT '',
+        tratamiento_id INTEGER,
+        notas TEXT NOT NULL DEFAULT '',
+        FOREIGN KEY (parcela_id) REFERENCES parcelas(id) ON DELETE SET NULL,
+        FOREIGN KEY (tercero_id) REFERENCES terceros(id) ON DELETE SET NULL,
+        FOREIGN KEY (tratamiento_id) REFERENCES tratamientos(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute(
+        'CREATE INDEX idx_gastos_fecha ON apuntes_gasto(fecha_ms)');
+    await db.execute(
+        'CREATE INDEX idx_gastos_tipo ON apuntes_gasto(tipo_gasto)');
+    await db.execute(
+        'CREATE INDEX idx_gastos_tercero ON apuntes_gasto(tercero_id)');
+    await db.execute(
+        'CREATE INDEX idx_gastos_parcela ON apuntes_gasto(parcela_id)');
+    await db.execute(
+        'CREATE INDEX idx_gastos_tratamiento ON apuntes_gasto(tratamiento_id)');
   }
 
   // ──────────────────────── CRUD básico ────────────────────────
@@ -549,6 +656,83 @@ class BaseDatosSoleraAceitera {
             whereArgs: [loteAceiteId],
             orderBy: 'fecha_ms DESC');
     return filas.map(Analitica.fromMap).toList(growable: false);
+  }
+
+  // ──────────────────────── Libro económico (v2) ────────────────────────
+
+  Future<int> insertarTercero(Tercero t) async {
+    final db = await basedatos;
+    return db.insert('terceros', t.toMap()..remove('id'));
+  }
+
+  Future<List<Tercero>> listarTerceros({String? tipo}) async {
+    final db = await basedatos;
+    final filas = tipo == null
+        ? await db.query('terceros', orderBy: 'nombre ASC')
+        : await db.query('terceros',
+            where: "tipo = ? OR tipo = 'ambos'",
+            whereArgs: [tipo],
+            orderBy: 'nombre ASC');
+    return filas.map(Tercero.fromMap).toList(growable: false);
+  }
+
+  Future<ConfiguracionFiscal> obtenerConfiguracionFiscal() async {
+    final db = await basedatos;
+    final filas = await db.query('configuracion_fiscal', limit: 1);
+    if (filas.isEmpty) return ConfiguracionFiscal();
+    return ConfiguracionFiscal.fromMap(filas.first);
+  }
+
+  Future<int> guardarConfiguracionFiscal(ConfiguracionFiscal c) async {
+    final db = await basedatos;
+    final existente = await db.query('configuracion_fiscal', limit: 1);
+    if (existente.isEmpty) {
+      return db.insert('configuracion_fiscal', c.toMap()..remove('id'));
+    }
+    final id = existente.first['id'] as int;
+    await db.update('configuracion_fiscal', c.toMap()..remove('id'),
+        where: 'id = ?', whereArgs: [id]);
+    return id;
+  }
+
+  Future<int> insertarApunteIngreso(ApunteIngreso a) async {
+    final db = await basedatos;
+    return db.insert('apuntes_ingreso', a.toMap()..remove('id'));
+  }
+
+  Future<List<ApunteIngreso>> listarApuntesIngreso({
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final tieneFiltroTemporal = desdeMs != null && hastaMs != null;
+    final filas = tieneFiltroTemporal
+        ? await db.query('apuntes_ingreso',
+            where: 'fecha_ms >= ? AND fecha_ms <= ?',
+            whereArgs: [desdeMs, hastaMs],
+            orderBy: 'fecha_ms DESC')
+        : await db.query('apuntes_ingreso', orderBy: 'fecha_ms DESC');
+    return filas.map(ApunteIngreso.fromMap).toList(growable: false);
+  }
+
+  Future<int> insertarApunteGasto(ApunteGasto a) async {
+    final db = await basedatos;
+    return db.insert('apuntes_gasto', a.toMap()..remove('id'));
+  }
+
+  Future<List<ApunteGasto>> listarApuntesGasto({
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final tieneFiltroTemporal = desdeMs != null && hastaMs != null;
+    final filas = tieneFiltroTemporal
+        ? await db.query('apuntes_gasto',
+            where: 'fecha_ms >= ? AND fecha_ms <= ?',
+            whereArgs: [desdeMs, hastaMs],
+            orderBy: 'fecha_ms DESC')
+        : await db.query('apuntes_gasto', orderBy: 'fecha_ms DESC');
+    return filas.map(ApunteGasto.fromMap).toList(growable: false);
   }
 
   /// Cierra la conexión. Usado por tests para forzar reapertura.
