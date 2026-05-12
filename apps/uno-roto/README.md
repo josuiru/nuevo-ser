@@ -1,105 +1,87 @@
-# Uno Roto — Prototipo del combate
+# Uno Roto — Juego de matemáticas narrativo
 
-Prototipo mínimo de la mecánica de cortar Fragmentos Unitarios (Familia B).
-Cubre solo los denominadores **1/2, 1/3, 1/4 y 1/5**. Sin narrativa, sin
-sincronización, sin backend. Un único objetivo:
+Juego educativo de matemáticas (fracciones, decimales, proporciones, geometría y estadística) para niños de 9 a 14 años. Las matemáticas **son** el gameplay, no su excusa.
 
-> Responder a la pregunta más peligrosa del proyecto:
-> **¿el gesto de cortar se siente como jugar o como examen?**
+Parte de la línea **Colección Nuevo Ser Kids**.
 
-## Qué hay y qué no hay
+## Estado del proyecto
 
-Incluido:
+**MVP prácticamente completo (~90%)**. Catálogo de 66 habilidades implementado en 8 dominios, 4 arcos narrativos con más de 60 escenas, combates jugables, motor adaptativo, backend WordPress y tutor IA.
 
-- Pantalla única con selector de Fragmento (2, 3, 4, 5).
-- Fragmento dibujado con aura neón y latido suave (biblia §3.2 — azul-violeta).
-- Gesto de cortar: deslizar desde el centro hacia el borde crea un radio.
-- Evaluación tolerante: el jugador completa el objetivo si traza tantos radios
-  como el denominador, distribuidos de forma aproximadamente uniforme
-  (tolerancia actual: ±12° por sector).
-- Feedback visual inmediato: aura verde suave (éxito), rosa (no cuadra).
-- Mensaje amable bajo el Fragmento (nunca "¡incorrecto!").
-- Reintento automático tras 1,5 segundos.
+## Lo que incluye
 
-No incluido (a propósito):
+### 66 habilidades en 8 dominios
+- **FR** — Fracciones: unitario, comparación, simplificar, amplificar, mixto a impropio, fracción de cantidad, ordenar, dual (suma, resta, multiplicación, división)
+- **DEC** — Decimales: lectura, comparación, ordenar, redondeo, operaciones, conversión fracción↔decimal
+- **PROP** — Proporcionalidad: razón, regla de tres, porcentajes, aumentos y descuentos, escala
+- **DIV** — Divisibilidad: múltiplos, divisores, criterios, primos, MCM y MCD
+- **OP** — Jerarquía de operaciones: básica y con fracciones, operación mixta decimal+fracción
+- **MED** — Medidas: longitud, masa y capacidad, tiempo sexagesimal, ángulos, superficie y áreas
+- **GEO** — Geometría: polígonos, perímetro, área de rectángulo y triángulo, círculo, volumen, simetría axial
+- **EST** — Estadística: gráfico de barras, gráfico circular, media, moda y mediana, probabilidad
 
-- Progresión, rangos, cuenta, sincronización.
-- Otras familias de Fragmentos.
-- Narrativa, Sora, diálogos, misiones.
-- Sonido.
-- Animaciones de combate avanzadas.
+### Narrativa — 4 arcos completos
+- **Arco 1** (14 escenas): El encuentro con Sora, el primer Fragmento, la ciudad rota. Combates con Kurz.
+- **Arco 2** (16 escenas): Mercado, Canales, los Fragmentos nombrados. Combate con Zafrán.
+- **Arco 3** (18 escenas): Industria, Puerto, el duelo con Kai. Eco y la IA tutor.
+- **Arco 4** (14 escenas): Afueras, la Montaña, el combate con Vorax, el cierre del viaje.
+
+### Motor de juego
+- Selector adaptativo de habilidades con pesos por nivel, decaimiento, distrito y anti-repetición
+- Motor de maestría con 5 niveles por habilidad (precisión ponderada, tiempo mediano, decaimiento 21d/14d)
+- Sistema de rangos narrativos (Aprendiz I→III, Iniciado) vinculados a esquirlas y progreso
+- 6 distritos con atmósferas visuales diferenciadas (Tejados, Canales, Mercado, Industria, Puerto, Afueras)
+- Puzzles con distractores curados a errores reales de niños
+
+### Combates jugables
+- **Kurz**: 3 combates calibrados (derrota → probable derrota → victoria)
+- **Zafrán**: combate de MCM con preguntas de amplificación
+- **Vorax**: combate de conversión impropio→mixto
+- **Duelo Kai**: combate en Arco 3
+- Fragmentos nombrados con voces, halos de color y personalidad propia
+
+### Tutor IA v0.2
+- Integración con Claude API (Anthropic) en servidor
+- Filtro de seguridad en doble capa (cliente Dart + servidor PHP)
+- Cache LRU con persistencia global y TTL de 30 días
+- Cooldown de 10 minutos entre consultas
+- Se ofrece tras un Fragmento que se escapa en el cazadero
+
+### Extras
+- **El Faro de Azula**: periódico semanal in-game con lore, 10 ediciones, acertijos
+- **Capa sonora**: 4 capas (ambient, música, efectos, narrativos) con fades crossing y paquete descargable
+- **Sistema de perfiles**: multi-niño en el mismo dispositivo
+- **3 idiomas**: castellano, euskera, catalán desde el primer arranque
+- **Modo entrenamiento**: práctica por dominio sin presión narrativa
+- **Pista escalonada**: ayuda visual tras 2 fallos consecutivos
+- **Micro-tutorial gestual**: la primera vez que se ve cada familia de puzzle
+
+## Stack técnico
+
+- **Cliente**: Flutter + Dart, CustomPainter, offline-first, shared_preferences
+- **Backend**: WordPress plugin `nuevo-ser-core`, MySQL, REST API, JWT
+- **IA tutor**: Claude API con cache LRU + filtros de seguridad
+- **Idiomas**: `flutter_localizations` + `intl` (UI) y mapas runtime (narrativa)
+
+## Requisitos
+
+- Flutter ≥ 3.24
+- Dart 3.5
 
 ## Cómo arrancar
 
-Requiere Flutter ≥ 3.24 en el sistema.
-
 ```bash
-cd app
+cd apps/uno-roto
 flutter pub get
-flutter analyze    # debe salir sin issues
-flutter test       # debe pasar 7/7
-flutter run        # lanza en el dispositivo/emulador activo
+flutter analyze
+flutter test
+flutter run -d linux        # escritorio
+flutter build apk --release  # APK Android
 ```
 
-Si no hay dispositivo Android/iOS conectado, se puede ejecutar en Linux:
-
-```bash
-flutter run -d linux
-```
-
-## Estructura
-
-```
-lib/
-├── main.dart                       # entry point, MaterialApp
-├── nucleo/
-│   └── paleta.dart                 # tema y paleta neón
-├── dominio/                        # lógica pura Dart, sin Flutter
-│   ├── fragmento.dart              # FragmentoUnitario y RadioTrazado
-│   └── resolucion_corte.dart       # EvaluadorCorte y ResultadoIntento
-└── vista/
-    ├── pantalla_combate.dart       # pantalla y selector
-    ├── lienzo_combate.dart         # GestureDetector y ciclo del intento
-    └── pintor_fragmento.dart       # CustomPainter del Fragmento
-test/
-├── evaluador_corte_test.dart       # 6 tests de lógica pura
-└── widget_test.dart                # smoke test de arranque
-```
-
-## Test de validación con niños
-
-**Qué hay que responder con este prototipo** — ordenado por importancia:
-
-1. ¿El niño **entiende** solo, sin instrucciones, cómo se corta?
-   *Si no, el gesto está mal elegido y hay que rediseñarlo.*
-2. ¿**Sonríe** cuando acierta?
-   *Si no, falta algo en el feedback. La matemática no basta por sí sola.*
-3. ¿**Quiere probar otro denominador** por curiosidad, o se aburre?
-   *Si se aburre con 1/2, 1/3, 1/4, 1/5 el juego completo no funcionará.*
-4. ¿Cuando falla, **se rinde** o **reintenta**?
-   *Si se rinde, el fallo está mal presentado. El mensaje amable no basta —
-   la estética también debe acompañar.*
-5. ¿Hace una **estrategia distinta** con 1/5 que con 1/2?
-   *Si no, no está aprendiendo — está pulsando. Revisar.*
-
-### Protocolo sugerido
-
-- 5-10 niños de 9 a 12 años.
-- Sesiones individuales de 15 minutos máximo.
-- No enseñar a usarlo — entregar el móvil y observar.
-- Permitido: preguntarles al final qué esperaban que pasara.
-- **Prohibido**: animar o felicitar durante la sesión (distorsiona).
-
-### Criterios de éxito del prototipo
-
-- ≥ 80% de los niños descubren el gesto en menos de 30 segundos.
-- ≥ 70% **sonríen** espontáneamente al menos una vez.
-- ≥ 60% prueban con un denominador mayor sin invitación.
-- Ningún niño se frustra visiblemente (llanto, silencio largo, dejar el móvil).
-
-Si se cumplen, se sigue al siguiente prototipo (Familia C o narrativa).
-Si no se cumplen, se rediseña el gesto antes de construir nada encima.
+> Nota: Flutter no está en PATH del sistema — exportar con `export PATH="$HOME/flutter/bin:$PATH"`.
+> Build Android requiere Java 17.
 
 ## Licencia
 
-AGPL-3.0 (decisión en `docs/03-arquitectura-tecnica.md` §13).
+Código: **AGPL-3.0**. Contenido: **CC-BY-SA 4.0**.
