@@ -1,3 +1,4 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,6 +10,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle FR.08: el niño ve tres fracciones y elige el ordenamiento
 /// correcto de menor a mayor entre cuatro candidatos. Distractores:
@@ -86,6 +89,8 @@ class _PantallaOrdenarFraccionesState extends State<PantallaOrdenarFracciones>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.ordenarFracciones);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -195,6 +200,7 @@ class _PantallaOrdenarFraccionesState extends State<PantallaOrdenarFracciones>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.ordenarFracciones),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

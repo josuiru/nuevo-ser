@@ -1,0 +1,104 @@
+name: solera_apicola
+description: "Solera Apícola — gestor para apicultores profesionales y semi-pro. Censo de colmenas con matrícula, libro oficial REGA, gestión de varroa, identificación IA."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Mapa
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.4.0
+
+  # GPS y permisos
+  geolocator: 12.0.0
+  permission_handler: ^11.3.1
+
+  # Cámara y archivos (transitivos vía nuevo_ser_core; explícitos
+  # porque los call-sites de la app los consumen).
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Almacenamiento local
+  sqflite: ^2.3.3
+  shared_preferences: ^2.3.2
+
+  # HTTP (cliente Anthropic)
+  http: ^1.2.2
+
+  # Caché de imágenes
+  cached_network_image: ^3.4.1
+
+  # Compartir y exportar
+  share_plus: ^10.0.2
+  archive: ^3.6.1
+
+  # Utilidades
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+  crypto: ^3.0.7
+
+  # Selector de ficheros (backup/restore)
+  file_picker: ^8.1.4
+
+  # Generación de PDF (libro REGA + informes). `pdf` viene transitivo
+  # via nuevo_ser_core; `printing` se queda en la app porque lanza el
+  # visor del SO.
+  pdf: ^3.11.1
+  printing: ^5.13.4
+
+  # Plataforma compartida del monorepo
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # Generador de iconos Android (mipmap-*) e iOS a partir del PNG fuente.
+  # Sólo se invoca con `dart run flutter_launcher_icons` cuando cambia
+  # el logo — no es runtime dep.
+  flutter_launcher_icons: ^0.14.1
+  # Generador de splash screen Android (incluye Android 12+) e iOS.
+  # Se invoca con `dart run flutter_native_splash:create` cuando cambia
+  # el logo o el color de fondo — no es runtime dep.
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icono-logo-apicultura.png
+
+# Configuración del generador de iconos del lanzador.
+# Regenerar tras cambiar el PNG con:
+#   cd apps/solera-apicola && dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icono-logo-apicultura.png"
+  min_sdk_android: 21
+  # Adaptive icon (Android 8+). El fondo es la crema panal que ya
+  # viene en el PNG; lo replicamos en background_color para que el
+  # foreground (los hexágonos) quede centrado en cualquier máscara.
+  adaptive_icon_background: "#FAF6E8"
+  adaptive_icon_foreground: "assets/icono-logo-apicultura.png"
+
+# Configuración del splash screen — pantalla de arranque.
+# Regenerar tras cambiar el PNG o el color con:
+#   cd apps/solera-apicola && dart run flutter_native_splash:create
+# Crema panal (`#FAF6E8`) en fondo + logo apícola centrado.
+flutter_native_splash:
+  color: "#FAF6E8"
+  image: assets/icono-logo-apicultura.png
+  android: true
+  ios: false
+  android_12:
+    color: "#FAF6E8"
+    image: assets/icono-logo-apicultura.png

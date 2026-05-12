@@ -24,6 +24,30 @@ dependencies:
   archive: ^3.6.1
   crypto: ^3.0.5
 
+  # Usados por src/foto/gestor_fotos.dart — captura de fotos desde
+  # cámara/galería y persistencia bajo el directorio de documentos
+  # de la app. Consumido por la suite Solera (agro, viticultura,
+  # apícola, arbolado urbano) y por uno-roto (avatares).
+  image_picker: ^1.1.2
+  path: ^1.9.0
+  path_provider: ^2.1.4
+
+  # Home screen shortcuts (Android/iOS) para "Nuevo hallazgo" sin abrir la app
+  quick_actions: ^1.1.0
+
+  # Usado por src/pdf/ — plantillas reutilizables de informes
+  # periódicos (cabecera + bullets resumen + tablas + paginación)
+  # consumidas por la suite Solera para sus PDFs de campaña, libro
+  # oficial de tratamientos PAC, libro REGA apícola, etc.
+  # `printing` se queda en cada app (lanza el visor del SO).
+  pdf: ^3.11.1
+
+  # Constraint laxo: cada app del monorepo pinea su propia versión
+  # de intl (uno-roto y el-cuaderno usan 0.20.x via flutter_localizations,
+  # agro usa 0.19.x). El core sólo usa `DateFormat(...).format(date)`,
+  # API estable desde 0.18, así que aceptamos ambas familias.
+  intl: any
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

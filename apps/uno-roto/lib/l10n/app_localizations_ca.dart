@@ -952,4 +952,21 @@ class AppLocalizationsCa extends AppLocalizations {
   String sonidoDescargaInstalando(int actual, int total) {
     return 'Instal·lant $actual / $total';
   }
+
+  @override
+  String get cuentaErrorCamposAnadirNino =>
+      'Posa el correu, la contrasenya i el nom de l\'infant.';
+
+  @override
+  String get cuentaAnadirNinoTitulo => 'AFEGIR INFANT';
+
+  @override
+  String get cuentaAnadirNinoTagline =>
+      'Posa el correu i la contrasenya del tutor que ja té compte. Afegirem aquest infant sota el mateix compte.';
+
+  @override
+  String get cuentaAnadirNinoBoton => 'AFEGIR INFANT';
+
+  @override
+  String get cuentaAnadirNinoBotonEnviando => 'AFEGINT…';
 }

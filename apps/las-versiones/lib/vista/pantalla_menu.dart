@@ -106,6 +106,14 @@ class PantallaMenu extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Image.asset(
+                'assets/marca/las_versiones_logo.png',
+                height: 140,
+                fit: BoxFit.contain,
+              ),
+            ),
             const _Encabezado(texto: 'MI ARCHIVO'),
             _FilaMenu(
               icono: Icons.menu_book_outlined,

@@ -6,6 +6,8 @@ import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../dominio/mosaico_arco_1.dart';
 import '../dominio/mosaico_arco_2.dart';
+import '../dominio/mosaico_arco_3.dart';
+import '../dominio/mosaico_arco_4.dart';
 import 'repositorio_mosaico.dart';
 
 /// `game_id` con el que el backend identifica a Las Versiones (sembrado
@@ -30,6 +32,25 @@ const String formatoMosaicoV2 = 'comic_8_vinetas_confianza';
 /// cuidador, futura) puede distinguir el formato para presentar la
 /// vista correspondiente.
 const String formatoAudioGuiaArco2 = 'audio_guia_arco_2';
+
+/// `format` del Mosaico del Arco 3 — ficha de museo con cartela
+/// honestísima de 6 líneas (procedencia, datación, lengua, función
+/// original, reutilización, lo que la piedra dice). Cada línea
+/// lleva en su texto el nivel de confianza que le corresponde
+/// (Probable, Disputada, Sólido), no en marcas separadas. Tercer
+/// formato distinto en el MVP — los tres Mosaicos son notas
+/// epistémicas con materialidad propia y el adulto puede leer
+/// cuál es cuál a partir del campo `format`.
+const String formatoFichaMuseoArco3 = 'ficha_museo_arco_3';
+
+/// `format` del Mosaico del Arco 4 — proyecto integrador final del
+/// MVP en formato **doble cartela paralela** de 12 líneas en total
+/// (6 por cada una de las dos piezas, una prehistórica muda y una
+/// romana elocuente). Cuarto formato distinto en el MVP — el cuarto
+/// Mosaico cierra el recorrido material del juego con el formato más
+/// elaborado, y el adulto puede distinguirlo a partir del campo
+/// `format`.
+const String formatoDobleCartelaArco4 = 'doble_cartela_arco_4';
 
 /// Resultado de un intento de sincronización del Mosaico. La pantalla
 /// puede usar esta información para enseñar al jugador qué pasó (sin
@@ -241,4 +262,68 @@ class SincronizadorMosaicoArco2 extends SincronizadorMosaicoBase {
         for (final fragmento in MosaicoArco2.fragmentos)
           if (fragmento.esAnclajeObligatorio) fragmento.id,
       ];
+}
+
+/// Sube el Mosaico del Arco 3 (ficha de museo de 6 líneas) al
+/// endpoint `POST /companion/mosaicos`. Hereda el flujo de
+/// [SincronizadorMosaicoBase]; sólo aporta la fuente concreta de
+/// datos (`MosaicoArco3.cartela`).
+///
+/// **Anclaje en el M3 vs M1/M2**: las líneas de la cartela del M3
+/// no tienen anclaje a fuentes catalogadas — la pieza elegida es
+/// **anónima y no documentada por nombre en archivo** (doc 09 §M3).
+/// La cartela se sostiene en la observación directa de la piedra y
+/// en el marco interpretativo del arco. Por tanto
+/// `idsPiezasConAnclajeObligatorio` devuelve lista vacía y
+/// `fulfilledAnchors` lleva las líneas leídas, no las ancladas a
+/// una fuente.
+class SincronizadorMosaicoArco3 extends SincronizadorMosaicoBase {
+  SincronizadorMosaicoArco3({
+    required super.repoCuenta,
+    required super.repoMosaico,
+    required super.clienteCompanion,
+    super.gameId = gameIdLasVersiones,
+    super.formato = formatoFichaMuseoArco3,
+  });
+
+  @override
+  String get idArco => MosaicoArco3.idArco;
+
+  @override
+  String get titulo => MosaicoArco3.titulo;
+
+  @override
+  List<String> get idsPiezasConAnclajeObligatorio => const [];
+}
+
+/// Sube el Mosaico del Arco 4 (doble cartela paralela de 12 líneas)
+/// al endpoint `POST /companion/mosaicos`. Hereda el flujo de
+/// [SincronizadorMosaicoBase]; sólo aporta la fuente concreta de
+/// datos (las dos cartelas de `MosaicoArco4`) y los defaults del
+/// formato.
+///
+/// **Anclaje en el M4 vs M1/M2/M3**: como el M3, el M4 no requiere
+/// anclaje a fuentes catalogadas — la doble cartela es voz
+/// museográfica de la Cronista articulando dos piezas concretas que
+/// ha trabajado a lo largo del MVP, no compone un dossier nuevo. Por
+/// tanto `idsPiezasConAnclajeObligatorio` devuelve lista vacía y
+/// `fulfilledAnchors` lleva las líneas leídas, no las ancladas a una
+/// fuente.
+class SincronizadorMosaicoArco4 extends SincronizadorMosaicoBase {
+  SincronizadorMosaicoArco4({
+    required super.repoCuenta,
+    required super.repoMosaico,
+    required super.clienteCompanion,
+    super.gameId = gameIdLasVersiones,
+    super.formato = formatoDobleCartelaArco4,
+  });
+
+  @override
+  String get idArco => MosaicoArco4.idArco;
+
+  @override
+  String get titulo => MosaicoArco4.titulo;
+
+  @override
+  List<String> get idsPiezasConAnclajeObligatorio => const [];
 }

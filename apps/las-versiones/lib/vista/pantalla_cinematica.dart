@@ -71,24 +71,52 @@ class _PantallaCinematicaState extends State<PantallaCinematica> {
   /// segundo, ritmo cómodo de lectura para el público objetivo.
   static const Duration _intervaloReveal = Duration(milliseconds: 25);
 
+  /// Tiempo que la cinemática debe estar abierta antes de mostrar el
+  /// botón "SALTAR ESCENA". Niños del público objetivo (10-14 años)
+  /// necesitan poder escapar de cinemáticas largas sin pelearse con
+  /// el tap-skip plano a plano. 8 segundos da tiempo a leer el primer
+  /// plano de contexto pero corta antes de que la sensación de
+  /// "página interminable" se consolide.
+  static const Duration _retardoBotonSaltar = Duration(seconds: 8);
+
   int _indicePlano = 0;
   _Fase _fase = _Fase.pausaPrevia;
   int _caracteresRevelados = 0;
   Timer? _temporizadorReveal;
   Timer? _temporizadorPlanoAmbiente;
+  Timer? _temporizadorBotonSaltar;
+  bool _botonSaltarVisible = false;
 
   PlanoEscena get _planoActual => widget.escena.planos[_indicePlano];
+
+  /// `true` si el botón SALTAR ESCENA debe estar visible y operable.
+  /// No aparece durante un `PlanoEleccion` — la elección es agencia
+  /// del jugador y no debe poder esquivarse con el botón. Tampoco se
+  /// muestra sobre `PlanoCierreAmable` porque ese ya es el botón
+  /// natural de salida.
+  bool get _puedeSaltar {
+    if (!_botonSaltarVisible) return false;
+    final plano = _planoActual;
+    if (plano is PlanoEleccion) return false;
+    if (plano is PlanoCierreAmable) return false;
+    return true;
+  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _iniciarPlanoActual());
+    _temporizadorBotonSaltar = Timer(_retardoBotonSaltar, () {
+      if (!mounted) return;
+      setState(() => _botonSaltarVisible = true);
+    });
   }
 
   @override
   void dispose() {
     _temporizadorReveal?.cancel();
     _temporizadorPlanoAmbiente?.cancel();
+    _temporizadorBotonSaltar?.cancel();
     super.dispose();
   }
 
@@ -226,8 +254,42 @@ class _PantallaCinematicaState extends State<PantallaCinematica> {
     _iniciarPlanoActual();
   }
 
+  /// Salta hasta el siguiente `PlanoEleccion` o al final de la
+  /// escena. Si la cinemática no contiene más elecciones por delante,
+  /// se cierra entera (igual que el último tap del último plano —
+  /// dispara `alTerminar` que activa el `flagDeSalida` y los flags de
+  /// cierre institucionales). Si quedan elecciones por delante, se
+  /// detiene en la primera para que el jugador decida — el motivo
+  /// que la elección encarna no se puede saltar (por ejemplo, la
+  /// pregunta nuclear de Begoña en 1.0.1 *"¿por qué estás aquí?"*).
+  void _saltarHastaSiguienteEleccionOFinal() {
+    if (!_puedeSaltar) return;
+    HapticFeedback.selectionClick();
+    _temporizadorReveal?.cancel();
+    _temporizadorPlanoAmbiente?.cancel();
+    final planos = widget.escena.planos;
+    var indice = _indicePlano + 1;
+    while (indice < planos.length) {
+      if (planos[indice] is PlanoEleccion) break;
+      indice++;
+    }
+    if (indice >= planos.length) {
+      widget.alTerminar();
+      return;
+    }
+    setState(() {
+      _indicePlano = indice;
+      _caracteresRevelados = 0;
+      _fase = _Fase.pausaPrevia;
+    });
+    _iniciarPlanoActual();
+  }
+
   @override
   Widget build(BuildContext contexto) {
+    final totalPlanos = widget.escena.planos.length;
+    final fraccion =
+        totalPlanos == 0 ? 0.0 : (_indicePlano + 1) / totalPlanos;
     return Scaffold(
       backgroundColor: PaletaArchivo.fondoProfundo,
       body: GestureDetector(
@@ -239,6 +301,29 @@ class _PantallaCinematicaState extends State<PantallaCinematica> {
               child: FondoAmbiente(ambiente: widget.escena.ambiente),
             ),
             SafeArea(child: _construirContenidoDePlano()),
+            // Barra de progreso de la cinemática — discreta, en la
+            // parte superior. Anticipa la duración para que el niño
+            // no sienta que el flujo es interminable.
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                bottom: false,
+                child: SizedBox(
+                  height: 2,
+                  child: LinearProgressIndicator(
+                    value: fraccion,
+                    minHeight: 2,
+                    backgroundColor:
+                        PaletaArchivo.ambarLacre.withOpacity(0.12),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      PaletaArchivo.ambarLacre.withOpacity(0.55),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             if (widget.alAbrirMenu != null)
               Positioned(
                 top: 4,
@@ -255,6 +340,49 @@ class _PantallaCinematicaState extends State<PantallaCinematica> {
                   ),
                 ),
               ),
+            // Botón SALTAR ESCENA — abajo a la izquierda, fuera del
+            // área principal de tap-para-avanzar. Tras 8 segundos se
+            // hace fade-in. Oculto durante PlanoEleccion (la decisión
+            // necesita agencia) y durante PlanoCierreAmable (el
+            // cierre amable ya es el botón natural).
+            Positioned(
+              bottom: 12,
+              left: 12,
+              child: SafeArea(
+                child: IgnorePointer(
+                  ignoring: !_puedeSaltar,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 600),
+                    opacity: _puedeSaltar ? 0.85 : 0.0,
+                    child: TextButton.icon(
+                      onPressed: _saltarHastaSiguienteEleccionOFinal,
+                      style: TextButton.styleFrom(
+                        foregroundColor: PaletaArchivo.ambarLacre,
+                        backgroundColor:
+                            PaletaArchivo.fondoMedio.withOpacity(0.75),
+                        side: BorderSide(
+                          color:
+                              PaletaArchivo.ambarLacre.withOpacity(0.55),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                      ),
+                      icon: const Icon(Icons.fast_forward, size: 16),
+                      label: const Text(
+                        'SALTAR',
+                        style: TextStyle(
+                          fontSize: 11,
+                          letterSpacing: 2.4,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

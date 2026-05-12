@@ -1,0 +1,86 @@
+name: solera_quesera
+description: "Solera Quesera — gestor para queserías artesanales. Trazabilidad de leche a queso, gestión de afinado por pieza, libro oficial de trazabilidad APPCC, cumplimiento de DO, identificación IA de defectos."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Mapa
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.4.0
+
+  # GPS y permisos
+  geolocator: 12.0.0
+  permission_handler: ^11.3.1
+
+  # Cámara y archivos
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Almacenamiento local
+  sqflite: ^2.3.3
+  shared_preferences: ^2.3.2
+
+  # HTTP
+  http: ^1.2.2
+
+  # Caché de imágenes
+  cached_network_image: ^3.4.1
+
+  # Compartir y exportar
+  share_plus: ^10.0.2
+  archive: ^3.6.1
+
+  # Utilidades
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+  crypto: ^3.0.7
+
+  # Selector de ficheros (backup/restore, importar CSV)
+  file_picker: ^8.1.4
+
+  # Generación de PDF
+  pdf: ^3.11.1
+  printing: ^5.13.4
+
+  # Plataforma compartida del monorepo
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icono-logo-quesera.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icono-logo-quesera.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FDF6E8"
+  adaptive_icon_foreground: "assets/icono-logo-quesera.png"
+
+# Fondo crema leche + logo queso/Q equilibrado centrado.
+flutter_native_splash:
+  color: "#FDF6E8"
+  image: assets/icono-logo-quesera.png
+  android: true
+  ios: false
+  android_12:
+    color: "#FDF6E8"
+    image: assets/icono-logo-quesera.png

@@ -85,6 +85,36 @@ final class NS_Profile_Config {
 			20
 		);
 	}
+
+	/**
+	 * Configuración por defecto del perfil P2 (detección F1). Los
+	 * umbrales se reinterpretan como F1 en lugar de precisión simple.
+	 * Espejo de `ProfileConfig.defaultP2` del Dart.
+	 */
+	public static function default_p2(): self {
+		return new self(
+			0.85, 0.70, 0.40,
+			20, 5, 3,
+			0.70,
+			4,
+			20
+		);
+	}
+
+	/**
+	 * Configuración por defecto del perfil P3 (rúbrica compuesta). Los
+	 * umbrales se reinterpretan como puntuación rúbrica.
+	 * Espejo de `ProfileConfig.defaultP3` del Dart.
+	 */
+	public static function default_p3(): self {
+		return new self(
+			0.85, 0.70, 0.40,
+			12, 4, 2,
+			0.70,
+			4,
+			12
+		);
+	}
 }
 
 interface NS_Mastery_Profile {
@@ -182,6 +212,16 @@ final class NS_P1_Precision implements NS_Mastery_Profile {
 	}
 
 	private static function tiempo_mediano( array $intentos ): float {
+		return self::tiempo_mediano_publico( $intentos );
+	}
+
+	/**
+	 * Helper público para que los perfiles P2/P3 reusen el cálculo de
+	 * tiempo mediano sin duplicarlo. Se mantiene también el método
+	 * privado por simetría con el código previo y para no exponer un
+	 * nombre _publico en el contrato si en el futuro pasa a interna.
+	 */
+	public static function tiempo_mediano_publico( array $intentos ): float {
 		if ( empty( $intentos ) ) {
 			return 0.0;
 		}
@@ -232,18 +272,278 @@ abstract class NS_Mastery_Profile_Stub implements NS_Mastery_Profile {
 	}
 }
 
-final class NS_P2_Detection extends NS_Mastery_Profile_Stub {
-	public function __construct() {
-		parent::__construct( 'P2Detection pendiente — espejo del UnimplementedError Dart.' );
+/**
+ * Perfil P2 — detección binaria con métrica F1. Espejo de
+ * `P2Detection` del Dart. Cada intento reciente lleva
+ * `senalEsperada` (clase real) y `clasePredicha` (lo que dijo la
+ * persona) en `ir[].se`/`ir[].cp`; F1 se calcula sobre los pares
+ * presentes ponderados por dificultad. Los intentos sin pareja se
+ * ignoran (defensivo) pero se registran.
+ */
+final class NS_P2_Detection implements NS_Mastery_Profile {
+	public function id(): string {
+		return NS_MASTERY_ID_PERFIL_P2;
 	}
-	public function id(): string { return NS_MASTERY_ID_PERFIL_P2; }
+
+	public function compute( array $payload, array $previo, NS_Profile_Config $config ): array {
+		$dificultad = (float) $payload['dificultad'];
+		assert( $dificultad >= 0.5 && $dificultad <= 2.0 );
+
+		$intento_nuevo = array(
+			't' => $payload['instante'],
+			'a' => (bool) $payload['acierto'],
+			'd' => $dificultad,
+			's' => (int) $payload['duracionSegundos'],
+		);
+		if ( array_key_exists( 'senalEsperada', $payload ) && null !== $payload['senalEsperada'] ) {
+			$intento_nuevo['se'] = (bool) $payload['senalEsperada'];
+		}
+		if ( array_key_exists( 'clasePredicha', $payload ) && null !== $payload['clasePredicha'] ) {
+			$intento_nuevo['cp'] = (bool) $payload['clasePredicha'];
+		}
+
+		$intentos   = $previo['ir'];
+		$intentos[] = $intento_nuevo;
+		if ( count( $intentos ) > $config->max_intentos_recientes ) {
+			$intentos = array_slice(
+				$intentos,
+				count( $intentos ) - $config->max_intentos_recientes
+			);
+		}
+
+		$f1                    = self::f1_score( $intentos );
+		$tiempo_mediano        = NS_P1_Precision::tiempo_mediano_publico( $intentos );
+		$total_exposiciones    = (int) $previo['te'] + 1;
+		$sesiones_consecutivas = self::actualizar_sesiones_consecutivas(
+			$previo,
+			$payload['instante'],
+			$f1,
+			$config
+		);
+
+		return array(
+			'precision'                  => $f1,
+			'tiempoMedianoSeg'           => $tiempo_mediano,
+			'sesionesConsecutivasBuenas' => $sesiones_consecutivas,
+			'totalExposiciones'          => $total_exposiciones,
+			'intentosRecientes'          => $intentos,
+		);
+	}
+
+	public function level_from_score( array $score, NS_Profile_Config $config, int $nivel_previo ): int {
+		if (
+			$score['precision'] >= $config->umbral_precision_maestria &&
+			$score['totalExposiciones'] >= $config->exposiciones_min_maestria &&
+			$score['sesionesConsecutivasBuenas'] >= $config->sesiones_consecutivas_min_maestria
+		) {
+			return NS_Nivel_Maestria::MAESTRIA;
+		}
+		if (
+			$score['precision'] >= $config->umbral_precision_competente &&
+			$score['sesionesConsecutivasBuenas'] >= $config->sesiones_consecutivas_min_competente
+		) {
+			return NS_Nivel_Maestria::COMPETENTE;
+		}
+		if ( $score['precision'] >= $config->umbral_precision_en_desarrollo ) {
+			return NS_Nivel_Maestria::EN_DESARROLLO;
+		}
+		if ( $score['totalExposiciones'] > 0 ) {
+			return NS_Nivel_Maestria::INTRODUCIDA;
+		}
+		return NS_Nivel_Maestria::INEXPLORADA;
+	}
+
+	private static function f1_score( array $intentos ): float {
+		$tp = 0.0;
+		$fp = 0.0;
+		$fn = 0.0;
+		foreach ( $intentos as $intento ) {
+			if ( ! array_key_exists( 'se', $intento ) || ! array_key_exists( 'cp', $intento ) ) {
+				continue;
+			}
+			$senal = (bool) $intento['se'];
+			$clase = (bool) $intento['cp'];
+			$peso  = (float) $intento['d'];
+			if ( $senal && $clase ) {
+				$tp += $peso;
+			} elseif ( ! $senal && $clase ) {
+				$fp += $peso;
+			} elseif ( $senal && ! $clase ) {
+				$fn += $peso;
+			}
+		}
+		if ( $tp <= 0 ) {
+			return 0.0;
+		}
+		$precision = $tp / ( $tp + $fp );
+		$recall    = $tp / ( $tp + $fn );
+		if ( $precision + $recall <= 0 ) {
+			return 0.0;
+		}
+		return 2 * $precision * $recall / ( $precision + $recall );
+	}
+
+	private static function actualizar_sesiones_consecutivas(
+		array $previo,
+		string $ahora_iso,
+		float $f1_actual,
+		NS_Profile_Config $config
+	): int {
+		$ahora     = new DateTimeImmutable( $ahora_iso );
+		$ultima    = new DateTimeImmutable( $previo['up'] );
+		$gap_seg   = $ahora->getTimestamp() - $ultima->getTimestamp();
+		$gap_horas = intdiv( $gap_seg, 3600 );
+		$es_nueva  = $gap_horas >= $config->gap_horas_nueva_sesion;
+		if ( ! $es_nueva ) {
+			return (int) $previo['scb'];
+		}
+		if ( $f1_actual >= $config->precision_min_sesion_buena ) {
+			return (int) $previo['scb'] + 1;
+		}
+		return 0;
+	}
 }
 
-final class NS_P3_Construction extends NS_Mastery_Profile_Stub {
-	public function __construct() {
-		parent::__construct( 'P3Construction pendiente — espejo del UnimplementedError Dart.' );
+/**
+ * Perfil P3 — rúbrica compuesta de cuatro componentes. Espejo de
+ * `P3Construction` del Dart. Pesos canónicos del doc 02 §6.1
+ * (anclaje 0.35 + calibración 0.25 + completud 0.25 + falacias 0.15).
+ * Cada intento lleva los componentes en `ir[].cr.{a,c,p,f}` (cada uno
+ * 0..1, clipeado defensivamente).
+ */
+final class NS_P3_Construction implements NS_Mastery_Profile {
+	const PESO_ANCLAJE            = 0.35;
+	const PESO_CALIBRACION        = 0.25;
+	const PESO_COMPLETUD          = 0.25;
+	const PESO_AUSENCIA_FALACIAS  = 0.15;
+
+	public function id(): string {
+		return NS_MASTERY_ID_PERFIL_P3;
 	}
-	public function id(): string { return NS_MASTERY_ID_PERFIL_P3; }
+
+	public function compute( array $payload, array $previo, NS_Profile_Config $config ): array {
+		$dificultad = (float) $payload['dificultad'];
+		assert( $dificultad >= 0.5 && $dificultad <= 2.0 );
+
+		$intento_nuevo = array(
+			't' => $payload['instante'],
+			'a' => (bool) $payload['acierto'],
+			'd' => $dificultad,
+			's' => (int) $payload['duracionSegundos'],
+		);
+		if ( array_key_exists( 'componentesRubrica', $payload ) && null !== $payload['componentesRubrica'] ) {
+			$intento_nuevo['cr'] = $payload['componentesRubrica'];
+		}
+
+		$intentos   = $previo['ir'];
+		$intentos[] = $intento_nuevo;
+		if ( count( $intentos ) > $config->max_intentos_recientes ) {
+			$intentos = array_slice(
+				$intentos,
+				count( $intentos ) - $config->max_intentos_recientes
+			);
+		}
+
+		$puntuacion            = self::puntuacion_rubrica_ponderada( $intentos );
+		$tiempo_mediano        = NS_P1_Precision::tiempo_mediano_publico( $intentos );
+		$total_exposiciones    = (int) $previo['te'] + 1;
+		$sesiones_consecutivas = self::actualizar_sesiones_consecutivas(
+			$previo,
+			$payload['instante'],
+			$puntuacion,
+			$config
+		);
+
+		return array(
+			'precision'                  => $puntuacion,
+			'tiempoMedianoSeg'           => $tiempo_mediano,
+			'sesionesConsecutivasBuenas' => $sesiones_consecutivas,
+			'totalExposiciones'          => $total_exposiciones,
+			'intentosRecientes'          => $intentos,
+		);
+	}
+
+	public function level_from_score( array $score, NS_Profile_Config $config, int $nivel_previo ): int {
+		if (
+			$score['precision'] >= $config->umbral_precision_maestria &&
+			$score['totalExposiciones'] >= $config->exposiciones_min_maestria &&
+			$score['sesionesConsecutivasBuenas'] >= $config->sesiones_consecutivas_min_maestria
+		) {
+			return NS_Nivel_Maestria::MAESTRIA;
+		}
+		if (
+			$score['precision'] >= $config->umbral_precision_competente &&
+			$score['sesionesConsecutivasBuenas'] >= $config->sesiones_consecutivas_min_competente
+		) {
+			return NS_Nivel_Maestria::COMPETENTE;
+		}
+		if ( $score['precision'] >= $config->umbral_precision_en_desarrollo ) {
+			return NS_Nivel_Maestria::EN_DESARROLLO;
+		}
+		if ( $score['totalExposiciones'] > 0 ) {
+			return NS_Nivel_Maestria::INTRODUCIDA;
+		}
+		return NS_Nivel_Maestria::INEXPLORADA;
+	}
+
+	private static function puntuacion_rubrica_ponderada( array $intentos ): float {
+		$numerador   = 0.0;
+		$denominador = 0.0;
+		foreach ( $intentos as $intento ) {
+			if ( ! array_key_exists( 'cr', $intento ) || ! is_array( $intento['cr'] ) ) {
+				continue;
+			}
+			$puntuacion   = self::puntuacion_por_intento( $intento['cr'] );
+			$dificultad   = (float) $intento['d'];
+			$numerador   += $puntuacion * $dificultad;
+			$denominador += $dificultad;
+		}
+		if ( $denominador <= 0 ) {
+			return 0.0;
+		}
+		return $numerador / $denominador;
+	}
+
+	private static function puntuacion_por_intento( array $componentes ): float {
+		$a = self::clip_unitario( (float) ( $componentes['a'] ?? 0 ) );
+		$c = self::clip_unitario( (float) ( $componentes['c'] ?? 0 ) );
+		$p = self::clip_unitario( (float) ( $componentes['p'] ?? 0 ) );
+		$f = self::clip_unitario( (float) ( $componentes['f'] ?? 0 ) );
+		return $a * self::PESO_ANCLAJE
+			+ $c * self::PESO_CALIBRACION
+			+ $p * self::PESO_COMPLETUD
+			+ $f * self::PESO_AUSENCIA_FALACIAS;
+	}
+
+	private static function clip_unitario( float $valor ): float {
+		if ( $valor < 0 ) {
+			return 0.0;
+		}
+		if ( $valor > 1 ) {
+			return 1.0;
+		}
+		return $valor;
+	}
+
+	private static function actualizar_sesiones_consecutivas(
+		array $previo,
+		string $ahora_iso,
+		float $puntuacion_actual,
+		NS_Profile_Config $config
+	): int {
+		$ahora     = new DateTimeImmutable( $ahora_iso );
+		$ultima    = new DateTimeImmutable( $previo['up'] );
+		$gap_seg   = $ahora->getTimestamp() - $ultima->getTimestamp();
+		$gap_horas = intdiv( $gap_seg, 3600 );
+		$es_nueva  = $gap_horas >= $config->gap_horas_nueva_sesion;
+		if ( ! $es_nueva ) {
+			return (int) $previo['scb'];
+		}
+		if ( $puntuacion_actual >= $config->precision_min_sesion_buena ) {
+			return (int) $previo['scb'] + 1;
+		}
+		return 0;
+	}
 }
 
 final class NS_P4_Calibration extends NS_Mastery_Profile_Stub {

@@ -1,0 +1,135 @@
+{
+  "_doc": "Fixtures de paridad Dart/PHP para el motor adaptativo, perfil P2 (detección F1). Cada caso aplica `secuencia` sobre `estado_inicial` con `id_perfil='P2'` y `config=defaultP2`, y debe producir `esperado_final` (campos id/nv/pr/tm/up/scb/te coinciden bit a bit; `ir` se compara elemento a elemento incluyendo `se`/`cp`). Doc 02 §6.1 + nuevo-ser-core-arquitectura §6.2.",
+  "casos": [
+    {
+      "nombre": "TP único — F1 = 1.0; pasa a introducida (1 exposición, F1=1 cumple en_desarrollo pero hace falta sesión consecutiva buena para competente)",
+      "estado_inicial": {
+        "id": "HF.10",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 8, "instante": "2026-05-01T10:00:00.000", "senalEsperada": true, "clasePredicha": true }
+      ],
+      "esperado_final": {
+        "id": "HF.10",
+        "nv": 2, "pr": 1.0, "tm": 8.0,
+        "up": "2026-05-01T10:00:00.000",
+        "scb": 1, "te": 1,
+        "ir": [
+          { "t": "2026-05-01T10:00:00.000", "a": true, "d": 1.0, "s": 8, "se": true, "cp": true }
+        ]
+      }
+    },
+    {
+      "nombre": "TP+FP+TN+FN ponderados (dificultad uniforme 1.0) → F1 = 0.5 en_desarrollo",
+      "estado_inicial": {
+        "id": "HF.10",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true,  "dificultad": 1.0, "duracionSegundos": 5,  "instante": "2026-05-01T10:00:00.000", "senalEsperada": true,  "clasePredicha": true  },
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 7,  "instante": "2026-05-01T10:01:00.000", "senalEsperada": false, "clasePredicha": true  },
+        { "acierto": true,  "dificultad": 1.0, "duracionSegundos": 9,  "instante": "2026-05-01T10:02:00.000", "senalEsperada": false, "clasePredicha": false },
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 11, "instante": "2026-05-01T10:03:00.000", "senalEsperada": true,  "clasePredicha": false }
+      ],
+      "esperado_final": {
+        "id": "HF.10",
+        "nv": 2, "pr": 0.5, "tm": 8.0,
+        "up": "2026-05-01T10:03:00.000",
+        "scb": 1, "te": 4,
+        "ir": [
+          { "t": "2026-05-01T10:00:00.000", "a": true,  "d": 1.0, "s": 5,  "se": true,  "cp": true  },
+          { "t": "2026-05-01T10:01:00.000", "a": false, "d": 1.0, "s": 7,  "se": false, "cp": true  },
+          { "t": "2026-05-01T10:02:00.000", "a": true,  "d": 1.0, "s": 9,  "se": false, "cp": false },
+          { "t": "2026-05-01T10:03:00.000", "a": false, "d": 1.0, "s": 11, "se": true,  "cp": false }
+        ]
+      }
+    },
+    {
+      "nombre": "Sólo FN → TP=0 → F1=0 → introducida (no llega a en_desarrollo pero sí supera inexplorada por exposición)",
+      "estado_inicial": {
+        "id": "HF.10",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 12, "instante": "2026-05-01T10:00:00.000", "senalEsperada": true, "clasePredicha": false }
+      ],
+      "esperado_final": {
+        "id": "HF.10",
+        "nv": 1, "pr": 0.0, "tm": 12.0,
+        "up": "2026-05-01T10:00:00.000",
+        "scb": 0, "te": 1,
+        "ir": [
+          { "t": "2026-05-01T10:00:00.000", "a": false, "d": 1.0, "s": 12, "se": true, "cp": false }
+        ]
+      }
+    },
+    {
+      "nombre": "Maestría: 19 TP previos (4 sesiones consecutivas buenas) + un TP nuevo en sesión 5 → 20 exposiciones + 5 sesiones + F1=1.0",
+      "estado_inicial": {
+        "id": "HF.10",
+        "nv": 3, "pr": 1.0, "tm": 6.0,
+        "up": "2026-04-30T20:00:00.000",
+        "scb": 4, "te": 19,
+        "ir": [
+          { "t": "2026-04-30T19:30:00.000", "a": true, "d": 1.0, "s": 5, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:31:00.000", "a": true, "d": 1.0, "s": 5, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:32:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:33:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:34:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:35:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:36:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:37:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:38:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:39:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:40:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:41:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:42:00.000", "a": true, "d": 1.0, "s": 7, "se": false, "cp": false },
+          { "t": "2026-04-30T19:43:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:44:00.000", "a": true, "d": 1.0, "s": 7, "se": false, "cp": false },
+          { "t": "2026-04-30T19:45:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:46:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:47:00.000", "a": true, "d": 1.0, "s": 7, "se": false, "cp": false },
+          { "t": "2026-04-30T19:48:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  }
+        ]
+      },
+      "secuencia": [
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 7, "instante": "2026-05-01T10:00:00.000", "senalEsperada": true, "clasePredicha": true }
+      ],
+      "esperado_final": {
+        "id": "HF.10",
+        "nv": 4, "pr": 1.0, "tm": 6.0,
+        "up": "2026-05-01T10:00:00.000",
+        "scb": 5, "te": 20,
+        "ir": [
+          { "t": "2026-04-30T19:30:00.000", "a": true, "d": 1.0, "s": 5, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:31:00.000", "a": true, "d": 1.0, "s": 5, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:32:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:33:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:34:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:35:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:36:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:37:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:38:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:39:00.000", "a": true, "d": 1.0, "s": 6, "se": false, "cp": false },
+          { "t": "2026-04-30T19:40:00.000", "a": true, "d": 1.0, "s": 6, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:41:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:42:00.000", "a": true, "d": 1.0, "s": 7, "se": false, "cp": false },
+          { "t": "2026-04-30T19:43:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:44:00.000", "a": true, "d": 1.0, "s": 7, "se": false, "cp": false },
+          { "t": "2026-04-30T19:45:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:46:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-04-30T19:47:00.000", "a": true, "d": 1.0, "s": 7, "se": false, "cp": false },
+          { "t": "2026-04-30T19:48:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  },
+          { "t": "2026-05-01T10:00:00.000", "a": true, "d": 1.0, "s": 7, "se": true,  "cp": true  }
+        ]
+      }
+    }
+  ]
+}

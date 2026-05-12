@@ -1779,6 +1779,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Instalando {actual} / {total}'**
   String sonidoDescargaInstalando(int actual, int total);
+
+  /// No description provided for @cuentaErrorCamposAnadirNino.
+  ///
+  /// In es, this message translates to:
+  /// **'Pon el email, la contraseña y el nombre del niño.'**
+  String get cuentaErrorCamposAnadirNino;
+
+  /// No description provided for @cuentaAnadirNinoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'AÑADIR NIÑO'**
+  String get cuentaAnadirNinoTitulo;
+
+  /// No description provided for @cuentaAnadirNinoTagline.
+  ///
+  /// In es, this message translates to:
+  /// **'Mete el email y la contraseña del tutor que ya tiene cuenta. Añadiremos a este niño bajo esa misma cuenta.'**
+  String get cuentaAnadirNinoTagline;
+
+  /// No description provided for @cuentaAnadirNinoBoton.
+  ///
+  /// In es, this message translates to:
+  /// **'AÑADIR NIÑO'**
+  String get cuentaAnadirNinoBoton;
+
+  /// No description provided for @cuentaAnadirNinoBotonEnviando.
+  ///
+  /// In es, this message translates to:
+  /// **'AÑADIENDO…'**
+  String get cuentaAnadirNinoBotonEnviando;
 }
 
 class _AppLocalizationsDelegate

@@ -1,7 +1,9 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_simetria.dart';
@@ -11,6 +13,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle GEO.07: el niño ve una figura con un eje (vertical u
 /// horizontal) sobreimpreso, y decide si la figura es simétrica
@@ -76,6 +80,14 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
     if (_problema.esCorrecta(valor)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      final txt = valor ? 'sí' : 'no';
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: txt,
+        respuestaCorrecta: txt,
+        preguntaTexto: '¿la figura es simétrica?',
+        opciones: ['sí', 'no'],
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -84,6 +96,8 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.simetria);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() {
@@ -215,6 +229,7 @@ class _PantallaSimetriaState extends State<PantallaSimetria>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.simetria),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto).demoPuzzleTocaSiNo,

@@ -6,10 +6,17 @@ import 'package:las_versiones/vista/pantalla_esqueleto.dart';
 void main() {
   group('PantallaEsqueleto', () {
     testWidgets(
-      'sin callback de menú — sólo título y nota; ningún engranaje',
+      'sin callback de menú — logo + nota visibles; ningún engranaje',
       (tester) async {
         await tester.pumpWidget(const MaterialApp(home: PantallaEsqueleto()));
-        expect(find.text('LAS VERSIONES'), findsOneWidget);
+        final logo = find.byWidgetPredicate((widget) =>
+            widget is Image &&
+            widget.image is AssetImage &&
+            (widget.image as AssetImage).assetName ==
+                'assets/marca/las_versiones_logo.png');
+        expect(logo, findsOneWidget);
+        expect(find.text('El Archivo abre sus puertas pronto.'),
+            findsOneWidget);
         expect(find.byIcon(Icons.settings_outlined), findsNothing);
       },
     );

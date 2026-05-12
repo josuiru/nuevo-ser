@@ -1,5 +1,7 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_redondeo_decimal.dart';
@@ -9,6 +11,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle DEC.09: el niño ve un decimal con dos cifras (2,37) y elige
 /// su redondeo a la décima entre cuatro candidatos. Las trampas son
@@ -76,6 +80,13 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
     if (_problema.esCorrecta(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '${_problema.candidatos[indice]}',
+        respuestaCorrecta: '${_problema.candidatos[_problema.indiceCorrecto]}',
+        preguntaTexto: 'elige la opción correcta',
+        opciones: _problema.candidatos.map((c) => '$c').toList(),
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -84,6 +95,8 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.redondeoDecimal);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -197,6 +210,7 @@ class _PantallaRedondeoDecimalState extends State<PantallaRedondeoDecimal>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.redondeoDecimal),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

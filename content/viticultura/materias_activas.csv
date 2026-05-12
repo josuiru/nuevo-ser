@@ -1,0 +1,38 @@
+# DATOS PROVISIONALES SIN VALIDAR AGRONÓMICAMENTE
+# Fuente: bibliografía clásica + Registro de Productos Fitosanitarios MAPA (snapshot pre-validación)
+# AVISO IMPORTANTE: la lista oficial de materias autorizadas en UE/España cambia cada pocos meses
+# (autorizaciones, retiradas, ampliaciones). Para producción comercial:
+#   1) Descargar Registro vigente desde MAPA antes de cada release
+#   2) Validar con agrónomo asesor
+#   3) Confirmar dosis y plazos de seguridad contra la etiqueta del producto comercial
+#
+# Columnas:
+#   id                       snake_case
+#   nombre_canonico          nombre químico habitual
+#   plagas_objetivo          ids de plagas separados por | (deben existir en plagas_vid.csv)
+#   tipo_accion              contacto | translaminar | sistemico | biologico | fisico
+#   plazo_seguridad_orient   días orientativos. ⚠ verificar etiqueta
+#   ecologico                si | no
+#   notas                    texto libre
+#   revisado_por             relleno por el asesor
+#   fecha_revision           YYYY-MM-DD
+id,nombre_canonico,plagas_objetivo,tipo_accion,plazo_seguridad_orient,ecologico,notas,revisado_por,fecha_revision
+azufre,Azufre,oidio,contacto,0,si,"Mojable o espolvoreo. No aplicar con T>28°C (riesgo fototoxicidad).",Registro Fitosanitario MAPA 2026,2026-05-08
+sulfato_cobre,Sulfato de cobre (caldo bordelés),mildiu,contacto,21,si,"Limite UE: 4 kg Cu/ha/año (media móvil 7 años).",Registro Fitosanitario MAPA 2026,2026-05-08
+hidroxido_cobre,Hidróxido de cobre,mildiu,contacto,21,si,"Sustituye al sulfato en muchas formulaciones modernas. Mismo límite UE de Cu.",Registro Fitosanitario MAPA 2026,2026-05-08
+oxicloruro_cobre,Oxicloruro de cobre,mildiu,contacto,21,si,"Alternativa cúprica. Mismo límite UE de Cu.",Registro Fitosanitario MAPA 2026,2026-05-08
+folpet,Folpet,mildiu|black_rot,contacto,28,no,"Preventivo de amplio espectro. Vigilar plazo seguridad.",Registro Fitosanitario MAPA 2026,2026-05-08
+fosetil_aluminio,Fosetil-aluminio,mildiu,sistemico,28,no,"Sistémico ascendente y descendente. Buena penetración.",Registro Fitosanitario MAPA 2026,2026-05-08
+dimetomorfo,Dimetomorfo,mildiu,translaminar,28,no,"Antiesporulante. Se mezcla con cúpricos para preventivo+curativo.",Registro Fitosanitario MAPA 2026,2026-05-08
+azoxistrobin,Azoxistrobin,mildiu|oidio,sistemico,21,no,"Estrobilurina. Resistencia cruzada — alternar con otros modos de acción.",Registro Fitosanitario MAPA 2026,2026-05-08
+miclobutanil,Miclobutanil,oidio,sistemico,14,no,"Triazol. Curativo de oídio.",Registro Fitosanitario MAPA 2026,2026-05-08
+tebuconazol,Tebuconazol,oidio,sistemico,21,no,"Triazol. Atención: bajo revisión UE.",Registro Fitosanitario MAPA 2026,2026-05-08
+penconazol,Penconazol,oidio,sistemico,28,no,"Triazol clásico para oídio.",Registro Fitosanitario MAPA 2026,2026-05-08
+boscalid,Boscalid,botritis,translaminar,21,no,"SDHI. Se mezcla con piraclostrobin habitualmente.",Registro Fitosanitario MAPA 2026,2026-05-08
+fluopiram,Fluopiram,botritis|oidio,translaminar,21,no,"SDHI. Bajo riesgo de resistencia si se rota.",Registro Fitosanitario MAPA 2026,2026-05-08
+pirimetanil,Pirimetanil,botritis,sistemico,21,no,"Anilinopirimidina. Buena curativo de botritis.",Registro Fitosanitario MAPA 2026,2026-05-08
+ciprodinil,Ciprodinil,botritis,sistemico,21,no,"Anilinopirimidina. Alternativa o mezcla con pirimetanil.",Registro Fitosanitario MAPA 2026,2026-05-08
+fludioxonil,Fludioxonil,botritis,contacto,21,no,"Habitual en mezcla con ciprodinil.",Registro Fitosanitario MAPA 2026,2026-05-08
+bacillus_thuringiensis_kurstaki,Bacillus thuringiensis kurstaki,polilla_racimo,biologico,0,si,"Solo eficaz contra larvas pequeñas. Sin plazo seguridad.",Registro Fitosanitario MAPA 2026,2026-05-08
+spinosad,Spinosad,polilla_racimo,contacto,14,si,"Origen biológico. Autorizado en ecológico con condiciones (toxicidad para abejas).",Registro Fitosanitario MAPA 2026,2026-05-08
+aceite_parafinico,Aceite parafínico,acaros_eriofidos,fisico,0,si,"Acción física. Buen perfil ecológico. Aplicar fuera del periodo de floración.",Registro Fitosanitario MAPA 2026,2026-05-08

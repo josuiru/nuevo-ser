@@ -18,12 +18,13 @@ pluginManagement {
 
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    // AGP 8.7.3: última 8.x estable que mantiene el DSL clásico que el
-    // plugin de Flutter 3.41 todavía usa al aplicarse. Subir a AGP 9+
-    // rompe la build hasta que Flutter publique su Gradle plugin con
-    // el DSL nuevo. Bajar a 8.1.0 dispara el aviso de AGP 9+ porque
-    // alguna dependencia transitiva exige un mínimo > 8.1.
-    id "com.android.application" version "8.7.3" apply false
+    // AGP 8.9.1: subido desde 8.7.3 porque dependencias androidx
+    // transitivas (activity 1.12.4, core 1.18.0, navigationevent
+    // 1.0.2) exigen como mínimo 8.9.1 al hacer assembleRelease. Sigue
+    // serie 8.x — compatible con el DSL clásico del plugin de Flutter.
+    // Subir a AGP 9+ rompe la build hasta que Flutter publique su
+    // Gradle plugin con el DSL nuevo.
+    id "com.android.application" version "8.9.1" apply false
     // Kotlin 2.1.0 mínimo exigido por Flutter 3.41+ — la 1.9.20 anterior
     // disparaba el warning "Flutter support for your project's Kotlin
     // version will soon be dropped" y abortaba la build.

@@ -18,10 +18,12 @@ import 'escenario.dart';
 import 'pantalla_ajustes_sonido.dart';
 import 'pantalla_caza.dart';
 import 'pantalla_entrenamiento.dart';
+import 'pantalla_progreso_distrito.dart';
 import 'pantalla_faro.dart';
 import 'pantalla_habilidades.dart';
 import 'pantalla_instrucciones.dart';
 import 'pantalla_mi_cuaderno.dart';
+import 'pantalla_tour_educadores.dart';
 
 /// Mapa de la ciudad. Muestra los distritos del catálogo posicionados
 /// según biblia §3.4 y la Montaña al fondo. Los distritos bloqueados
@@ -65,6 +67,78 @@ class _PantallaMapaState extends State<PantallaMapa>
       duration: const Duration(seconds: 16),
     )..repeat();
     _cargar();
+    _mostrarOnboardingSiPrimeraVez();
+  }
+
+  Future<void> _mostrarOnboardingSiPrimeraVez() async {
+    final yaVisto = await widget.repositorio.flagNarrativoActivo('onboarding_mapa_visto');
+    if (yaVisto || !mounted) return;
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: PaletaNeon.violetaNeon.withOpacity(0.3),
+          ),
+        ),
+        title: const Text(
+          'Bienvenido a Azula',
+          style: TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 18,
+            fontWeight: FontWeight.w300,
+            letterSpacing: 2,
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _onbParrafo('Este es el mapa de la ciudad. Cada zona tiene Fragmentos matemáticos diferentes.'),
+              _onbParrafo('Para empezar, toca un distrito. Allí verás Fragmentos flotando: tócalos para resolver puzzles.'),
+              _onbParrafo('Si te atascas, pulsa el botón ? en cada puzzle. Si fallas varias veces, recibirás ayuda.'),
+              _onbParrafo('Desde arriba puedes entrenar por temas, ver tu cuaderno o ajustar el sonido.'),
+              _onbParrafo('\u{1F917} ¡Sora te guiará!'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await widget.repositorio.activarFlagNarrativo('onboarding_mapa_visto');
+              if (ctx.mounted) Navigator.of(ctx).pop();
+            },
+            child: const Text(
+              '¡A JUGAR!',
+              style: TextStyle(
+                color: PaletaNeon.violetaNeon,
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _onbParrafo(String texto) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(
+        texto,
+        style: TextStyle(
+          color: PaletaNeon.textoTenue.withOpacity(0.9),
+          fontSize: 14,
+          height: 1.5,
+        ),
+      ),
+    );
   }
 
   @override
@@ -207,6 +281,15 @@ class _PantallaMapaState extends State<PantallaMapa>
     );
   }
 
+  Future<void> _abrirTour() async {
+    HapticFeedback.selectionClick();
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const PantallaTourEducadores(),
+      ),
+    );
+  }
+
   Future<void> _abrirFaro() async {
     HapticFeedback.selectionClick();
     final banco = await _cargarBancoFaroSiHaceFalta();
@@ -238,6 +321,17 @@ class _PantallaMapaState extends State<PantallaMapa>
     // Al volver del distrito, recargamos esquirlas para reflejar las
     // ganadas durante la sesión.
     await _cargar();
+  }
+
+  Future<void> _abrirProgreso(Distrito distrito) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaProgresoDistrito(
+          distrito: distrito,
+          repositorio: widget.repositorio,
+        ),
+      ),
+    );
   }
 
   @override
@@ -283,6 +377,7 @@ class _PantallaMapaState extends State<PantallaMapa>
                         alAbrirEntrenamiento: _abrirEntrenamiento,
                         alAbrirFaro: _abrirFaro,
                         alAbrirInstrucciones: _abrirInstrucciones,
+                        alAbrirTour: _abrirTour,
                       ),
                     ),
                     Expanded(
@@ -292,6 +387,7 @@ class _PantallaMapaState extends State<PantallaMapa>
                                 esquirlas: _esquirlas,
                                 tamano: constraints.biggest,
                                 alEntrar: _entrarADistrito,
+                                onVerProgreso: (d) => _abrirProgreso(d),
                               ),
                             )
                           : const SizedBox.shrink(),
@@ -318,6 +414,7 @@ class _Encabezado extends StatelessWidget {
   final VoidCallback alAbrirEntrenamiento;
   final VoidCallback alAbrirFaro;
   final VoidCallback alAbrirInstrucciones;
+  final VoidCallback alAbrirTour;
 
   const _Encabezado({
     required this.esquirlas,
@@ -330,6 +427,7 @@ class _Encabezado extends StatelessWidget {
     required this.alAbrirEntrenamiento,
     required this.alAbrirFaro,
     required this.alAbrirInstrucciones,
+    required this.alAbrirTour,
   });
 
   @override
@@ -423,6 +521,13 @@ class _Encabezado extends StatelessWidget {
             color: PaletaNeon.textoTenue,
             alPulsar: alAbrirInstrucciones,
             tooltip: AppLocalizations.of(contexto).mapaBotonInstrucciones,
+          ),
+          const SizedBox(width: 8),
+          _ChipAccion(
+            icono: Icons.school,
+            color: PaletaNeon.exitoSuave,
+            alPulsar: alAbrirTour,
+            tooltip: 'Tour para educadores',
           ),
           const SizedBox(width: 8),
           Tooltip(
@@ -521,11 +626,13 @@ class _LienzoMapa extends StatelessWidget {
   final int esquirlas;
   final Size tamano;
   final ValueChanged<Distrito> alEntrar;
+  final ValueChanged<Distrito>? onVerProgreso;
 
   const _LienzoMapa({
     required this.esquirlas,
     required this.tamano,
     required this.alEntrar,
+    this.onVerProgreso,
   });
 
   @override
@@ -534,36 +641,6 @@ class _LienzoMapa extends StatelessWidget {
     final alto = tamano.height;
     return Stack(
       children: [
-        // La Montaña al horizonte: inalcanzable, con marca de
-        // próxima era. Biblia §4.7.
-        Positioned(
-          top: 4,
-          left: 0,
-          right: 0,
-          child: Column(
-            children: [
-              Text(
-                AppLocalizations.of(contexto).mapaMontanaTitulo,
-                style: const TextStyle(
-                  color: PaletaNeon.violetaNeon,
-                  fontSize: 12,
-                  letterSpacing: 4,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                AppLocalizations.of(contexto).mapaMontanaSubtitulo,
-                style: TextStyle(
-                  color: PaletaNeon.textoTenue.withOpacity(0.7),
-                  fontSize: 10,
-                  letterSpacing: 1.4,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-          ),
-        ),
         for (final distrito in CatalogoDistritos.todos)
           Positioned(
             left: distrito.xMapa * ancho - 68,
@@ -573,6 +650,9 @@ class _LienzoMapa extends StatelessWidget {
               desbloqueado: distrito.estaDesbloqueado(esquirlas),
               esquirlasDelJugador: esquirlas,
               alEntrar: alEntrar,
+              onLongPress: onVerProgreso != null
+                  ? () => onVerProgreso!(distrito)
+                  : null,
             ),
           ),
       ],
@@ -585,18 +665,21 @@ class _NodoDistrito extends StatelessWidget {
   final bool desbloqueado;
   final int esquirlasDelJugador;
   final ValueChanged<Distrito> alEntrar;
+  final VoidCallback? onLongPress;
 
   const _NodoDistrito({
     required this.distrito,
     required this.desbloqueado,
     required this.esquirlasDelJugador,
     required this.alEntrar,
+    this.onLongPress,
   });
 
   @override
   Widget build(BuildContext contexto) {
     return GestureDetector(
       onTap: desbloqueado ? () => alEntrar(distrito) : null,
+      onLongPress: onLongPress,
       child: Opacity(
         opacity: desbloqueado ? 1.0 : 0.45,
         child: Container(

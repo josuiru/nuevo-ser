@@ -948,4 +948,21 @@ class AppLocalizationsEu extends AppLocalizations {
   String sonidoDescargaInstalando(int actual, int total) {
     return 'Instalatzen $actual / $total';
   }
+
+  @override
+  String get cuentaErrorCamposAnadirNino =>
+      'Idatzi e-posta, pasahitza eta umearen izena.';
+
+  @override
+  String get cuentaAnadirNinoTitulo => 'HAURRA GEHITU';
+
+  @override
+  String get cuentaAnadirNinoTagline =>
+      'Jadanik kontua duen tutorearen e-posta eta pasahitza jarri. Haur hau kontu berean gehituko dugu.';
+
+  @override
+  String get cuentaAnadirNinoBoton => 'HAURRA GEHITU';
+
+  @override
+  String get cuentaAnadirNinoBotonEnviando => 'GEHITZEN…';
 }

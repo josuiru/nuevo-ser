@@ -4,15 +4,14 @@ import 'package:las_versiones/dominio/catalogo_brechas.dart';
 
 void main() {
   group('CatalogoBrechas.todas', () {
-    test('catálogo cubre las 4 Brechas del Arco 1 + las 4 Brechas '
-        'del Arco 2 + las 4 Brechas jugables del Arco 3 implementadas '
-        '(12 Brechas) — F2-28d cierra el set de Brechas jugables del '
-        'Arco 3 sumando la 3.5 *Estella en su esplendor* (Brecha de '
-        'respiro) a la 3.1, 3.3 y 3.4 ya abiertas. La 3.2 Banu Qasi '
-        'sigue bloqueada por BANU-QASI hasta validación del comité; '
-        'la 3.6 TUDELA-1378 sigue bloqueada por validación del '
-        'comité provisional', () {
-      expect(CatalogoBrechas.todas, hasLength(12));
+    test('catálogo cubre las 4 Brechas del Arco 1 + las 4 del Arco 2 '
+        '+ las 5 jugables del Arco 3 implementadas + las 2 del Arco 4 '
+        '(15 Brechas). La 3.6 TUDELA-1378 + las 2 del Arco 4 '
+        '(JOANA-DE-RONCAL + PARED-MEDIANERA-1394) quedan PENDIENTES DE '
+        'VALIDACIÓN del comité asesor histórico (registradas en '
+        'BLOQUEOS-PENDIENTES.md). La 3.2 Banu Qasi sigue bloqueada '
+        'por BANU-QASI hasta validación del comité', () {
+      expect(CatalogoBrechas.todas, hasLength(15));
       expect(
         CatalogoBrechas.todas.map((brecha) => brecha.id).toList(),
         [
@@ -28,6 +27,9 @@ void main() {
           '3.3',
           '3.4',
           '3.5',
+          '3.6',
+          '4.1',
+          '4.B',
         ],
       );
     });

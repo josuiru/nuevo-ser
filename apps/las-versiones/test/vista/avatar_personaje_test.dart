@@ -60,9 +60,10 @@ void main() {
     );
 
     testWidgets(
-      'voz sin retrato ilustrado (Tasio) — modo procedural: ningún '
-      'ClipOval en el árbol, sólo el CustomPaint con inicial + borde + '
-      'disco translúcido del color de la voz',
+      'tras F2-30 + entrega de los 12 retratos restantes, todas las '
+      'voces principales del juego tienen retrato ilustrado — Tasio '
+      'incluido. El modo procedural sólo se reserva como fallback si '
+      'el asset falla a cargar (errorBuilder del Image.asset)',
       (tester) async {
         await tester.pumpWidget(const MaterialApp(
           home: Scaffold(
@@ -74,13 +75,6 @@ void main() {
           find.descendant(
             of: find.byType(AvatarPersonaje),
             matching: find.byType(ClipOval),
-          ),
-          findsNothing,
-        );
-        expect(
-          find.descendant(
-            of: find.byType(AvatarPersonaje),
-            matching: find.byType(CustomPaint),
           ),
           findsOneWidget,
         );

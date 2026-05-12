@@ -86,33 +86,71 @@ extension NivelMaestriaEntero on NivelMaestria {
 
 /// Registro de un intento concreto (resultado de un puzzle) contra una
 /// habilidad. Formato mínimo para persistencia local.
+///
+/// Los tres campos opcionales [senalEsperada], [clasePredicha] y
+/// [componentesRubrica] llevan la metadata por intento que P2 y P3
+/// necesitan. Son `null` para intentos P1/P4, presentes para P2 y P3
+/// respectivamente. Su shape JSON es compacto (`se`, `cp`, `cr`) y se
+/// omite cuando es null para que estados P1 antiguos serialicen
+/// idénticamente que antes (retrocompatibilidad de fixtures).
 class IntentoHabilidad {
   final DateTime instante;
   final bool acierto;
   final double dificultad;
   final int duracionSegundos;
 
+  /// **P2 — clase real**: `true` si el caso era de la clase positiva
+  /// (la "señal" — p. ej. para HF.10, "esta fuente sí omite"), `false`
+  /// si era negativo. `null` para intentos sin pareo binario.
+  final bool? senalEsperada;
+
+  /// **P2 — clase predicha**: lo que la persona dijo. Si [acierto] es
+  /// true, [clasePredicha] == [senalEsperada]; si false, la opuesta.
+  /// `null` cuando [senalEsperada] es null.
+  final bool? clasePredicha;
+
+  /// **P3 — componentes de rúbrica** 0..1. Claves esperadas: `a`
+  /// (anclaje), `c` (calibración), `p` (completud), `f` (ausencia de
+  /// falacias). `null` para intentos no rúbrica.
+  final Map<String, double>? componentesRubrica;
+
   const IntentoHabilidad({
     required this.instante,
     required this.acierto,
     required this.dificultad,
     required this.duracionSegundos,
+    this.senalEsperada,
+    this.clasePredicha,
+    this.componentesRubrica,
   });
 
-  Map<String, dynamic> aJson() => {
-        't': instante.toIso8601String(),
-        'a': acierto,
-        'd': dificultad,
-        's': duracionSegundos,
-      };
+  Map<String, dynamic> aJson() {
+    final json = <String, dynamic>{
+      't': instante.toIso8601String(),
+      'a': acierto,
+      'd': dificultad,
+      's': duracionSegundos,
+    };
+    if (senalEsperada != null) json['se'] = senalEsperada;
+    if (clasePredicha != null) json['cp'] = clasePredicha;
+    if (componentesRubrica != null) json['cr'] = componentesRubrica;
+    return json;
+  }
 
-  factory IntentoHabilidad.desdeJson(Map<String, dynamic> json) =>
-      IntentoHabilidad(
-        instante: DateTime.parse(json['t'] as String),
-        acierto: json['a'] as bool,
-        dificultad: (json['d'] as num).toDouble(),
-        duracionSegundos: (json['s'] as num).toInt(),
-      );
+  factory IntentoHabilidad.desdeJson(Map<String, dynamic> json) {
+    final cr = json['cr'];
+    return IntentoHabilidad(
+      instante: DateTime.parse(json['t'] as String),
+      acierto: json['a'] as bool,
+      dificultad: (json['d'] as num).toDouble(),
+      duracionSegundos: (json['s'] as num).toInt(),
+      senalEsperada: json['se'] as bool?,
+      clasePredicha: json['cp'] as bool?,
+      componentesRubrica: cr == null
+          ? null
+          : (cr as Map).map((k, v) => MapEntry(k as String, (v as num).toDouble())),
+    );
+  }
 }
 
 /// Estado agregado de una habilidad para un niño. Se calcula a partir

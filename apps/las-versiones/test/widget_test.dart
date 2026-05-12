@@ -96,7 +96,12 @@ void main() {
     expect(find.byType(PantallaConfiguracionInicial), findsOneWidget);
     expect(find.byType(PantallaEsqueleto), findsNothing);
     expect(find.byType(PantallaCinematica), findsNothing);
-    expect(find.text('LAS VERSIONES'), findsOneWidget);
+    final logo = find.byWidgetPredicate((widget) =>
+        widget is Image &&
+        widget.image is AssetImage &&
+        (widget.image as AssetImage).assetName ==
+            'assets/marca/las_versiones_logo.png');
+    expect(logo, findsOneWidget);
     expect(find.text('Castellano'), findsOneWidget);
     expect(find.text('Euskara'), findsOneWidget);
     expect(find.text('Català'), findsOneWidget);
@@ -1200,6 +1205,10 @@ void main() {
   testWidgets(
       'esqueleto sin token persistido → menú muestra fila "Iniciar sesión"',
       (tester) async {
+    tester.view.physicalSize = const Size(900, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues(seedEsqueletoCompleto());
     await tester.pumpWidget(crearApp());
     await tester.pumpAndSettle();
@@ -1216,6 +1225,10 @@ void main() {
   testWidgets(
       'esqueleto con token persistido → menú muestra fila "Sesión iniciada"',
       (tester) async {
+    tester.view.physicalSize = const Size(900, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues(
       seedEsqueletoCompleto(tokenBackend: 'token-jwt-de-prueba'),
     );
@@ -1233,6 +1246,10 @@ void main() {
   testWidgets(
       'tap en "Iniciar sesión" desde el menú abre la PantallaLogin',
       (tester) async {
+    tester.view.physicalSize = const Size(900, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues(seedEsqueletoCompleto());
     await tester.pumpWidget(crearApp());
     await tester.pumpAndSettle();
@@ -1249,6 +1266,10 @@ void main() {
   testWidgets(
       'tap en "Sesión iniciada" abre la pantalla en modo cuenta con email',
       (tester) async {
+    tester.view.physicalSize = const Size(900, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     final seed = seedEsqueletoCompleto(tokenBackend: 'jwt-de-prueba');
     seed['nuevoser.lasversiones.email_backend'] = 'adulto@example.com';
     SharedPreferences.setMockInitialValues(seed);
@@ -1268,6 +1289,10 @@ void main() {
   testWidgets(
       'cerrar sesión desde la pantalla de cuenta borra token y devuelve el '
       'esqueleto a su estado sin sesión', (tester) async {
+    tester.view.physicalSize = const Size(900, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     final seed = seedEsqueletoCompleto(tokenBackend: 'jwt-de-prueba');
     seed['nuevoser.lasversiones.email_backend'] = 'adulto@example.com';
     SharedPreferences.setMockInitialValues(seed);

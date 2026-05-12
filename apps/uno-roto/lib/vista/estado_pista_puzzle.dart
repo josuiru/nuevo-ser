@@ -24,6 +24,7 @@ class EstadoPistaPuzzle {
   Timer? _temporizador;
 
   bool get activa => _activa;
+  int get fallosConsecutivos => _fallosConsecutivos;
 
   void registrarAcierto() {
     _fallosConsecutivos = 0;

@@ -1,0 +1,58 @@
+# DATOS PROVISIONALES SIN VALIDAR POR INGENIERO TÉCNICO FORESTAL
+# Fuente: bibliografía de jardinería urbana ibérica + inventarios públicos de
+# ayuntamientos (Madrid, Barcelona, Vitoria-Gasteiz, Iruña)
+# Validar con ingeniero técnico forestal o de jardinería antes de producción
+# comercial.
+#
+# Columnas:
+#   id                      snake_case sin tildes (estable, no cambiar tras producción)
+#   nombre_canonico         nombre visible en castellano
+#   nombre_cientifico       binomial latino
+#   familia                 caducifolio | perenne_caducifolio | perenne | palmacea | conifera
+#   altura_max_metros       altura adulta orientativa
+#   uso_urbano_tipico       texto libre — alineación, parque, plaza, etc.
+#   tolerancia_poda         alta | media | baja
+#   notas                   texto libre — particularidades urbanas (sombra, hojas alérgenas, etc.)
+#   revisado_por            vacío hasta validación
+#   fecha_revision          vacía hasta validación
+id,nombre_canonico,nombre_cientifico,familia,altura_max_metros,uso_urbano_tipico,tolerancia_poda,notas,revisado_por,fecha_revision
+platano_sombra,Plátano de sombra,Platanus × hispanica,caducifolio,30,Alineación de paseos y avenidas anchas,alta,Especie urbana más frecuente en España. Susceptible a anthracnosis y oídio. Hoja grande y alérgena para algunas personas,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+tilo,Tilo común,Tilia platyphyllos,caducifolio,25,Parque y avenida de orden alto,media,Aroma floral en junio. Atrae abejas — vigilar piquera con apicultura urbana,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+fresno_comun,Fresno común,Fraxinus excelsior,caducifolio,30,Parque y ribera urbana,media,Hoja compuesta. Buen porte de copa,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+acer_negundo,Arce negundo,Acer negundo,caducifolio,15,Plaza pequeña y alineación urbana,alta,Crecimiento rápido — requiere poda anual de mantenimiento,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+almendro_ornamental,Almendro ornamental,Prunus dulcis,caducifolio,8,Plaza y parque pequeño,media,Floración temprana de gran valor ornamental. Susceptible a chancro,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+pino_pinonero,Pino piñonero,Pinus pinea,perenne,25,Parque y zona ajardinada amplia,baja,Riesgo procesionaria del pino. Copa parasol característica,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+pino_carrasco,Pino carrasco,Pinus halepensis,perenne,20,Parque mediterráneo,baja,Riesgo procesionaria. Adaptado a clima seco,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+palmera_datilera,Palmera datilera,Phoenix dactylifera,palmacea,25,Avenida y plaza monumental,baja,Vector picudo rojo — DECLARACIÓN OBLIGATORIA si se confirma plaga,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+palmera_canaria,Palmera canaria,Phoenix canariensis,palmacea,18,Avenida y plaza monumental,baja,Vector picudo rojo — DECLARACIÓN OBLIGATORIA si se confirma plaga. Más sensible que la datilera,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+naranjo_amargo,Naranjo amargo,Citrus aurantium,perenne,10,Alineación cálida (Andalucía y Levante),media,Frutos no comestibles. Aroma del azahar característico de Sevilla,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+jacaranda,Jacarandá,Jacaranda mimosifolia,caducifolio,15,Plaza y avenida ornamental,media,Floración violeta espectacular en mayo-junio. Sensible a heladas tardías,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+robinia,Robinia / Falsa acacia,Robinia pseudoacacia,caducifolio,20,Parque y alineación rústica,alta,Especie invasora en algunas zonas — vigilar regeneración,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+ciprés_mediterráneo,Ciprés mediterráneo,Cupressus sempervirens,conifera,25,Cementerio y zona conmemorativa,baja,Forma columnar característica. Sensible al chancro del ciprés,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+encina,Encina,Quercus ilex,perenne,20,Parque amplio y zona naturalizada,baja,Especie autóctona de gran valor ecológico. Crecimiento muy lento,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+melojo,Melojo / Roble rebollo,Quercus pyrenaica,caducifolio,20,Parque amplio y zona naturalizada del norte ibérico,baja,Especie autóctona. Hoja persistente seca durante el invierno,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+olmo_siberiano,Olmo siberiano,Ulmus pumila,caducifolio,18,Alineación urbana,alta,Resistente a grafiosis (al contrario que el olmo común). Crecimiento rápido,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+catalpa,Catalpa,Catalpa bignonioides,caducifolio,15,Plaza y parque pequeño,media,Hoja muy grande — sombra densa. Vainas largas tras floración,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+liquidambar,Liquidámbar,Liquidambar styraciflua,caducifolio,20,Alineación urbana ornamental,media,Otoñada espectacular en rojos y púrpuras,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+ginkgo,Ginkgo / Árbol del Cuarenta Escudos,Ginkgo biloba,caducifolio,25,Alineación urbana ornamental,media,Macho preferible — la hembra produce frutos malolientes. Resistencia muy alta a contaminación,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+fresno_de_flor,Fresno de flor / Fresno florido,Fraxinus ornus,caducifolio,15,Alineación y plaza,media,Floración blanca cremosa muy ornamental. Más pequeño que el fresno común,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+celtis_almez,Almez / Latonero,Celtis australis,caducifolio,20,Alineación tradicional ibérica,media,Especie clásica del paseo mediterráneo. Frutos comestibles,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+lagerstroemia,Júpiter / Crespón,Lagerstroemia indica,caducifolio,8,Plaza y rotonda,alta,Floración estival prolongada (julio-septiembre). Tolera podas drásticas,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+sophora,Sófora del Japón,Styphnolobium japonicum,caducifolio,20,Alineación urbana ornamental,media,Floración blanca tardía (julio-agosto). Madera resistente,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+paulownia,Paulownia,Paulownia tomentosa,caducifolio,20,Plaza y parque,baja,Crecimiento muy rápido. Floración violeta en mayo. Especie invasora — vigilar,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+celindo,Celindo / Pittósporo,Pittosporum tobira,perenne,5,Seto formal y plaza pequeña,alta,Más arbusto-árbol pequeño que árbol urbano clásico. Tolera podas frecuentes,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+brachychiton,Braquiquito / Árbol botella,Brachychiton populneus,perenne,15,Alineación cálida sur peninsular,media,Hoja persistente de aspecto trémulo (como álamo). Tolera sequía,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+melia,Cinamomo,Melia azedarach,caducifolio,15,Alineación cálida y plaza,media,Floración lila aromática. Frutos tóxicos — vigilar paseos infantiles,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+laurel,Laurel,Laurus nobilis,perenne,10,Plaza y alineación corta,alta,Hoja aromática perenne. Tolera podas formales (formas cónicas),Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+arce_japones,Arce palmado / Arce japonés,Acer palmatum,caducifolio,8,Jardín ornamental y plaza pequeña,baja,Otoñada espectacular. Sensible a sol directo intenso,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+abedul,Abedul,Betula pendula,caducifolio,20,Parque del norte ibérico,baja,Polen muy alérgeno. Corteza ornamental blanca,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+chopo_lombardo,Chopo lombardo,Populus nigra var italica,caducifolio,30,Alineación de gran porte,baja,Crecimiento muy rápido. Raíces invasivas — vigilar cercanía a saneamiento,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+sauce_lloron,Sauce llorón,Salix babylonica,caducifolio,15,Parque junto al agua,media,Mejor cerca de cursos de agua. Sensible a sequía,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+laurel_indias,Laurel de Indias / Ficus,Ficus microcarpa,perenne,25,Alineación cálida sur peninsular,media,Raíces aéreas y subterráneas muy invasivas — vigilar pavimentación. Sensible a heladas,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+magnolio,Magnolio,Magnolia grandiflora,perenne,20,Parque ornamental,media,Hoja grande perenne. Floración blanca aromática espectacular,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+araucaria,Araucaria,Araucaria heterophylla,conifera,30,Parque histórico y zona costera,baja,Crecimiento lento. Característica del paisaje urbano de algunas ciudades costeras,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+cedro_himalaya,Cedro del Himalaya,Cedrus deodara,conifera,30,Parque amplio,baja,Porte espectacular. Crecimiento moderado,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+olmo_comun,Olmo común,Ulmus minor,caducifolio,25,Alineación tradicional (en declive por grafiosis),baja,Susceptible a grafiosis — vigilar muerte súbita. Sustituido frecuentemente por olmo siberiano,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+araguaney,Araguaney / Tipuana,Tipuana tipu,caducifolio,18,Alineación sur peninsular,media,Floración amarilla estival. Frutos en sámara,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+falso_pimiento,Falso pimiento,Schinus molle,perenne,12,Alineación cálida y parque,media,Aspecto llorón. Tolera sequía. Frutos rojos pequeños,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08
+acacia_constantinopla,Acacia de Constantinopla / Albizia,Albizia julibrissin,caducifolio,12,Alineación y plaza ornamental,media,Floración rosada filiforme característica en julio,Inventarios municipales Madrid + Barcelona OpenData + AEPJP,2026-05-08

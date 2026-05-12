@@ -1,0 +1,115 @@
+{
+  "_doc": "Fixtures de paridad Dart/PHP para el motor adaptativo, perfil P3 (rúbrica compuesta). Cada caso aplica `secuencia` sobre `estado_inicial` con `id_perfil='P3'` y `config=defaultP3`. Los componentes de rúbrica viajan en `componentesRubrica` del payload y en `ir[].cr` del estado, con claves `a`,`c`,`p`,`f` cada uno 0..1 (clipeado defensivamente). Pesos canónicos 0.35/0.25/0.25/0.15 (doc 02 §6.1). Doc nuevo-ser-core-arquitectura §6.2.",
+  "casos": [
+    {
+      "nombre": "Una rúbrica perfecta → puntuación 1.0; pasa a en_desarrollo (1 exposición + sesión consecutiva buena = 1)",
+      "estado_inicial": {
+        "id": "AH.06",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 90, "instante": "2026-05-01T10:00:00.000", "componentesRubrica": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } }
+      ],
+      "esperado_final": {
+        "id": "AH.06",
+        "nv": 2, "pr": 1.0, "tm": 90.0,
+        "up": "2026-05-01T10:00:00.000",
+        "scb": 1, "te": 1,
+        "ir": [
+          { "t": "2026-05-01T10:00:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } }
+        ]
+      }
+    },
+    {
+      "nombre": "Promedio ponderado: rúbrica perfecta dif 2.0 + rúbrica nula dif 1.0 → 2/3 = 0.6667 en_desarrollo",
+      "estado_inicial": {
+        "id": "AH.06",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true,  "dificultad": 2.0, "duracionSegundos": 60, "instante": "2026-05-01T10:00:00.000", "componentesRubrica": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+        { "acierto": false, "dificultad": 1.0, "duracionSegundos": 80, "instante": "2026-05-01T10:01:00.000", "componentesRubrica": { "a": 0.0, "c": 0.0, "p": 0.0, "f": 0.0 } }
+      ],
+      "esperado_final": {
+        "id": "AH.06",
+        "nv": 2, "pr": 0.6666666666666666, "tm": 70.0,
+        "up": "2026-05-01T10:01:00.000",
+        "scb": 1, "te": 2,
+        "ir": [
+          { "t": "2026-05-01T10:00:00.000", "a": true,  "d": 2.0, "s": 60, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-05-01T10:01:00.000", "a": false, "d": 1.0, "s": 80, "cr": { "a": 0.0, "c": 0.0, "p": 0.0, "f": 0.0 } }
+        ]
+      }
+    },
+    {
+      "nombre": "Componentes clipeados: a=1.5→1, c=-0.5→0 → puntuación = 1·0.35 + 0 + 0.8·0.25 + 0.5·0.15 = 0.625 en_desarrollo",
+      "estado_inicial": {
+        "id": "AH.06",
+        "nv": 0, "pr": 0.0, "tm": 0.0,
+        "up": "1970-01-01T00:00:00.000",
+        "scb": 0, "te": 0, "ir": []
+      },
+      "secuencia": [
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 70, "instante": "2026-05-01T10:00:00.000", "componentesRubrica": { "a": 1.5, "c": -0.5, "p": 0.8, "f": 0.5 } }
+      ],
+      "esperado_final": {
+        "id": "AH.06",
+        "nv": 2, "pr": 0.625, "tm": 70.0,
+        "up": "2026-05-01T10:00:00.000",
+        "scb": 0, "te": 1,
+        "ir": [
+          { "t": "2026-05-01T10:00:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.5, "c": -0.5, "p": 0.8, "f": 0.5 } }
+        ]
+      }
+    },
+    {
+      "nombre": "Maestría P3: estado con 11 intentos perfectos en 3 sesiones + un nuevo perfecto en 4ª → 12 exposiciones + 4 sesiones + puntuación 1.0",
+      "estado_inicial": {
+        "id": "AH.06",
+        "nv": 3, "pr": 1.0, "tm": 80.0,
+        "up": "2026-04-30T20:00:00.000",
+        "scb": 3, "te": 11,
+        "ir": [
+          { "t": "2026-04-30T19:30:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:31:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:32:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:33:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:34:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:35:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:36:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:37:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:38:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:39:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:40:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } }
+        ]
+      },
+      "secuencia": [
+        { "acierto": true, "dificultad": 1.0, "duracionSegundos": 90, "instante": "2026-05-01T10:00:00.000", "componentesRubrica": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } }
+      ],
+      "esperado_final": {
+        "id": "AH.06",
+        "nv": 4, "pr": 1.0, "tm": 80.0,
+        "up": "2026-05-01T10:00:00.000",
+        "scb": 4, "te": 12,
+        "ir": [
+          { "t": "2026-04-30T19:30:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:31:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:32:00.000", "a": true, "d": 1.0, "s": 70, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:33:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:34:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:35:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:36:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:37:00.000", "a": true, "d": 1.0, "s": 80, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:38:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:39:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-04-30T19:40:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } },
+          { "t": "2026-05-01T10:00:00.000", "a": true, "d": 1.0, "s": 90, "cr": { "a": 1.0, "c": 1.0, "p": 1.0, "f": 1.0 } }
+        ]
+      }
+    }
+  ]
+}

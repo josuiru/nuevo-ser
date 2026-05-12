@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-/// Cliente HTTP del plugin WordPress `uno-roto-core`. Encapsula los
-/// cinco endpoints del doc 03 §5:
+/// Cliente HTTP del plugin WordPress `nuevo-ser-core`. Encapsula los
+/// endpoints REST del backend:
 ///
 ///   POST /register
 ///   POST /login
+///   POST /auth/anadir-nino
 ///   GET  /progress              (JWT)
 ///   POST /sync/progress         (JWT)
+///   POST /auth/solicitar-reset
 ///   DELETE /account             (JWT)
 ///
 /// Diseño:

@@ -1,0 +1,24 @@
+# DATOS PROVISIONALES SIN VALIDAR ENOLÓGICAMENTE
+# Fuente: manuales clásicos de viticultura (Hidalgo, Reynier) + bibliografía pública
+# Validar con enólogo asesor antes de producción comercial
+#
+# Columnas:
+#   id                   snake_case sin tildes
+#   nombre_canonico      nombre visible
+#   vigor                bajo | medio | alto | muy_alto
+#   tolerancia_caliza    porcentaje aproximado de caliza activa que tolera
+#   resistencia_sequia   baja | media | alta | muy_alta
+#   notas                texto libre con adaptación al suelo y observaciones
+#   revisado_por         relleno por el asesor
+#   fecha_revision       YYYY-MM-DD
+id,nombre_canonico,vigor,tolerancia_caliza,resistencia_sequia,notas,revisado_por,fecha_revision
+110_r,110 Richter,alto,17,alta,Suelos pobres y secos. Acelera la maduración. Resistencia media a filoxera.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+so4,SO4 (Selección Oppenheim 4),medio_alto,15,media,Suelos profundos y húmedos. Sensible a sequía.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+41_b,41-B Millardet et de Grasset,medio,40,media,El más resistente a caliza activa. Suelos calizos del Jerez y similares.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+1103_paulsen,1103 Paulsen,alto,17,alta,Suelos pobres y secos. Vigor alto. Adaptación a clima mediterráneo.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+161_49c,161-49 Couderc,medio,25,media,Buena calidad y vigor moderado. Sensible a sequía extrema.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+ru_140,140 Ruggeri,muy_alto,20,muy_alta,Resistente a sequía extrema. Suelos áridos andaluces.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+420a,420A Millardet et de Grasset,bajo,20,baja,Vigor bajo y calidad alta. Suelos frescos y profundos.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+196_17,196-17 Castel,medio,8,media,Suelos compactos. Tolerancia baja a caliza.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+5bb,5BB Kober,alto,20,baja,Suelos húmedos y profundos. Acelera la brotación.,IMIDA Certificación + ENTAV-INRA,2026-05-08
+fercal,Fercal,medio,40,media,Resistente a caliza activa alta. Suelos calizos del centro y sur.,IMIDA Certificación + ENTAV-INRA,2026-05-08

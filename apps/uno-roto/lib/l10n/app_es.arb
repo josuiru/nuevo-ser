@@ -6,7 +6,9 @@
   "tutorCabecera": "pista — {habilidad}",
   "@tutorCabecera": {
     "placeholders": {
-      "habilidad": { "type": "String" }
+      "habilidad": {
+        "type": "String"
+      }
     }
   },
   "tutorInputPista": "pregunta",
@@ -16,7 +18,9 @@
   "tutorOfertaCuerpo": "Sobre {habilidad}. Una pista, no la solución.",
   "@tutorOfertaCuerpo": {
     "placeholders": {
-      "habilidad": { "type": "String" }
+      "habilidad": {
+        "type": "String"
+      }
     }
   },
   "tutorOfertaSigoSolo": "sigo solo",
@@ -46,8 +50,12 @@
   "sonidoPaqueteVersion": "Versión {version} · {tamano}",
   "@sonidoPaqueteVersion": {
     "placeholders": {
-      "version": {"type": "int"},
-      "tamano": {"type": "String"}
+      "version": {
+        "type": "int"
+      },
+      "tamano": {
+        "type": "String"
+      }
     }
   },
   "sonidoPaqueteExplicacion": "Ambient, música y narrativos se descargan del servidor para no inflar el tamaño de la app.",
@@ -58,7 +66,9 @@
   "sonidoPaqueteConfirmTexto": "Se eliminarán {tamano} del dispositivo. Podrás volver a descargarlo cuando quieras.",
   "@sonidoPaqueteConfirmTexto": {
     "placeholders": {
-      "tamano": {"type": "String"}
+      "tamano": {
+        "type": "String"
+      }
     }
   },
   "sonidoPaqueteConfirmBotonBorrar": "Borrar",
@@ -68,7 +78,9 @@
   "sonidoMensajeFallido": "Descarga fallida: {mensaje}",
   "@sonidoMensajeFallido": {
     "placeholders": {
-      "mensaje": {"type": "String"}
+      "mensaje": {
+        "type": "String"
+      }
     }
   },
   "cierreBotonSeguir": "Seguir practicando",
@@ -85,20 +97,26 @@
   "barrasPreguntaValor": "¿cuántos en \"{etiqueta}\"?",
   "@barrasPreguntaValor": {
     "placeholders": {
-      "etiqueta": {"type": "String"}
+      "etiqueta": {
+        "type": "String"
+      }
     }
   },
   "barrasPreguntaTotal": "¿cuál es el total?",
   "aumentoVerbo": "aumenta un {porcentaje}% sobre",
   "@aumentoVerbo": {
     "placeholders": {
-      "porcentaje": {"type": "int"}
+      "porcentaje": {
+        "type": "int"
+      }
     }
   },
   "descuentoVerbo": "descuenta un {porcentaje}% sobre",
   "@descuentoVerbo": {
     "placeholders": {
-      "porcentaje": {"type": "int"}
+      "porcentaje": {
+        "type": "int"
+      }
     }
   },
   "respuestaSi": "sí",
@@ -107,7 +125,9 @@
   "habRitmoSnack": "Ritmo \"{ritmo}\". Se aplicará en la próxima escena.",
   "@habRitmoSnack": {
     "placeholders": {
-      "ritmo": { "type": "String" }
+      "ritmo": {
+        "type": "String"
+      }
     }
   },
   "habSyncFaltaToken": "Vincula primero una cuenta desde el icono de perfil.",
@@ -115,23 +135,35 @@
   "habSyncResumen": "Sync OK. Esquirlas {esquirlas} · {flags} flags · {habilidades} habilidades.",
   "@habSyncResumen": {
     "placeholders": {
-      "esquirlas": { "type": "int" },
-      "flags": { "type": "int" },
-      "habilidades": { "type": "int" }
+      "esquirlas": {
+        "type": "int"
+      },
+      "flags": {
+        "type": "int"
+      },
+      "habilidades": {
+        "type": "int"
+      }
     }
   },
   "habSyncSesionCaduco": "La sesión caducó. Ábrela desde \"Cuenta\" e inicia sesión otra vez.",
   "habApiError": "API {codigo}: {mensaje}",
   "@habApiError": {
     "placeholders": {
-      "codigo": { "type": "int" },
-      "mensaje": { "type": "String" }
+      "codigo": {
+        "type": "int"
+      },
+      "mensaje": {
+        "type": "String"
+      }
     }
   },
   "habRedError": "Red: {error}",
   "@habRedError": {
     "placeholders": {
-      "error": { "type": "String" }
+      "error": {
+        "type": "String"
+      }
     }
   },
   "habReiniciarTitulo": "Reiniciar progreso",
@@ -141,7 +173,9 @@
   "habEsquirlasResumen": "{n} esquirlas",
   "@habEsquirlasResumen": {
     "placeholders": {
-      "n": { "type": "int" }
+      "n": {
+        "type": "int"
+      }
     }
   },
   "habNivelInexplorada": "sin tocar",
@@ -152,16 +186,26 @@
   "habChipNivel": "{n} {etiqueta}",
   "@habChipNivel": {
     "placeholders": {
-      "n": { "type": "int" },
-      "etiqueta": { "type": "String" }
+      "n": {
+        "type": "int"
+      },
+      "etiqueta": {
+        "type": "String"
+      }
     }
   },
   "habFilaResumen": "{nivel} · precisión {precision}% · {intentos} intentos",
   "@habFilaResumen": {
     "placeholders": {
-      "nivel": { "type": "String" },
-      "precision": { "type": "int" },
-      "intentos": { "type": "int" }
+      "nivel": {
+        "type": "String"
+      },
+      "precision": {
+        "type": "int"
+      },
+      "intentos": {
+        "type": "int"
+      }
     }
   },
   "cuentaTitulo": "cuenta",
@@ -181,7 +225,9 @@
   "cuentaCaducadaCuerpo": "Vuelve a iniciar sesión para sincronizar y usar el tutor:\n{email}",
   "@cuentaCaducadaCuerpo": {
     "placeholders": {
-      "email": { "type": "String" }
+      "email": {
+        "type": "String"
+      }
     }
   },
   "cuentaCampoEmail": "email del tutor",
@@ -210,7 +256,9 @@
   "panelTutorErrorServidor": "Error del servidor ({codigo}).",
   "@panelTutorErrorServidor": {
     "placeholders": {
-      "codigo": { "type": "int" }
+      "codigo": {
+        "type": "int"
+      }
     }
   },
   "panelTutorErrorRed": "No se pudo conectar al servidor.",
@@ -225,7 +273,9 @@
   "panelTutorSaludoConNombre": "Hola, {nombre}.",
   "@panelTutorSaludoConNombre": {
     "placeholders": {
-      "nombre": { "type": "String" }
+      "nombre": {
+        "type": "String"
+      }
     }
   },
   "panelTutorSubtituloSaludo": "Aquí tienes el progreso real, sin adornos.",
@@ -250,7 +300,9 @@
   "perfDialogBorrarCuerpo": "Se borrará todo el progreso de {nombre}. Esta acción no se puede deshacer.",
   "@perfDialogBorrarCuerpo": {
     "placeholders": {
-      "nombre": { "type": "String" }
+      "nombre": {
+        "type": "String"
+      }
     }
   },
   "perfBotonBorrar": "borrar",
@@ -262,17 +314,29 @@
   "cuadernoResumen": "{leidas} leídas · {desbloqueadas} de {total} desbloqueadas",
   "@cuadernoResumen": {
     "placeholders": {
-      "leidas": { "type": "int" },
-      "desbloqueadas": { "type": "int" },
-      "total": { "type": "int" }
+      "leidas": {
+        "type": "int"
+      },
+      "desbloqueadas": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "mapaArcoResumen": "Arco {romano} · {vistas}/{total}",
   "@mapaArcoResumen": {
     "placeholders": {
-      "romano": { "type": "String" },
-      "vistas": { "type": "int" },
-      "total": { "type": "int" }
+      "romano": {
+        "type": "String"
+      },
+      "vistas": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "mapaMontanaTitulo": "LA MONTAÑA",
@@ -280,7 +344,9 @@
   "mapaDistritoBloqueado": "se abre a las {n} esquirlas",
   "@mapaDistritoBloqueado": {
     "placeholders": {
-      "n": { "type": "int" }
+      "n": {
+        "type": "int"
+      }
     }
   },
   "puzzleBotonHuir": "huir",
@@ -335,7 +401,9 @@
   "puzzleInstrEscalaMapa": "mapa 1:{denominador}",
   "@puzzleInstrEscalaMapa": {
     "placeholders": {
-      "denominador": { "type": "int" }
+      "denominador": {
+        "type": "int"
+      }
     }
   },
   "puzzleInstrEnPlano": "en plano",
@@ -362,7 +430,9 @@
   "puzzleInstrCualEsModa": "toca el valor de la {modo}",
   "@puzzleInstrCualEsModa": {
     "placeholders": {
-      "modo": { "type": "String" }
+      "modo": {
+        "type": "String"
+      }
     }
   },
   "puzzleHeaderOpDecimal": "OP. DECIMAL",
@@ -380,8 +450,12 @@
   "puzzleInstrPorcentajeDe": "el {porcentaje} % de {cantidad}",
   "@puzzleInstrPorcentajeDe": {
     "placeholders": {
-      "porcentaje": { "type": "int" },
-      "cantidad": { "type": "int" }
+      "porcentaje": {
+        "type": "int"
+      },
+      "cantidad": {
+        "type": "int"
+      }
     }
   },
   "puzzleHeaderQuePorcentaje": "¿QUÉ %?",
@@ -392,8 +466,12 @@
   "puzzleInstrProbabilidadSaco": "saco con {favorables} rojas y {otros} azules",
   "@puzzleInstrProbabilidadSaco": {
     "placeholders": {
-      "favorables": { "type": "int" },
-      "otros": { "type": "int" }
+      "favorables": {
+        "type": "int"
+      },
+      "otros": {
+        "type": "int"
+      }
     }
   },
   "puzzleInstrProbabilidadFormula": "toca la fracción que da la probabilidad",
@@ -401,8 +479,12 @@
   "puzzleInstrPEquals": "P = {numerador}/{denominador}",
   "@puzzleInstrPEquals": {
     "placeholders": {
-      "numerador": { "type": "int" },
-      "denominador": { "type": "int" }
+      "numerador": {
+        "type": "int"
+      },
+      "denominador": {
+        "type": "int"
+      }
     }
   },
   "puzzleInstrComoPorcentaje": "toca el porcentaje equivalente a la fracción",
@@ -428,22 +510,37 @@
   "sonidoDescargaBajandoConTotal": "Bajando {mb} / {total} MB",
   "@sonidoDescargaBajandoConTotal": {
     "placeholders": {
-      "mb": { "type": "String" },
-      "total": { "type": "String" }
+      "mb": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
     }
   },
   "sonidoDescargaBajandoSinTotal": "Bajando {mb} MB",
   "@sonidoDescargaBajandoSinTotal": {
     "placeholders": {
-      "mb": { "type": "String" }
+      "mb": {
+        "type": "String"
+      }
     }
   },
   "sonidoDescargaVerificando": "Verificando integridad…",
   "sonidoDescargaInstalando": "Instalando {actual} / {total}",
   "@sonidoDescargaInstalando": {
     "placeholders": {
-      "actual": { "type": "int" },
-      "total": { "type": "int" }
+      "actual": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
-  }
+  },
+  "cuentaErrorCamposAnadirNino": "Pon el email, la contraseña y el nombre del niño.",
+  "cuentaAnadirNinoTitulo": "AÑADIR NIÑO",
+  "cuentaAnadirNinoTagline": "Mete el email y la contraseña del tutor que ya tiene cuenta. Añadiremos a este niño bajo esa misma cuenta.",
+  "cuentaAnadirNinoBoton": "AÑADIR NIÑO",
+  "cuentaAnadirNinoBotonEnviando": "AÑADIENDO…"
 }

@@ -76,6 +76,18 @@ class EscenasArco3 {
     mesaYReconstruccionEstella,
     concilioEstella,
     calleRuaAlAnochecer,
+    isauraPresenta,
+    lasFuentesDe1378,
+    viajeATudela,
+    elBarrioJuderia,
+    conversacionConKarim,
+    laCuartaAfirmacion,
+    reconstruccionFinal,
+    elConcilioDelIncendio,
+    tasioAlSalir,
+    elSilencioSegundo,
+    entregaDelMosaicoM3,
+    aprendizIII,
   ];
 
   /// Flags institucionales adicionales que el orquestador activa al
@@ -195,6 +207,48 @@ class EscenasArco3 {
     },
     'escena_3_5_4_vista': {
       'arco_3_estacion_5_cerrada',
+    },
+    'escena_3_6_1_vista': {
+      'isaura_presenta_brecha_1378',
+      'carpeta_1378_recibida',
+    },
+    'escena_3_6_2_vista': {
+      'fuentes_1378_estudiadas',
+    },
+    'escena_3_6_3_vista': {
+      'viaje_tudela_juderia_iniciado',
+    },
+    'escena_3_6_4_vista': {
+      'juderia_tudela_visitada',
+    },
+    'escena_3_6_5_vista': {
+      'karim_afirmacion_silencio_validada',
+    },
+    'escena_3_6_6_vista': {
+      'silencio_tres_semanas_documentado',
+    },
+    'escena_3_6_7_vista': {
+      'reconstruccion_1378_producida',
+    },
+    'escena_3_6_8_vista': {
+      'concilio_3_6_cerrado',
+      'aprendiz_iii_anunciado',
+      'met_tasio_concilio',
+    },
+    'escena_3_6_9_vista': {
+      'tasio_afirmacion_cuatro_validada',
+      'tasio_cuando_te_gradues',
+    },
+    'escena_3_6_10_vista': {
+      'arco_3_estacion_6_cerrada',
+      'maren_silencio_segundo_escrito',
+    },
+    'escena_m_3_entrega_vista': {
+      'mosaico_arco_3_validado_por_andres',
+    },
+    'escena_3_z_vista': {
+      'arco_3_cerrado_por_la_cronista',
+      'aprendiz_iii_consagrado',
     },
   };
 
@@ -2889,6 +2943,1367 @@ class EscenasArco3 {
         voz: VozPersonaje.vozDeFuente,
         texto: 'Ha sido un alivio.',
         pausaPrevia: Duration(milliseconds: 1000),
+      ),
+    ],
+  );
+
+  /// 3.6.1 — *Isaura presenta*. Principios de mayo. Despacho de
+  /// Isaura. La carpeta gruesa de la Brecha del incendio de la
+  /// judería de Tudela de 1378 sobre la mesa. Isaura le adelanta
+  /// a Maren su versión publicada en 2017 y la de Tasio publicada
+  /// en 2021, las dos lecturas que rompieron la relación entre
+  /// ellos. Le pasa la carpeta y le da seis semanas. La cinemática
+  /// articula el contraste central de la Brecha — Probable vs
+  /// Sólido para la complicidad institucional, identificación
+  /// nominativa de tres miembros del Concejo en la versión de
+  /// Tasio, prudencia metodológica de Isaura, precio personal de
+  /// la prudencia. Cierre con el anuncio de que el Concilio será
+  /// amplio y que Karim ha pedido invitar a Tasio como observador.
+  /// Doc 09 §3.6.1.
+  ///
+  /// **PENDIENTE DE VALIDACIÓN COMITÉ TUDELA-1378**: las cifras
+  /// concretas de víctimas (al menos dieciocho personas, cuatro
+  /// casas destruidas completas, otras siete dañadas) y la
+  /// identificación nominal de tres miembros del Concejo del 1378
+  /// como responsables son material que requiere validación del
+  /// comité asesor histórico antes de exposición pública. Mientras
+  /// tanto se mantiene la formulación literal del doc 09 v0.3
+  /// porque el guion canónico ya la lleva — pero registrada en
+  /// `BLOQUEOS-PENDIENTES.md`.
+  static const EscenaCinematica isauraPresenta = EscenaCinematica(
+    id: '3.6.1',
+    titulo: 'Isaura presenta',
+    flagDeSalida: 'escena_3_6_1_vista',
+    flagsRequeridos: {'escena_3_5_4_vista'},
+    ambiente: AmbienteArchivo.despachoIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Despacho de Isaura, principios de mayo. Una carpeta '
+            'gruesa sobre la mesa — la carpeta de la Brecha. Maren '
+            'entra. Isaura le señala una silla.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Es tu hora.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Ya.'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Antes de empezar, quiero contarte yo lo que pasó. Tú '
+            'tendrás tu propia lectura. Pero conoce primero la mía '
+            'y la suya.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Isaura abre la carpeta. Saca tres documentos antiguos '
+            '— actas del Concejo de Tudela del 1378 y del 1379, '
+            'fragmento de un padrón judío anterior, una carta '
+            'posterior.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'En noviembre de 1378, el barrio judío de Tudela ardió '
+            'en una noche. Murieron al menos dieciocho personas, '
+            'según lo que se documenta. Cuatro casas destruidas '
+            'completas, otras siete dañadas. La sinagoga sufrió '
+            'daños menores.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Quién lo provocó?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Las actas del Concejo del día siguiente lo atribuyen '
+            'a "personas no identificadas, ajenas a la comunidad '
+            'cristiana de la villa". El padrón judío posterior — '
+            'incompleto — registra las muertes. Una carta de un '
+            'superviviente a un correligionario de Zaragoza, '
+            'dieciocho meses después, habla de "los señores del '
+            'Concejo que callaron tres semanas antes y no callaron '
+            'tres semanas después".',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Entonces hubo complicidad institucional.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Esa es la pregunta. Yo digo: Probable. Hay indicios '
+            'sólidos pero no documentación directa.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Y Tasio?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sólido. E identifica por nombre a tres miembros del '
+            'Concejo del 1378 como responsables de la complicidad '
+            'activa.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Sobre qué evidencia?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sobre la carta del superviviente, sobre correlación '
+            'entre presencias documentadas en sesiones del Concejo '
+            'previas, y sobre un fragmento de testimonio recogido '
+            'por la Inquisición seis años después de un converso '
+            'que mencionaba a uno de los tres.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué dijiste tú al respecto?',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Que la evidencia de Tasio era circunstancial. Que la '
+            'correlación de presencias no es prueba. Que el '
+            'testimonio inquisitorial es de fuente mediada y '
+            'posiblemente extraído bajo presión. Que para identificar '
+            'nominalmente a personas como responsables de un '
+            'asesinato colectivo hace falta más.',
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Tasio pensó que yo era cobarde.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Lo eras?'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa muy larga.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No lo sé. Lo que sé es que prefiero quedarme en '
+            'Probable que afirmar Sólido lo que es sólo Probable.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Lo que también sé es que mi prudencia tuvo precio: la '
+            'versión de Resolutiva tomó tracción pública, fue citada '
+            'por una asociación judía internacional para una demanda '
+            'simbólica, y mi versión más cauta quedó como "la '
+            'institución que no quería molestar".',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Eso te dolió?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y aún así mantienes tu versión?',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sí.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Isaura empuja la carpeta hacia Maren.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Maren. Te paso la carpeta. Tienes seis semanas. '
+            'Trabaja con todo el material. Habla con Karim si '
+            'necesitas. Habla conmigo si quieres. Habla con Tasio '
+            'si necesitas — yo no te lo pido, pero no te lo '
+            'prohíbo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Llega a tu propia versión. Sin imitar la mía, sin '
+            'imitar la suya. Y defiéndela.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y si no llego a una propia?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Entonces lo declaras. "He revisado el material. He '
+            'visto los argumentos de las dos versiones. No tengo '
+            'elementos para llegar a una tercera. Mi conclusión '
+            'es que se mantiene la disputa."',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Eso es válido?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sí. Pero raramente sucede que una Cronista joven con '
+            'perspectiva fresca no encuentre nada nuevo.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Y otra cosa.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'El Concilio de cierre va a ser amplio. Begoña, yo, '
+            'Aitor, Joana, Karim, Marina como observadora. Y Karim '
+            'ha pedido invitar a Tasio como observador externo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Aceptamos?',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Begoña ha aceptado. Yo apoyé.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Por qué?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Porque tú tienes que defender tu versión ante todos '
+            'los oídos que existen. Si no la sostienes con Tasio '
+            'mirando, no la has sostenido del todo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 2000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren coge la carpeta. Pesa.',
+      ),
+    ],
+  );
+
+  /// 3.6.2 — *Las fuentes de 1378*. Las semanas siguientes en el
+  /// Archivo, Mesa de Trabajo. Maren trabaja durante semanas con
+  /// las ocho fuentes catalogadas: actas del Concejo, padrón
+  /// parcial de la judería anterior al incendio, carta del
+  /// superviviente a un correligionario de Zaragoza, fragmento de
+  /// testimonio inquisitorial, correspondencia de la Corona del
+  /// rey Carlos II, restos arqueológicos del barrio (excavación
+  /// del s. XX, niveles de incendio identificados), comparación
+  /// con casos análogos peninsulares (Sevilla 1391, Toledo) y las
+  /// dos reconstrucciones publicadas previas (Isaura 2017,
+  /// Tasio/Resolutiva 2021). Voz del Cuaderno articulando el
+  /// descubrimiento del silencio de tres semanas en las actas
+  /// posteriores como afirmación independiente. Doc 09 §3.6.2.
+  static const EscenaCinematica lasFuentesDe1378 = EscenaCinematica(
+    id: '3.6.2',
+    titulo: 'Las fuentes de 1378',
+    flagDeSalida: 'escena_3_6_2_vista',
+    flagsRequeridos: {'escena_3_6_1_vista'},
+    ambiente: AmbienteArchivo.mesaTrabajoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mesa de Trabajo del Archivo. Maren tiene la carpeta '
+            'abierta y ocho montones de material distribuidos sobre '
+            'la mesa: actas del Concejo del periodo, padrón parcial '
+            'de la judería, carta del superviviente, fragmento de '
+            'testimonio inquisitorial, correspondencia del rey '
+            'Carlos II al Concejo, informes arqueológicos del '
+            'barrio, comparación con casos peninsulares del s. XIV, '
+            'y las dos reconstrucciones publicadas previas.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pasa horas anotando. La interfaz le permite organizar, '
+            'comparar, anotar. La Mesa guarda sus revisiones día a '
+            'día.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Día cuatro. Tasio tiene razón en una cosa. La '
+            'correlación de presencias en sesiones del Concejo '
+            'previas al incendio NO es prueba — pero tampoco es '
+            'nada. Las tres personas que él identifica estuvieron '
+            'presentes en las tres sesiones donde se discutió "el '
+            'problema judío" en el mes anterior. Eso no es probable '
+            'que sea casual.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Maren cierra los ojos un segundo.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Día once. Pero también tiene razón Isaura. El '
+            'testimonio inquisitorial de seis años después es '
+            'problemático. El converso que lo da podría haber '
+            'dicho lo que el inquisidor quería oír, podría tener '
+            'motivos personales contra los acusados, podría '
+            'confundir lo que vio.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Día dieciocho. Hay algo que ninguno de los dos dice. '
+            'Las actas del Concejo posteriores al incendio. Isaura '
+            'las usa. Tasio también. Pero ninguno comenta lo que '
+            'llevan tres semanas sin tratar.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren se levanta. Camina por la sala. Vuelve a la '
+            'mesa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Día veintidós. Las actas posteriores al incendio dejan '
+            'de mencionar al barrio judío durante tres semanas '
+            'completas. Cuando lo retoman, lo hacen en términos '
+            'administrativos burocráticos. Eso es silencio anómalo. '
+            'Las actas anteriores discutían "el problema judío" '
+            'cada dos sesiones. Después del incendio: nada durante '
+            'tres semanas.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'El silencio es información.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+    ],
+  );
+
+  /// 3.6.3 — *Viaje a Tudela*. Tras tres semanas de trabajo en el
+  /// Archivo. Maren e Isaura van juntas esta vez al lugar de la
+  /// Brecha. Conversación escasa en el coche — las dos saben qué
+  /// van a ver. Isaura le da la opción de hablar con Tasio si
+  /// aparece en la cafetería; Tasio no aparece. Doc 09 §3.6.3.
+  static const EscenaCinematica viajeATudela = EscenaCinematica(
+    id: '3.6.3',
+    titulo: 'Viaje a Tudela',
+    flagDeSalida: 'escena_3_6_3_vista',
+    flagsRequeridos: {'escena_3_6_2_vista'},
+    ambiente: AmbienteArchivo.cocheIsaura,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'El coche de Isaura camino a Tudela. Esta vez Maren '
+            'no va con Aitor — va con Isaura. La conversación es '
+            'escasa.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Ya conoces la cafetería.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Si Tasio aparece, di lo que tengas que decir.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Tasio no aparece. Maren e Isaura visitan la antigua '
+            'judería sin interrupciones.',
+      ),
+    ],
+  );
+
+  /// 3.6.4 — *El barrio*. Antigua judería de Tudela, calles del
+  /// casco viejo. Maren e Isaura caminan por las calles que
+  /// fueron la judería. Una placa moderna identifica la zona, la
+  /// sinagoga ya no existe. Plaza pequeña que pudo haber sido
+  /// espacio comunitario. Una piedra grabada con caracteres
+  /// hebreos parcialmente borrados, reutilizada en una pared
+  /// posterior. Maren formula la pregunta del peso de cerrar
+  /// versión: *"si yo cierro mi versión, ¿lo sabrá más gente?"*.
+  /// Doc 09 §3.6.4.
+  static const EscenaCinematica elBarrioJuderia = EscenaCinematica(
+    id: '3.6.4',
+    titulo: 'El barrio',
+    flagDeSalida: 'escena_3_6_4_vista',
+    flagsRequeridos: {'escena_3_6_3_vista'},
+    ambiente: AmbienteArchivo.juderiaTudela,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Antigua judería de Tudela. Calles estrechas del casco '
+            'viejo. Una placa moderna identifica la zona — "Antiguo '
+            'barrio judío de Tudela". La sinagoga histórica ya no '
+            'existe. Hay una plaza pequeña que pudo haber sido un '
+            'espacio comunitario.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren camina despacio. Mira los muros. Algunos '
+            'fragmentos antiguos visibles. Una piedra grabada con '
+            'caracteres hebreos parcialmente borrados, reutilizada '
+            'en una pared posterior.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Aquí pasó.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Aquí pasó.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa larga.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Hace seis siglos y medio.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'La gente que pasa por aquí no lo sabe.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'La mayoría no.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Si yo cierro mi versión, ¿lo sabrá más gente?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Algo más. No mucho. La Brecha es académica. Pero todo '
+            'cierre tiene resonancia, aunque modesta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Vale.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+    ],
+  );
+
+  /// 3.6.5 — *Conversación con Karim*. Días después en la
+  /// cafetería del Archivo. Maren le pasa a Karim el avance de su
+  /// reconstrucción. Karim lee con atención y se centra en la
+  /// afirmación cuatro — el silencio de tres semanas en las
+  /// actas posteriores como afirmación independiente, dato
+  /// declarado en sí mismo. *"Esto no lo dice ni Isaura ni
+  /// Tasio. Eso es lo que estaba esperando que alguien dijera
+  /// desde 2021."* Karim le da el método para defender la
+  /// solidez (recuento del patrón anterior + posterior). Avisa
+  /// que Tasio asistirá al Concilio como observador, sentado al
+  /// fondo, sin derecho a hablar. Doc 09 §3.6.5.
+  static const EscenaCinematica conversacionConKarim = EscenaCinematica(
+    id: '3.6.5',
+    titulo: 'Conversación con Karim',
+    flagDeSalida: 'escena_3_6_5_vista',
+    flagsRequeridos: {'escena_3_6_4_vista'},
+    ambiente: AmbienteArchivo.cafeteriaArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cafetería del Archivo, días después. Maren ha pedido '
+            'a Karim que la vea. Le pasa el avance de su '
+            'reconstrucción. Karim lee.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Tu afirmación cuatro.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            '"El silencio de tres semanas en las actas posteriores '
+            'al incendio es información sobre la complicidad '
+            'institucional, declarado como dato en sí mismo."',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Esto no lo dice ni Isaura ni Tasio.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: '¿Por qué crees que no lo dicen?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque los dos discuten sobre **qué pasó** en la '
+            'noche del incendio y en los días previos. La pregunta '
+            'de qué pasó después — institucionalmente — no la '
+            'formulan ninguno como Brecha propia.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Y tú la formulas como afirmación dentro de la tuya.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Eso es lo que estaba esperando que alguien dijera desde '
+            '2021.',
+        pausaPrevia: Duration(milliseconds: 2000),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 2000)),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Maren. Esa afirmación cuatro va a ser tu escudo y tu '
+            'blanco. Los Anclados te van a preguntar cómo argumentas '
+            'que el silencio de tres semanas es Sólido y no '
+            'Probable. Tasio se va a alegrar pero también va a '
+            'querer empujarte más allá.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Cómo defiendo la solidez?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Comparas con el patrón anterior. ¿Cuántas veces en los '
+            'seis meses anteriores el Concejo trató asuntos del '
+            'barrio judío?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Lo cuento.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Y comparas con el patrón posterior. ¿Cuándo retoman? '
+            '¿En qué términos?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Ya lo tengo.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Entonces es Sólido.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Una cosa más.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Tasio está invitado al Concilio. Lo sabes.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Le voy a recibir yo. Le voy a sentar al fondo. No va '
+            'a poder hacer preguntas. Sólo escuchar.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Si en cualquier momento te incomoda su presencia, me '
+            'avisas con la mirada y le pido salir.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No va a hacer falta.'),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto: 'Eso espero. Pero te lo digo por si acaso.',
+      ),
+    ],
+  );
+
+  /// 3.6.6 — *La cuarta afirmación*. Mesa de Trabajo. Maren
+  /// prepara el análisis comparativo del patrón. Recuento de
+  /// menciones del barrio judío en actas del Concejo en los seis
+  /// meses anteriores: cada dos sesiones, total 14 menciones.
+  /// Recuento del periodo posterior al incendio: 0 menciones
+  /// durante 21 días. Cuando retoman: una sola mención, en
+  /// términos burocráticos sobre tasas pendientes, sin referencia
+  /// al incendio. Voz del Cuaderno articulando la solidez del
+  /// silencio. Doc 09 §3.6.6.
+  static const EscenaCinematica laCuartaAfirmacion = EscenaCinematica(
+    id: '3.6.6',
+    titulo: 'La cuarta afirmación',
+    flagDeSalida: 'escena_3_6_6_vista',
+    flagsRequeridos: {'escena_3_6_5_vista'},
+    ambiente: AmbienteArchivo.mesaTrabajoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mesa de Trabajo. Maren prepara el análisis comparativo '
+            'del patrón. Recuento de menciones del barrio judío en '
+            'las actas del Concejo en los seis meses anteriores: '
+            'cada dos sesiones, total catorce menciones, sobre '
+            'temas variados — impuestos, conflictos comerciales '
+            'menores, "el problema" en términos retóricos.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Recuento del periodo posterior al incendio: cero '
+            'menciones durante veintiún días. Cuando retoman: una '
+            'sola mención, en términos burocráticos sobre tasas '
+            'pendientes, sin referencia al incendio.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'El silencio es Sólido.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Lo que no sé es si el silencio refleja vergüenza, '
+            'complicidad activa, o simplemente no sabían qué decir. '
+            'Pero el silencio en sí mismo está documentado.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Tres semanas de no decir nada sobre algo de lo que '
+            'llevaban seis meses hablando cada quince días.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+    ],
+  );
+
+  /// 3.6.7 — *Reconstrucción final*. Mesa de Trabajo. Maren
+  /// produce las nueve afirmaciones canónicas de su versión:
+  /// hecho del incendio (Sólido), carta del superviviente (Sólido
+  /// como fuente, interpretativo Probable), correlación de
+  /// presencias (Sólido como correlación, Probable como
+  /// implicación), silencio de tres semanas como dato (Sólido
+  /// — la afirmación nueva), complicidad institucional como
+  /// categoría general (Sólido) con forma específica (Probable
+  /// sin discriminar), identificación nominal de tres miembros
+  /// (Disputado), testimonio inquisitorial como caracterización
+  /// metodológica (Sólido), declaración de estado de la Brecha
+  /// (Sólido), nombres de víctimas como tarea pendiente (Sólido).
+  /// Añade nombres parciales conservados de cuatro víctimas. Voz
+  /// del Cuaderno cerrando: *"No es lo que Tasio quería. No es
+  /// exactamente lo que Isaura defendió. Es mío."* Doc 09 §3.6.7.
+  static const EscenaCinematica reconstruccionFinal = EscenaCinematica(
+    id: '3.6.7',
+    titulo: 'Reconstrucción final',
+    flagDeSalida: 'escena_3_6_7_vista',
+    flagsRequeridos: {'brecha_3_6_completada'},
+    ambiente: AmbienteArchivo.mesaTrabajoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Mesa de Trabajo. La reconstrucción final de Maren tiene '
+            'nueve afirmaciones articuladas con sus anclajes. Las '
+            'va escribiendo a limpio.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Una. El incendio del barrio judío de Tudela en noviembre '
+            'de 1378, con al menos dieciocho víctimas mortales '
+            'documentadas. Sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Dos. La carta del superviviente identifica un patrón de '
+            '"callar antes y no callar después" entre algunos miembros '
+            'del Concejo. Sólido la fuente; la interpretación '
+            'específica de qué actores requiere otras fuentes '
+            'corroboradoras.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Tres. La correlación de presencias en sesiones previas '
+            'identifica a tres miembros con presencia continua. '
+            'Sólido la correlación; Probable la implicación directa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Cuatro. El silencio de tres semanas en las actas '
+            'posteriores al incendio, en contraste con el patrón '
+            'previo, es información sobre la postura institucional '
+            'del Concejo y constituye dato en sí mismo. Sólido.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Cinco. La complicidad institucional como categoría '
+            'general — Sólido. La forma específica (orden directa, '
+            'pacto silencioso, omisión deliberada) — Probable sin '
+            'posibilidad actual de discriminar.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Seis. La identificación nominal de los tres miembros '
+            'señalados por Tasio — Disputado. La evidencia sostiene '
+            'sospecha razonable pero no determinación nominativa con '
+            'la confianza que el oficio requiere para nombrar a '
+            'personas en relación a un asesinato colectivo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Siete. El testimonio inquisitorial de seis años después '
+            'es fuente mediada con sesgo del productor (inquisidor) '
+            'y posibles motivaciones del declarante (converso). '
+            'Sólido como caracterización metodológica.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Ocho. La Brecha sigue siendo, tras seiscientos cincuenta '
+            'años, una herida histórica abierta. La identificación '
+            'nominativa queda Disputada y reabierta. Sólido como '
+            'declaración de estado.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Nueve. Las víctimas merecen ser reconocidas con nombre '
+            'cuando sea posible. El padrón parcial conserva nombres '
+            'incompletos. Maren añade los cuatro nombres parcialmente '
+            'conservados — un Mosé ben con apellido fragmentado, una '
+            'Dueña con apellido perdido, un niño Yosef con '
+            'identificación parcial, una mujer Esther con casa '
+            'identificada. Sólido como tarea pendiente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'No he resuelto la Brecha.',
+        pausaPrevia: Duration(milliseconds: 1800),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'He añadido lo que podía añadir.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Lo que añado es: el silencio posterior es dato. Y los '
+            'nombres de las víctimas son tarea pendiente.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'No es lo que Tasio quería. No es exactamente lo que '
+            'Isaura defendió. Es mío.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+    ],
+  );
+
+  /// 3.6.8 — *El Concilio del incendio*. Una semana después.
+  /// Salón del Concilio del Archivo, sala más llena de lo
+  /// habitual. Begoña preside. Isaura, Aitor, Joana, Karim,
+  /// Marina como observadora, Maren. Tasio asiste como observador
+  /// externo, sentado al fondo, sin derecho a hablar durante el
+  /// Concilio formal. Maren presenta veinte minutos. Las nueve
+  /// afirmaciones con sus anclajes. Joana cuestiona el Sólido
+  /// de la cuatro; Aitor reconoce la metodología nueva en la
+  /// cinco; Karim aprueba la nueve; Begoña pregunta al final
+  /// si la reconstrucción está "haciendo encaje" entre las dos
+  /// versiones, Maren responde con cinco segundos de pausa y
+  /// argumenta sin concesiones. Sello unánime. Begoña anuncia
+  /// "Aprendiz III". Doc 09 §3.6.8.
+  static const EscenaCinematica elConcilioDelIncendio = EscenaCinematica(
+    id: '3.6.8',
+    titulo: 'El Concilio del incendio',
+    flagDeSalida: 'escena_3_6_8_vista',
+    flagsRequeridos: {'escena_3_6_7_vista'},
+    ambiente: AmbienteArchivo.salonConcilio,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Salón del Concilio del Archivo, una semana después. '
+            'Sala más llena de lo habitual. Begoña preside. Isaura, '
+            'Aitor, Joana, Karim, Marina como observadora, Maren. '
+            'Tasio al fondo, sentado en una silla que normalmente '
+            'no se usa.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura:
+            'Maren entra. Saluda con la cabeza. Le hace un '
+            'asentimiento mínimo a Tasio cuando entra. Él le hace '
+            'otro. Isaura está en su sitio habitual.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto:
+            'Maren Lozano, Aprendiz II. Brecha del incendio de la '
+            'judería de Tudela de 1378. Adelante.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren presenta. Veinte minutos. Las nueve afirmaciones, '
+            'con anclajes y niveles de confianza. Cuando termina la '
+            'afirmación cuatro — el silencio de tres semanas — '
+            'Marina al fondo asiente sin querer. Karim cierra los '
+            'ojos un segundo. Cuando termina la afirmación seis — '
+            'el Disputado sobre la identificación nominativa — '
+            'Tasio al fondo no se mueve.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Termina. Pausa. Begoña abre las preguntas.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.joana,
+        texto:
+            'Tu afirmación cuatro. La declaras Sólido. ¿Por qué '
+            'Sólido y no Probable?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque la documentación es directa. Las actas existen, '
+            'el silencio existe en ellas, el contraste con el patrón '
+            'anterior es cuantificable. Lo que es interpretativo — '
+            'qué significa el silencio — lo declaro Probable o '
+            'Disputado en otras afirmaciones. La existencia del '
+            'silencio en sí, declarable como dato, es Sólido.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.joana, texto: 'Bien.'),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto:
+            'Tu afirmación cinco — complicidad institucional como '
+            'afirmación general Sólido. Haces algo que no se hacía '
+            'antes: afirmar Sólido la categoría general y dejar '
+            'Probable la forma específica. ¿Por qué crees que esa '
+            'distinción es honesta?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque la evidencia disponible — silencio posterior + '
+            'correlación de presencias + carta del superviviente + '
+            'testimonio inquisitorial — converge en algo. Lo que '
+            'converge — la categoría general "hubo complicidad '
+            'institucional" — está mejor sostenido que cualquiera '
+            'de las formas específicas. Cada forma específica tiene '
+            'evidencia parcial. La categoría general tiene evidencia '
+            'múltiple convergente.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.aitor,
+        texto: 'Eso es nueva metodología.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'No es nueva. Es declarar honestamente lo que las '
+            'fuentes permiten declarar.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.karim,
+        texto:
+            'Tu afirmación nueve — los nombres de las víctimas como '
+            'tarea pendiente. ¿Por qué la incluyes?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Porque sin ella la Brecha trata el incendio como '
+            'acontecimiento histórico abstracto. Las víctimas tenían '
+            'nombres. Algunos los conservamos parcialmente. '
+            'Reconocerlos es parte del oficio. Y declarar que los '
+            'desconocidos son tarea pendiente es declarar que el '
+            'oficio sigue.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Bien.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa larga. Begoña no ha hablado todavía.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Una pregunta para terminar.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto:
+            'Tu reconstrucción defiende posiciones más sólidas que '
+            'las dos anteriores publicadas en algunos puntos, y '
+            'posiciones más cautas en otros. ¿Cómo respondes a quien '
+            'te diga que estás "haciendo encaje" entre las dos '
+            'versiones para parecer original?',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren tarda mucho en responder. Cinco segundos. Tasio '
+            'al fondo no se mueve.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Que cada afirmación tiene su anclaje propio. Que la '
+            'afirmación cuatro — el silencio de tres semanas — no '
+            'la contiene ninguna de las dos versiones anteriores. '
+            'Que la afirmación cinco — la categoría general como '
+            'Sólido — es un nivel intermedio que ni Isaura ni Tasio '
+            'formularon. Que mi reconstrucción no encaja entre las '
+            'dos: extiende el debate añadiendo un dato que ambas '
+            'versiones tenían disponible y ninguna usó como '
+            'afirmación independiente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: '¿Y si te dicen que estás siendo presuntuosa?',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto:
+            'Que me lo demuestren mostrando que el silencio posterior '
+            'no es dato.',
+        pausaPrevia: Duration(milliseconds: 2200),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pausa larga. Begoña la mira. Diez segundos. Después '
+            'mira a los demás.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.begona, texto: '¿Comentarios para sellar?'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sello.'),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Sello.'),
+      PlanoDialogo(voz: VozPersonaje.joana, texto: 'Sello.'),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Sello.'),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Sellada.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.begona,
+        texto: 'Aprendiz III.',
+        pausaPrevia: Duration(milliseconds: 2000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Maren no se mueve durante un segundo. Después asiente. '
+            'Se le humedecen los ojos un poquito — no llora pero '
+            'está cerca. Lo controla. Tasio al fondo asiente '
+            'solemnemente. Karim lo ve, nadie más.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.begona, texto: 'Cierre.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Empiezan a levantarse. Maren se queda quieta. Marina '
+            'viene a darle un abrazo breve, no protocolario. Karim '
+            'va al fondo a hablar con Tasio. Aitor se acerca a '
+            'Maren.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.aitor, texto: 'Bien.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Gracias.',
+        pausaPrevia: Duration(milliseconds: 1000),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Aitor se va. Isaura no se acerca. La mira desde su '
+            'sitio. Dos segundos. Asiente. Sale. Maren se queda en '
+            'el salón vacío. Después sale al pasillo.',
+      ),
+    ],
+  );
+
+  /// 3.6.9 — *Tasio al salir*. Pasillo del Archivo cerca de la
+  /// salida. Tasio se acerca a Maren. *"La afirmación cuatro
+  /// está bien."* / *"Sigo pensando que las otras conclusiones
+  /// se quedan cortas. Pero la cuatro la doy."* En la puerta del
+  /// Archivo, antes de salir: *"Cuando te gradúes, hablamos."*
+  /// Karim se acerca a Maren tras la salida de Tasio. Doc 09 §3.6.9.
+  static const EscenaCinematica tasioAlSalir = EscenaCinematica(
+    id: '3.6.9',
+    titulo: 'Tasio al salir',
+    flagDeSalida: 'escena_3_6_9_vista',
+    flagsRequeridos: {'escena_3_6_8_vista'},
+    ambiente: AmbienteArchivo.pasilloArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Pasillo del Archivo cerca de la salida. Maren camina '
+            'hacia la puerta. Tasio está cerca, hablando con Karim '
+            'en voz baja. Cuando ve a Maren, deja a Karim. Se '
+            'acerca.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: 'Maren.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'La afirmación cuatro está bien.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Gracias.',
+        pausaPrevia: Duration(milliseconds: 1200),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'No me des las gracias. La construiste tú.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto:
+            'Sigo pensando que las otras conclusiones se quedan '
+            'cortas.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Lo sé.'),
+      PlanoDialogo(voz: VozPersonaje.tasio, texto: 'Pero la cuatro la doy.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Tasio asiente brevemente. Se gira para irse. En la '
+            'puerta del Archivo, antes de salir, se vuelve.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.tasio,
+        texto: 'Cuando te gradúes, hablamos.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Sale. Karim se acerca a Maren.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: '¿Estás bien?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.karim, texto: 'Has estado.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Karim asiente y se aleja. Maren se queda en el pasillo. '
+            'La cámara se queda con ella unos segundos. Después '
+            'corta.',
+      ),
+    ],
+  );
+
+  /// 3.6.10 — *El silencio segundo*. Esa noche, casa de Maren.
+  /// Maren se ducha durante mucho tiempo. Después en su
+  /// habitación. Toalla en el pelo. Pijama. El cuaderno cerrado.
+  /// Lo abre. Voz del Cuaderno escribiendo: *"Tasio dijo 'cuando
+  /// te gradúes, hablamos.' No le he dicho nada a Isaura. Tampoco
+  /// lo voy a decir esta noche. Lo que sí voy a decir es que Tasio
+  /// me ha tratado bien las dos veces. Y Karim ha tenido razón al
+  /// invitarlo. Begoña ha aceptado bien también. Algo de lo que
+  /// pasó hoy va a estar en mi cabeza durante mucho tiempo. Y la
+  /// frase de Tasio del primer día — 'no la fuerces pero no la
+  /// evites' — la entiendo ahora."* Cierra el cuaderno. Apaga la
+  /// luz. Negro. Doc 09 §3.6.10.
+  static const EscenaCinematica elSilencioSegundo = EscenaCinematica(
+    id: '3.6.10',
+    titulo: 'El silencio segundo',
+    flagDeSalida: 'escena_3_6_10_vista',
+    flagsRequeridos: {'escena_3_6_9_vista'},
+    ambiente: AmbienteArchivo.cuartoCasaMaren,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Casa de Maren, esa noche. Audio: agua corriendo durante '
+            'un minuto largo. Después el agua se cierra.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren en su habitación. Toalla en el pelo. Pijama. Se '
+            'sienta en la mesa. El cuaderno cerrado. Lo abre. Una '
+            'página en blanco. Coge el bolígrafo. Empieza a escribir.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto: 'Tasio dijo "cuando te gradúes, hablamos."',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'No le he dicho nada a Isaura. Tampoco lo voy a decir '
+            'esta noche.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Lo que sí voy a decir, aunque sea sólo a este cuaderno: '
+            'Tasio me ha tratado bien las dos veces. Y Karim ha '
+            'tenido razón al invitarlo. Begoña ha aceptado bien '
+            'también.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Algo de lo que pasó hoy va a estar en mi cabeza durante '
+            'mucho tiempo.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.vozDeFuente,
+        texto:
+            'Y la frase de Tasio del primer día — "no la fuerces '
+            'pero no la evites" — la entiendo ahora.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Cierra el cuaderno. Apaga la luz. Negro.',
+      ),
+    ],
+  );
+
+  /// M3.entrega — *Andrés en el ático*. Maren entrega su Mosaico
+  /// del Arco 3 (ficha de museo con cartela de la piedra grabada
+  /// del barrio mudéjar de Tudela) a Andrés en el ático del
+  /// Archivo. Andrés la archiva sin decir nada. Antes de que Maren
+  /// se vaya, le pregunta sólo *"¿La piedra existe?"* — Maren
+  /// confirma que está en el muro y que la fotografió. Andrés
+  /// cierra: *"Bien. La gente que pase por allí ya sabe que hay
+  /// alguien que la mira con respeto."* Reconocimiento por gesto
+  /// pequeño paralelo al M1.entrega y M2.entrega. Doc 09 §M3.
+  static const EscenaCinematica entregaDelMosaicoM3 = EscenaCinematica(
+    id: 'M3.entrega',
+    titulo: 'Andrés en el ático',
+    flagDeSalida: 'escena_m_3_entrega_vista',
+    flagsRequeridos: {'mosaico_arco_3_entregado'},
+    ambiente: AmbienteArchivo.aticoArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Ático del Archivo. Mesa de trabajo de Andrés. Maren '
+            'entra con la cartela impresa y una foto de la piedra '
+            'del muro de Tudela.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Te traigo el Mosaico del arco.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Andrés coge la cartela. La lee despacio. La foto. La '
+            'archiva en una carpeta sin decir nada. Antes de que '
+            'Maren se vaya, levanta la cabeza.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.andres, texto: '¿La piedra existe?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Está en el muro. Sigue ahí. La fotografié.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Andrés sonríe brevemente.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.andres,
+        texto:
+            'Bien. La gente que pase por allí ya sabe que hay '
+            'alguien que la mira con respeto.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Maren asiente. Sale del ático. Andrés sigue trabajando '
+            'en silencio.',
+      ),
+    ],
+  );
+
+  /// 3.Z — *Aprendiz III*. Días después de la entrega del Mosaico
+  /// M3. Patio del Archivo, junto al brocal del pozo. Sábado por
+  /// la tarde. Maren ha pasado a por unos libros. Isaura está en
+  /// el banco. Maren se sienta a su lado. *"Aprendiz III." / "Sí."
+  /// / "Has cerrado el arco más difícil del MVP. Lo que viene es
+  /// más corto. Más reposado." / "¿Olite?" / "Olite. Y la antesala
+  /// de 1512." / "Sin Brecha de la conquista." / "Sin Brecha de
+  /// la conquista. Eso es para cuando seas mayor."* Maren cuenta
+  /// a Isaura el "cuando te gradúes, hablamos" de Tasio; Isaura
+  /// dice que lo sospechaba. *"¿Y si no decido bien?" / "No hay
+  /// decidir bien o mal. Hay decidir con honestidad."* Cierre con
+  /// el patio, el capitel del s. XII, el brocal, el sol oblicuo
+  /// de mayo. APRENDIZ III flotante. Anuncio del Arco 4 *Una corte
+  /// brillante en su crepúsculo*. Doc 09 §3.Z.
+  static const EscenaCinematica aprendizIII = EscenaCinematica(
+    id: '3.Z',
+    titulo: 'Aprendiz III',
+    flagDeSalida: 'escena_3_z_vista',
+    flagsRequeridos: {'escena_m_3_entrega_vista'},
+    ambiente: AmbienteArchivo.patioArchivo,
+    planos: [
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Patio del Archivo, junto al brocal del pozo. Sábado '
+            'por la tarde. Maren ha pasado por el Archivo a por '
+            'unos libros. Isaura está en el banco. Maren se sienta '
+            'a su lado.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Aprendiz III.'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Has cerrado el arco más difícil del MVP. Lo que viene '
+            'es más corto. Más reposado.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Olite?'),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: 'Olite. Y la antesala de 1512.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sin Brecha de la conquista.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Sin Brecha de la conquista. Eso es para cuando seas '
+            'mayor.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 3),
+        textoLectura: 'Pausa larga.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Isaura.'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Sí?'),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Tasio dijo "cuando te gradúes, hablamos".',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura:
+            'Pausa muy larga. Isaura no contesta inmediatamente.',
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Lo dijo.'),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Tú lo sabías?'),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Lo sospechaba.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Qué hago?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No tienes que decidir ahora. Te queda un arco. Decides '
+            'después de graduarte.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: '¿Y si no decido bien?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'No hay decidir bien o mal. Hay decidir con honestidad. '
+            'Lo que sea con honestidad será bien.',
+        pausaPrevia: Duration(milliseconds: 2000),
+      ),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
+      PlanoAmbiente(duracion: Duration(milliseconds: 1500)),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto: '¿Te trata bien Tasio?',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.maren,
+        texto: 'Sí.',
+        pausaPrevia: Duration(milliseconds: 1500),
+      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Bien.'),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 6),
+        textoLectura:
+            'Las dos se quedan sentadas. La cámara se aleja. El '
+            'capitel del s. XII en el patio. El brocal del pozo. '
+            'El sol de mayo entrando oblicuo. Tres segundos sin '
+            'diálogo.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 4),
+        textoLectura: 'Aparece flotante: APRENDIZ III.',
+      ),
+      PlanoAmbiente(
+        duracion: Duration(seconds: 5),
+        textoLectura:
+            'Música breve. Negro extendido. Una línea de texto: '
+            '"Continuará en Arco 4 — Una corte brillante en su '
+            'crepúsculo."',
       ),
     ],
   );

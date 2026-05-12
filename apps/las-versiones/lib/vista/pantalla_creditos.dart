@@ -46,6 +46,14 @@ class PantallaCreditos extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(28, 18, 28, 36),
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: Image.asset(
+                'assets/marca/las_versiones_logo.png',
+                height: 160,
+                fit: BoxFit.contain,
+              ),
+            ),
             const _Seccion(
               encabezado: 'ATMÓSFERAS FOTOGRÁFICAS',
               parrafoIntroductorio:

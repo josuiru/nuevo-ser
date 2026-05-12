@@ -320,7 +320,7 @@ class _NoticiaWidget extends StatelessWidget {
         if (noticia.firma != null) ...[
           const SizedBox(height: 6),
           Text(
-            noticia.firma!,
+            noticia.firma ?? '',
             style: const TextStyle(
               fontFamily: 'CormorantGaramond',
               color: _ColoresFaro.tintaTenue,
@@ -517,7 +517,7 @@ class _AcertijoWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      acertijo.pista!,
+                      acertijo.pista ?? '',
                       style: const TextStyle(
                         fontFamily: 'CormorantGaramond',
                         color: _ColoresFaro.tinta,

@@ -211,6 +211,17 @@ final class VozPersonaje implements VozPersonajeContrato {
     colorNombre: PaletaArchivo.tintaTenue,
   );
 
+  /// **La conservadora del palacio de Olite** — voz local del
+  /// territorio que recibe a Maren y Aitor en el palacio (4.1.2)
+  /// y les abre el acceso a los registros de cuentas. El doc 10
+  /// §4.1.2 la presenta deliberadamente sin nombre, como
+  /// `Arqueólogo` o `Monje`. Etiqueta funcional `Conservadora`,
+  /// tinta tenue.
+  static const VozPersonaje conservadoraPalacio = VozPersonaje._(
+    nombreVisible: 'Conservadora',
+    colorNombre: PaletaArchivo.tintaTenue,
+  );
+
   /// Voz sin atribución personal, reservada a **fragmentos de fuente
   /// histórica** que el player levanta del manuscrito sin ponerlos en
   /// boca de un personaje del elenco: una cita en latín, una línea

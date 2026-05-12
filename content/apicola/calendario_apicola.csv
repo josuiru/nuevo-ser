@@ -1,0 +1,73 @@
+# DATOS PROVISIONALES SIN VALIDAR POR APICULTOR ASESOR
+# Fuente: bibliografía clásica de apicultura ibérica + boletines de cooperativas apícolas
+# Validar con apicultor asesor local antes de producción comercial
+#
+# Las fechas son ORIENTATIVAS para una zona climática amplia. La variabilidad real
+# entre comarcas dentro de la misma zona puede ser de ±2 décadas. La app debe permitir
+# override por apiario (pendiente F2).
+#
+# Zonas climáticas peninsulares (ISO simplificada):
+#   norte    Galicia/Cantábrica/Vasconia/Pirineos/Norte de Castilla — clima atlántico/oceánico
+#   centro   Mesetas/Sistema Central — clima continental
+#   sur      Andalucía/Extremadura/Murcia/Levante — clima mediterráneo seco
+#
+# Tareas estandarizadas (ID estable):
+#   revision_primaveral       primera apertura tras invernada
+#   estimulacion_postura      alimento estimulante para arranque de cría
+#   division_enjambre         divisiones artificiales / formación de núcleos
+#   trashumancia_mielada      traslado a floración principal
+#   colocacion_alza           añadir alzas para mielada
+#   cosecha_principal         cosecha principal de miel
+#   tratamiento_varroa_verano tratamiento de verano (típicamente fórmico o orgánicos)
+#   ultima_cosecha            cosecha tardía si hay segunda mielada
+#   tratamiento_varroa_otono  tratamiento principal de otoño con sticky board previo
+#   alimentacion_invernal     suplemento si reservas insuficientes
+#   tratamiento_oxalico_invernada  oxálico sublimado en sin-postura
+#   revision_invernada        revisión externa rápida en pleno invierno
+#
+# Columnas:
+#   zona                norte | centro | sur
+#   tarea_id            ver lista arriba
+#   nombre_visible      texto humano para mostrar en la app
+#   mes                 1-12
+#   decada              1 (días 1-10) | 2 (días 11-20) | 3 (días 21-fin)
+#   notas               texto libre — particularidades de la zona
+#   revisado_por        vacío hasta validación
+#   fecha_revision      vacía hasta validación
+zona,tarea_id,nombre_visible,mes,decada,notas,revisado_por,fecha_revision
+norte,revision_primaveral,Revisión primaveral,3,3,Tras frío atlántico — esperar estabilización de temperatura,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,estimulacion_postura,Estímulo de postura,4,1,Si reservas escasas — jarabe ligero,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,division_enjambre,Divisiones / núcleos,5,1,Antes de la fiebre de enjambrazón natural,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,trashumancia_mielada,Trashumancia a brezo o castaño,6,2,Castaño y brezo en zona atlántica,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,colocacion_alza,Colocación de alzas,5,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,cosecha_principal,Cosecha principal,7,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,tratamiento_varroa_verano,Tratamiento varroa verano,8,1,Fórmico o aceite esencial — cría presente,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,ultima_cosecha,Cosecha tardía (brezo otoñal),9,3,Solo si hay brezo — variable por comarca,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,tratamiento_varroa_otono,Tratamiento varroa otoño,10,1,Plazo retirada respetado antes de invernada,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,alimentacion_invernal,Alimentación invernal,10,3,Pesar previa — reservas mínimo 12 kg,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,tratamiento_oxalico_invernada,Oxálico sublimado en sin-postura,12,3,Punto sin cría operculada — ventana corta,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+norte,revision_invernada,Revisión externa de invernada,1,2,Sin abrir — solo escuchar y observar piquera,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,revision_primaveral,Revisión primaveral,3,1,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,estimulacion_postura,Estímulo de postura,3,2,Antes que en el norte — clima continental se calienta más rápido,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,division_enjambre,Divisiones / núcleos,4,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,trashumancia_mielada,Trashumancia a romero / encina,5,1,Mielada de romero precoz en interior,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,colocacion_alza,Colocación de alzas,4,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,cosecha_principal,Cosecha principal,6,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,tratamiento_varroa_verano,Tratamiento varroa verano,7,2,Verano seco — cuidar temperatura del fórmico (>30°C ineficaz),FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,ultima_cosecha,Cosecha tardía (espliego/girasol),8,3,Solo si hay segunda mielada,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,tratamiento_varroa_otono,Tratamiento varroa otoño,9,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,alimentacion_invernal,Alimentación invernal,10,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,tratamiento_oxalico_invernada,Oxálico sublimado en sin-postura,12,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+centro,revision_invernada,Revisión externa de invernada,1,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,revision_primaveral,Revisión primaveral,2,2,Climas mediterráneos — primaveras tempranas,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,estimulacion_postura,Estímulo de postura,2,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,division_enjambre,Divisiones / núcleos,3,2,Riesgo de enjambrazón muy temprano,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,trashumancia_mielada,Trashumancia a azahar / romero,3,3,Azahar en Levante y Andalucía,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,colocacion_alza,Colocación de alzas,3,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,cosecha_principal,Cosecha principal de azahar,5,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,tratamiento_varroa_verano,Tratamiento varroa verano,7,1,Cuidar temperatura — verano andaluz seca y muy caliente,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,ultima_cosecha,Cosecha tardía (girasol/algarrobo),8,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,tratamiento_varroa_otono,Tratamiento varroa otoño,9,2,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,alimentacion_invernal,Alimentación invernal,11,1,Invernada corta — reservas más livianas,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,tratamiento_oxalico_invernada,Oxálico sublimado en sin-postura,1,1,Climas suaves: la sin-postura es muy breve y a veces inexistente,FEDAS + boletines técnicos cooperativas regionales,2026-05-08
+sur,revision_invernada,Revisión externa de invernada,12,3,,FEDAS + boletines técnicos cooperativas regionales,2026-05-08

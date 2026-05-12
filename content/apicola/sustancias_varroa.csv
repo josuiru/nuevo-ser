@@ -1,0 +1,33 @@
+# DATOS PROVISIONALES SIN VALIDAR POR VETERINARIO APÍCOLA
+# Fuente: bibliografía sanitaria apícola + textos de organismos públicos sobre varroosis
+# AVISO IMPORTANTE: la lista oficial de sustancias autorizadas para varroosis cambia con
+# cada actualización del MAPA y normativa europea. Para producción comercial:
+#   1) Descargar Registro vigente desde el MAPA antes de cada release
+#   2) Validar con veterinario apícola
+#   3) Confirmar dosis, plazo de seguridad y eficacia contra etiqueta del producto comercial
+#
+# El CATÁLOGO LISTA SUSTANCIAS ACTIVAS, NO MARCAS COMERCIALES (compromiso legal de la app).
+# Plazos de seguridad orientativos a confirmar contra etiqueta — no se garantiza vigencia.
+#
+# Columnas:
+#   id                          snake_case sin tildes
+#   nombre_canonico             nombre visible
+#   familia                     organica | sintetica | natural_aceite_esencial
+#   vehiculo_principal          sublimacion | goteo | sandwich | tira_polimero | nebulizacion
+#   eficacia_orientativa        baja | media | alta | muy_alta
+#   plazo_seguridad_dias        número entero — días entre última aplicación y cosecha
+#   autorizada_ecologico        si | no
+#   ventana_aplicacion          orientativa: invernada | primavera | otono | sin_postura | con_postura
+#   notas                       texto libre — efecto residual, condiciones de uso
+#   revisado_por                vacío hasta validación
+#   fecha_revision              vacía hasta validación
+id,nombre_canonico,familia,vehiculo_principal,eficacia_orientativa,plazo_seguridad_dias,autorizada_ecologico,ventana_aplicacion,notas,revisado_por,fecha_revision
+acido_oxalico,Ácido oxálico,organica,sublimacion,muy_alta,0,si,sin_postura,Muy eficaz en ausencia de cría operculada — invernada o tras enjambrazón. Mejor vehículo: sublimación con vaporizador,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+acido_oxalico_goteo,Ácido oxálico (goteo),organica,goteo,alta,0,si,sin_postura,Mismo principio activo en jarabe — más manual y agresivo para abejas que la sublimación,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+acido_formico,Ácido fórmico,organica,nebulizacion,alta,0,si,con_postura,Penetra en la cría operculada — útil con cría presente. Cuidado: tóxico para abejas adultas en dosis alta,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+timol,Timol,natural_aceite_esencial,tira_polimero,media,0,si,otono,Aceite esencial del tomillo. Eficacia variable con la temperatura ambiente. Plazo retirada antes de cosecha,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+amitraz,Amitraz,sintetica,tira_polimero,muy_alta,30,no,otono,Acaricida sintético. Riesgo de residuos en cera. Sospecha de resistencias documentadas en Europa,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+flumetrina,Flumetrina,sintetica,tira_polimero,alta,30,no,otono,Piretroide sintético. Resistencias documentadas — alternar con familias distintas,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+fluvalinato,Tau-fluvalinato,sintetica,tira_polimero,alta,30,no,otono,Piretroide sintético. Resistencias documentadas — usar con prudencia,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+acido_lactico,Ácido láctico,organica,nebulizacion,media,0,si,sin_postura,Tradicional — eficaz solo sobre varroa forética. Operativamente muy laborioso,AEMPS CIMA Vet + RD 1132/2010,2026-05-08
+mezcla_oxalico_glicerol,Ácido oxálico + glicerol (tiras),organica,tira_polimero,alta,0,si,otono,Tira de carton impregnada — efecto prolongado. Confirmar autorización vigente,AEMPS CIMA Vet + RD 1132/2010,2026-05-08

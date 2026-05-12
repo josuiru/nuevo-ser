@@ -1,0 +1,24 @@
+# DATOS PROVISIONALES SIN VALIDAR POR APICULTOR ASESOR
+# Fuente: bibliografía clásica de apicultura ibérica + manuales de manejo
+# Validar con apicultor asesor antes de producción comercial
+#
+# Columnas:
+#   id                       snake_case sin tildes
+#   nombre_canonico          nombre visible
+#   formato                  fija_horizontal | vertical_alza | top_bar | tronco
+#   numero_cuadros_camara    cuadros en cámara de cría — 0 si tronco/top-bar
+#   apilable_alzas           si | no — si admite alzas verticales
+#   uso_tradicional          texto — dónde es habitual su uso
+#   ventajas                 pipe-separadas
+#   desventajas              pipe-separadas
+#   notas                    texto libre
+#   revisado_por             vacío hasta validación
+#   fecha_revision           vacía hasta validación
+id,nombre_canonico,formato,numero_cuadros_camara,apilable_alzas,uso_tradicional,ventajas,desventajas,notas,revisado_por,fecha_revision
+layens,Layens,fija_horizontal,12,no,Mediterránea — España y Francia mediterránea,Cámara de cría amplia|sin alzas (manejo simple)|cuadros largos pesados con miel,Sin alzas dificulta cosechas escalonadas|cuadros pesados al cosechar|menos modular,Colmena más extendida en España. Cuadros 30x35 cm aproximados,RD 209/2002 + bibliografía apícola,2026-05-08
+layens_industrial,Layens industrial (12 cuadros),fija_horizontal,12,no,Mediterránea ibérica,Idem Layens|estandarizada,Idem Layens,Variante con dimensiones estandarizadas para mecanización,RD 209/2002 + bibliografía apícola,2026-05-08
+dadant,Dadant,vertical_alza,10,si,Francia y centro-sur de Europa,Alzas apilables|cámara de cría amplia|cuadros más manejables que en Layens,Asimetría cámara-alza|menos extendida en España que Layens,Cuadros de cámara mayores que los de alza — cuadro Dadant clásico,RD 209/2002 + bibliografía apícola,2026-05-08
+langstroth,Langstroth,vertical_alza,10,si,EE. UU. y mundial — más extendida globalmente,Estándar internacional|alzas y cámara mismo cuadro|máxima modularidad,Cámara de cría a veces pequeña en climas largos,Inventada por L.L. Langstroth en 1851 — base de la apicultura moderna,RD 209/2002 + bibliografía apícola,2026-05-08
+warre,Warré,vertical_alza,8,si,Movimiento de apicultura natural en Europa,Manejo mínimo|nesting natural sin cuadros precableados|alzas pequeñas ligeras,Difícil para cosecha escalonada|menos productiva|incompatible con mecanización,Diseñada por Émile Warré (años 1920) — popular en apicultura natural,RD 209/2002 + bibliografía apícola,2026-05-08
+top_bar,Top-bar,top_bar,0,no,África y apicultura naturalista en Europa/EE. UU.,Sin cuadros — solo barras superiores|construcción sencilla|abeja diseña su panal,No apilable|cosecha destructiva del panal|incompatible con extractor centrífugo,Apicultura tradicional africana adaptada a hobbistas,RD 209/2002 + bibliografía apícola,2026-05-08
+tronco_artesanal,Tronco artesanal (corcho/castaño),tronco,0,no,Cantábrico y zonas tradicionales europeas,Bajo coste|integración paisajística,No permite manejo moderno|no permite registro fitosanitario fiable,Patrimonio etnográfico — uso decorativo o demostrativo más que productivo,RD 209/2002 + bibliografía apícola,2026-05-08

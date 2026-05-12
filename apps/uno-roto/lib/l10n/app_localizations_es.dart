@@ -948,4 +948,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String sonidoDescargaInstalando(int actual, int total) {
     return 'Instalando $actual / $total';
   }
+
+  @override
+  String get cuentaErrorCamposAnadirNino =>
+      'Pon el email, la contraseña y el nombre del niño.';
+
+  @override
+  String get cuentaAnadirNinoTitulo => 'AÑADIR NIÑO';
+
+  @override
+  String get cuentaAnadirNinoTagline =>
+      'Mete el email y la contraseña del tutor que ya tiene cuenta. Añadiremos a este niño bajo esa misma cuenta.';
+
+  @override
+  String get cuentaAnadirNinoBoton => 'AÑADIR NIÑO';
+
+  @override
+  String get cuentaAnadirNinoBotonEnviando => 'AÑADIENDO…';
 }

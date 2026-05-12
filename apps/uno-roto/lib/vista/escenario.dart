@@ -383,6 +383,9 @@ class PintorEscenario extends CustomPainter {
       case 'afueras':
         _pintarBaseAfueras(canvas, size);
         break;
+      case 'montana':
+        _pintarBaseAfueras(canvas, size);
+        break;
       case 'tejados':
       default:
         _pintarBaseTejados(canvas, size);

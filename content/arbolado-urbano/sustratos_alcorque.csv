@@ -1,0 +1,21 @@
+# DATOS PROVISIONALES SIN VALIDAR POR INGENIERO TÉCNICO FORESTAL
+# Fuente: bibliografía de jardinería urbana ibérica + manuales de
+# pavimentación urbana sostenible.
+# Validar con técnico asesor antes de producción.
+#
+# Columnas:
+#   id                  snake_case sin tildes
+#   nombre_canonico     nombre visible
+#   permeabilidad       alta | media | baja | nula
+#   facilidad_riego     directa | indirecta | dificil
+#   notas               texto libre
+#   revisado_por        vacío hasta validación
+#   fecha_revision      vacía hasta validación
+id,nombre_canonico,permeabilidad,facilidad_riego,notas,revisado_por,fecha_revision
+mineral,Alcorque mineral,alta,directa,Tradicional — tierra+grava sin sellar. La opción más permeable y la mejor para el árbol pero requiere mantenimiento (malas hierbas|hojarasca),NTJ 08C + AEPJP,2026-05-08
+organico,Alcorque con cubierta orgánica (acolchado),alta,directa,Acolchado de corteza|paja u otro material orgánico — protege la humedad y reduce malas hierbas. Recomendado en alineaciones modernas,NTJ 08C + AEPJP,2026-05-08
+sellado_asfalto,Alcorque sellado con asfalto,nula,dificil,Antigua práctica frecuente en cascos urbanos viejos — el árbol sufre. Sustituible progresivamente por otras opciones al renovar pavimento,NTJ 08C + AEPJP,2026-05-08
+pavimento_poroso,Pavimento poroso,media,indirecta,Pavimento drenante (resina + áridos|hormigón poroso) que permite el riego. Estética urbana cuidada con buen comportamiento para el árbol,NTJ 08C + AEPJP,2026-05-08
+rejilla_metalica,Rejilla metálica,alta,directa,Rejilla circular o cuadrada sobre el alcorque — protege contra pisado y deja pasar agua. Frecuente en plazas pavimentadas,NTJ 08C + AEPJP,2026-05-08
+ajardinado_continuo,Ajardinado continuo,alta,directa,El árbol se planta en parterre verde continuo (sin alcorque definido). Solo en parques o medianas anchas,NTJ 08C + AEPJP,2026-05-08
+sin_alcorque,Sin alcorque definido,baja,dificil,Árbol plantado sin alcorque diferenciado o con alcorque desaparecido — habitual en árboles muy viejos donde el pavimento ha crecido,NTJ 08C + AEPJP,2026-05-08

@@ -36,8 +36,12 @@
   "sonidoPaqueteVersion": "Versió {version} · {tamano}",
   "@sonidoPaqueteVersion": {
     "placeholders": {
-      "version": {"type": "int"},
-      "tamano": {"type": "String"}
+      "version": {
+        "type": "int"
+      },
+      "tamano": {
+        "type": "String"
+      }
     }
   },
   "sonidoPaqueteExplicacion": "L'ambient, la música i els narratius es descarreguen del servidor per no inflar la mida de l'app.",
@@ -48,7 +52,9 @@
   "sonidoPaqueteConfirmTexto": "S'eliminaran {tamano} del dispositiu. Podràs tornar a descarregar-lo quan vulguis.",
   "@sonidoPaqueteConfirmTexto": {
     "placeholders": {
-      "tamano": {"type": "String"}
+      "tamano": {
+        "type": "String"
+      }
     }
   },
   "sonidoPaqueteConfirmBotonBorrar": "Esborrar",
@@ -58,7 +64,9 @@
   "sonidoMensajeFallido": "Descàrrega fallida: {mensaje}",
   "@sonidoMensajeFallido": {
     "placeholders": {
-      "mensaje": {"type": "String"}
+      "mensaje": {
+        "type": "String"
+      }
     }
   },
   "cierreBotonSeguir": "Seguir practicant",
@@ -75,20 +83,26 @@
   "barrasPreguntaValor": "quants a \"{etiqueta}\"?",
   "@barrasPreguntaValor": {
     "placeholders": {
-      "etiqueta": {"type": "String"}
+      "etiqueta": {
+        "type": "String"
+      }
     }
   },
   "barrasPreguntaTotal": "quin és el total?",
   "aumentoVerbo": "augmenta un {porcentaje}% sobre",
   "@aumentoVerbo": {
     "placeholders": {
-      "porcentaje": {"type": "int"}
+      "porcentaje": {
+        "type": "int"
+      }
     }
   },
   "descuentoVerbo": "descompta un {porcentaje}% sobre",
   "@descuentoVerbo": {
     "placeholders": {
-      "porcentaje": {"type": "int"}
+      "porcentaje": {
+        "type": "int"
+      }
     }
   },
   "respuestaSi": "sí",
@@ -310,5 +324,10 @@
   "sonidoDescargaBajandoConTotal": "Baixant {mb} / {total} MB",
   "sonidoDescargaBajandoSinTotal": "Baixant {mb} MB",
   "sonidoDescargaVerificando": "Verificant integritat…",
-  "sonidoDescargaInstalando": "Instal·lant {actual} / {total}"
+  "sonidoDescargaInstalando": "Instal·lant {actual} / {total}",
+  "cuentaErrorCamposAnadirNino": "Posa el correu, la contrasenya i el nom de l'infant.",
+  "cuentaAnadirNinoTitulo": "AFEGIR INFANT",
+  "cuentaAnadirNinoTagline": "Posa el correu i la contrasenya del tutor que ja té compte. Afegirem aquest infant sota el mateix compte.",
+  "cuentaAnadirNinoBoton": "AFEGIR INFANT",
+  "cuentaAnadirNinoBotonEnviando": "AFEGINT…"
 }

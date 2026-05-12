@@ -36,8 +36,12 @@
   "sonidoPaqueteVersion": "Bertsioa {version} · {tamano}",
   "@sonidoPaqueteVersion": {
     "placeholders": {
-      "version": {"type": "int"},
-      "tamano": {"type": "String"}
+      "version": {
+        "type": "int"
+      },
+      "tamano": {
+        "type": "String"
+      }
     }
   },
   "sonidoPaqueteExplicacion": "Giro-soinua, musika eta narratiboak zerbitzaritik deskargatzen dira aplikazioaren tamaina ez puzteko.",
@@ -48,7 +52,9 @@
   "sonidoPaqueteConfirmTexto": "Gailutik {tamano} kenduko dira. Nahi duzunean berriro deskarga dezakezu.",
   "@sonidoPaqueteConfirmTexto": {
     "placeholders": {
-      "tamano": {"type": "String"}
+      "tamano": {
+        "type": "String"
+      }
     }
   },
   "sonidoPaqueteConfirmBotonBorrar": "Ezabatu",
@@ -58,7 +64,9 @@
   "sonidoMensajeFallido": "Deskargak huts egin du: {mensaje}",
   "@sonidoMensajeFallido": {
     "placeholders": {
-      "mensaje": {"type": "String"}
+      "mensaje": {
+        "type": "String"
+      }
     }
   },
   "cierreBotonSeguir": "Praktikatzen jarraitu",
@@ -75,20 +83,26 @@
   "barrasPreguntaValor": "zenbat \"{etiqueta}\" daude?",
   "@barrasPreguntaValor": {
     "placeholders": {
-      "etiqueta": {"type": "String"}
+      "etiqueta": {
+        "type": "String"
+      }
     }
   },
   "barrasPreguntaTotal": "zein da guztira?",
   "aumentoVerbo": "%{porcentaje} igo honi:",
   "@aumentoVerbo": {
     "placeholders": {
-      "porcentaje": {"type": "int"}
+      "porcentaje": {
+        "type": "int"
+      }
     }
   },
   "descuentoVerbo": "%{porcentaje} jaitsi honi:",
   "@descuentoVerbo": {
     "placeholders": {
-      "porcentaje": {"type": "int"}
+      "porcentaje": {
+        "type": "int"
+      }
     }
   },
   "respuestaSi": "bai",
@@ -310,5 +324,10 @@
   "sonidoDescargaBajandoConTotal": "Jaisten {mb} / {total} MB",
   "sonidoDescargaBajandoSinTotal": "Jaisten {mb} MB",
   "sonidoDescargaVerificando": "Osotasuna egiaztatzen…",
-  "sonidoDescargaInstalando": "Instalatzen {actual} / {total}"
+  "sonidoDescargaInstalando": "Instalatzen {actual} / {total}",
+  "cuentaErrorCamposAnadirNino": "Idatzi e-posta, pasahitza eta umearen izena.",
+  "cuentaAnadirNinoTitulo": "HAURRA GEHITU",
+  "cuentaAnadirNinoTagline": "Jadanik kontua duen tutorearen e-posta eta pasahitza jarri. Haur hau kontu berean gehituko dugu.",
+  "cuentaAnadirNinoBoton": "HAURRA GEHITU",
+  "cuentaAnadirNinoBotonEnviando": "GEHITZEN…"
 }

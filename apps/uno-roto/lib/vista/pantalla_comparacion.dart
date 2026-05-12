@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../dominio/fragmento_en_tejado.dart' show ModoComparacion;
+import '../dominio/fragmento_en_tejado.dart' show ModoComparacion, TipoFragmentoEnTejado;
+
+import '../dominio/respuesta_puzzle.dart';
 import '../dominio/problema_comparacion.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../l10n/app_localizations.dart';
@@ -11,6 +13,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle FR.05 / FR.06: el niño ve dos fracciones y tiene que tocar
 /// la mayor. El modo decide qué se comparte (denominador o numerador)
@@ -89,6 +93,18 @@ class _PantallaComparacionState extends State<PantallaComparacion>
     if (_problema.esCorrecto(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      final opciones = ['${_problema.a.numerador}/${_problema.a.denominador}',
+          '${_problema.b.numerador}/${_problema.b.denominador}'];
+      final idxCorrecto = _problema.indiceMayor ?? 0;
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: opciones[indice],
+        respuestaCorrecta: opciones[idxCorrecto],
+        preguntaTexto: widget.modo == ModoComparacion.mismoNumerador
+            ? '¿qué fracción es mayor? (mismo numerador)'
+            : '¿qué fracción es mayor? (mismo denominador)',
+        opciones: opciones,
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -97,6 +113,8 @@ class _PantallaComparacionState extends State<PantallaComparacion>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.comparacion);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -240,6 +258,7 @@ class _PantallaComparacionState extends State<PantallaComparacion>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.comparacion),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

@@ -1,5 +1,7 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_comparacion_unidad.dart';
@@ -9,6 +11,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle FR.04: el niño ve una fracción grande y elige si es menor,
 /// igual o mayor que 1. Tres botones — primera mecánica de tres
@@ -79,6 +83,13 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
     if (_problema.esCorrecta(opcion)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '$opcion',
+        respuestaCorrecta: '${_problema.relacionCorrecta}',
+        preguntaTexto: '¿${_problema.fraccion.etiqueta} es <1, =1 o >1?',
+        opciones: ['<1', '=1', '>1'],
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -87,6 +98,8 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.comparacionUnidad);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -237,6 +250,7 @@ class _PantallaComparacionUnidadState extends State<PantallaComparacionUnidad>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.comparacionUnidad),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

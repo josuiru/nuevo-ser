@@ -15,6 +15,44 @@ referencias y revertir la sustitución.
 
 ---
 
+## TUDELA-1378 — Estación 3.6 entera (10 cinemáticas + Brecha jugable + Mosaico M3 + cinemáticas de cierre del arco)
+
+**Tracker doc 17**: Prioridad 1 del comité provisional, **sin validar**. La validación crítica más sensible del MVP entero según el README v0.3.
+
+**Guion canónico (doc 09 §3.6, §M3, §3.Z)**: Estación de cierre del Arco 3 que aborda el incendio del barrio judío de Tudela en noviembre de 1378 y la complicidad institucional del Concejo. Cubre el material más sensible del MVP — un acto de violencia antijudía medieval con pretensión de identificación nominal de responsables, encuadrado en el debate académico entre dos versiones publicadas previas (Isaura 2017, prudencia metodológica; Tasio/Resolutiva 2021, identificación nominal Sólido). La Brecha le exige a Maren producir una tercera versión propia que articula el silencio de tres semanas en las actas posteriores como afirmación independiente — la afirmación nueva que ni Isaura ni Tasio formularon.
+
+**Estado**: implementación **completa** de las 10 cinemáticas de la Estación 3.6 (3.6.1 *Isaura presenta* a 3.6.10 *El silencio segundo*) + Brecha 3.6 jugable (`CatalogoBrechas.brecha36` con 7 fuentes y 9 afirmaciones canónicas) + Mosaico M3 ficha de museo (`MosaicoArco3` + `PantallaMosaicoArco3` con cartela de 6 líneas) + cinemática `M3.entrega` (Andrés en el ático archivando la cartela) + cinemática 3.Z *Aprendiz III* (cierre formal del arco con anuncio del Arco 4) + sincronizador `SincronizadorMosaicoArco3` (formato `ficha_museo_arco_3`). Todo el material del doc 09 v0.3 reproducido fielmente.
+
+**PENDIENTE DE VALIDACIÓN MASIVA DEL COMITÉ ASESOR HISTÓRICO** — el contenido tiene puntos sensibles que requieren validación antes de exposición pública:
+
+1. **Cifras concretas de víctimas**: "al menos dieciocho personas, según lo que se documenta", "cuatro casas destruidas completas, otras siete dañadas", "la sinagoga sufrió daños menores". Las cifras vienen del doc canónico — el comité debe validar si se ajustan a la documentación histórica conservada o si son aproximaciones del guion que requieren afinarse.
+
+2. **Identificación nominal de tres miembros del Concejo**: la versión de Tasio/Resolutiva (2021) "identifica por nombre a tres miembros del Concejo del 1378 como responsables de la complicidad activa" (3.6.1 + afirmación 6 del catálogo jugable). Los **nombres concretos no figuran en el código** — sólo se alude a "tres miembros" sin nombrarlos. El comité debe validar si esa identificación nominal está sostenida por evidencia que el oficio acepte hoy, o si la afirmación 6 debe seguir Disputada (tal como la implementamos) o cambiarse a un nivel distinto.
+
+3. **Carta del superviviente a un correligionario de Zaragoza**: pieza primaria diegética que carga el patrón "callar antes y no callar después". Identidad parcialmente conservada, pieza no atribuida nominalmente — el comité debe validar si existe una pieza así en archivos o si es composición pedagógica del guion.
+
+4. **Fragmento de testimonio inquisitorial de seis años después**: pieza primaria diegética con un converso declarante anónimo que menciona a uno de los tres miembros señalados. El comité debe validar la verosimilitud de esta pieza en el aparato inquisitorial del s. XIV navarro.
+
+5. **Excavación arqueológica del barrio**: el doc canónico menciona "excavación de 1989, niveles de incendio identificados, algunos restos óseos humanos en escombros". El código suaviza a "excavación arqueológica del s. XX" sin fecha exacta y sin afirmar restos óseos como hallazgo concreto. El comité debe validar si existe excavación documentada y qué se conservó.
+
+6. **Correspondencia del rey Carlos II de Navarra al Concejo**: dos cartas posteriores al incendio. El doc canónico lo presenta como pieza primaria existente; el código lo recoge tal cual. El comité debe validar si se conservan esas dos cartas en el archivo real navarro.
+
+7. **Cuatro nombres parcialmente conservados de víctimas**: "un Mosé ben con apellido fragmentado, una Dueña con apellido perdido, un niño Yosef con identificación parcial, una mujer Esther con casa identificada". Composición diegética verosímil basada en patrones onomásticos hebreos del periodo — los nombres son **explícitamente parciales** y la afirmación 9 del catálogo jugable los declara como "tarea pendiente de identificación nominativa". El comité debe validar si proceden de la documentación conservada o si son composición del guion.
+
+8. **Casos comparativos peninsulares**: el doc menciona "Sevilla 1391, Toledo periódicamente". El código lo cita en la fuente "restos arqueológicos + comparación con casos análogos peninsulares del s. XIV". Material trazable bien establecido en historiografía antijudía peninsular medieval.
+
+9. **Las dos reconstrucciones publicadas previas (Isaura 2017, Tasio/Resolutiva 2021)**: piezas internas del universo del juego, no pretenden ser publicaciones reales. El comité no necesita validar su existencia — son ficción narrativa del oficio del Archivo.
+
+10. **Pieza del Mosaico M3 (piedra grabada del barrio mudéjar de Tudela con caracteres árabes parcialmente borrados)**: pieza explícitamente declarada anónima y no documentada por nombre en archivo. La cartela del M3 declara su procedencia ("muro reutilizado en una casa del antiguo barrio mudéjar de Tudela"), datación ("siglos XII-XIV, Probable") y reutilización ("documentada en muro del s. XVII") con todos los niveles de confianza visibles. El comité debe validar si la asociación al barrio mudéjar de Tudela y la datación epigráfica andalusí tardía o mudéjar inicial son adecuadas.
+
+**Material trazable preservado sin sustitución**: año 1378 + Concejo de Tudela + judería real de Tudela + rey Carlos II de Navarra + Inquisición s. XIV + casos comparativos peninsulares (Sevilla 1391, Toledo).
+
+**Cuando el comité valide TUDELA-1378**: revisar las 10 entradas anteriores. Posibles ajustes al catálogo jugable de la Brecha 3.6 (cifras de víctimas, calibración de la afirmación 6, atribución de las piezas primarias). El esqueleto narrativo (las 10 cinemáticas + M3.entrega + 3.Z) y la estructura jugable (catálogo de 7 fuentes + 9 afirmaciones canónicas + `minimoAfirmacionesParaConcilio: 7`) pueden mantenerse — sólo cambiar contenido textual de afirmaciones o calibraciones.
+
+**Importante**: el flag `arco_3_iniciado` que se activa al cerrar la 3.0.1 incluye `tudela_1378_anunciada` desde F2-20a, así que la mención del incendio entró en el código en aquel slice anterior; lo que se añade ahora es el desarrollo entero de la Estación. El esqueleto del Arco 3 (5 Estaciones jugables + 1 pendiente) queda funcionalmente cerrado tras este slice; sólo la 3.2 Banu Qasi sigue marcada como narrativa-sin-Brecha-jugable a la espera de validación BANU-QASI.
+
+---
+
 ## PIO-BELTRAN — autoría de "el libro de Beltrán" y "informe de 1973"
 
 **Tracker doc 17**: pendiente.
@@ -856,3 +894,125 @@ para evaluar cuando entre la fase visual del juego (doc 11):
   licencias"*. El inventario de `CREDITOS.md` ya reflejaba la doble
   licencia.
 
+
+
+## Arco 4 — sustituciones diegéticas activas (F2-32)
+
+El Arco 4 entero (`escenas_arco_4.dart` + `catalogo_brechas.dart`
+brechas 4.1 y 4.B + `mosaico_arco_4.dart`) reproduce el doc 10 v0.1
+con sustituciones diegéticas en los puntos no validados por el comité
+asesor histórico. La estructura jugable y la pedagogía (Aprendiz III
+avanzado donde la Cronista determina el sujeto + caso pequeño como
+ventana a la cotidianidad + doble cartela paralela como Mosaico
+integrador del MVP) están preservadas; cuando el comité valide se
+ajustan los nombres y detalles concretos sin tocar la estructura.
+
+### REFORMULACION-1512 — final del Arco 4 reformulado por el comité provisional
+
+El comité asesor provisional propuso en sesión del 29 abril 2026
+(documentada en `coleccion-nuevo-ser-paquete-documental-v0.3/cambios-pendientes-v0.3/`)
+una reformulación del final del Arco 4: añadir Estaciones 4.4 (La
+conquista) + 4.5 (La guerra) + 4.6 (Amaiur), nuevo Concilio de
+graduación a Cronista (4.Z.1-4 con defensa metodológica frente a
+Karim, presentación de los siete territorios herederos, pregunta
+final de Begoña), y reescritura del 4.A.2 *"para cuando seas mayor"*
++ 4.H.1/4.H.2 + 4.Z. La implementación actual sigue el doc 10 v0.1
+*vigente* hasta consolidación: el cierre del MVP es la cinemática
+4.Z (`elPatioVacio`) según doc 10 v0.1. Cuando se consolide la
+reformulación, las cinemáticas 4.A.2, 4.H.1, 4.H.2 y 4.Z se
+sustituyen y se añaden las cinco cinemáticas nuevas
+(4.4 + 4.5 + 4.6 + 4.Z.1-4) sin tocar las Estaciones 4.1, 4.A.1,
+4.B y los días-Archivo 4.C/D/E/F/G ya implementados.
+
+### JOANA-DE-RONCAL — Brecha 4.1 jugable (Aprendiz III avanzado)
+
+Material trazable preservado: palacio de Olite real, Carlos III el
+Noble + Leonor + las cuatro infantas (Juana, María, Beatriz, Blanca)
+como personajes históricamente documentados, valle de Roncal real,
+prácticas administrativas de cortes peninsulares del s. XV
+documentadas, edad típica de entrada al servicio de doncella de
+cámara, prácticas matrimoniales del estamento (mayoría se casaba
+antes de los veinticinco), terminación frecuente del servicio por
+matrimonio o muerte joven.
+
+Sustituciones diegéticas declaradas: **Joana de Roncal como persona
+concreta es figura ficticia diegética** — los detalles de su
+biografía (entrada al palacio en 1402 con dieciocho años, servicio
+sucesivo a Leonor y Blanca, viaje a Tudela 1405 y a Estella, gasto
+de tela de 1408, desaparición de los registros en 1412, mención de
+"limosnas a la familia de Roncal por la pérdida de su hija") son
+modelo literario verosímil construido como composición pedagógica a
+partir de tipos documentales reales del periodo. "Pedro de Roncal"
+como hermano que paga el viaje al palacio en 1402 también ficticio.
+
+Cuando el comité valide o sustituya por figura real documentada
+(p. ej. Marina de Sagasti — doncella de cámara real de la corte de
+Carlos III según la nómina de palacio publicada por Castro Álava en
+*Catálogo del Archivo General de Navarra*, sección Comptos —, o
+Beltrana de Echauz, o cualquier otra figura concreta de las nóminas
+de palacio realmente documentadas), se sustituyen el nombre, las
+fechas y los detalles concretos sin tocar la estructura jugable
+(8 afirmaciones canónicas con distribución 5S + 2P + 1D, las dos
+Probables — apellido del valle + familia hidalga modesta — la
+Disputada — el gasto de tela de 1408 con tres lecturas plausibles —
+y el mínimo 6 para Concilio).
+
+### PARED-MEDIANERA-1394 — Brecha 4.B jugable (caso pequeño como ventana)
+
+Material trazable preservado: Estella/Lizarra real, modelo de
+villa-Camino con tres comunidades documentadas (cristiana,
+mudéjar/musulmana, judía) en el s. XIV, prácticas jurídicas de
+pleitos por paredes medianeras como tipo documental real del
+periodo bajomedieval peninsular, responsa rabínicos como género
+jurídico real producido por juristas judíos del s. XIV-XV con
+identidades nominalmente documentadas en el corpus, marcos jurídicos
+compartidos entre comunidades como patrón general triangulable en
+los estudios académicos contemporáneos.
+
+Sustituciones diegéticas declaradas: el pleito concreto y los
+nombres "Pedro Garaicoa" (cristiano), "Yusuf al-Tudelí" (mudéjar) y
+"Mohammed" (testigo mudéjar) son figuras ficticias diegéticas —
+modelo literario verosímil construido a partir de tipos documentales
+reales (pleitos por paredes medianeras conservados en archivos
+municipales peninsulares del periodo). Las cinco Sólidas del
+catálogo (pleito documentado, Yusuf acude al tribunal cristiano sin
+objeciones, testigo mudéjar bajo juramento mudéjar respetado,
+cristianos no descalifican por religión, veredicto parcialmente
+favorable a Yusuf con cumplimiento sin apelaciones) reproducen el
+patrón estructural del género documental real; sólo los nombres y
+la fecha concreta son ficticios. La afirmación 7 (vecindad funcional
+con tensiones como caracterización general inferida) y la 8 (el
+caso pequeño como afirmación metodológica del oficio) se anclan
+adicionalmente en los responsa rabínicos y los estudios secundarios
+sobre convivencia en villas peninsulares del periodo.
+
+Cuando el comité valide o sustituya por pleito real documentado
+(p. ej. los pleitos del *Libro Rubro* del Concejo de Estella, o las
+sentencias del tribunal municipal de Tudela conservadas en el
+Archivo Municipal, o los pleitos con testigo judío recogidos en los
+*Responsa* de Solomon ben Adret o Isaac bar Sheshet — RIBASH —),
+se sustituyen los nombres, la fecha concreta y la materia disputada
+sin tocar la estructura jugable (8 afirmaciones canónicas con
+distribución 5S + 2P + 1S metodológica, la metodológica vive en el
+texto preservando la paridad Dart/PHP del core, mínimo 6 para
+Concilio).
+
+### MOSAICO-M4 — doble cartela paralela como proyecto integrador
+
+Material trazable preservado: el primer dolmen de Aralar como pieza
+de la Brecha 1.1 (sustituciones residuales del Arco 1 ya registradas
+bajo ARALAR-DATACIONES) y el ara funeraria romana de Pompelo como
+pieza de la Brecha 2.1 (sustitución POMPAELO-INSCRIPCION ya validada
+en F2-17 con el ara real de Aelio Attiano publicada en *Epigraphica*
+76 (2014) por García-Barberena/Unzu/Velaza).
+
+Las dos cartelas paralelas reproducen fielmente las observaciones de
+Maren a lo largo del MVP sobre las dos piezas (procedencia, datación,
+lengua, función original, reutilización, lo que la pieza dice). Las
+datacioness aproximadas y atribuciones específicas siguen el patrón
+de sustituciones diegéticas registrado para cada Brecha
+correspondiente — las afirmaciones del Mosaico no introducen material
+nuevo sin validar, sólo articulan en formato museográfico lo que las
+Brechas jugables ya produjeron. Por tanto el M4 cierra cuando se
+cierran ARALAR-DATACIONES + POMPAELO-INSCRIPCION (esta última ya
+cerrada en F2-17).

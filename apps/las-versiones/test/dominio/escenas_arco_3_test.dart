@@ -1055,10 +1055,12 @@ void main() {
       'latente 3.A.1 + Estación 3.2 completa (3.2.1 a 3.2.8) + '
       'latente 3.B.1 + Estación 3.3 completa (3.3.1 a 3.3.6) + '
       'latente 3.C.1 + Estación 3.4 completa (3.4.1 a 3.4.7) + '
-      'latente 3.D.1 + Estación 3.5 completa (3.5.1 a 3.5.4) — '
-      '36 cinemáticas implementadas',
+      'latente 3.D.1 + Estación 3.5 completa (3.5.1 a 3.5.4) + '
+      'Estación 3.6 completa TUDELA-1378 (3.6.1 a 3.6.10) + '
+      'M3.entrega + cierre 3.Z — 48 cinemáticas implementadas. La '
+      '3.6 entra completa **PENDIENTE DE VALIDACIÓN COMITÉ**',
       () {
-        expect(EscenasArco3.todas, hasLength(36));
+        expect(EscenasArco3.todas, hasLength(48));
         expect(
           EscenasArco3.todas.map((escena) => escena.id).toList(),
           [
@@ -1098,6 +1100,18 @@ void main() {
             '3.5.2',
             '3.5.3',
             '3.5.4',
+            '3.6.1',
+            '3.6.2',
+            '3.6.3',
+            '3.6.4',
+            '3.6.5',
+            '3.6.6',
+            '3.6.7',
+            '3.6.8',
+            '3.6.9',
+            '3.6.10',
+            'M3.entrega',
+            '3.Z',
           ],
         );
       },

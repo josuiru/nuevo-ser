@@ -3671,6 +3671,1215 @@ class CatalogoBrechas {
     ),
   ];
 
+  /// Brecha 3.6 — La Brecha del incendio de la judería de Tudela
+  /// de 1378. La más sensible del MVP. Doc 09 §3.6.
+  ///
+  /// **PENDIENTE DE VALIDACIÓN COMITÉ TUDELA-1378**: el catálogo
+  /// de 7 fuentes y las 9 afirmaciones canónicas reproducen
+  /// fielmente el material del doc 09 v0.3, incluyendo cifras
+  /// concretas (al menos 18 víctimas mortales, 4 casas destruidas
+  /// completas, 7 dañadas), identificación de tres miembros del
+  /// Concejo (sin nombres en el catálogo), correspondencia del
+  /// rey Carlos II, casos comparativos peninsulares (Sevilla 1391,
+  /// Toledo). Toda esta información requiere validación del comité
+  /// asesor histórico antes de exposición pública. Registrado en
+  /// `BLOQUEOS-PENDIENTES.md`.
+  ///
+  /// Calibración pedagógica del catálogo: 5 Sólido + 3 Probable +
+  /// 1 Disputado, sin "Disputado puro" — los matices "Sólido (la
+  /// fuente)" / "Sólido (la correlación)" / "Sólido (la categoría
+  /// general)" / "Sólido como caracterización metodológica" /
+  /// "Sólido como declaración de estado" / "Sólido como tarea
+  /// pendiente" viven en el `texto` de las afirmaciones, NO en
+  /// niveles nuevos del enum (preserva paridad Dart/PHP).
+  ///
+  /// `minimoAfirmacionesParaConcilio: 7` — el catálogo más exigente
+  /// del MVP. Declarar 7 de 9 obliga a tocar al menos una de las 3
+  /// Probables o la Disputada.
+  static const Brecha brecha36 = Brecha(
+    id: '3.6',
+    titulo: 'El incendio de la judería de Tudela (1378)',
+    ubicacionVisible: 'TUDELA — ARCHIVO + ANTIGUA JUDERÍA',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.06',
+      'HF.07',
+      'HF.10',
+      'HF.11',
+      'CC.01',
+      'CC.05',
+      'CC.07',
+      'PH.01',
+      'PH.04',
+      'PH.06',
+      'PH.10',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+      'AH.05',
+      'AH.06',
+      'AH.07',
+    ],
+    fuentes: _fuentesBrecha36,
+    afirmacionesCanonicas: _afirmacionesBrecha36,
+    flagDeCompletado: 'brecha_3_6_completada',
+    minimoAfirmacionesParaConcilio: 7,
+  );
+
+  static const List<Fuente> _fuentesBrecha36 = [
+    Fuente(
+      id: 'actas_concejo_tudela_1378_1379',
+      tipoVisible: 'Actas del Concejo de Tudela del periodo (1378-1379)',
+      descripcion:
+          'Cuerpo documental de actas municipales del Concejo de '
+          'Tudela del periodo en torno al incendio de noviembre de '
+          '1378 — sesiones del Concejo en los seis meses anteriores '
+          '(catorce menciones del barrio judío sobre temas variados, '
+          'cada dos sesiones aproximadamente, algunas en términos '
+          'retóricos sobre "el problema judío"), acta del día '
+          'siguiente al incendio (atribuye el hecho a "personas no '
+          'identificadas, ajenas a la comunidad cristiana de la '
+          'villa"), y actas posteriores donde el barrio judío deja '
+          'de mencionarse durante veintiún días completos. Cuando se '
+          'retoma, la primera mención es burocrática sobre tasas '
+          'pendientes, sin referencia al incendio.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Concejo de Tudela (escribano municipal)',
+        fecha: '1378-1379 d.C.',
+        publico: 'Uso administrativo interno + auditorio real para '
+            'confirmaciones jurídicas',
+        intereses: 'Registrar las decisiones del Concejo + mantener '
+            'el orden jurídico-administrativo de la villa + '
+            'protegerse legalmente ante una eventual revisión real',
+        omisiones: 'Atribuye el incendio a "personas no identificadas". '
+            'No menciona la ausencia de investigación posterior. '
+            'No tematiza el silencio de tres semanas que se observa '
+            'al comparar el patrón anterior y posterior — el '
+            'silencio es información que la fuente no declara como '
+            'tal pero que se hace visible al cuantificarlo',
+        corroboraOContradice: 'Ancla las afirmaciones 1 (hecho del '
+            'incendio + cifras documentadas), 2 (carta del '
+            'superviviente como anclaje del patrón "callar antes y '
+            'no callar después" complementario a las actas), 3 '
+            '(correlación de presencias previas) y 4 (silencio de '
+            'tres semanas posterior como dato cuantificable). La '
+            'interpretación específica del silencio es Probable o '
+            'Sólido según se declare la existencia o el significado',
+      ),
+    ),
+    Fuente(
+      id: 'padron_parcial_juderia_anterior',
+      tipoVisible: 'Padrón parcial de la judería de Tudela anterior '
+          'al incendio',
+      descripcion:
+          'Padrón parcial de la judería de Tudela documentado antes '
+          'del incendio del 1378 — registro fiscal-administrativo '
+          'incompleto que conserva nombres parciales de cabezas de '
+          'familia, viviendas censadas, contribuciones pagadas. Tras '
+          'el incendio, una versión revisada del padrón registra las '
+          'muertes, parcialmente. Cuatro nombres de víctimas '
+          'parcialmente conservados: un Mosé ben con apellido '
+          'fragmentado, una Dueña con apellido perdido, un niño '
+          'Yosef con identificación parcial, una mujer Esther con '
+          'casa identificada. Otros nombres de víctimas ilegibles o '
+          'perdidos.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Administración fiscal de Tudela + comunidad judía '
+            'local (registro mixto de propósitos)',
+        fecha: 'Anterior al 1378 (padrón base) + posterior al 1378 '
+            '(registro de muertes)',
+        publico: 'Administración fiscal del Concejo + autoridades de '
+            'la comunidad judía',
+        intereses: 'Registrar la base contributiva de la judería + '
+            'documentar a los miembros para la propia administración '
+            'comunitaria + tras el incendio, dejar constancia de las '
+            'pérdidas',
+        omisiones: 'Padrón parcial — no conserva todos los nombres. '
+            'Tras el incendio el registro está dañado físicamente '
+            'y/o intencionalmente incompleto. Los nombres de los '
+            'agresores no aparecen — la fuente registra víctimas, '
+            'no responsables',
+        corroboraOContradice: 'Ancla la afirmación 9 (víctimas '
+            'merecen ser reconocidas con nombre cuando sea posible '
+            '— tarea pendiente). Aporta los cuatro nombres '
+            'parcialmente conservados que la reconstrucción de '
+            'Maren incluye en su versión',
+      ),
+    ),
+    Fuente(
+      id: 'carta_superviviente_zaragoza',
+      tipoVisible: 'Carta del superviviente de la judería de Tudela '
+          'a un correligionario de Zaragoza (dieciocho meses después '
+          'del incendio)',
+      descripcion:
+          'Carta de un superviviente de la comunidad judía de '
+          'Tudela enviada a un correligionario de la judería de '
+          'Zaragoza dieciocho meses después del incendio. Habla de '
+          '"los señores del Concejo que callaron tres semanas antes '
+          'y no callaron tres semanas después". Es la única fuente '
+          'directa en primera persona que conservamos del lado de '
+          'la comunidad judía afectada. La identidad del autor está '
+          'parcialmente conservada; la del receptor también. La '
+          'carta está deteriorada en algunas partes pero el pasaje '
+          'sobre el silencio del Concejo es legible.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Superviviente de la judería de Tudela (identidad '
+            'parcialmente conservada)',
+        fecha: 'h. 1380 d.C. (dieciocho meses después del incendio)',
+        publico: 'Correligionario de Zaragoza + comunidades judías '
+            'aragonesas y navarras receptoras',
+        intereses: 'Comunicar el horror + denunciar la complicidad '
+            'institucional percibida + buscar solidaridad y memoria '
+            'en otras comunidades + registrar lo vivido para la '
+            'memoria comunitaria',
+        omisiones: 'Voz de un superviviente concreto — no representa '
+            'voces colectivas, perspectiva única. No identifica '
+            'nominalmente a los miembros del Concejo cómplices, '
+            'sólo apunta al patrón colectivo del callar. Sesgo del '
+            'productor (víctima) declarado y legítimo, sin '
+            'pretensión de neutralidad',
+        corroboraOContradice: 'Ancla la afirmación 2 (patrón "callar '
+            'antes y no callar después" identificado en la carta). '
+            'Triangula con las actas del Concejo (la cuantificación '
+            'del silencio anterior y posterior) y con la correlación '
+            'de presencias',
+      ),
+    ),
+    Fuente(
+      id: 'fragmento_testimonio_inquisitorial',
+      tipoVisible: 'Fragmento de testimonio inquisitorial de seis '
+          'años después del incendio',
+      descripcion:
+          'Fragmento de testimonio recogido por la Inquisición seis '
+          'años después del incendio (h. 1384) de un converso al '
+          'cristianismo que habla del incendio y menciona a uno de '
+          'los tres miembros del Concejo señalados por la versión '
+          'de Tasio. Fuente mediada por el aparato inquisitorial: '
+          'el testimonio se recoge en un proceso, posiblemente bajo '
+          'coacción, y registrado por un escribano del Tribunal con '
+          'su propia agenda. El fragmento está incompleto — el '
+          'cuerpo principal del testimonio se ha perdido, sólo se '
+          'conserva la parte donde se menciona el incendio.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Tribunal inquisitorial + converso declarante '
+            '(identidad parcialmente conservada en el registro)',
+        fecha: 'h. 1384 d.C. (seis años después del incendio)',
+        publico: 'Tribunal inquisitorial interno; uso eventual como '
+            'precedente jurídico-eclesiástico',
+        intereses: 'Inquisidor: recoger declaraciones útiles para '
+            'procesos contra conversos y para presionar a la '
+            'comunidad. Declarante: posibles motivaciones múltiples '
+            '(ajuste de cuentas personal, presión inquisitorial, '
+            'sinceridad parcial, conveniencia con sus interrogadores)',
+        omisiones: 'Fragmento incompleto — no conservamos el cuerpo '
+            'principal del testimonio. La identidad concreta del '
+            'declarante y las condiciones de la declaración están '
+            'sólo parcialmente documentadas. El silencio sobre las '
+            'condiciones del registro inquisitorial es un sesgo '
+            'estructural del aparato',
+        corroboraOContradice: 'Mencionado como evidencia parcial en '
+            'la afirmación 6 (identificación nominal Disputado) y '
+            'en la afirmación 7 (testimonio inquisitorial como '
+            'caracterización metodológica de fuente mediada). NO '
+            'puede sostener afirmaciones nominativas por sí solo. '
+            'Aporta sospecha pero no determinación',
+      ),
+    ),
+    Fuente(
+      id: 'correspondencia_carlos_ii_concejo',
+      tipoVisible: 'Correspondencia del rey Carlos II de Navarra al '
+          'Concejo de Tudela (dos cartas posteriores al incendio)',
+      descripcion:
+          'Dos cartas del rey Carlos II de Navarra al Concejo de '
+          'Tudela posteriores al incendio. La primera, fechada '
+          'pocas semanas después, pide informe sobre lo sucedido. '
+          'La segunda, varios meses después, da por cerrado el '
+          'asunto en términos administrativos sin investigación '
+          'posterior. La correspondencia conservada en el archivo '
+          'real navarro permite triangular la respuesta institucional '
+          'desde la Corona — el rey pide informe y el Concejo '
+          'cierra el caso sin más.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Cancillería del rey Carlos II de Navarra',
+        fecha: 'Finales de 1378 + primer semestre de 1379',
+        publico: 'Concejo de Tudela + uso administrativo en el '
+            'archivo real',
+        intereses: 'Mantener el orden en una villa importante del '
+            'reino + recabar información mínima para no perder '
+            'control sobre lo sucedido + cerrar el asunto sin '
+            'tensión política mayor',
+        omisiones: 'No insiste en la investigación tras la respuesta '
+            'del Concejo. La segunda carta cierra el asunto en '
+            'términos administrativos sin profundizar. El silencio '
+            'real posterior — Carlos II no vuelve a abrir el asunto '
+            'durante el resto de su reinado — es información '
+            'paralela al silencio del Concejo',
+        corroboraOContradice: 'Sostiene la afirmación 5 (complicidad '
+            'institucional como categoría general — la respuesta '
+            'real débil refuerza el cuadro). Triangula con el '
+            'silencio de tres semanas en las actas del Concejo: '
+            'la complicidad institucional se extiende desde el '
+            'Concejo hasta la respuesta real diluida',
+      ),
+    ),
+    Fuente(
+      id: 'restos_arqueologicos_juderia',
+      tipoVisible: 'Restos arqueológicos del barrio judío + '
+          'comparación con casos análogos peninsulares del s. XIV',
+      descripcion:
+          'Excavación arqueológica del antiguo barrio judío de '
+          'Tudela realizada en el s. XX, niveles de incendio '
+          'identificados estratigráficamente, algunos restos óseos '
+          'humanos en escombros, cerámica doméstica del periodo, '
+          'fragmentos de paredes pintadas. Complementado por el '
+          'cuerpo bibliográfico moderno sobre violencias antijudías '
+          'en la península Ibérica del s. XIV — Sevilla 1391, '
+          'Toledo periódicamente, otros pogromos del periodo. '
+          'Permite contextualizar el incendio de Tudela como caso '
+          'temprano del patrón general que culminará en 1391.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Arqueólogos del s. XX + cuerpo bibliográfico '
+            'moderno sobre violencias antijudías peninsulares del '
+            's. XIV',
+        fecha: 'Excavación s. XX (niveles del s. XIV) + '
+            'historiografía s. XX-XXI',
+        publico: 'Especialistas + consumo museográfico local',
+        intereses: 'Documentar arqueológicamente el barrio + '
+            'reconstruir el contexto del incendio + situar Tudela '
+            '1378 en el patrón peninsular del s. XIV',
+        omisiones: 'Como toda fuente material, no explicita '
+            'identidades concretas ni motivaciones individuales. '
+            'Los restos óseos no permiten identificación nominal '
+            'sin análisis posterior. La comparación con casos '
+            'análogos es marco interpretativo, no evidencia '
+            'directa',
+        corroboraOContradice: 'Sostiene la afirmación 1 (hecho del '
+            'incendio + cifras orientativas, niveles de incendio '
+            'arqueológicamente confirmados). Aporta marco '
+            'interpretativo a la afirmación 5 (la complicidad '
+            'institucional encaja con patrones documentados en '
+            'casos peninsulares paralelos)',
+      ),
+    ),
+    Fuente(
+      id: 'reconstrucciones_publicadas_isaura_tasio',
+      tipoVisible: 'Las dos reconstrucciones publicadas previas — '
+          'Isaura (2017) y Tasio/Resolutiva (2021)',
+      descripcion:
+          'Las dos reconstrucciones publicadas previas que fijaron '
+          'el debate académico sobre el incendio. La de Isaura '
+          '(2017) declara la complicidad institucional como '
+          'Probable, sin identificación nominal. La de '
+          'Tasio/Resolutiva (2021) declara la complicidad como '
+          'Sólido e identifica nominalmente a tres miembros del '
+          'Concejo del 1378 como responsables, basándose en la '
+          'correlación de presencias + carta del superviviente + '
+          'fragmento inquisitorial. Ambas son lecturas defendidas '
+          'académicamente con criterios distintos — la primera más '
+          'cauta, la segunda más resolutiva.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Isaura Etxeberria (2017) + Tasio Mendía y la '
+            'corriente Resolutiva (2021)',
+        fecha: '2017 + 2021',
+        publico: 'Comunidad académica de cronistas + público '
+            'amplio interesado en historia medieval navarra',
+        intereses: 'Isaura: defender prudencia metodológica frente '
+            'a determinaciones nominativas con evidencia parcial. '
+            'Tasio/Resolutiva: defender que la determinación '
+            'histórica exige nombrar a los responsables aun cuando '
+            'la evidencia sea circunstancial pero convergente',
+        omisiones: 'Ninguna de las dos formula el silencio de tres '
+            'semanas en las actas posteriores como afirmación '
+            'independiente — ambas usan las actas posteriores pero '
+            'no tematizan el patrón cuantitativo del silencio. '
+            'La afirmación 4 de la reconstrucción de Maren llena '
+            'esa omisión',
+        corroboraOContradice: 'Marco de referencia para la '
+            'reconstrucción de Maren — su versión nueva no '
+            'sustituye a las anteriores sino que extiende el '
+            'debate añadiendo la afirmación 4 y articulando la '
+            'distinción entre categoría general (Sólido) y forma '
+            'específica (Probable) de la afirmación 5',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha36 = [
+    AfirmacionCanonica(
+      id: 'incendio_documentado_1378',
+      texto: 'En noviembre de 1378, el barrio judío de Tudela sufrió '
+          'un incendio nocturno con al menos dieciocho víctimas '
+          'mortales documentadas, cuatro casas destruidas completas '
+          'y otras siete dañadas. La sinagoga sufrió daños menores. '
+          'Sólido — los hechos básicos están registrados en las '
+          'actas del Concejo del día siguiente, en el padrón parcial '
+          'posterior al incendio y confirmados arqueológicamente por '
+          'los niveles de incendio identificados en la excavación '
+          'del s. XX.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'actas_concejo_tudela_1378_1379',
+        'padron_parcial_juderia_anterior',
+        'restos_arqueologicos_juderia',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'carta_superviviente_patron_callar',
+      texto: 'La carta del superviviente posterior identifica un '
+          'patrón de "callar antes y no callar después" entre '
+          'algunos miembros del Concejo. Sólido la fuente — la '
+          'carta existe y el pasaje es legible. La interpretación '
+          'específica de qué actores concretos integran ese patrón '
+          'requiere otras fuentes corroboradoras y se trata en '
+          'afirmaciones posteriores con calibración distinta.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'carta_superviviente_zaragoza',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'correlacion_presencias_concejo_previas',
+      texto: 'La correlación de presencias en sesiones previas del '
+          'Concejo donde se trató "el problema judío" identifica a '
+          'tres miembros con presencia continua durante el mes '
+          'anterior al incendio. Sólido la correlación — los '
+          'registros de presencias en las actas son cuantificables '
+          'y el patrón es estadísticamente anómalo respecto al '
+          'comportamiento general de los miembros del Concejo. '
+          'Probable la implicación directa — la correlación es '
+          'evidencia parcial, no prueba causal.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'actas_concejo_tudela_1378_1379',
+        'reconstrucciones_publicadas_isaura_tasio',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'silencio_tres_semanas_dato',
+      texto: 'Las actas del Concejo posteriores al incendio '
+          'presentan veintiún días de silencio absoluto sobre el '
+          'barrio judío, en contraste con un patrón previo de '
+          'menciones cada dos sesiones durante seis meses anteriores '
+          '(catorce menciones documentadas). Cuando se retoma, la '
+          'primera mención es burocrática sobre tasas pendientes, '
+          'sin referencia al incendio. Este silencio es información '
+          'sobre la postura institucional del Concejo y constituye '
+          'dato sólido en sí mismo, independientemente de la lectura '
+          'específica que se le dé. Sólido — la afirmación nueva '
+          'que ni Isaura ni Tasio formularon como independiente.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'actas_concejo_tudela_1378_1379',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'complicidad_institucional_categoria_general',
+      texto: 'La complicidad institucional del Concejo en los '
+          'hechos — por acción, omisión o ambas — es Sólido como '
+          'afirmación general. La forma específica de la complicidad '
+          '(orden directa, pacto silencioso, omisión deliberada) es '
+          'Probable sin posibilidad actual de discriminar entre las '
+          'tres formas. La evidencia disponible (silencio posterior '
+          '+ correlación de presencias + carta del superviviente + '
+          'testimonio inquisitorial + correspondencia real diluida) '
+          'converge en la categoría general, no en una forma '
+          'específica.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'actas_concejo_tudela_1378_1379',
+        'carta_superviviente_zaragoza',
+        'correspondencia_carlos_ii_concejo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'identificacion_nominal_tres_miembros',
+      texto: 'La identificación nominal de los tres miembros del '
+          'Concejo señalados por la versión de Tasio/Resolutiva '
+          '(2021) como responsables individuales es Disputado. La '
+          'evidencia disponible (correlación de presencias + '
+          'testimonio inquisitorial mediado de seis años después + '
+          'la carta del superviviente que apunta al patrón '
+          'colectivo sin nombrar) sostiene sospecha razonable pero '
+          'no determinación nominativa con la confianza que el '
+          'oficio requiere para nombrar a personas en relación a '
+          'un asesinato colectivo. La afirmación queda reabierta '
+          'para futuras Brechas con evidencia adicional.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'actas_concejo_tudela_1378_1379',
+        'fragmento_testimonio_inquisitorial',
+        'reconstrucciones_publicadas_isaura_tasio',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'testimonio_inquisitorial_caracterizacion',
+      texto: 'El fragmento de testimonio inquisitorial recogido seis '
+          'años después del incendio es fuente mediada con sesgo '
+          'estructural del productor (inquisidor + escribano del '
+          'Tribunal con su propia agenda) y posibles motivaciones '
+          'múltiples del declarante (converso bajo presión '
+          'inquisitorial, posibles ajustes de cuentas personales, '
+          'condiciones de la declaración sólo parcialmente '
+          'documentadas). Su contenido no se descarta pero no puede '
+          'sostener afirmaciones nominativas por sí solo. Sólido '
+          'como caracterización metodológica de la fuente.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'fragmento_testimonio_inquisitorial',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'brecha_estado_herida_abierta',
+      texto: 'La Brecha del incendio de la judería de Tudela de 1378 '
+          'sigue siendo, tras seiscientos cincuenta años, una herida '
+          'histórica abierta. La afirmación de complicidad '
+          'institucional como Sólido (categoría general) y la '
+          'afirmación del silencio posterior como Sólido son '
+          'contribuciones que esta reconstrucción aporta al debate. '
+          'La identificación nominativa de responsables individuales '
+          'queda Disputada y reabierta para futuras Brechas con '
+          'evidencia adicional. Sólido como declaración de estado.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'reconstrucciones_publicadas_isaura_tasio',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'victimas_nombres_tarea_pendiente',
+      texto: 'Las víctimas no nombradas (al menos dieciocho '
+          'documentadas) merecen ser reconocidas con nombre cuando '
+          'sea posible. El padrón parcial conserva nombres '
+          'incompletos: un Mosé ben con apellido fragmentado, una '
+          'Dueña con apellido perdido, un niño Yosef con '
+          'identificación parcial, una mujer Esther con casa '
+          'identificada. La parte del oficio que esta Brecha no '
+          'resuelve es la identificación nominativa del resto de '
+          'víctimas. Sólido como tarea pendiente.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'padron_parcial_juderia_anterior',
+      ],
+    ),
+  ];
+
+  /// **Brecha 4.1 — Joana de Roncal** (Aprendiz III avanzada). Primera
+  /// Brecha jugable del Arco 4 (doc 10 §4.1). Aitor lleva a Maren a la
+  /// sala de cuentas del palacio de Olite y le pide que **elija el
+  /// sujeto** — la primera Brecha del MVP donde la Cronista determina
+  /// quién es la persona reconstruida, no se le entrega. Maren elige a
+  /// Joana de Roncal, doncella de cámara documentada en las cuentas de
+  /// palacio entre 1402 y 1412.
+  ///
+  /// 4 fuentes diegéticas extraídas del corpus archivístico real del
+  /// reino de Navarra del s. XV (cuentas administrativas de la corte
+  /// de Carlos III el Noble + correspondencia interna del chambelán +
+  /// padrones del valle de Roncal + comparación con biografías
+  /// publicadas de doncellas de cámara de cortes peninsulares
+  /// contemporáneas). 8 afirmaciones canónicas calibradas
+  /// pedagógicamente **5 Sólido + 2 Probable + 1 Disputado** según el
+  /// comportamiento del Concilio en la cinemática 4.1.6 — el vestido
+  /// especial de 1408 lo declaran Disputado (al menos tres lecturas
+  /// plausibles, ninguna documentada cerrada), la "pérdida de hija" en
+  /// limosnas de 1412 lo declaran Probable (coincidencia temporal y
+  /// condición de "hija sin más identificación" encajan, pero la
+  /// mención no es nominativa).
+  ///
+  /// `minimoAfirmacionesParaConcilio: 6` — declarar 6 de 8 obliga a
+  /// tocar al menos una de las dos Probables o la Disputada, donde el
+  /// oficio de Aprendiz III se ejercita.
+  ///
+  /// La Brecha 4.1 hace su debut narrativo del **Aprendiz III
+  /// avanzado**: la Cronista determina el sujeto, no lo recibe. El
+  /// oficio aplicado a una vida pequeña documentada (10 años de
+  /// cuentas + cuatro menciones cualificadas + una mención posible)
+  /// es la pedagogía de la Estación — *"esta es mi Brecha"* como
+  /// articula Maren al final de 4.1.3.
+  ///
+  /// Material trazable preservado: palacio de Olite real, Carlos III
+  /// el Noble + Leonor + las cuatro infantas (Juana, María, Beatriz,
+  /// Blanca) como personajes históricamente documentados, valle de
+  /// Roncal real, prácticas administrativas de las cortes peninsulares
+  /// del s. XV documentadas. Joana de Roncal como persona concreta es
+  /// **figura ficticia diegética** — los detalles de su biografía se
+  /// construyen como modelo literario verosímil de doncella de cámara
+  /// del periodo a partir del registro genuino de cuentas de palacio.
+  /// Registro completo en `BLOQUEOS-PENDIENTES.md` bajo JOANA-DE-RONCAL.
+  static const Brecha brecha41 = Brecha(
+    id: '4.1',
+    titulo: 'Joana de Roncal',
+    ubicacionVisible: 'OLITE — PALACIO + ARCHIVO DE IRUÑA',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.06',
+      'HF.10',
+      'HF.11',
+      'CC.01',
+      'CC.04',
+      'CC.05',
+      'GH.04',
+      'PH.01',
+      'PH.04',
+      'PH.06',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+      'AH.06',
+      'AH.07',
+    ],
+    fuentes: _fuentesBrecha41,
+    afirmacionesCanonicas: _afirmacionesBrecha41,
+    flagDeCompletado: 'brecha_4_1_completada',
+    minimoAfirmacionesParaConcilio: 6,
+  );
+
+  static const List<Fuente> _fuentesBrecha41 = [
+    Fuente(
+      id: 'cuentas_palacio_olite_1402_1412',
+      tipoVisible: 'Cuentas de palacio de Olite (1402-1412)',
+      descripcion:
+          'Cuerpo documental administrativo de la corte de Carlos III '
+          'el Noble — pagos a personal, compras de alimento, gastos en '
+          'vestidos, intercambios diplomáticos, regalos en fechas '
+          'señaladas, gastos de viajes con la corte. Las cuentas '
+          'mencionan a Joana de Roncal regularmente entre 1402 y 1412 '
+          'como "doncella de cámara", primero al servicio de la reina '
+          'Leonor y después de la infanta Blanca. Aparece como testigo '
+          'en una compra de tela en 1408 y figura en pagos por '
+          'servicios, regalos en fechas señaladas y viajes con la corte '
+          'a Tudela (1405) y Estella. En 1412 deja de aparecer.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Escribanía y tesorería de la corte de Carlos III el '
+            'Noble',
+        fecha: '1402-1412 d.C.',
+        publico: 'Uso administrativo interno del palacio + auditoría '
+            'real',
+        intereses: 'Registrar los gastos del palacio para contabilidad '
+            'real + justificar partidas de tesorería + mantener orden '
+            'administrativo de la casa real',
+        omisiones: 'Las cuentas registran lo pagado, no lo vivido. No '
+            'consignan estados emocionales, motivos personales, '
+            'relaciones interpersonales más allá del registro nominal. '
+            'Las personas aparecen en función de las partidas de '
+            'gasto, no como sujetos. Cuando alguien deja de aparecer, '
+            'la fuente no dice por qué — sólo deja de mencionarlo',
+        corroboraOContradice: 'Ancla las afirmaciones 1 (servicio '
+            'documentado 1402-1412), 2 (entrada joven y salida en torno '
+            'a los 28), 5 (viajes con la corte), 6 (servicio sucesivo '
+            'a Leonor y a Blanca) y 7 (gasto de tela de 1408 — sin '
+            'explicación documentada del motivo)',
+      ),
+    ),
+    Fuente(
+      id: 'correspondencia_chambelan_corte',
+      tipoVisible: 'Correspondencia interna del chambelán de la corte '
+          'de Olite',
+      descripcion:
+          'Cuerpo de cartas administrativas internas del chambelán de '
+          'la corte navarra. En 1402 incluye un pago a "Pedro de '
+          'Roncal" por gastos de viaje de su hermana Joana al palacio '
+          '— ancla la entrada de Joana al servicio. En 1407 incluye '
+          'una carta breve al chambelán solicitando autorización para '
+          'que Joana viaje a su valle por enfermedad de su madre — '
+          'única referencia documentada al núcleo familiar de Joana en '
+          'el periodo de servicio.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Chambelán de la corte de Carlos III + secretarios '
+            'cortesanos',
+        fecha: '1402-1412 d.C.',
+        publico: 'Uso administrativo interno + comunicación con '
+            'familias del personal de servicio',
+        intereses: 'Gestionar autorizaciones de servicio + mantener '
+            'orden administrativo del personal cortesano + responder a '
+            'familias del personal con tono institucional',
+        omisiones: 'No registra motivos personales más allá de los '
+            'estrictamente administrativos. No consigna intercambios '
+            'verbales ni decisiones tomadas oralmente — sólo lo escrito '
+            'queda. La correspondencia preserva una fracción mínima de '
+            'lo que efectivamente circulaba',
+        corroboraOContradice: 'Ancla las afirmaciones 3 (apellido del '
+            'valle de Roncal por mención del hermano Pedro de Roncal '
+            'pagado por el viaje) y 4 (familia hidalga modesta del '
+            'valle por gastos modestos de viaje y por la carta de 1407 '
+            'sobre la madre)',
+      ),
+    ),
+    Fuente(
+      id: 'padrones_valle_roncal_finales_xiv',
+      tipoVisible: 'Padrones del valle de Roncal (finales del s. XIV — '
+          'principios del s. XV)',
+      descripcion:
+          'Padrones fiscales del valle de Roncal del periodo. Registro '
+          'de familias hidalgas modestas del valle pirenaico navarro. '
+          'Una mención de "limosnas a la familia de Roncal por la '
+          'pérdida de su hija" en 1412 sin más detalles — podría '
+          'corresponder a Joana, podría corresponder a una hermana o a '
+          'otra hija de la misma familia.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Administración fiscal del valle de Roncal + curas '
+            'parroquiales locales',
+        fecha: 'Finales s. XIV — principios s. XV',
+        publico: 'Administración fiscal navarra + gestión parroquial '
+            'local',
+        intereses: 'Registrar la base contributiva del valle + '
+            'documentar miembros de las familias hidalgas para gestión '
+            'administrativa + dejar constancia de pérdidas y limosnas '
+            'distribuidas',
+        omisiones: 'Padrón parcial — no conserva todos los registros '
+            'familiares con detalle nominal completo. La mención de '
+            '"pérdida de hija" en 1412 no nombra a la difunta, sólo '
+            'consigna la limosna y la condición de hija. Otras hijas '
+            'de la misma familia que pudieran haber muerto en el '
+            'mismo periodo no se discriminan',
+        corroboraOContradice: 'Ancla parcialmente la afirmación 8 '
+            '(coincidencia temporal entre la desaparición de Joana '
+            'de las cuentas en 1412 y la "pérdida de hija" registrada '
+            'ese mismo año). La identificación nominativa entre las '
+            'dos fuentes queda como inferencia Probable, no Sólida',
+      ),
+    ),
+    Fuente(
+      id: 'biografias_doncellas_camara_comparadas',
+      tipoVisible: 'Biografías publicadas de doncellas de cámara de '
+          'cortes peninsulares contemporáneas (s. XIV-XV)',
+      descripcion:
+          'Cuerpo bibliográfico secundario de estudios sobre el '
+          'servicio cortesano femenino en cortes peninsulares del '
+          'periodo bajomedieval — Castilla, Aragón, Portugal, Navarra. '
+          'Permite triangular el patrón general del servicio: edad de '
+          'entrada (en torno a los quince-dieciocho años), duración '
+          'media del servicio, prácticas matrimoniales típicas del '
+          'estamento (la mayoría se casaba antes de los veinticinco), '
+          'movilidad asociada a viajes con la corte, terminación '
+          'frecuente del servicio por matrimonio o muerte joven.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Cuerpo bibliográfico académico contemporáneo',
+        fecha: 'Estudios académicos del s. XX-XXI',
+        publico: 'Investigación académica especializada + público '
+            'culto interesado en historia social bajomedieval',
+        intereses: 'Reconstruir patrones del servicio cortesano '
+            'femenino + iluminar vidas de mujeres habitualmente '
+            'invisibilizadas por la historiografía clásica',
+        omisiones: 'Los estudios se basan en los casos mejor '
+            'documentados, lo que sesga el patrón hacia las cortes con '
+            'mejor preservación archivística. Las trayectorias atípicas '
+            '(servicio largo sin matrimonio, terminación por causa '
+            'desconocida) están subrepresentadas en el corpus '
+            'bibliográfico',
+        corroboraOContradice: 'Ancla las afirmaciones 7 (matrimonio '
+            'antes de los veinticinco como patrón típico — Joana se '
+            'aparta del patrón al permanecer doncella diez años) y 8 '
+            '(terminación del servicio por muerte joven como salida '
+            'frecuente — encaja con la inferencia sobre Joana en 1412)',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha41 = [
+    AfirmacionCanonica(
+      id: 'joana_servicio_documentado_diez_anos',
+      texto: 'Joana de Roncal sirvió en la corte de Carlos III el '
+          'Noble como doncella de cámara entre 1402 y 1412 — diez '
+          'años documentados de servicio continuo, primero al servicio '
+          'de la reina Leonor y después de la infanta Blanca. Sólido — '
+          'las cuentas de palacio registran sus pagos por servicios y '
+          'regalos en fechas señaladas durante todo el periodo.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'cuentas_palacio_olite_1402_1412',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'joana_edad_entrada_y_salida',
+      texto: 'Joana entró al servicio del palacio en 1402 con dieciocho '
+          'años aproximados y dejó de aparecer en los registros en '
+          '1412, posiblemente alrededor de los veintiocho. Sólido la '
+          'edad aproximada de entrada (registrada en el pago al hermano '
+          'Pedro por gastos de viaje al palacio); sólido el rango de '
+          'salida (la última mención documentada en las cuentas).',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'cuentas_palacio_olite_1402_1412',
+        'correspondencia_chambelan_corte',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'apellido_roncal_origen_valle',
+      texto: 'El apellido "de Roncal" indica origen del valle pirenaico '
+          'navarro de Roncal, pequeño valle del Pirineo navarro. '
+          'Probable — la convención toponímica del periodo asocia '
+          'sistemáticamente el apellido al valle de procedencia, pero '
+          'el patrón admite excepciones (apellidos heredados sin '
+          'coincidencia geográfica). El pago a "Pedro de Roncal" como '
+          'hermano de Joana corrobora la procedencia del valle.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'correspondencia_chambelan_corte',
+        'padrones_valle_roncal_finales_xiv',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'familia_hidalga_modesta',
+      texto: 'Joana provenía probablemente de familia hidalga modesta '
+          'del valle de Roncal — los gastos de viaje al palacio en '
+          '1402 son modestos para un acceso a la corte, y la carta de '
+          '1407 sobre la madre enferma sugiere un núcleo familiar de '
+          'estamento medio sin grandes recursos. Probable — la '
+          'caracterización del estamento se infiere de la modestia de '
+          'los gastos y del registro general del valle, no de '
+          'documentación nominativa explícita sobre el patrimonio '
+          'familiar.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'correspondencia_chambelan_corte',
+        'padrones_valle_roncal_finales_xiv',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'viajes_tudela_estella_1405',
+      texto: 'Joana viajó con la corte navarra a Tudela en 1405 y a '
+          'Estella en años posteriores como acompañante de la reina y '
+          'después de la infanta Blanca. Sólido — los registros de '
+          'gastos de viaje de la corte la mencionan nominalmente como '
+          'parte del séquito.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'cuentas_palacio_olite_1402_1412',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'servicio_sucesivo_leonor_blanca',
+      texto: 'Joana sirvió primero a la reina Leonor (esposa de Carlos '
+          'III) y posteriormente a la infanta Blanca, futura reina de '
+          'Navarra. La transición del servicio queda registrada en las '
+          'cuentas de palacio sin discontinuidad temporal apreciable. '
+          'Sólido — las cuentas registran nominalmente el cambio de '
+          'titular del servicio.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'cuentas_palacio_olite_1402_1412',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'gasto_tela_1408_matrimonio_inminente',
+      texto: 'El gasto de tela de 1408 para un vestido especial de '
+          'Joana indica un matrimonio inminente. Disputado — al menos '
+          'tres lecturas plausibles convergen en la documentación '
+          'disponible: matrimonio inminente (que no llegó a registrarse '
+          'porque no llegó a celebrarse), ascenso de servicio sin '
+          'matrimonio (que tampoco aparece registrado, sigue como '
+          'doncella), o evento ceremonial puntual de la corte (regalo '
+          'de la reina, fiesta cortesana). Joana sigue apareciendo en '
+          'las cuentas como "doncella" sin mención de marido hasta '
+          '1412, lo que descarta la primera lectura como cerrada. La '
+          'evidencia disponible no permite discriminar entre las '
+          'lecturas restantes con la confianza que el oficio requiere.',
+      calibracionCorrecta: NivelConfianza.disputado,
+      idsFuentesAnclaje: [
+        'cuentas_palacio_olite_1402_1412',
+        'biografias_doncellas_camara_comparadas',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'perdida_de_hija_1412_corresponde_a_joana',
+      texto: 'La mención de "limosnas a la familia de Roncal por la '
+          'pérdida de su hija" registrada en 1412 corresponde '
+          'probablemente a Joana de Roncal. Probable — la coincidencia '
+          'temporal con la desaparición de Joana de las cuentas de '
+          'palacio ese mismo año, junto con la condición de "hija sin '
+          'más identificación", encaja con Joana como única hija de la '
+          'familia que sirviera en la corte en ese momento según las '
+          'fuentes disponibles. Pero no es Sólido porque la mención no '
+          'es nominativa — podría corresponder a una hermana u otra '
+          'hija de la misma familia que muriera en el mismo año.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'cuentas_palacio_olite_1402_1412',
+        'padrones_valle_roncal_finales_xiv',
+        'biografias_doncellas_camara_comparadas',
+      ],
+    ),
+  ];
+
+  /// **Brecha 4.B — La pared medianera de Estella (1394)**. Brecha
+  /// jugable de la Estación 4.B (Tres comunidades en Estella) del
+  /// Arco 4 (doc 10 §4.B). Karim sugiere a Maren que en lugar de
+  /// abordar la convivencia de las tres comunidades en Estella en
+  /// términos generales — *"convivencia tardomedieval"* — elija un
+  /// caso pequeño documentado y lo trabaje como ventana a la
+  /// cotidianidad. Maren elige un pleito de 1394 entre Pedro Garaicoa
+  /// (cristiano) y Yusuf al-Tudelí (mudéjar) por una pared medianera
+  /// entre dos casas en Estella.
+  ///
+  /// 4 fuentes diegéticas: el expediente del pleito conservado en los
+  /// archivos municipales de Estella, el registro municipal de pleitos
+  /// del periodo (cuerpo de género para triangular procedimiento),
+  /// los responsa rabínicos de juristas judíos del s. XIV-XV (que
+  /// articulan los marcos jurídicos compartidos entre comunidades
+  /// según la lección de Karim en 4.B.2), y estudios secundarios sobre
+  /// convivencia en villas peninsulares del periodo bajomedieval.
+  ///
+  /// 8 afirmaciones canónicas calibradas pedagógicamente **5 Sólido +
+  /// 2 Probable + 1 Sólido como afirmación metodológica**. Las 5
+  /// Sólido son los hechos del pleito (pleito documentado, Yusuf
+  /// acude al tribunal cristiano sin objeciones, testigo mudéjar bajo
+  /// juramento mudéjar respetado, cristianos no descalifican por
+  /// religión, sentencia se cumple sin apelaciones). Las 2 Probables
+  /// son las inferencias indirectas que el caso ilumina pero no cierra
+  /// (marcos jurídicos compartidos como patrón general, vecindad
+  /// funcional con tensiones como caracterización de las relaciones
+  /// cotidianas — un caso no es muestra). La 8 metodológica es la
+  /// lección del oficio que Karim cierra en 4.B.5 (*"una Brecha así,
+  /// de un caso pequeño, vale más que diez Brechas sobre grandes
+  /// acontecimientos cuando se trata de entender cómo vivía la gente"*).
+  ///
+  /// `minimoAfirmacionesParaConcilio: 6` — declarar 6 de 8 obliga a
+  /// tocar al menos una de las dos Probables, donde el oficio se
+  /// ejercita en la inferencia desde el caso al patrón.
+  ///
+  /// **El matiz "Sólido como afirmación metodológica"** vive en el
+  /// texto de la afirmación 8, NO como nivel nuevo del enum
+  /// `NivelConfianza` (preserva paridad Dart/PHP del core; mismo
+  /// patrón que los matices "Sólido (la ausencia)" del Arco 2 y
+  /// "Sólido (la incertidumbre)" del Arco 3).
+  ///
+  /// Material trazable preservado: Estella/Lizarra real, modelo de
+  /// villa-Camino con tres comunidades documentadas (cristiana,
+  /// mudéjar/musulmana, judía) en el s. XIV, prácticas jurídicas de
+  /// pleitos por paredes medianeras como tipo documental real del
+  /// periodo, responsa rabínicos como género jurídico real. El pleito
+  /// concreto y los nombres "Pedro Garaicoa" + "Yusuf al-Tudelí" +
+  /// "Mohammed" son **figuras ficticias diegéticas** — modelo
+  /// literario verosímil construido a partir de tipos documentales
+  /// reales del periodo. Registro completo en `BLOQUEOS-PENDIENTES.md`
+  /// bajo PARED-MEDIANERA-1394.
+  static const Brecha brecha4B = Brecha(
+    id: '4.B',
+    titulo: 'La pared medianera de Estella (1394)',
+    ubicacionVisible: 'ESTELLA — ARCHIVO MUNICIPAL + ARCHIVO DE IRUÑA',
+    habilidadesEjercitadas: [
+      'PR.01',
+      'PR.02',
+      'PR.03',
+      'PR.04',
+      'HF.01',
+      'HF.02',
+      'HF.03',
+      'HF.04',
+      'HF.06',
+      'HF.07',
+      'HF.10',
+      'HF.11',
+      'CC.01',
+      'CC.05',
+      'GH.04',
+      'PH.01',
+      'PH.04',
+      'PH.06',
+      'AH.01',
+      'AH.02',
+      'AH.03',
+      'AH.06',
+      'AH.07',
+    ],
+    fuentes: _fuentesBrecha4B,
+    afirmacionesCanonicas: _afirmacionesBrecha4B,
+    flagDeCompletado: 'brecha_4_b_completada',
+    minimoAfirmacionesParaConcilio: 6,
+  );
+
+  static const List<Fuente> _fuentesBrecha4B = [
+    Fuente(
+      id: 'expediente_pleito_pared_medianera_1394',
+      tipoVisible: 'Expediente del pleito de la pared medianera de '
+          'Estella (1394)',
+      descripcion:
+          'Expediente jurídico del pleito de 1394 entre Pedro Garaicoa '
+          '(cristiano) y Yusuf al-Tudelí (mudéjar) por una pared '
+          'medianera entre dos casas en Estella, conservado en los '
+          'archivos municipales. El expediente registra la demanda '
+          'inicial, los testimonios bajo juramento (cristianos y '
+          'mudéjar — Mohammed bajo juramento mudéjar respetado por el '
+          'tribunal), el dictamen pericial sobre la pared, el '
+          'veredicto del tribunal (parcialmente favorable a Yusuf) y '
+          'el cumplimiento de la sentencia sin apelaciones '
+          'documentadas posteriores.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Tribunal municipal de Estella + escribano del '
+            'concejo',
+        fecha: '1394 d.C.',
+        publico: 'Uso jurídico-administrativo interno del concejo + '
+            'archivo municipal',
+        intereses: 'Resolver el pleito conforme al procedimiento '
+            'jurídico vigente + dejar constancia de testimonios y '
+            'veredicto para futuras consultas + mantener orden '
+            'jurídico en la villa',
+        omisiones: 'El expediente registra el procedimiento, no las '
+            'relaciones cotidianas previas entre los litigantes ni el '
+            'contexto vital del barrio. Las personas aparecen como '
+            'partes y testigos del pleito, no como vecinos con vida '
+            'cotidiana documentada. Lo que el procedimiento no '
+            'tematiza no se preserva',
+        corroboraOContradice: 'Ancla las afirmaciones 1 (pleito '
+            'documentado), 2 (Yusuf acude al tribunal cristiano sin '
+            'objeciones del juez), 3 (testigo mudéjar bajo juramento '
+            'mudéjar respetado), 4 (testigos cristianos no descalifican '
+            'por religión), 5 (veredicto parcialmente favorable a '
+            'Yusuf) y 6 (sentencia cumplida sin apelaciones)',
+      ),
+    ),
+    Fuente(
+      id: 'registro_pleitos_estella_periodo',
+      tipoVisible: 'Registro municipal de pleitos de Estella del '
+          'periodo (s. XIV)',
+      descripcion:
+          'Cuerpo documental del registro municipal de pleitos de '
+          'Estella del s. XIV — cuerpo de género que permite '
+          'triangular si el procedimiento del pleito de la pared '
+          'medianera de 1394 sigue el patrón ordinario del tribunal '
+          '(juramentos respetados según la confesión del testigo, '
+          'veredictos sustantivos sobre la materia disputada, '
+          'cumplimiento de sentencias sin apelaciones inhabituales) '
+          'o presenta anomalías procedimentales que requerirían '
+          'lectura específica.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Tribunal municipal de Estella + escribanos del '
+            'concejo',
+        fecha: 's. XIV (cuerpo de género)',
+        publico: 'Uso jurídico-administrativo interno + archivo '
+            'municipal',
+        intereses: 'Mantener orden jurídico en la villa + dejar '
+            'constancia procedimental para futuras consultas + '
+            'normalizar la práctica jurídica del tribunal',
+        omisiones: 'El registro de género preserva el procedimiento, '
+            'no la vida cotidiana entre pleitos. Casos no llegados a '
+            'pleito (resueltos informalmente entre vecinos) no se '
+            'documentan — un sesgo estructural hacia la conflictividad '
+            'declarada',
+        corroboraOContradice: 'Ancla la afirmación 7 (los marcos '
+            'jurídicos compartidos como patrón general inferido del '
+            'cuerpo documental) — el pleito de 1394 no es anomalía, '
+            'sigue el patrón ordinario',
+      ),
+    ),
+    Fuente(
+      id: 'responsa_rabinicos_xiv_xv',
+      tipoVisible: 'Responsa rabínicos de juristas judíos peninsulares '
+          '(s. XIV-XV)',
+      descripcion:
+          'Cuerpo documental de responsa rabínicos producidos por '
+          'juristas judíos peninsulares del periodo. Karim trabaja con '
+          'Maren en la cinemática 4.B.2 cómo los responsa articulan '
+          'los marcos jurídicos compartidos entre comunidades — '
+          'reglas de convivencia, gestión de pleitos intercomunitarios, '
+          'reconocimiento mutuo de juramentos y procedimientos. El '
+          'corpus permite triangular el patrón de funcionamiento '
+          'jurídico de las tres comunidades (cristiana, mudéjar/'
+          'musulmana, judía) en villas peninsulares del periodo.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.primaria,
+        autor: 'Juristas rabínicos peninsulares del periodo (autores '
+            'identificados nominalmente en el corpus)',
+        fecha: 's. XIV-XV',
+        publico: 'Comunidades judías peninsulares + autoridades '
+            'municipales que reconocían el género',
+        intereses: 'Resolver consultas jurídicas de las comunidades '
+            'judías + articular marcos de convivencia con cristianos y '
+            'musulmanes + preservar la jurisprudencia comunitaria',
+        omisiones: 'El corpus articula la perspectiva jurídica de la '
+            'comunidad judía. Las perspectivas cristiana y musulmana '
+            'sobre los mismos marcos compartidos viven en otros '
+            'corpus análogos (decretales, fatwas) que la Brecha no '
+            'incorpora directamente — sesgo estructural por la '
+            'elección de corpus',
+        corroboraOContradice: 'Ancla la afirmación 7 (marcos jurídicos '
+            'compartidos como patrón general) — los responsa '
+            'documentan el reconocimiento mutuo de juramentos y '
+            'procedimientos entre comunidades, lo que el pleito de '
+            '1394 ejemplifica',
+      ),
+    ),
+    Fuente(
+      id: 'estudios_convivencia_villas_peninsulares',
+      tipoVisible: 'Estudios secundarios sobre convivencia en villas '
+          'peninsulares del periodo bajomedieval',
+      descripcion:
+          'Cuerpo bibliográfico secundario de estudios académicos del '
+          's. XX-XXI sobre convivencia entre comunidades cristiana, '
+          'judía y mudéjar/musulmana en villas peninsulares del '
+          'periodo bajomedieval (Estella, Tudela, Toledo, Murviedro, '
+          'Calatayud, Daroca, Calahorra). Permite contrastar la '
+          'caracterización de la convivencia funcional con tensiones '
+          'frente a las dos lecturas extremas habitualmente presentes '
+          'en la historiografía: la convivencia idílica de algunas '
+          'tradiciones románticas y el conflicto permanente de otras '
+          'lecturas más recientes.',
+      propiedadesCanonicas: PropiedadesFuente(
+        tipo: TipoFuente.secundaria,
+        autor: 'Cuerpo bibliográfico académico contemporáneo',
+        fecha: 'Estudios académicos del s. XX-XXI',
+        publico: 'Investigación académica especializada + público '
+            'culto interesado en historia social bajomedieval '
+            'peninsular',
+        intereses: 'Reconstruir patrones realistas de convivencia + '
+            'evitar la idealización romántica + evitar el sesgo '
+            'presentista del conflicto retroproyectado',
+        omisiones: 'Los estudios se basan en los casos mejor '
+            'documentados, lo que sesga el patrón hacia las villas '
+            'con mejor preservación archivística. Convivencias en '
+            'núcleos rurales y aldeas pequeñas están subrepresentadas '
+            'en el corpus',
+        corroboraOContradice: 'Ancla la afirmación 7 (vecindad '
+            'funcional con tensiones como caracterización general) y '
+            'la afirmación 8 (metodológica — el caso pequeño como '
+            'ventana a la cotidianidad)',
+      ),
+    ),
+  ];
+
+  static const List<AfirmacionCanonica> _afirmacionesBrecha4B = [
+    AfirmacionCanonica(
+      id: 'pleito_documentado_1394',
+      texto: 'En 1394 hubo un pleito documentado entre Pedro Garaicoa '
+          '(cristiano) y Yusuf al-Tudelí (mudéjar) por una pared '
+          'medianera entre dos casas en Estella, conservado en el '
+          'expediente del archivo municipal. Sólido — el expediente '
+          'registra la demanda, los testimonios, el dictamen pericial '
+          'sobre la pared, el veredicto y el cumplimiento.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'yusuf_tribunal_cristiano_sin_objeciones',
+      texto: 'Yusuf al-Tudelí, mudéjar, acude al tribunal cristiano de '
+          'Estella sin objeciones del juez sobre su capacidad para '
+          'litigar. Sólido — el expediente del pleito registra la '
+          'admisión de la causa y la presentación de testimonios sin '
+          'incidente procedimental documentado.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'testigo_mudejar_juramento_respetado',
+      texto: 'El testigo mudéjar Mohammed declara bajo juramento '
+          'mudéjar (no cristiano) y el tribunal lo respeta como válido '
+          'a efectos del pleito. Sólido — el expediente registra '
+          'nominalmente el juramento empleado y su recepción por el '
+          'tribunal.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'cristianos_no_descalifican_por_religion',
+      texto: 'Los testigos cristianos del pleito no descalifican a '
+          'Yusuf por su religión — sus argumentaciones se centran en '
+          'la materia disputada (la pared), no en la condición '
+          'religiosa del litigante. Sólido — el expediente registra '
+          'literalmente el contenido de los testimonios.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'veredicto_parcialmente_favorable_yusuf',
+      texto: 'El veredicto del tribunal da parcialmente la razón a '
+          'Yusuf en la disputa por la pared, y la sentencia se cumple '
+          'sin apelaciones documentadas posteriores. Sólido — el '
+          'expediente registra el veredicto, el cumplimiento y la '
+          'ausencia de recurso ulterior.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'procedimiento_sigue_patron_ordinario',
+      texto: 'El procedimiento del pleito de 1394 sigue el patrón '
+          'ordinario del tribunal de Estella documentado en el '
+          'registro municipal de pleitos del s. XIV — no presenta '
+          'anomalías procedimentales que requerirían lectura '
+          'específica. Sólido — la triangulación con el cuerpo '
+          'documental del registro municipal confirma la '
+          'normalización del procedimiento.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+        'registro_pleitos_estella_periodo',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'marcos_juridicos_compartidos_y_vecindad_funcional',
+      texto: 'El pleito ilumina la existencia de marcos jurídicos '
+          'compartidos entre las tres comunidades (cristiana, mudéjar '
+          'y judía) en Estella tardomedieval — reconocimiento mutuo '
+          'de juramentos según la confesión del testigo, gestión de '
+          'pleitos intercomunitarios sin descalificación por religión, '
+          'cumplimiento de sentencias sin contestación. Las relaciones '
+          'cotidianas pueden caracterizarse como vecindad funcional '
+          'con sus tensiones, ni la convivencia idílica que algunas '
+          'tradiciones románticas quieren ver, ni el conflicto '
+          'permanente que otras lecturas presentistas prefieren. '
+          'Probable — un caso documentado no es muestra estadística, '
+          'pero los responsa rabínicos del periodo y los estudios '
+          'sobre villas peninsulares triangulan el patrón general.',
+      calibracionCorrecta: NivelConfianza.probable,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+        'responsa_rabinicos_xiv_xv',
+        'estudios_convivencia_villas_peninsulares',
+      ],
+    ),
+    AfirmacionCanonica(
+      id: 'caso_pequeno_ventana_cotidianidad',
+      texto: 'Una Brecha sobre un caso pequeño documentado vale más '
+          'que diez Brechas sobre grandes acontecimientos cuando se '
+          'trata de entender cómo vivía la gente. El expediente del '
+          'pleito de la pared medianera ilumina la cotidianidad de '
+          'Estella en 1394 — una pared, un pleito, dos hombres y un '
+          'testigo, y a través de eso, los marcos jurídicos '
+          'compartidos y la vecindad funcional entre las tres '
+          'comunidades. Sólido como afirmación metodológica — la '
+          'lección del oficio que el Concilio reconoce.',
+      calibracionCorrecta: NivelConfianza.solido,
+      idsFuentesAnclaje: [
+        'expediente_pleito_pared_medianera_1394',
+        'estudios_convivencia_villas_peninsulares',
+      ],
+    ),
+  ];
+
   static const List<Brecha> todas = [
     brecha11,
     brecha12,
@@ -3684,6 +4893,9 @@ class CatalogoBrechas {
     brecha33,
     brecha34,
     brecha35,
+    brecha36,
+    brecha41,
+    brecha4B,
   ];
 
   /// Mapping inverso: dado el flag que dispara una Brecha, devolver
@@ -3791,8 +5003,56 @@ class CatalogoBrechas {
     // `escena_3_5_1_vista` — F2-28d sigue el mismo patrón que F2-28a
     // / F2-28b / F2-28c en este Arco. Cierre del set de Brechas
     // jugables del Arco 3 (la 3.2 sigue bloqueada por validación
-    // BANU-QASI; la 3.6 TUDELA-1378 sigue bloqueada por validación
-    // del comité provisional).
+    // BANU-QASI).
     'estella_conjunto_visitado': brecha35,
+    // 3.6 se dispara con `silencio_tres_semanas_documentado`
+    // (cierre de la cinemática 3.6.6 *La cuarta afirmación* — Maren
+    // ha cuantificado el patrón anterior y posterior del silencio
+    // en las actas del Concejo y queda lista para producir las
+    // nueve afirmaciones canónicas en la Mesa de Trabajo. La
+    // cinemática 3.6.7 *Reconstrucción final* (puesta en limpio
+    // narrativa de las 9 afirmaciones que la jugable produce)
+    // requiere ahora `brecha_3_6_completada` en lugar de
+    // `escena_3_6_6_vista`. **PENDIENTE DE VALIDACIÓN COMITÉ
+    // TUDELA-1378**: el catálogo entero de la 3.6 está implementado
+    // siguiendo fielmente el doc 09 v0.3 con sustituciones diegéticas
+    // mínimas en los puntos no validables (registro completo en
+    // BLOQUEOS-PENDIENTES.md); cuando el comité valide, se ajustan
+    // los puntos sensibles sin tocar la estructura jugable.
+    'silencio_tres_semanas_documentado': brecha36,
+    // 4.1 se dispara con `joana_de_roncal_elegida` (cierre de la
+    // cinemática 4.1.3 *Joana de Roncal* — Maren ha leído las cuentas
+    // de palacio de Olite con Aitor y ha elegido a Joana, doncella de
+    // cámara documentada entre 1402 y 1412, como sujeto de su Brecha
+    // de Aprendiz III avanzada — la primera Brecha del MVP donde la
+    // Cronista determina el sujeto en lugar de recibirlo). La 4.1.5
+    // cinemática *Reconstrucción* (puesta en limpio narrativa de las
+    // 8 afirmaciones que la jugable produce) requiere ahora
+    // `brecha_4_1_completada` en lugar del previo `escena_4_1_4_vista`.
+    // **PENDIENTE DE VALIDACIÓN COMITÉ JOANA-DE-RONCAL**: el material
+    // trazable está preservado (palacio de Olite, Carlos III el Noble,
+    // Leonor, infanta Blanca, valle de Roncal, prácticas
+    // administrativas de cortes peninsulares del s. XV); Joana como
+    // persona concreta y los detalles de su biografía son ficción
+    // diegética verosímil construida desde tipos documentales reales.
+    // Registro completo en BLOQUEOS-PENDIENTES.md.
+    'joana_de_roncal_elegida': brecha41,
+    // 4.B se dispara con `pleito_pared_medianera_estudiado` (cierre
+    // de la cinemática 4.B.3 *Una Brecha de vecinos* — Maren ha
+    // elegido como núcleo de su Brecha el pleito documentado de 1394
+    // entre Pedro Garaicoa y Yusuf al-Tudelí por una pared medianera
+    // entre dos casas en Estella, tras la lección de Karim sobre los
+    // responsa rabínicos como articulación de los marcos jurídicos
+    // compartidos entre comunidades en 4.B.2). La 4.B.4 cinemática
+    // *Reconstrucción* (puesta en limpio narrativa) requiere ahora
+    // `brecha_4_b_completada` en lugar del previo `escena_4_b_3_vista`.
+    // **PENDIENTE DE VALIDACIÓN COMITÉ PARED-MEDIANERA-1394**: el
+    // material trazable está preservado (Estella/Lizarra real, modelo
+    // de villa-Camino con tres comunidades documentadas, prácticas
+    // jurídicas de pleitos por paredes medianeras como tipo
+    // documental real, responsa rabínicos como género jurídico real);
+    // el pleito concreto y los nombres son ficción diegética
+    // verosímil. Registro completo en BLOQUEOS-PENDIENTES.md.
+    'pleito_pared_medianera_estudiado': brecha4B,
   };
 }

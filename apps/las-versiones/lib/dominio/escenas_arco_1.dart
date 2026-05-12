@@ -396,12 +396,14 @@ class EscenasArco1 {
     ambiente: AmbienteArchivo.recorridoArchivo,
     planos: [
       // Encuadre temporal y espacial — Maren llega al Archivo el
-      // segundo día, en la entrada espera Isaura.
+      // segundo día. Recortado para arrancar más rápido — el detalle
+      // del bastón vuelve más adelante con Isaura en el coche y en
+      // las Brechas.
       PlanoAmbiente(
-        duracion: Duration(seconds: 3),
+        duracion: Duration(seconds: 2),
         textoLectura:
-            'Día siguiente. 8:55 de la mañana. Maren cruza la puerta '
-            'del Archivo. Isaura espera en el portón, con el bastón.',
+            'Día siguiente, 8:55. Maren cruza la puerta del Archivo. '
+            'Isaura la espera en el portón.',
       ),
 
       // Apertura del recorrido. Isaura no hace ceremonia.
@@ -412,25 +414,22 @@ class EscenasArco1 {
         texto: 'Te enseño dónde son las cosas. Cinco minutos.',
       ),
 
-      // Planta baja — sala de evaluación, despacho de Begoña, cocina.
-      // La línea sobre la cocina del Archivo encarna el tono general
-      // del lugar: nada formal, hazlo tuyo.
+      // Planta baja — versión condensada (la sala de evaluación ya
+      // se vio en 1.0.1, no hace falta reintroducirla con detalle).
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto:
-            'Esto es la planta baja. Recepción, despacho de Begoña, '
-            'sala de evaluación donde estuviste ayer. La cocina del '
-            'Archivo — el café siempre está. Hazlo tuyo.',
+            'Planta baja: recepción, despacho de Begoña, cocina. El '
+            'café siempre está. Hazlo tuyo.',
       ),
 
-      // Patio interior. La afirmación cronológica concreta sobre los
-      // capiteles s. XII y el brocal s. XV cae bajo la entrada
-      // EDIFICIO-ARCHIVO pendiente de validar (doc 17). Sustituida
-      // por una formulación que preserva el sentido —piezas
-      // antiguas reaprovechadas— sin afirmar siglos concretos.
+      // Patio interior. Texto de la transición y la observación
+      // condensados en un solo plano descriptivo, en lugar de tres.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Pasan al patio interior.',
+        textoLectura:
+            'Pasan al patio interior. Maren mira los capiteles del '
+            'pórtico tres segundos.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
@@ -438,17 +437,15 @@ class EscenasArco1 {
             'El patio. Los capiteles tienen muchos siglos. El brocal '
             'del pozo, también. Aquí no se tira nada que sirva.',
       ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura: 'Maren se para a mirar tres segundos.',
-      ),
       PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Sigue.'),
 
-      // Sótano: Pompelo. La ciudad romana de Pompelo está validada
-      // como entrada en el doc 17 — se puede nombrar.
+      // Sótano: Pompelo. Texto descriptivo del mosaico fundido con
+      // la transición — antes eran dos planos ambiente seguidos.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Bajan al sótano.',
+        textoLectura:
+            'Bajan al sótano. Mosaico parcialmente conservado, horno '
+            'romano, una cisterna.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
@@ -456,43 +453,31 @@ class EscenasArco1 {
             'Pompelo. Esto está debajo del Archivo y debajo de la '
             'calle Curia. La domus que estaba aquí en el siglo I.',
       ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura:
-            'Mosaico parcialmente conservado. Horno romano. La '
-            'cisterna.',
-      ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Esto cómo se mantiene?'),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto: 'Buena pregunta. Lo verás más adelante.',
-        pausaPrevia: Duration(milliseconds: 600),
       ),
 
-      // Biblioteca primera planta. Aitor encorvado sobre un
-      // manuscrito — sólo se le menciona, no habla.
+      // Biblioteca primera planta — fundimos transición + Aitor
+      // levantando la vista en un solo plano de lectura.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
         textoLectura:
-            'Suben a la biblioteca. Mesas iluminadas. Una persona '
-            'mayor encorvada sobre un manuscrito.',
+            'Suben a la biblioteca. Una persona mayor encorvada sobre '
+            'un manuscrito levanta la vista y sonríe brevemente.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
-        texto: 'Aitor Etxeberri. Constructor. Especialista en el Camino. '
+        texto:
+            'Aitor Etxeberri. Constructor. Especialista en el Camino. '
             'Lo conocerás.',
       ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura:
-            'Aitor levanta la vista. Sonríe brevemente. Maren saluda '
-            'con la cabeza. Isaura pasa de largo.',
-      ),
 
-      // Ático: Andrés Vidaurre, vitrinas, humor seco.
+      // Ático: Andrés. Vitrinas + presentación condensados.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Bajan al ático. Vitrinas con piezas.',
+        textoLectura: 'Suben al ático. Vitrinas con piezas.',
       ),
       PlanoDialogo(
         voz: VozPersonaje.andres,
@@ -503,41 +488,35 @@ class EscenasArco1 {
         voz: VozPersonaje.andres,
         texto:
             'Yo soy Andrés. El de las cosas. Cuando necesites una '
-            'pieza, vienes a verme. Cuando rompas algo, también '
-            'vienes a verme, pero con cara de pena.',
+            'pieza, vienes a verme. Cuando rompas algo, también — '
+            'pero con cara de pena.',
       ),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
       PlanoDialogo(
         voz: VozPersonaje.andres,
         texto: 'Esta no parece de las que rompen.',
       ),
-      PlanoDialogo(
-        voz: VozPersonaje.isaura,
-        texto: 'Mm. Ya veremos.',
-      ),
+      PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Mm. Ya veremos.'),
 
-      // Salón del Concilio. Maren se queda en el umbral. La línea
-      // de Isaura sembrando "aquí presentarás tu trabajo cuando
-      // llegue el momento" es el primer susurro del Concilio, que
-      // será fase 5 de cada Brecha.
-      PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura:
-            'Salón del Concilio. Mesa larga. Tres sillones de orejas '
-            'en cabecera, vacíos. Maren se queda en la puerta sin '
-            'entrar.',
-      ),
-      PlanoDialogo(
-        voz: VozPersonaje.isaura,
-        texto: 'Aquí presentarás tu trabajo cuando llegue el momento. No hoy.',
-      ),
-
-      // Encuentro con Marina en el pasillo, de vuelta.
+      // Salón del Concilio. Plano descriptivo recortado.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
         textoLectura:
-            'Vuelven a la primera planta. En el pasillo se cruzan '
-            'con Marina Ríos, 17 años, Aprendiz III.',
+            'Salón del Concilio. Mesa larga, tres sillones de orejas '
+            'vacíos. Maren se queda en la puerta.',
+      ),
+      PlanoDialogo(
+        voz: VozPersonaje.isaura,
+        texto:
+            'Aquí presentarás tu trabajo cuando llegue el momento. No '
+            'hoy.',
+      ),
+
+      // Encuentro con Marina. Saludos cortos fundidos.
+      PlanoAmbiente(
+        duracion: Duration(seconds: 2),
+        textoLectura:
+            'Vuelven al pasillo. Se cruzan con Marina Ríos, 17 años, '
+            'Aprendiz III.',
       ),
       PlanoDialogo(voz: VozPersonaje.marina, texto: 'Buenos días.'),
       PlanoDialogo(
@@ -545,26 +524,41 @@ class EscenasArco1 {
         texto: 'Marina, ésta es Maren. Aspirante desde hoy.',
       ),
       PlanoDialogo(voz: VozPersonaje.marina, texto: 'Hola. Bienvenida.'),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Hola.'),
       PlanoDialogo(
         voz: VozPersonaje.marina,
         texto: 'La prueba de Cascante la tengo lista para mañana.',
       ),
       PlanoDialogo(voz: VozPersonaje.isaura, texto: 'Bien. Mañana la vemos.'),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura: 'Marina sigue su camino. Maren la mira irse.',
-      ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
-        texto: 'Marina lleva cuatro años. Es Reformista. Os caeréis bien.',
+        texto:
+            'Marina lleva cuatro años. Es Reformista. Os caeréis bien.',
       ),
 
-      // Cierre del recorrido en la cocina. Té compartido. Isaura
-      // anuncia que mañana es la primera Brecha — Aralar.
+      // Cierre del recorrido en la cocina. Micro-elección de
+      // carácter — qué bebe Maren. No afecta a flujo narrativo,
+      // sólo da agencia táctil al jugador en una cinemática expositiva.
       PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura: 'Vuelven a la cocina. Isaura prepara dos tés.',
+        duracion: Duration(seconds: 2),
+        textoLectura: 'Vuelven a la cocina.',
+      ),
+      PlanoEleccion(
+        voz: VozPersonaje.isaura,
+        textoPrompt: '¿Té o café?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Café.',
+            flagsAEstablecer: {'preferencia_cafe'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Té.',
+            flagsAEstablecer: {'preferencia_te'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Agua.',
+            flagsAEstablecer: {'preferencia_agua'},
+          ),
+        ],
       ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
@@ -587,14 +581,7 @@ class EscenasArco1 {
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto: 'No se aprende esperando.',
-        pausaPrevia: Duration(milliseconds: 800),
-      ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 4),
-        textoLectura:
-            'Le pone el té delante. Se sienta enfrente. Beben en '
-            'silencio durante un minuto entero. No se acaba nada — '
-            'sólo dos personas tomando té.',
+        pausaPrevia: Duration(milliseconds: 600),
       ),
 
       PlanoCierreAmable(textoBoton: 'IR A CASA'),
@@ -623,21 +610,18 @@ class EscenasArco1 {
     ambiente: AmbienteArchivo.casaMaren,
     planos: [
       PlanoAmbiente(
-        duracion: Duration(seconds: 3),
+        duracion: Duration(seconds: 2),
         textoLectura:
-            'Casco Viejo de Iruña. 14:00. Maren entra a casa. Iratxe '
-            'termina de preparar comida. Naia ve dibujos en el salón.',
+            'Casco Viejo de Iruña, 14:00. Maren entra a casa. Iratxe '
+            'termina de preparar comida.',
       ),
 
-      // Madre + Maren. La madre ya conoce el Archivo desde dentro
-      // (de cuando hizo "lo del puente" — referencia diegética sin
-      // afirmación histórica concreta).
+      // Madre + Maren. Acortado: las dos pausas descriptivas
+      // intermedias se omiten (la sartén, la mesa) — el ritmo del
+      // diálogo ya carga el cambio emocional sin necesidad de plano
+      // ambiente.
       PlanoDialogo(voz: VozPersonaje.iratxe, texto: '¿Qué tal?'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Empecé.'),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 1),
-        textoLectura: 'Iratxe deja la sartén. Se gira.',
-      ),
       PlanoDialogo(voz: VozPersonaje.iratxe, texto: '¿Ya?'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Mañana voy a Aralar.'),
       PlanoAmbiente(
@@ -651,29 +635,19 @@ class EscenasArco1 {
         texto: 'Bien.',
         pausaPrevia: Duration(milliseconds: 600),
       ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 1),
-        textoLectura: 'Maren empieza a poner la mesa.',
-      ),
-      PlanoDialogo(voz: VozPersonaje.iratxe, texto: '¿Y? ¿Qué tal Begoña?'),
+      PlanoDialogo(voz: VozPersonaje.iratxe, texto: '¿Y Begoña?'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Seca.'),
       PlanoDialogo(
         voz: VozPersonaje.iratxe,
         texto:
-            'Sí. Conmigo también. La conozco de cuando hicimos lo '
-            'del puente.',
+            'Conmigo también. La conozco de cuando hicimos lo del '
+            'puente.',
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: '¿Qué puente?'),
-      PlanoDialogo(
-        voz: VozPersonaje.iratxe,
-        texto: 'El romano. Hace años.',
-      ),
+      PlanoDialogo(voz: VozPersonaje.iratxe, texto: 'El romano. Hace años.'),
 
-      // Naia entra. Sus preguntas son lo que da forma a la escena.
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura: 'Naia llega del salón.',
-      ),
+      // Naia entra. Plano de transición eliminado — el cambio de
+      // hablante ya marca su entrada.
       PlanoDialogo(
         voz: VozPersonaje.naia,
         texto: 'Maren, ¿hoy te han hecho cronista ya?',
@@ -682,34 +656,21 @@ class EscenasArco1 {
       PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Qué es eso?'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Lo que va antes.'),
       PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Antes de qué?'),
-      PlanoDialogo(
-        voz: VozPersonaje.maren,
-        texto: 'De saber.',
-        pausaPrevia: Duration(milliseconds: 600),
-      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'De saber.'),
       PlanoDialogo(voz: VozPersonaje.naia, texto: 'Pero tú ya sabes cosas.'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'No las que vienen.'),
 
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura: 'Iratxe sirve la comida.',
-      ),
       PlanoDialogo(voz: VozPersonaje.iratxe, texto: 'Vamos a comer.'),
 
-      // Antonio entra del instituto. Gesto silencioso —besarla en
-      // la cabeza— y un libro prometido para la mesa de Maren.
-      PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura:
-            'Comen. Conversación normal. Antonio entra del instituto. '
-            'Le pone una mano en el pelo a Maren, la besa en la '
-            'cabeza, se sienta sin decir nada.',
-      ),
-      PlanoDialogo(voz: VozPersonaje.antonio, texto: 'Bienvenida.'),
+      // Antonio entra del instituto. Plano descriptivo del gesto
+      // silencioso fundido con la transición posterior.
       PlanoAmbiente(
         duracion: Duration(seconds: 2),
-        textoLectura: 'Antonio come. A los diez minutos pregunta.',
+        textoLectura:
+            'Antonio entra del instituto. Le pone una mano en el pelo '
+            'a Maren, la besa en la cabeza, se sienta.',
       ),
+      PlanoDialogo(voz: VozPersonaje.antonio, texto: 'Bienvenida.'),
       PlanoDialogo(voz: VozPersonaje.antonio, texto: '¿Mañana Aralar?'),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Sí.'),
       PlanoDialogo(
@@ -718,14 +679,16 @@ class EscenasArco1 {
       ),
       PlanoDialogo(voz: VozPersonaje.maren, texto: 'Vale.'),
 
-      // La pregunta de Naia. Es el corazón pedagógico de toda la
-      // escena: "¿y cómo sabes cómo pasaron?" — pregunta que el
-      // juego entero responde, lentamente.
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura: 'Pausa larga. Naia rompe el silencio.',
+      // La pregunta de Naia es el corazón pedagógico de toda la
+      // escena. La línea descriptiva "Pausa larga. Naia rompe el
+      // silencio." se sustituye por una pausa previa breve en el
+      // primer diálogo, manteniendo el ritmo sin añadir un plano
+      // ambiente más.
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: '¿Yo puedo ir a Aralar?',
+        pausaPrevia: Duration(milliseconds: 1200),
       ),
-      PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Yo puedo ir a Aralar?'),
       PlanoDialogo(voz: VozPersonaje.iratxe, texto: 'Algún día.'),
       PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Cuándo?'),
       PlanoDialogo(voz: VozPersonaje.iratxe, texto: 'Cuando seas más mayor.'),
@@ -735,31 +698,38 @@ class EscenasArco1 {
       ),
       PlanoDialogo(voz: VozPersonaje.iratxe, texto: 'Sí. Por eso.'),
       PlanoDialogo(voz: VozPersonaje.naia, texto: 'Quiero ser arqueóloga.'),
-      PlanoDialogo(
-        voz: VozPersonaje.maren,
-        texto: 'No es arqueóloga.',
-      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No es arqueóloga.'),
       PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Qué es?'),
-      PlanoDialogo(
-        voz: VozPersonaje.maren,
-        texto: 'No sé bien. Cronista.',
-        pausaPrevia: Duration(milliseconds: 800),
-      ),
+      PlanoDialogo(voz: VozPersonaje.maren, texto: 'No sé bien. Cronista.'),
       PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Y qué hace?'),
-      PlanoDialogo(
+
+      // Micro-elección de carácter — Maren responde a Naia. Las tres
+      // opciones convergen al mismo flujo (Naia preguntando "¿y cómo
+      // sabes cómo pasaron?") pero el flag deja registro del tono
+      // que la Cronista eligió en su primera respuesta sobre el oficio.
+      PlanoEleccion(
         voz: VozPersonaje.maren,
-        texto: 'Cuenta las cosas como pasaron.',
+        textoPrompt: '¿Y qué hace?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Cuenta las cosas como pasaron.',
+            flagsAEstablecer: {'oficio_explicado_simple'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Lee cosas viejas y trata de entenderlas.',
+            flagsAEstablecer: {'oficio_explicado_humilde'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Hace preguntas. Después busca respuestas.',
+            flagsAEstablecer: {'oficio_explicado_preguntas'},
+          ),
+        ],
       ),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 2),
-        textoLectura:
-            'Naia se queda pensando. Iratxe y Antonio se miran un '
-            'segundo.',
-      ),
-      PlanoDialogo(voz: VozPersonaje.naia, texto: '¿Y cómo sabes cómo pasaron?'),
-      PlanoAmbiente(
-        duracion: Duration(seconds: 3),
-        textoLectura: 'Maren mira a su hermana. Largo silencio.',
+
+      PlanoDialogo(
+        voz: VozPersonaje.naia,
+        texto: '¿Y cómo sabes cómo pasaron?',
+        pausaPrevia: Duration(milliseconds: 800),
       ),
       PlanoDialogo(
         voz: VozPersonaje.maren,
@@ -767,20 +737,17 @@ class EscenasArco1 {
         pausaPrevia: Duration(milliseconds: 1200),
       ),
 
-      // Tarde en su cuarto. Cuaderno abierto, ventana al castaño.
-      // La primera entrada del Cuaderno se renderiza como
-      // PlanoAmbiente con texto de lectura — el sistema completo
-      // del Cuaderno todavía no existe.
+      // Tarde en su cuarto. Plano descriptivo recortado — la imagen
+      // del castaño y el libro abierto cabe en menos texto sin
+      // perder el aire íntimo.
       PlanoAmbiente(
         duracion: Duration(seconds: 3),
         textoLectura:
-            'Tarde tranquila. Maren sube a su habitación. En la mesa, '
-            'ya, está el libro que su padre prometió. Lo abre. Lee '
-            'veinte minutos. Cierra el libro. Mira al castaño del '
-            'patio interior por la ventana.',
+            'Tarde en la habitación. El libro de la sierra está ya en '
+            'la mesa. Maren lee. Mira al castaño por la ventana.',
       ),
       PlanoAmbiente(
-        duracion: Duration(seconds: 5),
+        duracion: Duration(seconds: 4),
         textoLectura:
             'Mañana voy a Aralar. No sé qué tengo que hacer. Isaura '
             'tampoco me lo ha dicho. Quizá ese sea el primer '
@@ -814,8 +781,29 @@ class EscenasArco1 {
             'pegando bajo.',
       ),
 
-      PlanoDialogo(voz: VozPersonaje.isaura, texto: '¿Has dormido?'),
-      PlanoDialogo(voz: VozPersonaje.maren, texto: 'Mal.'),
+      // Micro-elección de carácter — el primer plano de diálogo del
+      // Arco 1 fuera del despacho de Begoña. Las tres opciones
+      // convergen narrativamente (Isaura comenta "la primera vez se
+      // duerme mal") pero el flag registra cómo Maren se presenta
+      // ante el adulto que la lleva a la primera Brecha.
+      PlanoEleccion(
+        voz: VozPersonaje.isaura,
+        textoPrompt: '¿Has dormido?',
+        opciones: [
+          OpcionEleccion(
+            textoJugador: 'Mal.',
+            flagsAEstablecer: {'noche_previa_dormida_mal'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Casi nada.',
+            flagsAEstablecer: {'noche_previa_apenas_dormida'},
+          ),
+          OpcionEleccion(
+            textoJugador: 'Bien.',
+            flagsAEstablecer: {'noche_previa_dormida_bien'},
+          ),
+        ],
+      ),
       PlanoDialogo(
         voz: VozPersonaje.isaura,
         texto: 'La primera vez se duerme mal.',

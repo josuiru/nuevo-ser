@@ -1,5 +1,7 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_comparacion_decimal.dart';
@@ -9,6 +11,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle DEC.02: dos decimales lado a lado, el niño toca el mayor.
 /// Visualmente paralelo a [PantallaComparacion] pero con etiquetas de
@@ -82,6 +86,15 @@ class _PantallaComparacionDecimalState
     if (_problema.esCorrecto(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      final opc = [_problema.etiquetaA, _problema.etiquetaB];
+      final idxCorr = _problema.indiceMayor ?? 0;
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: opc[indice],
+        respuestaCorrecta: opc[idxCorr],
+        preguntaTexto: '¿qué decimal es mayor?',
+        opciones: opc,
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -90,6 +103,8 @@ class _PantallaComparacionDecimalState
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.comparacionDecimal);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -223,6 +238,7 @@ class _PantallaComparacionDecimalState
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.comparacionDecimal),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

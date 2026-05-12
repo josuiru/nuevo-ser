@@ -33,13 +33,19 @@ class SelectorHabilidades {
   /// restringen al dominio elegido (FR/DEC/PROP/…) y la bonificación de
   /// pertenencia al distrito se desactiva — en entrenamiento el niño
   /// elige el dominio explícitamente, el distrito ambiental no manda.
+  ///
+  /// [rangoActual] es el nombre del rango del niño en formato JSON
+  /// (p. ej. `'Aprendiz_II'`, `'Iniciado_I'`). Si no se proporciona,
+  /// no se filtra por rango (comportamiento predeterminado).
   Future<String?> elegirSiguienteHabilidad({
     required Distrito distrito,
     String? dominioFiltrado,
+    String? rangoActual,
   }) {
     final candidatas = (dominioFiltrado != null
-            ? catalogo.delDominio(dominioFiltrado)
-            : catalogo.delDistrito(distrito.identificador))
+            ? catalogo.delDominio(dominioFiltrado, rangoActual: rangoActual)
+            : catalogo.delDistrito(distrito.identificador,
+                rangoActual: rangoActual))
         .where((h) => skillsConPuzzleImplementado.contains(h.identificador));
     return _selectorCore.elegirSiguienteHabilidad(
       candidatas: candidatas,

@@ -26,8 +26,11 @@ import 'dominio/cuaderno.dart';
 import 'dominio/escenas_arco_1.dart';
 import 'dominio/escenas_arco_2.dart';
 import 'dominio/escenas_arco_3.dart';
+import 'dominio/escenas_arco_4.dart';
 import 'dominio/mosaico_arco_1.dart';
 import 'dominio/mosaico_arco_2.dart';
+import 'dominio/mosaico_arco_3.dart';
+import 'dominio/mosaico_arco_4.dart';
 import 'nucleo/paleta_archivo.dart';
 import 'vista/pantalla_avances.dart';
 import 'vista/pantalla_brecha.dart';
@@ -41,6 +44,8 @@ import 'vista/pantalla_menu.dart';
 import 'vista/pantalla_perfiles.dart';
 import 'vista/pantalla_mosaico_arco_1.dart';
 import 'vista/pantalla_mosaico_arco_2.dart';
+import 'vista/pantalla_mosaico_arco_3.dart';
+import 'vista/pantalla_mosaico_arco_4.dart';
 import 'vista/pantalla_resumenes.dart';
 
 /// Clave global del idioma elegido por la Cronista en el primer
@@ -308,6 +313,8 @@ class _OrquestadorState extends State<Orquestador> {
   late final ClienteApi _clienteApi;
   late final SincronizadorMosaicoArco1 _sincronizadorMosaico;
   late final SincronizadorMosaicoArco2 _sincronizadorMosaicoArco2;
+  late final SincronizadorMosaicoArco3 _sincronizadorMosaicoArco3;
+  late final SincronizadorMosaicoArco4 _sincronizadorMosaicoArco4;
 
   @override
   void initState() {
@@ -320,6 +327,16 @@ class _OrquestadorState extends State<Orquestador> {
       clienteCompanion: _clienteCompanion,
     );
     _sincronizadorMosaicoArco2 = SincronizadorMosaicoArco2(
+      repoCuenta: widget.repoCuenta,
+      repoMosaico: widget.repoMosaico,
+      clienteCompanion: _clienteCompanion,
+    );
+    _sincronizadorMosaicoArco3 = SincronizadorMosaicoArco3(
+      repoCuenta: widget.repoCuenta,
+      repoMosaico: widget.repoMosaico,
+      clienteCompanion: _clienteCompanion,
+    );
+    _sincronizadorMosaicoArco4 = SincronizadorMosaicoArco4(
       repoCuenta: widget.repoCuenta,
       repoMosaico: widget.repoMosaico,
       clienteCompanion: _clienteCompanion,
@@ -377,6 +394,7 @@ class _OrquestadorState extends State<Orquestador> {
       EscenasArco1.todas,
       EscenasArco2.todas,
       EscenasArco3.todas,
+      EscenasArco4.todas,
     ]) {
       for (final escena in catalogo) {
         final yaVista = _flagsActivos.contains(escena.flagDeSalida);
@@ -445,6 +463,7 @@ class _OrquestadorState extends State<Orquestador> {
       ...?EscenasArco1.flagsDeCierrePorEscena[escena.flagDeSalida],
       ...?EscenasArco2.flagsDeCierrePorEscena[escena.flagDeSalida],
       ...?EscenasArco3.flagsDeCierrePorEscena[escena.flagDeSalida],
+      ...?EscenasArco4.flagsDeCierrePorEscena[escena.flagDeSalida],
     };
     for (final flag in flagsACerrar) {
       await widget.repoFlags.activar(flag);
@@ -524,6 +543,28 @@ class _OrquestadorState extends State<Orquestador> {
         !_flagsActivos.contains(MosaicoArco2.flagDeMosaicoEntregado);
   }
 
+  /// `true` si la Cronista debe ver la pantalla del Mosaico del
+  /// Arco 3 ahora — el arco está completado (cierre de 3.6.10 *El
+  /// silencio segundo*) y el Mosaico aún no se ha entregado.
+  bool get _mosaicoArco3Pendiente {
+    if (!_idiomaElegido) return false;
+    return _flagsActivos.contains(MosaicoArco3.flagDeArcoCompletado) &&
+        !_flagsActivos.contains(MosaicoArco3.flagDeMosaicoEntregado);
+  }
+
+  /// `true` si la Cronista debe ver la pantalla del Mosaico del
+  /// Arco 4 ahora — el último día de Archivo grande está cerrado
+  /// (cinemática 4.G.3 *El silencio que vuelve*) y el Mosaico aún no
+  /// se ha entregado. Tras la entrega encadena la cinemática
+  /// `M4.entrega` (Andrés en el ático del Archivo) y después la
+  /// víspera + ceremonia de graduación a Cronista (4.H.1, 4.H.2) y el
+  /// cierre del MVP (4.Z).
+  bool get _mosaicoArco4Pendiente {
+    if (!_idiomaElegido) return false;
+    return _flagsActivos.contains(MosaicoArco4.flagDeArcoCompletado) &&
+        !_flagsActivos.contains(MosaicoArco4.flagDeMosaicoEntregado);
+  }
+
   Future<void> _alEntregarMosaicoArco1() async {
     await widget.repoFlags.activar(MosaicoArco1.flagDeMosaicoEntregado);
     if (!mounted) return;
@@ -595,6 +636,77 @@ class _OrquestadorState extends State<Orquestador> {
           debugPrint('Mosaico Arco 2: archivado en backend.');
         case SyncMosaicoError(:final razon):
           debugPrint('Mosaico Arco 2: error de sync — $razon');
+      }
+    }
+  }
+
+  Future<void> _alEntregarMosaicoArco3() async {
+    await widget.repoFlags.activar(MosaicoArco3.flagDeMosaicoEntregado);
+    if (!mounted) return;
+    _flagsActivos = {
+      ..._flagsActivos,
+      MosaicoArco3.flagDeMosaicoEntregado,
+    };
+    // Tras entregar, la cinemática `M3.entrega` (Andrés en el ático
+    // archivando la cartela) queda pendiente — su `flagsRequeridos`
+    // referencia `mosaico_arco_3_entregado`. Recalculamos la próxima
+    // escena para que el orquestador la dispare antes del esqueleto;
+    // después encadenará la 3.Z (Aprendiz III en el patio del
+    // Archivo) que cierra el Arco 3 entero.
+    setState(() {
+      _escenaEnReproduccion = _proximaEscenaPendiente();
+    });
+    // Sincronización opt-in con `format='ficha_museo_arco_3'`. No
+    // bloquea ni avisa al jugador.
+    _sincronizarMosaicoArco3EnSegundoPlano();
+  }
+
+  Future<void> _sincronizarMosaicoArco3EnSegundoPlano() async {
+    final resultado = await _sincronizadorMosaicoArco3.sincronizar();
+    if (kDebugMode) {
+      switch (resultado) {
+        case SyncMosaicoSinToken():
+          debugPrint('Mosaico Arco 3: sin token, queda local.');
+        case SyncMosaicoExito():
+          debugPrint('Mosaico Arco 3: archivado en backend.');
+        case SyncMosaicoError(:final razon):
+          debugPrint('Mosaico Arco 3: error de sync — $razon');
+      }
+    }
+  }
+
+  Future<void> _alEntregarMosaicoArco4() async {
+    await widget.repoFlags.activar(MosaicoArco4.flagDeMosaicoEntregado);
+    if (!mounted) return;
+    _flagsActivos = {
+      ..._flagsActivos,
+      MosaicoArco4.flagDeMosaicoEntregado,
+    };
+    // Tras entregar, la cinemática `M4.entrega` (Andrés en el ático
+    // archivando la doble cartela) queda pendiente — su
+    // `flagsRequeridos` referencia `mosaico_arco_4_entregado`.
+    // Recalculamos la próxima escena para que el orquestador la
+    // dispare antes del esqueleto; después encadenarán la víspera
+    // (4.H.1), la ceremonia de graduación a Cronista (4.H.2) y el
+    // cierre del MVP (4.Z).
+    setState(() {
+      _escenaEnReproduccion = _proximaEscenaPendiente();
+    });
+    // Sincronización opt-in con `format='doble_cartela_arco_4'`. No
+    // bloquea ni avisa al jugador.
+    _sincronizarMosaicoArco4EnSegundoPlano();
+  }
+
+  Future<void> _sincronizarMosaicoArco4EnSegundoPlano() async {
+    final resultado = await _sincronizadorMosaicoArco4.sincronizar();
+    if (kDebugMode) {
+      switch (resultado) {
+        case SyncMosaicoSinToken():
+          debugPrint('Mosaico Arco 4: sin token, queda local.');
+        case SyncMosaicoExito():
+          debugPrint('Mosaico Arco 4: archivado en backend.');
+        case SyncMosaicoError(:final razon):
+          debugPrint('Mosaico Arco 4: error de sync — $razon');
       }
     }
   }
@@ -898,6 +1010,20 @@ class _OrquestadorState extends State<Orquestador> {
     if (_mosaicoArco2Pendiente) {
       return PantallaMosaicoArco2(
         alEntregar: _alEntregarMosaicoArco2,
+        repoMosaico: widget.repoMosaico,
+        alAbrirMenu: _alAbrirMenu,
+      );
+    }
+    if (_mosaicoArco3Pendiente) {
+      return PantallaMosaicoArco3(
+        alEntregar: _alEntregarMosaicoArco3,
+        repoMosaico: widget.repoMosaico,
+        alAbrirMenu: _alAbrirMenu,
+      );
+    }
+    if (_mosaicoArco4Pendiente) {
+      return PantallaMosaicoArco4(
+        alEntregar: _alEntregarMosaicoArco4,
         repoMosaico: widget.repoMosaico,
         alAbrirMenu: _alAbrirMenu,
       );

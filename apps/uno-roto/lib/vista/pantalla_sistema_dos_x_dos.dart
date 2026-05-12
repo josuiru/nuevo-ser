@@ -1,9 +1,12 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/contador_intentos_puzzle.dart';
 import '../dominio/problema_sistema_dos_x_dos.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
 import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -11,6 +14,7 @@ import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import 'widgets/cabecera_puzzle.dart';
 import 'widgets/tarjeta_numero.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle ALG.03: el niño ve un sistema 2×2 sencillo y elige el par
 /// solución (x, y) entre cuatro candidatos.
@@ -76,6 +80,13 @@ class _PantallaSistemaDosXDosState extends State<PantallaSistemaDosXDos>
     if (_problema.esCorrecta(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '${_problema.candidatos[indice]}',
+        respuestaCorrecta: '${_problema.candidatos[_problema.indiceCorrecto]}',
+        preguntaTexto: 'elige la opción correcta',
+        opciones: _problema.candidatos.map((c) => '$c').toList(),
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -84,6 +95,8 @@ class _PantallaSistemaDosXDosState extends State<PantallaSistemaDosXDos>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.sistemaDosXDos);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -159,7 +172,8 @@ class _PantallaSistemaDosXDosState extends State<PantallaSistemaDosXDos>
                 ),
               ),
             ),
-            if (_mostrandoDemo)
+                BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.sistemaDosXDos),
+          if (_mostrandoDemo)
               OverlayDemoPuzzle(
                 mensaje:
                     AppLocalizations.of(contexto).demoPuzzleTocaResultado,

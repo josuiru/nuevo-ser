@@ -420,6 +420,11 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
       );
       await widget.repositorio.guardarTokenBackend(resp.token);
       await widget.repositorio.guardarEmailBackend(email);
+      try {
+        final p = await widget.repositorio.exportarProgresoParaSync();
+        final h = await widget.repositorio.exportarHabilidadesParaSync();
+        await api.sincronizar(token: resp.token, progreso: p, habilidades: h);
+      } catch (_) {}
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } on ExcepcionApi catch (e) {
@@ -795,7 +800,7 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
     final nombreNino = _nombreNino.text.trim();
     if (email.isEmpty || password.isEmpty || nombreNino.isEmpty) {
       setState(() => _mensajeError =
-          AppLocalizations.of(context).cuentaErrorCamposLogin);
+          AppLocalizations.of(context).cuentaErrorCamposAnadirNino);
       return;
     }
     setState(() {
@@ -814,6 +819,11 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
       );
       await widget.repositorio.guardarTokenBackend(resp.token);
       await widget.repositorio.guardarEmailBackend(email);
+      try {
+        final p = await widget.repositorio.exportarProgresoParaSync();
+        final h = await widget.repositorio.exportarHabilidadesParaSync();
+        await api.sincronizar(token: resp.token, progreso: p, habilidades: h);
+      } catch (_) {}
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } on ExcepcionApi catch (e) {
@@ -835,13 +845,14 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
 
   @override
   Widget build(BuildContext contexto) {
+    final textos = AppLocalizations.of(contexto);
     return Scaffold(
       backgroundColor: PaletaNeon.fondoProfundo,
       appBar: AppBar(
         backgroundColor: PaletaNeon.fondoMedio,
-        title: const Text(
-          'AÑADIR NIÑO',
-          style: TextStyle(
+        title: Text(
+          textos.cuentaAnadirNinoTitulo,
+          style: const TextStyle(
             color: PaletaNeon.textoPrincipal,
             fontSize: 16,
             letterSpacing: 4,
@@ -856,9 +867,8 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'Mete el email y la contraseña del tutor que ya tiene '
-                'cuenta. Añadiremos a este niño bajo esa misma cuenta.',
+              Text(
+                textos.cuentaAnadirNinoTagline,
                 style: TextStyle(
                   color: PaletaNeon.textoTenue,
                   fontSize: 13,
@@ -895,7 +905,7 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
               ],
               const SizedBox(height: 24),
               _BotonGrande(
-                texto: _enviando ? 'AÑADIENDO…' : 'AÑADIR NIÑO',
+                texto: _enviando ? textos.cuentaAnadirNinoBotonEnviando : textos.cuentaAnadirNinoBoton,
                 color: PaletaNeon.azulNeon,
                 alPulsar: _enviando ? () {} : _anadir,
               ),

@@ -1,0 +1,67 @@
+name: agro
+description: "Solera — gestor de fincas agrícolas. Frutales, trufas, olivar, pistacho, dehesa."
+publish_to: 'none'
+version: 0.3.0+3
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Mapa
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.4.0
+
+  # GPS y permisos
+  geolocator: 12.0.0
+  permission_handler: ^11.3.1
+
+  # Cámara y archivos
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Almacenamiento local
+  sqflite: ^2.3.3
+  shared_preferences: ^2.3.2
+
+  # HTTP
+  http: ^1.2.2
+
+  # Caché de imágenes (galerías Wikipedia/IA en F2+)
+  cached_network_image: ^3.4.1
+
+  # Compartir y exportar
+  share_plus: ^10.0.2
+  archive: ^3.6.1
+
+  # Utilidades
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+  crypto: ^3.0.7
+
+  # Selector de ficheros (backup/restore, importar GPX/CSV)
+  file_picker: ^8.1.4
+
+  # Generación de PDF (informes de campaña)
+  pdf: ^3.11.1
+  printing: ^5.13.4
+
+  # Plataforma compartida del monorepo. Solera consume el core para
+  # reutilizar GestorFotos, CsvGenerico y PlantillaPdf — la base sobre
+  # la que se forkean Solera Viticultura, Solera Apícola y Solera
+  # Arbolado Urbano. Path local en monorepo Melos.
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

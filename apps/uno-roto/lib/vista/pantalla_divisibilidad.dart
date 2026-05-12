@@ -1,5 +1,7 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_divisibilidad.dart';
@@ -9,6 +11,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle DIV.03/DIV.01: el niño ve un número y un divisor; decide si
 /// es divisible (DIV.03/04) o si es múltiplo (DIV.01) con un toque "sí"
@@ -85,6 +89,14 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
     if (_problema.esCorrecta(si)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      final correcta = si ? 'sí' : 'no';
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: correcta,
+        respuestaCorrecta: correcta,
+        preguntaTexto: '¿${_problema.numero} es divisible entre ${_problema.divisor}?',
+        opciones: ['sí', 'no'],
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -93,6 +105,8 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.divisibilidad);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -231,6 +245,7 @@ class _PantallaDivisibilidadState extends State<PantallaDivisibilidad>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.divisibilidad),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto).demoPuzzleTocaSiNo,

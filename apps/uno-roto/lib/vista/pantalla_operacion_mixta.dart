@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../datos/repositorio_progreso.dart';
-import '../dominio/fragmento_en_tejado.dart' show SimboloOperador;
+import '../dominio/fragmento_en_tejado.dart' show SimboloOperador, TipoFragmentoEnTejado;
+
 import '../dominio/problema_operacion_mixta.dart';
 import '../dominio/problema_espejo.dart' show Fraccion;
 import '../l10n/app_localizations.dart';
@@ -11,6 +12,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle OP.03: el niño ve "0,5 + 1/4" o "1/2 × 0,4" y elige el
 /// resultado decimal correcto entre cuatro candidatos. La trampa
@@ -88,6 +91,8 @@ class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.operacionMixta);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -201,6 +206,7 @@ class _PantallaOperacionMixtaState extends State<PantallaOperacionMixta>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.operacionMixta),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

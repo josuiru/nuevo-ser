@@ -1,7 +1,9 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_volumen.dart';
@@ -11,6 +13,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle GEO.06: el niño ve una caja 3D (ortoedro) con sus tres
 /// dimensiones etiquetadas y elige el volumen entre cuatro candidatos.
@@ -75,6 +79,13 @@ class _PantallaVolumenState extends State<PantallaVolumen>
     if (_problema.esCorrecta(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '${_problema.candidatos[indice]}',
+        respuestaCorrecta: '${_problema.candidatos[_problema.indiceCorrecto]}',
+        preguntaTexto: 'elige la opción correcta',
+        opciones: _problema.candidatos.map((c) => '$c').toList(),
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -83,6 +94,8 @@ class _PantallaVolumenState extends State<PantallaVolumen>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.volumen);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -200,6 +213,7 @@ class _PantallaVolumenState extends State<PantallaVolumen>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.volumen),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

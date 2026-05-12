@@ -1,0 +1,32 @@
+# DATOS PROVISIONALES SIN VALIDAR POR INGENIERO TÉCNICO FORESTAL
+# Fuente: pliegos técnicos de mantenimiento de arbolado urbano de
+# ayuntamientos públicos + bibliografía clásica de jardinería.
+# Validar con técnico asesor antes de producción.
+#
+# La nomenclatura no es estándar entre municipios — algunos llaman
+# "saneamiento" a lo que otros llaman "limpieza". Este catálogo unifica
+# los tipos más frecuentes.
+#
+# Columnas:
+#   id                 snake_case sin tildes
+#   nombre_canonico    nombre visible
+#   descripcion        qué hace esta poda
+#   epoca_recomendada  ventana habitual del año
+#   intensidad         baja | media | alta | muy_alta
+#   controvertida      no | si — si hay debate técnico sobre su uso
+#   notas              texto libre
+#   revisado_por       vacío hasta validación
+#   fecha_revision     vacía hasta validación
+id,nombre_canonico,descripcion,epoca_recomendada,intensidad,controvertida,notas,revisado_por,fecha_revision
+formacion,Poda de formación,Modela la estructura del árbol joven|elimina chupones|equilibra la copa,Otoño-invierno (savia parada) en años 2-5 desde plantación,media,no,Poda crítica para definir la estructura adulta del árbol — invertir tiempo aquí ahorra problemas en décadas posteriores,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+mantenimiento,Poda de mantenimiento,Eliminación de ramas mal orientadas|limpieza ligera|estabilización anual,Otoño-invierno (savia parada),baja,no,Poda anual ligera que preserva el porte natural del árbol,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+saneamiento,Poda de saneamiento,Eliminación de madera muerta|enferma o rota,Cualquier época si hay urgencia sanitaria|preferiblemente otoño,media,no,También llamada limpieza en algunos pliegos,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+refaldado,Refaldado,Subir la copa eliminando ramas bajas para visibilidad de tráfico|peatonal o señalización,Otoño-invierno,media,no,Necesario en alineaciones junto a viario y carriles bus. Mantener al menos 2/3 de copa,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+descopado,Descopado,Eliminación de la cima del árbol manteniendo el tronco principal,Cualquier época por urgencia,muy_alta,si,CONTROVERTIDA — modifica permanentemente el porte natural. Ayuntamientos modernos la han abandonado salvo emergencia. Genera rebrotes débiles peligrosos a futuro,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+terciado,Terciado,Reducción a un tercio del volumen de copa,Otoño-invierno,alta,si,CONTROVERTIDA — práctica histórica española. Asociada a estrés del árbol y aparición de chupones masivos,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+aterrazado,Aterrazado / Poda drástica,Reducción muy severa de la copa con cortes grandes,Otoño-invierno por urgencia,muy_alta,si,CONTROVERTIDA — debate intenso en jardinería ibérica. Produce heridas grandes mal cicatrizables. Reservada para emergencias por riesgo,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+drenaje_copa,Drenaje de copa / Aclareo,Eliminación selectiva de ramas para abrir la copa y facilitar paso del aire y luz,Otoño-invierno,media,no,Pieza clave en lucha contra anthracnosis y oídio. Preserva la silueta del árbol,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+poda_seguridad,Poda de seguridad,Eliminación de ramas con riesgo de caída inmediato,Cualquier época por urgencia,variable,no,Reactiva — tras temporal o tras detección de riesgo VTA elevado,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+poda_arquitectonica,Poda arquitectónica / Formal,Mantenimiento de formas geométricas (parasol|setos en altura|topiaria),Anual o bianual según la forma,alta,no,Requiere personal experto. Frecuente en plataneras de arquitectura formal,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+desbroce_chupones,Desbroce de chupones,Eliminación de los chupones del tronco y zona inferior,Primavera-verano,baja,no,Operación frecuente en árboles jóvenes y tras podas drásticas,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08
+trasmoche,Trasmoche / Desmocha,Poda tradicional de cabeza para producir madera o forraje (NO típicamente urbana),Otoño-invierno,muy_alta,si,Práctica rural histórica. Inadecuada en arbolado urbano salvo restauración patrimonial intencionada,Estándar Europeo de Poda EN 17321 + AEPJP,2026-05-08

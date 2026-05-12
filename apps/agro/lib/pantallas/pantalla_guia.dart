@@ -1,0 +1,494 @@
+import 'package:flutter/material.dart';
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+
+import '../datos/catalogo_cultivos.dart';
+import '../datos/catalogo_plagas.dart';
+import '../datos/info_cultivos.dart';
+import 'widgets/imagen_commons_widget.dart';
+
+/// Pantalla "Guía" con dos tabs:
+/// 1) Cultivos: lista navegable; detalle con descripción agronómica,
+///    exigencias, calendario y lista de plagas/enfermedades vinculadas.
+/// 2) Plagas y enfermedades: lista filtrable por cultivo y por tipo
+///    (plaga, enfermedad, fisiológico, abiótico).
+///
+/// El detalle de un cultivo enlaza con sus plagas; el detalle de una
+/// plaga enlaza con los cultivos afectados (navegación cruzada).
+class PantallaGuia extends StatelessWidget {
+  PantallaGuia({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Guía'),
+          bottom: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.eco), text: 'Cultivos'),
+              Tab(icon: Icon(Icons.bug_report), text: 'Plagas y enfermedades'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _ListaCultivos(),
+            _ListaPlagas(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ListaCultivos extends StatelessWidget {
+  _ListaCultivos();
+
+  @override
+  Widget build(BuildContext context) {
+    // Agrupamos por categoría. Mantiene el orden del catálogo dentro de
+    // cada categoría — el orden en `catalogoCultivos` ya es razonable
+    // (trufas primero, luego pepita, hueso, frutos secos, etc.).
+    final porCategoria = <CategoriaCultivo, List<Cultivo>>{};
+    for (final c in catalogoCultivos) {
+      porCategoria.putIfAbsent(c.categoria, () => []).add(c);
+    }
+    return ListView(
+      children: [
+        for (final cat in CategoriaCultivo.values)
+          if (porCategoria[cat] != null)
+            _BloqueCategoria(
+              categoria: cat,
+              cultivos: porCategoria[cat]!,
+            ),
+      ],
+    );
+  }
+}
+
+class _BloqueCategoria extends StatelessWidget {
+  final CategoriaCultivo categoria;
+  final List<Cultivo> cultivos;
+  _BloqueCategoria({required this.categoria, required this.cultivos});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          child: Text(
+            categoria.nombreVisible,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ),
+        for (final c in cultivos)
+          ListTile(
+            leading: CircleAvatar(backgroundColor: c.color, child: Icon(c.icono, color: Colors.white)),
+            title: Text(c.nombreVisible),
+            subtitle: c.nombreCientifico.isEmpty
+                ? null
+                : Text(c.nombreCientifico, style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12)),
+            trailing: Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => PantallaDetalleCultivo(cultivo: c)),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class PantallaDetalleCultivo extends StatelessWidget {
+  final Cultivo cultivo;
+  PantallaDetalleCultivo({super.key, required this.cultivo});
+
+  @override
+  Widget build(BuildContext context) {
+    final info = infoCultivos[cultivo.id];
+    final plagas = plagasDeCultivo(cultivo.id);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(cultivo.nombreVisible),
+        backgroundColor: cultivo.color,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (cultivo.nombreCientifico.isNotEmpty)
+            ImagenCommonsWidget(
+              tituloWikipedia: _tituloWikipediaParaCultivo(cultivo),
+              terminoBusqueda: cultivo.nombreCientifico,
+              altura: 220,
+            ),
+          if (cultivo.nombreCientifico.isNotEmpty) SizedBox(height: 12),
+          if (cultivo.nombreCientifico.isNotEmpty)
+            Text(
+              cultivo.nombreCientifico,
+              style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+            ),
+          SizedBox(height: 4),
+          Text(
+            cultivo.categoria.nombreVisible,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 16),
+          if (info?.descripcion.isNotEmpty == true) ...[
+            _Subtitulo('Descripción'),
+            Text(info!.descripcion),
+            SizedBox(height: 16),
+          ],
+          if (info?.exigencias.isNotEmpty == true) ...[
+            _Subtitulo('Exigencias agronómicas'),
+            Text(info!.exigencias),
+            SizedBox(height: 16),
+          ],
+          if (info?.calendario.isNotEmpty == true) ...[
+            _Subtitulo('Calendario'),
+            Text(info!.calendario),
+            SizedBox(height: 16),
+          ],
+          if (cultivo.variedadesSugeridas.isNotEmpty) ...[
+            _Subtitulo('Variedades habituales'),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final v in cultivo.variedadesSugeridas)
+                  Chip(label: Text(v, style: TextStyle(fontSize: 12))),
+              ],
+            ),
+            SizedBox(height: 16),
+          ],
+          if (cultivo.patronesSugeridos.isNotEmpty) ...[
+            _Subtitulo(cultivo.categoria == CategoriaCultivo.micorricicoTrufa ? 'Hospederos habituales (texto)' : 'Patrones habituales'),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final p in cultivo.patronesSugeridos)
+                  Chip(label: Text(p, style: TextStyle(fontSize: 12))),
+              ],
+            ),
+            SizedBox(height: 16),
+          ],
+          if (cultivo.hospederosCultivoIds.isNotEmpty) ...[
+            _Subtitulo('Árboles hospederos catalogados'),
+            Text(
+              'Estos árboles son los hospederos habituales de la micorrización trufera. Toca para abrir su ficha.',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final hospederoId in cultivo.hospederosCultivoIds)
+                  if (catalogoCultivos.any((c) => c.id == hospederoId))
+                    Builder(builder: (context) {
+                      final hospedero = catalogoCultivos.firstWhere((c) => c.id == hospederoId);
+                      return ActionChip(
+                        avatar: Icon(hospedero.icono, color: hospedero.color, size: 18),
+                        label: Text(hospedero.nombreVisible, style: TextStyle(fontSize: 12)),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => PantallaDetalleCultivo(cultivo: hospedero)),
+                        ),
+                      );
+                    }),
+              ],
+            ),
+            SizedBox(height: 16),
+          ],
+          if (cultivo.trufasHospedables.isNotEmpty) ...[
+            _Subtitulo('Trufas que puede albergar'),
+            Text(
+              'Este árbol puede actuar como hospedero de las siguientes trufas si se planta micorrizado y el suelo es adecuado.',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final trufaId in cultivo.trufasHospedables)
+                  if (catalogoCultivos.any((c) => c.id == trufaId))
+                    Builder(builder: (context) {
+                      final trufa = catalogoCultivos.firstWhere((c) => c.id == trufaId);
+                      return ActionChip(
+                        avatar: Icon(trufa.icono, color: trufa.color, size: 18),
+                        label: Text(trufa.nombreVisible, style: TextStyle(fontSize: 12)),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => PantallaDetalleCultivo(cultivo: trufa)),
+                        ),
+                      );
+                    }),
+              ],
+            ),
+            SizedBox(height: 16),
+          ],
+          _Subtitulo('Plagas y enfermedades'),
+          if (plagas.isEmpty)
+            Text(
+              'Sin plagas catalogadas para este cultivo en v1. El catálogo se ampliará con validación agronómica en v2.',
+              style: TextStyle(color: Colors.grey),
+            )
+          else
+            for (final p in plagas)
+              Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: p.tipo.color,
+                    child: Icon(p.tipo.icono, color: Colors.white, size: 20),
+                  ),
+                  title: Text(p.nombreComun),
+                  subtitle: Text(
+                    [
+                      if (p.nombreCientifico.isNotEmpty) p.nombreCientifico,
+                      p.tipo.nombreVisible,
+                    ].join(' · '),
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                  ),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => PantallaDetallePlaga(plaga: p)),
+                  ),
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ListaPlagas extends StatefulWidget {
+  _ListaPlagas();
+
+  @override
+  State<_ListaPlagas> createState() => _ListaPlagasState();
+}
+
+class _ListaPlagasState extends State<_ListaPlagas> {
+  String? _filtroCultivo;
+  TipoPlaga? _filtroTipo;
+
+  @override
+  Widget build(BuildContext context) {
+    final filtradas = catalogoPlagas.where((p) {
+      if (_filtroCultivo != null && !p.cultivoIds.contains(_filtroCultivo)) return false;
+      if (_filtroTipo != null && p.tipo != _filtroTipo) return false;
+      return true;
+    }).toList();
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  initialValue: _filtroCultivo,
+                  isDense: true,
+                  decoration: InputDecoration(
+                    labelText: 'Cultivo',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  items: [
+                    const DropdownMenuItem<String?>(value: null, child: Text(SoleraL10n.t('todos'))),
+                    for (final c in catalogoCultivos)
+                      if (c.id != 'generico')
+                        DropdownMenuItem<String?>(value: c.id, child: Text(c.nombreVisible)),
+                  ],
+                  onChanged: (v) => setState(() => _filtroCultivo = v),
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: DropdownButtonFormField<TipoPlaga?>(
+                  initialValue: _filtroTipo,
+                  isDense: true,
+                  decoration: InputDecoration(
+                    labelText: 'Tipo',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  items: [
+                    const DropdownMenuItem<TipoPlaga?>(value: null, child: Text(SoleraL10n.t('todos'))),
+                    for (final t in TipoPlaga.values)
+                      DropdownMenuItem<TipoPlaga?>(value: t, child: Text(t.nombreVisible)),
+                  ],
+                  onChanged: (v) => setState(() => _filtroTipo = v),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: filtradas.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text(
+                      'Sin resultados para los filtros seleccionados.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: filtradas.length,
+                  itemBuilder: (_, i) {
+                    final p = filtradas[i];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: p.tipo.color,
+                        child: Icon(p.tipo.icono, color: Colors.white, size: 20),
+                      ),
+                      title: Text(p.nombreComun),
+                      subtitle: Text(
+                        [
+                          if (p.nombreCientifico.isNotEmpty) p.nombreCientifico,
+                          p.tipo.nombreVisible,
+                        ].join(' · '),
+                        style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                      ),
+                      trailing: Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => PantallaDetallePlaga(plaga: p)),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class PantallaDetallePlaga extends StatelessWidget {
+  final Plaga plaga;
+  PantallaDetallePlaga({super.key, required this.plaga});
+
+  @override
+  Widget build(BuildContext context) {
+    final cultivosAfectados = [
+      for (final c in catalogoCultivos)
+        if (plaga.cultivoIds.contains(c.id)) c,
+    ];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(plaga.nombreComun),
+        backgroundColor: plaga.tipo.color,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (plaga.nombreCientifico.isNotEmpty || plaga.nombreComun.isNotEmpty)
+            ImagenCommonsWidget(
+              tituloWikipedia: _tituloWikipediaParaPlaga(plaga),
+              terminoBusqueda: plaga.nombreCientifico.isNotEmpty ? plaga.nombreCientifico : plaga.nombreComun,
+              altura: 200,
+            ),
+          if (plaga.nombreCientifico.isNotEmpty || plaga.nombreComun.isNotEmpty)
+            SizedBox(height: 12),
+          if (plaga.nombreCientifico.isNotEmpty)
+            Text(
+              plaga.nombreCientifico,
+              style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+            ),
+          SizedBox(height: 4),
+          Row(
+            children: [
+              Icon(plaga.tipo.icono, color: plaga.tipo.color, size: 18),
+              SizedBox(width: 4),
+              Text(plaga.tipo.nombreVisible, style: TextStyle(fontWeight: FontWeight.bold, color: plaga.tipo.color)),
+            ],
+          ),
+          SizedBox(height: 16),
+          _Subtitulo('Descripción'),
+          Text(plaga.descripcion),
+          SizedBox(height: 16),
+          _Subtitulo('Síntomas'),
+          Text(plaga.sintomas),
+          if (plaga.condicionesFavorables.isNotEmpty) ...[
+            SizedBox(height: 16),
+            _Subtitulo('Condiciones favorables'),
+            Text(plaga.condicionesFavorables),
+          ],
+          if (plaga.manejoCultural.isNotEmpty) ...[
+            SizedBox(height: 16),
+            _Subtitulo('Manejo cultural'),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.green.shade200),
+              ),
+              child: Text(plaga.manejoCultural),
+            ),
+            SizedBox(height: 6),
+            Text(
+              'Las recomendaciones de productos fitosanitarios autorizados (BBDD del MAPA) y plazos de seguridad estarán disponibles en próximas versiones validadas por agrónomo.',
+              style: TextStyle(fontSize: 11, color: Colors.grey.shade600, fontStyle: FontStyle.italic),
+            ),
+          ],
+          SizedBox(height: 16),
+          _Subtitulo('Cultivos afectados'),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final c in cultivosAfectados)
+                ActionChip(
+                  avatar: Icon(c.icono, color: c.color, size: 16),
+                  label: Text(c.nombreVisible, style: TextStyle(fontSize: 12)),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => PantallaDetalleCultivo(cultivo: c)),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Subtitulo extends StatelessWidget {
+  final String texto;
+  _Subtitulo(this.texto);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Text(texto, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+    );
+  }
+}
+
+/// Construye el título de Wikipedia para buscar la lead image. Para
+/// taxones la convención es nombre científico con guión bajo. Si el
+/// cultivo no tiene nombre científico (caso 'generico') devolvemos
+/// el nombre visible que rara vez tendrá artículo, lo que hará que
+/// el servicio caiga al fallback de búsqueda Commons.
+String _tituloWikipediaParaCultivo(Cultivo cultivo) {
+  if (cultivo.nombreCientifico.isNotEmpty) {
+    return cultivo.nombreCientifico.replaceAll(' ', '_');
+  }
+  return cultivo.nombreVisible.replaceAll(' ', '_');
+}
+
+String _tituloWikipediaParaPlaga(Plaga plaga) {
+  if (plaga.nombreCientifico.isNotEmpty) {
+    return plaga.nombreCientifico.replaceAll(' ', '_');
+  }
+  return plaga.nombreComun.replaceAll(' ', '_');
+}

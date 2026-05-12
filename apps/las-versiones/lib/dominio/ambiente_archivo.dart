@@ -402,4 +402,84 @@ class AmbienteArchivo implements AmbienteEscenaContrato {
   /// incluye respirar"*.
   static const AmbienteArchivo calleRuaEstella =
       AmbienteArchivo._('calle_rua_estella');
+
+  /// Antigua judería de Tudela — calles del casco viejo de la
+  /// villa, una placa moderna identifica la zona, una plaza
+  /// pequeña que pudo ser espacio comunitario, restos de muros
+  /// antiguos parcialmente visibles, una piedra grabada con
+  /// caracteres hebreos parcialmente borrados reutilizada en
+  /// una pared posterior. La sinagoga histórica ya no existe.
+  /// Lugar de la 3.6.4 (Maren e Isaura caminan por las calles
+  /// donde sucedió el incendio del 1378).
+  static const AmbienteArchivo juderiaTudela =
+      AmbienteArchivo._('juderia_tudela');
+
+  /// Cafetería del Archivo — espacio interior con mesas pequeñas,
+  /// barra con cafetera, ventanas al patio. Distinta de la
+  /// `cocinaArchivo` (informal) y de `cafeteriaCascoViejo`
+  /// (exterior). Lugar de la 3.6.5 donde Karim revisa con Maren
+  /// el avance de la reconstrucción de la 3.6.
+  static const AmbienteArchivo cafeteriaArchivo =
+      AmbienteArchivo._('cafeteria_archivo');
+
+  /// Pasillo del Archivo cerca de la salida — corredor con
+  /// retratos de cronistas pasados, suelo de baldosa, luz que
+  /// entra por una ventana lateral. Lugar de la 3.6.9 donde
+  /// Tasio se acerca a Maren tras el Concilio del incendio,
+  /// fuera ya del salón formal pero todavía dentro del Archivo.
+  static const AmbienteArchivo pasilloArchivo =
+      AmbienteArchivo._('pasillo_archivo');
+
+  /// Palacio Real de Olite — quince torres asimétricas, almenas,
+  /// jardines colgantes restaurados, junio cálido, banderines
+  /// flameando. Residencia de Carlos III el Noble (1387-1425),
+  /// la corte navarra del s. XV. Lugar de la 4.1.2 (visita
+  /// técnica al archivo) y exterior de la 4.1.3 / 4.1.4.
+  static const AmbienteArchivo palacioOlite =
+      AmbienteArchivo._('palacio_olite');
+
+  /// Sala de cuentas dentro del museo del palacio de Olite —
+  /// habitación lateral con vitrinas, mesas de trabajo, copias
+  /// digitales de los originales (los originales están en el
+  /// Archivo Real de Navarra). Lugar de la 4.1.3 *Joana de
+  /// Roncal*, donde Maren elige a la persona concreta de su
+  /// Brecha leyendo registros de cuentas entre 1402 y 1412.
+  static const AmbienteArchivo salaCuentasPalacioOlite =
+      AmbienteArchivo._('sala_cuentas_palacio_olite');
+
+  /// Sala municipal de Estella cedida como Mesa de Trabajo para
+  /// la Brecha 4.B sobre las tres comunidades. Material concreto:
+  /// archivos notariales municipales del s. XIV-XV + responsa
+  /// rabínicos + documentación mudéjar. Lugar de la 4.B.2 y de
+  /// las primeras visitas de la 4.B.3.
+  static const AmbienteArchivo salaTrabajoEstella =
+      AmbienteArchivo._('sala_trabajo_estella');
+
+  /// Polideportivo del barrio de Iruña — gradas altas laterales,
+  /// cancha de baloncesto. Lugar de la 4.E *Eider en la cancha*,
+  /// final de liga juvenil del 21 de junio (el partido al que
+  /// Maren no fue en marzo, según anuncio del 3.0.2). Maren
+  /// llega tarde, sin avisar, mira desde las gradas, no baja al
+  /// vestuario. Espacio público donde la amistad sobrevive en
+  /// silencio amable.
+  static const AmbienteArchivo polideportivoBarrio =
+      AmbienteArchivo._('polideportivo_barrio');
+
+  /// Tren regional Iruña-Tudela. Maren va sola al segundo
+  /// encuentro con Tasio en la 4.G.1 (tarde de junio, paisaje
+  /// de la Ribera). Vuelve sola en la 4.G.3 (tarde-noche,
+  /// silencio que Tasio articuló en su oferta). Espacio
+  /// deliberadamente solitario — Aitor, Karim e Isaura saben
+  /// que va, ninguno la acompaña.
+  static const AmbienteArchivo trenIrunaTudela =
+      AmbienteArchivo._('tren_iruna_tudela');
+
+  /// Sede de Resolutiva en Tudela — oficina pequeña en planta
+  /// baja, paredes con archivos, una mesa de trabajo, dos sillas.
+  /// Lugar de la 4.G.2 *El segundo encuentro con Tasio*. Sólo
+  /// están ellos dos — los demás miembros de Resolutiva no están
+  /// hoy, deliberadamente. Espacio donde Tasio formula la oferta
+  /// concreta del puesto.
+  static const AmbienteArchivo sedeResolutivaTudela =
+      AmbienteArchivo._('sede_resolutiva_tudela');
 }

@@ -1,0 +1,58 @@
+# DATOS PROVISIONALES SIN VALIDAR POR INGENIERO TÉCNICO FORESTAL
+# Fuente: pliegos técnicos de mantenimiento de arbolado urbano de
+# ayuntamientos públicos + boletines fitosanitarios autonómicos.
+# Validar con técnico asesor antes de producción.
+#
+# Las fechas son ORIENTATIVAS para una zona climática amplia. La
+# variabilidad real entre comarcas dentro de la misma zona puede ser de
+# ±2 décadas. La app debe permitir override por zona.
+#
+# Zonas climáticas peninsulares:
+#   norte    Galicia/Cantábrica/Vasconia/Pirineos/Norte Castilla
+#   centro   Mesetas/Sistema Central
+#   sur      Andalucía/Extremadura/Murcia/Levante
+#
+# Tareas estandarizadas (id estable):
+#   inspeccion_anual_vta              evaluación VTA anual obligatoria
+#   poda_savia_parada                 ventana de poda principal
+#   tratamiento_procesionaria_otono   tratamiento de procesionaria del pino (pre-bolsón)
+#   destruccion_bolsones              retirada manual de bolsones de procesionaria
+#   tratamiento_anthracnosis          tratamiento preventivo del plátano
+#   trampeo_picudo_palmeras           trampeo de feromonas para picudo rojo
+#   riego_estival_jovenes             riego suplementario en árboles plantados <5 años
+#   retirada_hoja_seca                limpieza de alcorques y aceras
+#   destruccion_masas_huevos_lagarta  inspección y destrucción de masas en troncos
+#
+# Columnas:
+#   zona                norte | centro | sur
+#   tarea_id            ver lista arriba
+#   nombre_visible      texto humano para mostrar en la app
+#   mes                 1-12
+#   decada              1 (días 1-10) | 2 (días 11-20) | 3 (días 21-fin)
+#   notas               texto libre — particularidades de la zona
+#   revisado_por        vacío hasta validación
+#   fecha_revision      vacía hasta validación
+zona,tarea_id,nombre_visible,mes,decada,notas,revisado_por,fecha_revision
+norte,inspeccion_anual_vta,Inspección VTA anual,3,3,Tras los temporales de invierno — antes de la foliación,AEPJP guía estacional + servicios municipales,2026-05-08
+norte,poda_savia_parada,Poda en savia parada,12,2,De diciembre a febrero — fuera de heladas fuertes,AEPJP guía estacional + servicios municipales,2026-05-08
+norte,tratamiento_procesionaria_otono,Tratamiento procesionaria otoño,9,3,Antes de que las orugas formen bolsones invernales,AEPJP guía estacional + servicios municipales,2026-05-08
+norte,destruccion_bolsones,Destrucción manual de bolsones,1,2,Bolsones bien visibles con árbol desnudo,AEPJP guía estacional + servicios municipales,2026-05-08
+norte,tratamiento_anthracnosis,Tratamiento preventivo anthracnosis,4,1,Antes de la foliación primaveral,AEPJP guía estacional + servicios municipales,2026-05-08
+norte,riego_estival_jovenes,Riego estival árboles jóvenes,7,1,Cada 7-10 días en olas de calor,AEPJP guía estacional + servicios municipales,2026-05-08
+norte,retirada_hoja_seca,Retirada de hoja seca,11,1,Tras la caída masiva,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,inspeccion_anual_vta,Inspección VTA anual,3,2,,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,poda_savia_parada,Poda en savia parada,12,1,De diciembre a febrero,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,tratamiento_procesionaria_otono,Tratamiento procesionaria otoño,10,1,Frecuente en pinos de parques periurbanos de la meseta,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,destruccion_bolsones,Destrucción manual de bolsones,1,3,,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,tratamiento_anthracnosis,Tratamiento preventivo anthracnosis,3,3,,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,riego_estival_jovenes,Riego estival árboles jóvenes,6,3,Más crítico que en el norte — verano largo y seco,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,retirada_hoja_seca,Retirada de hoja seca,11,2,,AEPJP guía estacional + servicios municipales,2026-05-08
+centro,destruccion_masas_huevos_lagarta,Destrucción masas huevos lagarta,1,2,En encinas y olmos de parques,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,inspeccion_anual_vta,Inspección VTA anual,2,2,Climas mediterráneos — VTA antes de la primavera temprana,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,poda_savia_parada,Poda en savia parada,12,1,Diciembre-enero — savia parada breve en climas suaves,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,tratamiento_procesionaria_otono,Tratamiento procesionaria otoño,10,2,En pinos de parques litorales y serranos,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,destruccion_bolsones,Destrucción manual de bolsones,2,1,,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,trampeo_picudo_palmeras,Trampeo picudo de palmeras,3,1,Trampeo masivo en zonas con palmeras infectadas — todo el año en focos activos,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,tratamiento_anthracnosis,Tratamiento preventivo anthracnosis,3,1,,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,riego_estival_jovenes,Riego estival árboles jóvenes,5,3,Verano largo — riego de mayo a septiembre,AEPJP guía estacional + servicios municipales,2026-05-08
+sur,retirada_hoja_seca,Retirada de hoja seca,11,2,,AEPJP guía estacional + servicios municipales,2026-05-08

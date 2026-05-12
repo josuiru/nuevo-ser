@@ -1,9 +1,12 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/contador_intentos_puzzle.dart';
 import '../dominio/problema_potencia_natural.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
 import '../l10n/app_localizations.dart';
 import '../nucleo/paleta.dart';
 import 'escenario.dart';
@@ -12,6 +15,7 @@ import 'overlay_demo_puzzle.dart';
 import 'widgets/cabecera_puzzle.dart';
 import 'widgets/cuadro_formula.dart';
 import 'widgets/tarjeta_numero.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle ARI.02: el niño ve `2⁴` y elige el resultado entre cuatro
 /// candidatos. Entrada a la potencia como multiplicación repetida.
@@ -77,6 +81,13 @@ class _PantallaPotenciaNaturalState extends State<PantallaPotenciaNatural>
     if (_problema.esCorrecta(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '${_problema.candidatos[indice]}',
+        respuestaCorrecta: '${_problema.candidatos[_problema.indiceCorrecto]}',
+        preguntaTexto: 'elige la opción correcta',
+        opciones: _problema.candidatos.map((c) => '$c').toList(),
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -85,6 +96,8 @@ class _PantallaPotenciaNaturalState extends State<PantallaPotenciaNatural>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.potenciaNatural);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -163,7 +176,8 @@ class _PantallaPotenciaNaturalState extends State<PantallaPotenciaNatural>
                 ),
               ),
             ),
-            if (_mostrandoDemo)
+                BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.potenciaNatural),
+          if (_mostrandoDemo)
               OverlayDemoPuzzle(
                 mensaje:
                     AppLocalizations.of(contexto).demoPuzzleTocaResultado,

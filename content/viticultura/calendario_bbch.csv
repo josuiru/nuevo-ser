@@ -1,0 +1,103 @@
+# DATOS PROVISIONALES SIN VALIDAR ENOLÓGICAMENTE
+# Fuente: Estaciones de Avisos Fitosanitarios de Castilla y León, Rioja y Galicia
+#         (boletines públicos) + manuales de viticultura
+# Validar con enólogo asesor antes de producción comercial
+#
+# Estados BBCH (FAO 1995, escala canónica para vid):
+#   09  brotación
+#   15  5 hojas extendidas
+#   53  inflorescencia visible
+#   65  plena floración
+#   71  cuajado (granos del tamaño de un grano de pimienta)
+#   75  tamaño guisante
+#   81  inicio del envero
+#   89  vendimia (madurez tecnológica)
+#   93  caída de hojas
+#
+# Las décadas son orientativas para una zona climática AMPLIA. La variabilidad
+# entre parcelas dentro de la misma zona puede ser de ±2 décadas. La app debe
+# permitir override por viñedo (pendiente F2).
+#
+# Columnas:
+#   variedad_id       debe existir en variedades.csv
+#   zona              norte | sur (norte = Galicia/Cantábrica/Rioja Alta/Norte Castilla;
+#                                  sur = La Mancha/Andalucía/Extremadura/Levante)
+#   estado_bbch       09|15|53|65|71|75|81|89|93
+#   nombre_estado     legible
+#   mes               1-12
+#   decada            1|2|3 (1 = días 1-10, 2 = 11-20, 3 = 21-fin de mes)
+#   revisado_por
+#   fecha_revision
+variedad_id,zona,estado_bbch,nombre_estado,mes,decada,revisado_por,fecha_revision
+tempranillo,norte,09,Brotación,4,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,15,5 hojas,4,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,53,Inflorescencia visible,5,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,65,Plena floración,6,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,71,Cuajado,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,75,Tamaño guisante,7,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,81,Inicio envero,8,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,89,Vendimia,10,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,norte,93,Caída de hojas,11,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,09,Brotación,3,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,15,5 hojas,4,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,53,Inflorescencia visible,5,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,65,Plena floración,5,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,71,Cuajado,6,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,75,Tamaño guisante,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,81,Inicio envero,7,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,89,Vendimia,9,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+tempranillo,sur,93,Caída de hojas,10,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,09,Brotación,4,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,15,5 hojas,5,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,53,Inflorescencia visible,5,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,65,Plena floración,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,71,Cuajado,7,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,75,Tamaño guisante,7,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,81,Inicio envero,8,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,89,Vendimia,10,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,norte,93,Caída de hojas,11,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,09,Brotación,4,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,15,5 hojas,4,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,53,Inflorescencia visible,5,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,65,Plena floración,6,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,71,Cuajado,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,75,Tamaño guisante,7,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,81,Inicio envero,7,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,89,Vendimia,9,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+garnacha_tinta,sur,93,Caída de hojas,10,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,09,Brotación,4,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,15,5 hojas,4,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,53,Inflorescencia visible,5,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,65,Plena floración,6,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,71,Cuajado,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,75,Tamaño guisante,7,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,81,Inicio envero,7,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,89,Vendimia,10,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+monastrell,sur,93,Caída de hojas,11,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,09,Brotación,4,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,15,5 hojas,4,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,53,Inflorescencia visible,5,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,65,Plena floración,6,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,71,Cuajado,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,75,Tamaño guisante,7,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,81,Inicio envero,8,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,89,Vendimia,9,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+mencia,norte,93,Caída de hojas,11,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,09,Brotación,4,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,15,5 hojas,4,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,53,Inflorescencia visible,5,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,65,Plena floración,6,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,71,Cuajado,6,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,75,Tamaño guisante,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,81,Inicio envero,7,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,89,Vendimia,9,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+albariño,norte,93,Caída de hojas,11,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,09,Brotación,4,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,15,5 hojas,4,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,53,Inflorescencia visible,5,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,65,Plena floración,6,2,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,71,Cuajado,6,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,75,Tamaño guisante,7,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,81,Inicio envero,7,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,89,Vendimia,9,1,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08
+verdejo,norte,93,Caída de hojas,10,3,Eichhorn-Lorenz / Lorenz et al. 1995,2026-05-08

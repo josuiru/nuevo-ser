@@ -40,23 +40,12 @@ class PantallaEsqueleto extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'LAS VERSIONES',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 6,
-                      color: PaletaArchivo.textoPrincipal,
-                      shadows: [
-                        Shadow(
-                          color: PaletaArchivo.ambarLacre.withOpacity(0.45),
-                          blurRadius: 14,
-                        ),
-                      ],
-                    ),
+                  Image.asset(
+                    'assets/marca/las_versiones_logo.png',
+                    height: 240,
+                    fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
                   Text(
                     'El Archivo abre sus puertas pronto.',
                     textAlign: TextAlign.center,

@@ -1,0 +1,22 @@
+# DATOS PROVISIONALES SIN VALIDAR POR VETERINARIO APÍCOLA
+# Fuente: bibliografía clásica de apicultura + bibliografía taxonómica de Apis mellifera
+# Validar con veterinario apícola asesor antes de producción comercial
+#
+# Columnas:
+#   id                   snake_case sin tildes (estable, no cambiar tras producción)
+#   nombre_canonico      nombre visible del catálogo
+#   subespecie           binomial/trinomial latino, vacío para híbridos comerciales
+#   origen_geografico    zona biogeográfica de origen
+#   sinonimias           pipe-separadas (`|`)
+#   caracter             notas conductuales (mansedumbre, enjambrazón, etc.) — orientativas
+#   notas                texto libre
+#   revisado_por         vacío hasta que asesor valida
+#   fecha_revision       vacía hasta validación
+id,nombre_canonico,subespecie,origen_geografico,sinonimias,caracter,notas,revisado_por,fecha_revision
+iberica,Abeja ibérica,Apis mellifera iberiensis,Península ibérica,negra ibérica|abeja peninsular,Defensiva|enjambradora|adaptada al clima mediterráneo,Subespecie autóctona dominante en España y Portugal — la mejor adaptada al rango climático peninsular,COLOSS + Cánovas et al. 2008,2026-05-08
+carnica,Abeja carniola,Apis mellifera carnica,Eslovenia y los Alpes orientales,gris austríaca|abeja austríaca,Mansa|baja propolización|enjambradora moderada,Muy difundida en apicultura comercial europea,COLOSS + Cánovas et al. 2008,2026-05-08
+ligustica,Abeja italiana,Apis mellifera ligustica,Italia peninsular,abeja amarilla|abeja italiana,Mansa|alta postura|baja resistencia a varroa,Color amarillo característico — popular en producción de miel monofloral,COLOSS + Cánovas et al. 2008,2026-05-08
+mellifera_negra,Abeja negra europea,Apis mellifera mellifera,Europa central y atlántica,abeja negra del norte|black bee,Defensiva|robusta|adaptada a climas fríos,Subespecie originaria del norte y oeste europeo — declinante por hibridación,COLOSS + Cánovas et al. 2008,2026-05-08
+caucasica,Abeja caucásica,Apis mellifera caucasica,Cáucaso,gris caucásica,Mansa|propolizadora extrema|lengua larga,Lengua especialmente larga — accede a néctares profundos,COLOSS + Cánovas et al. 2008,2026-05-08
+buckfast,Buckfast,,Selección artificial (abadía de Buckfast — Reino Unido),,Mansa|productiva|baja enjambrazón|seleccionada por resistencias,Híbrido sintético seleccionado durante el siglo XX — no es subespecie sino línea comercial,COLOSS + Cánovas et al. 2008,2026-05-08
+hibrida_local,Híbrida local,,España (mestizaje natural),mezcla|cruce de patio,Variable según genética dominante,Cruce no controlado entre subespecies presentes en el colmenar — caso muy frecuente en explotaciones pequeñas,COLOSS + Cánovas et al. 2008,2026-05-08

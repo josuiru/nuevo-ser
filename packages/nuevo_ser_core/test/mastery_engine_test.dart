@@ -136,20 +136,20 @@ void main() {
     );
   });
 
-  test('los perfiles P2/P3/P4 lanzan UnimplementedError hasta su implementación', () {
-    final perfilesStub = ['P2', 'P3', 'P4'];
+  test('el perfil P4 sigue siendo stub y lanza UnimplementedError', () {
+    // P2 y P3 fueron implementados (slice C1+C2). P4 sigue pendiente
+    // hasta que entre el primer consumidor que la requiera; el motor
+    // debe seguir rompiendo visiblemente si se cablea P4 por error.
     final inicial = EstadoHabilidad.inicial('FR.01');
     final payload = acierto(DateTime(2026, 1, 1, 10));
-    for (final id in perfilesStub) {
-      expect(
-        () => motor.actualizarMaestria(
-          previo: inicial,
-          payload: payload,
-          idPerfil: id,
-        ),
-        throwsUnimplementedError,
-        reason: 'Perfil $id debe lanzar UnimplementedError mientras es stub.',
-      );
-    }
+    expect(
+      () => motor.actualizarMaestria(
+        previo: inicial,
+        payload: payload,
+        idPerfil: 'P4',
+      ),
+      throwsUnimplementedError,
+      reason: 'Perfil P4 debe lanzar UnimplementedError mientras es stub.',
+    );
   });
 }

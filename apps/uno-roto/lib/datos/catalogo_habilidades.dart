@@ -83,14 +83,33 @@ class CatalogoHabilidades {
 
   Habilidad? porId(String id) => habilidades[id];
 
-  List<Habilidad> delDominio(String dominio) =>
-      habilidades.values.where((h) => h.dominio == dominio).toList();
+  List<Habilidad> delDominio(String dominio, {String? rangoActual}) =>
+      habilidades.values
+          .where((h) => h.dominio == dominio)
+          .where((h) => _rangoAlcanza(rangoActual, h.rangoExigido))
+          .toList();
 
   /// Todas las habilidades que el distrito puede presentar.
-  List<Habilidad> delDistrito(String idDistrito) => habilidades.values
-      .where((h) =>
-          h.distritos.contains(idDistrito) || h.distritos.contains('todos'))
-      .toList();
+  /// Si se proporciona [rangoActual], solo devuelve habilidades cuyo
+  /// [rangoExigido] sea alcanzable desde ese rango.
+  List<Habilidad> delDistrito(String idDistrito, {String? rangoActual}) =>
+      habilidades.values
+          .where((h) =>
+              h.distritos.contains(idDistrito) ||
+              h.distritos.contains('todos'))
+          .where((h) => _rangoAlcanza(rangoActual, h.rangoExigido))
+          .toList();
+
+  /// True si [rangoActual] es suficiente para acceder a una habilidad
+  /// con [rangoExigido]. Los rangos están ordenados en la lista
+  /// [rangos] del JSON (índice más alto = más avanzado).
+  bool _rangoAlcanza(String? rangoActual, String rangoExigido) {
+    if (rangoActual == null) return true;
+    final actualIdx = rangos.indexOf(rangoActual);
+    final exigidoIdx = rangos.indexOf(rangoExigido);
+    if (actualIdx < 0 || exigidoIdx < 0) return true;
+    return actualIdx >= exigidoIdx;
+  }
 }
 
 class ReglasDecaimiento {

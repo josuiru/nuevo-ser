@@ -31,54 +31,49 @@ class PantallaConfiguracionInicial extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Spacer(),
-              Text(
-                'LAS VERSIONES',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 6,
-                  color: PaletaArchivo.textoPrincipal,
-                  shadows: [
-                    Shadow(
-                      color: PaletaArchivo.ambarLacre.withOpacity(0.45),
-                      blurRadius: 14,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 36),
-              const _LineaTrilingue('Hola.', 'Kaixo.', 'Hola.'),
-              const SizedBox(height: 12),
-              const _LineaTrilingue(
-                '¿En qué idioma te hablo?',
-                'Zein hizkuntzatan hitz egingo dizut?',
-                'En quina llengua et parlo?',
-              ),
-              const Spacer(),
-              _BotonIdioma(
-                etiqueta: 'Castellano',
-                codigo: 'es',
-                alPulsar: alElegirIdioma,
-              ),
-              const SizedBox(height: 14),
-              _BotonIdioma(
-                etiqueta: 'Euskara',
-                codigo: 'eu',
-                alPulsar: alElegirIdioma,
-              ),
-              const SizedBox(height: 14),
-              _BotonIdioma(
-                etiqueta: 'Català',
-                codigo: 'ca',
-                alPulsar: alElegirIdioma,
-              ),
-              const Spacer(flex: 2),
-            ],
+          child: LayoutBuilder(
+            builder: (contexto, restricciones) {
+              final alturaLogo =
+                  (restricciones.maxHeight * 0.35).clamp(140.0, 280.0);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Spacer(),
+                  Image.asset(
+                    'assets/marca/las_versiones_logo.png',
+                    height: alturaLogo,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 24),
+                  const _LineaTrilingue('Hola.', 'Kaixo.', 'Hola.'),
+                  const SizedBox(height: 12),
+                  const _LineaTrilingue(
+                    '¿En qué idioma te hablo?',
+                    'Zein hizkuntzatan hitz egingo dizut?',
+                    'En quina llengua et parlo?',
+                  ),
+                  const Spacer(),
+                  _BotonIdioma(
+                    etiqueta: 'Castellano',
+                    codigo: 'es',
+                    alPulsar: alElegirIdioma,
+                  ),
+                  const SizedBox(height: 14),
+                  _BotonIdioma(
+                    etiqueta: 'Euskara',
+                    codigo: 'eu',
+                    alPulsar: alElegirIdioma,
+                  ),
+                  const SizedBox(height: 14),
+                  _BotonIdioma(
+                    etiqueta: 'Català',
+                    codigo: 'ca',
+                    alPulsar: alElegirIdioma,
+                  ),
+                  const Spacer(flex: 2),
+                ],
+              );
+            },
           ),
         ),
       ),

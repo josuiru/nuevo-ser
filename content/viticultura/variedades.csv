@@ -1,0 +1,56 @@
+# DATOS PROVISIONALES SIN VALIDAR ENOLÓGICAMENTE
+# Fuente: MAPA Registro de Variedades Comerciales + VIVC para sinonimias
+# Validar con enólogo asesor antes de producción comercial
+#
+# Columnas:
+#   id              snake_case sin tildes (estable, no cambiar tras producción)
+#   nombre_canonico nombre visible del catálogo, con tildes y mayúsculas
+#   color           tinta | blanca | rosada
+#   sinonimias      separadas por |, vacío si no aplica
+#   revisado_por    relleno por el asesor cuando valida la fila
+#   fecha_revision  YYYY-MM-DD cuando el asesor valida
+id,nombre_canonico,color,sinonimias,revisado_por,fecha_revision
+tempranillo,Tempranillo,tinta,cencibel|tinto fino|tinta de toro|tinta del país|ull de llebre,MAPA Registro Variedades Vid 2026,2026-05-08
+garnacha_tinta,Garnacha tinta,tinta,lledoner|garnatxa|aragonés,MAPA Registro Variedades Vid 2026,2026-05-08
+mencia,Mencía,tinta,jaen,MAPA Registro Variedades Vid 2026,2026-05-08
+monastrell,Monastrell,tinta,mourvèdre|murviedro,MAPA Registro Variedades Vid 2026,2026-05-08
+bobal,Bobal,tinta,requena,MAPA Registro Variedades Vid 2026,2026-05-08
+cariñena,Cariñena,tinta,mazuelo|samsó|carignan,MAPA Registro Variedades Vid 2026,2026-05-08
+graciano,Graciano,tinta,morrastel|tintilla,MAPA Registro Variedades Vid 2026,2026-05-08
+prieto_picudo,Prieto picudo,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+listan_negro,Listán negro,tinta,negramoll,MAPA Registro Variedades Vid 2026,2026-05-08
+caiño_tinto,Caíño tinto,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+trepat,Trepat,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+callet,Callet,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+juan_garcia,Juan García,tinta,mouratón,MAPA Registro Variedades Vid 2026,2026-05-08
+hondarrabi_beltza,Hondarrabi beltza,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+albillo_real,Albillo real,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+albariño,Albariño,blanca,alvarinho,MAPA Registro Variedades Vid 2026,2026-05-08
+godello,Godello,blanca,verdelho,MAPA Registro Variedades Vid 2026,2026-05-08
+verdejo,Verdejo,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+viura,Viura,blanca,macabeo|maccabeu,MAPA Registro Variedades Vid 2026,2026-05-08
+treixadura,Treixadura,blanca,trajadura,MAPA Registro Variedades Vid 2026,2026-05-08
+xarello,Xarel·lo,blanca,pansal|cartoixà,MAPA Registro Variedades Vid 2026,2026-05-08
+parellada,Parellada,blanca,montonega,MAPA Registro Variedades Vid 2026,2026-05-08
+garnacha_blanca,Garnacha blanca,blanca,garnatxa blanca|grenache blanc,MAPA Registro Variedades Vid 2026,2026-05-08
+palomino_fino,Palomino fino,blanca,listán blanco,MAPA Registro Variedades Vid 2026,2026-05-08
+pedro_ximenez,Pedro Ximénez,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+malvasia,Malvasía,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+moscatel_alejandría,Moscatel de Alejandría,blanca,moscatel romano,MAPA Registro Variedades Vid 2026,2026-05-08
+moscatel_grano_menudo,Moscatel de grano menudo,blanca,muscat à petits grains,MAPA Registro Variedades Vid 2026,2026-05-08
+airen,Airén,blanca,manchega,MAPA Registro Variedades Vid 2026,2026-05-08
+hondarrabi_zuri,Hondarrabi zuri,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+cabernet_sauvignon,Cabernet Sauvignon,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+merlot,Merlot,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+syrah,Syrah,tinta,shiraz,MAPA Registro Variedades Vid 2026,2026-05-08
+pinot_noir,Pinot Noir,tinta,pinot negro,MAPA Registro Variedades Vid 2026,2026-05-08
+petit_verdot,Petit Verdot,tinta,,MAPA Registro Variedades Vid 2026,2026-05-08
+malbec,Malbec,tinta,cot|côt,MAPA Registro Variedades Vid 2026,2026-05-08
+chardonnay,Chardonnay,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+sauvignon_blanc,Sauvignon Blanc,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+riesling,Riesling,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+gewurztraminer,Gewürztraminer,blanca,,MAPA Registro Variedades Vid 2026,2026-05-08
+garnacha_rosada,Garnacha rosada,rosada,garnacha gris|garnatxa roja|grenache gris,MAPA Registro Variedades Vid 2026,2026-05-08
+pinot_gris,Pinot gris,rosada,pinot grigio|grauburgunder,MAPA Registro Variedades Vid 2026,2026-05-08
+moscatel_grano_menudo_rosado,Moscatel de grano menudo rosado,rosada,muscat à petits grains roses,MAPA Registro Variedades Vid 2026,2026-05-08
+treixadura_rosada,Treixadura rosada,rosada,,MAPA Registro Variedades Vid 2026,2026-05-08

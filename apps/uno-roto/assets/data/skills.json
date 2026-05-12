@@ -226,7 +226,8 @@
         "D"
       ],
       "districts": [
-        "tejados"
+        "tejados",
+        "canales"
       ],
       "intro_rank": "Aprendiz_III",
       "required_rank": "Iniciado_I",
@@ -291,7 +292,8 @@
         "E"
       ],
       "districts": [
-        "canales"
+        "canales",
+        "industria"
       ],
       "intro_rank": "Aprendiz_III",
       "required_rank": "Iniciado_I",
@@ -513,7 +515,7 @@
         "H"
       ],
       "districts": [
-        "puerto"
+        "mercado"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_III",
@@ -553,7 +555,7 @@
         "G"
       ],
       "districts": [
-        "industria"
+        "canales"
       ],
       "intro_rank": "Aprendiz_III",
       "required_rank": "Iniciado_I",
@@ -574,7 +576,7 @@
         "G"
       ],
       "districts": [
-        "industria"
+        "canales"
       ],
       "intro_rank": "Iniciado_I",
       "required_rank": "Iniciado_I",
@@ -681,7 +683,8 @@
         "G"
       ],
       "districts": [
-        "industria"
+        "industria",
+        "mercado"
       ],
       "intro_rank": "Iniciado_I",
       "required_rank": "Iniciado_II",
@@ -702,7 +705,7 @@
         "G"
       ],
       "districts": [
-        "industria"
+        "canales"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_II",
@@ -873,7 +876,7 @@
         "B"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Aprendiz_II",
       "required_rank": "Aprendiz_III",
@@ -895,7 +898,7 @@
         "C"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Aprendiz_III",
       "required_rank": "Iniciado_I",
@@ -916,7 +919,7 @@
         "B"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Aprendiz_III",
       "required_rank": "Iniciado_I",
@@ -937,7 +940,7 @@
         "B"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Iniciado_I",
       "required_rank": "Iniciado_II",
@@ -959,7 +962,7 @@
         "B"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Iniciado_I",
       "required_rank": "Iniciado_II",
@@ -981,7 +984,7 @@
         "D"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_II",
@@ -1003,7 +1006,7 @@
         "F"
       ],
       "districts": [
-        "canales"
+        "puerto"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_II",
@@ -1020,7 +1023,7 @@
       "deps": [],
       "families": [],
       "districts": [
-        "puerto"
+        "canales"
       ],
       "intro_rank": "Aprendiz_III",
       "required_rank": "Iniciado_II",
@@ -1044,7 +1047,7 @@
         "C"
       ],
       "districts": [
-        "puerto"
+        "industria"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Fraccionista",
@@ -1068,7 +1071,7 @@
         "C"
       ],
       "districts": [
-        "puerto"
+        "industria"
       ],
       "intro_rank": "Iniciado_III",
       "required_rank": "Fraccionista_Mayor",
@@ -1359,7 +1362,7 @@
       ],
       "families": [],
       "districts": [
-        "afueras"
+        "puerto"
       ],
       "intro_rank": "Iniciado_I",
       "required_rank": "Iniciado_II",
@@ -1378,7 +1381,7 @@
       ],
       "families": [],
       "districts": [
-        "afueras"
+        "puerto"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_III",
@@ -1398,7 +1401,7 @@
       ],
       "families": [],
       "districts": [
-        "afueras"
+        "puerto"
       ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_III",
@@ -1419,7 +1422,7 @@
       ],
       "families": [],
       "districts": [
-        "afueras"
+        "puerto"
       ],
       "intro_rank": "Iniciado_III",
       "required_rank": "Fraccionista",
@@ -1435,7 +1438,9 @@
       "domain": "ARI",
       "deps": [],
       "families": [],
-      "districts": [],
+      "districts": [
+        "tejados"
+      ],
       "intro_rank": "Aprendiz_I",
       "required_rank": "Aprendiz_I",
       "precision_threshold": 0.9,
@@ -1453,7 +1458,9 @@
         "DEC.04"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "afueras"
+      ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Fraccionista",
       "precision_threshold": 0.75,
@@ -1468,7 +1475,9 @@
       "domain": "ARI",
       "deps": [],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_I",
       "precision_threshold": 0.8,
@@ -1485,7 +1494,9 @@
         "ARI.02"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_III",
       "required_rank": "Iniciado_II",
       "precision_threshold": 0.8,
@@ -1502,7 +1513,9 @@
         "ALG.01"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_III",
       "required_rank": "Fraccionista",
       "precision_threshold": 0.7,
@@ -1520,7 +1533,9 @@
         "ARI.03"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_III",
       "required_rank": "Iniciado_II",
       "precision_threshold": 0.75,
@@ -1535,7 +1550,9 @@
       "domain": "ARI",
       "deps": [],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_I",
       "precision_threshold": 0.85,
@@ -1552,7 +1569,9 @@
         "ARI.04"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_II",
       "required_rank": "Iniciado_I",
       "precision_threshold": 0.85,
@@ -1569,7 +1588,9 @@
         "ALG.02"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Fraccionista",
       "required_rank": "Iniciado_III",
       "precision_threshold": 0.7,
@@ -1586,7 +1607,9 @@
         "ALG.01"
       ],
       "families": [],
-      "districts": [],
+      "districts": [
+        "montana"
+      ],
       "intro_rank": "Iniciado_III",
       "required_rank": "Iniciado_II",
       "precision_threshold": 0.75,

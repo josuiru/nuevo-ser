@@ -7,8 +7,29 @@ class Fraccion {
   final int numerador;
   final int denominador;
 
+  /// El `assert` se elimina en release. Se mantiene `const` para que
+  /// las decenas de Fracciones constantes (curated pools) sigan
+  /// siendo compile-time. La validación runtime se aplica en
+  /// [Fraccion.dinamica] — usar este factory cuando los valores se
+  /// derivan de aritmética no garantizada (restas, simplificaciones,
+  /// caminos de "trampa clásica").
   const Fraccion(this.numerador, this.denominador)
       : assert(denominador > 0);
+
+  /// Factory con validación runtime (también activa en release).
+  /// Usar siempre que numerador/denominador procedan de cálculos
+  /// dinámicos: restas, simplificaciones o ramas defensivas
+  /// (`_trampaClasica` en [ProblemaDual], etc.).
+  factory Fraccion.dinamica(int numerador, int denominador) {
+    if (denominador <= 0) {
+      throw ArgumentError.value(
+        denominador,
+        'denominador',
+        'Fracción exige denominador > 0 (recibido: $denominador).',
+      );
+    }
+    return Fraccion(numerador, denominador);
+  }
 
   String get etiqueta =>
       denominador == 1 ? '$numerador' : '$numerador/$denominador';

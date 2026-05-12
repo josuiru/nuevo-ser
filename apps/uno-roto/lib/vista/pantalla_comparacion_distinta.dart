@@ -1,5 +1,7 @@
+import '../dominio/fragmento_en_tejado.dart' show TipoFragmentoEnTejado;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
 import '../dominio/problema_comparacion_distinta.dart';
@@ -9,6 +11,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle FR.07: el niño ve dos fracciones sin nada en común
 /// (denominadores y numeradores distintos) y toca la mayor. El sesgo
@@ -85,6 +89,15 @@ class _PantallaComparacionDistintaState
     if (_problema.esCorrecta(indice)) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      final opc = [_problema.a.etiqueta, _problema.b.etiqueta];
+      final idxCorr = _problema.indiceMayor;
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: opc[indice],
+        respuestaCorrecta: opc[idxCorr],
+        preguntaTexto: '¿qué fracción es mayor? (sin nada en común)',
+        opciones: opc,
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -93,6 +106,8 @@ class _PantallaComparacionDistintaState
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.comparacionDistinta);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -226,6 +241,7 @@ class _PantallaComparacionDistintaState
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.comparacionDistinta),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

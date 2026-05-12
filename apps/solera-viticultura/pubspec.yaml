@@ -1,0 +1,110 @@
+name: solera_viticultura
+description: "Solera Viticultura — gestor para bodegas pequeñas y medias. Censo de cepas, fenología BBCH, libro de tratamientos PAC, identificación IA de mildiu/oídio/botritis."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Mapa
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.4.0
+
+  # GPS y permisos
+  geolocator: 12.0.0
+  permission_handler: ^11.3.1
+
+  # Cámara y archivos (image_picker, path_provider, path vienen
+  # transitivamente vía nuevo_ser_core; los declaramos también
+  # explícitamente porque los call-sites de la app los consumen).
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Almacenamiento local
+  sqflite: ^2.3.3
+  shared_preferences: ^2.3.2
+
+  # HTTP (cliente Anthropic, sync futuro)
+  http: ^1.2.2
+
+  # Caché de imágenes
+  cached_network_image: ^3.4.1
+
+  # Compartir y exportar
+  share_plus: ^10.0.2
+  archive: ^3.6.1
+
+  # Utilidades
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+  crypto: ^3.0.7
+
+  # Selector de ficheros (backup/restore, importar CSV)
+  file_picker: ^8.1.4
+
+  # Generación de PDF (libro PAC, informes de campaña). El paquete
+  # `pdf` viene transitivo via nuevo_ser_core; `printing` se queda
+  # en la app porque lanza el visor del SO.
+  pdf: ^3.11.1
+  printing: ^5.13.4
+
+  # Plataforma compartida del monorepo: GestorFotos, csv_io,
+  # informe_periodico_pdf y resto de servicios reutilizables.
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # Generador de iconos Android (mipmap-*) e iOS a partir del PNG fuente.
+  # Sólo se invoca con `dart run flutter_launcher_icons` cuando cambia
+  # el logo — no es runtime dep.
+  flutter_launcher_icons: ^0.14.1
+  # Generador de splash screen Android (incluye Android 12+) e iOS.
+  # Se invoca con `dart run flutter_native_splash:create` cuando cambia
+  # el logo o el color de fondo — no es runtime dep.
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icono-log-viticultura.png
+
+# Configuración del generador de iconos del lanzador.
+# Regenerar tras cambiar el PNG con:
+#   cd apps/solera-viticultura && dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icono-log-viticultura.png"
+  min_sdk_android: 21
+  # Adaptive icon (Android 8+). El fondo es la crema panal/savia que
+  # ya viene en el PNG; lo replicamos en background_color para que el
+  # foreground (la hoja con sus berries) quede centrado en cualquier
+  # forma de máscara que aplique el lanzador.
+  adaptive_icon_background: "#F6E8D2"
+  adaptive_icon_foreground: "assets/icono-log-viticultura.png"
+
+# Configuración del splash screen — pantalla de arranque.
+# Regenerar tras cambiar el PNG o el color con:
+#   cd apps/solera-viticultura && dart run flutter_native_splash:create
+# Crema burdeos (`#F6E8D2`) en fondo + logo viticultura centrado.
+# Android 12+ usa la API nativa: el icono va en `android_12.image` y
+# se recorta a círculo automáticamente, así que aprovechamos el mismo
+# PNG (la hoja queda inscrita).
+flutter_native_splash:
+  color: "#F6E8D2"
+  image: assets/icono-log-viticultura.png
+  android: true
+  ios: false
+  android_12:
+    color: "#F6E8D2"
+    image: assets/icono-log-viticultura.png

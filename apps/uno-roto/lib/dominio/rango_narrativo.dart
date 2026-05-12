@@ -53,3 +53,21 @@ RangoNarrativo rangoSegunEsquirlas(int esquirlas) {
   if (esquirlas >= 30) return RangoNarrativo.aprendiz2;
   return RangoNarrativo.aprendiz1;
 }
+
+/// Nombre del rango en el formato usado por `skills.json` (p. ej.
+/// `'Iniciado_II'`) según el total de esquirlas acumuladas. Se usa para
+/// filtrar habilidades cuyo [rangoExigido] supera el rango actual del
+/// niño.
+///
+/// Los umbrales están alineados con la progresión de los distritos
+/// (0 esquirlas → Tejados, 150 → Montaña) para que el filtro por rango
+/// y el desbloqueo por esquirlas cooperen, no se solapen.
+String rangoStringSegunEsquirlas(int esquirlas) {
+  if (esquirlas >= 500) return 'Fraccionista';
+  if (esquirlas >= 300) return 'Iniciado_III';
+  if (esquirlas >= 200) return 'Iniciado_II';
+  if (esquirlas >= 150) return 'Iniciado_I';
+  if (esquirlas >= 100) return 'Aprendiz_III';
+  if (esquirlas >= 30) return 'Aprendiz_II';
+  return 'Aprendiz_I';
+}

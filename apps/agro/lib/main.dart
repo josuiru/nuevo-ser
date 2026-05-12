@@ -1,0 +1,128 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
+import 'pantallas/pantalla_ajustes.dart';
+import 'pantallas/pantalla_guia.dart';
+import 'pantallas/pantalla_hoy.dart';
+import 'pantallas/pantalla_lista_plantas.dart';
+import 'pantallas/pantalla_mapa.dart';
+import 'pantallas/pantalla_meteo_agro.dart';
+import 'pantallas/pantalla_onboarding.dart';
+import 'servicios/grabador_track.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // intl/DateFormat con locale `es_ES` (usado en lista de plantas y
+  // ficha) requiere cargar los datos de localización antes del runApp.
+  // Sin esto, cualquier build que toque DateFormat(..., 'es_ES') lanza
+  // LocaleDataException y deja la pantalla en blanco.
+  await initializeDateFormatting('es_ES', null);
+  // Recupera recorridos GPS que quedaron grabándose si la app murió por
+  // crash o kill OS. Sesiones con ≥2 puntos se consolidan automáticamente
+  // como "Recorrido recuperado DD/MM HH:mm"; las de menos se descartan.
+  unawaited(GrabadorTrack.instancia.consolidarSesionesPendientes());
+  final yaCompletado = await PantallaOnboarding.yaCompletado();
+  runApp(AplicacionSolera(mostrarOnboarding: !yaCompletado));
+}
+
+class AplicacionSolera extends StatelessWidget {
+  final bool mostrarOnboarding;
+  const AplicacionSolera({super.key, this.mostrarOnboarding = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Solera',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF558B2F),
+          brightness: Brightness.light,
+        ),
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF5F1E8),
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF558B2F),
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      initialRoute: mostrarOnboarding ? '/onboarding' : '/',
+      routes: {
+        '/': (_) => const PantallaPrincipal(),
+        '/onboarding': (_) => const PantallaOnboarding(),
+      },
+    );
+  }
+}
+
+class PantallaPrincipal extends StatefulWidget {
+  const PantallaPrincipal({super.key});
+
+  @override
+  State<PantallaPrincipal> createState() => _PantallaPrincipalState();
+}
+
+class _PantallaPrincipalState extends State<PantallaPrincipal> {
+  int _indice = 0;
+
+  // IndexedStack mantiene el estado de cada pantalla al saltar entre
+  // pestañas (no se pierde el zoom del mapa, los filtros aplicados, ni
+  // la posición del scroll). Las pantallas que necesiten refrescar al
+  // entrar lo hacen explícitamente en su initState.
+  final _pantallas = const <Widget>[
+    PantallaHoy(),
+    PantallaMapa(),
+    PantallaMeteoAgro(),
+    PantallaListaPlantas(),
+    PantallaGuia(),
+    PantallaAjustes(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(index: _indice, children: _pantallas),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _indice,
+        onDestinationSelected: (i) => setState(() => _indice = i),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.today_outlined),
+            selectedIcon: Icon(Icons.today),
+            label: 'Hoy',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.map_outlined),
+            selectedIcon: Icon(Icons.map),
+            label: 'Mapa',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.cloud_outlined),
+            selectedIcon: Icon(Icons.cloud),
+            label: 'Meteo',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.eco_outlined),
+            selectedIcon: Icon(Icons.eco),
+            label: 'Plantas',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
+            label: 'Guía',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Ajustes',
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -18,11 +18,29 @@ class SessionPayload {
   final int duracionSegundos;
   final DateTime instante;
 
+  /// **P2 — clase real**: `true` si el caso pertenece a la clase
+  /// positiva (la "señal"), `false` si negativo. `null` para perfiles
+  /// que no requieren clasificación binaria (P1, P4).
+  final bool? senalEsperada;
+
+  /// **P2 — clase predicha**: lo que la persona dijo. Si [acierto] es
+  /// true, [clasePredicha] == [senalEsperada]; si false, la opuesta.
+  /// `null` cuando [senalEsperada] es null.
+  final bool? clasePredicha;
+
+  /// **P3 — componentes de rúbrica** 0..1. Claves esperadas: `a`
+  /// (anclaje), `c` (calibración), `p` (completud), `f` (ausencia de
+  /// falacias). `null` para intentos no rúbrica.
+  final Map<String, double>? componentesRubrica;
+
   const SessionPayload({
     required this.acierto,
     required this.dificultad,
     required this.duracionSegundos,
     required this.instante,
+    this.senalEsperada,
+    this.clasePredicha,
+    this.componentesRubrica,
   });
 }
 
@@ -87,6 +105,41 @@ class ProfileConfig {
     precisionMinSesionBuena: 0.75,
     gapHorasNuevaSesion: 4,
     maxIntentosRecientes: 20,
+  );
+
+  /// Configuración por defecto del perfil P2 (detección F1). Los
+  /// umbrales se reinterpretan como F1 ≥ {0.85, 0.70, 0.40}: P2 usa los
+  /// mismos campos del struct pero la métrica es F1 en lugar de
+  /// precisión simple. Bajado respecto a P1 porque F1 castiga
+  /// asimétricamente falsos positivos y negativos — exigir 0.90 sería
+  /// inalcanzable con clases moderadamente desbalanceadas.
+  static const ProfileConfig defaultP2 = ProfileConfig(
+    umbralPrecisionMaestria: 0.85,
+    umbralPrecisionCompetente: 0.70,
+    umbralPrecisionEnDesarrollo: 0.40,
+    exposicionesMinMaestria: 20,
+    sesionesConsecutivasMinMaestria: 5,
+    sesionesConsecutivasMinCompetente: 3,
+    precisionMinSesionBuena: 0.70,
+    gapHorasNuevaSesion: 4,
+    maxIntentosRecientes: 20,
+  );
+
+  /// Configuración por defecto del perfil P3 (rúbrica compuesta). Los
+  /// umbrales se reinterpretan como puntuación rúbrica ≥ {0.85, 0.70,
+  /// 0.40}: P3 calcula promedio ponderado de los cuatro componentes
+  /// (anclaje·0.35 + calibración·0.25 + completud·0.25 + ausencia
+  /// falacias·0.15) sobre los últimos N intentos.
+  static const ProfileConfig defaultP3 = ProfileConfig(
+    umbralPrecisionMaestria: 0.85,
+    umbralPrecisionCompetente: 0.70,
+    umbralPrecisionEnDesarrollo: 0.40,
+    exposicionesMinMaestria: 12,
+    sesionesConsecutivasMinMaestria: 4,
+    sesionesConsecutivasMinCompetente: 2,
+    precisionMinSesionBuena: 0.70,
+    gapHorasNuevaSesion: 4,
+    maxIntentosRecientes: 12,
   );
 }
 

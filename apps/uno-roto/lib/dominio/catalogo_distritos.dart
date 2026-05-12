@@ -6,7 +6,7 @@ import 'fragmento_en_tejado.dart';
 /// Catálogo fijo de distritos del MVP. Posiciones en el mapa siguen la
 /// biblia §3.4: Tejados en el centro, Canales al oeste, Mercado al este,
 /// Industria al sur, Puerto más al sur todavía, Afueras al noroeste, y
-/// la Montaña en lo alto (inalcanzable).
+/// la Montaña en lo alto (Era 3).
 class CatalogoDistritos {
   CatalogoDistritos._();
 
@@ -19,9 +19,18 @@ class CatalogoDistritos {
     xMapa: 0.5,
     yMapa: 0.45,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.unitario: 0.65,
-      TipoFragmentoEnTejado.espejo: 0.25,
-      TipoFragmentoEnTejado.decimal: 0.1,
+      TipoFragmentoEnTejado.unitario: 0.16,
+      TipoFragmentoEnTejado.sumaBasica: 0.07,
+      TipoFragmentoEnTejado.lecturaFraccion: 0.09,
+      TipoFragmentoEnTejado.lecturaDecimal: 0.07,
+      TipoFragmentoEnTejado.comparacion: 0.10,
+      TipoFragmentoEnTejado.comparacionUnidad: 0.08,
+      TipoFragmentoEnTejado.comparacionMedia: 0.07,
+      TipoFragmentoEnTejado.espejo: 0.10,
+      TipoFragmentoEnTejado.multiplos: 0.08,
+      TipoFragmentoEnTejado.simplificar: 0.07,
+      TipoFragmentoEnTejado.amplificar: 0.07,
+      TipoFragmentoEnTejado.porcentaje: 0.04,
     },
     saludoPrimeraVisita: 'Tejados. Lo básico. Aquí te haces la mano.',
   );
@@ -29,19 +38,28 @@ class CatalogoDistritos {
   static const Distrito canales = Distrito(
     identificador: 'canales',
     nombre: 'Barrio de los Canales',
-    descripcionCorta: 'Donde los Fragmentos se juntan.',
+    descripcionCorta: 'Donde los Fragmentos se transforman.',
     colorAcento: Color(0xFFFF9A6B),
     esquirlasParaDesbloquear: 20,
     xMapa: 0.22,
     yMapa: 0.55,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.unitario: 0.2,
-      TipoFragmentoEnTejado.espejo: 0.25,
-      TipoFragmentoEnTejado.dual: 0.45,
-      TipoFragmentoEnTejado.decimal: 0.1,
+      TipoFragmentoEnTejado.dual: 0.12,
+      TipoFragmentoEnTejado.comparacionDecimal: 0.08,
+      TipoFragmentoEnTejado.comparacionDistinta: 0.08,
+      TipoFragmentoEnTejado.redondeoDecimal: 0.08,
+      TipoFragmentoEnTejado.mixtoAImpropio: 0.08,
+      TipoFragmentoEnTejado.espejo: 0.08,
+      TipoFragmentoEnTejado.simplificar: 0.08,
+      TipoFragmentoEnTejado.amplificar: 0.08,
+      TipoFragmentoEnTejado.ordenarDecimales: 0.07,
+      TipoFragmentoEnTejado.ordenarFracciones: 0.07,
+      TipoFragmentoEnTejado.unitario: 0.06,
+      TipoFragmentoEnTejado.decimal: 0.06,
+      TipoFragmentoEnTejado.jerarquia: 0.06,
     },
     saludoPrimeraVisita:
-        'Canales. Aquí los Fragmentos vienen de dos en dos. Fúndelos.',
+        'Canales. Aquí los Fragmentos se transforman. Compáralos.',
   );
 
   static const Distrito mercado = Distrito(
@@ -53,50 +71,77 @@ class CatalogoDistritos {
     xMapa: 0.78,
     yMapa: 0.55,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.porcentaje: 0.4,
-      TipoFragmentoEnTejado.proporcional: 0.3,
-      TipoFragmentoEnTejado.espejo: 0.15,
-      TipoFragmentoEnTejado.unitario: 0.15,
+      TipoFragmentoEnTejado.porcentaje: 0.10,
+      TipoFragmentoEnTejado.porcentajeCantidad: 0.10,
+      TipoFragmentoEnTejado.porcentajeDe: 0.08,
+      TipoFragmentoEnTejado.proporcional: 0.10,
+      TipoFragmentoEnTejado.razon: 0.08,
+      TipoFragmentoEnTejado.reglaDeTres: 0.08,
+      TipoFragmentoEnTejado.fraccionDeCantidad: 0.08,
+      TipoFragmentoEnTejado.aumentoDescuento: 0.08,
+      TipoFragmentoEnTejado.escala: 0.07,
+      TipoFragmentoEnTejado.espejo: 0.06,
+      TipoFragmentoEnTejado.unitario: 0.05,
+      TipoFragmentoEnTejado.decimal: 0.06,
+      TipoFragmentoEnTejado.dual: 0.06,
     },
     saludoPrimeraVisita:
-        'Mercado de la Luz. Aquí todo se intercambia. Presta atención.',
+        'Mercado de la Luz. Proporciones e intercambios.',
   );
 
   static const Distrito industria = Distrito(
     identificador: 'industria',
     nombre: 'Zona Industrial',
-    descripcionCorta: 'Medidas exactas, decimales.',
+    descripcionCorta: 'Medidas exactas y operaciones.',
     colorAcento: Color(0xFF7EE8D7),
     esquirlasParaDesbloquear: 60,
     xMapa: 0.5,
     yMapa: 0.72,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.decimal: 0.35,
-      TipoFragmentoEnTejado.operacionDecimal: 0.25,
-      TipoFragmentoEnTejado.impropio: 0.15,
-      TipoFragmentoEnTejado.unitario: 0.15,
-      TipoFragmentoEnTejado.porcentaje: 0.1,
+      TipoFragmentoEnTejado.decimal: 0.11,
+      TipoFragmentoEnTejado.operacionDecimal: 0.11,
+      TipoFragmentoEnTejado.longitud: 0.08,
+      TipoFragmentoEnTejado.masaCapacidad: 0.08,
+      TipoFragmentoEnTejado.tiempo: 0.07,
+      TipoFragmentoEnTejado.superficie: 0.07,
+      TipoFragmentoEnTejado.angulo: 0.06,
+      TipoFragmentoEnTejado.jerarquia: 0.07,
+      TipoFragmentoEnTejado.jerarquiaFracciones: 0.05,
+      TipoFragmentoEnTejado.operacionMixta: 0.06,
+      TipoFragmentoEnTejado.ordenarDecimales: 0.06,
+      TipoFragmentoEnTejado.lecturaDecimal: 0.06,
+      TipoFragmentoEnTejado.impropio: 0.06,
+      TipoFragmentoEnTejado.dual: 0.06,
     },
     saludoPrimeraVisita:
-        'Industria. Aquí no valen los aproximados. Cifra por cifra.',
+        'Industria. Medidas exactas, cifra por cifra.',
   );
 
   static const Distrito puerto = Distrito(
     identificador: 'puerto',
     nombre: 'Puerto Silencioso',
-    descripcionCorta: 'Aguas profundas. Pesos pesados.',
+    descripcionCorta: 'Aguas profundas. Divisibilidad y orden.',
     colorAcento: Color(0xFF4DC9FF),
     esquirlasParaDesbloquear: 80,
     xMapa: 0.5,
     yMapa: 0.88,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.unitario: 0.35,
-      TipoFragmentoEnTejado.impropio: 0.3,
-      TipoFragmentoEnTejado.dual: 0.2,
-      TipoFragmentoEnTejado.espejo: 0.15,
+      TipoFragmentoEnTejado.divisibilidad: 0.09,
+      TipoFragmentoEnTejado.divisores: 0.08,
+      TipoFragmentoEnTejado.mcmMcd: 0.08,
+      TipoFragmentoEnTejado.primo: 0.08,
+      TipoFragmentoEnTejado.multiplos: 0.07,
+      TipoFragmentoEnTejado.impropio: 0.08,
+      TipoFragmentoEnTejado.dual: 0.12,
+      TipoFragmentoEnTejado.espejo: 0.10,
+      TipoFragmentoEnTejado.media: 0.08,
+      TipoFragmentoEnTejado.modaMediana: 0.06,
+      TipoFragmentoEnTejado.probabilidad: 0.06,
+      TipoFragmentoEnTejado.probabilidadPorcentaje: 0.05,
+      TipoFragmentoEnTejado.decimal: 0.05,
     },
     saludoPrimeraVisita:
-        'Puerto. Aquí los Fragmentos son grandes. No tengas prisa.',
+        'Puerto. Divisibilidad y estadística. Las aguas están muy claras.',
   );
 
   static const Distrito afueras = Distrito(
@@ -108,14 +153,46 @@ class CatalogoDistritos {
     xMapa: 0.22,
     yMapa: 0.28,
     mezclaPuzzles: {
-      TipoFragmentoEnTejado.proporcional: 0.3,
-      TipoFragmentoEnTejado.porcentaje: 0.2,
-      TipoFragmentoEnTejado.decimal: 0.2,
-      TipoFragmentoEnTejado.espejo: 0.15,
-      TipoFragmentoEnTejado.dual: 0.15,
+      TipoFragmentoEnTejado.poligono: 0.08,
+      TipoFragmentoEnTejado.perimetro: 0.08,
+      TipoFragmentoEnTejado.areaRectangulo: 0.08,
+      TipoFragmentoEnTejado.areaTriangulo: 0.07,
+      TipoFragmentoEnTejado.circulo: 0.07,
+      TipoFragmentoEnTejado.volumen: 0.06,
+      TipoFragmentoEnTejado.simetria: 0.06,
+      TipoFragmentoEnTejado.graficoBarras: 0.07,
+      TipoFragmentoEnTejado.graficoCircular: 0.07,
+      TipoFragmentoEnTejado.ecuacionLineal: 0.06,
+      TipoFragmentoEnTejado.proporcional: 0.06,
+      TipoFragmentoEnTejado.porcentaje: 0.06,
+      TipoFragmentoEnTejado.escala: 0.06,
+      TipoFragmentoEnTejado.razon: 0.06,
+      TipoFragmentoEnTejado.decimal: 0.06,
     },
     saludoPrimeraVisita:
-        'Afueras. Aquí se ve el horizonte. Y la Montaña.',
+        'Afueras. Geometría, gráficos y horizonte.',
+  );
+
+  static const Distrito montana = Distrito(
+    identificador: 'montana',
+    nombre: 'La Montaña',
+    descripcionCorta: 'Donde los Fragmentos son abstractos.',
+    colorAcento: Color(0xFFFFE4B5),
+    esquirlasParaDesbloquear: 150,
+    xMapa: 0.5,
+    yMapa: 0.15,
+    mezclaPuzzles: {
+      TipoFragmentoEnTejado.potenciaNatural: 0.13,
+      TipoFragmentoEnTejado.raizCuadrada: 0.13,
+      TipoFragmentoEnTejado.pitagoras: 0.13,
+      TipoFragmentoEnTejado.ecuacionAmbosLados: 0.12,
+      TipoFragmentoEnTejado.enteroSigno: 0.12,
+      TipoFragmentoEnTejado.valorAbsoluto: 0.12,
+      TipoFragmentoEnTejado.sistemaDosXDos: 0.12,
+      TipoFragmentoEnTejado.relacionLineal: 0.13,
+    },
+    saludoPrimeraVisita:
+        'La Montaña. Ábaco, álgebra y abstracción.',
   );
 
   static const List<Distrito> todos = [
@@ -125,5 +202,6 @@ class CatalogoDistritos {
     industria,
     puerto,
     afueras,
+    montana,
   ];
 }

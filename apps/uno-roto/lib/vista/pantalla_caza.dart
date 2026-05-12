@@ -19,6 +19,8 @@ import '../dominio/generador_caza.dart';
 import '../dominio/mapeo_habilidades_puzzle.dart';
 import '../dominio/motor_maestria.dart';
 import '../dominio/rango_narrativo.dart';
+import '../dominio/respuesta_puzzle.dart';
+import '../dominio/ayuda_puzzle.dart';
 import '../dominio/problema_comparacion_decimal.dart';
 import '../dominio/problema_comparacion_distinta.dart';
 import '../dominio/problema_ordenar_decimales.dart';
@@ -191,6 +193,13 @@ class _PantallaCazaState extends State<PantallaCaza>
   // Fragmento de ella en la sesión actual; los siguientes sin extra.
   final Set<String> _habilidadesRemontadasEstaSesion = <String>{};
   String? _lineaAmbienteSora;
+  String? _skillPreview;
+  /// Fallback local de fallos consecutivos cuando no hay tutor backend.
+  /// Permite ofrecer ayuda local aunque no haya token de servidor.
+  final Map<String, int> _fallosLocalesConsecutivos = {};
+  final Set<String> _cooldownAyudaLocal = {};
+  Timer? _timerSync;
+  final Map<String, EstadoHabilidad> _estadosCache = {};
   Timer? _temporizadorSpawn;
   Timer? _temporizadorTick;
   Timer? _temporizadorLineaSora;
@@ -263,6 +272,24 @@ class _PantallaCazaState extends State<PantallaCaza>
       estadoTutor: widget.repositorio.estadoTutor,
       proveedorToken: () => token,
     );
+    _iniciarSyncPeriodico(token);
+  }
+
+  /// Sincroniza el progreso cada 10 minutos si hay token.
+  void _iniciarSyncPeriodico(String token) {
+    _timerSync?.cancel();
+    _timerSync = Timer.periodic(const Duration(minutes: 10), (_) async {
+      try {
+        final api = ClienteApi(
+          urlBase: ConfigApi.urlBase,
+          hostOverride: ConfigApi.hostOverride,
+        );
+        final p = await widget.repositorio.exportarProgresoParaSync();
+        final h = await widget.repositorio.exportarHabilidadesParaSync();
+        await api.sincronizar(token: token, progreso: p, habilidades: h);
+        api.cerrar();
+      } catch (_) {}
+    });
   }
 
   Future<void> _inicializarMotorMaestria() async {
@@ -272,16 +299,29 @@ class _PantallaCazaState extends State<PantallaCaza>
       catalogo: catalogo,
       cargarEstado: widget.repositorio.cargarEstadoHabilidad,
       guardarEstado: widget.repositorio.guardarEstadoHabilidad,
-      alSubirNivel: (idHabilidad, nivel) {
+      alSubirNivel: (idHabilidad, nivel) async {
         widget.repositorio.activarFlagNarrativo(
           MotorMaestria.flagDeMaestria(idHabilidad, nivel),
         );
+        // Celebramos subidas a "competente" o "maestría"
+        if (nivel == NivelMaestria.competente) {
+          final nombre = catalogo.porId(idHabilidad)?.nombre ?? idHabilidad;
+          _mostrarLineaAmbienteSora('«$nombre» — ya la tienes.');
+        } else if (nivel == NivelMaestria.maestria) {
+          final nombre = catalogo.porId(idHabilidad)?.nombre ?? idHabilidad;
+          _mostrarLineaAmbienteSora('«$nombre» — dominada.');
+        }
       },
     );
     _selectorHabilidades = SelectorHabilidades(
       catalogo: catalogo,
       cargarEstado: widget.repositorio.cargarEstadoHabilidad,
     );
+    // Precargar estados para _mostrarSkillPreview (evitar async delay)
+    for (final id in catalogo.habilidades.keys) {
+      final estado = await widget.repositorio.cargarEstadoHabilidad(id);
+      if (estado != null) _estadosCache[id] = estado;
+    }
   }
 
   Future<void> _cargarEstadoInicial() async {
@@ -333,6 +373,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     _temporizadorSpawn?.cancel();
     _temporizadorTick?.cancel();
     _temporizadorLineaSora?.cancel();
+    _timerSync?.cancel();
     // Dejamos el ambient sonando pero paramos la música del distrito
     // al volver al mapa — hace que la transición se sienta.
     ServicioSonoro.instancia.detenerCapa(CapaAudio.musica, msFade: 700);
@@ -375,6 +416,7 @@ class _PantallaCazaState extends State<PantallaCaza>
     final idHabilidad = await selector.elegirSiguienteHabilidad(
       distrito: widget.distrito,
       dominioFiltrado: widget.dominioFiltrado,
+      rangoActual: rangoStringSegunEsquirlas(esquirlas),
     );
     if (idHabilidad == null) {
       return _generador.siguiente(
@@ -419,7 +461,24 @@ class _PantallaCazaState extends State<PantallaCaza>
     // puzzle lo incrementa; al volver, [intentosPuzzleActual] nos
     // dice en qué intento acertó el niño y escalamos las esquirlas.
     reiniciarIntentosPuzzle();
+    // Mostrar el nombre de la skill antes de abrir el puzzle
+    _mostrarSkillPreview(fragmento);
+    await Future.delayed(const Duration(milliseconds: 2400));
+    if (!mounted) return;
     final capturado = await _abrirPuzzleSegunTipo(fragmento);
+    // Si la pantalla de puzzle no registró su propia respuesta
+    // (vía UltimaRespuestaPuzzle), registramos una genérica desde
+    // el Fragmento para que el tutor IA tenga contexto.
+    if (UltimaRespuestaPuzzle.ultima == null && capturado == true) {
+      final (pregunta, _) = _descripcionPuzzle(fragmento);
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '(no capturada)',
+        respuestaCorrecta: '(no disponible)',
+        preguntaTexto: pregunta,
+        opciones: [],
+      ));
+    }
     if (!mounted) return;
     final intentos = intentosPuzzleActual;
     // Leemos la precisión histórica ANTES de registrar el nuevo
@@ -1465,16 +1524,25 @@ class _PantallaCazaState extends State<PantallaCaza>
   }
 
   /// Registra el resultado en el contador del tutor (fallos
-  /// consecutivos por habilidad). Silencioso si no hay servicio:
-  /// modo offline, sin token, etc.
+  /// consecutivos por habilidad). También lleva un conteo local
+  /// para ofrecer ayuda aunque no haya backend.
   Future<void> _registrarEnTutor(
     FragmentoEnTejado fragmento,
     bool acertado,
   ) async {
+    final id = idHabilidadPrincipal(fragmento);
+    // Conteo local (siempre, incluso sin backend)
+    if (acertado) {
+      _fallosLocalesConsecutivos[id] = 0;
+    } else {
+      _fallosLocalesConsecutivos[id] =
+          (_fallosLocalesConsecutivos[id] ?? 0) + 1;
+    }
+    // Conteo remoto (solo si hay backend)
     final servicio = _servicioTutor;
     if (servicio == null) return;
     await servicio.registrarResultado(
-      idHabilidad: idHabilidadPrincipal(fragmento),
+      idHabilidad: id,
       acierto: acertado,
     );
   }
@@ -1487,9 +1555,21 @@ class _PantallaCazaState extends State<PantallaCaza>
   /// pocos minutos. Si la sigue necesitando, el contador del tutor
   /// se mantiene: cuando expire el cooldown volverá a ofrecerse.
   Future<void> _quizasOfrecerTutor(FragmentoEnTejado fragmento) async {
-    final servicio = _servicioTutor;
-    if (servicio == null) return;
     final idHabilidad = idHabilidadPrincipal(fragmento);
+    final servicio = _servicioTutor;
+
+    // Fallback local: si no hay tutor backend pero el niño ha fallado
+    // 3+ veces, ofrecemos la ayuda local de AyudaPuzzle.
+    if (servicio == null) {
+      final fallos = _fallosLocalesConsecutivos[idHabilidad] ?? 0;
+      if (fallos < 3) return;
+      if (_cooldownAyudaLocal.contains(idHabilidad)) return;
+      _cooldownAyudaLocal.add(idHabilidad);
+      if (!mounted) return;
+      await _mostrarAyudaLocal(fragmento);
+      return;
+    }
+
     if (!await servicio.deberiaOfrecer(idHabilidad)) return;
     if (!mounted) return;
     final nombreHabilidad = _nombreVisibleDeHabilidad(idHabilidad);
@@ -1561,6 +1641,127 @@ class _PantallaCazaState extends State<PantallaCaza>
     );
   }
 
+  /// Muestra ayuda local (sin backend) usando la explicación de
+  /// AyudaPuzzle. Se dispara tras 3 fallos consecutivos si no hay
+  /// tutor remoto disponible.
+  Future<void> _mostrarAyudaLocal(FragmentoEnTejado fragmento) async {
+    final (titulo, texto, transferencia) = AyudaPuzzle.paraTipo(fragmento.tipo);
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.6),
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: PaletaNeon.textoTenue.withOpacity(0.2),
+          ),
+        ),
+        title: Text(
+          titulo,
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 1.5,
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                texto,
+                style: const TextStyle(
+                  color: PaletaNeon.textoTenue,
+                  fontSize: 14,
+                  height: 1.6,
+                ),
+              ),
+              if (transferencia.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: PaletaNeon.fondoProfundo.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '\u{1F4A1} ',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      Expanded(
+                        child: Text(
+                          transferencia,
+                          style: const TextStyle(
+                            color: PaletaNeon.textoPrincipal,
+                            fontSize: 13,
+                            height: 1.4,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text(
+              'SEGUIR',
+              style: TextStyle(
+                color: PaletaNeon.violetaNeon,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Muestra brevemente el nombre de la skill antes de abrir el puzzle.
+  void _mostrarSkillPreview(FragmentoEnTejado fragmento) async {
+    final id = idHabilidadPrincipal(fragmento);
+    final nombre = _nombreVisibleDeHabilidad(id);
+    final (_, _, transferencia) = AyudaPuzzle.paraTipo(fragmento.tipo);
+    // Incluir el nivel actual de la skill (desde cache)
+    final estado = _estadosCache[id];
+    final nivelTexto = _nivelLocalizado(estado?.nivel);
+    final lineaNivel = nivelTexto != null ? ' · $nivelTexto' : '';
+    final texto = transferencia.isNotEmpty
+        ? '$nombre$lineaNivel\n$transferencia'
+        : '$nombre$lineaNivel';
+    setState(() => _skillPreview = texto);
+    Future.delayed(const Duration(milliseconds: 2600), () {
+      if (!mounted) return;
+      setState(() {
+        if (_skillPreview == texto) _skillPreview = null;
+      });
+    });
+  }
+
+  String? _nivelLocalizado(NivelMaestria? nivel) {
+    if (nivel == null || nivel == NivelMaestria.inexplorada) return null;
+    final textos = AppLocalizations.of(context);
+    return switch (nivel) {
+      NivelMaestria.introducida => textos.habNivelIntroducida,
+      NivelMaestria.enDesarrollo => textos.habNivelEnDesarrollo,
+      NivelMaestria.competente => textos.habNivelCompetente,
+      NivelMaestria.maestria => textos.habNivelMaestria,
+      _ => null,
+    };
+  }
+
   String _nombreVisibleDeHabilidad(String id) {
     final catalogo = _selectorHabilidades?.catalogo;
     if (catalogo == null) return id;
@@ -1572,7 +1773,370 @@ class _PantallaCazaState extends State<PantallaCaza>
   /// qué tiene delante.
   String _contextoFragmento(FragmentoEnTejado fragmento) {
     final tipo = fragmento.tipo.name;
-    return '$tipo n=${fragmento.numerador} d=${fragmento.denominador}';
+    final skillId = idHabilidadPrincipal(fragmento);
+    final habilidad = _selectorHabilidades?.catalogo.porId(skillId);
+    final nombre = habilidad?.nombre ?? skillId;
+    final (pregunta, errorTipico) = _descripcionPuzzle(fragmento);
+    final intentos = intentosPuzzleActual;
+    final acertado = intentos <= 1;
+
+    // Si el puzzle registró la respuesta concreta, la usamos.
+    final respuesta = UltimaRespuestaPuzzle.ultima;
+    UltimaRespuestaPuzzle.limpiar();
+
+    final respuestaTexto = respuesta != null
+        ? '''
+Respuesta del niño: ${respuesta.respuestaDelNino}
+Respuesta correcta: ${respuesta.respuestaCorrecta}
+Opciones: ${respuesta.opciones.join(' | ')}
+Pregunta exacta: ${respuesta.preguntaTexto}'''
+        : '';
+
+    return '''
+Skill: $skillId ($nombre)
+Tipo: $tipo n=${fragmento.numerador} d=${fragmento.denominador}
+Pregunta: $pregunta
+Resultado: ${acertado ? 'acertado a la primera' : 'falló $intentos veces antes de acertar'}
+Error típico en esta skill: $errorTipico$respuestaTexto''';
+  }
+
+  /// Describe qué pregunta plantea este Fragmento y cuál es el error
+  /// más común, para que el tutor IA pueda contextualizar la ayuda.
+  (String pregunta, String errorTipico) _descripcionPuzzle(
+      FragmentoEnTejado f) {
+    switch (f.tipo) {
+      case TipoFragmentoEnTejado.unitario:
+        return (
+          'cortar ${f.numerador}/${f.denominador} en partes iguales',
+          'confundir el número de cortes con el número de partes'
+        );
+      case TipoFragmentoEnTejado.comparacion:
+        final esMismoNum = f.modoComparacion == ModoComparacion.mismoNumerador;
+        return (
+          esMismoNum
+              ? '¿qué fracción es mayor? mismo numerador'
+              : '¿qué fracción es mayor? mismo denominador',
+          esMismoNum
+              ? 'creer que denominador mayor = fracción mayor'
+              : 'confundir numerador y denominador'
+        );
+      case TipoFragmentoEnTejado.comparacionDistinta:
+        return (
+          '¿qué fracción es mayor? sin nada en común',
+          'comparar solo numeradores o solo denominadores en vez de multiplicar en cruz'
+        );
+      case TipoFragmentoEnTejado.comparacionUnidad:
+        return (
+          '¿${f.numerador}/${f.denominador} es <1, =1 o >1?',
+          'creer que numerador < denominador significa <1 (falso si es impropia)'
+        );
+      case TipoFragmentoEnTejado.comparacionMedia:
+        return (
+          '¿${f.numerador}/${f.denominador} es <1/2, =1/2 o >1/2?',
+          'comparar numerador y denominador directamente sin aplicar 2n > d'
+        );
+      case TipoFragmentoEnTejado.espejo:
+        return (
+          'elegir la fracción equivalente a ${f.numerador}/${f.denominador}',
+          'multiplicar numerador pero no denominador, o viceversa'
+        );
+      case TipoFragmentoEnTejado.simplificar:
+        return (
+          'simplificar ${f.numerador}/${f.denominador} al máximo',
+          'no encontrar el MCD o simplificar solo un término'
+        );
+      case TipoFragmentoEnTejado.amplificar:
+        return (
+          'completar la fracción equivalente: ${f.numerador}/${f.denominador} = ?/${f.denominadorB ?? 0}',
+          'multiplicar por el factor equivocado o sumar en vez de multiplicar'
+        );
+      case TipoFragmentoEnTejado.decimal:
+        return (
+          'elegir el decimal que equivale a ${f.numerador}/${f.denominador}',
+          'confundir décimas con centésimas'
+        );
+      case TipoFragmentoEnTejado.porcentaje:
+        return (
+          'elegir el porcentaje equivalente a la fracción',
+          'confundir % con decimal'
+        );
+      case TipoFragmentoEnTejado.dual:
+        final op = f.operador?.simbolo ?? '+';
+        return (
+          'calcular ${f.numerador}/${f.denominador} $op ${f.numeradorB}/${f.denominadorB}',
+          'sumar numeradores sin igualar denominadores o confundir la operación'
+        );
+      case TipoFragmentoEnTejado.operacionDecimal:
+        final op = f.operador?.simbolo ?? '+';
+        return (
+          'calcular ${f.decimalA ?? ''} $op ${f.decimalB ?? ''}',
+          'colocar mal la coma decimal o no alinear cifras'
+        );
+      case TipoFragmentoEnTejado.jerarquia:
+        return (
+          'calcular respetando prioridad de × y ÷',
+          'operar de izquierda a derecha sin respetar jerarquía'
+        );
+      case TipoFragmentoEnTejado.jerarquiaFracciones:
+        return (
+          'calcular con fracciones respetando prioridad de × y ÷',
+          'operar izquierda a derecha sin respetar jerarquía ni igualar denominadores'
+        );
+      case TipoFragmentoEnTejado.operacionMixta:
+        return (
+          'calcular operación mixta decimal + fracción',
+          'convertir mal la fracción a decimal o viceversa'
+        );
+      case TipoFragmentoEnTejado.divisibilidad:
+        final divisor = f.denominador;
+        return (
+          '¿el número es divisible entre $divisor?',
+          'aplicar mal el criterio de divisibilidad o confundir múltiplo con divisor'
+        );
+      case TipoFragmentoEnTejado.multiplos:
+        return (
+          '¿el número es múltiplo?',
+          'confundir múltiplo con divisor'
+        );
+      case TipoFragmentoEnTejado.divisores:
+        return (
+          'tres son divisores, tocar el que NO lo es',
+          'no comprobar la división exacta'
+        );
+      case TipoFragmentoEnTejado.primo:
+        return (
+          '¿${f.numerador} es primo?',
+          'olvidar que 1 no es primo, o creer que impar = primo'
+        );
+      case TipoFragmentoEnTejado.mcmMcd:
+        final esMcd = f.etiquetaDecimal == 'mcd';
+        return (
+          esMcd ? 'calcular el MCD' : 'calcular el MCM',
+          esMcd
+              ? 'confundir MCD con MCM, o escoger el menor sin descomponer'
+              : 'confundir MCM con MCD, o multiplicar sin eliminar comunes'
+        );
+      case TipoFragmentoEnTejado.porcentajeCantidad:
+        return (
+          'calcular el porcentaje de una cantidad',
+          'multiplicar sin dividir entre 100, o confundir % con el número literal'
+        );
+      case TipoFragmentoEnTejado.porcentajeDe:
+        return (
+          '¿qué porcentaje representa una parte del total?',
+          'poner parte/total al revés o no multiplicar por 100'
+        );
+      case TipoFragmentoEnTejado.aumentoDescuento:
+        return (
+          'calcular aumento o descuento porcentual',
+          'calcular solo la variación sin sumarla/restarla, o confundir aumento con descuento'
+        );
+      case TipoFragmentoEnTejado.proporcional:
+        return (
+          'completar la proporción',
+          'aplicar la relación al revés'
+        );
+      case TipoFragmentoEnTejado.reglaDeTres:
+        return (
+          'regla de tres directa',
+          'invertir la relación (multiplicar los términos equivocados)'
+        );
+      case TipoFragmentoEnTejado.razon:
+        return (
+          'elegir la razón reducida',
+          'no simplificar o confundir el orden de los términos'
+        );
+      case TipoFragmentoEnTejado.fraccionDeCantidad:
+        return (
+          'calcular la fracción de una cantidad',
+          'multiplicar sin dividir, o dividir sin multiplicar'
+        );
+      case TipoFragmentoEnTejado.escala:
+        return (
+          'aplicar escala y convertir unidades',
+          'olvidar la conversión de unidades o confundir escala'
+        );
+      case TipoFragmentoEnTejado.lecturaFraccion:
+        return (
+          'leer el texto y elegir la fracción correcta',
+          'invertir numerador y denominador'
+        );
+      case TipoFragmentoEnTejado.lecturaDecimal:
+        return (
+          'leer el texto y elegir el decimal correcto',
+          'confundir décimas con centésimas o leer mal las cifras'
+        );
+      case TipoFragmentoEnTejado.redondeoDecimal:
+        return (
+          'redondear ${f.numerador},${f.denominador} a la décima',
+          'truncar en vez de redondear, o redondear mal la centésima 5'
+        );
+      case TipoFragmentoEnTejado.comparacionDecimal:
+        return (
+          'tocar el decimal mayor',
+          'elegir el de más cifras en vez del de mayor valor'
+        );
+      case TipoFragmentoEnTejado.ordenarDecimales:
+        return (
+          'ordenar decimales de menor a mayor',
+          'ordenar por número de cifras en vez de por valor posicional'
+        );
+      case TipoFragmentoEnTejado.ordenarFracciones:
+        return (
+          'ordenar fracciones de menor a mayor',
+          'ordenar solo por numerador o solo por denominador'
+        );
+      case TipoFragmentoEnTejado.impropio:
+        return (
+          'convertir fracción impropia a número mixto',
+          'poner el resto como numerador sin cambiar el denominador'
+        );
+      case TipoFragmentoEnTejado.mixtoAImpropio:
+        return (
+          'convertir número mixto a fracción impropia',
+          'multiplicar sin sumar, o sumar sin multiplicar'
+        );
+      case TipoFragmentoEnTejado.longitud:
+        return (
+          'convertir unidades de longitud',
+          'aplicar el factor equivocado (×10 en vez de ×100, o dirección contraria)'
+        );
+      case TipoFragmentoEnTejado.masaCapacidad:
+        return (
+          'convertir unidades de masa o capacidad',
+          'aplicar el factor lineal del metro a litros o gramos'
+        );
+      case TipoFragmentoEnTejado.superficie:
+        return (
+          'convertir unidades de superficie',
+          'aplicar factor lineal (×10) en vez de ×100 por peldaño'
+        );
+      case TipoFragmentoEnTejado.tiempo:
+        return (
+          'convertir unidades de tiempo (horas, minutos, segundos)',
+          'tratar el tiempo como decimal (base 60 vs base 10)'
+        );
+      case TipoFragmentoEnTejado.angulo:
+        return (
+          'clasificar el ángulo por su abertura',
+          'confundir obtuso con agudo, o no identificar el recto exacto'
+        );
+      case TipoFragmentoEnTejado.poligono:
+        return (
+          'nombrar el polígono por su número de lados',
+          'confundir el nombre (pentágono por hexágono)'
+        );
+      case TipoFragmentoEnTejado.perimetro:
+        return (
+          'calcular el perímetro del polígono',
+          'olvidar un lado o sumar solo la base y la altura'
+        );
+      case TipoFragmentoEnTejado.areaRectangulo:
+        return (
+          'calcular el área del rectángulo',
+          'calcular el perímetro en vez del área'
+        );
+      case TipoFragmentoEnTejado.areaTriangulo:
+        return (
+          'calcular el área del triángulo (b × h / 2)',
+          'olvidar dividir entre 2'
+        );
+      case TipoFragmentoEnTejado.circulo:
+        return (
+          'calcular área o perímetro del círculo con π',
+          'confundir área con perímetro, o usar diámetro en vez de radio'
+        );
+      case TipoFragmentoEnTejado.volumen:
+        return (
+          'calcular el volumen del ortoedro (l × a × h)',
+          'calcular el área superficial en vez del volumen'
+        );
+      case TipoFragmentoEnTejado.simetria:
+        return (
+          '¿la figura es simétrica respecto al eje?',
+          'confundir simetría axial con simetría rotacional'
+        );
+      case TipoFragmentoEnTejado.graficoBarras:
+        return (
+          'leer el valor de una barra en el gráfico',
+          'leer la barra contigua o confundir la escala del eje'
+        );
+      case TipoFragmentoEnTejado.graficoCircular:
+        return (
+          'leer el porcentaje de una porción en el gráfico circular',
+          'leer la porción contigua o confundir fracción visual con porcentaje'
+        );
+      case TipoFragmentoEnTejado.media:
+        return (
+          'calcular la media aritmética',
+          'sumar sin dividir entre la cantidad de elementos'
+        );
+      case TipoFragmentoEnTejado.modaMediana:
+        return (
+          'calcular la moda o la mediana',
+          'confundir moda con mediana o no ordenar los datos'
+        );
+      case TipoFragmentoEnTejado.probabilidad:
+        return (
+          'calcular la probabilidad como fracción',
+          'poner casos favorables y totales al revés'
+        );
+      case TipoFragmentoEnTejado.probabilidadPorcentaje:
+        return (
+          'convertir probabilidad de fracción a porcentaje',
+          'no multiplicar por 100 o confundir numerador y denominador'
+        );
+      case TipoFragmentoEnTejado.sumaBasica:
+        return (
+          'suma básica',
+          'error de cálculo simple'
+        );
+      case TipoFragmentoEnTejado.ecuacionLineal:
+        return (
+          'resolver ecuación lineal simple',
+          'no aislar la incógnita correctamente o error de signo al despejar'
+        );
+      case TipoFragmentoEnTejado.potenciaNatural:
+        return (
+          'calcular potencia natural',
+          'multiplicar base × exponente en vez de base^exponente'
+        );
+      case TipoFragmentoEnTejado.raizCuadrada:
+        return (
+          'calcular raíz cuadrada',
+          'elegir la mitad del número en vez de la raíz'
+        );
+      case TipoFragmentoEnTejado.pitagoras:
+        return (
+          'aplicar Pitágoras',
+          'sumar catetos sin elevar al cuadrado, o no identificar la hipotenusa'
+        );
+      case TipoFragmentoEnTejado.ecuacionAmbosLados:
+        return (
+          'resolver ecuación con incógnita en ambos lados',
+          'no agrupar términos semejantes antes de despejar'
+        );
+      case TipoFragmentoEnTejado.enteroSigno:
+        return (
+          'operar con enteros y signo',
+          'error con la regla de signos (menos × menos = más)'
+        );
+      case TipoFragmentoEnTejado.valorAbsoluto:
+        return (
+          'calcular valor absoluto',
+          'ignorar el valor absoluto y tratar como paréntesis'
+        );
+      case TipoFragmentoEnTejado.sistemaDosXDos:
+        return (
+          'resolver sistema de dos ecuaciones',
+          'no aislar bien una incógnita o error de sustitución'
+        );
+      case TipoFragmentoEnTejado.relacionLineal:
+        return (
+          'encontrar la regla de una relación lineal',
+          'confundir pendiente con ordenada al origen'
+        );
+    }
   }
 
   void _comentarTrasCaptura() {
@@ -1669,6 +2233,38 @@ class _PantallaCazaState extends State<PantallaCaza>
                         },
                       ),
                     ),
+                    if (_skillPreview != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 80),
+                        child: Center(
+                          child: AnimatedOpacity(
+                            opacity: _skillPreview != null ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 300),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: PaletaNeon.fondoMedio.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: PaletaNeon.violetaNeon
+                                      .withOpacity(0.3),
+                                ),
+                              ),
+                              child: Text(
+                                _skillPreview!,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: PaletaNeon.textoPrincipal,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     SoraPresencia(
                       textoActivo: _lineaAmbienteSora == null
                           ? null

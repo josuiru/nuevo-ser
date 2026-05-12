@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../dominio/respuesta_puzzle.dart';
 
 import '../datos/repositorio_progreso.dart';
-import '../dominio/fragmento_en_tejado.dart' show OperadorAritmetico, SimboloOperador;
+import '../dominio/fragmento_en_tejado.dart' show OperadorAritmetico, SimboloOperador, TipoFragmentoEnTejado;
+
 import '../dominio/problema_dual.dart';
 import '../dominio/problema_espejo.dart';
 import '../l10n/app_localizations.dart';
@@ -11,6 +13,8 @@ import 'escenario.dart';
 import 'estado_pista_puzzle.dart';
 import 'overlay_demo_puzzle.dart';
 import '../dominio/contador_intentos_puzzle.dart';
+import 'widgets/boton_ayuda_puzzle.dart';
+import 'widgets/ayuda_tras_fallos.dart';
 
 /// Puzzle de Familia F (Duales). Se muestra una suma a/b + c/d y el
 /// niño elige el resultado correcto entre cuatro candidatos.
@@ -89,6 +93,13 @@ class _PantallaDualState extends State<PantallaDual>
     if (indice == _problema.indiceCorrecto) {
       HapticFeedback.heavyImpact();
       _pista.registrarAcierto();
+      UltimaRespuestaPuzzle.registrar(RespuestaPuzzle(
+        acertado: true,
+        respuestaDelNino: '${_problema.candidatos[indice]}',
+        respuestaCorrecta: '${_problema.candidatos[_problema.indiceCorrecto]}',
+        preguntaTexto: 'elige la opción correcta',
+        opciones: _problema.candidatos.map((c) => '$c').toList(),
+      ));
       Future.delayed(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -97,6 +108,8 @@ class _PantallaDualState extends State<PantallaDual>
       HapticFeedback.vibrate();
       contarFalloPuzzle();
       _pista.registrarFallo();
+      comprobarYAyudarSiProcede(context, _pista, TipoFragmentoEnTejado.dual);
+      if (!mounted) return;
       Future.delayed(const Duration(milliseconds: 900), () {
         if (!mounted) return;
         setState(() => _revelado = false);
@@ -210,6 +223,7 @@ class _PantallaDualState extends State<PantallaDual>
                   ),
                 ),
               ),
+              BotonAyudaPuzzle(destacar: _pista.activa, tipo: TipoFragmentoEnTejado.dual),
               if (_mostrandoDemo)
                 OverlayDemoPuzzle(
                   mensaje: AppLocalizations.of(contexto)

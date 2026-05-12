@@ -9,6 +9,9 @@
 ///   - `src/i18n/`      — utilidades de localización
 ///   - `src/audio/`     — capa sonora, descargador de paquetes
 ///   - `src/narrative/` — sistema de cinemáticas genérico
+///   - `src/foto/`      — captura y persistencia de fotos del usuario
+///   - `src/csv/`       — lectura y escritura de tablas CSV de bajo nivel
+///   - `src/pdf/`       — plantillas de informes PDF con estilo consistente
 ///
 /// Estado de la extracción tras F1.3:
 ///   - mastery:   modelos (`Habilidad`, `EstadoHabilidad`, `IntentoHabilidad`),
@@ -31,6 +34,11 @@ export 'src/audio/capa_audio.dart';
 export 'src/audio/descargador_audio.dart';
 export 'src/audio/repositorio_sugerencia_paquete_audio.dart';
 export 'src/audio/repositorio_version_paquete_audio.dart';
+export 'src/csv/csv_io.dart';
+export 'src/foto/gestor_fotos.dart';
+export 'src/pdf/guardar_pdf.dart';
+export 'src/pdf/informe_periodico.dart';
+export 'src/pdf/widgets_pdf.dart';
 // Nota: el módulo `calibration/` se expone por path explícito desde
 // los juegos que lo necesitan, no desde este barrel — `NivelConfianza`
 // es un nombre que otros juegos (p. ej. el-cuaderno) usan para
@@ -56,7 +64,23 @@ export 'src/storage/gestor_perfiles.dart';
 export 'src/storage/repositorio_avatar_perfil.dart';
 export 'src/storage/repositorio_cuenta_backend.dart';
 export 'src/storage/repositorio_habilidades.dart';
+export 'src/i18n/solera_l10n.dart';
 export 'src/storage/repositorio_idioma_app.dart';
 export 'src/storage/repositorio_preferencias_audio.dart';
 export 'src/sync/cliente_api.dart';
 export 'src/sync/fecha_mysql.dart';
+// Widgets UI compartidos por la suite Solera (Viticultura, Apícola,
+// Arbolado Urbano) y candidatos a otras apps que necesiten formularios
+// con catálogo + IA.
+export 'src/ui/accesos_directos.dart';
+export 'src/ui/barra_busqueda.dart';
+export 'src/ui/banner_coincidencia_catalogo.dart';
+export 'src/ui/cruz_centro_mapa.dart';
+export 'src/ui/campo_autocomplete_catalogo.dart';
+export 'src/ui/dialogo_confirmacion.dart';
+export 'src/ui/galeria_imagenes.dart';
+export 'src/ui/indicador_estado.dart';
+export 'src/ui/selector_fotos.dart';
+export 'src/ui/selector_idioma.dart';
+export 'src/ui/tarjeta_observacion.dart';
+export 'src/ui/tarjeta_resumen.dart';
