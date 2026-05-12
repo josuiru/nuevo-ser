@@ -16,6 +16,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+import 'branding.dart';
 import 'pantallas/pantalla_ajustes.dart';
 import 'pantallas/pantalla_hoy.dart';
 import 'pantallas/pantalla_libro_aceite.dart';
@@ -29,16 +30,6 @@ Future<void> main() async {
   await initializeDateFormatting('es_ES', null);
   runApp(const AppSoleraAceitera());
 }
-
-/// Color primario de la paleta — verde oliva oscuro. Mantenido como
-/// constante top-level para que F1-A8 (branding final) pueda
-/// sustituirlo en un único punto sin tocar el árbol de widgets.
-const Color colorPrimarioAceitera = Color(0xFF5C6B3A);
-
-/// Color de fondo cálido (crema) para `scaffoldBackgroundColor`. Crea
-/// la sensación de campo soleado + papel de cuaderno antiguo, en línea
-/// con el resto de la suite Solera.
-const Color colorCremaAceitera = Color(0xFFF5EFE2);
 
 class AppSoleraAceitera extends StatelessWidget {
   const AppSoleraAceitera({super.key});

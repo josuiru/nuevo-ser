@@ -72,11 +72,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icono-logo-aceitera.png
 
 # Configuración del generador de iconos del lanzador.
-# El logo es placeholder en F1-1; se sustituye en F1-A8 (branding final).
-# Regenerar tras cambiar el PNG con:
-#   cd apps/solera-aceitera && dart run flutter_launcher_icons
+# El logo es PLACEHOLDER (generado con ImageMagick en F1-A8 — aceituna
+# verde oliva sobre fondo crema). El ilustrador debe sustituirlo por el
+# activo definitivo y regenerar con `dart run flutter_launcher_icons`.
 flutter_launcher_icons:
   android: true
   ios: false

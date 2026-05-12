@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../datos/base_datos.dart';
 import '../datos/catalogos_generados/catalogo_variedades_olivo.dart';
 import '../modelos/parcela.dart';
+import '../utiles/permisos_gps.dart';
 
 /// Formulario de alta de una parcela nueva. Sin catálogo curado en
 /// F1-A3 — la variedad y el sistema de riego son texto libre. F1-A6
@@ -26,8 +28,50 @@ class _PantallaNuevaParcelaState extends State<PantallaNuevaParcela> {
   final _edadCtrl = TextEditingController();
   String _sistemaRiego = 'secano';
   bool _guardando = false;
+  bool _capturandoGps = false;
+  double? _latitud;
+  double? _longitud;
 
   static const _opcionesRiego = ['secano', 'superficial', 'goteo', 'aspersion', 'mixto'];
+
+  Future<void> _capturarGps() async {
+    setState(() => _capturandoGps = true);
+    try {
+      final permiso = await asegurarPermisoUbicacion();
+      if (!permiso) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Permiso de ubicación denegado o GPS desactivado. Activa el GPS y reintenta.'),
+          ),
+        );
+        return;
+      }
+      final posicion = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 30),
+      );
+      if (!mounted) return;
+      setState(() {
+        _latitud = posicion.latitude;
+        _longitud = posicion.longitude;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'GPS capturado: ${posicion.latitude.toStringAsFixed(5)}, ${posicion.longitude.toStringAsFixed(5)} (precisión ±${posicion.accuracy.toStringAsFixed(0)} m)'),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error capturando GPS: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _capturandoGps = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -52,6 +96,8 @@ class _PantallaNuevaParcelaState extends State<PantallaNuevaParcela> {
       marcoPlantacion: _marcoCtrl.text.trim(),
       edadMediaAnyos: int.tryParse(_edadCtrl.text) ?? 0,
       sistemaRiego: _sistemaRiego,
+      latitud: _latitud,
+      longitud: _longitud,
       fechaCreacionMs: DateTime.now().millisecondsSinceEpoch,
     );
     await BaseDatosSoleraAceitera().insertarParcela(p);
@@ -157,6 +203,44 @@ class _PantallaNuevaParcelaState extends State<PantallaNuevaParcela> {
                     .toList(),
                 onChanged: (v) =>
                     setState(() => _sistemaRiego = v ?? 'secano'),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _latitud == null
+                            ? Icons.location_off
+                            : Icons.location_on,
+                        color: const Color(0xFF5C6B3A),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _latitud == null
+                              ? 'Sin coordenadas (opcional)'
+                              : 'GPS: ${_latitud!.toStringAsFixed(5)}, ${_longitud!.toStringAsFixed(5)}',
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: _capturandoGps ? null : _capturarGps,
+                        icon: _capturandoGps
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Icon(Icons.my_location),
+                        label: const Text('Capturar GPS'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
               FilledButton(
