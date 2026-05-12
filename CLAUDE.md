@@ -22,7 +22,8 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 │   ├── solera-viticultura/   Solera Viticultura (bodegas pequeñas/medias)
 │   ├── solera-apicola/       Solera Apícola (apicultores 20-200 colmenas)
 │   ├── solera-arbolado-urbano/ Solera Arbolado Urbano (B2B ayuntamientos)
-│   └── solera-quesera/       Solera Quesera (queserías artesanas, F1-5)
+│   ├── solera-quesera/       Solera Quesera (queserías artesanas, F1-5)
+│   └── solera-aceitera/      Solera Aceitera (almazaras pequeñas, F1-A1 esqueleto)
 │
 ├── packages/
 │   ├── nuevo_ser_core/        plataforma compartida (motor maestría, sync, audio, cinemáticas)
@@ -62,12 +63,13 @@ Catálogos curados (`datos_guia.dart`, `datos_minerales.dart`, `cronoestratigraf
 
 ## Suite Solera — verticales especializadas
 
-Cuatro forks de Solera por vertical. Comparten widgets (`CampoAutocompleteCatalogo`, `SelectorFotos`, banners) y servicios (`gestor_fotos`, `csv_io`, `informe_periodico_pdf`) en `nuevo_ser_core/src/ui/`. Catálogos en CSVs en `content/<vertical>/` compilados a Dart.
+Cinco forks de Solera por vertical. Comparten widgets (`CampoAutocompleteCatalogo`, `SelectorFotos`, banners) y servicios (`gestor_fotos`, `csv_io`, `informe_periodico_pdf`) en `nuevo_ser_core/src/ui/`. Catálogos en CSVs en `content/<vertical>/` compilados a Dart.
 
 - **`apps/solera-viticultura/`** — bodegas 5-30 ha. Cuaderno PAC móvil (RD 1311/2012) + IA vid. F1-1 a F1-10 cerradas (provisional). Branding burdeos+crema.
 - **`apps/solera-apicola/`** — apicultores 20-200 colmenas. Libro REGA + gestión varroa + IA apícola. F1A-1 a F1A-8 cerradas (provisional). Branding ámbar+crema.
 - **`apps/solera-arbolado-urbano/`** — B2B ayuntamientos. QR chapa + VTA + multi-operario. F1U-1 a F1U-8 cerradas (provisional). Branding verde+crema.
 - **`apps/solera-quesera/`** — queserías artesanas. Cuaderno APPCC + curación + trazabilidad lotes. F1-5 (catálogos provisionales). Branding dorado+crema.
+- **`apps/solera-aceitera/`** — almazaras pequeñas y medianas (100-2000 hl/campaña). Cuaderno PAC olivar (RD 1311/2012) + libro de movimientos del aceite (RD 760/2021 + AICA) + DOP olivar + IA visual plagas olivar + cierre fiscal REAGP. **F1-A1 esqueleto cerrado**, F1-A2 modelos+BD pendiente. Branding verde oliva+crema.
 
 Detalle de cada una en su `CLAUDE.md` + `BLOQUEOS-PENDIENTES.md`.
 

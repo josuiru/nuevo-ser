@@ -1,0 +1,102 @@
+name: solera_aceitera
+description: "Solera Aceitera — gestor de explotación olivarera y almazara para almazaras pequeñas y medianas. Cuaderno PAC olivar, libro de movimientos del aceite, DOP, IA visual de plagas y enfermedades."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Mapa de las parcelas del olivar (referencia visual + GPS al anotar)
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.4.0
+
+  # GPS y permisos: localización al registrar tratamientos/incidencias
+  geolocator: 12.0.0
+  permission_handler: ^11.3.1
+
+  # Cámara y archivos: fotos antes/después de tratamientos, IA visual
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Almacenamiento local cifrado
+  sqflite: ^2.3.3
+  shared_preferences: ^2.3.2
+
+  # HTTP (cliente Anthropic para IA visual de plagas olivar)
+  http: ^1.2.2
+
+  # Caché de imágenes
+  cached_network_image: ^3.4.1
+
+  # Compartir y exportar (informes PDF + backups)
+  share_plus: ^10.0.2
+  archive: ^3.6.1
+
+  # Utilidades
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+  crypto: ^3.0.7
+
+  # Selector de ficheros (backup/restore)
+  file_picker: ^8.1.4
+
+  # Generación de PDF (cuaderno PAC olivar + libro movimientos del aceite).
+  # `pdf` viene transitivo via nuevo_ser_core; `printing` se queda en la
+  # app para abrir el visor del SO.
+  pdf: ^3.11.1
+  printing: ^5.13.4
+
+  # Plataforma compartida del monorepo
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # Generador de iconos Android (mipmap-*) a partir del PNG fuente.
+  # Sólo se invoca con `dart run flutter_launcher_icons` cuando cambia
+  # el logo — no es runtime dep.
+  flutter_launcher_icons: ^0.14.1
+  # Generador de splash screen Android (incluye Android 12+).
+  # Se invoca con `dart run flutter_native_splash:create` cuando cambia
+  # el logo o el color de fondo — no es runtime dep.
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+
+# Configuración del generador de iconos del lanzador.
+# El logo es placeholder en F1-1; se sustituye en F1-A8 (branding final).
+# Regenerar tras cambiar el PNG con:
+#   cd apps/solera-aceitera && dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icono-logo-aceitera.png"
+  min_sdk_android: 21
+  # Adaptive icon (Android 8+). El fondo es la crema cálida que ya viene
+  # en el PNG; lo replicamos en background_color para que el foreground
+  # (aceituna + rama) quede centrado en cualquier máscara.
+  adaptive_icon_background: "#F5EFE2"
+  adaptive_icon_foreground: "assets/icono-logo-aceitera.png"
+
+# Configuración del splash screen — pantalla de arranque.
+# Regenerar tras cambiar el PNG o el color con:
+#   cd apps/solera-aceitera && dart run flutter_native_splash:create
+# Crema (`#F5EFE2`) en fondo + logo aceitera centrado.
+flutter_native_splash:
+  color: "#F5EFE2"
+  image: assets/icono-logo-aceitera.png
+  android: true
+  ios: false
+  android_12:
+    color: "#F5EFE2"
+    image: assets/icono-logo-aceitera.png

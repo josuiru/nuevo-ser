@@ -1,0 +1,3 @@
+Marcador del directorio para que git conserve la carpeta vacía
+hasta que F1-A4/A5/A7 introduzcan `generador_cuaderno_pac_pdf.dart`,
+`generador_libro_aceite_pdf.dart` y `cliente_anthropic.dart`.

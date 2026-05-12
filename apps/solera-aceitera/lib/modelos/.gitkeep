@@ -1,0 +1,4 @@
+Marcador del directorio para que git conserve la carpeta vacía
+hasta que F1-A2 introduzca los modelos POJO (Olivar, Parcela, Olivo,
+Campania, Recoleccion, PartidaAceituna, Molturacion, LoteAceite,
+Movimiento, Venta, Tratamiento, Incidencia, Analitica, Titular).

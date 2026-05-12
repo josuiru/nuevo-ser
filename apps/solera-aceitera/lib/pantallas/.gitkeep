@@ -1,0 +1,5 @@
+Marcador del directorio para que git conserve la carpeta vacía
+hasta que F1-A3 introduzca las pantallas reales (PantallaHoy,
+PantallaMapa, PantallaListaParcelas, PantallaFichaParcela,
+PantallaCampania, PantallaMolturacion, PantallaLibroAceite,
+PantallaCuadernoPac, PantallaAjustes).
