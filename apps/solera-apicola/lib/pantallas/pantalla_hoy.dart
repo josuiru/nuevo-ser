@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nuevo_ser_core/nuevo_ser_core.dart';
 
 import '../datos/catalogos_generados/catalogo_calendario_apicola.dart';
+import 'widgets/tarjeta_resumen_meteo.dart';
 
 const _diasSemana = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 const _mesesEs = [
@@ -59,6 +60,8 @@ class _PantallaHoyState extends State<PantallaHoy> {
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
+          const TarjetaResumenMeteo(),
+          const SizedBox(height: 12),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),

@@ -8,6 +8,7 @@ import '../datos/fenologia.dart';
 import '../estado/finca_activa.dart';
 import '../modelos/incidencia.dart';
 import 'pantalla_ficha_planta.dart';
+import 'widgets/tarjeta_resumen_meteo.dart';
 
 /// Pantalla "Hoy" — primera pestaña del NavBar. Resumen activo de:
 /// - Incidencias abiertas (acción inmediata).
@@ -105,6 +106,8 @@ class _PantallaHoyState extends State<PantallaHoy> {
             const SizedBox(height: 4),
             Text('en $_nombreFincaActiva', style: const TextStyle(color: Colors.grey, fontSize: 12)),
             const SizedBox(height: 16),
+            const TarjetaResumenMeteo(),
+            const SizedBox(height: 12),
             if (_incidenciasAbiertas.isNotEmpty) _BloqueIncidencias(incidencias: _incidenciasAbiertas),
             if (tareasPorCultivo.isNotEmpty) ...[
               const SizedBox(height: 12),

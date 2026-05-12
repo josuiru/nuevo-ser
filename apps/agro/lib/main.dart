@@ -8,7 +8,6 @@ import 'pantallas/pantalla_guia.dart';
 import 'pantallas/pantalla_hoy.dart';
 import 'pantallas/pantalla_lista_plantas.dart';
 import 'pantallas/pantalla_mapa.dart';
-import 'pantallas/pantalla_meteo_agro.dart';
 import 'pantallas/pantalla_onboarding.dart';
 import 'servicios/grabador_track.dart';
 
@@ -74,10 +73,13 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   // pestañas (no se pierde el zoom del mapa, los filtros aplicados, ni
   // la posición del scroll). Las pantallas que necesiten refrescar al
   // entrar lo hacen explícitamente en su initState.
+  //
+  // El acceso al meteo se ha movido a la pantalla Hoy (tarjeta resumen
+  // que abre `PantallaMeteoAgro` en push) para reducir el número de
+  // iconos del NavigationBar.
   final _pantallas = const <Widget>[
     PantallaHoy(),
     PantallaMapa(),
-    PantallaMeteoAgro(),
     PantallaListaPlantas(),
     PantallaGuia(),
     PantallaAjustes(),
@@ -100,11 +102,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             icon: Icon(Icons.map_outlined),
             selectedIcon: Icon(Icons.map),
             label: 'Mapa',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.cloud_outlined),
-            selectedIcon: Icon(Icons.cloud),
-            label: 'Meteo',
           ),
           NavigationDestination(
             icon: Icon(Icons.eco_outlined),

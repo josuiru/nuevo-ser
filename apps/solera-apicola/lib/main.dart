@@ -9,7 +9,8 @@ import 'pantallas/pantalla_guia.dart';
 import 'pantallas/pantalla_hoy.dart';
 import 'pantallas/pantalla_lista_colmenas.dart';
 import 'pantallas/pantalla_mapa.dart';
-import 'pantallas/pantalla_meteo_apicola.dart';
+// pantalla_meteo_apicola.dart se invoca desde la tarjeta resumen de
+// PantallaHoy (push) en lugar de ocupar una pestaña del NavigationBar.
 import 'pantallas/pantalla_onboarding.dart';
 
 final _autoBackupApicola = AutoBackup(
@@ -121,10 +122,12 @@ class PantallaPrincipal extends StatefulWidget {
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
   int _indice = 1;
 
+  // Meteo se ha movido a la pantalla Hoy (tarjeta resumen que abre
+  // `PantallaMeteoApicola` en push) para reducir el número de iconos
+  // del NavigationBar.
   final _pantallas = const <Widget>[
     PantallaHoy(),
     PantallaMapa(),
-    PantallaMeteoApicola(),
     PantallaListaColmenas(),
     PantallaGuia(),
     PantallaAjustes(),
@@ -147,11 +150,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             icon: Icon(Icons.map_outlined),
             selectedIcon: Icon(Icons.map),
             label: 'Mapa',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.cloud_outlined),
-            selectedIcon: Icon(Icons.cloud),
-            label: 'Meteo',
           ),
           NavigationDestination(
             icon: Icon(Icons.hive_outlined),
