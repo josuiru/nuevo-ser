@@ -1,19 +1,32 @@
-// Solera Aceitera — esqueleto F1-A1.
+// Solera Aceitera — F1-A3 con navegación principal completa.
 //
-// Esta es la primera fase del fork: pubspec, branding, estructura y
-// app mínima compilable en linux desktop + Android. NO incluye modelos,
-// BD, pantallas reales ni catálogos — esos llegan en F1-A2 (modelos +
-// sqflite), F1-A3 (pantallas) y F1-A6 (catálogos).
-//
-// El placeholder visible al arrancar avisa explícitamente del estado
-// para que un humano que abra la app entienda que está en obras y no
-// confunda con un producto vendible.
+// Arranque:
+//   main() → AppSoleraAceitera → _Orquestador
+//     ├── PantallaOnboarding (primer arranque, hasta tener titular+olivar)
+//     └── PantallaPrincipal (NavigationBar con IndexedStack)
+//          ├── Hoy        — dashboard de la campaña activa
+//          ├── Mapa       — flutter_map con parcelas que tienen coords
+//          ├── Parcelas   — listado + ficha + alta + tratamientos
+//          ├── Lotes      — listado + ficha (con movimientos y analíticas)
+//          ├── Libro      — vista cronológica del libro de movimientos
+//          └── Ajustes    — titular, olivar y gestión de campañas
 //
 // Detalle de fase y diferenciadores en `CLAUDE.md` del paquete.
 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+import 'pantallas/pantalla_ajustes.dart';
+import 'pantallas/pantalla_hoy.dart';
+import 'pantallas/pantalla_libro_aceite.dart';
+import 'pantallas/pantalla_lista_lotes.dart';
+import 'pantallas/pantalla_lista_parcelas.dart';
+import 'pantallas/pantalla_mapa.dart';
+import 'pantallas/pantalla_onboarding.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('es_ES', null);
   runApp(const AppSoleraAceitera());
 }
 
@@ -24,8 +37,7 @@ const Color colorPrimarioAceitera = Color(0xFF5C6B3A);
 
 /// Color de fondo cálido (crema) para `scaffoldBackgroundColor`. Crea
 /// la sensación de campo soleado + papel de cuaderno antiguo, en línea
-/// con el resto de la suite Solera (crema savia en arbolado, ámbar en
-/// apícola, burdeos+crema en viticultura, dorado+crema en quesera).
+/// con el resto de la suite Solera.
 const Color colorCremaAceitera = Color(0xFFF5EFE2);
 
 class AppSoleraAceitera extends StatelessWidget {
@@ -43,68 +55,106 @@ class AppSoleraAceitera extends StatelessWidget {
           brightness: Brightness.light,
         ),
         scaffoldBackgroundColor: colorCremaAceitera,
-        fontFamily: 'Roboto',
       ),
-      home: const _PantallaEsqueletoF1A1(),
+      home: const _Orquestador(),
     );
   }
 }
 
-/// Pantalla placeholder del esqueleto F1-A1. Se sustituye por la
-/// `PantallaHoy` real cuando entre F1-A3.
-class _PantallaEsqueletoF1A1 extends StatelessWidget {
-  const _PantallaEsqueletoF1A1();
+class _Orquestador extends StatefulWidget {
+  const _Orquestador();
+
+  @override
+  State<_Orquestador> createState() => _OrquestadorState();
+}
+
+class _OrquestadorState extends State<_Orquestador> {
+  bool? _mostrarOnboarding;
+
+  @override
+  void initState() {
+    super.initState();
+    _resolver();
+  }
+
+  Future<void> _resolver() async {
+    final yaVisto = await PantallaOnboarding.yaVisto();
+    if (mounted) setState(() => _mostrarOnboarding = !yaVisto);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mostrar = _mostrarOnboarding;
+    if (mostrar == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    if (mostrar) {
+      return PantallaOnboarding(
+        alTerminar: () => setState(() => _mostrarOnboarding = false),
+      );
+    }
+    return const PantallaPrincipal();
+  }
+}
+
+class PantallaPrincipal extends StatefulWidget {
+  const PantallaPrincipal({super.key});
+
+  @override
+  State<PantallaPrincipal> createState() => _PantallaPrincipalState();
+}
+
+class _PantallaPrincipalState extends State<PantallaPrincipal> {
+  int _indice = 0;
+
+  final _pantallas = const <Widget>[
+    PantallaHoy(),
+    PantallaMapa(),
+    PantallaListaParcelas(),
+    PantallaListaLotes(),
+    PantallaLibroAceite(),
+    PantallaAjustes(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Solera Aceitera'),
-        backgroundColor: colorPrimarioAceitera,
-        foregroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.eco,
-                size: 96,
-                color: colorPrimarioAceitera,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Solera Aceitera',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: colorPrimarioAceitera,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Esqueleto F1-A1',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.black54,
-                    ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Cuaderno de explotación olivarera y libro de movimientos '
-                'del aceite para almazaras pequeñas y medianas. '
-                'Esta fase sólo siembra el paquete y la estructura — '
-                'los modelos, la base de datos y las pantallas reales '
-                'llegan en F1-A2 y F1-A3.',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.black87,
-                      height: 1.4,
-                    ),
-              ),
-            ],
+      body: IndexedStack(index: _indice, children: _pantallas),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _indice,
+        onDestinationSelected: (i) => setState(() => _indice = i),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.today_outlined),
+            selectedIcon: Icon(Icons.today),
+            label: 'Hoy',
           ),
-        ),
+          NavigationDestination(
+            icon: Icon(Icons.map_outlined),
+            selectedIcon: Icon(Icons.map),
+            label: 'Mapa',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.park_outlined),
+            selectedIcon: Icon(Icons.park),
+            label: 'Parcelas',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.water_drop_outlined),
+            selectedIcon: Icon(Icons.water_drop),
+            label: 'Lotes',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
+            label: 'Libro',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Ajustes',
+          ),
+        ],
       ),
     );
   }
