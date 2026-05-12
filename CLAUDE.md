@@ -69,7 +69,7 @@ Cinco forks de Solera por vertical. Comparten widgets (`CampoAutocompleteCatalog
 - **`apps/solera-apicola/`** — apicultores 20-200 colmenas. Libro REGA + gestión varroa + IA apícola. F1A-1 a F1A-8 cerradas (provisional). Branding ámbar+crema.
 - **`apps/solera-arbolado-urbano/`** — B2B ayuntamientos. QR chapa + VTA + multi-operario. F1U-1 a F1U-8 cerradas (provisional). Branding verde+crema.
 - **`apps/solera-quesera/`** — queserías artesanas. Cuaderno APPCC + curación + trazabilidad lotes. F1-5 (catálogos provisionales). Branding dorado+crema.
-- **`apps/solera-aceitera/`** — almazaras pequeñas y medianas (100-2000 hl/campaña). Cuaderno PAC olivar (RD 1311/2012) + libro de movimientos del aceite (RD 760/2021 + AICA) + DOP olivar + IA visual plagas olivar + cierre fiscal REAGP. **F1-A1 + F1-A2 + F1-A3 cerradas** (esqueleto + 14 modelos POJO + sqflite v1 + 26 tests + 14 pantallas con navegación NavigationBar). Branding verde oliva+crema.
+- **`apps/solera-aceitera/`** — almazaras pequeñas y medianas (100-2000 hl/campaña). Cuaderno PAC olivar (RD 1311/2012) + libro de movimientos del aceite (RD 760/2021 + AICA) + DOP olivar + IA visual plagas olivar + cierre fiscal REAGP. **F1-A1 + F1-A2 + F1-A3 + F1-A4 cerradas** (esqueleto + 14 modelos POJO + sqflite v1 + 14 pantallas con navegación NavigationBar + generador Cuaderno PAC PDF con sello PROVISIONAL custodiado por guardrail R1 + 26 tests). Branding verde oliva+crema.
 
 Detalle de cada una en su `CLAUDE.md` + `BLOQUEOS-PENDIENTES.md`.
 

@@ -33,24 +33,41 @@ IFAPA o equivalente con experiencia en cooperativa. Hace falta para:
 `catalogosCompletamenteRevisados=false`. La app muestra banner amarillo
 "datos provisionales" en cualquier autocomplete que dependa de catálogo.
 
-## F1-A4 + F1-A5 — Formato cuaderno PAC + libro de movimientos del aceite
+## F1-A4 — Formato cuaderno PAC olivar (PROVISIONAL desde esta sesión)
 
-**Estado**: F1-A4 y F1-A5 ejecutables en paralelo después de F1-A2 (la
-BD ya tiene las tablas necesarias).
+**Estado**: implementado. `lib/servicios/generador_cuaderno_pac_pdf.dart`
+produce el PDF firmable con dos tablas (tratamientos fitosanitarios +
+recolección) usando la plantilla `informe_periodico` del core. Selector
+de campaña + parcela opcional desde `PantallaCuadernoPac`, accesible
+desde Ajustes → "Informes".
 
-**Bloqueante**: **técnico OCA / auditor AICA** para validar que el PDF
-generado pasa una inspección real.
+**Bloqueante**: **técnico OCA / asesor APAE humano** para auditar el
+formato y registrar nombre + nº colegiado antes de retirar el sello.
 
-- Cuaderno PAC olivar conforme RD 1311/2012 + RD 285/2021 vigente
-  (CUE digital de RD 34/2025 entra en vigor 2027 — el PDF clásico
-  sigue siendo aceptado hasta entonces).
-- Libro de movimientos del aceite conforme RD 760/2021 + requisitos
-  de la Agencia de Información y Control Alimentarios (AICA).
+- Conforme RD 1311/2012 + RD 285/2021 vigente.
+- CUE digital de RD 34/2025 entra en vigor en 2027 — el PDF clásico
+  sigue siendo aceptado hasta entonces, anotado para F1.1.
 
-**Mientras tanto**: el PDF lleva sello "PROVISIONAL — pendiente de
-validación por asesor técnico" en cabecera. El test `sello_provisional_test.dart`
-(equivalente al de viticultura/apícola/agro, riesgo R1 de la auditoría
-2026-05-12) impide retirarlo silenciosamente.
+**Mientras tanto**: el subtítulo del PDF lleva la palabra `PROVISIONAL`
+literal. El test `test/sello_provisional_test.dart` (equivalente al de
+viticultura/apícola/agro, riesgo R1 de la auditoría 2026-05-12) impide
+retirarlo silenciosamente — para desbloquear hay que documentar el
+nombre del técnico OCA en este bloqueo y actualizar el test en el
+mismo commit.
+
+## F1-A5 — Libro de movimientos del aceite
+
+**Estado**: pendiente. La BD ya tiene las tablas `lotes_aceite`,
+`molturaciones`, `movimientos` y `ventas` necesarias.
+
+**Bloqueante**: **auditor AICA** para validar que el PDF generado
+pasa una inspección real.
+
+- Conforme RD 760/2021 + requisitos de la Agencia de Información y
+  Control Alimentarios (AICA).
+
+**Mientras tanto**: cuando se implemente, llevará el mismo patrón
+`PROVISIONAL` que F1-A4 con su propio guardrail.
 
 ## F1-A9 — Libro ingresos/gastos REAGP olivar
 

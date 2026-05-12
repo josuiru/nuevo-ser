@@ -5,6 +5,7 @@ import '../datos/base_datos.dart';
 import '../modelos/campania.dart';
 import '../modelos/olivar.dart';
 import '../modelos/titular.dart';
+import 'pantalla_cuaderno_pac.dart';
 
 /// Ajustes: datos del titular, del olivar y gestión de campañas.
 /// Pantalla mínima en F1-A3 — F1-A8 añadirá secciones de IA, backup y
@@ -136,6 +137,26 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                         : null,
                   ),
                 )),
+          const SizedBox(height: 24),
+          const Text('Informes',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.picture_as_pdf,
+                  color: Color(0xFF5C6B3A)),
+              title: const Text('Cuaderno PAC olivar'),
+              subtitle: const Text(
+                'Genera el PDF del Cuaderno de Explotación PAC '
+                '(RD 1311/2012) · sello PROVISIONAL',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PantallaCuadernoPac(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
