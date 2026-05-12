@@ -147,6 +147,15 @@ flutter:
   # .dart_tool/flutter_gen/gen_l10n/.
   generate: true
 
+  # Catálogo seminal de Misterios v0.1 (los 19 del documento
+  # `docs/el-cuaderno/catalogo-seminal-misterios.md`). Extraído de
+  # `lib/datos_simulados/seed.dart` para que el comité científico (item
+  # #6 de decisiones-provisionales.md) pueda auditar el contenido
+  # editando JSON, no Dart. Lo carga `cargarCatalogoSeminal()` vía
+  # rootBundle solo en debug (lo invoca `sembrarDatosDesarrollo`).
+  assets:
+    - assets/data/misterios_seminal_v0_1.json
+
 # ---------------------------------------------------------------------
 # Configuración de flutter_launcher_icons (A7).
 # Genera mipmaps Android (legacy + adaptive) desde el placeholder
