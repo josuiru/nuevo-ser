@@ -5,6 +5,7 @@ import '../datos/base_datos.dart';
 import '../modelos/campania.dart';
 import '../modelos/olivar.dart';
 import '../modelos/titular.dart';
+import 'pantalla_clave_anthropic.dart';
 import 'pantalla_cuaderno_pac.dart';
 
 /// Ajustes: datos del titular, del olivar y gestión de campañas.
@@ -153,6 +154,26 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const PantallaCuadernoPac(),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text('Inteligencia artificial',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.auto_awesome,
+                  color: Color(0xFF5C6B3A)),
+              title: const Text('Clave Anthropic (BYO key)'),
+              subtitle: const Text(
+                'Identificación visual de plagas y variedades con Claude '
+                '(local — la clave no sale del dispositivo)',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PantallaClaveAnthropic(),
                 ),
               ),
             ),

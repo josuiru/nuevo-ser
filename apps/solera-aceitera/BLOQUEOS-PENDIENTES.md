@@ -100,13 +100,31 @@ tiene una casuística REAGP más compleja que las otras Solera:
 **Mientras tanto**: la pantalla queda escondida del flujo principal o
 con banner "PROVISIONAL" persistente. Mismo patrón que las otras Solera.
 
-## F1-A7 — Caveat IA Vision
+## F1-A7 — IA Claude Vision (cableada en esta sesión, caveat)
 
-**Estado**: planificado tras F1-A6.
+**Estado**: implementado. `ClienteAnthropic` con dos modos
+(`diagnosticarPlaga` + `identificarVariedad`) y matching fuzzy contra
+catálogos `plagas_olivo` + `variedades_olivo`. Botón
+`BotonDiagnosticarPlagaIa` cableado en `PantallaNuevoTratamiento`.
+BYO key local en `PantallaClaveAnthropic` (Ajustes → "Inteligencia
+artificial").
 
-**Bloqueante**: validación del catálogo F1-A6 por el asesor agrónomo.
-Hasta entonces, todo diagnóstico de la IA se marca como "provisional —
-contraste con técnico antes de aplicar tratamiento".
+**Caveat**: hasta que F1-A6 esté validado por el asesor agrónomo, los
+diagnósticos que coincidan con el catálogo se marcan como "Coincide con
+el catálogo (provisional)" y los que no, como "Diagnóstico libre —
+contrasta con un técnico". El banner rojo de declaración obligatoria
+funciona ya para Xylella + verticilosis (catálogo provisional).
+
+**Hard limits respetados** (a verificar manualmente con uso real):
+
+- La IA no recomienda productos comerciales por marca (restricción a
+  nivel de system prompt — la app no la fuerza por código, pero la
+  observación rutinaria del operador detectará desviaciones).
+- Cero PlantNet / cero Commons en BD pre-cargada — todo se queda en el
+  dispositivo del operador.
+
+**Pendiente**: tests de integración con clave de pruebas o mock-server
+en F2.
 
 ## F1-A8 — Branding visual definitivo
 

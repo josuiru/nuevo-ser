@@ -4,6 +4,7 @@ import '../datos/base_datos.dart';
 import '../datos/catalogos_generados/catalogo_fitosanitarios_olivar.dart';
 import '../datos/catalogos_generados/catalogo_plagas_olivo.dart';
 import '../modelos/tratamiento.dart';
+import 'widgets/boton_diagnosticar_plaga_ia.dart';
 
 /// Formulario para registrar un tratamiento fitosanitario sobre una
 /// parcela. Sin catálogo curado en F1-A3 — sustancia y plaga son
@@ -58,6 +59,24 @@ class _PantallaNuevoTratamientoState extends State<PantallaNuevoTratamiento> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              BotonDiagnosticarPlagaIa(
+                alAceptar: (resultado) {
+                  setState(() {
+                    if (resultado.idCatalogo.isNotEmpty) {
+                      _plagaCtrl.text = resultado.idCatalogo;
+                    } else if (resultado.nombreComun.isNotEmpty) {
+                      _plagaCtrl.text = resultado.nombreComun;
+                    }
+                    final notaIa = '[IA Claude · '
+                        'confianza ${(resultado.confianza * 100).toStringAsFixed(0)} %] '
+                        '${resultado.manejoCultural}';
+                    _observacionesCtrl.text = _observacionesCtrl.text.isEmpty
+                        ? notaIa
+                        : '$notaIa\n\n${_observacionesCtrl.text}';
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
               Autocomplete<FitosanitarioOlivar>(
                 displayStringForOption: (f) => f.nombreCanonico,
                 optionsBuilder: (entrada) {
