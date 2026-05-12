@@ -410,6 +410,7 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
     final api = ClienteApi(
       urlBase: ConfigApi.urlBase,
       hostOverride: ConfigApi.hostOverride,
+      userAgent: 'UnoRoto/1.0 (Android)',
     );
     try {
       final resp = await api.registrar(
@@ -621,6 +622,7 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
     final api = ClienteApi(
       urlBase: ConfigApi.urlBase,
       hostOverride: ConfigApi.hostOverride,
+      userAgent: 'UnoRoto/1.0 (Android)',
     );
     try {
       final resp =
@@ -810,6 +812,7 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
     final api = ClienteApi(
       urlBase: ConfigApi.urlBase,
       hostOverride: ConfigApi.hostOverride,
+      userAgent: 'UnoRoto/1.0 (Android)',
     );
     try {
       final resp = await api.anadirNinoACuentaExistente(

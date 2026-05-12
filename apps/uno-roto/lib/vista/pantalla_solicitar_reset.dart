@@ -47,6 +47,7 @@ class _PantallaSolicitarResetState extends State<PantallaSolicitarReset> {
     final api = ClienteApi(
       urlBase: ConfigApi.urlBase,
       hostOverride: ConfigApi.hostOverride,
+      userAgent: 'UnoRoto/1.0 (Android)',
     );
     try {
       await api.solicitarResetPassword(email: email);

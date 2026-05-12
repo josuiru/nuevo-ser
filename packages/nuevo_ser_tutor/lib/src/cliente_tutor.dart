@@ -15,8 +15,15 @@ import 'package:nuevo_ser_core/nuevo_ser_core.dart' show ExcepcionApi;
 /// - Si el servidor rechaza por su propio filtro devuelve 422 con
 ///   un motivo en castellano que la UI muestra tal cual.
 class ClienteTutor {
+  /// User-Agent por defecto. No vacío para esquivar la regla 920330 de
+  /// mod_security (Empty User Agent Header → 406). Cada app debería
+  /// inyectar el suyo (`'UnoRoto/0.5 (Android)'`, `'LasVersiones/0.1 (iOS)'`,
+  /// etc.) para que el backend pueda agrupar caché y métricas por origen.
+  static const String userAgentPorDefecto = 'NuevoSer/1.0 (Flutter)';
+
   final String urlBase;
   final String? hostOverride;
+  final String userAgent;
   final Duration tiempoEspera;
   final http.Client _cliente;
 
@@ -24,6 +31,7 @@ class ClienteTutor {
     required this.urlBase,
     http.Client? cliente,
     this.hostOverride,
+    this.userAgent = userAgentPorDefecto,
     this.tiempoEspera = const Duration(seconds: 20),
   }) : _cliente = cliente ?? http.Client();
 
@@ -32,12 +40,10 @@ class ClienteTutor {
   Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/nuevo-ser/v1$ruta');
 
   Map<String, String> _cabeceras(String token) {
-    // Necesario para esquivar la regla 920330 de mod_security
-    // (Empty User Agent Header → 406). Ver `cliente_api.dart`.
     final base = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
-      'User-Agent': 'UnoRoto/0.5 (Android)',
+      'User-Agent': userAgent,
       'Accept': 'application/json',
     };
     if (hostOverride != null) {

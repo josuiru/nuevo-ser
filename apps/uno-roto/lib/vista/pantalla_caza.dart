@@ -268,6 +268,7 @@ class _PantallaCazaState extends State<PantallaCaza>
       cliente: ClienteTutor(
         urlBase: ConfigApi.urlBase,
         hostOverride: ConfigApi.hostOverride,
+        userAgent: 'UnoRoto/1.0 (Android)',
       ),
       estadoTutor: widget.repositorio.estadoTutor,
       proveedorToken: () => token,
@@ -283,6 +284,7 @@ class _PantallaCazaState extends State<PantallaCaza>
         final api = ClienteApi(
           urlBase: ConfigApi.urlBase,
           hostOverride: ConfigApi.hostOverride,
+          userAgent: 'UnoRoto/1.0 (Android)',
         );
         final p = await widget.repositorio.exportarProgresoParaSync();
         final h = await widget.repositorio.exportarHabilidadesParaSync();

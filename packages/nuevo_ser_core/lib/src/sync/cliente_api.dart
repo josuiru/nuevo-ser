@@ -19,6 +19,12 @@ import 'package:http/http.dart' as http;
 /// - Cliente HTTP inyectable — tests usan `http.MockClient`.
 /// - Errores tipados vía `ExcepcionApi`.
 class ClienteApi {
+  /// User-Agent por defecto. No vacío para esquivar la regla 920330 de
+  /// mod_security CRS (Empty User Agent → 406). Cada app debería
+  /// inyectar el suyo (`'UnoRoto/1.0 (Android)'`, `'LasVersiones/0.1 (iOS)'`,
+  /// etc.) para que el backend pueda agrupar métricas por origen.
+  static const String userAgentPorDefecto = 'NuevoSer/1.0 (Flutter)';
+
   /// URL base del backend, sin barra final. Ej: `https://unoroto.example.org`.
   /// En desarrollo con Local WP puede ser `http://127.0.0.1:10063` + el
   /// parámetro [hostOverride] a `uno-roto.local`.
@@ -30,6 +36,11 @@ class ClienteApi {
   /// `uno-roto.local`).
   final String? hostOverride;
 
+  /// Identificador que viaja en `User-Agent`. Inyectable para que
+  /// distintas apps consumidoras se puedan distinguir en logs/métricas
+  /// del backend.
+  final String userAgent;
+
   /// Timeout para cada petición. 10s es amplio para conexiones móviles.
   final Duration tiempoEspera;
 
@@ -40,6 +51,7 @@ class ClienteApi {
     required this.urlBase,
     http.Client? cliente,
     this.hostOverride,
+    this.userAgent = userAgentPorDefecto,
     this.tiempoEspera = const Duration(seconds: 10),
   }) : _cliente = cliente ?? http.Client();
 
@@ -48,12 +60,9 @@ class ClienteApi {
   Uri _uri(String ruta) => Uri.parse('$urlBase/wp-json/nuevo-ser/v1$ruta');
 
   Map<String, String> _cabeceras({String? token}) {
-    // Importante: el WAF de Apache (mod_security CRS) rechaza con 406
-    // las peticiones sin User-Agent — el package:http de Dart en
-    // Android no lo añade por defecto. Lo fijamos siempre.
     final base = {
       'Content-Type': 'application/json',
-      'User-Agent': 'UnoRoto/0.5 (Android)',
+      'User-Agent': userAgent,
       'Accept': 'application/json',
     };
     if (token != null && token.isNotEmpty) {

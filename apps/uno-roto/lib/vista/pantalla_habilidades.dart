@@ -456,6 +456,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     final api = ClienteApi(
       urlBase: ConfigApi.urlBase,
       hostOverride: ConfigApi.hostOverride,
+      userAgent: 'UnoRoto/1.0 (Android)',
     );
     try {
       mensajero.showSnackBar(
@@ -574,6 +575,7 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
       cliente: ClienteTutor(
         urlBase: ConfigApi.urlBase,
         hostOverride: ConfigApi.hostOverride,
+        userAgent: 'UnoRoto/1.0 (Android)',
       ),
       estadoTutor: widget.repositorio.estadoTutor,
       proveedorToken: () => token,
