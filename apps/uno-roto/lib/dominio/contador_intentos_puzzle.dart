@@ -35,10 +35,16 @@ int get intentosPuzzleActual => _intentosPuzzleActual;
 /// reintento resta una esquirla del valor [base].
 ///
 /// **Regla del último intento posible.** Si el niño llega al último
-/// intento que el puzzle permite (p. ej. 4.º de 4 opciones, 3.º de 3,
-/// 2.º de 2), ya no demuestra razonamiento — está eligiendo por
-/// descarte. En ese caso devuelve **0**, sin importar [base]. Esto
-/// motiva pensar antes de tocar.
+/// intento que el puzzle permite (p. ej. 4.º de 4 opciones, 3.º de 3),
+/// ya no demuestra razonamiento — está eligiendo por descarte. En ese
+/// caso devuelve **0**, sin importar [base]. Esto motiva pensar antes
+/// de tocar.
+///
+/// **Excepción binarios (2 opciones).** Para sí/no la regla del
+/// descarte no aplica: fallar una vez y acertar a la segunda sigue
+/// siendo razonamiento legítimo (no hay alternativa entre la primera y
+/// la del descarte), así que se mantiene el mínimo de 1 esquirla en
+/// todos los intentos.
 ///
 /// Para los intentos intermedios mantiene un mínimo de 1 esquirla — el
 /// niño aún razonó algo y atrapó al Fragmento.
@@ -51,12 +57,12 @@ int get intentosPuzzleActual => _intentosPuzzleActual;
 ///   base=3 → 3 / 2 / 0
 ///   base=2 → 2 / 1 / 0
 /// Ejemplos con 2 opciones (binarios):
-///   base=1 → 1 / 0
+///   base=1 → 1 / 1 (sin descarte)
 int esquirlasSegunIntentos({
   required int base,
   required int totalOpciones,
 }) {
-  if (totalOpciones >= 2 && _intentosPuzzleActual >= totalOpciones) {
+  if (totalOpciones >= 3 && _intentosPuzzleActual >= totalOpciones) {
     return 0;
   }
   if (base <= 1) return 1;

@@ -103,11 +103,17 @@ class CatalogoHabilidades {
   /// True si [rangoActual] es suficiente para acceder a una habilidad
   /// con [rangoExigido]. Los rangos están ordenados en la lista
   /// [rangos] del JSON (índice más alto = más avanzado).
+  ///
+  /// Si alguno de los dos rangos no aparece en [rangos] (catálogo
+  /// corrupto o rango heredado de una versión antigua), devolvemos
+  /// `false` en lugar de `true`: preferimos esconder la habilidad
+  /// hasta que la inconsistencia se resuelva, antes que abrir acceso
+  /// silenciosamente a habilidades que el niño no debería ver aún.
   bool _rangoAlcanza(String? rangoActual, String rangoExigido) {
     if (rangoActual == null) return true;
     final actualIdx = rangos.indexOf(rangoActual);
     final exigidoIdx = rangos.indexOf(rangoExigido);
-    if (actualIdx < 0 || exigidoIdx < 0) return true;
+    if (actualIdx < 0 || exigidoIdx < 0) return false;
     return actualIdx >= exigidoIdx;
   }
 }

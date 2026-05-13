@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../dominio/ayuda_puzzle.dart';
+import '../../dominio/contador_intentos_puzzle.dart';
 import '../../dominio/fragmento_en_tejado.dart';
 import '../../nucleo/paleta.dart';
 import '../estado_pista_puzzle.dart';
@@ -16,8 +17,13 @@ Future<bool> comprobarYAyudarSiProcede(
 ) async {
   if (pista.fallosConsecutivos < 5) return false;
 
-  // Reset para no encadenar diálogos
+  // Reset para no encadenar diálogos. Reseteamos también el contador de
+  // intentos del puzzle: si el niño decide SEGUIR tras leer la ayuda
+  // recibe una "segunda oportunidad limpia". Sin esto, [_intentosPuzzleActual]
+  // queda alto y el siguiente acierto cae en la regla del descarte y le
+  // entrega 0 esquirlas pese a haber leído la explicación.
   pista.registrarAcierto();
+  reiniciarIntentosPuzzle();
 
   if (!context.mounted) return false;
 
@@ -124,7 +130,12 @@ Future<bool> comprobarYAyudarSiProcede(
   );
 
   if (quiereSalir == true && context.mounted) {
-    Navigator.of(context).pop(true);
+    // VOLVER al mapa NO es captura. Si saliéramos con pop(true) el
+    // cazadero registraría acierto en el motor de maestría y soltaría
+    // el SnackBar "+0 (de X posibles)" — coherente con la regla del
+    // descarte pero engañoso para el niño, que abandonó porque no
+    // entendía el puzzle.
+    Navigator.of(context).pop(false);
   }
   return true;
 }

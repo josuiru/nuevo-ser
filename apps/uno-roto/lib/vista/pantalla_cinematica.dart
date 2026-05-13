@@ -34,8 +34,11 @@ class PantallaCinematica extends StatefulWidget {
   final String nombreJugador;
 
   /// Callback invocado por cada flag narrativo establecido durante la
-  /// escena — típicamente para persistirlo en el repositorio.
-  final ValueChanged<String>? alEstablecerFlag;
+  /// escena — típicamente para persistirlo en el repositorio. Es async
+  /// porque la persistencia con SharedPreferences lo es; los sitios
+  /// llamantes deben hacer `await` para evitar perder el flag si la
+  /// app se cierra entre la elección y el commit a disco.
+  final Future<void> Function(String)? alEstablecerFlag;
 
   /// Ritmo del juego — afecta velocidad de reveal y duración de
   /// ambientes. Si se omite, usa estándar.
@@ -313,15 +316,19 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     });
   }
 
-  void _elegirOpcion(int indice) {
+  Future<void> _elegirOpcion(int indice) async {
     final plano = _planoActual;
     if (plano is! PlanoEleccion) return;
     if (_fase != _FaseReproduccion.mostrandoOpciones) return;
     HapticFeedback.selectionClick();
     setState(() => _indiceOpcionElegida = indice);
-    for (final flag in plano.opciones[indice].flagsAEstablecer) {
-      widget.alEstablecerFlag?.call(flag);
+    final callback = widget.alEstablecerFlag;
+    if (callback != null) {
+      for (final flag in plano.opciones[indice].flagsAEstablecer) {
+        await callback(flag);
+      }
     }
+    if (!mounted) return;
     _empezarRevealRespuesta();
   }
 

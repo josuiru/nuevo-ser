@@ -300,6 +300,15 @@ class FragmentoEnTejado {
   /// igual de urgentes.
   final Duration tiempoDeVida;
 
+  /// Dificultad calibrada por el `GeneradorCaza` desde esquirlas y
+  /// rango (0..7). Las pantallas Era 3 (raíz cuadrada, Pitágoras,
+  /// sistemas 2×2…) la leen para regenerar el problema con el mismo
+  /// peldaño que el cazadero — sin esto, un Aprendiz III veía siempre
+  /// los casos triviales que se generan con `dificultad: 1` por
+  /// defecto. Null en Fragmentos construidos a mano (tests, escenas
+  /// guionadas) donde no hay calibración que respetar.
+  final int? dificultadSugerida;
+
   const FragmentoEnTejado({
     required this.identificador,
     required this.numerador,
@@ -316,6 +325,7 @@ class FragmentoEnTejado {
     this.decimalA,
     this.decimalB,
     this.modoComparacion,
+    this.dificultadSugerida,
   });
 
   bool get esCompuesto => numerador > 1;

@@ -21,8 +21,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// `3x + 2 = x + 8`. Segundo escalón del dominio ALG.
 class PantallaEcuacionAmbosLados extends StatefulWidget {
   final ProblemaEcuacionAmbosLados? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaEcuacionAmbosLados({super.key, this.problemaPredeterminado});
+  const PantallaEcuacionAmbosLados({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaEcuacionAmbosLados> createState() =>
@@ -49,7 +54,7 @@ class _PantallaEcuacionAmbosLadosState
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorEcuacionAmbosLados().generar(dificultad: 1);
+        GeneradorEcuacionAmbosLados().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

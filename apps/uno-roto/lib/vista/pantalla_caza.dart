@@ -199,6 +199,11 @@ class _PantallaCazaState extends State<PantallaCaza>
   final Map<String, int> _fallosLocalesConsecutivos = {};
   final Set<String> _cooldownAyudaLocal = {};
   Timer? _timerSync;
+  /// Guard contra solapamiento: si una llamada a `sincronizar` aún está
+  /// en vuelo cuando el Timer.periodic dispara la siguiente (caso raro
+  /// pero posible si la red va muy lenta), saltamos esa iteración para
+  /// no encadenar dos escrituras de progreso simultáneas.
+  bool _syncEnVuelo = false;
   final Map<String, EstadoHabilidad> _estadosCache = {};
   Timer? _temporizadorSpawn;
   Timer? _temporizadorTick;
@@ -280,17 +285,38 @@ class _PantallaCazaState extends State<PantallaCaza>
   void _iniciarSyncPeriodico(String token) {
     _timerSync?.cancel();
     _timerSync = Timer.periodic(const Duration(minutes: 10), (_) async {
+      if (_syncEnVuelo) return;
+      _syncEnVuelo = true;
+      final api = ClienteApi(
+        urlBase: ConfigApi.urlBase,
+        hostOverride: ConfigApi.hostOverride,
+        userAgent: 'UnoRoto/1.0 (Android)',
+      );
       try {
-        final api = ClienteApi(
-          urlBase: ConfigApi.urlBase,
-          hostOverride: ConfigApi.hostOverride,
-          userAgent: 'UnoRoto/1.0 (Android)',
-        );
         final p = await widget.repositorio.exportarProgresoParaSync();
         final h = await widget.repositorio.exportarHabilidadesParaSync();
         await api.sincronizar(token: token, progreso: p, habilidades: h);
+      } on ExcepcionApi catch (e) {
+        // Token caducado o inválido: el servidor lo rechaza con 401.
+        // Borramos el token local y paramos el sync — la próxima vez que
+        // el niño entre al panel de cuenta podrá reautenticarse. Sin
+        // esto, el timer seguía reintentando con el token muerto cada
+        // 10 minutos para siempre.
+        if (e.codigo == 401) {
+          _timerSync?.cancel();
+          _timerSync = null;
+          await widget.repositorio.borrarTokenBackend();
+        } else {
+          debugPrint('[uroto.sync] ${e.codigo}: ${e.mensaje}');
+        }
+      } catch (e) {
+        // Red caída, timeout, JSON corrupto… loguear sin romper la
+        // sesión del niño. Volveremos a intentar en la siguiente vuelta.
+        debugPrint('[uroto.sync] excepción no-API: $e');
+      } finally {
         api.cerrar();
-      } catch (_) {}
+        _syncEnVuelo = false;
+      }
     });
   }
 
@@ -302,7 +328,12 @@ class _PantallaCazaState extends State<PantallaCaza>
       cargarEstado: widget.repositorio.cargarEstadoHabilidad,
       guardarEstado: widget.repositorio.guardarEstadoHabilidad,
       alSubirNivel: (idHabilidad, nivel) async {
-        widget.repositorio.activarFlagNarrativo(
+        // Esperamos al `activarFlagNarrativo` antes de seguir — si la
+        // app se cerrara entre el callback y la persistencia (raro pero
+        // posible al fondo) el flag de maestría se perdería y la escena
+        // que depende de él (p. ej. 1.9 al alcanzar `fr_05_competente`)
+        // quedaría latente sin razón aparente.
+        await widget.repositorio.activarFlagNarrativo(
           MotorMaestria.flagDeMaestria(idHabilidad, nivel),
         );
         // Celebramos subidas a "competente" o "maestría"
@@ -658,8 +689,16 @@ class _PantallaCazaState extends State<PantallaCaza>
   ///
   /// La gran mayoría son de 4 candidatos. Los binarios sí/no son 2.
   /// Tres puzzles de fracciones (FR.03 / FR.04) son de 3 botones.
+  ///
+  /// Caso especial: el Fragmento unitario (combate de enfoque) no tiene
+  /// candidatos discretos — es una mecánica continua de cortar radios
+  /// con precisión geométrica. Devolvemos 0 para señalar "sin opciones
+  /// finitas", lo que desactiva la regla del descarte en
+  /// [esquirlasSegunIntentos]. Sin esto, los fallos acumulados a lo
+  /// largo de varios sub-combates llevaban la recompensa a 0 al cerrar.
   int _totalOpcionesDePuzzle(TipoFragmentoEnTejado tipo) {
     return switch (tipo) {
+      TipoFragmentoEnTejado.unitario => 0,
       TipoFragmentoEnTejado.primo ||
       TipoFragmentoEnTejado.simetria ||
       TipoFragmentoEnTejado.divisibilidad ||
@@ -701,49 +740,65 @@ class _PantallaCazaState extends State<PantallaCaza>
       case TipoFragmentoEnTejado.potenciaNatural:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaPotenciaNatural(),
+            builder: (_) => PantallaPotenciaNatural(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.raizCuadrada:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaRaizCuadrada(),
+            builder: (_) => PantallaRaizCuadrada(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.ecuacionAmbosLados:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaEcuacionAmbosLados(),
+            builder: (_) => PantallaEcuacionAmbosLados(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.pitagoras:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaPitagoras(),
+            builder: (_) => PantallaPitagoras(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.enteroSigno:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaEnteroSigno(),
+            builder: (_) => PantallaEnteroSigno(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.valorAbsoluto:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaValorAbsoluto(),
+            builder: (_) => PantallaValorAbsoluto(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.sistemaDosXDos:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaSistemaDosXDos(),
+            builder: (_) => PantallaSistemaDosXDos(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.relacionLineal:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaRelacionLineal(),
+            builder: (_) => PantallaRelacionLineal(
+              dificultad: fragmento.dificultadSugerida ?? 1,
+            ),
           ),
         );
       case TipoFragmentoEnTejado.decimal:
@@ -1491,15 +1546,21 @@ class _PantallaCazaState extends State<PantallaCaza>
   }
 
   /// Comprueba si el total acumulado de esquirlas implica subir de
-  /// rango y, si es así, lo persiste y activa el flag narrativo
-  /// correspondiente para que las escenas reaccionen.
+  /// rango y, si es así, lo persiste y activa el flag narrativo de
+  /// **cada rango intermedio** para que las escenas que dependen de
+  /// rangos previos no queden latentes. Sin esto, importar progreso
+  /// del servidor o un salto grande de esquirlas podía cruzar dos
+  /// umbrales en una captura y dejar la 1.13 (requiere Aprendiz II)
+  /// huérfana.
   Future<void> _verificarSubidaDeRango() async {
     final actual = await widget.repositorio.cargarRango();
     final segunEsquirlas = rangoSegunEsquirlas(_esquirlasTotal);
     if (segunEsquirlas.valor > actual.valor) {
       await widget.repositorio.guardarRango(segunEsquirlas);
-      await widget.repositorio
-          .activarFlagNarrativo(segunEsquirlas.flagAlcanzado);
+      for (var i = actual.valor + 1; i <= segunEsquirlas.valor; i++) {
+        await widget.repositorio
+            .activarFlagNarrativo(RangoNarrativo.values[i].flagAlcanzado);
+      }
     }
   }
 

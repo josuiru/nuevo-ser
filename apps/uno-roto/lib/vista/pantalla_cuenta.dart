@@ -432,10 +432,8 @@ class _EstadoPantallaRegistro extends State<_PantallaRegistro> {
       if (!mounted) return;
       setState(() => _mensajeError = e.mensaje);
     } catch (e, st) {
-      // ignore: avoid_print
-      print('[uroto.cuenta] excepción registrar: $e');
-      // ignore: avoid_print
-      print(st);
+      debugPrint('[uroto.cuenta] excepción registrar: $e');
+      debugPrint('$st');
       if (!mounted) return;
       setState(() =>
           _mensajeError = AppLocalizations.of(context).cuentaErrorRed);
@@ -654,10 +652,8 @@ class _EstadoPantallaInicioSesion extends State<_PantallaInicioSesion> {
       if (!mounted) return;
       setState(() => _mensajeError = e.mensaje);
     } catch (e, st) {
-      // ignore: avoid_print
-      print('[uroto.cuenta] excepción login: $e');
-      // ignore: avoid_print
-      print(st);
+      debugPrint('[uroto.cuenta] excepción login: $e');
+      debugPrint('$st');
       if (!mounted) return;
       setState(() =>
           _mensajeError = AppLocalizations.of(context).cuentaErrorRed);
@@ -833,10 +829,8 @@ class _EstadoPantallaAnadirNino extends State<_PantallaAnadirNino> {
       if (!mounted) return;
       setState(() => _mensajeError = e.mensaje);
     } catch (e, st) {
-      // ignore: avoid_print
-      print('[uroto.cuenta] excepción anadirNino: $e');
-      // ignore: avoid_print
-      print(st);
+      debugPrint('[uroto.cuenta] excepción anadirNino: $e');
+      debugPrint('$st');
       if (!mounted) return;
       setState(() =>
           _mensajeError = AppLocalizations.of(context).cuentaErrorRed);

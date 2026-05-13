@@ -20,8 +20,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// lados etiquetados y elige el tercero. Aplicación de Pitágoras.
 class PantallaPitagoras extends StatefulWidget {
   final ProblemaPitagoras? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaPitagoras({super.key, this.problemaPredeterminado});
+  const PantallaPitagoras({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaPitagoras> createState() => _PantallaPitagorasState();
@@ -46,7 +51,7 @@ class _PantallaPitagorasState extends State<PantallaPitagoras>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorPitagoras().generar(dificultad: 1);
+        GeneradorPitagoras().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

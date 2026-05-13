@@ -285,8 +285,24 @@ class RepositorioProgreso {
     return lista.toSet();
   }
 
-  Future<void> marcarVarianteEntrenamientoUsada(String id) async {
+  /// Marca [id] como usada en el pool del Arco 1. Si [reemplazarTodo] es
+  /// true (caso "pool agotado y reseteado en esta misma transición"),
+  /// sobrescribe el set a `{id}` en una sola escritura — atómico frente
+  /// a un cierre de app entre reset y marcado, que dejaba el set vacío
+  /// y permitía repetir la variante recién mostrada en el siguiente
+  /// arranque.
+  Future<void> marcarVarianteEntrenamientoUsada(
+    String id, {
+    bool reemplazarTodo = false,
+  }) async {
     final prefs = await _prefs();
+    if (reemplazarTodo) {
+      await prefs.setStringList(
+        await _clave(_sufVariantesEntrenamientoUsadas),
+        [id],
+      );
+      return;
+    }
     final usadas = await cargarVariantesEntrenamientoUsadas();
     if (usadas.contains(id)) return;
     usadas.add(id);
@@ -308,8 +324,20 @@ class RepositorioProgreso {
     return lista.toSet();
   }
 
-  Future<void> marcarVariantePuenteUsada(String id) async {
+  /// Misma semántica que [marcarVarianteEntrenamientoUsada] para el
+  /// pool del Arco 2.
+  Future<void> marcarVariantePuenteUsada(
+    String id, {
+    bool reemplazarTodo = false,
+  }) async {
     final prefs = await _prefs();
+    if (reemplazarTodo) {
+      await prefs.setStringList(
+        await _clave(_sufVariantesPuentesUsadas),
+        [id],
+      );
+      return;
+    }
     final usadas = await cargarVariantesPuentesUsadas();
     if (usadas.contains(id)) return;
     usadas.add(id);
@@ -331,8 +359,20 @@ class RepositorioProgreso {
     return lista.toSet();
   }
 
-  Future<void> marcarVarianteMaquinaUsada(String id) async {
+  /// Misma semántica que [marcarVarianteEntrenamientoUsada] para el
+  /// pool del Arco 3.
+  Future<void> marcarVarianteMaquinaUsada(
+    String id, {
+    bool reemplazarTodo = false,
+  }) async {
     final prefs = await _prefs();
+    if (reemplazarTodo) {
+      await prefs.setStringList(
+        await _clave(_sufVariantesMaquinasUsadas),
+        [id],
+      );
+      return;
+    }
     final usadas = await cargarVariantesMaquinasUsadas();
     if (usadas.contains(id)) return;
     usadas.add(id);
@@ -354,8 +394,20 @@ class RepositorioProgreso {
     return lista.toSet();
   }
 
-  Future<void> marcarVarianteEraDosUsada(String id) async {
+  /// Misma semántica que [marcarVarianteEntrenamientoUsada] para el
+  /// pool de la Era 2.
+  Future<void> marcarVarianteEraDosUsada(
+    String id, {
+    bool reemplazarTodo = false,
+  }) async {
     final prefs = await _prefs();
+    if (reemplazarTodo) {
+      await prefs.setStringList(
+        await _clave(_sufVariantesEraDosUsadas),
+        [id],
+      );
+      return;
+    }
     final usadas = await cargarVariantesEraDosUsadas();
     if (usadas.contains(id)) return;
     usadas.add(id);
@@ -456,12 +508,21 @@ class RepositorioProgreso {
 
   /// Asegura que el rango sea al menos [minimo]. Si ya es igual o
   /// superior, no hace nada y devuelve `false`. Si sube, persiste el
-  /// nuevo rango, activa su `flagAlcanzado` y devuelve `true`.
+  /// nuevo rango, activa el `flagAlcanzado` de **cada rango intermedio**
+  /// y devuelve `true`.
+  ///
+  /// Activar los intermedios importa: la escena 1.13 (Las palabras de
+  /// Irune) requiere `rango_aprendiz_ii_alcanzado`. Si saltáramos de
+  /// Aprendiz I a Aprendiz III directamente (combate kurz_3 victoria
+  /// con esquirlas que ya cruzaron varios umbrales), la 1.13 quedaba
+  /// latente sin razón aparente.
   Future<bool> forzarRangoMinimo(RangoNarrativo minimo) async {
     final actual = await cargarRango();
     if (actual.valor >= minimo.valor) return false;
     await guardarRango(minimo);
-    await activarFlagNarrativo(minimo.flagAlcanzado);
+    for (var i = actual.valor + 1; i <= minimo.valor; i++) {
+      await activarFlagNarrativo(RangoNarrativo.values[i].flagAlcanzado);
+    }
     return true;
   }
 

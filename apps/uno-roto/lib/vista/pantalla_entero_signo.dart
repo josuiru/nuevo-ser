@@ -21,8 +21,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// resultado entre cuatro candidatos. Pedagogía del signo en enteros.
 class PantallaEnteroSigno extends StatefulWidget {
   final ProblemaEnteroSigno? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaEnteroSigno({super.key, this.problemaPredeterminado});
+  const PantallaEnteroSigno({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaEnteroSigno> createState() => _PantallaEnteroSignoState();
@@ -47,7 +52,7 @@ class _PantallaEnteroSignoState extends State<PantallaEnteroSigno>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorEnteroSigno().generar(dificultad: 1);
+        GeneradorEnteroSigno().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

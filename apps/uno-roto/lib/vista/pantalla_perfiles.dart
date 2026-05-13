@@ -50,46 +50,51 @@ class _PantallaPerfilesState extends State<PantallaPerfiles> {
   Future<void> _crearPerfilNuevo() async {
     final textos = AppLocalizations.of(context);
     final controladorNombre = TextEditingController();
-    final nombreIntroducido = await showDialog<String>(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: PaletaNeon.fondoMedio,
-        title: Text(
-          textos.perfDialogNuevoTitulo,
-          style: const TextStyle(color: PaletaNeon.textoPrincipal),
-        ),
-        content: TextField(
-          controller: controladorNombre,
-          autofocus: true,
-          maxLength: 20,
-          style: const TextStyle(color: PaletaNeon.textoPrincipal),
-          decoration: InputDecoration(
-            hintText: textos.perfDialogNuevoHint,
-            hintStyle: const TextStyle(color: PaletaNeon.textoTenue),
-            counterStyle: const TextStyle(color: PaletaNeon.textoTenue),
+    final String? nombreIntroducido;
+    try {
+      nombreIntroducido = await showDialog<String>(
+        context: context,
+        builder: (_) => AlertDialog(
+          backgroundColor: PaletaNeon.fondoMedio,
+          title: Text(
+            textos.perfDialogNuevoTitulo,
+            style: const TextStyle(color: PaletaNeon.textoPrincipal),
           ),
-          onSubmitted: (texto) =>
-              Navigator.of(context).pop(texto.trim()),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              textos.comunCancelar,
-              style: const TextStyle(color: PaletaNeon.textoTenue),
+          content: TextField(
+            controller: controladorNombre,
+            autofocus: true,
+            maxLength: 20,
+            style: const TextStyle(color: PaletaNeon.textoPrincipal),
+            decoration: InputDecoration(
+              hintText: textos.perfDialogNuevoHint,
+              hintStyle: const TextStyle(color: PaletaNeon.textoTenue),
+              counterStyle: const TextStyle(color: PaletaNeon.textoTenue),
             ),
+            onSubmitted: (texto) =>
+                Navigator.of(context).pop(texto.trim()),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context)
-                .pop(controladorNombre.text.trim()),
-            child: Text(
-              textos.perfBotonCrear,
-              style: const TextStyle(color: PaletaNeon.violetaNeon),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                textos.comunCancelar,
+                style: const TextStyle(color: PaletaNeon.textoTenue),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            TextButton(
+              onPressed: () => Navigator.of(context)
+                  .pop(controladorNombre.text.trim()),
+              child: Text(
+                textos.perfBotonCrear,
+                style: const TextStyle(color: PaletaNeon.violetaNeon),
+              ),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      controladorNombre.dispose();
+    }
     if (nombreIntroducido == null || nombreIntroducido.isEmpty) return;
     final idCreado =
         await widget.repositorio.crearPerfil(nombreIntroducido);

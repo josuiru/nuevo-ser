@@ -99,6 +99,11 @@ class _PantallaCombateEnfoqueState extends State<PantallaCombateEnfoque>
   }
 
   void _gestionarFinSubCombate() {
+    // El status listener del controller de rotura puede dispararse en
+    // el mismo frame que un pop por "huir", dejando el widget
+    // desmontado pero con el callback en cola. Sin esta guarda,
+    // `Navigator.of(context)` o `setState` rompen el árbol.
+    if (!mounted) return;
     if (_subCombatesResueltos >= _subCombatesTotales) {
       Navigator.of(context).pop(true);
       return;

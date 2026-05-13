@@ -20,8 +20,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// solución (x, y) entre cuatro candidatos.
 class PantallaSistemaDosXDos extends StatefulWidget {
   final ProblemaSistemaDosXDos? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaSistemaDosXDos({super.key, this.problemaPredeterminado});
+  const PantallaSistemaDosXDos({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaSistemaDosXDos> createState() =>
@@ -47,7 +52,7 @@ class _PantallaSistemaDosXDosState extends State<PantallaSistemaDosXDos>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorSistemaDosXDos().generar(dificultad: 1);
+        GeneradorSistemaDosXDos().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

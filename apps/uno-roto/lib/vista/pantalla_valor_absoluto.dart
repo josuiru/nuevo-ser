@@ -21,8 +21,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// cuatro candidatos. Pedagogía del "lo que dista del cero".
 class PantallaValorAbsoluto extends StatefulWidget {
   final ProblemaValorAbsoluto? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaValorAbsoluto({super.key, this.problemaPredeterminado});
+  const PantallaValorAbsoluto({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaValorAbsoluto> createState() => _PantallaValorAbsolutoState();
@@ -47,7 +52,7 @@ class _PantallaValorAbsolutoState extends State<PantallaValorAbsoluto>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorValorAbsoluto().generar(dificultad: 1);
+        GeneradorValorAbsoluto().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

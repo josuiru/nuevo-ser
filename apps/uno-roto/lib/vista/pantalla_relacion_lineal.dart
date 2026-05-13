@@ -20,8 +20,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// `y = mx + n` correspondiente.
 class PantallaRelacionLineal extends StatefulWidget {
   final ProblemaRelacionLineal? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaRelacionLineal({super.key, this.problemaPredeterminado});
+  const PantallaRelacionLineal({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaRelacionLineal> createState() =>
@@ -47,7 +52,7 @@ class _PantallaRelacionLinealState extends State<PantallaRelacionLineal>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorRelacionLineal().generar(dificultad: 1);
+        GeneradorRelacionLineal().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

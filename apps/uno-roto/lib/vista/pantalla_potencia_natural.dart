@@ -21,8 +21,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// candidatos. Entrada a la potencia como multiplicación repetida.
 class PantallaPotenciaNatural extends StatefulWidget {
   final ProblemaPotenciaNatural? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaPotenciaNatural({super.key, this.problemaPredeterminado});
+  const PantallaPotenciaNatural({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaPotenciaNatural> createState() =>
@@ -48,7 +53,7 @@ class _PantallaPotenciaNaturalState extends State<PantallaPotenciaNatural>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorPotenciaNatural().generar(dificultad: 1);
+        GeneradorPotenciaNatural().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

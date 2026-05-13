@@ -297,27 +297,33 @@ class _OrquestadorFasesState extends State<OrquestadorFases> {
     EscenaCinematica variante,
     bool poolReseteado,
   ) async {
+    // Cuando el pool se acaba de resetear, usamos `reemplazarTodo: true`
+    // para que el set quede en {id} en una sola escritura. Sin esto,
+    // un reset seguido de un marcado dejaba una ventana intermedia con
+    // el set vacío: si la app se cerraba ahí, en el siguiente arranque
+    // la primera variante del array volvía a salir, repitiendo la que
+    // el niño acababa de ver.
     switch (arco) {
       case ArcoConVariantes.arco1:
-        if (poolReseteado) {
-          await _repositorio.resetearVariantesEntrenamiento();
-        }
-        await _repositorio.marcarVarianteEntrenamientoUsada(variante.id);
+        await _repositorio.marcarVarianteEntrenamientoUsada(
+          variante.id,
+          reemplazarTodo: poolReseteado,
+        );
       case ArcoConVariantes.arco2:
-        if (poolReseteado) {
-          await _repositorio.resetearVariantesPuentes();
-        }
-        await _repositorio.marcarVariantePuenteUsada(variante.id);
+        await _repositorio.marcarVariantePuenteUsada(
+          variante.id,
+          reemplazarTodo: poolReseteado,
+        );
       case ArcoConVariantes.arco3:
-        if (poolReseteado) {
-          await _repositorio.resetearVariantesMaquinas();
-        }
-        await _repositorio.marcarVarianteMaquinaUsada(variante.id);
+        await _repositorio.marcarVarianteMaquinaUsada(
+          variante.id,
+          reemplazarTodo: poolReseteado,
+        );
       case ArcoConVariantes.eraDos:
-        if (poolReseteado) {
-          await _repositorio.resetearVariantesEraDos();
-        }
-        await _repositorio.marcarVarianteEraDosUsada(variante.id);
+        await _repositorio.marcarVarianteEraDosUsada(
+          variante.id,
+          reemplazarTodo: poolReseteado,
+        );
     }
   }
 

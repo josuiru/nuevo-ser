@@ -293,6 +293,58 @@ void main() {
   });
 
   test(
+    'forzarRangoMinimo activa los flags de cada rango intermedio',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final repo = RepositorioProgreso();
+
+      // Saltar de Aprendiz I directamente a Aprendiz III debe activar
+      // también el flag de Aprendiz II — la escena 1.13 depende de él.
+      final subio = await repo.forzarRangoMinimo(RangoNarrativo.aprendiz3);
+      expect(subio, isTrue);
+
+      final flags = await repo.flagsNarrativosActivos();
+      expect(
+        flags,
+        containsAll([
+          'rango_aprendiz_ii_alcanzado',
+          'rango_aprendiz_iii_alcanzado',
+        ]),
+      );
+
+      // Llamar otra vez no hace nada y no añade flags duplicados.
+      final subioOtraVez =
+          await repo.forzarRangoMinimo(RangoNarrativo.aprendiz3);
+      expect(subioOtraVez, isFalse);
+    },
+  );
+
+  test(
+    'marcarVarianteEntrenamientoUsada con reemplazarTodo escribe solo el id dado',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final repo = RepositorioProgreso();
+
+      // Pre-cargamos varias variantes "usadas" simulando una ronda agotada.
+      await repo.marcarVarianteEntrenamientoUsada('a');
+      await repo.marcarVarianteEntrenamientoUsada('b');
+      await repo.marcarVarianteEntrenamientoUsada('c');
+      expect(
+        await repo.cargarVariantesEntrenamientoUsadas(),
+        {'a', 'b', 'c'},
+      );
+
+      // Cuando el pool se resetea y se elige la primera del array nuevo,
+      // el flag `reemplazarTodo` deja el set en {id} de una sola vez.
+      await repo.marcarVarianteEntrenamientoUsada(
+        'd',
+        reemplazarTodo: true,
+      );
+      expect(await repo.cargarVariantesEntrenamientoUsadas(), {'d'});
+    },
+  );
+
+  test(
     'VariantesPuentes.elegirSiguiente evita las usadas',
     () {
       final primera = VariantesPuentes.elegirSiguiente(const {});

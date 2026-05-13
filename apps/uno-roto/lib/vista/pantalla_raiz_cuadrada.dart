@@ -22,8 +22,13 @@ import 'widgets/ayuda_tras_fallos.dart';
 /// contraria a la potenciación.
 class PantallaRaizCuadrada extends StatefulWidget {
   final ProblemaRaizCuadrada? problemaPredeterminado;
+  final int dificultad;
 
-  const PantallaRaizCuadrada({super.key, this.problemaPredeterminado});
+  const PantallaRaizCuadrada({
+    super.key,
+    this.problemaPredeterminado,
+    this.dificultad = 1,
+  });
 
   @override
   State<PantallaRaizCuadrada> createState() => _PantallaRaizCuadradaState();
@@ -48,7 +53,7 @@ class _PantallaRaizCuadradaState extends State<PantallaRaizCuadrada>
     )..repeat();
     _pista = EstadoPistaPuzzle(alCambiar: () => setState(() {}));
     _problema = widget.problemaPredeterminado ??
-        GeneradorRaizCuadrada().generar(dificultad: 1);
+        GeneradorRaizCuadrada().generar(dificultad: widget.dificultad);
     _decidirSiMostrarDemo();
   }
 

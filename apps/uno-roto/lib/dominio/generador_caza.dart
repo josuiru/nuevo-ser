@@ -222,6 +222,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -240,6 +241,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -259,6 +261,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -279,6 +282,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -297,6 +301,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -315,6 +320,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -335,6 +341,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
@@ -353,6 +360,7 @@ class GeneradorCaza {
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
       );
     }
 
