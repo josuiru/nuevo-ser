@@ -38,23 +38,43 @@ void main() {
     );
   }
 
-  testWidgets('Abrir pieza muestra texto y decisiones válidas', (tester) async {
+  testWidgets('Pieza sin identificar muestra panel y oculta decisiones',
+      (tester) async {
     final cargador = CargadorCorpus(bundle: bundleConPiezasReales());
     await tester.pumpWidget(_app(cargador: cargador));
     await tester.pumpAndSettle();
 
-    // Tocar pieza de Inês.
     await tester.tap(
       find.byKey(const ValueKey('pieza-carta-ines-bacalao-001')),
     );
-    // pumpAndSettle se cuelga en transiciones MaterialPageRoute por
-    // animaciones que mantienen actividad. Usamos pump discreto:
-    // un frame para disparar el tap + 500ms para la transición.
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
-    // Pantalla de documento: el cuerpo contiene "Caro João".
+    // Texto visible.
     expect(find.textContaining('Caro João'), findsOneWidget);
+    // Panel de identificación visible.
+    expect(find.text('¿En qué lengua viene?'), findsOneWidget);
+    // Decisiones NO visibles aún.
+    expect(find.text('Archivar'), findsNothing);
+    expect(find.text('Entregar al destinatario'), findsNothing);
+  });
+
+  testWidgets('Tras identificar la lengua aparecen las decisiones',
+      (tester) async {
+    final cargador = CargadorCorpus(bundle: bundleConPiezasReales());
+    await tester.pumpWidget(_app(cargador: cargador));
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.byKey(const ValueKey('pieza-carta-ines-bacalao-001')),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Identificar como Portugués (lengua correcta de la carta de Inês).
+    await tester.tap(find.text('Portugués'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     // Decisiones válidas para la pieza de Inês.
     expect(find.text('Archivar'), findsOneWidget);
@@ -64,6 +84,34 @@ void main() {
     // No válidas para esta pieza.
     expect(find.text('Devolver al remitente'), findsNothing);
     expect(find.text('Esperar'), findsNothing);
+
+    // Panel ya no debe estar.
+    expect(find.text('¿En qué lengua viene?'), findsNothing);
+  });
+
+  testWidgets('Fallar identificación mantiene panel con pista', (tester) async {
+    final cargador = CargadorCorpus(bundle: bundleConPiezasReales());
+    await tester.pumpWidget(_app(cargador: cargador));
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.byKey(const ValueKey('pieza-carta-ines-bacalao-001')),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Elegir Castellano (es de familia romance, igual que portugués →
+    // debe disparar la pista "Cerca. La familia es la misma.").
+    await tester.tap(find.text('Castellano'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+
+    // El panel sigue.
+    expect(find.text('¿En qué lengua viene?'), findsOneWidget);
+    // Mensaje del maestro con pista por familia.
+    expect(find.textContaining('familia es la misma'), findsOneWidget);
+    // Decisiones siguen ocultas.
+    expect(find.text('Archivar'), findsNothing);
   });
 
   testWidgets('Decidir archivar mueve pieza a resuelto', (tester) async {
@@ -74,13 +122,16 @@ void main() {
     // Estado inicial.
     expect(find.text('Archivo: nada hoy'), findsOneWidget);
 
-    // Abrir Inês, archivar.
+    // Abrir Inês, identificar portugués, archivar.
     await tester.tap(
       find.byKey(const ValueKey('pieza-carta-ines-bacalao-001')),
       warnIfMissed: false,
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.text('Portugués'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
     await tester.tap(find.text('Archivar'));
     // Tras decidir hay await + Navigator.pop. Pump discreto.
     await tester.pump();
@@ -108,9 +159,12 @@ void main() {
       0,
     );
 
-    // Abrir y archivar la carta de Inês.
+    // Abrir, identificar portugués, archivar la carta de Inês.
     await tester.tap(find.textContaining('ines cocinera lisboa'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Portugués'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
     await tester.tap(find.text('Archivar'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
@@ -131,13 +185,17 @@ void main() {
       await tester.pumpWidget(_app(cargador: cargador, repo: repo));
       await tester.pumpAndSettle();
 
-      // Abrir y archivar la nota de Niko (voz puntual no recurrente).
+      // Abrir, identificar euskara, archivar la nota de Niko (voz
+      // puntual no recurrente).
       await tester.tap(
         find.byKey(const ValueKey('pieza-nota-companero-aprendiz-026')),
         warnIfMissed: false,
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
+      await tester.tap(find.text('Euskara'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
       await tester.tap(find.text('Archivar'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));

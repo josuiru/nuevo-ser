@@ -18,10 +18,12 @@ import 'package:flutter/material.dart';
 
 import '../datos/cargador_corpus.dart';
 import '../datos/repositorio_familiaridad.dart';
+import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
 import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_sesion.dart';
 import '../datos/repositorio_vocabulario.dart';
+import '../dominio/identificaciones_lengua.dart';
 import '../dominio/decision_documento.dart';
 import '../dominio/estado_sesion.dart';
 import '../dominio/pieza_corpus.dart';
@@ -39,6 +41,7 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioVocabularioInyectado,
     this.repositorioInterpretacionesInyectado,
     this.repositorioPistasInyectado,
+    this.repositorioIdentificacionesInyectado,
   });
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
@@ -69,6 +72,10 @@ class PantallaMesa extends StatefulWidget {
   /// con el idPerfil.
   final RepositorioPistas? repositorioPistasInyectado;
 
+  /// RepositorioIdentificaciones inyectado (para tests). Si null, se
+  /// construye con el idPerfil.
+  final RepositorioIdentificaciones? repositorioIdentificacionesInyectado;
+
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
 }
@@ -81,7 +88,9 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   late final RepositorioVocabulario _repositorioVocabulario;
   late final RepositorioInterpretaciones _repositorioInterpretaciones;
   late final RepositorioPistas _repositorioPistas;
+  late final RepositorioIdentificaciones _repositorioIdentificaciones;
   late final CargadorCorpus _cargador;
+  IdentificacionesPiezas _identificaciones = IdentificacionesPiezas.inicial();
 
   @override
   void initState() {
@@ -98,8 +107,18 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
             RepositorioInterpretaciones(idPerfil: widget.idPerfil);
     _repositorioPistas = widget.repositorioPistasInyectado ??
         RepositorioPistas(idPerfil: widget.idPerfil);
+    _repositorioIdentificaciones =
+        widget.repositorioIdentificacionesInyectado ??
+            RepositorioIdentificaciones(idPerfil: widget.idPerfil);
     _cargador = widget.cargadorInyectado ?? CargadorCorpus();
     _cargarCorpus();
+    _cargarIdentificaciones();
+  }
+
+  Future<void> _cargarIdentificaciones() async {
+    final identificaciones = await _repositorioIdentificaciones.cargar();
+    if (!mounted) return;
+    setState(() => _identificaciones = identificaciones);
   }
 
   Future<void> _cargarCorpus() async {
@@ -132,11 +151,16 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
           repositorioVocabularioInyectado: _repositorioVocabulario,
           repositorioInterpretacionesInyectado: _repositorioInterpretaciones,
           repositorioPistasInyectado: _repositorioPistas,
+          repositorioIdentificacionesInyectado: _repositorioIdentificaciones,
           piezasResueltas: piezasResueltas,
           idPerfil: widget.idPerfil,
         ),
       ),
     );
+    if (!mounted) return;
+    // Refrescar identificaciones — el niño pudo haber identificado la
+    // lengua sin llegar a decidir, y queremos que la tarjeta lo refleje.
+    await _cargarIdentificaciones();
     if (!mounted) return;
     if (decision != null) {
       // Persistir antes de actualizar UI para que un cierre forzoso
@@ -182,6 +206,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
                 ? const _Cargando()
                 : _Mesa(
                     estado: estado,
+                    identificaciones: _identificaciones,
                     alTocarPieza: _abrirPieza,
                     alAbrirCuaderno: _abrirCuaderno,
                   ),
@@ -235,11 +260,13 @@ class _ErrorCarga extends StatelessWidget {
 class _Mesa extends StatelessWidget {
   const _Mesa({
     required this.estado,
+    required this.identificaciones,
     required this.alTocarPieza,
     required this.alAbrirCuaderno,
   });
 
   final EstadoSesion estado;
+  final IdentificacionesPiezas identificaciones;
   final ValueChanged<PiezaCorpus> alTocarPieza;
   final VoidCallback alAbrirCuaderno;
 
@@ -265,6 +292,7 @@ class _Mesa extends StatelessWidget {
           top: 96,
           child: _BandejaEntrada(
             piezas: estado.piezasEnBandejaDeEntrada(),
+            identificaciones: identificaciones,
             alTocarPieza: alTocarPieza,
           ),
         ),
@@ -309,9 +337,14 @@ class _SaludoMaestro extends StatelessWidget {
 }
 
 class _BandejaEntrada extends StatelessWidget {
-  const _BandejaEntrada({required this.piezas, required this.alTocarPieza});
+  const _BandejaEntrada({
+    required this.piezas,
+    required this.identificaciones,
+    required this.alTocarPieza,
+  });
 
   final List<PiezaCorpus> piezas;
+  final IdentificacionesPiezas identificaciones;
   final ValueChanged<PiezaCorpus> alTocarPieza;
 
   @override
@@ -334,6 +367,8 @@ class _BandejaEntrada extends StatelessWidget {
             _PapelEnBandeja(
               key: ValueKey('pieza-${piezas[indice].id}'),
               pieza: piezas[indice],
+              lenguaIdentificada:
+                  identificaciones.yaIdentificada(piezas[indice].id),
               alTocar: () => alTocarPieza(piezas[indice]),
             ),
           ],
@@ -347,10 +382,16 @@ class _PapelEnBandeja extends StatelessWidget {
   const _PapelEnBandeja({
     super.key,
     required this.pieza,
+    required this.lenguaIdentificada,
     required this.alTocar,
   });
 
   final PiezaCorpus pieza;
+
+  /// True si el niño ya identificó la lengua de esta pieza. Si no,
+  /// la tarjeta muestra "?" en el espacio de lengua — mecánica
+  /// nuclear §3.1.
+  final bool lenguaIdentificada;
   final VoidCallback alTocar;
 
   @override
@@ -395,7 +436,9 @@ class _PapelEnBandeja extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  pieza.lenguaPrincipal.nombreCanonico,
+                  lenguaIdentificada
+                      ? pieza.lenguaPrincipal.nombreCanonico
+                      : 'lengua sin identificar',
                   style: const TextStyle(
                     color: PaletaEstafeta.sepia,
                     fontSize: 11,

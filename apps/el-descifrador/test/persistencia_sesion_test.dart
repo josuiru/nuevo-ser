@@ -58,6 +58,10 @@ void main() {
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
+      // Identificar lengua antes de archivar (mecánica nuclear §3.1).
+      await tester.tap(find.text('Portugués'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
       await tester.tap(find.text('Archivar'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));

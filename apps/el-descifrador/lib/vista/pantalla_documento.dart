@@ -14,19 +14,24 @@
 import 'package:flutter/material.dart';
 
 import '../datos/repositorio_familiaridad.dart';
+import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
 import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/decision_documento.dart';
+import '../dominio/identificaciones_lengua.dart';
 import '../dominio/interpretacion_pieza.dart';
+import '../dominio/lengua.dart';
 import '../dominio/pieza_corpus.dart';
 import '../dominio/pistas_pedidas.dart';
+import '../dominio/servicio_candidatas_lengua.dart';
 import '../dominio/servicio_pistas.dart';
 import '../dominio/vocabulario_jugador.dart';
 import 'paleta_estafeta.dart';
 import 'widgets/dialogo_marcar_palabra.dart';
 import 'widgets/dialogo_pedir_pista.dart';
 import 'widgets/dialogo_proponer_interpretacion.dart';
+import 'widgets/panel_identificar_lengua.dart';
 import 'widgets/texto_marcable.dart';
 
 class PantallaDocumento extends StatefulWidget {
@@ -37,6 +42,8 @@ class PantallaDocumento extends StatefulWidget {
     this.repositorioVocabularioInyectado,
     this.repositorioInterpretacionesInyectado,
     this.repositorioPistasInyectado,
+    this.repositorioIdentificacionesInyectado,
+    this.servicioCandidatasInyectado,
     this.piezasResueltas = const [],
     this.idPerfil = 'principal',
   });
@@ -46,6 +53,11 @@ class PantallaDocumento extends StatefulWidget {
   final RepositorioVocabulario? repositorioVocabularioInyectado;
   final RepositorioInterpretaciones? repositorioInterpretacionesInyectado;
   final RepositorioPistas? repositorioPistasInyectado;
+  final RepositorioIdentificaciones? repositorioIdentificacionesInyectado;
+
+  /// Servicio que produce las candidatas de lengua. Inyectable para
+  /// tests deterministas.
+  final ServicioCandidatasLengua? servicioCandidatasInyectado;
 
   /// Piezas que el niño ha resuelto antes. El servicio de pistas las
   /// consulta para construir la pista de comparación.
@@ -60,10 +72,14 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   late final RepositorioVocabulario _repositorioVocabulario;
   late final RepositorioInterpretaciones _repositorioInterpretaciones;
   late final RepositorioPistas _repositorioPistas;
+  late final RepositorioIdentificaciones _repositorioIdentificaciones;
+  late final ServicioCandidatasLengua _servicioCandidatas;
   static const ServicioPistas _servicioPistas = ServicioPistas();
   VocabularioJugador? _vocabulario;
   InterpretacionPieza? _interpretacionActual;
   PistasPedidas _pistas = PistasPedidas.inicial();
+  IdentificacionLengua? _identificacion;
+  List<Lengua>? _candidatasLengua;
 
   @override
   void initState() {
@@ -75,9 +91,39 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
             RepositorioInterpretaciones(idPerfil: widget.idPerfil);
     _repositorioPistas = widget.repositorioPistasInyectado ??
         RepositorioPistas(idPerfil: widget.idPerfil);
+    _repositorioIdentificaciones =
+        widget.repositorioIdentificacionesInyectado ??
+            RepositorioIdentificaciones(idPerfil: widget.idPerfil);
+    _servicioCandidatas =
+        widget.servicioCandidatasInyectado ?? ServicioCandidatasLengua();
     _cargarVocabulario();
     _cargarInterpretacion();
     _cargarPistas();
+    _cargarIdentificacion();
+  }
+
+  Future<void> _cargarIdentificacion() async {
+    final identificaciones = await _repositorioIdentificaciones.cargar();
+    if (!mounted) return;
+    setState(() {
+      _identificacion = identificaciones.identificacionDe(widget.pieza.id);
+      _candidatasLengua = _servicioCandidatas.candidatasPara(
+        lenguaCorrecta: widget.pieza.lenguaPrincipal,
+      );
+    });
+  }
+
+  Future<void> _alElegirLengua(Lengua intentada) async {
+    final actualizadas =
+        await _repositorioIdentificaciones.registrarIntento(
+      idPieza: widget.pieza.id,
+      lenguaIntentada: intentada,
+      lenguaCorrecta: widget.pieza.lenguaPrincipal,
+    );
+    if (!mounted) return;
+    setState(() {
+      _identificacion = actualizadas.identificacionDe(widget.pieza.id);
+    });
   }
 
   Future<void> _cargarPistas() async {
@@ -200,6 +246,9 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   @override
   Widget build(BuildContext contexto) {
     final vocabulario = _vocabulario ?? VocabularioJugador.inicial();
+    final yaIdentificada =
+        _identificacion?.identificadaCorrectamente ?? false;
+    final candidatas = _candidatasLengua;
     return Scaffold(
       backgroundColor: PaletaEstafeta.madera.withValues(alpha: 0.95),
       body: SafeArea(
@@ -220,6 +269,10 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
                   interpretacionActual: _interpretacionActual,
                   palabrasConPistaPedida:
                       _pistas.palabrasConPistaEn(widget.pieza.id),
+                  identificada: yaIdentificada,
+                  identificacionPrevia: _identificacion,
+                  candidatasLengua: candidatas ?? const [],
+                  alElegirLengua: _alElegirLengua,
                   alTocarPalabra: _alTocarPalabra,
                   alProponerInterpretacion: _alProponerInterpretacion,
                   alDecidir: _alDecidir,
@@ -249,6 +302,10 @@ class _DocumentoAbierto extends StatelessWidget {
     required this.vocabulario,
     required this.interpretacionActual,
     required this.palabrasConPistaPedida,
+    required this.identificada,
+    required this.identificacionPrevia,
+    required this.candidatasLengua,
+    required this.alElegirLengua,
     required this.alTocarPalabra,
     required this.alProponerInterpretacion,
     required this.alDecidir,
@@ -258,6 +315,10 @@ class _DocumentoAbierto extends StatelessWidget {
   final VocabularioJugador vocabulario;
   final InterpretacionPieza? interpretacionActual;
   final Set<String> palabrasConPistaPedida;
+  final bool identificada;
+  final IdentificacionLengua? identificacionPrevia;
+  final List<Lengua> candidatasLengua;
+  final ValueChanged<Lengua> alElegirLengua;
   final void Function(String palabraOriginal) alTocarPalabra;
   final VoidCallback alProponerInterpretacion;
   final ValueChanged<DecisionDocumento> alDecidir;
@@ -286,7 +347,7 @@ class _DocumentoAbierto extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  pieza.lenguaPrincipal.nombreCanonico,
+                  identificada ? pieza.lenguaPrincipal.nombreCanonico : '?',
                   style: const TextStyle(
                     color: PaletaEstafeta.sepia,
                     fontSize: 12,
@@ -306,22 +367,32 @@ class _DocumentoAbierto extends StatelessWidget {
                   lengua: pieza.lenguaPrincipal,
                   vocabulario: vocabulario,
                   palabrasConPistaPedida: palabrasConPistaPedida,
-                  alTocarPalabra: alTocarPalabra,
+                  alTocarPalabra:
+                      identificada ? alTocarPalabra : (_) {},
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Divider(color: PaletaEstafeta.sepia.withValues(alpha: 0.4)),
             const SizedBox(height: 12),
-            _BotonInterpretacion(
-              tieneInterpretacion: interpretacionActual != null,
-              alPulsar: alProponerInterpretacion,
-            ),
-            const SizedBox(height: 12),
-            _BarraDecisiones(
-              decisionesValidas: pieza.decisionesValidas,
-              alDecidir: alDecidir,
-            ),
+            if (!identificada)
+              PanelIdentificarLengua(
+                candidatas: candidatasLengua,
+                identificacionPrevia: identificacionPrevia,
+                lenguaCorrecta: pieza.lenguaPrincipal,
+                alElegir: alElegirLengua,
+              )
+            else ...[
+              _BotonInterpretacion(
+                tieneInterpretacion: interpretacionActual != null,
+                alPulsar: alProponerInterpretacion,
+              ),
+              const SizedBox(height: 12),
+              _BarraDecisiones(
+                decisionesValidas: pieza.decisionesValidas,
+                alDecidir: alDecidir,
+              ),
+            ],
           ],
         ),
       ),
