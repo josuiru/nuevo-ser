@@ -3,10 +3,13 @@
 // El cuaderno es el progreso visible del niño en el juego. Sin XP,
 // sin barras, sin estrellas — solo páginas que ganan densidad.
 //
-// Tres secciones iniciales en v0.4.0:
+// Secciones del cuaderno:
 //   - Lenguas: una página por lengua vista en el corpus trabajado.
 //   - Personajes: una página por VozRemitente recurrente con piezas
 //     trabajadas. Muestra nivel de familiaridad.
+//   - Vocabulario: palabras marcadas verde/amarillo/rojo por lengua.
+//   - Mis interpretaciones: hipótesis del niño sobre documentos. Mecánica
+//     nuclear §3.4. La hipótesis es estado válido (biblia §2.3).
 //   - Documentos resueltos: lista de piezas en bandeja resuelto.
 //
 // Diseño tipográfico: el cuaderno habla poco (doc 09 §2). Su voz es
@@ -16,6 +19,7 @@ import 'package:flutter/material.dart';
 
 import '../dominio/estado_sesion.dart';
 import '../dominio/familiaridad_remitente.dart';
+import '../dominio/interpretacion_pieza.dart';
 import '../dominio/lengua.dart';
 import '../dominio/pieza_corpus.dart';
 import '../dominio/vocabulario_jugador.dart';
@@ -23,12 +27,14 @@ import '../dominio/voz_remitente.dart';
 import 'paleta_estafeta.dart';
 
 class PantallaCuaderno extends StatelessWidget {
-  const PantallaCuaderno({
+  PantallaCuaderno({
     super.key,
     required this.estadoSesion,
     required this.familiaridad,
     required this.vocabulario,
-  });
+    InterpretacionesPropuestas? interpretaciones,
+  }) : interpretaciones =
+            interpretaciones ?? InterpretacionesPropuestas.inicial();
 
   /// Estado actual de la sesión: piezas resueltas que el cuaderno
   /// indexa.
@@ -39,6 +45,9 @@ class PantallaCuaderno extends StatelessWidget {
 
   /// Vocabulario de palabras marcadas por el niño en cada lengua.
   final VocabularioJugador vocabulario;
+
+  /// Interpretaciones que el niño ha propuesto para documentos.
+  final InterpretacionesPropuestas interpretaciones;
 
   @override
   Widget build(BuildContext contexto) {
@@ -79,6 +88,11 @@ class PantallaCuaderno extends StatelessWidget {
                   ),
                   const _SeparadorPagina(),
                   _SeccionVocabulario(vocabulario: vocabulario),
+                  const _SeparadorPagina(),
+                  _SeccionInterpretaciones(
+                    interpretaciones: interpretaciones,
+                    estadoSesion: estadoSesion,
+                  ),
                   const _SeparadorPagina(),
                   _SeccionDocumentosResueltos(piezas: piezasResueltas),
                 ],
@@ -369,6 +383,115 @@ class _FilaPalabra extends StatelessWidget {
                     ),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SeccionInterpretaciones extends StatelessWidget {
+  const _SeccionInterpretaciones({
+    required this.interpretaciones,
+    required this.estadoSesion,
+  });
+
+  final InterpretacionesPropuestas interpretaciones;
+  final EstadoSesion estadoSesion;
+
+  String _tituloPieza(String idPieza) {
+    try {
+      final pieza = estadoSesion.piezaPorId(idPieza);
+      return '${pieza.remitenteTextoLibre.replaceAll('_', ' ')} '
+          '— ${pieza.lenguaPrincipal.nombreCanonico}';
+    } catch (_) {
+      return idPieza;
+    }
+  }
+
+  String _formatearFecha(DateTime fecha) {
+    final dia = fecha.day.toString().padLeft(2, '0');
+    final mes = fecha.month.toString().padLeft(2, '0');
+    return '$dia/$mes/${fecha.year}';
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    final lista = interpretaciones.ordenadasPorFecha();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _TituloSeccion('Mis interpretaciones'),
+        if (lista.isEmpty)
+          const _MensajeVacio(
+            'Aún no has propuesto ninguna interpretación. Cuando creas saber '
+            'lo que dice un documento, escríbelo aquí.',
+          )
+        else
+          for (final interpretacion in lista)
+            _FilaInterpretacion(
+              titulo: _tituloPieza(interpretacion.idPieza),
+              texto: interpretacion.texto,
+              fechaPropuesta: _formatearFecha(interpretacion.fechaPropuesta),
+              fechaRevision: interpretacion.fechaUltimaRevision == null
+                  ? null
+                  : _formatearFecha(interpretacion.fechaUltimaRevision!),
+            ),
+      ],
+    );
+  }
+}
+
+class _FilaInterpretacion extends StatelessWidget {
+  const _FilaInterpretacion({
+    required this.titulo,
+    required this.texto,
+    required this.fechaPropuesta,
+    required this.fechaRevision,
+  });
+
+  final String titulo;
+  final String texto;
+  final String fechaPropuesta;
+  final String? fechaRevision;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titulo,
+            style: const TextStyle(
+              color: PaletaEstafeta.tinta,
+              fontSize: 14,
+              fontFamily: 'serif',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            fechaRevision == null
+                ? 'Propuesta el $fechaPropuesta'
+                : 'Propuesta el $fechaPropuesta · revisada el $fechaRevision',
+            style: TextStyle(
+              color: PaletaEstafeta.sepia.withValues(alpha: 0.8),
+              fontSize: 11,
+              fontFamily: 'serif',
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            texto,
+            style: const TextStyle(
+              color: PaletaEstafeta.tinta,
+              fontSize: 14,
+              fontFamily: 'serif',
+              height: 1.4,
             ),
           ),
         ],

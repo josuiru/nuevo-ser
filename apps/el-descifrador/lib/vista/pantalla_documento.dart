@@ -14,12 +14,15 @@
 import 'package:flutter/material.dart';
 
 import '../datos/repositorio_familiaridad.dart';
+import '../datos/repositorio_interpretaciones.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/decision_documento.dart';
+import '../dominio/interpretacion_pieza.dart';
 import '../dominio/pieza_corpus.dart';
 import '../dominio/vocabulario_jugador.dart';
 import 'paleta_estafeta.dart';
 import 'widgets/dialogo_marcar_palabra.dart';
+import 'widgets/dialogo_proponer_interpretacion.dart';
 import 'widgets/texto_marcable.dart';
 
 class PantallaDocumento extends StatefulWidget {
@@ -28,12 +31,14 @@ class PantallaDocumento extends StatefulWidget {
     required this.pieza,
     required this.repositorioFamiliaridad,
     this.repositorioVocabularioInyectado,
+    this.repositorioInterpretacionesInyectado,
     this.idPerfil = 'principal',
   });
 
   final PiezaCorpus pieza;
   final RepositorioFamiliaridad repositorioFamiliaridad;
   final RepositorioVocabulario? repositorioVocabularioInyectado;
+  final RepositorioInterpretaciones? repositorioInterpretacionesInyectado;
   final String idPerfil;
 
   @override
@@ -42,20 +47,53 @@ class PantallaDocumento extends StatefulWidget {
 
 class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   late final RepositorioVocabulario _repositorioVocabulario;
+  late final RepositorioInterpretaciones _repositorioInterpretaciones;
   VocabularioJugador? _vocabulario;
+  InterpretacionPieza? _interpretacionActual;
 
   @override
   void initState() {
     super.initState();
     _repositorioVocabulario = widget.repositorioVocabularioInyectado ??
         RepositorioVocabulario(idPerfil: widget.idPerfil);
+    _repositorioInterpretaciones =
+        widget.repositorioInterpretacionesInyectado ??
+            RepositorioInterpretaciones(idPerfil: widget.idPerfil);
     _cargarVocabulario();
+    _cargarInterpretacion();
   }
 
   Future<void> _cargarVocabulario() async {
     final vocabulario = await _repositorioVocabulario.cargar();
     if (!mounted) return;
     setState(() => _vocabulario = vocabulario);
+  }
+
+  Future<void> _cargarInterpretacion() async {
+    final interpretaciones = await _repositorioInterpretaciones.cargar();
+    if (!mounted) return;
+    setState(() {
+      _interpretacionActual =
+          interpretaciones.interpretacionDe(widget.pieza.id);
+    });
+  }
+
+  Future<void> _alProponerInterpretacion() async {
+    final resultado = await mostrarDialogoProponerInterpretacion(
+      contexto: context,
+      interpretacionActual: _interpretacionActual,
+    );
+    if (resultado == null || !mounted) return;
+    final actualizadas =
+        await _repositorioInterpretaciones.proponerInterpretacion(
+      idPieza: widget.pieza.id,
+      texto: resultado.texto,
+    );
+    if (!mounted) return;
+    setState(() {
+      _interpretacionActual =
+          actualizadas.interpretacionDe(widget.pieza.id);
+    });
   }
 
   Future<void> _alTocarPalabra(String palabraOriginal) async {
@@ -118,7 +156,9 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
                 child: _DocumentoAbierto(
                   pieza: widget.pieza,
                   vocabulario: vocabulario,
+                  interpretacionActual: _interpretacionActual,
                   alTocarPalabra: _alTocarPalabra,
+                  alProponerInterpretacion: _alProponerInterpretacion,
                   alDecidir: _alDecidir,
                 ),
               ),
@@ -144,13 +184,17 @@ class _DocumentoAbierto extends StatelessWidget {
   const _DocumentoAbierto({
     required this.pieza,
     required this.vocabulario,
+    required this.interpretacionActual,
     required this.alTocarPalabra,
+    required this.alProponerInterpretacion,
     required this.alDecidir,
   });
 
   final PiezaCorpus pieza;
   final VocabularioJugador vocabulario;
+  final InterpretacionPieza? interpretacionActual;
   final void Function(String palabraOriginal) alTocarPalabra;
+  final VoidCallback alProponerInterpretacion;
   final ValueChanged<DecisionDocumento> alDecidir;
 
   @override
@@ -202,6 +246,11 @@ class _DocumentoAbierto extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Divider(color: PaletaEstafeta.sepia.withValues(alpha: 0.4)),
+            const SizedBox(height: 12),
+            _BotonInterpretacion(
+              tieneInterpretacion: interpretacionActual != null,
+              alPulsar: alProponerInterpretacion,
+            ),
             const SizedBox(height: 12),
             _BarraDecisiones(
               decisionesValidas: pieza.decisionesValidas,
@@ -279,5 +328,39 @@ class _BotonDecision extends StatelessWidget {
       case DecisionDocumento.esperar:
         return 'Esperar';
     }
+  }
+}
+
+class _BotonInterpretacion extends StatelessWidget {
+  const _BotonInterpretacion({
+    required this.tieneInterpretacion,
+    required this.alPulsar,
+  });
+
+  final bool tieneInterpretacion;
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return TextButton.icon(
+      onPressed: alPulsar,
+      style: TextButton.styleFrom(
+        foregroundColor: PaletaEstafeta.sepia,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      icon: Icon(
+        tieneInterpretacion ? Icons.edit_note : Icons.note_add_outlined,
+        size: 18,
+        color: PaletaEstafeta.sepia,
+      ),
+      label: Text(
+        tieneInterpretacion ? 'Revisar tu interpretación' : 'Tu interpretación',
+        style: const TextStyle(
+          fontSize: 13,
+          fontFamily: 'serif',
+          fontStyle: FontStyle.italic,
+        ),
+      ),
+    );
   }
 }
