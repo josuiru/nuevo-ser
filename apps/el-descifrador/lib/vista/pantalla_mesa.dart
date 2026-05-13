@@ -14,23 +14,43 @@
 // inicial — la estética definitiva la cierra el ilustrador asignado
 // (B8 BLOQUEOS-PENDIENTES.md).
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '../datos/cargador_corpus.dart';
 import '../datos/repositorio_familiaridad.dart';
+import '../datos/repositorio_sesion.dart';
+import '../dominio/decision_documento.dart';
 import '../dominio/estado_sesion.dart';
+import '../dominio/familiaridad_remitente.dart';
 import '../dominio/pieza_corpus.dart';
 import 'paleta_estafeta.dart';
+import 'pantalla_cuaderno.dart';
 import 'pantalla_documento.dart';
 
 class PantallaMesa extends StatefulWidget {
-  const PantallaMesa({super.key, this.idPerfil = 'principal'});
+  const PantallaMesa({
+    super.key,
+    this.idPerfil = 'principal',
+    this.cargadorInyectado,
+    this.repositorioFamiliaridadInyectado,
+    this.repositorioSesionInyectado,
+  });
 
-  /// ID del perfil del niño activo. En v0.3.0 hardcodeado a 'principal'
+  /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
   /// hasta que llegue el sistema de perfiles del Descifrador.
   final String idPerfil;
+
+  /// CargadorCorpus inyectado (para tests con bundle in-memory). Si
+  /// null, se construye uno con rootBundle.
+  final CargadorCorpus? cargadorInyectado;
+
+  /// RepositorioFamiliaridad inyectado (para tests). Si null, se
+  /// construye con el idPerfil.
+  final RepositorioFamiliaridad? repositorioFamiliaridadInyectado;
+
+  /// RepositorioSesion inyectado (para tests). Si null, se construye
+  /// con el idPerfil.
+  final RepositorioSesion? repositorioSesionInyectado;
 
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
@@ -40,21 +60,31 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   EstadoSesion? _estado;
   String? _errorCarga;
   late final RepositorioFamiliaridad _repositorioFamiliaridad;
+  late final RepositorioSesion _repositorioSesion;
+  late final CargadorCorpus _cargador;
 
   @override
   void initState() {
     super.initState();
-    _repositorioFamiliaridad = RepositorioFamiliaridad(idPerfil: widget.idPerfil);
+    _repositorioFamiliaridad =
+        widget.repositorioFamiliaridadInyectado ??
+            RepositorioFamiliaridad(idPerfil: widget.idPerfil);
+    _repositorioSesion = widget.repositorioSesionInyectado ??
+        RepositorioSesion(idPerfil: widget.idPerfil);
+    _cargador = widget.cargadorInyectado ?? CargadorCorpus();
     _cargarCorpus();
   }
 
   Future<void> _cargarCorpus() async {
     try {
-      final cargador = CargadorCorpus();
-      final resultado = await cargador.cargarTodo();
+      final resultado = await _cargador.cargarTodo();
+      final sesion = await _repositorioSesion.cargar();
       if (!mounted) return;
       setState(() {
-        _estado = EstadoSesion.inicial(resultado.piezasCargadas);
+        _estado = EstadoSesion.reconciliar(
+          piezasDelCorpus: resultado.piezasCargadas,
+          idsResueltas: sesion.decisionesPorPieza.keys.toSet(),
+        );
         _errorCarga = null;
       });
     } catch (excepcion) {
@@ -66,7 +96,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   }
 
   Future<void> _abrirPieza(PiezaCorpus pieza) async {
-    await Navigator.of(context).push<void>(
+    final decision = await Navigator.of(context).push<DecisionDocumento>(
       MaterialPageRoute(
         builder: (contexto) => PantallaDocumento(
           pieza: pieza,
@@ -75,9 +105,30 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
       ),
     );
     if (!mounted) return;
-    setState(() {
-      _estado = _estado?.conPiezaResuelta(pieza.id);
-    });
+    if (decision != null) {
+      // Persistir antes de actualizar UI para que un cierre forzoso
+      // entre setState y guardar no pierda la decisión.
+      await _repositorioSesion.registrarPiezaResuelta(pieza.id, decision);
+      if (!mounted) return;
+      setState(() {
+        _estado = _estado?.conPiezaResuelta(pieza.id);
+      });
+    }
+  }
+
+  Future<void> _abrirCuaderno() async {
+    final estado = _estado;
+    if (estado == null) return;
+    final familiaridad = await _repositorioFamiliaridad.cargar();
+    if (!mounted) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (contexto) => PantallaCuaderno(
+          estadoSesion: estado,
+          familiaridad: familiaridad,
+        ),
+      ),
+    );
   }
 
   @override
@@ -95,6 +146,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
                 : _Mesa(
                     estado: estado,
                     alTocarPieza: _abrirPieza,
+                    alAbrirCuaderno: _abrirCuaderno,
                   ),
       ),
     );
@@ -144,10 +196,15 @@ class _ErrorCarga extends StatelessWidget {
 }
 
 class _Mesa extends StatelessWidget {
-  const _Mesa({required this.estado, required this.alTocarPieza});
+  const _Mesa({
+    required this.estado,
+    required this.alTocarPieza,
+    required this.alAbrirCuaderno,
+  });
 
   final EstadoSesion estado;
   final ValueChanged<PiezaCorpus> alTocarPieza;
+  final VoidCallback alAbrirCuaderno;
 
   @override
   Widget build(BuildContext contexto) {
@@ -180,6 +237,13 @@ class _Mesa extends StatelessWidget {
           right: 32,
           top: 96,
           child: _BandejaResuelto(cantidad: estado.cantidadResueltas),
+        ),
+        // Botón del cuaderno (lateral derecho). Doc 11 §5.1 sitúa el
+        // cuaderno parcialmente visible en lateral derecho de la mesa.
+        Positioned(
+          right: 32,
+          bottom: 32,
+          child: _BotonCuaderno(alPulsar: alAbrirCuaderno),
         ),
       ],
     );
@@ -218,59 +282,54 @@ class _BandejaEntrada extends StatelessWidget {
     if (piezas.isEmpty) {
       return const SizedBox.shrink();
     }
+    // Layout vertical sin solapamiento en v0.4.0. El "papeles apilados
+    // con leves rotaciones" del doc 11 §5.1 lo afinará el ilustrador
+    // asignado cuando llegue (B8). Esta versión es funcional y
+    // permite hit-testing claro en tests.
     return SizedBox(
       width: 260,
-      height: 360,
-      child: Stack(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (var indice = 0; indice < piezas.length; indice++)
-            Positioned(
-              left: (indice * 12).toDouble(),
-              top: (indice * 14).toDouble(),
-              child: _PapelEnBandeja(
-                pieza: piezas[indice],
-                rotacionGrados: _rotacionPara(indice),
-                alTocar: () => alTocarPieza(piezas[indice]),
-              ),
+          for (var indice = 0; indice < piezas.length; indice++) ...[
+            if (indice > 0) const SizedBox(height: 12),
+            _PapelEnBandeja(
+              key: ValueKey('pieza-${piezas[indice].id}'),
+              pieza: piezas[indice],
+              alTocar: () => alTocarPieza(piezas[indice]),
             ),
+          ],
         ],
       ),
     );
-  }
-
-  /// Rotación leve estable por índice, sin random vivo en build.
-  /// Mantiene 4-6° de variación entre piezas según doc 11 §5.1.
-  double _rotacionPara(int indice) {
-    // Pseudoaleatorio determinista por índice — el orden no salta
-    // entre reconstrucciones.
-    final semilla = (indice * 37) % 11;
-    return (semilla - 5) * (pi / 180);
   }
 }
 
 class _PapelEnBandeja extends StatelessWidget {
   const _PapelEnBandeja({
+    super.key,
     required this.pieza,
-    required this.rotacionGrados,
     required this.alTocar,
   });
 
   final PiezaCorpus pieza;
-  final double rotacionGrados;
   final VoidCallback alTocar;
 
   @override
   Widget build(BuildContext contexto) {
-    return Transform.rotate(
-      angle: rotacionGrados,
-      child: Material(
-        color: PaletaEstafeta.papel,
-        elevation: 4,
+    // Nota v0.4.0: rotación visual diferida hasta que llegue ilustrador
+    // (doc 11 §5.1 pide leves rotaciones de 4-6° entre piezas). Transform.rotate
+    // interfiere con hit-testing en tests; el efecto se aplicará en CSS/widget
+    // de presentación cuando se cierre la guía visual definitiva.
+    return Material(
+      color: PaletaEstafeta.papel,
+      elevation: 4,
+      borderRadius: BorderRadius.circular(2),
+      child: InkWell(
+        onTap: alTocar,
         borderRadius: BorderRadius.circular(2),
-        child: InkWell(
-          onTap: alTocar,
-          borderRadius: BorderRadius.circular(2),
-          child: Container(
+        child: Container(
             width: 220,
             height: 280,
             padding: const EdgeInsets.all(20),
@@ -322,6 +381,47 @@ class _PapelEnBandeja extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+    );
+  }
+}
+
+class _BotonCuaderno extends StatelessWidget {
+  const _BotonCuaderno({required this.alPulsar});
+
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Material(
+      color: PaletaEstafeta.papel,
+      elevation: 4,
+      borderRadius: BorderRadius.circular(2),
+      child: InkWell(
+        key: const ValueKey('boton-cuaderno'),
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(2),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.book_outlined,
+                color: PaletaEstafeta.tinta,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Tu cuaderno',
+                style: const TextStyle(
+                  color: PaletaEstafeta.tinta,
+                  fontSize: 14,
+                  fontFamily: 'serif',
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -85,8 +85,9 @@ class PantallaDocumento extends StatelessWidget {
 
     if (!contexto.mounted) return;
 
-    // Cerrar la pantalla. La PantallaMesa moverá la pieza a resuelto.
-    Navigator.of(contexto).pop();
+    // Cerrar la pantalla devolviendo la decisión. PantallaMesa la
+    // persiste y mueve la pieza a resuelto.
+    Navigator.of(contexto).pop(decision);
   }
 }
 

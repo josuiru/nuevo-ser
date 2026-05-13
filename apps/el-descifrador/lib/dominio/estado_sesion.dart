@@ -41,6 +41,26 @@ class EstadoSesion {
     );
   }
 
+  /// Reconstruye estado combinando el corpus actual con una sesión
+  /// persistida previa. Piezas en el corpus que ya estaban resueltas
+  /// quedan en bandeja resuelto; las demás en bandeja entrada.
+  /// Piezas en la sesión persistida que ya no existen en el corpus
+  /// (eliminadas entre versiones) se ignoran.
+  factory EstadoSesion.reconciliar({
+    required List<PiezaCorpus> piezasDelCorpus,
+    required Set<String> idsResueltas,
+  }) {
+    final bandejas = <String, Bandeja>{};
+    for (final pieza in piezasDelCorpus) {
+      bandejas[pieza.id] =
+          idsResueltas.contains(pieza.id) ? Bandeja.resuelto : Bandeja.entrada;
+    }
+    return EstadoSesion._(
+      Map.unmodifiable(bandejas),
+      Map.unmodifiable({for (final pieza in piezasDelCorpus) pieza.id: pieza}),
+    );
+  }
+
   final Map<String, Bandeja> _bandejaPorPieza;
   final Map<String, PiezaCorpus> _piezas;
 
