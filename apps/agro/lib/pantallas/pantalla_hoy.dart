@@ -44,40 +44,53 @@ class _PantallaHoyState extends State<PantallaHoy> {
 
   Future<void> _cargar() async {
     setState(() => _cargando = true);
-    final db = BaseDatosAgro.instancia;
-    final fincaActivaId = await _persistenciaFinca.cargar();
-    final fincas = await db.listarFincas();
-    final incidencias = await db.listarIncidenciasAbiertas(fincaId: fincaActivaId);
-    final conteo = await db.contarPlantasPorCultivo(fincaId: fincaActivaId);
-    final plantas = await db.listarPlantas(fincaId: fincaActivaId);
-    final hace30 = DateTime.now().subtract(const Duration(days: 30)).millisecondsSinceEpoch;
-    double kilos = 0;
-    int n = 0;
-    for (final p in plantas) {
-      final cosechas = await db.listarCosechasDePlanta(p.id!);
-      for (final c in cosechas) {
-        if (c.fechaMs < hace30) continue;
-        kilos += c.kilos ?? 0;
-        n++;
+    // try/finally garantiza que _cargando vuelve a false aunque una
+    // query de BD falle (BD vacía recién migrada, foto rota en alguna
+    // tabla, lo que sea). Antes una excepción aquí dejaba la pantalla
+    // Hoy con spinner eterno y la tarjeta meteo nunca llegaba a
+    // renderizarse.
+    try {
+      final db = BaseDatosAgro.instancia;
+      final fincaActivaId = await _persistenciaFinca.cargar();
+      final fincas = await db.listarFincas();
+      final incidencias = await db.listarIncidenciasAbiertas(fincaId: fincaActivaId);
+      final conteo = await db.contarPlantasPorCultivo(fincaId: fincaActivaId);
+      final plantas = await db.listarPlantas(fincaId: fincaActivaId);
+      final hace30 = DateTime.now().subtract(const Duration(days: 30)).millisecondsSinceEpoch;
+      double kilos = 0;
+      int n = 0;
+      for (final p in plantas) {
+        final cosechas = await db.listarCosechasDePlanta(p.id!);
+        for (final c in cosechas) {
+          if (c.fechaMs < hace30) continue;
+          kilos += c.kilos ?? 0;
+          n++;
+        }
       }
+      final fincaActiva = fincas.where((f) => f.id == fincaActivaId).firstOrNull;
+      if (!mounted) return;
+      setState(() {
+        _nombreFincaActiva = fincaActiva?.nombre ?? 'todas las fincas';
+        _incidenciasAbiertas = incidencias;
+        _conteoPorCultivo = conteo;
+        _kilosUltimos30Dias = kilos;
+        _numCosechasUltimos30Dias = n;
+      });
+    } catch (_) {
+      // BD vacía / migrando / corrupta: dejamos los valores por defecto
+      // y dejamos que la UI se pinte (meteo + bloques vacíos).
+    } finally {
+      if (mounted) setState(() => _cargando = false);
     }
-    final fincaActiva = fincas.where((f) => f.id == fincaActivaId).firstOrNull;
-    if (!mounted) return;
-    setState(() {
-      _nombreFincaActiva = fincaActiva?.nombre ?? 'todas las fincas';
-      _incidenciasAbiertas = incidencias;
-      _conteoPorCultivo = conteo;
-      _kilosUltimos30Dias = kilos;
-      _numCosechasUltimos30Dias = n;
-      _cargando = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_cargando) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
+    // Antes: si _cargando == true, devolvíamos Scaffold pantalla
+    // completa con spinner → tarjeta meteo invisible mientras
+    // cargaba la BD. Ahora pintamos la pantalla siempre; la tarjeta
+    // meteo tiene su propio FutureBuilder y los bloques que
+    // dependen de la BD se muestran cuando _cargando vuelve a false.
     final ahora = DateTime.now();
     final mesActual = ahora.month;
     final cultivosActivos = _conteoPorCultivo.keys.toList()..sort();
