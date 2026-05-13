@@ -541,6 +541,23 @@ class BaseDatosSoleraAceitera {
     return filas.map(Parcela.fromMap).toList(growable: false);
   }
 
+  /// Actualiza solo las coordenadas de una parcela existente. Lo usa
+  /// `PantallaMapa` cuando el operador toca "Asignar GPS" sobre una
+  /// parcela que se creó sin coords desde el formulario.
+  Future<void> actualizarParcelaCoords({
+    required int id,
+    required double latitud,
+    required double longitud,
+  }) async {
+    final db = await basedatos;
+    await db.update(
+      'parcelas',
+      {'latitud': latitud, 'longitud': longitud},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<int> insertarOlivo(Olivo o) async {
     final db = await basedatos;
     return db.insert('olivos', o.toMap()..remove('id'));

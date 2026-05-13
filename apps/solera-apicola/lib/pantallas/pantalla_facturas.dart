@@ -13,7 +13,7 @@ import '../datos/base_datos.dart';
 import '../modelos/factura.dart';
 import '../servicios/generador_factura_pdf.dart';
 
-const _claveEmailBackup = 'solera_quesera.facturas.email_backup';
+const _claveEmailBackup = 'solera_apicola.facturas.email_backup';
 
 /// Pantalla de gestión de facturas emitidas.
 /// Permite crear, listar, ver PDF y compartir cada factura.

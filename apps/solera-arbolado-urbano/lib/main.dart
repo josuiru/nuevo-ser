@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'pantallas/pantalla_mapa.dart';
 import 'pantallas/pantalla_onboarding.dart';
 
-void main() {
+Future<void> main() async {
+  // `DateFormat('d MMM yyyy', 'es_ES')` que usa pantalla_facturas (y
+  // otras pantallas con fechas) lanza al primer .format() si los
+  // símbolos del locale no están cargados — la lista de facturas
+  // reventaba al renderizar el primer item tras emitir una.
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('es_ES', null);
   runApp(const SoleraArboladoUrbanoApp());
 }
 
