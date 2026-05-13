@@ -123,4 +123,25 @@
 
 ## Resueltos — 2026-05-13
 
-Doce decisiones cerradas. Ver `el-descifrador-07-decisiones-humanas-pendientes.md` §"Resueltas — 2026-05-13".
+Doce decisiones cerradas por autor responsable. Ver `el-descifrador-07-decisiones-humanas-pendientes.md` §"Resueltas — 2026-05-13".
+
+## Cierres provisionales por Claude — 2026-05-13
+
+Diez decisiones de scope cerradas provisionalmente por el asistente Claude por delegación expresa del autor responsable. **Plenamente reversibles** por el autor o cualquier asesor profesional cuando vea las piezas concretas. Ver `el-descifrador-07-decisiones-humanas-pendientes.md` §"Cierres provisionales por Claude — 2026-05-13".
+
+Las decisiones que **NO** se pueden cerrar provisionalmente (siguen siendo bloqueante humano real) están listadas en el mismo doc 07 §"Sigue siendo bloqueante humano real".
+
+## Activos en cartas-y-encargos
+
+Para desbloquear los humanos reales, se han redactado **tres cartas/briefs** que el autor responsable manda cuando esté listo:
+
+- `cartas-y-encargos/01-carta-asesores-lingüísticos.md` — invitación a las cuatro cooficiales primero.
+- `cartas-y-encargos/02-carta-centros-piloto.md` — invitación a 2-3 centros para Fase 4.
+- `cartas-y-encargos/03-brief-escritores-corpus.md` — encargo a escritores externos del corpus.
+
+Cada una contiene notas al autor para personalizar antes de enviar.
+
+## Material editorial avanzado provisionalmente
+
+- Catálogo seminal pieza 01-10 (`catalogo-seminal-muestra.md`): validado contra principios documentales, **pendiente de validación lingüística humana por pieza**.
+- Catálogo seminal pieza 11-20 (`catalogo-seminal-piezas-11-20.md`): añadido el 2026-05-13 por asistencia editorial de Claude. **Riesgo lingüístico variable por pieza** — italiano/alemán/latín/euskara pleno tienen riesgo alto. **Pendiente de validación lingüística humana antes de cualquier inclusión a v1.0**.
