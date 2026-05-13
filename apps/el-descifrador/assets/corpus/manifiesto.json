@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "fecha_actualizacion": "2026-05-13",
+  "nota_editorial": "Manifiesto del corpus de El Descifrador. Lista las piezas empaquetadas con la app. Las piezas en estado distinto de 'validada_para_produccion' viven aquí solo para tests y desarrollo — el motor de selección las ignora para servirlas al niño.",
+  "piezas": [
+    "assets/corpus/piezas/carta-ines-bacalao-001.json",
+    "assets/corpus/piezas/nota-companero-aprendiz-026.json"
+  ]
+}

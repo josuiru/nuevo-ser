@@ -1,0 +1,27 @@
+{
+  "id": "carta-ines-bacalao-001",
+  "tipo": "carta",
+  "remitente": "ines_cocinera_lisboa",
+  "destinatario": "joao-cocinero-puerto",
+  "lengua_principal": "pt",
+  "lenguas_infiltradas": ["es"],
+  "ocasion": "Inês ha tenido un cliente catalán exigente que pidió bacalao a la portuguesa y le ha gustado tanto que pidió la receta. Inês escribe a su amigo João del puerto pasándole la receta — peleando con la cuñada por no compartir la versión propia.",
+  "habilidades_atomicas": ["B6", "B3", "A10", "A5", "A9", "C5"],
+  "operacion_central": "proponer",
+  "dificultad": 2,
+  "decisiones_validas": ["entregar", "archivar", "publicar"],
+  "soporte": {
+    "tipo": "carta manuscrita",
+    "papel": "cuartilla blanca con manchas leves de aceite",
+    "tinta": "negra desigual",
+    "rasgos_visuales": [
+      "mancha de aceite en margen inferior derecho",
+      "letra rápida con tachones leves",
+      "subrayado a mano alzada de '12 horas, agua nueva tres veces'"
+    ]
+  },
+  "cruces_con_corpus": ["carta-joao-bacalao-002", "etiqueta-pimenton-vera-003"],
+  "texto_documento": "Caro João,\n\nLe mando la receita do bacalhau à portuguesa que me pediste. Se te serve, prova-a — mas não le ponhas todo o alho de golpe, que ya conozco yo cómo cocinan ustedes ahí en La Estafeta. Estou um pouco *embaraçada* de mandar-ta assim, sem a versão que faz a minha cunhada (que é melhor mas ela não ma passa, a muy ladina), mas se esperarmos a ter a sua boa não comemos nunca.\n\nO peixe: quilo e meio de bacalhau bem remolhado (**12 horas, água nova três vezes**). Pões a lume brando com vinho branco e louro. Uma cebola cortada em pluma. Azeite do bom, não do que vendeis aí que parece graxa de farol.\n\nConta-me como sai. E diz ao boticário que me mande pimentão do de Vera, que aqui só há português e não é o mesmo.\n\nBeijinhos,\nInês",
+  "estado_validacion": "borrador_claude_2026_05_13_pendiente_humano",
+  "validacion_pendiente": "asesor portugues europeo"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "nota-companero-aprendiz-026",
+  "tipo": "nota_breve",
+  "remitente": "aprendiz-companero-niko",
+  "destinatario": "aprendiz-jugador",
+  "lengua_principal": "eu",
+  "lenguas_infiltradas": ["es"],
+  "ocasion": "El compañero aprendiz Niko ha recibido en su mesa una carta en gallego que no consigue descifrar bien. Le pide ayuda al protagonista, que ya ha trabajado más documentos en gallego. Modela cooperación entre niños y aprendizaje horizontal.",
+  "habilidades_atomicas": ["A1", "A5", "A9", "C3", "D4"],
+  "operacion_central": "identificar",
+  "dificultad": 2,
+  "decisiones_validas": ["entregar", "archivar"],
+  "soporte": {
+    "tipo": "nota manuscrita rapida",
+    "papel": "media cuartilla, papel de cuaderno",
+    "tinta": "lapicero",
+    "rasgos_visuales": [
+      "letra de niño (caligrafía aún no formada)",
+      "una mancha de tinta en la esquina"
+    ]
+  },
+  "cruces_con_corpus": [],
+  "texto_documento": "Aprendiz:\n\nLagundu didezu? Galiziera batean idatzi diote eta ni ez naiz ulertzeko gai. Sora-rena izan daiteke baina ez dakit ziurtasunez. *Estrella de la Tarde* aipatzen du. Ezagutzen al duzu?\n\nEsan dezakezu zer dioen, mesedez? O al menos esan zein hitz ikertu behar dudan.\n\nEskerrik asko aurretik.\n\nNiko",
+  "estado_validacion": "borrador_claude_2026_05_13_pendiente_humano",
+  "validacion_pendiente": "asesor euskara"
+}

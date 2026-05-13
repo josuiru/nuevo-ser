@@ -48,3 +48,12 @@ flutter:
   # Genera AppLocalizations a partir de los ARB en lib/l10n.
   # Configurado en l10n.yaml.
   generate: true
+
+  # Corpus base de La Estafeta. Manifiesto declara qué piezas se
+  # empaquetan con la app. Las piezas en estado distinto de
+  # validada_para_produccion existen aquí para tests; el motor de
+  # selección las ignora para servir al niño.
+  # Ver `el-descifrador-16-arquitectura-tecnica.md` §4.1.
+  assets:
+    - assets/corpus/manifiesto.json
+    - assets/corpus/piezas/
