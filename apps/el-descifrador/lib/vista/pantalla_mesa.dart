@@ -55,7 +55,13 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioSellosInyectado,
     this.servicioSaludoInyectado,
     this.servicioCumpleanyosInyectado,
+    this.alAbrirMapa,
   });
+
+  /// Callback opcional para abrir el mapa del puerto desde la oficina.
+  /// Si null, no se renderiza el botón (caso tests que usan
+  /// PantallaMesa directamente sin orquestador).
+  final VoidCallback? alAbrirMapa;
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
   /// hasta que llegue el sistema de perfiles del Descifrador.
@@ -325,6 +331,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
                     alAbrirCuaderno: _abrirCuaderno,
                     alDescartarHito: _descartarHitoCumpleanyos,
                     alDescartarSellos: _descartarSellosPendientes,
+                    alAbrirMapa: widget.alAbrirMapa,
                   ),
       ),
     );
@@ -385,6 +392,7 @@ class _Mesa extends StatelessWidget {
     required this.alAbrirCuaderno,
     required this.alDescartarHito,
     required this.alDescartarSellos,
+    this.alAbrirMapa,
   });
 
   final EstadoSesion estado;
@@ -405,15 +413,26 @@ class _Mesa extends StatelessWidget {
   final VoidCallback alAbrirCuaderno;
   final VoidCallback alDescartarHito;
   final VoidCallback alDescartarSellos;
+  final VoidCallback? alAbrirMapa;
 
   @override
   Widget build(BuildContext contexto) {
     return Stack(
       children: [
-        // Mesa de madera oscura — fondo plano provisional, sin textura
-        // hasta que llegue el ilustrador (B8).
+        // Escenario renderizado en flavor3d v0.13: vista picada de la
+        // oficina de La Estafeta con la mesa, lámpara, tintero, pluma
+        // y ventana al mar atlántico. Se rellena recortando para cubrir
+        // toda la pantalla (BoxFit.cover).
         Positioned.fill(
-          child: Container(color: PaletaEstafeta.madera),
+          child: Image.asset(
+            'assets/escenarios/oficina.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        // Velo oscuro sutil para que los papeles y los textos
+        // destaquen sobre el render iluminado.
+        Positioned.fill(
+          child: Container(color: Colors.black.withValues(alpha: 0.32)),
         ),
         // Frase del maestro en la parte superior + hito de cumpleaños
         // del cuaderno si toca (doc 06 §4).
@@ -470,7 +489,57 @@ class _Mesa extends StatelessWidget {
           bottom: 32,
           child: _BotonCuaderno(alPulsar: alAbrirCuaderno),
         ),
+        // Botón mapa, esquina inferior izquierda — para salir al puerto
+        // (calle mayor → resto de localizaciones). Solo aparece si el
+        // orquestador inyectó el callback (no en tests aislados).
+        if (alAbrirMapa != null)
+          Positioned(
+            left: 32,
+            bottom: 32,
+            child: _BotonMapa(alPulsar: alAbrirMapa!),
+          ),
       ],
+    );
+  }
+}
+
+class _BotonMapa extends StatelessWidget {
+  const _BotonMapa({required this.alPulsar});
+
+  final VoidCallback alPulsar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Material(
+      color: Colors.black.withValues(alpha: 0.45),
+      borderRadius: BorderRadius.circular(2),
+      child: InkWell(
+        onTap: alPulsar,
+        borderRadius: BorderRadius.circular(2),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.map_outlined,
+                color: PaletaEstafeta.papel,
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Salir al puerto',
+                style: TextStyle(
+                  color: PaletaEstafeta.papel,
+                  fontSize: 13,
+                  fontFamily: 'serif',
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

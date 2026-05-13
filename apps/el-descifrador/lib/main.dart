@@ -12,7 +12,7 @@
 
 import 'package:flutter/material.dart';
 import 'l10n/app_localizations.dart';
-import 'vista/pantalla_mesa.dart';
+import 'vista/pantalla_puerto.dart';
 
 void main() {
   runApp(const AppDescifrador());
@@ -40,7 +40,7 @@ class AppDescifrador extends StatelessWidget {
           seedColor: const Color(0xFF7A5C3A),
         ),
       ),
-      home: const PantallaMesa(),
+      home: const PantallaPuerto(),
     );
   }
 }
