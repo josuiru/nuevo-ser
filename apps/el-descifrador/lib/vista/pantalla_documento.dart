@@ -18,6 +18,7 @@ import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
 import '../datos/repositorio_pistas.dart';
+import '../datos/repositorio_sellos.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/anotaciones_piezas.dart';
 import '../dominio/decision_documento.dart';
@@ -26,8 +27,10 @@ import '../dominio/interpretacion_pieza.dart';
 import '../dominio/lengua.dart';
 import '../dominio/pieza_corpus.dart';
 import '../dominio/pistas_pedidas.dart';
+import '../dominio/sellos.dart';
 import '../dominio/servicio_candidatas_lengua.dart';
 import '../dominio/servicio_pistas.dart';
+import '../dominio/servicio_sellos.dart';
 import '../dominio/vocabulario_jugador.dart';
 import 'paleta_estafeta.dart';
 import 'widgets/dialogo_anotacion_pieza.dart';
@@ -36,6 +39,19 @@ import 'widgets/dialogo_pedir_pista.dart';
 import 'widgets/dialogo_proponer_interpretacion.dart';
 import 'widgets/panel_identificar_lengua.dart';
 import 'widgets/texto_marcable.dart';
+
+/// Lo que la sesión de un documento devuelve a `PantallaMesa` al
+/// cerrarse: decisión tomada y sellos del cuaderno que se han
+/// activado durante la sesión.
+class ResultadoSesionDocumento {
+  const ResultadoSesionDocumento({
+    required this.decision,
+    required this.sellosNuevos,
+  });
+
+  final DecisionDocumento decision;
+  final List<SelloConcedido> sellosNuevos;
+}
 
 class PantallaDocumento extends StatefulWidget {
   const PantallaDocumento({
@@ -47,7 +63,9 @@ class PantallaDocumento extends StatefulWidget {
     this.repositorioPistasInyectado,
     this.repositorioIdentificacionesInyectado,
     this.repositorioAnotacionesInyectado,
+    this.repositorioSellosInyectado,
     this.servicioCandidatasInyectado,
+    this.servicioSellosInyectado,
     this.piezasResueltas = const [],
     this.idPerfil = 'principal',
   });
@@ -59,10 +77,12 @@ class PantallaDocumento extends StatefulWidget {
   final RepositorioPistas? repositorioPistasInyectado;
   final RepositorioIdentificaciones? repositorioIdentificacionesInyectado;
   final RepositorioAnotaciones? repositorioAnotacionesInyectado;
+  final RepositorioSellos? repositorioSellosInyectado;
 
   /// Servicio que produce las candidatas de lengua. Inyectable para
   /// tests deterministas.
   final ServicioCandidatasLengua? servicioCandidatasInyectado;
+  final ServicioSellos? servicioSellosInyectado;
 
   /// Piezas que el niño ha resuelto antes. El servicio de pistas las
   /// consulta para construir la pista de comparación.
@@ -79,7 +99,9 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   late final RepositorioPistas _repositorioPistas;
   late final RepositorioIdentificaciones _repositorioIdentificaciones;
   late final RepositorioAnotaciones _repositorioAnotaciones;
+  late final RepositorioSellos _repositorioSellos;
   late final ServicioCandidatasLengua _servicioCandidatas;
+  late final ServicioSellos _servicioSellos;
   static const ServicioPistas _servicioPistas = ServicioPistas();
   VocabularioJugador? _vocabulario;
   InterpretacionPieza? _interpretacionActual;
@@ -87,6 +109,10 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   IdentificacionLengua? _identificacion;
   List<Lengua>? _candidatasLengua;
   AnotacionesPiezas _anotaciones = AnotacionesPiezas.inicial();
+  Sellos _sellos = Sellos.inicial();
+  IdentificacionesPiezas _identificacionesPrevias =
+      IdentificacionesPiezas.inicial();
+  final List<SelloConcedido> _sellosNuevosAcumulados = [];
 
   @override
   void initState() {
@@ -103,13 +129,48 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
             RepositorioIdentificaciones(idPerfil: widget.idPerfil);
     _repositorioAnotaciones = widget.repositorioAnotacionesInyectado ??
         RepositorioAnotaciones(idPerfil: widget.idPerfil);
+    _repositorioSellos = widget.repositorioSellosInyectado ??
+        RepositorioSellos(idPerfil: widget.idPerfil);
     _servicioCandidatas =
         widget.servicioCandidatasInyectado ?? ServicioCandidatasLengua();
+    _servicioSellos =
+        widget.servicioSellosInyectado ?? const ServicioSellos();
     _cargarVocabulario();
     _cargarInterpretacion();
     _cargarPistas();
     _cargarIdentificacion();
     _cargarAnotaciones();
+    _cargarSellos();
+  }
+
+  Future<void> _cargarSellos() async {
+    final sellos = await _repositorioSellos.cargar();
+    if (!mounted) return;
+    setState(() => _sellos = sellos);
+  }
+
+  Future<void> _registrarSellos(List<String> claves) async {
+    if (claves.isEmpty) return;
+    var sellosActuales = _sellos;
+    final nuevos = <SelloConcedido>[];
+    for (final clave in claves) {
+      final (siguientes, eraNuevo) =
+          await _repositorioSellos.registrarSelloSiNuevo(clave);
+      if (eraNuevo) {
+        sellosActuales = siguientes;
+        final fecha = siguientes.fechaDe(clave) ?? DateTime.now();
+        nuevos.add(SelloConcedido(
+          clave: clave,
+          texto: textoCanonicoDeClave(clave),
+          fecha: fecha,
+        ));
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      _sellos = sellosActuales;
+      _sellosNuevosAcumulados.addAll(nuevos);
+    });
   }
 
   Future<void> _cargarAnotaciones() async {
@@ -188,6 +249,7 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
     final identificaciones = await _repositorioIdentificaciones.cargar();
     if (!mounted) return;
     setState(() {
+      _identificacionesPrevias = identificaciones;
       _identificacion = identificaciones.identificacionDe(widget.pieza.id);
       _candidatasLengua = _servicioCandidatas.candidatasPara(
         lenguaCorrecta: widget.pieza.lenguaPrincipal,
@@ -196,6 +258,7 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   }
 
   Future<void> _alElegirLengua(Lengua intentada) async {
+    final identificacionesPreviasAlIntento = _identificacionesPrevias;
     final actualizadas =
         await _repositorioIdentificaciones.registrarIntento(
       idPieza: widget.pieza.id,
@@ -204,8 +267,19 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
     );
     if (!mounted) return;
     setState(() {
+      _identificacionesPrevias = actualizadas;
       _identificacion = actualizadas.identificacionDe(widget.pieza.id);
     });
+
+    final acerto = intentada == widget.pieza.lenguaPrincipal;
+    if (acerto) {
+      final sellosNuevos = _servicioSellos.sellosTrasIdentificacionExitosa(
+        lenguaIdentificada: widget.pieza.lenguaPrincipal,
+        identificacionesPrevias: identificacionesPreviasAlIntento,
+        sellosPrevios: _sellos,
+      );
+      await _registrarSellos(sellosNuevos);
+    }
   }
 
   Future<void> _cargarPistas() async {
@@ -321,8 +395,17 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
     await widget.repositorioFamiliaridad.registrarPiezaTrabajada(
       widget.pieza.remitenteRecurrente,
     );
+    final sellosNuevos = _servicioSellos.sellosTrasDecision(
+      lenguaDePieza: widget.pieza.lenguaPrincipal,
+      decisionTomada: decision,
+      sellosPrevios: _sellos,
+    );
+    await _registrarSellos(sellosNuevos);
     if (!mounted) return;
-    Navigator.of(context).pop(decision);
+    Navigator.of(context).pop(ResultadoSesionDocumento(
+      decision: decision,
+      sellosNuevos: List.unmodifiable(_sellosNuevosAcumulados),
+    ));
   }
 
   @override

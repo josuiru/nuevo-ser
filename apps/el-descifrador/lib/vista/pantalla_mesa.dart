@@ -24,13 +24,14 @@ import '../datos/repositorio_interpretaciones.dart';
 import '../datos/repositorio_memoria_sesiones.dart';
 import '../datos/repositorio_notas_libres.dart';
 import '../datos/repositorio_pistas.dart';
+import '../datos/repositorio_sellos.dart';
 import '../datos/repositorio_sesion.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/identificaciones_lengua.dart';
 import '../dominio/memoria_sesiones.dart';
+import '../dominio/sellos.dart' show SelloConcedido;
 import '../dominio/servicio_cumpleanyos.dart';
 import '../dominio/servicio_saludo.dart';
-import '../dominio/decision_documento.dart';
 import '../dominio/estado_sesion.dart';
 import '../dominio/pieza_corpus.dart';
 import 'paleta_estafeta.dart';
@@ -51,6 +52,7 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioNotasLibresInyectado,
     this.repositorioAnotacionesInyectado,
     this.repositorioMemoriaSesionesInyectado,
+    this.repositorioSellosInyectado,
     this.servicioSaludoInyectado,
     this.servicioCumpleanyosInyectado,
   });
@@ -99,6 +101,10 @@ class PantallaMesa extends StatefulWidget {
   /// construye con el idPerfil.
   final RepositorioMemoriaSesiones? repositorioMemoriaSesionesInyectado;
 
+  /// RepositorioSellos inyectado (para tests). Si null, se construye
+  /// con el idPerfil.
+  final RepositorioSellos? repositorioSellosInyectado;
+
   /// Servicios inyectables para tests deterministas. Si null, se usa
   /// la implementación por defecto (sin parámetros).
   final ServicioSaludo? servicioSaludoInyectado;
@@ -120,6 +126,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   late final RepositorioNotasLibres _repositorioNotasLibres;
   late final RepositorioAnotaciones _repositorioAnotaciones;
   late final RepositorioMemoriaSesiones _repositorioMemoriaSesiones;
+  late final RepositorioSellos _repositorioSellos;
   late final ServicioSaludo _servicioSaludo;
   late final ServicioCumpleanyos _servicioCumpleanyos;
   late final CargadorCorpus _cargador;
@@ -127,6 +134,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   MemoriaSesiones? _memoriaPreviaAEstaVisita;
   MemoriaSesiones? _memoriaActual;
   HitoCumpleanyos? _hitoActivo;
+  List<SelloConcedido> _sellosNuevosPendientes = const [];
 
   @override
   void initState() {
@@ -153,6 +161,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     _repositorioMemoriaSesiones =
         widget.repositorioMemoriaSesionesInyectado ??
             RepositorioMemoriaSesiones(idPerfil: widget.idPerfil);
+    _repositorioSellos = widget.repositorioSellosInyectado ??
+        RepositorioSellos(idPerfil: widget.idPerfil);
     _servicioSaludo =
         widget.servicioSaludoInyectado ?? const ServicioSaludo();
     _servicioCumpleanyos = widget.servicioCumpleanyosInyectado ??
@@ -176,6 +186,10 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
       );
     });
     await _cargarCorpus();
+  }
+
+  void _descartarSellosPendientes() {
+    setState(() => _sellosNuevosPendientes = const []);
   }
 
   Future<void> _descartarHitoCumpleanyos() async {
@@ -221,7 +235,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
 
   Future<void> _abrirPieza(PiezaCorpus pieza) async {
     final piezasResueltas = _estado?.piezasResueltas() ?? const <PiezaCorpus>[];
-    final decision = await Navigator.of(context).push<DecisionDocumento>(
+    final resultado =
+        await Navigator.of(context).push<ResultadoSesionDocumento>(
       MaterialPageRoute(
         builder: (contexto) => PantallaDocumento(
           pieza: pieza,
@@ -231,6 +246,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
           repositorioPistasInyectado: _repositorioPistas,
           repositorioIdentificacionesInyectado: _repositorioIdentificaciones,
           repositorioAnotacionesInyectado: _repositorioAnotaciones,
+          repositorioSellosInyectado: _repositorioSellos,
           piezasResueltas: piezasResueltas,
           idPerfil: widget.idPerfil,
         ),
@@ -241,13 +257,22 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     // lengua sin llegar a decidir, y queremos que la tarjeta lo refleje.
     await _cargarIdentificaciones();
     if (!mounted) return;
-    if (decision != null) {
+    if (resultado != null) {
       // Persistir antes de actualizar UI para que un cierre forzoso
       // entre setState y guardar no pierda la decisión.
-      await _repositorioSesion.registrarPiezaResuelta(pieza.id, decision);
+      await _repositorioSesion.registrarPiezaResuelta(
+        pieza.id,
+        resultado.decision,
+      );
       if (!mounted) return;
       setState(() {
         _estado = _estado?.conPiezaResuelta(pieza.id);
+        if (resultado.sellosNuevos.isNotEmpty) {
+          _sellosNuevosPendientes = [
+            ..._sellosNuevosPendientes,
+            ...resultado.sellosNuevos,
+          ];
+        }
       });
     }
   }
@@ -259,6 +284,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     final vocabulario = await _repositorioVocabulario.cargar();
     final interpretaciones = await _repositorioInterpretaciones.cargar();
     final notasLibres = await _repositorioNotasLibres.cargar();
+    final sellos = await _repositorioSellos.cargar();
     if (!mounted) return;
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
@@ -268,6 +294,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
           vocabulario: vocabulario,
           interpretaciones: interpretaciones,
           notasLibres: notasLibres,
+          sellos: sellos,
           repositorioNotasLibresInyectado: _repositorioNotasLibres,
           idPerfil: widget.idPerfil,
         ),
@@ -292,10 +319,12 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
                     identificaciones: _identificaciones,
                     memoriaPreviaAEstaVisita: _memoriaPreviaAEstaVisita,
                     hitoCumpleanyos: _hitoActivo,
+                    sellosNuevosPendientes: _sellosNuevosPendientes,
                     servicioSaludo: _servicioSaludo,
                     alTocarPieza: _abrirPieza,
                     alAbrirCuaderno: _abrirCuaderno,
                     alDescartarHito: _descartarHitoCumpleanyos,
+                    alDescartarSellos: _descartarSellosPendientes,
                   ),
       ),
     );
@@ -350,10 +379,12 @@ class _Mesa extends StatelessWidget {
     required this.identificaciones,
     required this.memoriaPreviaAEstaVisita,
     required this.hitoCumpleanyos,
+    required this.sellosNuevosPendientes,
     required this.servicioSaludo,
     required this.alTocarPieza,
     required this.alAbrirCuaderno,
     required this.alDescartarHito,
+    required this.alDescartarSellos,
   });
 
   final EstadoSesion estado;
@@ -364,10 +395,16 @@ class _Mesa extends StatelessWidget {
   /// como visita nueva.
   final MemoriaSesiones? memoriaPreviaAEstaVisita;
   final HitoCumpleanyos? hitoCumpleanyos;
+
+  /// Sellos del cuaderno recién concedidos en la última sesión de
+  /// documento. Se muestran como banda discreta hasta que el niño la
+  /// descarta.
+  final List<SelloConcedido> sellosNuevosPendientes;
   final ServicioSaludo servicioSaludo;
   final ValueChanged<PiezaCorpus> alTocarPieza;
   final VoidCallback alAbrirCuaderno;
   final VoidCallback alDescartarHito;
+  final VoidCallback alDescartarSellos;
 
   @override
   Widget build(BuildContext contexto) {
@@ -397,6 +434,13 @@ class _Mesa extends StatelessWidget {
                 _BandaCumpleanyos(
                   hito: hitoCumpleanyos!,
                   alDescartar: alDescartarHito,
+                ),
+              ],
+              if (sellosNuevosPendientes.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _BandaSellosNuevos(
+                  sellos: sellosNuevosPendientes,
+                  alDescartar: alDescartarSellos,
                 ),
               ],
             ],
@@ -461,6 +505,67 @@ class _BandaCumpleanyos extends StatelessWidget {
                 fontFamily: 'serif',
                 height: 1.4,
               ),
+            ),
+          ),
+          IconButton(
+            onPressed: alDescartar,
+            icon: Icon(
+              Icons.close,
+              size: 16,
+              color: PaletaEstafeta.papel.withValues(alpha: 0.7),
+            ),
+            tooltip: 'Cerrar',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BandaSellosNuevos extends StatelessWidget {
+  const _BandaSellosNuevos({
+    required this.sellos,
+    required this.alDescartar,
+  });
+
+  final List<SelloConcedido> sellos;
+  final VoidCallback alDescartar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: PaletaEstafeta.papel.withValues(alpha: 0.08),
+        border: Border(
+          left: BorderSide(
+            color: PaletaEstafeta.papel.withValues(alpha: 0.5),
+            width: 2,
+          ),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final sello in sellos) ...[
+                  Text(
+                    sello.texto,
+                    style: const TextStyle(
+                      color: PaletaEstafeta.papel,
+                      fontSize: 14,
+                      fontFamily: 'serif',
+                      height: 1.4,
+                    ),
+                  ),
+                  if (sello != sellos.last) const SizedBox(height: 4),
+                ],
+              ],
             ),
           ),
           IconButton(

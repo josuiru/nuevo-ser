@@ -26,6 +26,7 @@ import '../dominio/interpretacion_pieza.dart';
 import '../dominio/lengua.dart';
 import '../dominio/notas_libres.dart';
 import '../dominio/pieza_corpus.dart';
+import '../dominio/sellos.dart';
 import '../dominio/vocabulario_jugador.dart';
 import '../dominio/voz_remitente.dart';
 import 'paleta_estafeta.dart';
@@ -39,11 +40,13 @@ class PantallaCuaderno extends StatefulWidget {
     required this.vocabulario,
     InterpretacionesPropuestas? interpretaciones,
     NotasLibres? notasLibres,
+    Sellos? sellos,
     this.repositorioNotasLibresInyectado,
     this.idPerfil = 'principal',
   })  : interpretaciones =
             interpretaciones ?? InterpretacionesPropuestas.inicial(),
-        notasLibres = notasLibres ?? NotasLibres.inicial();
+        notasLibres = notasLibres ?? NotasLibres.inicial(),
+        sellos = sellos ?? Sellos.inicial();
 
   /// Estado actual de la sesión: piezas resueltas que el cuaderno
   /// indexa.
@@ -60,6 +63,9 @@ class PantallaCuaderno extends StatefulWidget {
 
   /// Notas libres del cuaderno.
   final NotasLibres notasLibres;
+
+  /// Sellos del cuaderno (hitos sobrios sin XP). Doc 06 §4.
+  final Sellos sellos;
 
   /// Repositorio inyectable para crear/editar/borrar notas libres
   /// desde la propia pantalla del cuaderno. Si null, se construye con
@@ -198,6 +204,8 @@ class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
                     alEditar: _alEditarNota,
                     alBorrar: _alBorrarNota,
                   ),
+                  const _SeparadorPagina(),
+                  _SeccionSellos(sellos: widget.sellos),
                   const _SeparadorPagina(),
                   _SeccionDocumentosResueltos(piezas: piezasResueltas),
                 ],
@@ -748,6 +756,77 @@ class _TarjetaNota extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SeccionSellos extends StatelessWidget {
+  const _SeccionSellos({required this.sellos});
+
+  final Sellos sellos;
+
+  String _formatearFecha(DateTime fecha) {
+    final dia = fecha.day.toString().padLeft(2, '0');
+    final mes = fecha.month.toString().padLeft(2, '0');
+    return '$dia/$mes/${fecha.year}';
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    final lista = sellos.ordenadosPorFecha();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _TituloSeccion('Sellos'),
+        if (lista.isEmpty)
+          const _MensajeVacio(
+            'Aún no has consolidado ningún hito. Vendrán cuando descifres '
+            'tu primera pieza en una lengua nueva, o publiques algo en el '
+            'Boletín.',
+          )
+        else
+          for (final sello in lista)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.bookmark_border,
+                    size: 14,
+                    color: PaletaEstafeta.sepia.withValues(alpha: 0.8),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          sello.texto,
+                          style: const TextStyle(
+                            color: PaletaEstafeta.tinta,
+                            fontSize: 14,
+                            fontFamily: 'serif',
+                            height: 1.35,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _formatearFecha(sello.fecha),
+                          style: TextStyle(
+                            color: PaletaEstafeta.sepia.withValues(alpha: 0.8),
+                            fontSize: 11,
+                            fontFamily: 'serif',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      ],
     );
   }
 }
