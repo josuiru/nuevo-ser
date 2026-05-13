@@ -13,11 +13,13 @@
 
 import 'package:flutter/material.dart';
 
+import '../datos/repositorio_anotaciones.dart';
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
 import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_vocabulario.dart';
+import '../dominio/anotaciones_piezas.dart';
 import '../dominio/decision_documento.dart';
 import '../dominio/identificaciones_lengua.dart';
 import '../dominio/interpretacion_pieza.dart';
@@ -28,6 +30,7 @@ import '../dominio/servicio_candidatas_lengua.dart';
 import '../dominio/servicio_pistas.dart';
 import '../dominio/vocabulario_jugador.dart';
 import 'paleta_estafeta.dart';
+import 'widgets/dialogo_anotacion_pieza.dart';
 import 'widgets/dialogo_marcar_palabra.dart';
 import 'widgets/dialogo_pedir_pista.dart';
 import 'widgets/dialogo_proponer_interpretacion.dart';
@@ -43,6 +46,7 @@ class PantallaDocumento extends StatefulWidget {
     this.repositorioInterpretacionesInyectado,
     this.repositorioPistasInyectado,
     this.repositorioIdentificacionesInyectado,
+    this.repositorioAnotacionesInyectado,
     this.servicioCandidatasInyectado,
     this.piezasResueltas = const [],
     this.idPerfil = 'principal',
@@ -54,6 +58,7 @@ class PantallaDocumento extends StatefulWidget {
   final RepositorioInterpretaciones? repositorioInterpretacionesInyectado;
   final RepositorioPistas? repositorioPistasInyectado;
   final RepositorioIdentificaciones? repositorioIdentificacionesInyectado;
+  final RepositorioAnotaciones? repositorioAnotacionesInyectado;
 
   /// Servicio que produce las candidatas de lengua. Inyectable para
   /// tests deterministas.
@@ -73,6 +78,7 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   late final RepositorioInterpretaciones _repositorioInterpretaciones;
   late final RepositorioPistas _repositorioPistas;
   late final RepositorioIdentificaciones _repositorioIdentificaciones;
+  late final RepositorioAnotaciones _repositorioAnotaciones;
   late final ServicioCandidatasLengua _servicioCandidatas;
   static const ServicioPistas _servicioPistas = ServicioPistas();
   VocabularioJugador? _vocabulario;
@@ -80,6 +86,7 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   PistasPedidas _pistas = PistasPedidas.inicial();
   IdentificacionLengua? _identificacion;
   List<Lengua>? _candidatasLengua;
+  AnotacionesPiezas _anotaciones = AnotacionesPiezas.inicial();
 
   @override
   void initState() {
@@ -94,12 +101,87 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
     _repositorioIdentificaciones =
         widget.repositorioIdentificacionesInyectado ??
             RepositorioIdentificaciones(idPerfil: widget.idPerfil);
+    _repositorioAnotaciones = widget.repositorioAnotacionesInyectado ??
+        RepositorioAnotaciones(idPerfil: widget.idPerfil);
     _servicioCandidatas =
         widget.servicioCandidatasInyectado ?? ServicioCandidatasLengua();
     _cargarVocabulario();
     _cargarInterpretacion();
     _cargarPistas();
     _cargarIdentificacion();
+    _cargarAnotaciones();
+  }
+
+  Future<void> _cargarAnotaciones() async {
+    final anotaciones = await _repositorioAnotaciones.cargar();
+    if (!mounted) return;
+    setState(() => _anotaciones = anotaciones);
+  }
+
+  Future<void> _alAnyadirAnotacion() async {
+    final resultado = await mostrarDialogoAnotacion(contexto: context);
+    if (resultado == null || !mounted) return;
+    final siguientes = await _repositorioAnotaciones.anyadirAnotacion(
+      idPieza: widget.pieza.id,
+      texto: resultado.texto,
+    );
+    if (!mounted) return;
+    setState(() => _anotaciones = siguientes);
+  }
+
+  Future<void> _alEditarAnotacion(AnotacionPieza anotacion) async {
+    final resultado = await mostrarDialogoAnotacion(
+      contexto: context,
+      anotacionActual: anotacion,
+    );
+    if (resultado == null || !mounted) return;
+    final siguientes = await _repositorioAnotaciones.editarAnotacion(
+      id: anotacion.id,
+      texto: resultado.texto,
+    );
+    if (!mounted) return;
+    setState(() => _anotaciones = siguientes);
+  }
+
+  Future<void> _alBorrarAnotacion(AnotacionPieza anotacion) async {
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (contexto) => AlertDialog(
+        backgroundColor: PaletaEstafeta.papel,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2),
+        ),
+        title: const Text(
+          'Borrar esta anotación',
+          style: TextStyle(fontFamily: 'serif', fontSize: 16),
+        ),
+        content: const Text(
+          'Quedará fuera del documento. No se puede recuperar.',
+          style: TextStyle(fontFamily: 'serif', fontSize: 13),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(false),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(fontFamily: 'serif', fontSize: 13),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(true),
+            child: const Text(
+              'Borrar',
+              style: TextStyle(fontFamily: 'serif', fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmado != true || !mounted) return;
+    final siguientes =
+        await _repositorioAnotaciones.borrarAnotacion(anotacion.id);
+    if (!mounted) return;
+    setState(() => _anotaciones = siguientes);
   }
 
   Future<void> _cargarIdentificacion() async {
@@ -272,9 +354,13 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
                   identificada: yaIdentificada,
                   identificacionPrevia: _identificacion,
                   candidatasLengua: candidatas ?? const [],
+                  anotaciones: _anotaciones.anotacionesDe(widget.pieza.id),
                   alElegirLengua: _alElegirLengua,
                   alTocarPalabra: _alTocarPalabra,
                   alProponerInterpretacion: _alProponerInterpretacion,
+                  alAnyadirAnotacion: _alAnyadirAnotacion,
+                  alEditarAnotacion: _alEditarAnotacion,
+                  alBorrarAnotacion: _alBorrarAnotacion,
                   alDecidir: _alDecidir,
                 ),
               ),
@@ -305,9 +391,13 @@ class _DocumentoAbierto extends StatelessWidget {
     required this.identificada,
     required this.identificacionPrevia,
     required this.candidatasLengua,
+    required this.anotaciones,
     required this.alElegirLengua,
     required this.alTocarPalabra,
     required this.alProponerInterpretacion,
+    required this.alAnyadirAnotacion,
+    required this.alEditarAnotacion,
+    required this.alBorrarAnotacion,
     required this.alDecidir,
   });
 
@@ -318,9 +408,13 @@ class _DocumentoAbierto extends StatelessWidget {
   final bool identificada;
   final IdentificacionLengua? identificacionPrevia;
   final List<Lengua> candidatasLengua;
+  final List<AnotacionPieza> anotaciones;
   final ValueChanged<Lengua> alElegirLengua;
   final void Function(String palabraOriginal) alTocarPalabra;
   final VoidCallback alProponerInterpretacion;
+  final VoidCallback alAnyadirAnotacion;
+  final ValueChanged<AnotacionPieza> alEditarAnotacion;
+  final ValueChanged<AnotacionPieza> alBorrarAnotacion;
   final ValueChanged<DecisionDocumento> alDecidir;
 
   @override
@@ -383,6 +477,13 @@ class _DocumentoAbierto extends StatelessWidget {
                 alElegir: alElegirLengua,
               )
             else ...[
+              _SeccionAnotaciones(
+                anotaciones: anotaciones,
+                alAnyadir: alAnyadirAnotacion,
+                alEditar: alEditarAnotacion,
+                alBorrar: alBorrarAnotacion,
+              ),
+              const SizedBox(height: 12),
               _BotonInterpretacion(
                 tieneInterpretacion: interpretacionActual != null,
                 alPulsar: alProponerInterpretacion,
@@ -465,6 +566,183 @@ class _BotonDecision extends StatelessWidget {
       case DecisionDocumento.esperar:
         return 'Esperar';
     }
+  }
+}
+
+class _SeccionAnotaciones extends StatelessWidget {
+  const _SeccionAnotaciones({
+    required this.anotaciones,
+    required this.alAnyadir,
+    required this.alEditar,
+    required this.alBorrar,
+  });
+
+  final List<AnotacionPieza> anotaciones;
+  final VoidCallback alAnyadir;
+  final ValueChanged<AnotacionPieza> alEditar;
+  final ValueChanged<AnotacionPieza> alBorrar;
+
+  String _formatearFecha(DateTime fecha) {
+    final dia = fecha.day.toString().padLeft(2, '0');
+    final mes = fecha.month.toString().padLeft(2, '0');
+    return '$dia/$mes/${fecha.year}';
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Tus anotaciones',
+              style: TextStyle(
+                color: PaletaEstafeta.sepia.withValues(alpha: 0.9),
+                fontSize: 12,
+                fontFamily: 'serif',
+                letterSpacing: 1.2,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: alAnyadir,
+              style: TextButton.styleFrom(
+                foregroundColor: PaletaEstafeta.sepia,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                minimumSize: const Size(0, 28),
+              ),
+              icon: const Icon(Icons.add, size: 14),
+              label: const Text(
+                'Anotar',
+                style: TextStyle(
+                  fontFamily: 'serif',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        ),
+        if (anotaciones.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 4),
+            child: Text(
+              'Aún no has anotado nada sobre este documento.',
+              style: TextStyle(
+                color: PaletaEstafeta.tinta.withValues(alpha: 0.5),
+                fontSize: 12,
+                fontFamily: 'serif',
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          )
+        else
+          for (final anotacion in anotaciones)
+            _TarjetaAnotacion(
+              key: ValueKey('anotacion-${anotacion.id}'),
+              anotacion: anotacion,
+              fecha: _formatearFecha(anotacion.fechaCreacion),
+              fechaEdicion: anotacion.fechaUltimaEdicion == null
+                  ? null
+                  : _formatearFecha(anotacion.fechaUltimaEdicion!),
+              alEditar: () => alEditar(anotacion),
+              alBorrar: () => alBorrar(anotacion),
+            ),
+      ],
+    );
+  }
+}
+
+class _TarjetaAnotacion extends StatelessWidget {
+  const _TarjetaAnotacion({
+    super.key,
+    required this.anotacion,
+    required this.fecha,
+    required this.fechaEdicion,
+    required this.alEditar,
+    required this.alBorrar,
+  });
+
+  final AnotacionPieza anotacion;
+  final String fecha;
+  final String? fechaEdicion;
+  final VoidCallback alEditar;
+  final VoidCallback alBorrar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(10, 8, 10, 6),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: PaletaEstafeta.sepia.withValues(alpha: 0.6),
+              width: 2,
+            ),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              fechaEdicion == null
+                  ? 'Anotada el $fecha'
+                  : 'Anotada el $fecha · editada el $fechaEdicion',
+              style: TextStyle(
+                color: PaletaEstafeta.sepia.withValues(alpha: 0.8),
+                fontSize: 10,
+                fontFamily: 'serif',
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              anotacion.texto,
+              style: const TextStyle(
+                color: PaletaEstafeta.tinta,
+                fontSize: 13,
+                fontFamily: 'serif',
+                height: 1.35,
+              ),
+            ),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: alEditar,
+                  style: TextButton.styleFrom(
+                    foregroundColor: PaletaEstafeta.sepia,
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    minimumSize: const Size(0, 24),
+                  ),
+                  child: const Text(
+                    'Editar',
+                    style: TextStyle(fontFamily: 'serif', fontSize: 11),
+                  ),
+                ),
+                TextButton(
+                  onPressed: alBorrar,
+                  style: TextButton.styleFrom(
+                    foregroundColor: PaletaEstafeta.sepia,
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    minimumSize: const Size(0, 24),
+                  ),
+                  child: const Text(
+                    'Borrar',
+                    style: TextStyle(fontFamily: 'serif', fontSize: 11),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

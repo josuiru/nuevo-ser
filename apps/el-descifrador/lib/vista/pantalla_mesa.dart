@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 
 import '../datos/cargador_corpus.dart';
+import '../datos/repositorio_anotaciones.dart';
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
@@ -44,6 +45,7 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioPistasInyectado,
     this.repositorioIdentificacionesInyectado,
     this.repositorioNotasLibresInyectado,
+    this.repositorioAnotacionesInyectado,
   });
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
@@ -82,6 +84,10 @@ class PantallaMesa extends StatefulWidget {
   /// construye con el idPerfil.
   final RepositorioNotasLibres? repositorioNotasLibresInyectado;
 
+  /// RepositorioAnotaciones inyectado (para tests). Si null, se
+  /// construye con el idPerfil.
+  final RepositorioAnotaciones? repositorioAnotacionesInyectado;
+
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
 }
@@ -96,6 +102,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   late final RepositorioPistas _repositorioPistas;
   late final RepositorioIdentificaciones _repositorioIdentificaciones;
   late final RepositorioNotasLibres _repositorioNotasLibres;
+  late final RepositorioAnotaciones _repositorioAnotaciones;
   late final CargadorCorpus _cargador;
   IdentificacionesPiezas _identificaciones = IdentificacionesPiezas.inicial();
 
@@ -119,6 +126,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
             RepositorioIdentificaciones(idPerfil: widget.idPerfil);
     _repositorioNotasLibres = widget.repositorioNotasLibresInyectado ??
         RepositorioNotasLibres(idPerfil: widget.idPerfil);
+    _repositorioAnotaciones = widget.repositorioAnotacionesInyectado ??
+        RepositorioAnotaciones(idPerfil: widget.idPerfil);
     _cargador = widget.cargadorInyectado ?? CargadorCorpus();
     _cargarCorpus();
     _cargarIdentificaciones();
@@ -161,6 +170,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
           repositorioInterpretacionesInyectado: _repositorioInterpretaciones,
           repositorioPistasInyectado: _repositorioPistas,
           repositorioIdentificacionesInyectado: _repositorioIdentificaciones,
+          repositorioAnotacionesInyectado: _repositorioAnotaciones,
           piezasResueltas: piezasResueltas,
           idPerfil: widget.idPerfil,
         ),
