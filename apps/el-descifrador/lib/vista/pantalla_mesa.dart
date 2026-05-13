@@ -20,6 +20,7 @@ import '../datos/cargador_corpus.dart';
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
+import '../datos/repositorio_notas_libres.dart';
 import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_sesion.dart';
 import '../datos/repositorio_vocabulario.dart';
@@ -42,6 +43,7 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioInterpretacionesInyectado,
     this.repositorioPistasInyectado,
     this.repositorioIdentificacionesInyectado,
+    this.repositorioNotasLibresInyectado,
   });
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
@@ -76,6 +78,10 @@ class PantallaMesa extends StatefulWidget {
   /// construye con el idPerfil.
   final RepositorioIdentificaciones? repositorioIdentificacionesInyectado;
 
+  /// RepositorioNotasLibres inyectado (para tests). Si null, se
+  /// construye con el idPerfil.
+  final RepositorioNotasLibres? repositorioNotasLibresInyectado;
+
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
 }
@@ -89,6 +95,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   late final RepositorioInterpretaciones _repositorioInterpretaciones;
   late final RepositorioPistas _repositorioPistas;
   late final RepositorioIdentificaciones _repositorioIdentificaciones;
+  late final RepositorioNotasLibres _repositorioNotasLibres;
   late final CargadorCorpus _cargador;
   IdentificacionesPiezas _identificaciones = IdentificacionesPiezas.inicial();
 
@@ -110,6 +117,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     _repositorioIdentificaciones =
         widget.repositorioIdentificacionesInyectado ??
             RepositorioIdentificaciones(idPerfil: widget.idPerfil);
+    _repositorioNotasLibres = widget.repositorioNotasLibresInyectado ??
+        RepositorioNotasLibres(idPerfil: widget.idPerfil);
     _cargador = widget.cargadorInyectado ?? CargadorCorpus();
     _cargarCorpus();
     _cargarIdentificaciones();
@@ -179,6 +188,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     final familiaridad = await _repositorioFamiliaridad.cargar();
     final vocabulario = await _repositorioVocabulario.cargar();
     final interpretaciones = await _repositorioInterpretaciones.cargar();
+    final notasLibres = await _repositorioNotasLibres.cargar();
     if (!mounted) return;
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
@@ -187,6 +197,9 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
           familiaridad: familiaridad,
           vocabulario: vocabulario,
           interpretaciones: interpretaciones,
+          notasLibres: notasLibres,
+          repositorioNotasLibresInyectado: _repositorioNotasLibres,
+          idPerfil: widget.idPerfil,
         ),
       ),
     );

@@ -10,6 +10,8 @@
 //   - Vocabulario: palabras marcadas verde/amarillo/rojo por lengua.
 //   - Mis interpretaciones: hipótesis del niño sobre documentos. Mecánica
 //     nuclear §3.4. La hipótesis es estado válido (biblia §2.3).
+//   - Mis notas: escritura libre del niño. Mecánica nuclear §3.3. El
+//     cuaderno respeta lo que el niño escribe — sin autocorrección.
 //   - Documentos resueltos: lista de piezas en bandeja resuelto.
 //
 // Diseño tipográfico: el cuaderno habla poco (doc 09 §2). Su voz es
@@ -17,24 +19,31 @@
 
 import 'package:flutter/material.dart';
 
+import '../datos/repositorio_notas_libres.dart';
 import '../dominio/estado_sesion.dart';
 import '../dominio/familiaridad_remitente.dart';
 import '../dominio/interpretacion_pieza.dart';
 import '../dominio/lengua.dart';
+import '../dominio/notas_libres.dart';
 import '../dominio/pieza_corpus.dart';
 import '../dominio/vocabulario_jugador.dart';
 import '../dominio/voz_remitente.dart';
 import 'paleta_estafeta.dart';
+import 'widgets/dialogo_nota_libre.dart';
 
-class PantallaCuaderno extends StatelessWidget {
+class PantallaCuaderno extends StatefulWidget {
   PantallaCuaderno({
     super.key,
     required this.estadoSesion,
     required this.familiaridad,
     required this.vocabulario,
     InterpretacionesPropuestas? interpretaciones,
-  }) : interpretaciones =
-            interpretaciones ?? InterpretacionesPropuestas.inicial();
+    NotasLibres? notasLibres,
+    this.repositorioNotasLibresInyectado,
+    this.idPerfil = 'principal',
+  })  : interpretaciones =
+            interpretaciones ?? InterpretacionesPropuestas.inicial(),
+        notasLibres = notasLibres ?? NotasLibres.inicial();
 
   /// Estado actual de la sesión: piezas resueltas que el cuaderno
   /// indexa.
@@ -49,11 +58,100 @@ class PantallaCuaderno extends StatelessWidget {
   /// Interpretaciones que el niño ha propuesto para documentos.
   final InterpretacionesPropuestas interpretaciones;
 
+  /// Notas libres del cuaderno.
+  final NotasLibres notasLibres;
+
+  /// Repositorio inyectable para crear/editar/borrar notas libres
+  /// desde la propia pantalla del cuaderno. Si null, se construye con
+  /// el `idPerfil`.
+  final RepositorioNotasLibres? repositorioNotasLibresInyectado;
+
+  final String idPerfil;
+
+  @override
+  State<PantallaCuaderno> createState() => _EstadoPantallaCuaderno();
+}
+
+class _EstadoPantallaCuaderno extends State<PantallaCuaderno> {
+  late final RepositorioNotasLibres _repositorioNotasLibres;
+  late NotasLibres _notasLibres;
+
+  @override
+  void initState() {
+    super.initState();
+    _repositorioNotasLibres = widget.repositorioNotasLibresInyectado ??
+        RepositorioNotasLibres(idPerfil: widget.idPerfil);
+    _notasLibres = widget.notasLibres;
+  }
+
+  Future<void> _alAnyadirNota() async {
+    final resultado = await mostrarDialogoNotaLibre(contexto: context);
+    if (resultado == null || !mounted) return;
+    final siguientes =
+        await _repositorioNotasLibres.anyadirNota(texto: resultado.texto);
+    if (!mounted) return;
+    setState(() => _notasLibres = siguientes);
+  }
+
+  Future<void> _alEditarNota(NotaLibre nota) async {
+    final resultado = await mostrarDialogoNotaLibre(
+      contexto: context,
+      notaActual: nota,
+    );
+    if (resultado == null || !mounted) return;
+    final siguientes = await _repositorioNotasLibres.editarNota(
+      id: nota.id,
+      texto: resultado.texto,
+    );
+    if (!mounted) return;
+    setState(() => _notasLibres = siguientes);
+  }
+
+  Future<void> _alBorrarNota(NotaLibre nota) async {
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (contexto) => AlertDialog(
+        backgroundColor: PaletaEstafeta.papel,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2),
+        ),
+        title: const Text(
+          'Borrar esta nota',
+          style: TextStyle(fontFamily: 'serif', fontSize: 16),
+        ),
+        content: const Text(
+          'Quedará fuera del cuaderno. No se puede recuperar.',
+          style: TextStyle(fontFamily: 'serif', fontSize: 13),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(false),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(fontFamily: 'serif', fontSize: 13),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(contexto).pop(true),
+            child: const Text(
+              'Borrar',
+              style: TextStyle(fontFamily: 'serif', fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmado != true || !mounted) return;
+    final siguientes = await _repositorioNotasLibres.borrarNota(nota.id);
+    if (!mounted) return;
+    setState(() => _notasLibres = siguientes);
+  }
+
   @override
   Widget build(BuildContext contexto) {
-    final piezasResueltas = estadoSesion.piezasResueltas();
+    final piezasResueltas = widget.estadoSesion.piezasResueltas();
     final lenguasVistas = _lenguasVistasEn(piezasResueltas);
-    final remitentesConocidos = familiaridad.remitentesConocidos();
+    final remitentesConocidos = widget.familiaridad.remitentesConocidos();
 
     return Scaffold(
       backgroundColor: PaletaEstafeta.madera,
@@ -83,15 +181,22 @@ class PantallaCuaderno extends StatelessWidget {
                   _SeccionLenguas(lenguasVistas: lenguasVistas),
                   const _SeparadorPagina(),
                   _SeccionPersonajes(
-                    familiaridad: familiaridad,
+                    familiaridad: widget.familiaridad,
                     remitentes: remitentesConocidos,
                   ),
                   const _SeparadorPagina(),
-                  _SeccionVocabulario(vocabulario: vocabulario),
+                  _SeccionVocabulario(vocabulario: widget.vocabulario),
                   const _SeparadorPagina(),
                   _SeccionInterpretaciones(
-                    interpretaciones: interpretaciones,
-                    estadoSesion: estadoSesion,
+                    interpretaciones: widget.interpretaciones,
+                    estadoSesion: widget.estadoSesion,
+                  ),
+                  const _SeparadorPagina(),
+                  _SeccionNotasLibres(
+                    notas: _notasLibres,
+                    alAnyadir: _alAnyadirNota,
+                    alEditar: _alEditarNota,
+                    alBorrar: _alBorrarNota,
                   ),
                   const _SeparadorPagina(),
                   _SeccionDocumentosResueltos(piezas: piezasResueltas),
@@ -493,6 +598,153 @@ class _FilaInterpretacion extends StatelessWidget {
               fontFamily: 'serif',
               height: 1.4,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SeccionNotasLibres extends StatelessWidget {
+  const _SeccionNotasLibres({
+    required this.notas,
+    required this.alAnyadir,
+    required this.alEditar,
+    required this.alBorrar,
+  });
+
+  final NotasLibres notas;
+  final VoidCallback alAnyadir;
+  final ValueChanged<NotaLibre> alEditar;
+  final ValueChanged<NotaLibre> alBorrar;
+
+  String _formatearFecha(DateTime fecha) {
+    final dia = fecha.day.toString().padLeft(2, '0');
+    final mes = fecha.month.toString().padLeft(2, '0');
+    return '$dia/$mes/${fecha.year}';
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    final lista = notas.ordenadasPorFecha();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const _TituloSeccion('Mis notas'),
+            TextButton.icon(
+              onPressed: alAnyadir,
+              style: TextButton.styleFrom(
+                foregroundColor: PaletaEstafeta.sepia,
+              ),
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text(
+                'Nueva nota',
+                style: TextStyle(
+                  fontFamily: 'serif',
+                  fontSize: 13,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        ),
+        if (lista.isEmpty)
+          const _MensajeVacio(
+            'Aún no has escrito ninguna nota. El cuaderno es tuyo — escribe '
+            'aquí lo que se te ocurra.',
+          )
+        else
+          for (final nota in lista)
+            _TarjetaNota(
+              key: ValueKey('nota-${nota.id}'),
+              nota: nota,
+              fechaCreacion: _formatearFecha(nota.fechaCreacion),
+              fechaEdicion: nota.fechaUltimaEdicion == null
+                  ? null
+                  : _formatearFecha(nota.fechaUltimaEdicion!),
+              alEditar: () => alEditar(nota),
+              alBorrar: () => alBorrar(nota),
+            ),
+      ],
+    );
+  }
+}
+
+class _TarjetaNota extends StatelessWidget {
+  const _TarjetaNota({
+    super.key,
+    required this.nota,
+    required this.fechaCreacion,
+    required this.fechaEdicion,
+    required this.alEditar,
+    required this.alBorrar,
+  });
+
+  final NotaLibre nota;
+  final String fechaCreacion;
+  final String? fechaEdicion;
+  final VoidCallback alEditar;
+  final VoidCallback alBorrar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            fechaEdicion == null
+                ? 'Escrita el $fechaCreacion'
+                : 'Escrita el $fechaCreacion · editada el $fechaEdicion',
+            style: TextStyle(
+              color: PaletaEstafeta.sepia.withValues(alpha: 0.8),
+              fontSize: 11,
+              fontFamily: 'serif',
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            nota.texto,
+            style: const TextStyle(
+              color: PaletaEstafeta.tinta,
+              fontSize: 14,
+              fontFamily: 'serif',
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              TextButton(
+                onPressed: alEditar,
+                style: TextButton.styleFrom(
+                  foregroundColor: PaletaEstafeta.sepia,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  minimumSize: const Size(0, 28),
+                ),
+                child: const Text(
+                  'Editar',
+                  style: TextStyle(fontFamily: 'serif', fontSize: 11),
+                ),
+              ),
+              TextButton(
+                onPressed: alBorrar,
+                style: TextButton.styleFrom(
+                  foregroundColor: PaletaEstafeta.sepia,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  minimumSize: const Size(0, 28),
+                ),
+                child: const Text(
+                  'Borrar',
+                  style: TextStyle(fontFamily: 'serif', fontSize: 11),
+                ),
+              ),
+            ],
           ),
         ],
       ),
