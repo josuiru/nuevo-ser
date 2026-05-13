@@ -16,6 +16,7 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 │   ├── uno-roto/         juego de matemáticas 9-12 (Kids, en producción, fase ~8-9 MVP)
 │   ├── las-versiones/    juego de pensamiento histórico 10-14 (Kids, Fase 10)
 │   ├── el-cuaderno/      cuaderno de campo digital 9-13 (Kids, Bloque B)
+│   ├── el-descifrador/   juego de oficio civil para descifrar documentos 11-14 (Kids, esqueleto v0.1.0)
 │   ├── fosiles/          cuaderno de campo de fósiles (adulto aficionado, operador)
 │   ├── naturaleza/       cuaderno de campo de naturaleza (adulto aficionado, operador)
 │   ├── agro/             Solera — gestor de fincas (producto comercial)
@@ -45,6 +46,8 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 **Las Versiones (Fase 10)**: MVP Arco 1 + Arco 2 jugable end-to-end. 65 habilidades en 7 dominios, 4 perfiles de medición (P1/P4 funcionales en core). Brechas 1.1, 2.1, 2.2, 2.3, 2.4 jugables con 5 fases. Mosaicos M1 (cómic) y M2 (audio-guía). Companion cableado. Detalle exhaustivo en `apps/las-versiones/CLAUDE.md`. Sustituciones diegéticas en `BLOQUEOS-PENDIENTES.md`.
 
 **Companion v0.1**: 6 endpoints reales de 9 (`POST/GET /companion/cuaderno/entries`, `POST/GET /companion/mosaicos`, `POST /classrooms/{code}/join`, `POST /companion/aggregates/weekly`). 3 pendientes por auth profesor/cuidador. Plugin WP v0.9.0. Detalle en `packages/nuevo_ser_companion/README.md`.
+
+**El Descifrador (esqueleto v0.1.0)**: cuarto juego Kids aprobado el 2026-05-13 a Fase 1. Verbo motor: *descifrar*. Edad 11-14. Mundo: La Estafeta — puerto atlántico ficticio peninsular. Materia: lengua + idiomas L2 lectura asistida + pensamiento crítico + redacción. Las cuatro cooficiales (es/eu/ca/gl) como contenido nuclear desde día uno. Esqueleto Flutter+Melos creado, smoke test verde. Paquete documental v0.1 con 18 documentos fuera del monorepo en `~/Projects/games/el-descifrador-paquete-documental-v0.1/`. 12 decisiones cerradas, 13 bloqueos pendientes (asesoría lingüística cuatro cooficiales primero, corpus seminal mixto, ilustrador, compositor). Sin mecánica todavía. Ver `apps/el-descifrador/CLAUDE.md` y `apps/el-descifrador/BLOQUEOS-PENDIENTES.md`.
 
 ## Apps del operador (no Kids)
 

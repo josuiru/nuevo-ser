@@ -1,0 +1,50 @@
+name: el_descifrador
+description: "El Descifrador — juego de oficio civil para descifrar documentos en lenguas que no dominas. Cuarto juego Kids de la Colección Nuevo Ser."
+publish_to: 'none'
+
+# Versión esqueleto. Se incrementa al cerrar cada fase del roadmap del paquete documental.
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Las cuatro lenguas peninsulares cooficiales como L1 desde el día uno
+  # (decisión cerrada 2026-05-13). Castellano canónico + euskara + catalán
+  # + gallego. Traducciones humanas pendientes de asesoría lingüística.
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  cupertino_icons: ^1.0.8
+
+  # Persistencia local del cuaderno propio del niño, hipótesis fechadas,
+  # documentos resueltos. Doc 06 y doc 16.
+  shared_preferences: ^2.2.2
+
+  # Cliente HTTP para sync opcional al backend WordPress de la Colección
+  # (doc 16 §5.2). Opt-in por cuidador.
+  http: ^1.2.0
+
+  # Plataforma compartida de la Colección Nuevo Ser Kids. Las apps de
+  # juegos consumen los packages por path.
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+  nuevo_ser_tutor:
+    path: ../../packages/nuevo_ser_tutor
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Genera AppLocalizations a partir de los ARB en lib/l10n.
+  # Configurado en l10n.yaml.
+  generate: true

@@ -1,0 +1,11 @@
+{
+  "@@locale": "es",
+  "tituloApp": "El Descifrador",
+  "@tituloApp": {
+    "description": "Nombre del juego en la barra de título"
+  },
+  "mensajeEsqueletoBienvenida": "La Estafeta te espera.",
+  "@mensajeEsqueletoBienvenida": {
+    "description": "Mensaje único de la pantalla esqueleto v0.1. Será sustituido por la primera sesión real cuando entre el corpus."
+  }
+}

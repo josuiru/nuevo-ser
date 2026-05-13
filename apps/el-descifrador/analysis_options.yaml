@@ -1,0 +1,8 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Desactivado: el proyecto usa nombres de parámetros en español
+    # (regla del repo). Los métodos override del framework siguen
+    # siendo reconocibles por el tipo y la anotación @override.
+    avoid_renaming_method_parameters: false
