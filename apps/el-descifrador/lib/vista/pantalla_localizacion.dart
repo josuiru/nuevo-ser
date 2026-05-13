@@ -10,6 +10,7 @@
 import 'package:flutter/material.dart';
 
 import '../dominio/localizacion.dart';
+import '../dominio/personaje.dart';
 import 'paleta_estafeta.dart';
 
 class PantallaLocalizacion extends StatelessWidget {
@@ -51,81 +52,153 @@ class PantallaLocalizacion extends StatelessWidget {
     }
   }
 
+  void _mostrarFrasePersonaje(BuildContext contexto, Personaje personaje) {
+    final frase = personaje.frasePresentacion;
+    if (frase == null) return;
+    ScaffoldMessenger.of(contexto)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            '${personaje.nombreCanonico}: $frase',
+            style: const TextStyle(fontFamily: 'serif', fontSize: 15),
+          ),
+          backgroundColor: PaletaEstafeta.madera,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext contexto) {
+    final habitantes = personajesEn(localizacion);
+
     return Scaffold(
       backgroundColor: PaletaEstafeta.madera,
       body: SafeArea(
-        child: Stack(
-          children: [
-            // Fondo renderizado.
-            Positioned.fill(
-              child: Image.asset(
-                localizacion.rutaFondo,
-                fit: BoxFit.cover,
-              ),
-            ),
-            // Velo oscuro suave para legibilidad del texto.
-            Positioned.fill(
-              child: Container(color: Colors.black.withValues(alpha: 0.30)),
-            ),
-            // Mapa y volver, esquina superior izquierda.
-            Positioned(
-              top: 16,
-              left: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BotonNavegar(
-                    icono: Icons.map_outlined,
-                    etiqueta: 'Mapa',
-                    alPulsar: alAbrirMapa,
+        child: LayoutBuilder(
+          builder: (contexto, restricciones) {
+            final anchoEscena = restricciones.maxWidth;
+            final altoEscena = restricciones.maxHeight;
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    localizacion.rutaFondo,
+                    fit: BoxFit.cover,
                   ),
-                  const SizedBox(height: 8),
-                  _BotonNavegar(
-                    icono: Icons.home_outlined,
-                    etiqueta: 'Volver a tu mesa',
-                    alPulsar: alVolverAOficina,
+                ),
+                Positioned.fill(
+                  child:
+                      Container(color: Colors.black.withValues(alpha: 0.30)),
+                ),
+                // Personajes embebidos en el render del fondo (flavor3d
+                // import GLB + ghibli). Aquí solo ponemos zonas tap
+                // invisibles sobre su posición declarada para que tocar
+                // muestre su frase.
+                for (final personaje in habitantes)
+                  _ZonaTapPersonaje(
+                    personaje: personaje,
+                    altoEscena: altoEscena,
+                    anchoEscena: anchoEscena,
+                    alTocar: () => _mostrarFrasePersonaje(contexto, personaje),
                   ),
-                ],
-              ),
-            ),
-            // Texto narrativo, centro.
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560),
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
+                Positioned(
+                  top: 16,
+                  left: 16,
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        localizacion.nombreCanonico,
-                        style: const TextStyle(
-                          color: PaletaEstafeta.papel,
-                          fontSize: 28,
-                          fontFamily: 'serif',
-                          fontWeight: FontWeight.w600,
-                        ),
+                      _BotonNavegar(
+                        icono: Icons.map_outlined,
+                        etiqueta: 'Mapa',
+                        alPulsar: alAbrirMapa,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        _textoNarrativo(),
-                        style: TextStyle(
-                          color: PaletaEstafeta.papel.withValues(alpha: 0.92),
-                          fontSize: 16,
-                          fontFamily: 'serif',
-                          height: 1.45,
-                        ),
+                      const SizedBox(height: 8),
+                      _BotonNavegar(
+                        icono: Icons.home_outlined,
+                        etiqueta: 'Volver a tu mesa',
+                        alPulsar: alVolverAOficina,
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-          ],
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 560),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(32, 24, 32, 0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localizacion.nombreCanonico,
+                            style: const TextStyle(
+                              color: PaletaEstafeta.papel,
+                              fontSize: 28,
+                              fontFamily: 'serif',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _textoNarrativo(),
+                            style: TextStyle(
+                              color: PaletaEstafeta.papel
+                                  .withValues(alpha: 0.92),
+                              fontSize: 14,
+                              fontFamily: 'serif',
+                              height: 1.45,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
+      ),
+    );
+  }
+}
+
+/// Hitbox invisible que cubre la zona del personaje pintado en el PNG.
+/// El personaje real está en el render 3D del fondo; este widget solo
+/// captura el tap para mostrar su frase de presentación.
+class _ZonaTapPersonaje extends StatelessWidget {
+  const _ZonaTapPersonaje({
+    required this.personaje,
+    required this.altoEscena,
+    required this.anchoEscena,
+    required this.alTocar,
+  });
+
+  final Personaje personaje;
+  final double altoEscena;
+  final double anchoEscena;
+  final VoidCallback alTocar;
+
+  @override
+  Widget build(BuildContext contexto) {
+    final altoZona = altoEscena * personaje.alturaEnEscena;
+    final anchoZona = altoZona * 0.42;
+    final centroX = anchoEscena * personaje.posicionXEnEscena;
+    final pieY = altoEscena * personaje.posicionYEnEscena;
+    return Positioned(
+      left: centroX - anchoZona / 2,
+      top: pieY - altoZona,
+      width: anchoZona,
+      height: altoZona,
+      child: GestureDetector(
+        onTap: alTocar,
+        behavior: HitTestBehavior.opaque,
+        child: const SizedBox.expand(),
       ),
     );
   }
