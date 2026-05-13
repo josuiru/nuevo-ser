@@ -42,13 +42,20 @@ dev_dependencies:
 
   flutter_lints: ^4.0.0
 
-  # Genera el splash nativo Android para que el primer arranque no
-  # sea una pantalla en blanco.
-  flutter_native_splash: ^2.4.1
-
 # Splash nativo Android: papel envejecido sobre fondo verde-mar
 # atlántico de La Estafeta — sin imagen, el juego todavía no
 # tiene logo en assets/.
+#
+# La dependencia `flutter_native_splash` se quitó intencionalmente
+# del dev_dependencies tras generar los assets con
+# `dart run flutter_native_splash:create` una vez: el template
+# `android/` recién creado por `flutter create` la registraba mal
+# como plugin runtime en `GeneratedPluginRegistrant.java` y rompía
+# el build. Los XMLs ya generados (`launch_background.xml` +
+# `values-v31/styles.xml`) persisten en android/ y no necesitan el
+# paquete para funcionar. Si se cambia el color, reinstalar
+# temporalmente `flutter_native_splash: ^2.4.1` en dev_dependencies,
+# regenerar, y volver a quitarlo.
 flutter_native_splash:
   color: "#2C4F5E"
   android: true
