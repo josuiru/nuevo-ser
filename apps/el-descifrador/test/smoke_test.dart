@@ -31,7 +31,11 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Hay correo en la mesa.'), findsOneWidget);
+    // En la primera apertura del perfil, el maestro da la bienvenida.
+    expect(
+      find.textContaining('Bienvenido a la oficina'),
+      findsOneWidget,
+    );
     // Las dos piezas empaquetadas en v0.1.0 deben aparecer por
     // remitente. Inês es voz recurrente — su identificador en
     // remitenteTextoLibre se muestra con guiones bajos sustituidos.

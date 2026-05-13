@@ -21,11 +21,15 @@ import '../datos/repositorio_anotaciones.dart';
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_identificaciones.dart';
 import '../datos/repositorio_interpretaciones.dart';
+import '../datos/repositorio_memoria_sesiones.dart';
 import '../datos/repositorio_notas_libres.dart';
 import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_sesion.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/identificaciones_lengua.dart';
+import '../dominio/memoria_sesiones.dart';
+import '../dominio/servicio_cumpleanyos.dart';
+import '../dominio/servicio_saludo.dart';
 import '../dominio/decision_documento.dart';
 import '../dominio/estado_sesion.dart';
 import '../dominio/pieza_corpus.dart';
@@ -46,6 +50,9 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioIdentificacionesInyectado,
     this.repositorioNotasLibresInyectado,
     this.repositorioAnotacionesInyectado,
+    this.repositorioMemoriaSesionesInyectado,
+    this.servicioSaludoInyectado,
+    this.servicioCumpleanyosInyectado,
   });
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
@@ -88,6 +95,15 @@ class PantallaMesa extends StatefulWidget {
   /// construye con el idPerfil.
   final RepositorioAnotaciones? repositorioAnotacionesInyectado;
 
+  /// RepositorioMemoriaSesiones inyectado (para tests). Si null, se
+  /// construye con el idPerfil.
+  final RepositorioMemoriaSesiones? repositorioMemoriaSesionesInyectado;
+
+  /// Servicios inyectables para tests deterministas. Si null, se usa
+  /// la implementación por defecto (sin parámetros).
+  final ServicioSaludo? servicioSaludoInyectado;
+  final ServicioCumpleanyos? servicioCumpleanyosInyectado;
+
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
 }
@@ -103,8 +119,14 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   late final RepositorioIdentificaciones _repositorioIdentificaciones;
   late final RepositorioNotasLibres _repositorioNotasLibres;
   late final RepositorioAnotaciones _repositorioAnotaciones;
+  late final RepositorioMemoriaSesiones _repositorioMemoriaSesiones;
+  late final ServicioSaludo _servicioSaludo;
+  late final ServicioCumpleanyos _servicioCumpleanyos;
   late final CargadorCorpus _cargador;
   IdentificacionesPiezas _identificaciones = IdentificacionesPiezas.inicial();
+  MemoriaSesiones? _memoriaPreviaAEstaVisita;
+  MemoriaSesiones? _memoriaActual;
+  HitoCumpleanyos? _hitoActivo;
 
   @override
   void initState() {
@@ -128,9 +150,47 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
         RepositorioNotasLibres(idPerfil: widget.idPerfil);
     _repositorioAnotaciones = widget.repositorioAnotacionesInyectado ??
         RepositorioAnotaciones(idPerfil: widget.idPerfil);
+    _repositorioMemoriaSesiones =
+        widget.repositorioMemoriaSesionesInyectado ??
+            RepositorioMemoriaSesiones(idPerfil: widget.idPerfil);
+    _servicioSaludo =
+        widget.servicioSaludoInyectado ?? const ServicioSaludo();
+    _servicioCumpleanyos = widget.servicioCumpleanyosInyectado ??
+        const ServicioCumpleanyos();
     _cargador = widget.cargadorInyectado ?? CargadorCorpus();
-    _cargarCorpus();
+    _registrarVisitaYCargar();
     _cargarIdentificaciones();
+  }
+
+  Future<void> _registrarVisitaYCargar() async {
+    final memoriaPrevia = await _repositorioMemoriaSesiones.cargar();
+    final memoriaActual =
+        await _repositorioMemoriaSesiones.registrarVisita();
+    if (!mounted) return;
+    setState(() {
+      _memoriaPreviaAEstaVisita = memoriaPrevia;
+      _memoriaActual = memoriaActual;
+      _hitoActivo = _servicioCumpleanyos.hitoActivo(
+        memoria: memoriaActual,
+        ahora: memoriaActual.fechaUltimaVisita,
+      );
+    });
+    await _cargarCorpus();
+  }
+
+  Future<void> _descartarHitoCumpleanyos() async {
+    final actual = _memoriaActual;
+    final hito = _hitoActivo;
+    if (actual == null || hito == null) return;
+    final siguiente = await _repositorioMemoriaSesiones.marcarHitoMostrado(
+      memoriaActual: actual,
+      hito: hito.dias,
+    );
+    if (!mounted) return;
+    setState(() {
+      _memoriaActual = siguiente;
+      _hitoActivo = null;
+    });
   }
 
   Future<void> _cargarIdentificaciones() async {
@@ -230,8 +290,12 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
                 : _Mesa(
                     estado: estado,
                     identificaciones: _identificaciones,
+                    memoriaPreviaAEstaVisita: _memoriaPreviaAEstaVisita,
+                    hitoCumpleanyos: _hitoActivo,
+                    servicioSaludo: _servicioSaludo,
                     alTocarPieza: _abrirPieza,
                     alAbrirCuaderno: _abrirCuaderno,
+                    alDescartarHito: _descartarHitoCumpleanyos,
                   ),
       ),
     );
@@ -284,14 +348,26 @@ class _Mesa extends StatelessWidget {
   const _Mesa({
     required this.estado,
     required this.identificaciones,
+    required this.memoriaPreviaAEstaVisita,
+    required this.hitoCumpleanyos,
+    required this.servicioSaludo,
     required this.alTocarPieza,
     required this.alAbrirCuaderno,
+    required this.alDescartarHito,
   });
 
   final EstadoSesion estado;
   final IdentificacionesPiezas identificaciones;
+
+  /// Estado de memoria previa a registrar la visita actual. Permite que
+  /// el saludo mida "días desde la última visita" considerando hoy
+  /// como visita nueva.
+  final MemoriaSesiones? memoriaPreviaAEstaVisita;
+  final HitoCumpleanyos? hitoCumpleanyos;
+  final ServicioSaludo servicioSaludo;
   final ValueChanged<PiezaCorpus> alTocarPieza;
   final VoidCallback alAbrirCuaderno;
+  final VoidCallback alDescartarHito;
 
   @override
   Widget build(BuildContext contexto) {
@@ -302,12 +378,29 @@ class _Mesa extends StatelessWidget {
         Positioned.fill(
           child: Container(color: PaletaEstafeta.madera),
         ),
-        // Frase del maestro en la parte superior.
+        // Frase del maestro en la parte superior + hito de cumpleaños
+        // del cuaderno si toca (doc 06 §4).
         Positioned(
           top: 24,
           left: 32,
           right: 32,
-          child: _SaludoMaestro(estado: estado),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SaludoMaestro(
+                estado: estado,
+                memoria: memoriaPreviaAEstaVisita,
+                servicio: servicioSaludo,
+              ),
+              if (hitoCumpleanyos != null) ...[
+                const SizedBox(height: 8),
+                _BandaCumpleanyos(
+                  hito: hitoCumpleanyos!,
+                  alDescartar: alDescartarHito,
+                ),
+              ],
+            ],
+          ),
         ),
         // Bandeja de entrada (esquina superior izquierda).
         Positioned(
@@ -338,16 +431,73 @@ class _Mesa extends StatelessWidget {
   }
 }
 
-class _SaludoMaestro extends StatelessWidget {
-  const _SaludoMaestro({required this.estado});
+class _BandaCumpleanyos extends StatelessWidget {
+  const _BandaCumpleanyos({required this.hito, required this.alDescartar});
 
-  final EstadoSesion estado;
+  final HitoCumpleanyos hito;
+  final VoidCallback alDescartar;
 
   @override
   Widget build(BuildContext contexto) {
-    final String saludo = estado.bandejaDeEntradaVacia
-        ? 'El correo de hoy está hecho.'
-        : 'Hay correo en la mesa.';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: PaletaEstafeta.papel.withValues(alpha: 0.08),
+        border: Border(
+          left: BorderSide(
+            color: PaletaEstafeta.papel.withValues(alpha: 0.5),
+            width: 2,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              hito.texto,
+              style: const TextStyle(
+                color: PaletaEstafeta.papel,
+                fontSize: 14,
+                fontFamily: 'serif',
+                height: 1.4,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: alDescartar,
+            icon: Icon(
+              Icons.close,
+              size: 16,
+              color: PaletaEstafeta.papel.withValues(alpha: 0.7),
+            ),
+            tooltip: 'Cerrar',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SaludoMaestro extends StatelessWidget {
+  const _SaludoMaestro({
+    required this.estado,
+    required this.memoria,
+    required this.servicio,
+  });
+
+  final EstadoSesion estado;
+  final MemoriaSesiones? memoria;
+  final ServicioSaludo servicio;
+
+  @override
+  Widget build(BuildContext contexto) {
+    final saludo = servicio.saludoParaSesion(
+      memoria: memoria,
+      estado: estado,
+      ahora: DateTime.now(),
+    );
     return Text(
       saludo,
       style: const TextStyle(
