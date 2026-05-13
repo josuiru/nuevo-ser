@@ -11,8 +11,15 @@ import '../utiles/permisos_gps.dart';
 /// añade autocomplete contra catálogo CSV.
 class PantallaNuevaParcela extends StatefulWidget {
   final int olivarId;
+  final double? latitudInicial;
+  final double? longitudInicial;
 
-  const PantallaNuevaParcela({super.key, required this.olivarId});
+  const PantallaNuevaParcela({
+    super.key,
+    required this.olivarId,
+    this.latitudInicial,
+    this.longitudInicial,
+  });
 
   @override
   State<PantallaNuevaParcela> createState() => _PantallaNuevaParcelaState();
@@ -31,6 +38,13 @@ class _PantallaNuevaParcelaState extends State<PantallaNuevaParcela> {
   bool _capturandoGps = false;
   double? _latitud;
   double? _longitud;
+
+  @override
+  void initState() {
+    super.initState();
+    _latitud = widget.latitudInicial;
+    _longitud = widget.longitudInicial;
+  }
 
   static const _opcionesRiego = ['secano', 'superficial', 'goteo', 'aspersion', 'mixto'];
 

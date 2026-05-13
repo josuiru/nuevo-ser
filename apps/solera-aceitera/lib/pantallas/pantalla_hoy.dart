@@ -6,6 +6,7 @@ import '../modelos/campania.dart';
 import '../modelos/lote_aceite.dart';
 import '../modelos/olivar.dart';
 import 'widgets/banner_catalogos_provisionales.dart';
+import 'widgets/tarjeta_resumen_meteo.dart';
 
 /// Dashboard de "hoy". Muestra el estado de la campaña activa, el
 /// número de lotes y de parcelas, y los últimos lotes creados.
@@ -60,6 +61,8 @@ class _PantallaHoyState extends State<PantallaHoy> {
           padding: const EdgeInsets.all(16),
           children: [
             const BannerCatalogosProvisionales(),
+            const TarjetaResumenMeteo(),
+            const SizedBox(height: 12),
             _TarjetaCampania(
               campania: _campaniaActiva,
               formatoFecha: _formatoFecha,
