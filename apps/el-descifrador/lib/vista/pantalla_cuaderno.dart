@@ -18,6 +18,7 @@ import '../dominio/estado_sesion.dart';
 import '../dominio/familiaridad_remitente.dart';
 import '../dominio/lengua.dart';
 import '../dominio/pieza_corpus.dart';
+import '../dominio/vocabulario_jugador.dart';
 import '../dominio/voz_remitente.dart';
 import 'paleta_estafeta.dart';
 
@@ -26,6 +27,7 @@ class PantallaCuaderno extends StatelessWidget {
     super.key,
     required this.estadoSesion,
     required this.familiaridad,
+    required this.vocabulario,
   });
 
   /// Estado actual de la sesión: piezas resueltas que el cuaderno
@@ -34,6 +36,9 @@ class PantallaCuaderno extends StatelessWidget {
 
   /// Familiaridad con remitentes recurrentes (acumulada en sesiones).
   final FamiliaridadRemitente familiaridad;
+
+  /// Vocabulario de palabras marcadas por el niño en cada lengua.
+  final VocabularioJugador vocabulario;
 
   @override
   Widget build(BuildContext contexto) {
@@ -72,6 +77,8 @@ class PantallaCuaderno extends StatelessWidget {
                     familiaridad: familiaridad,
                     remitentes: remitentesConocidos,
                   ),
+                  const _SeparadorPagina(),
+                  _SeccionVocabulario(vocabulario: vocabulario),
                   const _SeparadorPagina(),
                   _SeccionDocumentosResueltos(piezas: piezasResueltas),
                 ],
@@ -258,6 +265,110 @@ class _FilaPersonaje extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SeccionVocabulario extends StatelessWidget {
+  const _SeccionVocabulario({required this.vocabulario});
+
+  final VocabularioJugador vocabulario;
+
+  @override
+  Widget build(BuildContext contexto) {
+    final lenguas = vocabulario.lenguasConPalabrasMarcadas();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _TituloSeccion('Vocabulario'),
+        if (lenguas.isEmpty)
+          const _MensajeVacio(
+            'Aún no has marcado ninguna palabra. Las que toques aparecerán aquí.',
+          )
+        else
+          for (final lengua in lenguas) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 8),
+              child: Text(
+                lengua.nombreCanonico,
+                style: const TextStyle(
+                  color: PaletaEstafeta.tinta,
+                  fontSize: 14,
+                  fontFamily: 'serif',
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            for (final entrada in vocabulario.palabrasEn(lengua))
+              _FilaPalabra(palabra: entrada.key, marca: entrada.value),
+            const SizedBox(height: 8),
+          ],
+      ],
+    );
+  }
+}
+
+class _FilaPalabra extends StatelessWidget {
+  const _FilaPalabra({required this.palabra, required this.marca});
+
+  final String palabra;
+  final MarcaPalabra marca;
+
+  Color get _colorMarca {
+    switch (marca.color) {
+      case MarcaColor.verde:
+        return const Color(0xFF558B2F);
+      case MarcaColor.amarillo:
+        return const Color(0xFFE0A500);
+      case MarcaColor.rojo:
+        return const Color(0xFFC62828);
+    }
+  }
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6, left: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            margin: const EdgeInsets.only(top: 6, right: 10),
+            decoration: BoxDecoration(
+              color: _colorMarca,
+              borderRadius: BorderRadius.circular(1),
+            ),
+          ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  color: PaletaEstafeta.tinta,
+                  fontSize: 14,
+                  fontFamily: 'serif',
+                ),
+                children: [
+                  TextSpan(
+                    text: palabra,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  if (marca.hipotesis != null && marca.hipotesis!.isNotEmpty)
+                    TextSpan(
+                      text: ' — ${marca.hipotesis}',
+                      style: TextStyle(
+                        color: PaletaEstafeta.tinta.withValues(alpha: 0.7),
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],

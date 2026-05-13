@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:el_descifrador/dominio/estado_sesion.dart';
 import 'package:el_descifrador/dominio/familiaridad_remitente.dart';
 import 'package:el_descifrador/dominio/pieza_corpus.dart';
+import 'package:el_descifrador/dominio/vocabulario_jugador.dart';
 import 'package:el_descifrador/dominio/voz_remitente.dart';
 import 'package:el_descifrador/l10n/app_localizations.dart';
 import 'package:el_descifrador/vista/pantalla_cuaderno.dart';
@@ -22,6 +23,7 @@ void main() {
       home: PantallaCuaderno(
         estadoSesion: estado,
         familiaridad: familiaridad,
+        vocabulario: VocabularioJugador.inicial(),
       ),
     );
   }

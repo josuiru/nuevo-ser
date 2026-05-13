@@ -1,48 +1,114 @@
 // Pantalla focal del documento abierto.
 //
 // El documento ocupa el 80-85% del centro de pantalla. Lo demás se
-// atenúa. Botón "decidir" abajo despliega un dialog con las decisiones
-// válidas declaradas en la pieza.
+// atenúa. El niño puede:
+//   - Tocar palabras para marcarlas (verde/amarillo/rojo + hipótesis
+//     opcional). Operación de mecánica nuclear §3.2.
+//   - Pulsar una decisión (Archivar / Devolver / Entregar / Publicar /
+//     Esperar) según lo declarado en la pieza.
 //
 // Al decidir:
-//   - Se registra la pieza trabajada con el remitente en el
-//     RepositorioFamiliaridad (si el remitente es recurrente).
-//   - Se vuelve a PantallaMesa, que mueve la pieza a bandeja resuelto.
-//
-// Composición según `el-descifrador-11-guia-visual.md` §5.2 y mecánica
-// nuclear §3.6. Versión inicial — falta marcar palabras, anotar al
-// cuaderno, proponer interpretación, pedir pistas (eso es del próximo
-// sprint, cuando entre el cuaderno completo).
+//   - Se registra familiaridad con el remitente (si recurrente).
+//   - Se devuelve la decisión a PantallaMesa, que la persiste.
 
 import 'package:flutter/material.dart';
 
 import '../datos/repositorio_familiaridad.dart';
+import '../datos/repositorio_vocabulario.dart';
 import '../dominio/decision_documento.dart';
 import '../dominio/pieza_corpus.dart';
+import '../dominio/vocabulario_jugador.dart';
 import 'paleta_estafeta.dart';
+import 'widgets/dialogo_marcar_palabra.dart';
+import 'widgets/texto_marcable.dart';
 
-class PantallaDocumento extends StatelessWidget {
+class PantallaDocumento extends StatefulWidget {
   const PantallaDocumento({
     super.key,
     required this.pieza,
     required this.repositorioFamiliaridad,
+    this.repositorioVocabularioInyectado,
+    this.idPerfil = 'principal',
   });
 
   final PiezaCorpus pieza;
   final RepositorioFamiliaridad repositorioFamiliaridad;
+  final RepositorioVocabulario? repositorioVocabularioInyectado;
+  final String idPerfil;
+
+  @override
+  State<PantallaDocumento> createState() => _EstadoPantallaDocumento();
+}
+
+class _EstadoPantallaDocumento extends State<PantallaDocumento> {
+  late final RepositorioVocabulario _repositorioVocabulario;
+  VocabularioJugador? _vocabulario;
+
+  @override
+  void initState() {
+    super.initState();
+    _repositorioVocabulario = widget.repositorioVocabularioInyectado ??
+        RepositorioVocabulario(idPerfil: widget.idPerfil);
+    _cargarVocabulario();
+  }
+
+  Future<void> _cargarVocabulario() async {
+    final vocabulario = await _repositorioVocabulario.cargar();
+    if (!mounted) return;
+    setState(() => _vocabulario = vocabulario);
+  }
+
+  Future<void> _alTocarPalabra(String palabraOriginal) async {
+    final vocabulario = _vocabulario;
+    if (vocabulario == null) return;
+    final marcaActual = vocabulario.marcaDe(
+      widget.pieza.lenguaPrincipal,
+      palabraOriginal,
+    );
+    final resultado = await mostrarDialogoMarcarPalabra(
+      contexto: context,
+      palabraOriginal: palabraOriginal,
+      marcaActual: marcaActual,
+    );
+    if (resultado == null || !mounted) return;
+
+    if (resultado.olvidar) {
+      final nuevo = await _repositorioVocabulario.olvidarMarca(
+        lengua: widget.pieza.lenguaPrincipal,
+        palabra: palabraOriginal,
+      );
+      if (!mounted) return;
+      setState(() => _vocabulario = nuevo);
+    } else if (resultado.marca != null) {
+      final nuevo = await _repositorioVocabulario.registrarMarca(
+        lengua: widget.pieza.lenguaPrincipal,
+        palabra: palabraOriginal,
+        marca: resultado.marca!,
+      );
+      if (!mounted) return;
+      setState(() => _vocabulario = nuevo);
+    }
+  }
+
+  Future<void> _alDecidir(DecisionDocumento decision) async {
+    await widget.repositorioFamiliaridad.registrarPiezaTrabajada(
+      widget.pieza.remitenteRecurrente,
+    );
+    if (!mounted) return;
+    Navigator.of(context).pop(decision);
+  }
 
   @override
   Widget build(BuildContext contexto) {
+    final vocabulario = _vocabulario ?? VocabularioJugador.inicial();
     return Scaffold(
       backgroundColor: PaletaEstafeta.madera.withValues(alpha: 0.95),
       body: SafeArea(
         child: Stack(
           children: [
-            // Mesa atenuada de fondo.
             Positioned.fill(
               child: Container(color: PaletaEstafeta.madera),
             ),
-            // Documento centrado al 80% del ancho disponible.
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -50,12 +116,13 @@ class PantallaDocumento extends StatelessWidget {
                   maxHeight: 900,
                 ),
                 child: _DocumentoAbierto(
-                  pieza: pieza,
-                  alDecidir: (decision) => _alDecidir(contexto, decision),
+                  pieza: widget.pieza,
+                  vocabulario: vocabulario,
+                  alTocarPalabra: _alTocarPalabra,
+                  alDecidir: _alDecidir,
                 ),
               ),
             ),
-            // Botón cerrar arriba a la derecha (sin decidir todavía).
             Positioned(
               top: 16,
               right: 16,
@@ -71,30 +138,19 @@ class PantallaDocumento extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> _alDecidir(
-    BuildContext contexto,
-    DecisionDocumento decision,
-  ) async {
-    // Registrar familiaridad con el remitente (si recurrente).
-    // Manifiesto Kids §3: el progreso del niño es el cuaderno, no XP
-    // visible. El registro de familiaridad es silencioso.
-    await repositorioFamiliaridad.registrarPiezaTrabajada(
-      pieza.remitenteRecurrente,
-    );
-
-    if (!contexto.mounted) return;
-
-    // Cerrar la pantalla devolviendo la decisión. PantallaMesa la
-    // persiste y mueve la pieza a resuelto.
-    Navigator.of(contexto).pop(decision);
-  }
 }
 
 class _DocumentoAbierto extends StatelessWidget {
-  const _DocumentoAbierto({required this.pieza, required this.alDecidir});
+  const _DocumentoAbierto({
+    required this.pieza,
+    required this.vocabulario,
+    required this.alTocarPalabra,
+    required this.alDecidir,
+  });
 
   final PiezaCorpus pieza;
+  final VocabularioJugador vocabulario;
+  final void Function(String palabraOriginal) alTocarPalabra;
   final ValueChanged<DecisionDocumento> alDecidir;
 
   @override
@@ -136,7 +192,12 @@ class _DocumentoAbierto extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
-                child: _TextoDocumento(texto: pieza.textoDocumento),
+                child: TextoMarcable(
+                  texto: pieza.textoDocumento,
+                  lengua: pieza.lenguaPrincipal,
+                  vocabulario: vocabulario,
+                  alTocarPalabra: alTocarPalabra,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -148,28 +209,6 @@ class _DocumentoAbierto extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _TextoDocumento extends StatelessWidget {
-  const _TextoDocumento({required this.texto});
-
-  final String texto;
-
-  @override
-  Widget build(BuildContext contexto) {
-    // v0.3.0 muestra el texto literal del documento. La interpretación
-    // de marcadores `*cursiva*` y `**negrita**` (doc 13 §10) se cablea
-    // cuando llegue el sprint de marcar palabras.
-    return Text(
-      texto,
-      style: const TextStyle(
-        color: PaletaEstafeta.tinta,
-        fontSize: 16,
-        fontFamily: 'serif',
-        height: 1.6,
       ),
     );
   }

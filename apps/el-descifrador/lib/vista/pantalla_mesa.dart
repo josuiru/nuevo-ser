@@ -19,9 +19,9 @@ import 'package:flutter/material.dart';
 import '../datos/cargador_corpus.dart';
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_sesion.dart';
+import '../datos/repositorio_vocabulario.dart';
 import '../dominio/decision_documento.dart';
 import '../dominio/estado_sesion.dart';
-import '../dominio/familiaridad_remitente.dart';
 import '../dominio/pieza_corpus.dart';
 import 'paleta_estafeta.dart';
 import 'pantalla_cuaderno.dart';
@@ -34,6 +34,7 @@ class PantallaMesa extends StatefulWidget {
     this.cargadorInyectado,
     this.repositorioFamiliaridadInyectado,
     this.repositorioSesionInyectado,
+    this.repositorioVocabularioInyectado,
   });
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
@@ -52,6 +53,10 @@ class PantallaMesa extends StatefulWidget {
   /// con el idPerfil.
   final RepositorioSesion? repositorioSesionInyectado;
 
+  /// RepositorioVocabulario inyectado (para tests). Si null, se
+  /// construye con el idPerfil.
+  final RepositorioVocabulario? repositorioVocabularioInyectado;
+
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
 }
@@ -61,6 +66,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   String? _errorCarga;
   late final RepositorioFamiliaridad _repositorioFamiliaridad;
   late final RepositorioSesion _repositorioSesion;
+  late final RepositorioVocabulario _repositorioVocabulario;
   late final CargadorCorpus _cargador;
 
   @override
@@ -71,6 +77,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
             RepositorioFamiliaridad(idPerfil: widget.idPerfil);
     _repositorioSesion = widget.repositorioSesionInyectado ??
         RepositorioSesion(idPerfil: widget.idPerfil);
+    _repositorioVocabulario = widget.repositorioVocabularioInyectado ??
+        RepositorioVocabulario(idPerfil: widget.idPerfil);
     _cargador = widget.cargadorInyectado ?? CargadorCorpus();
     _cargarCorpus();
   }
@@ -101,6 +109,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
         builder: (contexto) => PantallaDocumento(
           pieza: pieza,
           repositorioFamiliaridad: _repositorioFamiliaridad,
+          repositorioVocabularioInyectado: _repositorioVocabulario,
+          idPerfil: widget.idPerfil,
         ),
       ),
     );
@@ -120,12 +130,14 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     final estado = _estado;
     if (estado == null) return;
     final familiaridad = await _repositorioFamiliaridad.cargar();
+    final vocabulario = await _repositorioVocabulario.cargar();
     if (!mounted) return;
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (contexto) => PantallaCuaderno(
           estadoSesion: estado,
           familiaridad: familiaridad,
+          vocabulario: vocabulario,
         ),
       ),
     );
