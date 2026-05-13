@@ -87,16 +87,16 @@ class _PantallaFacturasState extends State<PantallaFacturas> {
   }
 
   Future<void> _verPdf(Factura f) async {
-    final queseria = await _bd.obtenerQueseria();
+    final ayuntamiento = await _bd.obtenerAyuntamiento();
     final doc = await _generador.generar(
       factura: f,
-      emisorNombre: queseria.razonSocial.isNotEmpty
-          ? queseria.razonSocial
-          : 'Quesería (sin configurar)',
-      emisorNif: queseria.nif,
-      emisorDireccion: queseria.direccion,
-      emisorTelefono: queseria.telefono,
-      emisorEmail: queseria.email,
+      emisorNombre: ayuntamiento.nombre.isNotEmpty
+          ? ayuntamiento.nombre
+          : 'Ayuntamiento (sin configurar)',
+      emisorNif: ayuntamiento.cif,
+      emisorDireccion: ayuntamiento.direccion,
+      emisorTelefono: ayuntamiento.telefono,
+      emisorEmail: ayuntamiento.email,
     );
     await Printing.sharePdf(
       bytes: await doc.save(),
@@ -105,12 +105,12 @@ class _PantallaFacturasState extends State<PantallaFacturas> {
   }
 
   Future<void> _compartirFactura(Factura f) async {
-    final queseria = await _bd.obtenerQueseria();
+    final ayuntamiento = await _bd.obtenerAyuntamiento();
     final doc = await _generador.generar(
       factura: f,
-      emisorNombre: queseria.razonSocial,
-      emisorNif: queseria.nif,
-      emisorDireccion: queseria.direccion,
+      emisorNombre: ayuntamiento.nombre,
+      emisorNif: ayuntamiento.cif,
+      emisorDireccion: ayuntamiento.direccion,
     );
     final pdfBytes = await doc.save();
     final tmp = await getTemporaryDirectory();
@@ -535,7 +535,7 @@ class _PantallaNuevaFacturaState extends State<_PantallaNuevaFactura> {
                   border: OutlineInputBorder(),
                   isDense: true),
               initialValue: _iva,
-              items: const [
+              items: [
                 DropdownMenuItem(value: 4.0, child: Text(SoleraL10n.t('4%_(tipo_reducido)'))),
                 DropdownMenuItem(value: 10.0, child: Text(SoleraL10n.t('10%_(alimento)'))),
                 DropdownMenuItem(value: 21.0, child: Text(SoleraL10n.t('21%_(general)'))),

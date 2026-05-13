@@ -423,5 +423,5 @@ class _Opcion {
   final String codigo;
   final String titulo;
   final String unidad;
-  _Opcion(this.codigo, this.titulo, this.unidad);
+  const _Opcion(this.codigo, this.titulo, this.unidad);
 }

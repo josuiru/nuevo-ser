@@ -27,7 +27,7 @@ enum _AccionMenu { hoy, guia, informeMunicipal, ajustes }
 /// GPS. Botón cámara abre escáner QR para localizar un árbol existente
 /// por su chapa.
 class PantallaMapa extends StatefulWidget {
-  PantallaMapa({super.key});
+  const PantallaMapa({super.key});
 
   @override
   State<PantallaMapa> createState() => _PantallaMapaState();
@@ -309,8 +309,8 @@ class _PantallaMapaState extends State<PantallaMapa> {
                   break;
               }
             },
-            itemBuilder: (_) => const [
-              PopupMenuItem(
+            itemBuilder: (_) => [
+              const PopupMenuItem(
                 value: _AccionMenu.hoy,
                 child: ListTile(
                   leading: Icon(Icons.today),
@@ -318,7 +318,7 @@ class _PantallaMapaState extends State<PantallaMapa> {
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: _AccionMenu.guia,
                 child: ListTile(
                   leading: Icon(Icons.menu_book),
@@ -326,7 +326,7 @@ class _PantallaMapaState extends State<PantallaMapa> {
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: _AccionMenu.informeMunicipal,
                 child: ListTile(
                   leading: Icon(Icons.description),
@@ -337,7 +337,7 @@ class _PantallaMapaState extends State<PantallaMapa> {
               PopupMenuItem(
                 value: _AccionMenu.ajustes,
                 child: ListTile(
-                  leading: Icon(Icons.settings),
+                  leading: const Icon(Icons.settings),
                   title: Text(SoleraL10n.t('ajustes')),
                   contentPadding: EdgeInsets.zero,
                 ),

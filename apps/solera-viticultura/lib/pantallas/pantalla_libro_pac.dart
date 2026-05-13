@@ -19,7 +19,7 @@ import 'pantalla_titular.dart';
 /// PantallaTitular antes — sin esos datos el PDF queda incompleto y
 /// no es válido para inspección.
 class PantallaLibroPac extends StatefulWidget {
-  PantallaLibroPac({super.key});
+  const PantallaLibroPac({super.key});
 
   @override
   State<PantallaLibroPac> createState() => _PantallaLibroPacState();

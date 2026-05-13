@@ -7,7 +7,7 @@ import 'pantalla_nueva_colmena.dart';
 import 'pantalla_nuevo_apiario.dart';
 
 class PantallaGestionApiarios extends StatefulWidget {
-  PantallaGestionApiarios({super.key});
+  const PantallaGestionApiarios({super.key});
 
   @override
   State<PantallaGestionApiarios> createState() =>

@@ -119,9 +119,9 @@ class _PantallaFincasState extends State<PantallaFincas> {
                           }
                           if (op == 'borrar') _alBorrar(f);
                         },
-                        itemBuilder: (_) => const [
-                          PopupMenuItem(value: 'renombrar', child: Text('Renombrar')),
-                          PopupMenuItem(value: 'sigpac', child: Text('Datos SIGPAC y superficie')),
+                        itemBuilder: (_) => [
+                          const PopupMenuItem(value: 'renombrar', child: Text('Renombrar')),
+                          const PopupMenuItem(value: 'sigpac', child: Text('Datos SIGPAC y superficie')),
                           PopupMenuItem(value: 'borrar', child: Text(SoleraL10n.t('borrar'))),
                         ],
                       ),

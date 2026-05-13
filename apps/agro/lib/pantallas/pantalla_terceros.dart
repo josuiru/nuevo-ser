@@ -298,10 +298,10 @@ class _SheetEditarTerceroState extends State<_SheetEditarTercero> {
                   labelText: 'Tipo',
                   border: OutlineInputBorder(),
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'cliente', child: Text('Cliente')),
+                items: [
+                  const DropdownMenuItem(value: 'cliente', child: Text('Cliente')),
                   DropdownMenuItem(value: 'proveedor', child: Text(SoleraL10n.t('proveedor'))),
-                  DropdownMenuItem(
+                  const DropdownMenuItem(
                       value: 'ambos', child: Text('Cliente y proveedor')),
                 ],
                 onChanged: (v) => setState(() => _tipo = v ?? 'ambos'),

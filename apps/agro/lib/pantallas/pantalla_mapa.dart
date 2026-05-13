@@ -26,7 +26,7 @@ enum _EstiloMapa { calle, satelite }
 enum _OrigenAltaMapa { gps, centroMapa }
 
 class PantallaMapa extends StatefulWidget {
-  PantallaMapa({super.key});
+  const PantallaMapa({super.key});
 
   @override
   State<PantallaMapa> createState() => _PantallaMapaState();

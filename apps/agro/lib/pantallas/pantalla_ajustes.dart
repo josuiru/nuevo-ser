@@ -16,7 +16,7 @@ import 'pantalla_titular.dart';
 import 'pantalla_tracks.dart';
 
 class PantallaAjustes extends StatelessWidget {
-  PantallaAjustes({super.key});
+  const PantallaAjustes({super.key});
 
   @override
   Widget build(BuildContext context) {

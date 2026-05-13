@@ -199,7 +199,7 @@ class _PantallaConfiguracionFiscalState
 class _Opcion {
   final String codigo;
   final String titulo;
-  _Opcion(this.codigo, this.titulo);
+  const _Opcion(this.codigo, this.titulo);
 }
 
 class _Cabecera extends StatelessWidget {

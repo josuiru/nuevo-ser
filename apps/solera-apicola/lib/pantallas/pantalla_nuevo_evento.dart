@@ -562,15 +562,15 @@ class _PantallaNuevoEventoState extends State<PantallaNuevoEvento> {
           DropdownButtonFormField<String>(
             initialValue: _motivoMovimiento,
             decoration: InputDecoration(labelText: 'Motivo', border: OutlineInputBorder()),
-            items: const [
-              DropdownMenuItem(value: 'mielada', child: Text('Mielada (trashumancia)')),
-              DropdownMenuItem(value: 'invernada', child: Text('Invernada')),
-              DropdownMenuItem(value: 'sanitario', child: Text('Sanitario')),
-              DropdownMenuItem(value: 'recogida_enjambre', child: Text('Recogida de enjambre')),
-              DropdownMenuItem(value: 'compra', child: Text('Compra')),
-              DropdownMenuItem(value: 'venta', child: Text('Venta')),
+            items: [
+              const DropdownMenuItem(value: 'mielada', child: Text('Mielada (trashumancia)')),
+              const DropdownMenuItem(value: 'invernada', child: Text('Invernada')),
+              const DropdownMenuItem(value: 'sanitario', child: Text('Sanitario')),
+              const DropdownMenuItem(value: 'recogida_enjambre', child: Text('Recogida de enjambre')),
+              const DropdownMenuItem(value: 'compra', child: Text('Compra')),
+              const DropdownMenuItem(value: 'venta', child: Text('Venta')),
               DropdownMenuItem(value: 'baja', child: Text(SoleraL10n.t('baja'))),
-              DropdownMenuItem(value: 'otro', child: Text('Otro')),
+              const DropdownMenuItem(value: 'otro', child: Text('Otro')),
             ],
             onChanged: (v) => setState(() => _motivoMovimiento = v ?? 'otro'),
           ),

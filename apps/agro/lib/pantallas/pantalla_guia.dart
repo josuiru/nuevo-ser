@@ -15,7 +15,7 @@ import 'widgets/imagen_commons_widget.dart';
 /// El detalle de un cultivo enlaza con sus plagas; el detalle de una
 /// plaga enlaza con los cultivos afectados (navegación cruzada).
 class PantallaGuia extends StatelessWidget {
-  PantallaGuia({super.key});
+  const PantallaGuia({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +299,7 @@ class _ListaPlagasState extends State<_ListaPlagas> {
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   items: [
-                    const DropdownMenuItem<String?>(value: null, child: Text(SoleraL10n.t('todos'))),
+                    DropdownMenuItem<String?>(value: null, child: Text(SoleraL10n.t('todos'))),
                     for (final c in catalogoCultivos)
                       if (c.id != 'generico')
                         DropdownMenuItem<String?>(value: c.id, child: Text(c.nombreVisible)),
@@ -318,7 +318,7 @@ class _ListaPlagasState extends State<_ListaPlagas> {
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   items: [
-                    const DropdownMenuItem<TipoPlaga?>(value: null, child: Text(SoleraL10n.t('todos'))),
+                    DropdownMenuItem<TipoPlaga?>(value: null, child: Text(SoleraL10n.t('todos'))),
                     for (final t in TipoPlaga.values)
                       DropdownMenuItem<TipoPlaga?>(value: t, child: Text(t.nombreVisible)),
                   ],

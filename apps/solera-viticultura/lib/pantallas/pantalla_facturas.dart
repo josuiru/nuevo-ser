@@ -87,16 +87,16 @@ class _PantallaFacturasState extends State<PantallaFacturas> {
   }
 
   Future<void> _verPdf(Factura f) async {
-    // obtenerQueseria no disponible en esta app
+    final titular = await _bd.obtenerTitular();
     final doc = await _generador.generar(
       factura: f,
-      emisorNombre: queseria.razonSocial.isNotEmpty
-          ? queseria.razonSocial
-          : 'Quesería (sin configurar)',
-      emisorNif: queseria.nif,
-      emisorDireccion: queseria.direccion,
-      emisorTelefono: queseria.telefono,
-      emisorEmail: queseria.email,
+      emisorNombre: titular.nombre.isNotEmpty
+          ? titular.nombre
+          : 'Bodega (sin configurar)',
+      emisorNif: titular.nif,
+      emisorDireccion: titular.direccion,
+      emisorTelefono: titular.telefono,
+      emisorEmail: titular.email,
     );
     await Printing.sharePdf(
       bytes: await doc.save(),
@@ -105,12 +105,12 @@ class _PantallaFacturasState extends State<PantallaFacturas> {
   }
 
   Future<void> _compartirFactura(Factura f) async {
-    // obtenerQueseria no disponible en esta app
+    final titular = await _bd.obtenerTitular();
     final doc = await _generador.generar(
       factura: f,
-      emisorNombre: 'Solera',
-      emisorNif: '',
-      emisorDireccion: '',
+      emisorNombre: titular.nombre.isNotEmpty ? titular.nombre : 'Bodega',
+      emisorNif: titular.nif,
+      emisorDireccion: titular.direccion,
     );
     final pdfBytes = await doc.save();
     final tmp = await getTemporaryDirectory();
@@ -535,7 +535,7 @@ class _PantallaNuevaFacturaState extends State<_PantallaNuevaFactura> {
                   border: OutlineInputBorder(),
                   isDense: true),
               initialValue: _iva,
-              items: const [
+              items: [
                 DropdownMenuItem(value: 4.0, child: Text(SoleraL10n.t('4%_(tipo_reducido)'))),
                 DropdownMenuItem(value: 10.0, child: Text(SoleraL10n.t('10%_(alimento)'))),
                 DropdownMenuItem(value: 21.0, child: Text(SoleraL10n.t('21%_(general)'))),

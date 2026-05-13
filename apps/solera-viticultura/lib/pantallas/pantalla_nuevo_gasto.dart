@@ -449,5 +449,5 @@ class _PantallaNuevoGastoState extends State<PantallaNuevoGasto> {
 class _OpcionTipo {
   final String codigo;
   final String titulo;
-  _OpcionTipo(this.codigo, this.titulo);
+  const _OpcionTipo(this.codigo, this.titulo);
 }

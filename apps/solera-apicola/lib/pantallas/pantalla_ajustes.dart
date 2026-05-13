@@ -16,7 +16,7 @@ import 'pantalla_terceros.dart';
 /// como entrada propia, para que la cabecera del mapa no se llene
 /// según vaya creciendo el conjunto.
 class PantallaAjustes extends StatelessWidget {
-  PantallaAjustes({super.key});
+  const PantallaAjustes({super.key});
 
   @override
   Widget build(BuildContext context) {

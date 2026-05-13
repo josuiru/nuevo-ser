@@ -19,7 +19,7 @@ import 'pantalla_apicultor.dart';
 /// PantallaApicultor antes — sin esos datos el PDF queda incompleto y no
 /// es válido para inspección.
 class PantallaLibroRega extends StatefulWidget {
-  PantallaLibroRega({super.key});
+  const PantallaLibroRega({super.key});
 
   @override
   State<PantallaLibroRega> createState() => _PantallaLibroRegaState();
