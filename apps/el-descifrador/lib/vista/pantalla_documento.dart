@@ -15,13 +15,17 @@ import 'package:flutter/material.dart';
 
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_interpretaciones.dart';
+import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/decision_documento.dart';
 import '../dominio/interpretacion_pieza.dart';
 import '../dominio/pieza_corpus.dart';
+import '../dominio/pistas_pedidas.dart';
+import '../dominio/servicio_pistas.dart';
 import '../dominio/vocabulario_jugador.dart';
 import 'paleta_estafeta.dart';
 import 'widgets/dialogo_marcar_palabra.dart';
+import 'widgets/dialogo_pedir_pista.dart';
 import 'widgets/dialogo_proponer_interpretacion.dart';
 import 'widgets/texto_marcable.dart';
 
@@ -32,6 +36,8 @@ class PantallaDocumento extends StatefulWidget {
     required this.repositorioFamiliaridad,
     this.repositorioVocabularioInyectado,
     this.repositorioInterpretacionesInyectado,
+    this.repositorioPistasInyectado,
+    this.piezasResueltas = const [],
     this.idPerfil = 'principal',
   });
 
@@ -39,6 +45,11 @@ class PantallaDocumento extends StatefulWidget {
   final RepositorioFamiliaridad repositorioFamiliaridad;
   final RepositorioVocabulario? repositorioVocabularioInyectado;
   final RepositorioInterpretaciones? repositorioInterpretacionesInyectado;
+  final RepositorioPistas? repositorioPistasInyectado;
+
+  /// Piezas que el niño ha resuelto antes. El servicio de pistas las
+  /// consulta para construir la pista de comparación.
+  final List<PiezaCorpus> piezasResueltas;
   final String idPerfil;
 
   @override
@@ -48,8 +59,11 @@ class PantallaDocumento extends StatefulWidget {
 class _EstadoPantallaDocumento extends State<PantallaDocumento> {
   late final RepositorioVocabulario _repositorioVocabulario;
   late final RepositorioInterpretaciones _repositorioInterpretaciones;
+  late final RepositorioPistas _repositorioPistas;
+  static const ServicioPistas _servicioPistas = ServicioPistas();
   VocabularioJugador? _vocabulario;
   InterpretacionPieza? _interpretacionActual;
+  PistasPedidas _pistas = PistasPedidas.inicial();
 
   @override
   void initState() {
@@ -59,8 +73,17 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
     _repositorioInterpretaciones =
         widget.repositorioInterpretacionesInyectado ??
             RepositorioInterpretaciones(idPerfil: widget.idPerfil);
+    _repositorioPistas = widget.repositorioPistasInyectado ??
+        RepositorioPistas(idPerfil: widget.idPerfil);
     _cargarVocabulario();
     _cargarInterpretacion();
+    _cargarPistas();
+  }
+
+  Future<void> _cargarPistas() async {
+    final pistas = await _repositorioPistas.cargar();
+    if (!mounted) return;
+    setState(() => _pistas = pistas);
   }
 
   Future<void> _cargarVocabulario() async {
@@ -110,6 +133,10 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
     );
     if (resultado == null || !mounted) return;
 
+    if (resultado.pedirPista) {
+      await _alPedirPista(palabraOriginal);
+      return;
+    }
     if (resultado.olvidar) {
       final nuevo = await _repositorioVocabulario.olvidarMarca(
         lengua: widget.pieza.lenguaPrincipal,
@@ -126,6 +153,40 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
       if (!mounted) return;
       setState(() => _vocabulario = nuevo);
     }
+  }
+
+  Future<void> _alPedirPista(String palabraOriginal) async {
+    final vocabulario = _vocabulario ?? VocabularioJugador.inicial();
+    final nivelesYaPedidos = _pistas.nivelesPedidos(
+      idPieza: widget.pieza.id,
+      palabra: palabraOriginal,
+    );
+    await mostrarDialogoPedirPista(
+      contexto: context,
+      palabraOriginal: palabraOriginal,
+      nivelesYaPedidos: nivelesYaPedidos,
+      responder: (nivel) {
+        // Registra la pista en background y devuelve la respuesta del
+        // maestro inmediatamente para que el niño la lea.
+        _repositorioPistas
+            .registrarPista(
+          idPieza: widget.pieza.id,
+          palabra: palabraOriginal,
+          nivel: nivel,
+        )
+            .then((actualizadas) {
+          if (!mounted) return;
+          setState(() => _pistas = actualizadas);
+        });
+        return _servicioPistas.responder(
+          nivel: nivel,
+          piezaActual: widget.pieza,
+          palabraOriginal: palabraOriginal,
+          vocabulario: vocabulario,
+          piezasResueltas: widget.piezasResueltas,
+        );
+      },
+    );
   }
 
   Future<void> _alDecidir(DecisionDocumento decision) async {
@@ -157,6 +218,8 @@ class _EstadoPantallaDocumento extends State<PantallaDocumento> {
                   pieza: widget.pieza,
                   vocabulario: vocabulario,
                   interpretacionActual: _interpretacionActual,
+                  palabrasConPistaPedida:
+                      _pistas.palabrasConPistaEn(widget.pieza.id),
                   alTocarPalabra: _alTocarPalabra,
                   alProponerInterpretacion: _alProponerInterpretacion,
                   alDecidir: _alDecidir,
@@ -185,6 +248,7 @@ class _DocumentoAbierto extends StatelessWidget {
     required this.pieza,
     required this.vocabulario,
     required this.interpretacionActual,
+    required this.palabrasConPistaPedida,
     required this.alTocarPalabra,
     required this.alProponerInterpretacion,
     required this.alDecidir,
@@ -193,6 +257,7 @@ class _DocumentoAbierto extends StatelessWidget {
   final PiezaCorpus pieza;
   final VocabularioJugador vocabulario;
   final InterpretacionPieza? interpretacionActual;
+  final Set<String> palabrasConPistaPedida;
   final void Function(String palabraOriginal) alTocarPalabra;
   final VoidCallback alProponerInterpretacion;
   final ValueChanged<DecisionDocumento> alDecidir;
@@ -240,6 +305,7 @@ class _DocumentoAbierto extends StatelessWidget {
                   texto: pieza.textoDocumento,
                   lengua: pieza.lenguaPrincipal,
                   vocabulario: vocabulario,
+                  palabrasConPistaPedida: palabrasConPistaPedida,
                   alTocarPalabra: alTocarPalabra,
                 ),
               ),

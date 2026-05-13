@@ -21,6 +21,7 @@ class TextoMarcable extends StatefulWidget {
     required this.lengua,
     required this.vocabulario,
     required this.alTocarPalabra,
+    this.palabrasConPistaPedida = const {},
     this.estiloBase,
   });
 
@@ -28,6 +29,12 @@ class TextoMarcable extends StatefulWidget {
   final Lengua lengua;
   final VocabularioJugador vocabulario;
   final void Function(String palabraOriginal) alTocarPalabra;
+
+  /// Conjunto de palabras (normalizadas) sobre las que el niño ya pidió
+  /// pista al maestro. Mecánica nuclear §3.5: "las pistas pedidas quedan
+  /// marcadas en el margen del documento". Se renderizan con un fondo
+  /// sutil para que el niño vea su propio rastro de búsqueda.
+  final Set<String> palabrasConPistaPedida;
   final TextStyle? estiloBase;
 
   @override
@@ -69,6 +76,9 @@ class _EstadoTextoMarcable extends State<TextoMarcable> {
           widget.lengua,
           segmento.contenido,
         );
+        final normalizada = normalizarPalabra(segmento.contenido);
+        final tienePista =
+            widget.palabrasConPistaPedida.contains(normalizada);
         final reconocedor = TapGestureRecognizer()
           ..onTap = () => widget.alTocarPalabra(segmento.contenido);
         _reconocedores.add(reconocedor);
@@ -76,7 +86,7 @@ class _EstadoTextoMarcable extends State<TextoMarcable> {
         spans.add(
           TextSpan(
             text: segmento.contenido,
-            style: _estiloParaMarca(estiloBase, marca),
+            style: _estiloParaMarca(estiloBase, marca, tienePista),
             recognizer: reconocedor,
           ),
         );
@@ -92,10 +102,20 @@ class _EstadoTextoMarcable extends State<TextoMarcable> {
     );
   }
 
-  TextStyle _estiloParaMarca(TextStyle base, MarcaPalabra? marca) {
-    if (marca == null) return base;
+  TextStyle _estiloParaMarca(
+    TextStyle base,
+    MarcaPalabra? marca,
+    bool tienePista,
+  ) {
+    var estilo = base;
+    if (tienePista) {
+      estilo = estilo.copyWith(
+        backgroundColor: PaletaEstafeta.sepia.withValues(alpha: 0.12),
+      );
+    }
+    if (marca == null) return estilo;
     final color = _colorParaMarca(marca.color);
-    return base.copyWith(
+    return estilo.copyWith(
       decoration: TextDecoration.underline,
       decorationColor: color,
       decorationThickness: 2.5,

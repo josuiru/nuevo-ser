@@ -8,13 +8,24 @@ import '../paleta_estafeta.dart';
 
 /// Resultado del diálogo. null si el niño cierra sin decidir.
 class ResultadoMarca {
-  const ResultadoMarca.aplicar(this.marca) : olvidar = false;
+  const ResultadoMarca.aplicar(this.marca)
+      : olvidar = false,
+        pedirPista = false;
   const ResultadoMarca.olvidar()
       : marca = null,
-        olvidar = true;
+        olvidar = true,
+        pedirPista = false;
+  const ResultadoMarca.pedirPista()
+      : marca = null,
+        olvidar = false,
+        pedirPista = true;
 
   final MarcaPalabra? marca;
   final bool olvidar;
+
+  /// El niño quiere pedir pista al maestro sobre esta palabra. El
+  /// llamador debe abrir el diálogo de pistas a continuación.
+  final bool pedirPista;
 }
 
 /// Abre el diálogo modal. Devuelve ResultadoMarca o null si cancela.
@@ -167,7 +178,34 @@ class _EstadoDialogo extends State<_DialogoMarcarPalabra> {
                 ),
                 maxLines: 2,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop(
+                      const ResultadoMarca.pedirPista(),
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: PaletaEstafeta.sepia,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
+                  ),
+                  icon: const Icon(Icons.help_outline, size: 16),
+                  label: const Text(
+                    'Pedir pista al maestro',
+                    style: TextStyle(
+                      fontFamily: 'serif',
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -23,5 +23,21 @@
   "cruces_con_corpus": ["carta-joao-bacalao-002", "etiqueta-pimenton-vera-003"],
   "texto_documento": "Caro João,\n\nLe mando la receita do bacalhau à portuguesa que me pediste. Se te serve, prova-a — mas não le ponhas todo o alho de golpe, que ya conozco yo cómo cocinan ustedes ahí en La Estafeta. Estou um pouco *embaraçada* de mandar-ta assim, sem a versão que faz a minha cunhada (que é melhor mas ela não ma passa, a muy ladina), mas se esperarmos a ter a sua boa não comemos nunca.\n\nO peixe: quilo e meio de bacalhau bem remolhado (**12 horas, água nova três vezes**). Pões a lume brando com vinho branco e louro. Uma cebola cortada em pluma. Azeite do bom, não do que vendeis aí que parece graxa de farol.\n\nConta-me como sai. E diz ao boticário que me mande pimentão do de Vera, que aqui só há português e não é o mesmo.\n\nBeijinhos,\nInês",
   "estado_validacion": "borrador_claude_2026_05_13_pendiente_humano",
-  "validacion_pendiente": "asesor portugues europeo"
+  "validacion_pendiente": "asesor portugues europeo",
+  "glosario": {
+    "bacalhau": "bacalao",
+    "embaraçada": "avergonzada (falso amigo: NO 'embarazada')",
+    "remolhado": "remojado",
+    "lume": "fuego",
+    "brando": "lento, suave",
+    "louro": "laurel",
+    "cebola": "cebolla",
+    "pluma": "juliana fina",
+    "azeite": "aceite (de oliva)",
+    "graxa": "grasa",
+    "farol": "faro",
+    "boticário": "boticario",
+    "pimentão": "pimentón",
+    "beijinhos": "besitos"
+  }
 }

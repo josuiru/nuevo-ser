@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import '../datos/cargador_corpus.dart';
 import '../datos/repositorio_familiaridad.dart';
 import '../datos/repositorio_interpretaciones.dart';
+import '../datos/repositorio_pistas.dart';
 import '../datos/repositorio_sesion.dart';
 import '../datos/repositorio_vocabulario.dart';
 import '../dominio/decision_documento.dart';
@@ -37,6 +38,7 @@ class PantallaMesa extends StatefulWidget {
     this.repositorioSesionInyectado,
     this.repositorioVocabularioInyectado,
     this.repositorioInterpretacionesInyectado,
+    this.repositorioPistasInyectado,
   });
 
   /// ID del perfil del niño activo. En v0.4.0 hardcodeado a 'principal'
@@ -63,6 +65,10 @@ class PantallaMesa extends StatefulWidget {
   /// construye con el idPerfil.
   final RepositorioInterpretaciones? repositorioInterpretacionesInyectado;
 
+  /// RepositorioPistas inyectado (para tests). Si null, se construye
+  /// con el idPerfil.
+  final RepositorioPistas? repositorioPistasInyectado;
+
   @override
   State<PantallaMesa> createState() => _EstadoPantallaMesa();
 }
@@ -74,6 +80,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   late final RepositorioSesion _repositorioSesion;
   late final RepositorioVocabulario _repositorioVocabulario;
   late final RepositorioInterpretaciones _repositorioInterpretaciones;
+  late final RepositorioPistas _repositorioPistas;
   late final CargadorCorpus _cargador;
 
   @override
@@ -89,6 +96,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
     _repositorioInterpretaciones =
         widget.repositorioInterpretacionesInyectado ??
             RepositorioInterpretaciones(idPerfil: widget.idPerfil);
+    _repositorioPistas = widget.repositorioPistasInyectado ??
+        RepositorioPistas(idPerfil: widget.idPerfil);
     _cargador = widget.cargadorInyectado ?? CargadorCorpus();
     _cargarCorpus();
   }
@@ -114,6 +123,7 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
   }
 
   Future<void> _abrirPieza(PiezaCorpus pieza) async {
+    final piezasResueltas = _estado?.piezasResueltas() ?? const <PiezaCorpus>[];
     final decision = await Navigator.of(context).push<DecisionDocumento>(
       MaterialPageRoute(
         builder: (contexto) => PantallaDocumento(
@@ -121,6 +131,8 @@ class _EstadoPantallaMesa extends State<PantallaMesa> {
           repositorioFamiliaridad: _repositorioFamiliaridad,
           repositorioVocabularioInyectado: _repositorioVocabulario,
           repositorioInterpretacionesInyectado: _repositorioInterpretaciones,
+          repositorioPistasInyectado: _repositorioPistas,
+          piezasResueltas: piezasResueltas,
           idPerfil: widget.idPerfil,
         ),
       ),

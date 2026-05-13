@@ -34,6 +34,7 @@ class PiezaCorpus {
     required this.crucesConCorpus,
     required this.textoDocumento,
     required this.estadoValidacion,
+    this.glosario = const {},
   });
 
   /// ID único en snake-kebab-case (ej: "carta-ines-bacalao-001").
@@ -100,6 +101,12 @@ class PiezaCorpus {
   /// al corpus v1.0 hasta que no esté en `validadaParaProduccion`.
   final EstadoValidacion estadoValidacion;
 
+  /// Equivalencias en castellano para palabras concretas (normalizadas).
+  /// Sostiene la pista de traducción del maestro (mecánica nuclear §3.5).
+  /// Mapa palabra-normalizada → traducción. Vacío si la pieza no tiene
+  /// glosario aún (caso típico: piezas en castellano, donde no hace falta).
+  final Map<String, String> glosario;
+
   /// True si la pieza ha pasado validación lingüística y editorial
   /// firmada y puede servirse al niño en producción.
   bool get listaParaProduccion =>
@@ -165,7 +172,26 @@ class PiezaCorpus {
       estadoValidacion: EstadoValidacion.desdeIdentificador(
         (mapa['estado_validacion'] as String?) ?? 'borrador',
       ),
+      glosario: _parsearGlosario(mapa['glosario']),
     );
+  }
+
+  static Map<String, String> _parsearGlosario(dynamic valor) {
+    if (valor == null) return const {};
+    if (valor is! Map) {
+      throw FormatException(
+        'Pieza del corpus mal formada: "glosario" debe ser objeto',
+      );
+    }
+    final resultado = <String, String>{};
+    for (final entrada in valor.entries) {
+      final clave = entrada.key;
+      final traduccion = entrada.value;
+      if (clave is String && traduccion is String) {
+        resultado[clave.toLowerCase().trim()] = traduccion;
+      }
+    }
+    return Map.unmodifiable(resultado);
   }
 
   static int _parsearDificultad(dynamic valor) {
