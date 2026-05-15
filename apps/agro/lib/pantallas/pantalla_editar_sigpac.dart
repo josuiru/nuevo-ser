@@ -49,15 +49,39 @@ class _PantallaEditarSigpacState extends State<PantallaEditarSigpac> {
   }
 
   Future<void> _guardar() async {
+    // Antes parseábamos la superficie con `double.tryParse` y si fallaba
+    // se guardaba `null` en silencio: el tester veía cómo el campo se
+    // borraba al guardar sin entender por qué (bug reportado en
+    // testeo 2026-05-15). Ahora validamos primero y avisamos.
+    final textoSup = _controladorSuperficie.text.trim();
+    double? superficie;
+    if (textoSup.isNotEmpty) {
+      superficie = double.tryParse(textoSup.replaceAll(',', '.'));
+      if (superficie == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Superficie no válida: "$textoSup". Usa solo números (p. ej. 4.7).',
+            ),
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
+        return;
+      }
+      if (superficie < 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('La superficie no puede ser negativa.')),
+        );
+        return;
+      }
+    }
     await BaseDatosAgro.instancia.actualizarFinca(widget.finca.id!, {
       'sigpac_provincia': _controladorProvincia.text.trim(),
       'sigpac_municipio': _controladorMunicipio.text.trim(),
       'sigpac_poligono': _controladorPoligono.text.trim(),
       'sigpac_parcela': _controladorParcela.text.trim(),
       'sigpac_recinto': _controladorRecinto.text.trim(),
-      'superficie_hectareas': double.tryParse(
-        _controladorSuperficie.text.replaceAll(',', '.'),
-      ),
+      'superficie_hectareas': superficie,
     });
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

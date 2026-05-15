@@ -18,6 +18,7 @@ import '../utiles/permisos_gps.dart';
 import 'pantalla_ficha_planta.dart';
 import 'pantalla_nueva_planta.dart';
 import 'pantalla_nuevo_evento.dart';
+import 'pantalla_tracks.dart';
 
 enum _AccionMarcador { cosecha, observacion, incidencia, abrirFicha }
 
@@ -48,6 +49,14 @@ class _PantallaMapaState extends State<PantallaMapa> {
   double _zoomActual = 6;
   bool _centroResuelto = false;
   StreamSubscription<void>? _suscripcionGrabador;
+  // Tick del track: cada GPS-fix del grabador antes disparaba setState
+  // que reconstruía TODO el FlutterMap, lo que en algunos dispositivos
+  // dejaba la PolylineLayer parpadeando o sin pintarse hasta que el
+  // usuario tocaba el mapa (bug reportado en testeo 2026-05-15:
+  // "mientras graba, la app NO dibuja el recorrido"). Ahora un
+  // ValueNotifier que sólo agita la PolylineLayer dentro de un
+  // ValueListenableBuilder.
+  final ValueNotifier<int> _tickTrack = ValueNotifier(0);
 
   @override
   void initState() {
@@ -55,6 +64,10 @@ class _PantallaMapaState extends State<PantallaMapa> {
     _cargarTodo();
     _resolverCentroInicial();
     _suscripcionGrabador = GrabadorTrack.instancia.cambios.listen((_) {
+      // Tick específico para la polyline. Usamos también setState
+      // ligero para refrescar el icono del AppBar (rojo/parar) — pero
+      // sin tocar la polyline directamente.
+      _tickTrack.value++;
       if (mounted) setState(() {});
     });
   }
@@ -62,6 +75,7 @@ class _PantallaMapaState extends State<PantallaMapa> {
   @override
   void dispose() {
     _suscripcionGrabador?.cancel();
+    _tickTrack.dispose();
     super.dispose();
   }
 
@@ -575,6 +589,13 @@ class _PantallaMapaState extends State<PantallaMapa> {
             onPressed: _alternarGrabacionTrack,
           ),
           IconButton(
+            icon: const Icon(Icons.route),
+            tooltip: 'Recorridos guardados',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => PantallaTracks()),
+            ),
+          ),
+          IconButton(
             icon: Icon(
               _modoCenso
                   ? Icons.add_location_alt
@@ -598,6 +619,15 @@ class _PantallaMapaState extends State<PantallaMapa> {
               maxZoom: 22,
               minZoom: 4,
               onTap: (_, punto) => _alPulsarMapa(punto),
+              // Long press en cualquier sitio del mapa: alta rápida de
+              // planta con coords del punto pulsado, sin necesidad de
+              // estar en modo censo (bug reportado en testeo
+              // 2026-05-15: "Toque largo en mapa NO abre Nueva planta
+              // con coordenadas predefinidas").
+              onLongPress: (_, punto) => _alAbrirNuevaPlanta(
+                latitud: punto.latitude,
+                longitud: punto.longitude,
+              ),
               onPositionChanged: (cam, _) {
                 _centroActual = cam.center;
                 _zoomActual = cam.zoom;
@@ -620,19 +650,26 @@ class _PantallaMapaState extends State<PantallaMapa> {
                 maxZoom: 22,
                 maxNativeZoom: 19,
               ),
-              if (GrabadorTrack.instancia.grabando &&
-                  GrabadorTrack.instancia.puntos.length >= 2)
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: GrabadorTrack.instancia.puntos
-                          .map((p) => LatLng(p.latitud, p.longitud))
-                          .toList(),
-                      color: Colors.red,
-                      strokeWidth: 4,
-                    ),
-                  ],
-                ),
+              ValueListenableBuilder<int>(
+                valueListenable: _tickTrack,
+                builder: (context, _, __) {
+                  if (!GrabadorTrack.instancia.grabando ||
+                      GrabadorTrack.instancia.puntos.length < 2) {
+                    return const SizedBox.shrink();
+                  }
+                  return PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: GrabadorTrack.instancia.puntos
+                            .map((p) => LatLng(p.latitud, p.longitud))
+                            .toList(),
+                        color: Colors.red,
+                        strokeWidth: 4,
+                      ),
+                    ],
+                  );
+                },
+              ),
               MarkerClusterLayerWidget(
                 options: MarkerClusterLayerOptions(
                   maxClusterRadius: 42,

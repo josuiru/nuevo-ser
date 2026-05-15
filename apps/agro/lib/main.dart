@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'pantallas/pantalla_ajustes.dart';
 import 'pantallas/pantalla_guia.dart';
@@ -13,6 +16,15 @@ import 'servicios/grabador_track.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // En Linux/Windows/macOS sqflite no tiene plugin nativo y necesita el
+  // adapter FFI. En Android el plugin nativo manda y este bloque es
+  // no-op (no entra al if). Sin esto la BD lanza
+  // "databaseFactory not initialized" y todas las pantallas que tocan
+  // BD fallan al cargarse.
+  if (!kIsWeb && (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   // intl/DateFormat con locale `es_ES` (usado en lista de plantas y
   // ficha) requiere cargar los datos de localización antes del runApp.
   // Sin esto, cualquier build que toque DateFormat(..., 'es_ES') lanza

@@ -142,14 +142,14 @@ class _BotonIdentificarIAState extends State<BotonIdentificarIA> {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(color: Colors.amber.shade200),
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.info_outline, size: 18, color: Colors.amber),
-            SizedBox(width: 8),
+            const Icon(Icons.info_outline, size: 18, color: Colors.amber),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 'Adjunta una foto para activar la identificación con IA.',
-                style: TextStyle(fontSize: 13),
+                style: TextStyle(fontSize: 13, color: Colors.amber.shade900),
               ),
             ),
           ],
@@ -273,7 +273,7 @@ class _ModalResultadoIA extends StatelessWidget {
                         plagaCatalogo != null
                             ? 'Diagnóstico coincide con catálogo Solera: ${plagaCatalogo.nombreComun}'
                             : 'Diagnóstico coincide con catálogo Solera',
-                        style: const TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 13, color: Colors.green.shade900),
                       ),
                     ),
                   ],
@@ -287,14 +287,14 @@ class _ModalResultadoIA extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.orange.shade300),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.warning_amber, color: Colors.orange, size: 20),
-                    SizedBox(width: 8),
+                    const Icon(Icons.warning_amber, color: Colors.orange, size: 20),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Diagnóstico libre — no coincide con el catálogo curado de Solera. Revisa con criterio antes de aceptar.',
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 13, color: Colors.orange.shade900),
                       ),
                     ),
                   ],
@@ -341,7 +341,12 @@ class _ModalResultadoIA extends StatelessWidget {
                   children: [
                     const Icon(Icons.info_outline, color: Colors.orange, size: 18),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(resultado.advertencia, style: const TextStyle(fontSize: 13))),
+                    Expanded(
+                      child: Text(
+                        resultado.advertencia,
+                        style: TextStyle(fontSize: 13, color: Colors.amber.shade900),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -351,7 +356,23 @@ class _ModalResultadoIA extends StatelessWidget {
               const Text('Manejo cultural sugerido',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
-              Text(resultado.manejoCultural, style: const TextStyle(fontSize: 14)),
+              // El sheet hereda el fondo del tema (claro en light, oscuro
+              // en dark), pero el modal `showModalBottomSheet` puede
+              // pintar fondo claro fijo en algunos temas y dejar el
+              // texto blanco-en-blanco. Pintamos el manejo en un
+              // recuadro verde claro con color de texto fijo.
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.green.shade200),
+                ),
+                child: Text(
+                  resultado.manejoCultural,
+                  style: TextStyle(fontSize: 14, color: Colors.green.shade900),
+                ),
+              ),
             ],
             const SizedBox(height: 16),
             Container(

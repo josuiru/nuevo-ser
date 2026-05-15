@@ -410,7 +410,17 @@ class _TarjetaEvento extends StatelessWidget {
               '${DateFormat('dd MMM yyyy', 'es_ES').format(DateTime.fromMillisecondsSinceEpoch(evento.fechaMs))}'
               '${evento.subtitulo.isNotEmpty ? '  ·  ${evento.subtitulo}' : ''}',
             ),
-            trailing: Icon(Icons.more_vert, size: 18, color: Colors.grey),
+            // Antes los 3 puntos eran un Icon decorativo y la única
+            // forma de abrir el menú era tocar largo el card. El
+            // tester (2026-05-15) probó tocar los 3 puntos y no
+            // pasaba nada. Ahora el icono es un IconButton que abre
+            // el mismo menú que el long press.
+            trailing: IconButton(
+              icon: const Icon(Icons.more_vert),
+              tooltip: 'Acciones',
+              onPressed: () => _alLongPress(context),
+            ),
+            onTap: () => _alLongPress(context),
           ),
           if (evento.rutasFotos.isNotEmpty)
             Padding(

@@ -38,7 +38,11 @@ class BaseDatosAgro {
       ruta,
       // Esquema con migración escalonada. Subir esta constante cada vez
       // que se añada un paso en `_aplicarMigraciones`. Nunca destructivo.
-      version: 6,
+      // v7 añade la tabla `facturas` que usa pantalla_facturas — antes
+      // estaba declarada en _aplicarMigraciones pero la versión seguía
+      // en 6, así que la tabla no llegaba a crearse y la pantalla de
+      // facturas fallaba en silencio.
+      version: 7,
       onConfigure: (db) async {
         // ON DELETE CASCADE en eventos hijos requiere FKs activas.
         await db.execute('PRAGMA foreign_keys = ON');

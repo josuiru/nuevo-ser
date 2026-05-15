@@ -1,7 +1,7 @@
 name: agro
 description: "Solera — gestor de fincas agrícolas. Frutales, trufas, olivar, pistacho, dehesa."
 publish_to: 'none'
-version: 0.3.1+4
+version: 0.3.2+5
 
 environment:
   sdk: ^3.11.5
@@ -27,6 +27,10 @@ dependencies:
 
   # Almacenamiento local
   sqflite: ^2.3.3
+  # En Linux/Windows/macOS sqflite necesita el adapter FFI explícito
+  # — la app sigue usando sqflite normal en Android (donde FFI no se
+  # carga). Inicialización condicional en main.dart.
+  sqflite_common_ffi: ^2.3.3
   shared_preferences: ^2.3.2
 
   # HTTP

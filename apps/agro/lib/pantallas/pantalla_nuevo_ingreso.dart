@@ -172,7 +172,21 @@ class _PantallaNuevoIngresoState extends State<PantallaNuevoIngreso> {
   }
 
   Future<void> _guardar() async {
-    if (!(_claveFormulario.currentState?.validate() ?? false)) return;
+    // Antes el guardado fallaba en silencio si validate() devolvía
+    // false (el botón quedaba habilitado pero "no pasaba nada") o si
+    // la BD lanzaba (FK violation, tabla inexistente, etc.). El
+    // tester (2026-05-15) reportó "los ingresos/gastos no se
+    // guardan" justo por esto: el flujo terminaba sin feedback.
+    if (!(_claveFormulario.currentState?.validate() ?? false)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Faltan datos obligatorios — revisa los campos marcados en rojo.',
+          ),
+        ),
+      );
+      return;
+    }
     setState(() => _guardando = true);
     final cantidadValor = double.tryParse(_cantidad.text.trim().replaceAll(',', '.'));
     final apunte = ApunteIngreso(
@@ -195,13 +209,30 @@ class _PantallaNuevoIngresoState extends State<PantallaNuevoIngreso> {
       notas: _notas.text.trim(),
     );
     final db = BaseDatosAgro.instancia;
-    if (apunte.id == null) {
-      await db.guardarApunteIngreso(apunte);
-    } else {
-      await db.actualizarApunteIngreso(apunte.id!, apunte.toMap()..remove('id'));
+    try {
+      if (apunte.id == null) {
+        await db.guardarApunteIngreso(apunte);
+      } else {
+        await db.actualizarApunteIngreso(apunte.id!, apunte.toMap()..remove('id'));
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(apunte.id == null ? 'Ingreso guardado.' : 'Ingreso actualizado.'),
+        ),
+      );
+      Navigator.of(context).pop(true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _guardando = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error guardando ingreso: $e'),
+          backgroundColor: Colors.red.shade700,
+          duration: const Duration(seconds: 6),
+        ),
+      );
     }
-    if (!mounted) return;
-    Navigator.of(context).pop(true);
   }
 
   @override

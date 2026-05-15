@@ -165,7 +165,22 @@ class _PantallaNuevoGastoState extends State<PantallaNuevoGasto> {
   }
 
   Future<void> _guardar() async {
-    if (!(_claveFormulario.currentState?.validate() ?? false)) return;
+    // Patrón defensivo idéntico al de pantalla_nuevo_ingreso: si la
+    // validación falla avisamos en lugar de quedarnos en silencio,
+    // y envolvemos el guardado en try/catch con snackbar para que
+    // cualquier error de BD (FK violation, tabla inexistente…)
+    // sea visible en lugar de dejar al usuario pensando que no ha
+    // pasado nada.
+    if (!(_claveFormulario.currentState?.validate() ?? false)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Faltan datos obligatorios — revisa los campos marcados en rojo.',
+          ),
+        ),
+      );
+      return;
+    }
     if (_imputacion == 'finca_concreta' && _fincaId == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Elige una parcela para imputación concreta'),
@@ -196,13 +211,30 @@ class _PantallaNuevoGastoState extends State<PantallaNuevoGasto> {
       notas: _notas.text.trim(),
     );
     final db = BaseDatosAgro.instancia;
-    if (apunte.id == null) {
-      await db.guardarApunteGasto(apunte);
-    } else {
-      await db.actualizarApunteGasto(apunte.id!, apunte.toMap()..remove('id'));
+    try {
+      if (apunte.id == null) {
+        await db.guardarApunteGasto(apunte);
+      } else {
+        await db.actualizarApunteGasto(apunte.id!, apunte.toMap()..remove('id'));
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(apunte.id == null ? 'Gasto guardado.' : 'Gasto actualizado.'),
+        ),
+      );
+      Navigator.of(context).pop(true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _guardando = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error guardando gasto: $e'),
+          backgroundColor: Colors.red.shade700,
+          duration: const Duration(seconds: 6),
+        ),
+      );
     }
-    if (!mounted) return;
-    Navigator.of(context).pop(true);
   }
 
   @override

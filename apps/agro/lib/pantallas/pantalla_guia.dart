@@ -42,26 +42,78 @@ class PantallaGuia extends StatelessWidget {
   }
 }
 
-class _ListaCultivos extends StatelessWidget {
+class _ListaCultivos extends StatefulWidget {
   _ListaCultivos();
 
   @override
+  State<_ListaCultivos> createState() => _ListaCultivosState();
+}
+
+class _ListaCultivosState extends State<_ListaCultivos> {
+  // Buscador de cultivos: el tester (2026-05-15) reportó que la pestaña
+  // "Plagas" tenía filtros por cultivo y tipo, pero la pestaña
+  // "Cultivos" no tenía buscador y había que scrollear toda la lista
+  // para encontrar uno concreto.
+  String _consulta = '';
+
+  @override
   Widget build(BuildContext context) {
-    // Agrupamos por categoría. Mantiene el orden del catálogo dentro de
-    // cada categoría — el orden en `catalogoCultivos` ya es razonable
-    // (trufas primero, luego pepita, hueso, frutos secos, etc.).
+    final consultaLimpia = _consulta.trim().toLowerCase();
+    final cultivosFiltrados = consultaLimpia.isEmpty
+        ? catalogoCultivos
+        : catalogoCultivos.where((c) {
+            final texto = '${c.nombreVisible} ${c.nombreCientifico}'
+                .toLowerCase();
+            return texto.contains(consultaLimpia);
+          }).toList();
     final porCategoria = <CategoriaCultivo, List<Cultivo>>{};
-    for (final c in catalogoCultivos) {
+    for (final c in cultivosFiltrados) {
       porCategoria.putIfAbsent(c.categoria, () => []).add(c);
     }
-    return ListView(
+    return Column(
       children: [
-        for (final cat in CategoriaCultivo.values)
-          if (porCategoria[cat] != null)
-            _BloqueCategoria(
-              categoria: cat,
-              cultivos: porCategoria[cat]!,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: 'Buscar cultivo',
+              hintText: 'Ej: olivo, almendro, trufa…',
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.search),
+              isDense: true,
+              suffixIcon: _consulta.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.clear, size: 18),
+                      onPressed: () => setState(() => _consulta = ''),
+                    ),
             ),
+            onChanged: (v) => setState(() => _consulta = v),
+          ),
+        ),
+        Expanded(
+          child: cultivosFiltrados.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      'Sin cultivos para "$_consulta".',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                )
+              : ListView(
+                  children: [
+                    for (final cat in CategoriaCultivo.values)
+                      if (porCategoria[cat] != null)
+                        _BloqueCategoria(
+                          categoria: cat,
+                          cultivos: porCategoria[cat]!,
+                        ),
+                  ],
+                ),
+        ),
       ],
     );
   }
@@ -356,6 +408,11 @@ class _ListaPlagasState extends State<_ListaPlagas> {
                           p.tipo.nombreVisible,
                         ].join(' · '),
                         style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                        // Sin esto los nombres científicos largos
+                        // (típico en trufas: "Tuber melanosporum Vittad.")
+                        // sobresalen del card y rompen la cuadrícula.
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       trailing: Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(
@@ -431,7 +488,14 @@ class PantallaDetallePlaga extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: Colors.green.shade200),
               ),
-              child: Text(plaga.manejoCultural),
+              // Color del texto fijo: el fondo es verde claro siempre,
+              // así que no debemos heredar el color del tema (en dark
+              // mode salía blanco-en-blanco — bug reportado por tester
+              // 2026-05-15).
+              child: Text(
+                plaga.manejoCultural,
+                style: TextStyle(color: Colors.green.shade900),
+              ),
             ),
             SizedBox(height: 6),
             Text(

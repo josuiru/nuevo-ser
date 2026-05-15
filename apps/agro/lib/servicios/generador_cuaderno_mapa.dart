@@ -133,13 +133,19 @@ Future<File> generarCuadernoMapa({
   );
   final plantas = await db.listarPlantas(fincaId: finca?.id);
   final mapaPlantas = {for (final p in plantas) p.id!: p};
-  final incidencias = <Incidencia>[];
-  for (final p in plantas) {
-    final lista = await db.listarIncidenciasDePlanta(p.id!);
-    for (final i in lista) {
-      if (i.fechaMs >= desdeMs && i.fechaMs <= hastaMs) incidencias.add(i);
-    }
-  }
+  // Antes este bloque era un loop secuencial que con 50+ plantas hacía
+  // 50 round-trips contra sqflite y bloqueaba el botón "Generar"
+  // varios segundos sin feedback (bug reportado en testeo
+  // 2026-05-15: "el botón no funciona / tarda mucho"). Ahora todas
+  // las consultas vuelan en paralelo con Future.wait.
+  final listas = await Future.wait(
+    plantas.map((p) => db.listarIncidenciasDePlanta(p.id!)),
+  );
+  final incidencias = <Incidencia>[
+    for (final lista in listas)
+      for (final i in lista)
+        if (i.fechaMs >= desdeMs && i.fechaMs <= hastaMs) i,
+  ];
 
   final pdf = pw.Document();
   pdf.addPage(
