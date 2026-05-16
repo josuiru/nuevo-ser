@@ -190,11 +190,11 @@ class _PantallaLibroEconomicoState extends State<PantallaLibroEconomico>
       width: double.infinity,
       padding: const EdgeInsets.all(8),
       color: Colors.amber.withValues(alpha: 0.18),
-      child: const Text(
+      child: Text(
         'Libro económico provisional. Pendiente de validación por asesor fiscal '
         'antes de presentar nada en una declaración. Mientras tanto, contrasta '
         'cada apunte con tu asesor.',
-        style: TextStyle(fontSize: 11),
+        style: TextStyle(fontSize: 11, color: Colors.amber.shade900),
       ),
     );
   }
@@ -871,10 +871,10 @@ class _ResumenAnual extends StatelessWidget {
               color: Colors.orange.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text(
+            child: Text(
               'Configura el régimen de IVA en Ajustes → Configuración fiscal '
               'para que el resumen distinga REAGP de régimen general.',
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: 12, color: Colors.orange.shade900),
             ),
           ),
         const SizedBox(height: 16),

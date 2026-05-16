@@ -377,7 +377,7 @@ class _PantallaNuevoEventoState extends State<PantallaNuevoEvento> {
                     child: Text(
                       'Tipo de poda controvertido — debate técnico activo. '
                       'Justifica la elección en las notas para inspección.',
-                      style: TextStyle(fontSize: 13),
+                      style: TextStyle(fontSize: 13, color: Colors.amber.shade900),
                     ),
                   ),
                 ],

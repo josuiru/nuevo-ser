@@ -187,11 +187,16 @@ class _PantallaClaveAnthropicState extends State<PantallaClaveAnthropic> {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: Colors.green.shade200),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green),
-                  SizedBox(width: 8),
-                  Expanded(child: Text('Clave configurada. La identificación con IA está activa.')),
+                  const Icon(Icons.check_circle, color: Colors.green),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Clave configurada. La identificación con IA está activa.',
+                      style: TextStyle(color: Colors.green.shade900),
+                    ),
+                  ),
                 ],
               ),
             ),

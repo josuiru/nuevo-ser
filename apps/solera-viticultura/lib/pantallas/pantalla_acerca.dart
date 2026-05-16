@@ -152,7 +152,7 @@ class _TarjetaCatalogos extends StatelessWidget {
             '${catalogoPlagasVid.length} plagas/enfermedades, '
             '${catalogoMateriasActivas.length} materias activas, '
             '${calendarioFenologicoBbch.length} estados BBCH.',
-            style: const TextStyle(fontSize: 13, height: 1.5),
+            style: TextStyle(fontSize: 13, height: 1.5, color: color.shade900),
           ),
           if (!catalogosCompletamenteRevisados) ...[
             const SizedBox(height: 8),

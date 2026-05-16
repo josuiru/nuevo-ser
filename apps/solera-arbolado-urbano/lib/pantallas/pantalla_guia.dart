@@ -401,15 +401,15 @@ class _TabTiposPoda extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.amber.shade400),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.warning_amber,
+                    const Icon(Icons.warning_amber,
                         color: Colors.amber, size: 18),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Tipo de poda controvertido — debate técnico activo. Justifica la elección por escrito ante una inspección.',
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 13, color: Colors.amber.shade900),
                       ),
                     ),
                   ],

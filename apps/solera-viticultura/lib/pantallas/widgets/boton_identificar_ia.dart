@@ -145,14 +145,14 @@ class _BotonIdentificarIAState extends State<BotonIdentificarIA> {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(color: Colors.amber.shade200),
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.info_outline, size: 18, color: Colors.amber),
-            SizedBox(width: 8),
+            const Icon(Icons.info_outline, size: 18, color: Colors.amber),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 'Adjunta una foto para activar la identificación con IA.',
-                style: TextStyle(fontSize: 13),
+                style: TextStyle(fontSize: 13, color: Colors.amber.shade900),
               ),
             ),
           ],
@@ -303,7 +303,10 @@ class _ModalResultadoIA extends StatelessWidget {
                   children: [
                     const Icon(Icons.info_outline, color: Colors.orange, size: 18),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(resultado.advertencia, style: const TextStyle(fontSize: 13))),
+                    Expanded(
+                        child: Text(resultado.advertencia,
+                            style: TextStyle(
+                                fontSize: 13, color: Colors.amber.shade900))),
                   ],
                 ),
               ),

@@ -82,12 +82,12 @@ class _PantallaExtractoEconomicoState extends State<PantallaExtractoEconomico> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.amber.shade700),
             ),
-            child: const Text(
+            child: Text(
               'PROVISIONAL. Este extracto es una herramienta de apoyo para el '
               'asesor fiscal — el formato exacto del libro registro y del modelo '
               '347 está pendiente de firma de asesor fiscal antes de presentar '
               'nada en una declaración.',
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: 12, color: Colors.amber.shade900),
             ),
           ),
           DropdownButtonFormField<int>(

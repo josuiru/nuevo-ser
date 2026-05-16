@@ -48,12 +48,16 @@ class BannerCatalogosProvisionales extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'Las variedades de olivo, plagas, fitosanitarios y DOPs '
                   'que ves todavía no han sido validadas por un asesor '
                   'agrónomo olivarero. Úsalas con criterio profesional '
                   'hasta que entren los datos definitivos.',
-                  style: TextStyle(fontSize: 12, height: 1.4),
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1.4,
+                    color: Colors.amber.shade900,
+                  ),
                 ),
               ],
             ),

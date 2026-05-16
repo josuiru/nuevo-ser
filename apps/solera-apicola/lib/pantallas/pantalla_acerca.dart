@@ -165,7 +165,7 @@ class _TarjetaCatalogos extends StatelessWidget {
             '${catalogoSustanciasVarroa.length} sustancias varroa, '
             '${catalogoPlagasApicolas.length} plagas/patologías, '
             '${calendarioApicola.length} tareas de calendario.',
-            style: const TextStyle(fontSize: 13, height: 1.5),
+            style: TextStyle(fontSize: 13, height: 1.5, color: color.shade900),
           ),
           if (!catalogosCompletamenteRevisados) ...[
             const SizedBox(height: 8),

@@ -103,7 +103,7 @@ class _PantallaClaveAnthropicState extends State<PantallaClaveAnthropic> {
               'Las llamadas se facturan en tu cuenta de Anthropic; cada '
               'consulta consume unos cuantos miles de tokens (típicamente '
               'unas décimas de céntimo con Claude Haiku 4.5).',
-              style: TextStyle(fontSize: 13, height: 1.5),
+              style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
             ),
           ),
           const SizedBox(height: 16),

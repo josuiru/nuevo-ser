@@ -353,12 +353,31 @@ class _PantallaLibroEconomicoState extends State<PantallaLibroEconomico> {
                   : Icons.error_outline,
               color: resultadoBruto >= 0 ? Colors.green : Colors.red,
             ),
-            title: const Text('Resultado bruto del año'),
-            subtitle: const Text('(ingresos base − gastos base)'),
+            title: Text(
+              'Resultado bruto del año',
+              style: TextStyle(
+                color: resultadoBruto >= 0
+                    ? Colors.green.shade900
+                    : Colors.red.shade900,
+              ),
+            ),
+            subtitle: Text(
+              '(ingresos base − gastos base)',
+              style: TextStyle(
+                color: resultadoBruto >= 0
+                    ? Colors.green.shade700
+                    : Colors.red.shade700,
+              ),
+            ),
             trailing: Text(
               _formatoEuros.format(resultadoBruto / 100),
-              style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: resultadoBruto >= 0
+                    ? Colors.green.shade900
+                    : Colors.red.shade900,
+              ),
             ),
           ),
         ),
