@@ -7,9 +7,21 @@ de cada app.
 ## Documentos en esta carpeta
 
 - **`README.md`** (este archivo) — cómo testear, cómo reportar, qué esperamos.
+- **`uno-roto-guia-testeo.md`** — guía detallada de testeo del juego Kids
+  **Uno Roto** (matemáticas 9-12). Incluye sección extra para profesorado
+  de matemáticas.
+- **`las-versiones-guia-testeo.md`** — guía detallada de testeo del juego
+  Kids **Las Versiones** (pensamiento histórico 10-14). Incluye sección
+  extra para profesorado de historia / pensamiento crítico.
+- **`el-cuaderno-guia-testeo.md`** — guía detallada de testeo del juego
+  Kids **El Cuaderno** (observación del medio 9-13). Incluye sección
+  extra para naturalistas y biólogos divulgadores.
+- **`el-descifrador-guia-testeo.md`** — guía detallada de testeo del juego
+  Kids **El Descifrador** (prototipo, oficio civil 11-14). Incluye sección
+  extra para profesorado de lengua / L2 / cuatro cooficiales.
 - **`fosiles-guia-testeo.md`** — guía detallada de testeo de la app **Fósiles**
-  (cuaderno de campo paleontológico). Incluye una sección extra para perfil
-  geólogo profesional.
+  (cuaderno de campo paleontológico, adulto aficionado). Incluye una sección
+  extra para perfil geólogo profesional.
 - **`agro-guia-testeo.md`** — guía detallada de testeo de la app **Solera**
   (gestor de fincas agrícolas).
 - **`plantilla-informe-bug.md`** — formato estándar para reportar incidencias.
