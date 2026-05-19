@@ -195,6 +195,14 @@ export PATH="$HOME/flutter/bin:$PATH"
 
 # Build Android requiere Java 17 (forzado en app/android/gradle.properties):
 # org.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64
+
+# Instalar APK en dispositivo SIN borrar los datos del usuario:
+adb install -r build/app/outputs/flutter-apk/app-release.apk
+# NUNCA usar `flutter install`: desinstala primero y borra
+# shared_preferences (progresos, perfiles, ajustes). Si la firma del
+# APK nuevo NO coincide con la del instalado, `adb install -r` falla
+# con INSTALL_FAILED_UPDATE_INCOMPATIBLE — en ese caso hay que
+# desinstalar a propósito, pero hay que avisar al usuario antes.
 ```
 
 ## Decisiones técnicas tomadas
@@ -229,6 +237,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 ## Incidentes conocidos (para no repetir)
 
 - **MIUI INSTALL_FAILED_USER_RESTRICTED**: aceptar popup manualmente en Redmi Note 8.
+- **`flutter install` borra datos del usuario**: incidente 2026-05-19 — `flutter install` desinstala primero y al fallar la nueva instalación por el popup MIUI dejó al tester sin app y sin progresos. Para actualizar sin borrar siempre `adb install -r <apk>` (ver bloque "Comandos habituales").
 - **shared_preferences_android jlink error**: requiere forzar Java 17 en gradle.properties.
 - **Niños testers dicen "es para clase"**: el pivote fue quitar sesiones dictadas y abrir cazadero libre. No volver al modelo "ejercicio-por-ejercicio".
 - **pumpAndSettle timeout en tests**: usar `pump(duration)` discretos.
