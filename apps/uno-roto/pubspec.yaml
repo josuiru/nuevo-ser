@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+5
 
 environment:
   sdk: ^3.5.0
@@ -89,6 +89,20 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+
+  # Genera el splash nativo Android para que el primer arranque no
+  # sea una pantalla en blanco.
+  flutter_native_splash: ^2.4.1
+
+# Splash nativo Android: violeta característico de Uno Roto sobre
+# fondo oscuro (paleta de Plenos), sin imagen — el logo es CustomPainter
+# en runtime y todavía no tiene PNG estático.
+flutter_native_splash:
+  color: "#1B1233"
+  android: true
+  ios: false
+  android_12:
+    color: "#1B1233"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
