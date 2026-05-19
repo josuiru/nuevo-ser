@@ -1,5 +1,160 @@
 [
   {
+    "codigo": "precambrico-ossa-morena",
+    "nombre_oficial": "Serie Negra",
+    "periodo": "Precámbrico",
+    "edad_aproximada": "4567 – 541 Ma",
+    "regiones": [
+      "Macizo Ibérico (Ossa-Morena)",
+      "Sierra Morena"
+    ],
+    "descripcion": "Serie Negra del Neoproterozoico tardío en la zona de Ossa-Morena: pizarras, grauvacas y niveles carbonatados con estromatolitos como única evidencia paleontológica plausible para aficionado.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-pedroche-cambrico",
+    "nombre_oficial": "Calizas De Pedroche",
+    "periodo": "Cámbrico",
+    "edad_aproximada": "541 – 485 Ma",
+    "regiones": [
+      "Sierra Morena (Pedroches)",
+      "Cordillera Cantábrica",
+      "Sierra de la Demanda"
+    ],
+    "descripcion": "Calizas y dolomías del Cámbrico Inferior con bioconstrucciones de arqueociátidos: los primeros arrecifes del Fanerozoico ibérico (zona de Pedroches y equivalentes).",
+    "activo": true
+  },
+  {
+    "codigo": "pizarras-cambrico-demanda",
+    "nombre_oficial": "Pizarras De Paradoxides",
+    "periodo": "Cámbrico",
+    "edad_aproximada": "541 – 485 Ma",
+    "regiones": [
+      "Macizo Ibérico (Zona Centro-Ibérica)",
+      "Sierra de la Demanda",
+      "Sierra Morena"
+    ],
+    "descripcion": "Pizarras del Cámbrico Medio con trilobites Paradoxides — el \"fósil de Iberia paleozoica\" por antonomasia para aficionado.",
+    "activo": true
+  },
+  {
+    "codigo": "cuarcita-armoricana",
+    "nombre_oficial": "Cuarcita Armoricana",
+    "periodo": "Ordovícico",
+    "edad_aproximada": "485 – 444 Ma",
+    "regiones": [
+      "Macizo Ibérico",
+      "Sierra Morena",
+      "Sistema Central",
+      "Montes de Toledo",
+      "Cordillera Cantábrica"
+    ],
+    "descripcion": "Areniscas y cuarcitas blancas del Ordovícico Inferior, durísimas, que arman las crestas de toda Iberia paleozoica. Famosas por los rastros Cruziana (huellas de trilobites) en las superficies de capa.",
+    "activo": true
+  },
+  {
+    "codigo": "pizarras-ordovicico-asaphus",
+    "nombre_oficial": "Pizarras De Cantera",
+    "periodo": "Ordovícico",
+    "edad_aproximada": "485 – 444 Ma",
+    "regiones": [
+      "Sistema Central",
+      "Montes de Toledo",
+      "Sierra Morena",
+      "Macizo Ibérico"
+    ],
+    "descripcion": "Pizarras oscuras del Ordovícico Medio sobre la Cuarcita Armoricana, ricas en trilobites Asaphus/Calymene y graptolitos del género Didymograptus.",
+    "activo": true
+  },
+  {
+    "codigo": "pizarras-graptoliticas-silurico",
+    "nombre_oficial": "Pizarras Graptoliticas",
+    "periodo": "Silúrico",
+    "edad_aproximada": "444 – 419 Ma",
+    "regiones": [
+      "Pirineos",
+      "Cordillera Cantábrica",
+      "Sierra Morena",
+      "Macizo Ibérico"
+    ],
+    "descripcion": "Pizarras negras y ampelitas del Silúrico con graptolitos (Monograptus) — facies anóxica de cuenca pelágica. Marcadora estratigráfica clave del Paleozoico medio ibérico.",
+    "activo": true
+  },
+  {
+    "codigo": "caliza-griotte-devonica",
+    "nombre_oficial": "Caliza Griotte",
+    "periodo": "Devónico",
+    "edad_aproximada": "419 – 359 Ma",
+    "regiones": [
+      "Pirineos",
+      "Cordillera Cantábrica"
+    ],
+    "descripcion": "Calizas nodulosas rojas del Devónico Superior, con cefalópodos (orthoceras, goniatites primitivos). Facies de umbral pelágico característica de los Pirineos y la Cordillera Cantábrica.",
+    "activo": true
+  },
+  {
+    "codigo": "devonico-asturiano-corales",
+    "nombre_oficial": "Devonico Asturiano",
+    "periodo": "Devónico",
+    "edad_aproximada": "419 – 359 Ma",
+    "regiones": [
+      "Cordillera Cantábrica",
+      "Asturias"
+    ],
+    "descripcion": "Calizas devónicas de la Cordillera Cantábrica con corales coloniales (Favosites tipo \"miel de panal\"), trilobites Phacops y braquiópodos Spirifer. Costa asturiana entre Candás y Luanco.",
+    "activo": true
+  },
+  {
+    "codigo": "caliza-de-montana",
+    "nombre_oficial": "Caliza De Montaña",
+    "periodo": "Carbonífero",
+    "edad_aproximada": "359 – 299 Ma",
+    "regiones": [
+      "Cordillera Cantábrica",
+      "Picos de Europa",
+      "Pirineos"
+    ],
+    "descripcion": "\"Caliza de Montaña\": calizas masivas del Carbonífero Inferior-Medio que arman los grandes macizos kársticos de la Cordillera Cantábrica (Picos de Europa). Ricas en fusulínidos y goniatites.",
+    "activo": true
+  },
+  {
+    "codigo": "carbon-asturiano",
+    "nombre_oficial": "Cuenca Carbonifera Central Asturiana",
+    "periodo": "Carbonífero",
+    "edad_aproximada": "359 – 299 Ma",
+    "regiones": [
+      "Cordillera Cantábrica",
+      "Asturias"
+    ],
+    "descripcion": "Cuenca Carbonífera Central Asturiana: alternancia de areniscas, pizarras y capas de carbón con flora carbonífera (calamites, lepidodendron, sigillarias).",
+    "activo": true
+  },
+  {
+    "codigo": "culm-carbonifero",
+    "nombre_oficial": "Culm",
+    "periodo": "Carbonífero",
+    "edad_aproximada": "359 – 299 Ma",
+    "regiones": [
+      "Macizo Ibérico",
+      "Sierra Morena",
+      "Pirineos"
+    ],
+    "descripcion": "Facies Culm: turbiditas (areniscas-pizarras alternantes) del Carbonífero del Macizo Ibérico. Contenido fósil escaso pero a veces aparecen goniatites en niveles pelágicos intercalados.",
+    "activo": true
+  },
+  {
+    "codigo": "permico-continental-pirineos",
+    "nombre_oficial": "Permico Continental",
+    "periodo": "Pérmico",
+    "edad_aproximada": "299 – 252 Ma",
+    "regiones": [
+      "Pirineos",
+      "Cordillera Ibérica (cuencas pérmicas)"
+    ],
+    "descripcion": "Series rojas continentales del Pérmico de las cuencas pirenaicas (Anayet, Cadí) con coníferas primitivas (Walchia) y restos de equisetales sobre limolitas rojas.",
+    "activo": true
+  },
+  {
     "codigo": "buntsandstein",
     "nombre_oficial": "Buntsandstein",
     "periodo": "Triásico",
