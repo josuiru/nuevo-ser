@@ -678,12 +678,16 @@ class _PantallaCazaState extends State<PantallaCaza>
       // la primera, el comentario de Sora se queda solo (sin números).
       // No es castigo: es información — "podrías haber ganado más".
       if (intentos > 1) {
+        final etiquetaPosibles = traducirNarrativa(
+          'posibles',
+          Localizations.localeOf(context),
+        );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
               content: Text(
-                '+$esquirlasFinales (de $esquirlasBase posibles)',
+                '+$esquirlasFinales (de $esquirlasBase $etiquetaPosibles)',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: PaletaNeon.textoPrincipal,
@@ -1794,8 +1798,14 @@ class _PantallaCazaState extends State<PantallaCaza>
   /// AyudaPuzzle. Se dispara tras 3 fallos consecutivos si no hay
   /// tutor remoto disponible.
   Future<void> _mostrarAyudaLocal(FragmentoEnTejado fragmento) async {
-    final (titulo, texto, transferencia) = AyudaPuzzle.paraTipo(fragmento.tipo);
+    final (tituloEs, textoEs, transferenciaEs) =
+        AyudaPuzzle.paraTipo(fragmento.tipo);
     if (!mounted) return;
+    final locale = Localizations.localeOf(context);
+    final titulo = traducirNarrativa(tituloEs, locale);
+    final texto = traducirNarrativa(textoEs, locale);
+    final transferencia = traducirNarrativa(transferenciaEs, locale);
+    final etiquetaSeguir = traducirNarrativa('SEGUIR', locale);
     await showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.6),
@@ -1865,9 +1875,9 @@ class _PantallaCazaState extends State<PantallaCaza>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text(
-              'SEGUIR',
-              style: TextStyle(
+            child: Text(
+              etiquetaSeguir,
+              style: const TextStyle(
                 color: PaletaNeon.violetaNeon,
                 letterSpacing: 1.5,
               ),
@@ -1888,8 +1898,14 @@ class _PantallaCazaState extends State<PantallaCaza>
       FragmentoEnTejado fragmento) async {
     final idTipo = fragmento.tipo.name;
     if (_ayudasPuzzlesVistas.contains(idTipo)) return;
-    final (titulo, texto, transferencia) = AyudaPuzzle.paraTipo(fragmento.tipo);
+    final (tituloEs, textoEs, transferenciaEs) =
+        AyudaPuzzle.paraTipo(fragmento.tipo);
     if (!mounted) return;
+    final locale = Localizations.localeOf(context);
+    final titulo = traducirNarrativa(tituloEs, locale);
+    final texto = traducirNarrativa(textoEs, locale);
+    final transferencia = traducirNarrativa(transferenciaEs, locale);
+    final etiquetaEmpezar = traducirNarrativa('EMPEZAR', locale);
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1960,9 +1976,9 @@ class _PantallaCazaState extends State<PantallaCaza>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text(
-              'EMPEZAR',
-              style: TextStyle(
+            child: Text(
+              etiquetaEmpezar,
+              style: const TextStyle(
                 color: PaletaNeon.violetaNeon,
                 letterSpacing: 1.5,
               ),
@@ -2607,7 +2623,7 @@ class _ContadorEsquirlas extends StatelessWidget {
             ),
           ),
           Text(
-            '$total esquirlas',
+            AppLocalizations.of(contexto).habEsquirlasResumen(total),
             style: const TextStyle(
               color: PaletaNeon.textoPrincipal,
               fontSize: 13,

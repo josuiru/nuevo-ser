@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../dominio/ayuda_puzzle.dart';
 import '../../dominio/contador_intentos_puzzle.dart';
 import '../../dominio/fragmento_en_tejado.dart';
+import '../../l10n/traducciones_narrativa.dart';
 import '../../nucleo/paleta.dart';
 import '../estado_pista_puzzle.dart';
 
@@ -28,9 +29,13 @@ Future<bool> comprobarYAyudarSiProcede(
   if (!context.mounted) return false;
 
   final result = AyudaPuzzle.paraTipo(tipo);
-  final titulo = result.$1;
-  final texto = result.$2;
-  final transferencia = result.$3;
+  final locale = Localizations.localeOf(context);
+  final titulo = traducirNarrativa(result.$1, locale);
+  final texto = traducirNarrativa(result.$2, locale);
+  final transferencia = traducirNarrativa(result.$3, locale);
+  final tituloDialog = traducirNarrativa('¿Necesitas ayuda?', locale);
+  final etiquetaSeguir = traducirNarrativa('SEGUIR', locale);
+  final etiquetaVolver = traducirNarrativa('VOLVER', locale);
   final quiereSalir = await showDialog<bool>(
     context: context,
     barrierColor: Colors.black.withOpacity(0.6),
@@ -43,7 +48,7 @@ Future<bool> comprobarYAyudarSiProcede(
         ),
       ),
       title: Text(
-        '¿Necesitas ayuda?',
+        tituloDialog,
         style: const TextStyle(
           color: PaletaNeon.textoPrincipal,
           fontSize: 16,
@@ -107,9 +112,9 @@ Future<bool> comprobarYAyudarSiProcede(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(ctx).pop(false),
-          child: const Text(
-            'SEGUIR',
-            style: TextStyle(
+          child: Text(
+            etiquetaSeguir,
+            style: const TextStyle(
               color: PaletaNeon.textoPrincipal,
               letterSpacing: 1.5,
             ),
@@ -117,9 +122,9 @@ Future<bool> comprobarYAyudarSiProcede(
         ),
         TextButton(
           onPressed: () => Navigator.of(ctx).pop(true),
-          child: const Text(
-            'VOLVER',
-            style: TextStyle(
+          child: Text(
+            etiquetaVolver,
+            style: const TextStyle(
               color: PaletaNeon.rosaAcento,
               letterSpacing: 1.5,
             ),

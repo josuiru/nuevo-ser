@@ -1258,4 +1258,137 @@ const Map<String, String> narrativaEu = <String, String>{
   'Si junto dos cuartos, tengo un medio.': 'Bi laurden biltzen baditut, erdi bat dut.',
   'El camino es al revés, pero el pan sigue siendo el mismo pan.': 'Bidea alderantziz da, baina ogia ogi bera da oraindik.',
   'Sí.': 'Bai.',
+
+  // ═══ Combates: Kurz 1/2/3, Zafrán, Kai, Vorax ═══
+  // Enunciados, opciones con texto, frases de fallo/acierto/derrota/
+  // victoria. Traducciones provisionales pendientes de revisión nativa
+  // — ver nota en CLAUDE.md sobre voz de cada personaje.
+
+  // Kurz 1
+  '¿Cuántos cuartos hay en un entero?': 'Zenbat laurden daude osoko batean?',
+  'Si tengo 3/4 y quito 1/4, ¿cuánto queda?':
+      '3/4 baditut eta 1/4 kentzen badut, zenbat geratzen da?',
+  '¿Qué es más: 1/2 o 1/4?': 'Zer da gehiago: 1/2 ala 1/4?',
+  'Iguales': 'Berdinak',
+
+  // Kurz 2
+  '¿Cuánto es 5/6 - 1/6?': 'Zenbat da 5/6 - 1/6?',
+  '¿Cuánto es 4/6 - 1/6?': 'Zenbat da 4/6 - 1/6?',
+  'Simplifica 3/6.': 'Sinplifikatu 3/6.',
+  '¿Cuánto es 2/6 + 1/6?': 'Zenbat da 2/6 + 1/6?',
+  'Simplifica 2/6.': 'Sinplifikatu 2/6.',
+
+  // Kurz 3
+  '¿Cuánto es 7/8 - 2/8?': 'Zenbat da 7/8 - 2/8?',
+  'Simplifica 4/8.': 'Sinplifikatu 4/8.',
+  '¿Cuánto es 5/8 - 2/8?': 'Zenbat da 5/8 - 2/8?',
+  'Simplifica 6/8.': 'Sinplifikatu 6/8.',
+
+  // Zafrán (MCM 7 y 11 = 77)
+  '¿Cuál es el MCM de 7 y 11?': 'Zein da 7 eta 11ren MKT?',
+  '¿A qué equivale 5/7 con denominador 77?':
+      'Zeri dagokio 5/7 77 izendatzailearekin?',
+  '¿A qué equivale 3/11 con denominador 77?':
+      'Zeri dagokio 3/11 77 izendatzailearekin?',
+  '¿Cuánto es 55/77 + 21/77?': 'Zenbat da 55/77 + 21/77?',
+  '¿Cuánto le falta a 76/77 para ser un entero?':
+      'Zenbat falta zaio 76/77ri oso bat izateko?',
+
+  // Kai (duelo amistoso)
+  'Ronda de reacción. ¿Cuánto es 3/5 de 20?':
+      'Erreakzio-txanda. Zenbat da 20ren 3/5?',
+  'Ronda de precisión. ¿A qué porcentaje equivale 3/4?':
+      'Zehaztasun-txanda. Zein ehunekoari dagokio 3/4?',
+  'Ronda Dual. 1/2 + 1/3 = ?': 'Txanda Duala. 1/2 + 1/3 = ?',
+
+  // Vorax (Impropio 11/4 → mixto → cuartos)
+  '11/4 es Impropio. Conviértelo a número mixto.':
+      '11/4 Bidegabea da. Bihurtu zenbaki misto.',
+  '1 y 7/4': '1 eta 7/4',
+  '2 y 3/4': '2 eta 3/4',
+  '3 y 2/4': '3 eta 2/4',
+  '4 y 1/4': '4 eta 1/4',
+  'Eliminas el 2 entero. ¿Qué parte queda como Fragmento?':
+      '2 osoa kentzen duzu. Zer zati geratzen da Zati gisa?',
+  '3/4 en cuartos: ¿cuántos cuartos son?':
+      '3/4 laurdenetan: zenbat laurden dira?',
+  'Tras eliminar un cuarto, ¿cuánto queda?':
+      'Laurden bat kendu ondoren, zenbat geratzen da?',
+  'Tras eliminar otro cuarto, ¿cuánto queda?':
+      'Beste laurden bat kendu ondoren, zenbat geratzen da?',
+  'Vorax se agita. No vayas rápido.':
+      'Vorax astindu egiten da. Ez joan azkar.',
+
+  // ═══ AyudaPuzzle: títulos y etiquetas de UI ═══
+  // Cuerpos largos de la ayuda pedagógica todavía sin traducir — el
+  // mapa devuelve el original si la clave no aparece, así que la app
+  // sigue funcionando con título en euskera + cuerpo en castellano
+  // hasta que haya revisión completa.
+  'AMPLIFICAR FRACCIONES': 'ZATIKIAK ANPLIFIKATU',
+  'ÁREA DEL RECTÁNGULO': 'LAUKIZUZENAREN AZALERA',
+  'ÁREA DEL TRIÁNGULO': 'TRIANGELUAREN AZALERA',
+  'AUMENTOS Y DESCUENTOS': 'GEHITUTAKOAK ETA DESKONTUAK',
+  'CLASIFICAR ÁNGULOS': 'ANGELUAK SAILKATU',
+  'COMPARAR CON LA UNIDAD': 'UNITATEAREKIN KONPARATU',
+  'COMPARAR CON 1/2': '1/2RAKIN KONPARATU',
+  'COMPARAR DECIMALES': 'HAMARTARRAK KONPARATU',
+  'COMPARAR FRACCIONES': 'ZATIKIAK KONPARATU',
+  'COMPARAR FRACCIONES DISTINTAS': 'ZATIKI DESBERDINAK KONPARATU',
+  'CONVERTIR LONGITUD': 'LUZERA BIHURTU',
+  'CONVERTIR MASA O CAPACIDAD': 'MASA EDO EDUKIERA BIHURTU',
+  'CONVERTIR SUPERFICIE': 'AZALERA BIHURTU',
+  'CONVERTIR TIEMPO': 'DENBORA BIHURTU',
+  'CORTAR EN PARTES IGUALES': 'ZATI BERDINETAN MOZTU',
+  'DIVISIBILIDAD': 'ZATIGARRITASUNA',
+  'DIVISORES': 'ZATITZAILEAK',
+  'ECUACIÓN EN AMBOS LADOS': 'BI ALDEETAKO EKUAZIOA',
+  'ECUACIÓN LINEAL': 'EKUAZIO LINEALA',
+  'ENTEROS CON SIGNO': 'ZEINUDUN OSOAK',
+  'ESCALA': 'ESKALA',
+  'FRACCIÓN DE UNA CANTIDAD': 'KOPURU BATEN ZATIKIA',
+  'FRACCIONES EQUIVALENTES': 'ZATIKI BALIOKIDEAK',
+  'GRÁFICO CIRCULAR': 'GRAFIKO ZIRKULARRA',
+  'GRÁFICO DE BARRAS': 'BARRA-GRAFIKOA',
+  'JERARQUÍA CON FRACCIONES': 'HIERARKIA ZATIKIEKIN',
+  'JERARQUÍA DE OPERACIONES': 'ERAGIKETEN HIERARKIA',
+  'LEER DECIMALES': 'HAMARTARRAK IRAKURRI',
+  'LEER FRACCIONES': 'ZATIKIAK IRAKURRI',
+  'MCM Y MCD': 'MKT ETA ZKH',
+  'MEDIA ARITMÉTICA': 'BATEZBESTEKO ARITMETIKOA',
+  'MODA Y MEDIANA': 'MODA ETA MEDIANA',
+  'MÚLTIPLOS': 'MULTIPLOAK',
+  'NOMBRAR POLÍGONOS': 'POLIGONOAK IZENDATU',
+  'NÚMEROS PRIMOS': 'ZENBAKI LEHENAK',
+  'OPERAR CON DECIMALES': 'HAMARTARREKIN ERAGITEKO',
+  'OPERAR CON FRACCIONES': 'ZATIKIEKIN ERAGITEKO',
+  'ORDENAR DECIMALES': 'HAMARTARRAK ORDENATU',
+  'ORDENAR FRACCIONES': 'ZATIKIAK ORDENATU',
+  'PERÍMETRO': 'PERIMETROA',
+  'PORCENTAJE DE UNA CANTIDAD': 'KOPURU BATEN EHUNEKOA',
+  'POTENCIAS': 'BERREDURAK',
+  'PROBABILIDAD': 'PROBABILITATEA',
+  'PROPORCIONES': 'PROPORTZIOAK',
+  'RAÍZ CUADRADA': 'ERRO KARRATUA',
+  'RAZÓN': 'ARRAZOIA',
+  'REDONDEAR DECIMALES': 'HAMARTARRAK BIRIBILDU',
+  'REGLAS DE TRES': 'HIRUREN ARAUA',
+  'RELACIÓN LINEAL': 'ERLAZIO LINEALA',
+  'SIMETRÍA AXIAL': 'SIMETRIA AXIALA',
+  'SIMPLIFICAR FRACCIONES': 'ZATIKIAK SINPLIFIKATU',
+  'SISTEMA DE ECUACIONES': 'EKUAZIO-SISTEMA',
+  'SUMA BÁSICA': 'BATUKETA OINARRIZKOA',
+  'TEOREMA DE PITÁGORAS': 'PITAGORASEN TEOREMA',
+  'VALOR ABSOLUTO': 'BALIO ABSOLUTUA',
+  'VOLUMEN DEL ORTOEDRO': 'ORTOEDROAREN BOLUMENA',
+
+  // Etiquetas de UI de los dialogs de ayuda
+  '¿Necesitas ayuda?': 'Laguntza behar duzu?',
+  'SEGUIR': 'JARRAITU',
+  'VOLVER': 'ITZULI',
+  'EMPEZAR': 'HASI',
+  'ENTENDIDO': 'ULERTUTA',
+  'CERRAR': 'ITXI',
+  'cerrar': 'itxi',
+  // SnackBar tras captura con fallos: "+5 (de 10 posibles)"
+  'posibles': 'posiblean',
 };

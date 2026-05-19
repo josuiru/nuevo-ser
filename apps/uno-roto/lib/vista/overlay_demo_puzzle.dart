@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
 
 /// Overlay-tutorial gestual que aparece **una sola vez** la primera vez
@@ -147,9 +148,12 @@ class _OverlayDemoPuzzleState extends State<OverlayDemoPuzzle>
                         color: PaletaNeon.textoTenue.withOpacity(0.6),
                       ),
                     ),
-                    child: const Text(
-                      'cerrar',
-                      style: TextStyle(
+                    child: Text(
+                      traducirNarrativa(
+                        'cerrar',
+                        Localizations.localeOf(context),
+                      ),
+                      style: const TextStyle(
                         color: PaletaNeon.textoTenue,
                         fontSize: 12,
                         letterSpacing: 1.5,

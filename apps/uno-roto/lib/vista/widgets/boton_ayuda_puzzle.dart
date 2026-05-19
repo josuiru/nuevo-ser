@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dominio/ayuda_puzzle.dart';
 import '../../dominio/fragmento_en_tejado.dart';
+import '../../l10n/traducciones_narrativa.dart';
 import '../../nucleo/paleta.dart';
 
 /// Botón "?" que abre una explicación pedagógica del puzzle actual.
@@ -121,7 +122,13 @@ class _BotonAyudaPuzzleState extends State<BotonAyudaPuzzle>
   }
 
   void _mostrarAyuda(BuildContext context) {
-    final (titulo, texto, transferencia) = AyudaPuzzle.paraTipo(widget.tipo);
+    final (tituloEs, textoEs, transferenciaEs) =
+        AyudaPuzzle.paraTipo(widget.tipo);
+    final locale = Localizations.localeOf(context);
+    final titulo = traducirNarrativa(tituloEs, locale);
+    final texto = traducirNarrativa(textoEs, locale);
+    final transferencia = traducirNarrativa(transferenciaEs, locale);
+    final etiquetaEntendido = traducirNarrativa('ENTENDIDO', locale);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -190,9 +197,9 @@ class _BotonAyudaPuzzleState extends State<BotonAyudaPuzzle>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text(
-              'ENTENDIDO',
-              style: TextStyle(
+            child: Text(
+              etiquetaEntendido,
+              style: const TextStyle(
                 color: PaletaNeon.violetaNeon,
                 letterSpacing: 1.5,
               ),

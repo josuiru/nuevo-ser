@@ -335,9 +335,12 @@ class _DetalleHabilidad extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  'CERRAR',
-                  style: TextStyle(
+                child: Text(
+                  traducirNarrativa(
+                    'CERRAR',
+                    Localizations.localeOf(context),
+                  ),
+                  style: const TextStyle(
                     color: PaletaNeon.textoPrincipal,
                     letterSpacing: 2,
                     fontSize: 12,

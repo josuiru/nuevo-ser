@@ -1262,4 +1262,137 @@ const Map<String, String> narrativaCa = <String, String>{
   'Un cuarto.': 'Un quart.',
   'Si junto dos cuartos, tengo un medio.': 'Si ajunto dos quarts, tinc un mig.',
   'El camino es al revés, pero el pan sigue siendo el mismo pan.': 'El camí és al revés, però el pa segueix sent el mateix pa.',
+
+  // ═══ Combates: Kurz 1/2/3, Zafrán, Kai, Vorax ═══
+  // Enunciados, opciones con texto, frases de fallo/acierto/derrota/
+  // victoria. Traducciones provisionales pendientes de revisión nativa
+  // — ver nota en CLAUDE.md sobre voz de cada personaje.
+
+  // Kurz 1
+  '¿Cuántos cuartos hay en un entero?': 'Quants quarts hi ha en un sencer?',
+  'Si tengo 3/4 y quito 1/4, ¿cuánto queda?':
+      'Si tinc 3/4 i en trec 1/4, quant queda?',
+  '¿Qué es más: 1/2 o 1/4?': 'Què és més: 1/2 o 1/4?',
+  'Iguales': 'Iguals',
+
+  // Kurz 2
+  '¿Cuánto es 5/6 - 1/6?': 'Quant és 5/6 - 1/6?',
+  '¿Cuánto es 4/6 - 1/6?': 'Quant és 4/6 - 1/6?',
+  'Simplifica 3/6.': 'Simplifica 3/6.',
+  '¿Cuánto es 2/6 + 1/6?': 'Quant és 2/6 + 1/6?',
+  'Simplifica 2/6.': 'Simplifica 2/6.',
+
+  // Kurz 3
+  '¿Cuánto es 7/8 - 2/8?': 'Quant és 7/8 - 2/8?',
+  'Simplifica 4/8.': 'Simplifica 4/8.',
+  '¿Cuánto es 5/8 - 2/8?': 'Quant és 5/8 - 2/8?',
+  'Simplifica 6/8.': 'Simplifica 6/8.',
+
+  // Zafrán (MCM 7 y 11 = 77)
+  '¿Cuál es el MCM de 7 y 11?': 'Quin és el MCM de 7 i 11?',
+  '¿A qué equivale 5/7 con denominador 77?':
+      'A què equival 5/7 amb denominador 77?',
+  '¿A qué equivale 3/11 con denominador 77?':
+      'A què equival 3/11 amb denominador 77?',
+  '¿Cuánto es 55/77 + 21/77?': 'Quant és 55/77 + 21/77?',
+  '¿Cuánto le falta a 76/77 para ser un entero?':
+      'Quant li falta a 76/77 per ser un sencer?',
+
+  // Kai (duelo amistoso)
+  'Ronda de reacción. ¿Cuánto es 3/5 de 20?':
+      'Ronda de reacció. Quant és 3/5 de 20?',
+  'Ronda de precisión. ¿A qué porcentaje equivale 3/4?':
+      'Ronda de precisió. A quin percentatge equival 3/4?',
+  'Ronda Dual. 1/2 + 1/3 = ?': 'Ronda Dual. 1/2 + 1/3 = ?',
+
+  // Vorax (Impropio 11/4 → mixto → cuartos)
+  '11/4 es Impropio. Conviértelo a número mixto.':
+      '11/4 és Impropi. Converteix-lo a nombre mixt.',
+  '1 y 7/4': '1 i 7/4',
+  '2 y 3/4': '2 i 3/4',
+  '3 y 2/4': '3 i 2/4',
+  '4 y 1/4': '4 i 1/4',
+  'Eliminas el 2 entero. ¿Qué parte queda como Fragmento?':
+      'Elimines el 2 sencer. Quina part queda com a Fragment?',
+  '3/4 en cuartos: ¿cuántos cuartos son?':
+      '3/4 en quarts: quants quarts són?',
+  'Tras eliminar un cuarto, ¿cuánto queda?':
+      'Després d\'eliminar un quart, quant queda?',
+  'Tras eliminar otro cuarto, ¿cuánto queda?':
+      'Després d\'eliminar un altre quart, quant queda?',
+  'Vorax se agita. No vayas rápido.':
+      'En Vorax s\'agita. No vagis ràpid.',
+
+  // ═══ AyudaPuzzle: títulos y etiquetas de UI ═══
+  // Cuerpos largos de la ayuda pedagógica todavía sin traducir — el
+  // mapa devuelve el original si la clave no aparece, así que la app
+  // sigue funcionando con título en català + cuerpo en castellano
+  // hasta que haya revisión completa.
+  'AMPLIFICAR FRACCIONES': 'AMPLIFICAR FRACCIONS',
+  'ÁREA DEL RECTÁNGULO': 'ÀREA DEL RECTANGLE',
+  'ÁREA DEL TRIÁNGULO': 'ÀREA DEL TRIANGLE',
+  'AUMENTOS Y DESCUENTOS': 'AUGMENTS I DESCOMPTES',
+  'CLASIFICAR ÁNGULOS': 'CLASSIFICAR ANGLES',
+  'COMPARAR CON LA UNIDAD': 'COMPARAR AMB LA UNITAT',
+  'COMPARAR CON 1/2': 'COMPARAR AMB 1/2',
+  'COMPARAR DECIMALES': 'COMPARAR DECIMALS',
+  'COMPARAR FRACCIONES': 'COMPARAR FRACCIONS',
+  'COMPARAR FRACCIONES DISTINTAS': 'COMPARAR FRACCIONS DIFERENTS',
+  'CONVERTIR LONGITUD': 'CONVERTIR LONGITUD',
+  'CONVERTIR MASA O CAPACIDAD': 'CONVERTIR MASSA O CAPACITAT',
+  'CONVERTIR SUPERFICIE': 'CONVERTIR SUPERFÍCIE',
+  'CONVERTIR TIEMPO': 'CONVERTIR TEMPS',
+  'CORTAR EN PARTES IGUALES': 'TALLAR EN PARTS IGUALS',
+  'DIVISIBILIDAD': 'DIVISIBILITAT',
+  'DIVISORES': 'DIVISORS',
+  'ECUACIÓN EN AMBOS LADOS': 'EQUACIÓ EN ELS DOS COSTATS',
+  'ECUACIÓN LINEAL': 'EQUACIÓ LINEAL',
+  'ENTEROS CON SIGNO': 'ENTERS AMB SIGNE',
+  'ESCALA': 'ESCALA',
+  'FRACCIÓN DE UNA CANTIDAD': 'FRACCIÓ D\'UNA QUANTITAT',
+  'FRACCIONES EQUIVALENTES': 'FRACCIONS EQUIVALENTS',
+  'GRÁFICO CIRCULAR': 'GRÀFIC CIRCULAR',
+  'GRÁFICO DE BARRAS': 'GRÀFIC DE BARRES',
+  'JERARQUÍA CON FRACCIONES': 'JERARQUIA AMB FRACCIONS',
+  'JERARQUÍA DE OPERACIONES': 'JERARQUIA D\'OPERACIONS',
+  'LEER DECIMALES': 'LLEGIR DECIMALS',
+  'LEER FRACCIONES': 'LLEGIR FRACCIONS',
+  'MCM Y MCD': 'MCM I MCD',
+  'MEDIA ARITMÉTICA': 'MITJANA ARITMÈTICA',
+  'MODA Y MEDIANA': 'MODA I MEDIANA',
+  'MÚLTIPLOS': 'MÚLTIPLES',
+  'NOMBRAR POLÍGONOS': 'ANOMENAR POLÍGONS',
+  'NÚMEROS PRIMOS': 'NOMBRES PRIMERS',
+  'OPERAR CON DECIMALES': 'OPERAR AMB DECIMALS',
+  'OPERAR CON FRACCIONES': 'OPERAR AMB FRACCIONS',
+  'ORDENAR DECIMALES': 'ORDENAR DECIMALS',
+  'ORDENAR FRACCIONES': 'ORDENAR FRACCIONS',
+  'PERÍMETRO': 'PERÍMETRE',
+  'PORCENTAJE DE UNA CANTIDAD': 'PERCENTATGE D\'UNA QUANTITAT',
+  'POTENCIAS': 'POTÈNCIES',
+  'PROBABILIDAD': 'PROBABILITAT',
+  'PROPORCIONES': 'PROPORCIONS',
+  'RAÍZ CUADRADA': 'ARREL QUADRADA',
+  'RAZÓN': 'RAÓ',
+  'REDONDEAR DECIMALES': 'ARRODONIR DECIMALS',
+  'REGLAS DE TRES': 'REGLA DE TRES',
+  'RELACIÓN LINEAL': 'RELACIÓ LINEAL',
+  'SIMETRÍA AXIAL': 'SIMETRIA AXIAL',
+  'SIMPLIFICAR FRACCIONES': 'SIMPLIFICAR FRACCIONS',
+  'SISTEMA DE ECUACIONES': 'SISTEMA D\'EQUACIONS',
+  'SUMA BÁSICA': 'SUMA BÀSICA',
+  'TEOREMA DE PITÁGORAS': 'TEOREMA DE PITÀGORES',
+  'VALOR ABSOLUTO': 'VALOR ABSOLUT',
+  'VOLUMEN DEL ORTOEDRO': 'VOLUM DE L\'ORTOEDRE',
+
+  // Etiquetas de UI de los dialogs de ayuda
+  '¿Necesitas ayuda?': 'Necessites ajuda?',
+  'SEGUIR': 'SEGUIR',
+  'VOLVER': 'TORNAR',
+  'EMPEZAR': 'COMENÇAR',
+  'ENTENDIDO': 'ENTÈS',
+  'CERRAR': 'TANCAR',
+  'cerrar': 'tancar',
+  // SnackBar tras captura con fallos: "+5 (de 10 posibles)"
+  'posibles': 'possibles',
 };

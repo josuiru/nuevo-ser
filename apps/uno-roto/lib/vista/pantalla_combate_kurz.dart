@@ -260,7 +260,13 @@ class _PantallaCombateKurzState extends State<PantallaCombateKurz>
                     pregunta.enunciado,
                     Localizations.localeOf(context),
                   ),
-                  opciones: pregunta.opciones,
+                  opciones: [
+                    for (final opcion in pregunta.opciones)
+                      traducirNarrativa(
+                        opcion,
+                        Localizations.localeOf(context),
+                      ),
+                  ],
                   bloqueado: _bloqueado,
                   alElegir: _alElegir,
                 ),
