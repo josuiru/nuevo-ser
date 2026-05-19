@@ -1395,4 +1395,265 @@ const Map<String, String> narrativaCa = <String, String>{
   'cerrar': 'tancar',
   // SnackBar tras captura con fallos: "+5 (de 10 posibles)"
   'posibles': 'possibles',
+
+  // ═══ AyudaPuzzle: cuerpos largos (texto + transferencia) ═══
+  // Traducción catalán provisional pendiente de revisión nativa.
+  // Si una clave no aparece o se ha modificado, el sistema cae al
+  // castellano sin romper. 64 familias × 2 entradas = 128 strings.
+  'Tienes que dividir el Fragmento en el número de partes que indica.\n\n1. Desliza el dedo para cortar.\n2. Cada corte debe hacer partes del mismo tamaño.\n3. Cuando tengas el número exacto de partes, el Fragmento se deshace.\n\nCuanto más preciso seas, mejor.':
+      'Has de dividir el Fragment en el nombre de parts que indica.\n\n1. Llisca el dit per tallar.\n2. Cada tall ha de fer parts de la mateixa mida.\n3. Quan tinguis el nombre exacte de parts, el Fragment es desfà.\n\nCom més precís siguis, millor.',
+  'En la vida: repartir una pizza, una tarta o cualquier cosa en partes iguales.':
+      'A la vida: repartir una pizza, un pastís o qualsevol cosa en parts iguals.',
+  'Tienes dos fracciones y tienes que tocar la mayor.\n\n• Si tienen el MISMO denominador (número de abajo), gana la que tiene el numerador (número de arriba) más grande.\n• Si tienen el MISMO numerador, gana la que tiene el denominador más pequeño (porque los trozos son más grandes).':
+      'Tens dues fraccions i has de tocar la més gran.\n\n• Si tenen el MATEIX denominador (nombre de sota), guanya la que té el numerador (nombre de dalt) més gran.\n• Si tenen el MATEIX numerador, guanya la que té el denominador més petit (perquè els trossos són més grans).',
+  'En la vida: saber qué oferta es mejor (3/8 de descuento vs 5/12).':
+      'A la vida: saber quina oferta és millor (3/8 de descompte vs 5/12).',
+  'Dos fracciones sin nada en común. No puedes comparar solo mirando.\n\nMultiplica en cruz:\n  a/b  ?  c/d  →  a×d  ?  c×b\nEl lado donde el producto sea mayor, esa fracción es la mayor.\n\nTambién puedes convertir a decimal dividiendo numerador entre denominador.':
+      'Dues fraccions sense res en comú. No pots comparar només mirant.\n\nMultiplica en creu:\n  a/b  ?  c/d  →  a×d  ?  c×b\nEl costat on el producte sigui més gran, aquesta fracció és la més gran.\n\nTambé pots convertir a decimal dividint numerador entre denominador.',
+  'En la vida: comparar ofertas con formatos distintos, o repartos diferentes.':
+      'A la vida: comparar ofertes amb formats diferents, o repartiments diferents.',
+  'Tienes dos decimales y tienes que tocar el mayor.\n\nCuidado: más cifras NO significa más grande.\n  0,35 NO es mayor que 0,4 (0,4 = 0,40).\n\nCompara cifra a cifra empezando por la izquierda: décimas, centésimas…':
+      'Tens dos decimals i has de tocar el més gran.\n\nCompte: més xifres NO vol dir més gran.\n  0,35 NO és més gran que 0,4 (0,4 = 0,40).\n\nCompara xifra a xifra començant per l\'esquerra: dècimes, centèsimes…',
+  'En la vida: comparar precios (0,35 €/kg vs 0,4 €/kg). Más cifras no es más caro.':
+      'A la vida: comparar preus (0,35 €/kg vs 0,4 €/kg). Més xifres no és més car.',
+  '¿La fracción es menor, igual o mayor que 1?\n\n• numerador < denominador → la fracción es menor que 1 (propia)\n• numerador = denominador → la fracción es igual a 1\n• numerador > denominador → la fracción es mayor que 1 (impropia)':
+      'La fracció és menor, igual o major que 1?\n\n• numerador < denominador → la fracció és menor que 1 (pròpia)\n• numerador = denominador → la fracció és igual a 1\n• numerador > denominador → la fracció és major que 1 (impròpia)',
+  'En la vida: saber si has comido más de una pizza entera o menos.':
+      'A la vida: saber si has menjat més d\'una pizza sencera o menys.',
+  'Verás una fracción y tres botones: <1/2, =1/2, >1/2.\n\nTruco: una fracción vale 1/2 cuando el denominador es el doble del numerador (2/4, 3/6, 5/10…). Desde ahí:\n\n  • Dobla el numerador y compáralo con el denominador.\n  • Si NO llega al denominador → la fracción es MENOR que 1/2.\n    Ejemplo: 4/9 → doble de 4 = 8, no llega a 9 → 4/9 < 1/2.\n\n  • Si da justo el denominador → IGUAL a 1/2.\n    Ejemplo: 3/6 → doble de 3 = 6 → 3/6 = 1/2.\n\n  • Si se pasa del denominador → MAYOR que 1/2.\n    Ejemplo: 5/9 → doble de 5 = 10, mayor que 9 → 5/9 > 1/2.':
+      'Veuràs una fracció i tres botons: <1/2, =1/2, >1/2.\n\nTruc: una fracció val 1/2 quan el denominador és el doble del numerador (2/4, 3/6, 5/10…). Des d\'aquí:\n\n  • Dobla el numerador i compara\'l amb el denominador.\n  • Si NO arriba al denominador → la fracció és MENOR que 1/2.\n    Exemple: 4/9 → doble de 4 = 8, no arriba a 9 → 4/9 < 1/2.\n\n  • Si dona just el denominador → IGUAL a 1/2.\n    Exemple: 3/6 → doble de 3 = 6 → 3/6 = 1/2.\n\n  • Si passa del denominador → MAJOR que 1/2.\n    Exemple: 5/9 → doble de 5 = 10, major que 9 → 5/9 > 1/2.',
+  'En la vida: estimar de un vistazo si un vaso o un depósito está más de la mitad lleno, sin medir.':
+      'A la vida: estimar d\'una ullada si un got o un dipòsit està més de la meitat ple, sense mesurar.',
+  'Elige la fracción que vale lo mismo que la que ves.\n\nDos fracciones son equivalentes cuando representan la misma cantidad.\n\nPara comprobarlo, multiplica en cruz: a/b = c/d si a×d = c×b.\nPara encontrar una equivalente, multiplica o divide numerador y denominador por el mismo número.':
+      'Tria la fracció que val el mateix que la que veus.\n\nDues fraccions són equivalents quan representen la mateixa quantitat.\n\nPer comprovar-ho, multiplica en creu: a/b = c/d si a×d = c×b.\nPer trobar-ne una d\'equivalent, multiplica o divideix numerador i denominador pel mateix nombre.',
+  'En la vida: repartir lo mismo de formas distintas (2/4 de pizza = 1/2).':
+      'A la vida: repartir el mateix de formes diferents (2/4 de pizza = 1/2).',
+  'Reduce la fracción a su forma más simple.\n\nPara simplificar, divide numerador y denominador entre el mismo número (el MCD).\n\nEjemplo: 6/8 → divide entre 2 → 3/4.\n6/8 y 3/4 valen lo mismo, pero 3/4 es la forma más simple.':
+      'Redueix la fracció a la seva forma més simple.\n\nPer simplificar, divideix numerador i denominador entre el mateix nombre (el MCD).\n\nExemple: 6/8 → divideix entre 2 → 3/4.\n6/8 i 3/4 valen el mateix, però 3/4 és la forma més simple.',
+  'En la vida: expresar medidas de la forma más simple (4/8 → 1/2).':
+      'A la vida: expressar mides de la forma més simple (4/8 → 1/2).',
+  'Completa el número que falta: a/b = ?/c.\n\nPara amplificar, multiplica numerador y denominador por el mismo número.\n\nEjemplo: 3/4 = ?/12 → 4×3 = 12, así que 3×3 = 9 → 3/4 = 9/12.':
+      'Amplia la fracció al denominador que es demana.\n\nPer mantenir el mateix valor, multiplica TOTS DOS (numerador i denominador) pel mateix nombre.\n\nExemple: 3/4 = ?/12 → el denominador es multiplica per 3 → el numerador també → 9/12.',
+  'En la vida: adaptar una receta para más comensales manteniendo proporciones.':
+      'A la vida: ampliar mides per a una recepta més gran, mantenint la proporció.',
+  'Elige el decimal que equivale a la fracción.\n\nPara convertir una fracción a decimal, divide el numerador entre el denominador.\n\nEjemplo: 3/4 = 3 ÷ 4 = 0,75.':
+      'Tria el decimal corresponent a la fracció.\n\nDivideix numerador entre denominador:\n  1/2 = 0,5\n  1/4 = 0,25\n  3/4 = 0,75\n  1/5 = 0,2\n\nMemoritza els més usats; t\'apareixeran sovint.',
+  'En la vida: convertir 3/4 de hora en 0,75 h para calcular tiempo total.':
+      'A la vida: entendre els decimals de la calculadora, preus, mesures.',
+  'Elige el porcentaje que equivale a la fracción.\n\nUn porcentaje es una fracción con denominador 100.\nPara convertir: multiplica la fracción por 100.\n\nEjemplo: 3/4 = 3÷4 = 0,75 → 0,75×100 = 75%.':
+      'Tria el percentatge corresponent a la fracció.\n\nPrimer troba el decimal (numerador/denominador) i multiplica per 100:\n  1/2 = 0,5 = 50 %\n  1/4 = 0,25 = 25 %\n  3/4 = 0,75 = 75 %\n  1/5 = 0,2 = 20 %',
+  'En la vida: entender que 3/4 = 75% en un examen, un descuento o una encuesta.':
+      'A la vida: entendre descomptes, resultats donats en percentatges.',
+  'Mira qué operador hay entre las dos fracciones y aplica la regla correspondiente.\n\n• SUMA o RESTA (a/b + c/d):\n    1) Iguala los denominadores buscando el MCM.\n    2) Suma o resta los numeradores; el denominador no cambia.\n    Ejemplo: 1/2 + 1/4 → 2/4 + 1/4 = 3/4.\n\n• MULTIPLICACIÓN (a/b × c/d):\n    Multiplica numerador × numerador y denominador × denominador.\n    Ejemplo: 2/3 × 4/5 = 8/15.\n\n• DIVISIÓN (a/b ÷ c/d):\n    Invierte la segunda fracción y multiplica.\n    Ejemplo: 2/3 ÷ 4/5 = 2/3 × 5/4 = 10/12 = 5/6.\n\nSimplifica el resultado siempre que puedas.':
+      'Mira quin operador hi ha entre les dues fraccions i aplica la regla corresponent.\n\n• SUMA o RESTA (a/b + c/d):\n    1) Iguala els denominadors buscant el MCM.\n    2) Suma o resta els numeradors; el denominador no canvia.\n    Exemple: 1/2 + 1/4 → 2/4 + 1/4 = 3/4.\n\n• MULTIPLICACIÓ (a/b × c/d):\n    Multiplica numerador × numerador i denominador × denominador.\n    Exemple: 2/3 × 4/5 = 8/15.\n\n• DIVISIÓ (a/b ÷ c/d):\n    Inverteix la segona fracció i multiplica.\n    Exemple: 2/3 ÷ 4/5 = 2/3 × 5/4 = 10/12 = 5/6.\n\nSimplifica el resultat sempre que puguis.',
+  'En la vida: sumar ingredientes en cocina (1/2 taza + 1/4 taza = 3/4 taza).':
+      'A la vida: sumar ingredients a la cuina (1/2 tassa + 1/4 tassa = 3/4 tassa).',
+  'Calcula el resultado de la operación con decimales.\n\n• SUMA y RESTA: alinea las comas decimales y suma o resta cifra a cifra.\n• MULTIPLICACIÓN: multiplica sin comas y después coloca la coma (tantos decimales como entre los dos factores).\n• DIVISIÓN: desplaza la coma para que el divisor sea entero.':
+      'Fes l\'operació entre decimals.\n\n• SUMA/RESTA: alinea les comes i opera.\n  2,5 + 1,75:\n     2,50\n   + 1,75\n   ─────\n     4,25\n\n• MULTIPLICACIÓ: multiplica sense fer cas de les comes; després, posa tantes dècimes com en sumen els dos nombres.\n  2,5 × 1,4 = 25 × 14 = 350 → 3,50 (1+1 dècimes).\n\n• DIVISIÓ: multiplica tots dos per eliminar les comes, després divideix els enters.',
+  'En la vida: calcular el total de la compra (1,25 € + 3,80 €).':
+      'A la vida: sumar preus, calcular descomptes, repartir mesures.',
+  'Calcula respetando la prioridad de las operaciones.\n\n1. Primero las multiplicaciones (×) y divisiones (÷).\n2. Después las sumas (+) y restas (−).\n\nNo operes de izquierda a derecha sin respetar la jerarquía, ¡es la trampa!':
+      'En una operació complexa, hi ha un ordre:\n\n1. Parèntesis ( )\n2. Potències (² ³) i arrels\n3. Multiplicació × i divisió ÷\n4. Suma + i resta −\n\nAl mateix nivell, d\'esquerra a dreta.\n\nExemple: 2 + 3 × 4 = 2 + 12 = 14 (NO 5 × 4 = 20).',
+  'En la vida: calcular 2 + 3 × 4 en una factura (× va antes que +).':
+      'A la vida: entendre la calculadora científica, aplicar bé les fórmules.',
+  'Igual que la jerarquía normal, pero con fracciones.\n\n1. Primero multiplica y divide las fracciones.\n2. Después suma y resta, igualando denominadores cuando haga falta.\n\nRecuerda simplificar el resultado si puedes.':
+      'Mateixa jerarquia, però amb fraccions.\n\n1/2 + 1/4 × 2/3 es resol:\n  1) Primer la multiplicació: 1/4 × 2/3 = 2/12 = 1/6.\n  2) Després la suma: 1/2 + 1/6 = 3/6 + 1/6 = 4/6 = 2/3.\n\nRecorda: × i ÷ abans de + i −.',
+  'En la vida: cálculos mixtos con ingredientes y medidas en cocina.':
+      'A la vida: ajustar receptes, calcular més porcions de receptes senceres.',
+  'Operación que mezcla un decimal y una fracción.\n\nConvierte la fracción a decimal (numerador ÷ denominador) y después opera.\n\nO al revés: convierte el decimal a fracción y opera con fracciones.\n\nElige el camino que te resulte más fácil.':
+      'Quan tens un decimal i una fracció junts, porta\'ls al mateix format:\n\n• La fracció a decimal (divideix numerador entre denominador).\n• O els decimals a fracció.\n\nDesprés opera, en el mateix format.\n\nExemple: 0,5 + 1/4 = 0,5 + 0,25 = 0,75.',
+  'En la vida: combinar medidas en distintos formatos (0,5 L + 1/4 L).':
+      'A la vida: combinar preus (€ decimal) i porcions de pastís.',
+  '¿El número se puede dividir exactamente?\n\n• Un número es divisible entre 2 si termina en 0 o cifra par.\n• Entre 3 si la suma de sus cifras es múltiplo de 3.\n• Entre 5 si termina en 0 o 5.\n• Entre 10 si termina en 0.\n\nSi la división da exacta (resto 0), es divisible.':
+      'Has de decidir si un nombre és divisible per un altre (SÍ/NO).\n\nCriteris:\n  • Per 2: acaba en 0,2,4,6,8\n  • Per 3: la suma de xifres és múltiple de 3\n  • Per 5: acaba en 0 o 5\n  • Per 9: la suma de xifres és múltiple de 9\n  • Per 10: acaba en 0',
+  'En la vida: saber si puedes repartir algo en grupos iguales sin que sobre nada.':
+      'A la vida: saber si 12 caramels es poden repartir igual entre 3 amics.',
+  '¿Un número es múltiplo de otro?\n\nUn número es múltiplo de otro si se puede dividir exactamente entre él.\n\nEjemplo: 15 es múltiplo de 3 porque 15÷3 = 5 exacto.\n         15 NO es múltiplo de 4 porque 15÷4 no da exacto.':
+      'Has de decidir si el nombre N és múltiple de M.\n\nMúltiples de M són: M, 2×M, 3×M, 4×M…\nExemple: múltiples de 6: 6, 12, 18, 24, 30…\n\nTruc: divideix N entre M. Si no queda residu, és múltiple.',
+  'En la vida: calcular cuándo coinciden dos eventos (cada 3 y cada 4 días).':
+      'A la vida: cada 30 minuts al rellotge digital de l\'aparcament — a quina hora s\'acabarà?',
+  'Tres números son divisores. El cuarto es el intruso: no lo es.\n\nUn divisor de N es un número que divide a N exactamente (resto 0).\n\nComprueba cada candidato haciendo la división mental. El que no encaja es el intruso.':
+      'Tens un nombre gran i quatre candidats; tres són divisors reals i un no ho és. Toca el que NO divideix.\n\nDivisors: nombres que divideixen N exactament.\nExemple: divisors de 12: 1, 2, 3, 4, 6, 12. El 5 no ho és.',
+  'En la vida: repartir equitativamente entre varias personas sin que sobre nada.':
+      'A la vida: repartir 24 alumnes en grups, amb el mateix nombre de membres.',
+  '¿El número es primo?\n\nUn número primo solo se puede dividir exactamente entre 1 y entre sí mismo.\n\nImportante: 1 NO es primo (solo tiene un divisor).\n2 es el único número primo par.':
+      'Decideix si un nombre és primer (SÍ/NO).\n\nPrimer: només té dos divisors: 1 i ell mateix.\nExemples: 2, 3, 5, 7, 11, 13, 17, 19…\n\nCompte:\n  • 1 NO és primer.\n  • 2 és l\'únic primer parell.\n  • 9 = 3×3, NO és primer.',
+  'En la vida: conceptos básicos de cifrado y seguridad digital.':
+      'A la vida: la base de la criptografia i els nombres segurs.',
+  'Verás dos números y cuatro candidatos. Fíjate primero en si la pantalla pide MCM o MCD: son cosas distintas.\n\n• MCM (mínimo común múltiplo) = el primer número que aparece en las dos tablas de multiplicar.\n    Ejemplo (4 y 6):\n      Tabla del 4 → 4, 8, 12, 16, 20…\n      Tabla del 6 → 6, 12, 18, 24…\n      El primero que se repite es 12. MCM(4, 6) = 12.\n\n• MCD (máximo común divisor) = el número más grande que divide a los dos exactamente.\n    Ejemplo (12 y 18):\n      Divisores de 12 → 1, 2, 3, 4, 6, 12\n      Divisores de 18 → 1, 2, 3, 6, 9, 18\n      El mayor común es 6. MCD(12, 18) = 6.\n\nTruco para no confundirlos: MCM siempre es igual o mayor que los dos números; MCD siempre es igual o menor.':
+      'Veuràs dos nombres i quatre candidats. Fixa\'t primer en si la pantalla demana MCM o MCD: són coses diferents.\n\n• MCM (mínim comú múltiple) = el primer nombre que apareix en les dues taules de multiplicar.\n    Exemple (4 i 6):\n      Taula del 4 → 4, 8, 12, 16, 20…\n      Taula del 6 → 6, 12, 18, 24…\n      El primer que es repeteix és 12. MCM(4, 6) = 12.\n\n• MCD (màxim comú divisor) = el nombre més gran que divideix els dos exactament.\n    Exemple (12 i 18):\n      Divisors de 12 → 1, 2, 3, 4, 6, 12\n      Divisors de 18 → 1, 2, 3, 6, 9, 18\n      El major comú és 6. MCD(12, 18) = 6.\n\nTruc per no confondre\'ls: MCM sempre igual o més gran que els dos nombres; MCD sempre igual o menor.',
+  'En la vida: dos campanas que suenan cada 6 y cada 8 minutos coinciden por primera vez al cabo de MCM(6, 8) = 24 minutos.':
+      'A la vida: dues campanes que sonen cada 6 i cada 8 minuts coincideixen per primera vegada al cap de MCM(6, 8) = 24 minuts.',
+  'Calcula el porcentaje de una cantidad.\n\nFórmula: (porcentaje × cantidad) ÷ 100\n\nEjemplo: el 25% de 80 = (25 × 80) ÷ 100 = 2000 ÷ 100 = 20.':
+      'Calcula el percentatge d\'una quantitat.\n\nFórmula: % × quantitat / 100\nExemple: el 25 % de 80 = 25 × 80 / 100 = 2000 / 100 = 20.\n\nTrucs: 50 % = la meitat; 25 % = un quart; 10 % = una desena part.',
+  'En la vida: calcular el 15% de propina o el 21% de IVA.':
+      'A la vida: calcular descomptes, l\'IVA i altres.',
+  'Una cantidad es ¿qué porcentaje del total?\n\nFórmula: (parte ÷ total) × 100\n\nEjemplo: 12 de 50 → (12 ÷ 50) × 100 = 0,24 × 100 = 24%.':
+      'L\'invers de l\'anterior: tens la part i el total, vols el percentatge.\n\nFórmula: (part / total) × 100\nExemple: 12 de 50 → (12/50) × 100 = 24 %.',
+  'En la vida: saber qué nota sacaste (12/14 → 85%).':
+      'A la vida: saber proporcionalment quant has aconseguit (12/50 = 24 %).',
+  'Calcula el resultado tras aplicar un aumento o descuento porcentual.\n\n1. Calcula el porcentaje de la cantidad.\n2. Si es aumento → suma el resultado.\n   Si es descuento → resta el resultado.\n\nEjemplo: aumenta un 15% sobre 200 → 15% de 200 = 30 → 200+30 = 230.':
+      'Afegeix o resta un percentatge a una quantitat.\n\n• Augment: quantitat + (% × quantitat / 100).\n  Augmenta un 15 % sobre 200 = 200 + 30 = 230.\n• Descompte: quantitat − (% × quantitat / 100).\n  Descompta un 20 % sobre 80 = 80 − 16 = 64.',
+  'En la vida: calcular rebajas (20% descuento) o subidas (10% aumento).':
+      'A la vida: descomptes a les botigues (− 30 %) o IVA afegit.',
+  'Completa la proporción: a:b = c:?\n\nDos ratios son proporcionales si el factor de escala es el mismo.\nPara encontrar el valor que falta: multiplica o divide por el mismo número ambos términos.':
+      'Entre dues magnituds hi ha una relació constant.\n\nProporció directa: quan una augmenta, l\'altra també.\nProporció inversa: quan una augmenta, l\'altra disminueix.\n\nExemple: si 3 pomes valen 2 €, 6 pomes valdran 4 € (directa).',
+  'En la vida: mantener la misma relación al ampliar una receta o un plano.':
+      'A la vida: doblar receptes, mantenint la mateixa mida.',
+  'Si "a → b", entonces "c → ?"\n\nFórmula: ? = (b × c) ÷ a\n\nEjemplo: si 3 kg cuestan 12 €, 5 kg cuestan (12 × 5) ÷ 3 = 60 ÷ 3 = 20 €.':
+      'Proporció directa: a → b · c → ?\n\nFórmula: ? = b × c / a\n\nExemple: si 3 pomes valen 2 €, quant valen 9 pomes?\n  ? = 2 × 9 / 3 = 18/3 = 6 €.',
+  'En la vida: si 3 kg cuestan 12 €, ¿cuánto cuestan 5 kg?':
+      'A la vida: compres amb una proporció coneguda, sense oblidar-la.',
+  'Elige la razón reducida que relaciona dos cantidades.\n\nUna razón compara dos cantidades. Se reduce dividiendo ambas entre el mismo número (el MCD).\n\nEjemplo: 12 manzanas y 8 naranjas → 12:8 → dividiendo entre 4 → 3:2.':
+      'Relació entre dues quantitats, simplificada com a:b.\n\nExemple: 12 pomes i 8 taronges → 12:8 = 3:2 (simplificada).\n\nTruc: troba el MCD i divideix totes dues entre ell.',
+  'En la vida: expresar relaciones (3:2 de manzanas a naranjas en una macedonia).':
+      'A la vida: receptes amb una proporció (3 aigua:1 arròs), escala de mapes.',
+  'Calcula la fracción de una cantidad.\n\nFórmula: (cantidad ÷ denominador) × numerador\n\nEjemplo: los 3/5 de 25 → (25 ÷ 5) × 3 = 5 × 3 = 15.':
+      'Calcula la fracció d\'una quantitat.\n\nFórmula: (numerador × quantitat) / denominador\nExemple: els 3/5 de 25 = (3 × 25) / 5 = 75/5 = 15.',
+  'En la vida: calcular los 3/5 de 25 € que te tocan en un reparto.':
+      'A la vida: repartir 2/3 de 30 caramels = 20 caramels.',
+  'Aplica la escala y convierte las unidades.\n\nEscala 1:500 significa que 1 cm en el plano son 500 cm (5 m) en la realidad.\n\n1. Multiplica la medida del plano por el denominador de la escala.\n2. Convierte el resultado a la unidad que te pidan (cm → m ÷ 100).':
+      'En un mapa o plànol, l\'escala indica la proporció amb la mida real.\n\nEscala 1:500 → 1 cm al plànol = 500 cm reals = 5 m.\nExemple: 4 cm al plànol = 4 × 500 = 2000 cm = 20 m.',
+  'En la vida: leer mapas y planos (1 cm en el mapa = 500 cm reales).':
+      'A la vida: entendre mapes, plànols, maquetes de joguina.',
+  'Lee el texto y elige la fracción correcta.\n\n"Tres quintos" → el numerador es 3 y el denominador es 5 → 3/5.\n\nCuidado: no inviertas numerador y denominador.':
+      'Tria la fracció corresponent al text en català ("tres cinquens").\n\n• Numerador: cardinal (un, dos, tres…).\n• Denominador: ordinal (quart, cinquè, sisè…).\n\nExemple: "tres cinquens" = 3/5.\nCompte: "mig" o "meitat" = 1/2, no 2/2.',
+  'En la vida: entender "tres quintos" en una receta o un reparto.':
+      'A la vida: entendre receptes i mesures parlades.',
+  'Lee el texto y elige el decimal correcto.\n\n"Veinticinco centésimas" → 0,25\n"Tres décimas" → 0,3\n\nCuidado con las cifras: décimas (1 cifra), centésimas (2 cifras).':
+      'Tria el decimal corresponent al text en català.\n\n• Dècimes: primera xifra després de la coma.\n• Centèsimes: segona.\n• Mil·lèsimes: tercera.\n\nExemple: "vint-i-cinc centèsimes" = 0,25.',
+  'En la vida: entender cuando alguien dice "cero coma veinticinco".':
+      'A la vida: entendre preus dits en veu alta, temps d\'una carrera.',
+  'Redondea el decimal a la décima.\n\nPara redondear a la décima, mira la centésima:\n• Si es 5 o más → la décima sube una.\n• Si es menos de 5 → la décima se queda igual.\n\nEjemplo: 2,37 → la centésima es 7 ≥ 5 → 2,4.':
+      'Apropa el decimal a menys xifres.\n\nPer arrodonir a la dècima:\n  • Mira la centèsima.\n  • 0-4 → arrodoneix avall (deixa la dècima igual).\n  • 5-9 → arrodoneix amunt (suma 1 a la dècima).\n\nExemple: 2,37 → centèsima 7 → arrodoneix a 2,4.',
+  'En la vida: dar un precio aproximado (2,37 € → 2,4 € al redondear).':
+      'A la vida: arrodonir preus i mesures, càlculs ràpids.',
+  'Ordena los decimales de menor a mayor.\n\nCompara cifra a cifra empezando por la izquierda.\nMás cifras NO significa más grande: 0,35 > 0,4? No, 0,4 = 0,40.':
+      'Ordena tres decimals de menor a major.\n\nCompara xifra a xifra des de l\'esquerra. Compte: més xifres NO vol dir més gran.\n\nExemple: 0,5 / 0,35 / 0,8 → ordre: 0,35 < 0,5 < 0,8.',
+  'En la vida: ordenar precios de menor a mayor sin confundirte.':
+      'A la vida: ordenar bé els preus de la botiga del més barat al més car.',
+  'Ordena las fracciones de menor a mayor.\n\nConviértelas a decimal (numerador ÷ denominador) para compararlas.\nO multiplica en cruz para ver cuál es mayor.':
+      'Ordena tres fraccions de menor a major.\n\nTrucs:\n• Converteix totes a decimal (numerador / denominador) i ordena.\n• O troba un denominador comú i compara els numeradors.',
+  'En la vida: ordenar medidas de ingredientes de menor a mayor.':
+      'A la vida: comparar quantitats parcials en receptes, mides de grups.',
+  'Convierte la fracción impropia en número mixto.\n\nDivide el numerador entre el denominador:\n  • el cociente es la parte entera\n  • el resto es el nuevo numerador\n  • el denominador se queda igual\n\nEjemplo: 7/4 → 7÷4 = 1 y resto 3 → 1 y 3/4.':
+      'Converteix la fracció impròpia (numerador > denominador) a nombre mixt.\n\nDivideix numerador entre denominador:\n  • Quocient: part sencera.\n  • Residu: nou numerador (denominador es manté).\n\nExemple: 11/4 → 11÷4 = 2 residu 3 → 2 i 3/4.',
+  'En la vida: expresar 7/4 de pizza como "una pizza y tres cuartos".':
+      'A la vida: dir 1 i 3/4 de pizza en lloc de 7/4.',
+  'Convierte el número mixto en fracción impropia.\n\nFórmula: (entero × denominador + numerador) / denominador\n\nEjemplo: 2 y 3/4 → (2×4 + 3)/4 = (8+3)/4 = 11/4.':
+      'Converteix el nombre mixt ("2 i 3/4") a fracció impròpia.\n\nFórmula: part sencera × denominador + numerador = nou numerador.\nExemple: 2 i 3/4 → 2×4 + 3 = 11/4.',
+  'En la vida: convertir "2 horas y media" a fracción para operar.':
+      'A la vida: tenir un format més còmode per operar amb fraccions.',
+  'Convierte entre unidades de longitud.\n\nLa escalera métrica: km → hm → dam → m → dm → cm → mm\nCada paso multiplica o divide por 10.\n\nEjemplo: 5 m = ? cm → de m a cm son 2 pasos ×10 → 5×10×10 = 500 cm.':
+      'L\'escala del sistema mètric multiplica per ×10 cada esglaó.\n\nkm → hm → dam → m → dm → cm → mm\n\nExemple: 5 m → cm: dos esglaons cap avall → ×100 → 500 cm.',
+  'En la vida: 5 m = 500 cm al medir una habitación o un mueble.':
+      'A la vida: entendre distàncies en diferents unitats (d\'un km a un m).',
+  'Convierte entre unidades de masa (g) o capacidad (L).\n\nMisma escalera que longitud: cada paso ×10.\n\nEjemplo: 3 kg = ? g → 3×10×10×10 = 3000 g.\nEjemplo: 5 L = ? mL → 5×10×10×10 = 5000 mL.':
+      'Massa (kg, g, mg) i capacitat (L, dL, cL, mL) usen també l\'escala ×10.\n\nMassa: kg → hg → dag → g → dg → cg → mg\nCapacitat: kL → hL → daL → L → dL → cL → mL\n\nExemple: 3 kg = 3000 g; 5 L = 500 cL.',
+  'En la vida: 1 kg = 1000 g para una receta, o 1 L = 1000 mL.':
+      'A la vida: combinar unitats de recepta, capacitat d\'ampolles de beguda.',
+  'Convierte entre unidades de superficie (m², cm²…).\n\nCada paso multiplica o divide por 100 (NO por 10).\n\nEjemplo: 5 m² = ? cm² → 5×100×100 = 50.000 cm².\n¡Atento! Es fácil confundirlo con la longitud lineal (×10).':
+      'L\'escala d\'àrees multiplica per ×100 cada esglaó (no ×10 com la lineal).\n\nExemple: 5 m² = ? cm²\n  Un sol esglaó avall → ×100? NO. m²→dm²→cm² dos esglaons → ×10 000 → 50 000 cm².\n\nPerò si et demanen m²→dm² directament: ×100 → 500 dm².',
+  'En la vida: calcular 5 m² en cm² para comprar baldosas.':
+      'A la vida: àrea d\'una habitació en mesures diferents, parcel·les a l\'hort.',
+  'Convierte entre horas, minutos y segundos.\n\nEl tiempo NO es decimal, es sexagesimal (base 60):\n  1 hora = 60 minutos\n  1 minuto = 60 segundos\n\nEjemplo: 2 h y 30 min = 2×60 + 30 = 150 min (NO 230).':
+      'És sexagesimal: cada esglaó multiplica per ×60 (no per ×10).\n\n1 h = 60 min\n1 min = 60 s\n1 h = 3600 s\n\nExemples:\n  3 h = 180 min\n  2 h i 30 min = 2×60 + 30 = 150 min.\n\nCompte: "2 h 30 min" NO és 230 min, sinó 150 min.',
+  'En la vida: 2 h y 30 min = 150 min (no 230). Útil para planificar.':
+      'A la vida: entendre la durada d\'un viatge, temps de receptes.',
+  'Elige el nombre del ángulo según su abertura.\n\n• Agudo: menos de 90°\n• Recto: exactamente 90°\n• Obtuso: más de 90° y menos de 180°\n• Llano: exactamente 180°':
+      'Mira l\'angle dibuixat i classifica:\n\n• Agut: més petit que 90°.\n• Recte: exactament 90° (escaire).\n• Obtús: entre 90° i 180°.\n• Pla: exactament 180° (línia recta).',
+  'En la vida: identificar si una esquina es recta (90°) para muebles.':
+      'A la vida: identificar si les coses són rectangulars, encreuaments de carrers.',
+  'Elige el nombre del polígono según su número de lados.\n\n• 3 lados → triángulo\n• 4 lados → cuadrado (o rectángulo)\n• 5 lados → pentágono\n• 6 lados → hexágono\n• 7 lados → heptágono\n• 8 lados → octágono':
+      'Nom segons el nombre de costats:\n\n• 3 costats → triangle\n• 4 costats → quadrilàter / quadrat\n• 5 costats → pentàgon\n• 6 costats → hexàgon\n• 7 costats → heptàgon\n• 8 costats → octàgon',
+  'En la vida: reconocer formas en señales, mosaicos y construcciones.':
+      'A la vida: senyals de trànsit (octàgon = STOP), moltes formes a la realitat.',
+  'Calcula el perímetro del polígono.\n\nEl perímetro es la suma de todos los lados.\n\nEn un rectángulo: P = 2 × (base + altura).\nEn un polígono regular: P = lado × número de lados.':
+      'Suma de tots els costats d\'un polígon.\n\nExemples:\n• Rectangle (3 cm × 5 cm): P = 2×(3+5) = 16 cm.\n• Triangle amb costats 4, 5, 6: P = 4+5+6 = 15 cm.\n• Hexàgon regular de costat 4: P = 6×4 = 24 cm.',
+  'En la vida: cuánta valla necesitas para cercar un terreno o un jardín.':
+      'A la vida: calcular la longitud d\'una tanca, el marc d\'un quadre.',
+  'Calcula el área del rectángulo.\n\nFórmula: Área = base × altura\n\nNo lo confundas con el perímetro (que suma los lados).':
+      'Fórmula: base × altura.\n\nExemple: 4 cm × 3 cm = 12 cm².\n\nCompte: no confondre amb el perímetre (2×(b+h)).',
+  'En la vida: calcular la superficie de una habitación para poner suelo.':
+      'A la vida: àrea d\'una habitació, terra o pintura a mesurar.',
+  'Calcula el área del triángulo.\n\nFórmula: Área = (base × altura) ÷ 2\n\n¡No olvides dividir entre 2!':
+      'Fórmula: (base × altura) / 2.\n\nL\'altura és perpendicular a la base.\n\nExemple: base 6, altura 4 → A = 6×4/2 = 12 cm².',
+  'En la vida: calcular el área de un tejado o un panel solar triangular.':
+      'A la vida: mesurar una parcel·la triangular, àrea d\'una teulada.',
+  'Calcula el área o el perímetro del círculo.\n\nUsa π ≈ 3,14.\n\n• Perímetro (circunferencia) = 2 × π × radio\n• Área = π × radio²\n\nNo las confundas: el perímetro mide el borde, el área mide el interior.':
+      'Amb el radi (r):\n\n• Perímetre (circumferència): P = 2 × π × r.\n• Àrea: A = π × r².\n\nπ ≈ 3,14.\n\nExemple: r = 5 cm → P = 2×3,14×5 = 31,4 cm; A = 3,14×25 = 78,5 cm².',
+  'En la vida: calcular la superficie de una mesa redonda o su borde.':
+      'A la vida: àrea d\'una pizza circular, rodes.',
+  'Calcula el volumen de la caja.\n\nFórmula: Volumen = largo × ancho × alto\n\nNo lo confundas con el área superficial (que suma todas las caras).':
+      'Fórmula: longitud × amplada × altura.\n\nExemple: 3 × 4 × 5 = 60 cm³.\n\nCompte: no confondre amb l\'àrea (2(la+lh+ah)).',
+  'En la vida: cuántos litros caben en una pecera o una caja.':
+      'A la vida: capacitat d\'una caixa, aigua d\'un aquari.',
+  '¿La figura es simétrica respecto al eje marcado?\n\nUna figura es simétrica si al doblarla por el eje, las dos mitades coinciden exactamente.\n\nImagina un espejo en la línea. ¿El reflejo sería idéntico?':
+      'Una figura té un eix simètric? (SÍ/NO).\n\nSi a totes dues bandes de l\'eix hi ha parts iguals, és simètrica.\n\nExemples:\n• Quadrat: té eixos horitzontal, vertical i diagonals.\n• La lletra T: només vertical.\n• La lletra R: cap.',
+  'En la vida: reconocer formas simétricas en la naturaleza y el arte.':
+      'A la vida: arquitectura, patrons de la natura (papallones, fulles).',
+  'Lee el valor en el gráfico de barras.\n\nMira la altura de la barra señalada y compárala con los números del eje vertical.\nSi te piden el total, suma todas las barras.':
+      'Cada barra correspon a un valor segons la seva alçada.\n\nDos tipus de pregunta:\n• Llegir el valor d\'una barra concreta.\n• Calcular el total de totes.\n\nLlegeix l\'escala de l\'eix Y amb cura.',
+  'En la vida: leer datos en periódicos, informes y estadísticas.':
+      'A la vida: pressupostos, estadístiques esportives, clima.',
+  'Lee el porcentaje de la porción señalada.\n\nEl círculo entero representa el 100%. Cada porción es una parte.\nFíjate en el tamaño de la porción respecto al círculo completo.':
+      'El cercle sencer és el 100 %. Cada tros representa un percentatge.\n\nPregunta: quin % representa el tros destacat.\n\nA cop d\'ull: tros més gran > 50 %, més petit < 25 %…',
+  'En la vida: entender porcentajes visuales en encuestas y resultados.':
+      'A la vida: resultats electorals, repartiment de votacions.',
+  'Calcula la media de los números.\n\nFórmula: (suma de todos los números) ÷ (cantidad de números)\n\n1. Suma todos los números.\n2. Divide entre cuántos números hay.':
+      'Suma de tots els nombres dividida pel nombre de nombres.\n\nExemple: 4, 6, 8 → suma 18, tres nombres → 18/3 = 6.',
+  'En la vida: calcular la nota media o el gasto promedio por día.':
+      'A la vida: mitjana de notes, velocitat mitjana d\'un viatge.',
+  'Calcula la moda o la mediana.\n\n• Moda: el número que más se repite.\n• Mediana: ordena los números y elige el del centro. Si hay dos, haz la media.':
+      '• MODA: el valor que es repeteix més.\n• MEDIANA: el valor central de tots els valors ordenats.\n\nExemple: 2, 3, 3, 5, 7 → moda 3, mediana 3.\nSi el nombre de valors és parell, la mediana és la mitjana dels dos centrals.',
+  'En la vida: entender qué talla es la más común (moda) o el salario típico (mediana).':
+      'A la vida: respostes més freqüents en enquestes, sous típics.',
+  'Calcula la probabilidad como fracción.\n\nFórmula: P = (casos favorables) / (casos totales)\n\nEjemplo: en una bolsa con 3 bolas rojas y 5 azules,\nP(roja) = 3/8. Simplifica si puedes.':
+      'Possibilitat que passi un fet.\n\nFórmula: casos favorables / casos possibles.\n\nExemple: amb una moneda: P(cara) = 1/2.\nTreure un 6 amb un dau: P(6) = 1/6.',
+  'En la vida: calcular la probabilidad de que llueva o de ganar un juego.':
+      'A la vida: en jocs, en prediccions del temps.',
+  'Convierte la probabilidad de fracción a porcentaje.\n\nFórmula: (numerador ÷ denominador) × 100\n\nEjemplo: P = 3/4 → (3÷4)×100 = 0,75×100 = 75%.':
+      'Després d\'expressar la probabilitat com a fracció, convertir-la a decimal i percentatge.\n\nExemple: P = 1/4 = 0,25 = 25 %.\nP = 3/10 = 0,3 = 30 %.',
+  'En la vida: expresar "3 de cada 4" como 75% de probabilidad.':
+      'A la vida: probabilitat de pluja del temps en percentatge.',
+  'Suma los dos números.\n\nSi necesitas, puedes usar los dedos o hacer la suma en tu cabeza.\nEs la operación más básica. Tómate tu tiempo.':
+      'Suma de dos nombres.\n\nTruc ràpid: descompon els nombres en desenes i unitats.\n  27 + 35 = (20 + 30) + (7 + 5) = 50 + 12 = 62.',
+  'En la vida: contar dinero, sumar objetos, calcular el total de una compra pequeña.':
+      'A la vida: comptes ràpids de compres, sumar temps.',
+  'Encuentra el valor de x.\n\nPara despejar x, pasa los números al otro lado del signo =:\n  • si están sumando → pasan restando\n  • si están restando → pasan sumando\n  • si están multiplicando → pasan dividiendo\n\nEjemplo: x + 5 = 12 → x = 12 - 5 → x = 7.':
+      'Troba x en una igualtat.\n\nForma: a×x + b = c → x = (c − b) / a.\nExemple: 3x + 5 = 14 → 3x = 9 → x = 3.\n\nRecorda: el que travessa el = canvia de signe.',
+  'En la vida: calcular cuánto tiempo falta para ahorrar suficiente dinero.':
+      'A la vida: resoldre una incògnita (quants en necessito?).',
+  'Calcula la potencia.\n\naⁿ = a × a × a … (n veces)\n\nEjemplo: 2³ = 2 × 2 × 2 = 8.\n\n¡Cuidado! No multipliques base × exponente (2³ ≠ 2×3).':
+      'L\'expressió a^b vol dir multiplicar a per ell mateix b vegades.\n\nExemple: 2³ = 2×2×2 = 8.\n5² = 5×5 = 25.\n\nCompte: 2³ NO és 2×3 = 6. Aquest és un error típic.',
+  'En la vida: calcular áreas (3² = 9) o crecimiento exponencial (doblar cada día).':
+      'A la vida: àrees (m²), volums (m³), informàtica (bits, bytes).',
+  'Calcula la raíz cuadrada.\n\n√x es el número que multiplicado por sí mismo da x.\n\nEjemplo: √25 = 5 porque 5 × 5 = 25.\n\nPista: aprende los cuadrados perfectos (1, 4, 9, 16, 25, 36…).':
+      '√n: quin nombre multiplicat per si mateix dona n?\n\nExemples:\n  √16 = 4 (4×4 = 16)\n  √25 = 5 (5×5 = 25)\n  √49 = 7 (7×7 = 49)\n\nMemoritza les primeres arrels quadrades del √1 al √100.',
+  'En la vida: calcular el lado de un cuadrado a partir de su área.':
+      'A la vida: el costat d\'un quadrat a partir de la seva àrea.',
+  'En un triángulo rectángulo:\n\nhipotenusa² = cateto₁² + cateto₂²\n\nIdentifica primero la hipotenusa (el lado más largo, frente al ángulo recto).\nDespués aplica la fórmula.':
+      'En un triangle rectangle: a² + b² = c²\n\n(a i b són els catets; c la hipotenusa).\n\nExemple: a=3, b=4 → c² = 9+16 = 25 → c = 5.\nTernes conegudes: (3,4,5), (5,12,13), (8,15,17).',
+  'En la vida: calcular la altura de una escalera apoyada en la pared.':
+      'A la vida: calcular distàncies, la longitud d\'una escala.',
+  'La x aparece a los dos lados del signo =. Para despejarla, junta todas las x en un lado y todos los números en el otro.\n\nRegla de oro: lo que cruza el = cambia de papel. Lo que estaba sumando cruza restando. Lo que multiplicaba cruza dividiendo. Y al revés.\n\nPasos, con ejemplo:  3x + 2 = x + 8\n\n  1) Cruza la x de la derecha al lado izquierdo (entra como −x).\n     3x − x + 2 = 8 → 2x + 2 = 8.\n\n  2) Cruza el +2 al lado derecho (entra como −2).\n     2x = 8 − 2 → 2x = 6.\n\n  3) El 2 está multiplicando a x: cruza dividiendo.\n     x = 6 ÷ 2 = 3.\n\nComprueba: 3·3 + 2 = 11 y 3 + 8 = 11. ¡Coincide!':
+      'La x apareix als dos costats del signe =. Per aïllar-la, ajunta totes les x a un costat i tots els nombres a l\'altre.\n\nRegla d\'or: el que travessa el = canvia de paper. El que sumava entra restant. El que multiplicava entra dividint. I a l\'inrevés.\n\nPassos, amb exemple:  3x + 2 = x + 8\n\n  1) Travessa la x de la dreta cap a l\'esquerra (entra com a −x).\n     3x − x + 2 = 8 → 2x + 2 = 8.\n\n  2) Travessa el +2 cap a la dreta (entra com a −2).\n     2x = 8 − 2 → 2x = 6.\n\n  3) El 2 multiplica la x: travessa dividint.\n     x = 6 ÷ 2 = 3.\n\nComprova: 3·3 + 2 = 11 i 3 + 8 = 11. Coincideix!',
+  'En la vida: problemas donde una cantidad aparece dos veces, como comparar tu edad con la de alguien de tu familia.':
+      'A la vida: problemes on una quantitat apareix dues vegades, com comparar la teva edat amb la d\'algú de la família.',
+  'Opera con números enteros que pueden tener signo negativo.\n\nRecuerda: -(-3) = +3  y  -3 × -2 = +6\n          -3 + (-2) = -5  y  -3 - (-2) = -1\n\nDos negativos seguidos se convierten en positivo.':
+      'Nombres amb signe: positius (+) i negatius (−).\n\nSuma i resta:\n  +3 + (+2) = +5\n  +3 + (−2) = +1\n  −3 + (−2) = −5\n\nMateix signe: suma els valors i mantén el signe.\nSignes diferents: resta els valors i pren el signe del més gran.',
+  'En la vida: temperaturas bajo cero, deber dinero, profundidad marina.':
+      'A la vida: temperatures (−5 °C), deutes (−10 €), sobre/sota el nivell del mar.',
+  'El valor absoluto de un número es su distancia hasta el 0.\n\n|5| = 5 y |-5| = 5 — ambos están a 5 unidades del 0.\n\nEl valor absoluto siempre es positivo o cero.':
+      'El valor absolut d\'un nombre és la seva distància al zero; sempre positiva.\n\nExemples:\n  |5| = 5\n  |−5| = 5\n  |0| = 0\n\nNotació: |x|.',
+  'En la vida: medir distancia entre dos puntos (da igual la dirección).':
+      'A la vida: diferència entre dues temperatures, distàncies.',
+  'Dos ecuaciones con dos incógnitas (x e y) que se cumplen a la vez. La pareja (x, y) que las satisface las dos es la solución del sistema.\n\nMétodo de sustitución, paso a paso:\n  1) Coge la ecuación más sencilla y despeja una incógnita.\n  2) Sustituye su valor en la otra ecuación.\n  3) Resuelve esa ecuación, que ahora solo tiene una incógnita.\n  4) Vuelve atrás con ese valor y calcula la otra.\n\nEjemplo:\n   x + y = 7\n   x − y = 1\n\n  De la 1.ª despejo:  x = 7 − y.\n  Sustituyo en la 2.ª:  (7 − y) − y = 1 → 7 − 2y = 1 → y = 3.\n  Vuelvo:  x = 7 − 3 = 4.\n  Solución: x = 4, y = 3.':
+      'Dues equacions amb dues incògnites (x i y), que es compleixen alhora. La parella (x, y) que les satisfà totes dues és la solució del sistema.\n\nMètode de substitució, pas a pas:\n  1) Agafa l\'equació més senzilla i aïlla una incògnita.\n  2) Substitueix el seu valor a l\'altra equació.\n  3) Resol aquesta equació, que ara només té una incògnita.\n  4) Torna enrere amb aquest valor i calcula l\'altra.\n\nExemple:\n   x + y = 7\n   x − y = 1\n\n  De la primera aïllo:  x = 7 − y.\n  Substitueixo a la segona:  (7 − y) − y = 1 → 7 − 2y = 1 → y = 3.\n  Torno:  x = 7 − 3 = 4.\n  Solució: x = 4, y = 3.',
+  'En la vida: dos manzanas y una naranja cuestan 5 €; una manzana y una naranja cuestan 3 €. ¿Cuánto vale cada fruta?':
+      'A la vida: dues pomes i una taronja costen 5 €; una poma i una taronja costen 3 €. Quant val cada fruita?',
+  'Verás una tabla con pares (x, y). Tu trabajo es encontrar la regla que dice cómo se obtiene cada y a partir de su x.\n\nLa regla siempre tiene la forma:  y = m·x + n.\n\nPara descubrirla:\n  1) Cuánto sube y cuando x sube de 1 en 1. Eso es m.\n     Mira dos filas seguidas: m = (y₂ − y₁) ÷ (x₂ − x₁).\n  2) Cuánto vale y cuando x = 0. Eso es n.\n     Si esa fila no aparece, despeja con cualquier fila:\n     n = y − m·x.\n\nAntes de elegir, prueba la regla con otra fila de la tabla.':
+      'Veuràs una taula amb parelles (x, y). La teva feina és trobar la regla que diu com s\'obté cada y a partir de la seva x.\n\nLa regla sempre té la forma:  y = m·x + n.\n\nPer descobrir-la:\n  1) Quant puja y quan x puja d\'1 en 1. Això és m.\n     Mira dues files seguides: m = (y₂ − y₁) ÷ (x₂ − x₁).\n  2) Quant val y quan x = 0. Això és n.\n     Si aquesta fila no apareix, aïlla amb qualsevol fila:\n     n = y − m·x.\n\nAbans de triar, prova la regla amb una altra fila de la taula.',
+  'En la vida: la factura de la luz — n es la cuota fija que pagas cada mes, m es lo que cuesta cada kWh consumido.':
+      'A la vida: la factura de la llum — n és la quota fixa que pagues cada mes, m el que costa cada kWh consumit.',
 };

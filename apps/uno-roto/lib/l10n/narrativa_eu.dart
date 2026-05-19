@@ -1391,4 +1391,265 @@ const Map<String, String> narrativaEu = <String, String>{
   'cerrar': 'itxi',
   // SnackBar tras captura con fallos: "+5 (de 10 posibles)"
   'posibles': 'posiblean',
+
+  // ═══ AyudaPuzzle: cuerpos largos (texto + transferencia) ═══
+  // Traducción euskera provisional pendiente de revisión nativa.
+  // Si una clave no aparece o se ha modificado, el sistema cae al
+  // castellano sin romper. 64 familias × 2 entradas = 128 strings.
+  'Tienes que dividir el Fragmento en el número de partes que indica.\n\n1. Desliza el dedo para cortar.\n2. Cada corte debe hacer partes del mismo tamaño.\n3. Cuando tengas el número exacto de partes, el Fragmento se deshace.\n\nCuanto más preciso seas, mejor.':
+      'Zatia adierazitako zati kopuruan banatu behar duzu.\n\n1. Lerratu hatza moztu ahal izateko.\n2. Moztu bakoitzak tamaina bereko zatiak egin behar ditu.\n3. Zati kopuru zehatza lortzen duzunean, Zatia desegingo da.\n\nZehatzago izan, hobeto.',
+  'En la vida: repartir una pizza, una tarta o cualquier cosa en partes iguales.':
+      'Bizitzan: pizza, tarta edo edozer zati berdinetan banatu.',
+  'Tienes dos fracciones y tienes que tocar la mayor.\n\n• Si tienen el MISMO denominador (número de abajo), gana la que tiene el numerador (número de arriba) más grande.\n• Si tienen el MISMO numerador, gana la que tiene el denominador más pequeño (porque los trozos son más grandes).':
+      'Bi zatiki dituzu eta handiena ukitu behar duzu.\n\n• IZENDATZAILE BERA badute (azpiko zenbakia), zenbakitzaile (gaineko zenbakia) handiena duenak irabazten du.\n• ZENBAKITZAILE BERA badute, izendatzaile txikiena duenak irabazten du (zatiak handiagoak baitira).',
+  'En la vida: saber qué oferta es mejor (3/8 de descuento vs 5/12).':
+      'Bizitzan: zein eskaintza den hobea jakitea (3/8 beherapena vs 5/12).',
+  'Dos fracciones sin nada en común. No puedes comparar solo mirando.\n\nMultiplica en cruz:\n  a/b  ?  c/d  →  a×d  ?  c×b\nEl lado donde el producto sea mayor, esa fracción es la mayor.\n\nTambién puedes convertir a decimal dividiendo numerador entre denominador.':
+      'Ezer komunean ez duten bi zatiki. Begira soilik ezin duzu konparatu.\n\nGurutzatuta biderkatu:\n  a/b  ?  c/d  →  a×d  ?  c×b\nBiderkadura handiena duen aldea, zatiki hori da handiena.\n\nZatiki batetik hamartar batera ere bihur dezakezu, zenbakitzailea izendatzailearen artean zatituz.',
+  'En la vida: comparar ofertas con formatos distintos, o repartos diferentes.':
+      'Bizitzan: formatu desberdineko eskaintzak edo banaketa desberdinak konparatu.',
+  'Tienes dos decimales y tienes que tocar el mayor.\n\nCuidado: más cifras NO significa más grande.\n  0,35 NO es mayor que 0,4 (0,4 = 0,40).\n\nCompara cifra a cifra empezando por la izquierda: décimas, centésimas…':
+      'Bi hamartar dituzu eta handiena ukitu behar duzu.\n\nKontuz: zifra gehiagok EZ du esan nahi handiagoa.\n  0,35 EZ da 0,4 baino handiagoa (0,4 = 0,40).\n\nKonparatu zifraz zifra ezkerretik hasita: hamarrenak, ehunenak…',
+  'En la vida: comparar precios (0,35 €/kg vs 0,4 €/kg). Más cifras no es más caro.':
+      'Bizitzan: prezioak konparatu (0,35 €/kg vs 0,4 €/kg). Zifra gehiago ez da garestiagoa.',
+  '¿La fracción es menor, igual o mayor que 1?\n\n• numerador < denominador → la fracción es menor que 1 (propia)\n• numerador = denominador → la fracción es igual a 1\n• numerador > denominador → la fracción es mayor que 1 (impropia)':
+      'Zatikia 1 baino txikiagoa, berdina ala handiagoa al da?\n\n• zenbakitzailea < izendatzailea → zatikia 1 baino txikiagoa da (propioa)\n• zenbakitzailea = izendatzailea → zatikia 1 da\n• zenbakitzailea > izendatzailea → zatikia 1 baino handiagoa da (irregularra)',
+  'En la vida: saber si has comido más de una pizza entera o menos.':
+      'Bizitzan: pizza oso bat baino gehiago jan duzun ala gutxiago jakitea.',
+  'Verás una fracción y tres botones: <1/2, =1/2, >1/2.\n\nTruco: una fracción vale 1/2 cuando el denominador es el doble del numerador (2/4, 3/6, 5/10…). Desde ahí:\n\n  • Dobla el numerador y compáralo con el denominador.\n  • Si NO llega al denominador → la fracción es MENOR que 1/2.\n    Ejemplo: 4/9 → doble de 4 = 8, no llega a 9 → 4/9 < 1/2.\n\n  • Si da justo el denominador → IGUAL a 1/2.\n    Ejemplo: 3/6 → doble de 3 = 6 → 3/6 = 1/2.\n\n  • Si se pasa del denominador → MAYOR que 1/2.\n    Ejemplo: 5/9 → doble de 5 = 10, mayor que 9 → 5/9 > 1/2.':
+      'Zatiki bat eta hiru botoi ikusiko dituzu: <1/2, =1/2, >1/2.\n\nTrukoa: zatiki batek 1/2 balio du izendatzailea zenbakitzailearen bikoitza denean (2/4, 3/6, 5/10…). Hortik:\n\n  • Bikoiztu zenbakitzailea eta izendatzailearekin konparatu.\n  • Izendatzailera EZ badira iristen → zatikia 1/2 baino TXIKIAGOA da.\n    Adibidea: 4/9 → 4ren bikoitza = 8, ez da 9ra iristen → 4/9 < 1/2.\n\n  • Izendatzailea zehazki ematen badu → 1/2ren BERDINA.\n    Adibidea: 3/6 → 3ren bikoitza = 6 → 3/6 = 1/2.\n\n  • Izendatzailetik pasatzen bada → 1/2 baino HANDIAGOA.\n    Adibidea: 5/9 → 5en bikoitza = 10, 9 baino handiagoa → 5/9 > 1/2.',
+  'En la vida: estimar de un vistazo si un vaso o un depósito está más de la mitad lleno, sin medir.':
+      'Bizitzan: edalontzi edo upel bat erditik gora dagoen ala ez begi kolpe batean igartzea, neurtu gabe.',
+  'Elige la fracción que vale lo mismo que la que ves.\n\nDos fracciones son equivalentes cuando representan la misma cantidad.\n\nPara comprobarlo, multiplica en cruz: a/b = c/d si a×d = c×b.\nPara encontrar una equivalente, multiplica o divide numerador y denominador por el mismo número.':
+      'Aukeratu ikusten duzun zatikiaren balio bera duen zatikia.\n\nBi zatiki baliokideak dira kantitate bera adierazten dutenean.\n\nEgiaztatzeko, gurutzatuta biderkatu: a/b = c/d baldin eta a×d = c×b.\nBaliokide bat aurkitzeko, biderkatu edo zatitu zenbakitzailea eta izendatzailea zenbaki beraren bidez.',
+  'En la vida: repartir lo mismo de formas distintas (2/4 de pizza = 1/2).':
+      'Bizitzan: gauza bera modu desberdinetan banatu (pizzaren 2/4 = 1/2).',
+  'Reduce la fracción a su forma más simple.\n\nPara simplificar, divide numerador y denominador entre el mismo número (el MCD).\n\nEjemplo: 6/8 → divide entre 2 → 3/4.\n6/8 y 3/4 valen lo mismo, pero 3/4 es la forma más simple.':
+      'Murriztu zatikia bere forma errazenera.\n\nSinplifikatzeko, zatitu zenbakitzailea eta izendatzailea zenbaki beraren bidez (ZKH).\n\nAdibidea: 6/8 → 2z zatitu → 3/4.\n6/8 eta 3/4 balio bera dute, baina 3/4 da forma errazena.',
+  'En la vida: expresar medidas de la forma más simple (4/8 → 1/2).':
+      'Bizitzan: neurriak forma errazenean adierazi (4/8 → 1/2).',
+  'Completa el número que falta: a/b = ?/c.\n\nPara amplificar, multiplica numerador y denominador por el mismo número.\n\nEjemplo: 3/4 = ?/12 → 4×3 = 12, así que 3×3 = 9 → 3/4 = 9/12.':
+      'Amplifikatu zatikia eskatzen den izendatzailera.\n\nZatikia berdina mantentzeko, biderkatu BIAK (zenbakitzailea eta izendatzailea) zenbaki beraren bidez.\n\nAdibidea: 3/4 = ?/12 → izendatzailea ×3 → zenbakitzailea ere ×3 → 9/12.',
+  'En la vida: adaptar una receta para más comensales manteniendo proporciones.':
+      'Bizitzan: errezeta gehiagorako neurriak handitu, proportzioa mantenduz.',
+  'Elige el decimal que equivale a la fracción.\n\nPara convertir una fracción a decimal, divide el numerador entre el denominador.\n\nEjemplo: 3/4 = 3 ÷ 4 = 0,75.':
+      'Zatikiari dagokion hamartarra hautatu.\n\nZatitu zenbakitzailea izendatzailearen artean:\n  1/2 = 0,5\n  1/4 = 0,25\n  3/4 = 0,75\n  1/5 = 0,2\n\nMemorizatu erabilienak; behin eta berriz agertuko zaizkizu.',
+  'En la vida: convertir 3/4 de hora en 0,75 h para calcular tiempo total.':
+      'Bizitzan: kalkulagailuko hamartarrak ulertzea, prezioak, neurriak.',
+  'Elige el porcentaje que equivale a la fracción.\n\nUn porcentaje es una fracción con denominador 100.\nPara convertir: multiplica la fracción por 100.\n\nEjemplo: 3/4 = 3÷4 = 0,75 → 0,75×100 = 75%.':
+      'Zatikiari dagokion ehunekoa aukeratu.\n\nLehenik hamartarra bilatu (zenbakitzailea/izendatzailea) eta 100ez biderkatu:\n  1/2 = 0,5 = 50 %\n  1/4 = 0,25 = 25 %\n  3/4 = 0,75 = 75 %\n  1/5 = 0,2 = 20 %',
+  'En la vida: entender que 3/4 = 75% en un examen, un descuento o una encuesta.':
+      'Bizitzan: beherapenak ulertu, ehunekoetan emandako emaitzak.',
+  'Mira qué operador hay entre las dos fracciones y aplica la regla correspondiente.\n\n• SUMA o RESTA (a/b + c/d):\n    1) Iguala los denominadores buscando el MCM.\n    2) Suma o resta los numeradores; el denominador no cambia.\n    Ejemplo: 1/2 + 1/4 → 2/4 + 1/4 = 3/4.\n\n• MULTIPLICACIÓN (a/b × c/d):\n    Multiplica numerador × numerador y denominador × denominador.\n    Ejemplo: 2/3 × 4/5 = 8/15.\n\n• DIVISIÓN (a/b ÷ c/d):\n    Invierte la segunda fracción y multiplica.\n    Ejemplo: 2/3 ÷ 4/5 = 2/3 × 5/4 = 10/12 = 5/6.\n\nSimplifica el resultado siempre que puedas.':
+      'Begiratu bi zatikien arteko eragiketa eta dagokion erregela aplikatu.\n\n• BATUKETA edo KENKETA (a/b + c/d):\n    1) Berdindu izendatzaileak MKT bilatuz.\n    2) Batu edo kendu zenbakitzaileak; izendatzailea ez da aldatzen.\n    Adibidea: 1/2 + 1/4 → 2/4 + 1/4 = 3/4.\n\n• BIDERKETA (a/b × c/d):\n    Biderkatu zenbakitzailea × zenbakitzailea eta izendatzailea × izendatzailea.\n    Adibidea: 2/3 × 4/5 = 8/15.\n\n• ZATIKETA (a/b ÷ c/d):\n    Alderantzikatu bigarren zatikia eta biderkatu.\n    Adibidea: 2/3 ÷ 4/5 = 2/3 × 5/4 = 10/12 = 5/6.\n\nEmaitza beti sinplifikatu ahal duzunean.',
+  'En la vida: sumar ingredientes en cocina (1/2 taza + 1/4 taza = 3/4 taza).':
+      'Bizitzan: sukaldean osagaiak batu (1/2 katilukada + 1/4 katilukada = 3/4 katilukada).',
+  'Calcula el resultado de la operación con decimales.\n\n• SUMA y RESTA: alinea las comas decimales y suma o resta cifra a cifra.\n• MULTIPLICACIÓN: multiplica sin comas y después coloca la coma (tantos decimales como entre los dos factores).\n• DIVISIÓN: desplaza la coma para que el divisor sea entero.':
+      'Egin eragiketa hamartarren artean.\n\n• BATUKETA/KENKETA: lerrokatu komak eta eragin.\n  2,5 + 1,75:\n     2,50\n   + 1,75\n   ─────\n     4,25\n\n• BIDERKETA: biderkatu komak kontuan hartu gabe; gero, jarri komak adina hamarren bi zenbakietan zituzten guztiak.\n  2,5 × 1,4 = 25 × 14 = 350 → 3,50 (1+1 hamarren).\n\n• ZATIKETA: biderkatu biak komak ezabatzeko, ondoren zatitu osokoak.',
+  'En la vida: calcular el total de la compra (1,25 € + 3,80 €).':
+      'Bizitzan: prezioak gehitu, deskontuak kalkulatu, neurriak banatu.',
+  'Calcula respetando la prioridad de las operaciones.\n\n1. Primero las multiplicaciones (×) y divisiones (÷).\n2. Después las sumas (+) y restas (−).\n\nNo operes de izquierda a derecha sin respetar la jerarquía, ¡es la trampa!':
+      'Eragiketa konplexu batean, hurrenkera dauka:\n\n1. Parentesiak ( )\n2. Berreduratak (² ³) eta erroak\n3. Biderketa × eta zatiketa ÷\n4. Batuketa + eta kenketa −\n\nMaila berean, ezkerretik eskuinera.\n\nAdibidea: 2 + 3 × 4 = 2 + 12 = 14 (EZ 5 × 4 = 20).',
+  'En la vida: calcular 2 + 3 × 4 en una factura (× va antes que +).':
+      'Bizitzan: kalkulagailu zientifikoa ulertu, formulak ondo aplikatu.',
+  'Igual que la jerarquía normal, pero con fracciones.\n\n1. Primero multiplica y divide las fracciones.\n2. Después suma y resta, igualando denominadores cuando haga falta.\n\nRecuerda simplificar el resultado si puedes.':
+      'Hierarkia bera, baina zatikiekin.\n\n1/2 + 1/4 × 2/3 ezagutzeko:\n  1) Lehenik biderketa: 1/4 × 2/3 = 2/12 = 1/6.\n  2) Ondoren batuketa: 1/2 + 1/6 = 3/6 + 1/6 = 4/6 = 2/3.\n\nGogoratu: × eta ÷ + eta − baino lehen.',
+  'En la vida: cálculos mixtos con ingredientes y medidas en cocina.':
+      'Bizitzan: errezetak doitu, errezeta osoetan zati gehiago kalkulatu.',
+  'Operación que mezcla un decimal y una fracción.\n\nConvierte la fracción a decimal (numerador ÷ denominador) y después opera.\n\nO al revés: convierte el decimal a fracción y opera con fracciones.\n\nElige el camino que te resulte más fácil.':
+      'Zenbaki hamartar eta zatiki bat batera dituzunean, biak formatu berera ekarri:\n\n• Zatikia hamartarrera (zenbakitzailea izendatzailearen artean zatitu).\n• Edo hamartarrak zatikira.\n\nEragin gero, formatu berean.\n\nAdibidea: 0,5 + 1/4 = 0,5 + 0,25 = 0,75.',
+  'En la vida: combinar medidas en distintos formatos (0,5 L + 1/4 L).':
+      'Bizitzan: prezioak (€ hamartar) eta tarta zatiak konbinatu.',
+  '¿El número se puede dividir exactamente?\n\n• Un número es divisible entre 2 si termina en 0 o cifra par.\n• Entre 3 si la suma de sus cifras es múltiplo de 3.\n• Entre 5 si termina en 0 o 5.\n• Entre 10 si termina en 0.\n\nSi la división da exacta (resto 0), es divisible.':
+      'Zenbaki bat beste batez zatigarria al den erabaki behar duzu (BAI/EZ).\n\nIrizpideak:\n  • 2ren: bukaeran 0,2,4,6,8\n  • 3ren: zifren batuketa 3ren multiploa\n  • 5en: bukaeran 0 ala 5\n  • 9ren: zifren batuketa 9ren multiploa\n  • 10en: bukaeran 0',
+  'En la vida: saber si puedes repartir algo en grupos iguales sin que sobre nada.':
+      'Bizitzan: 12 gozoki 3 lagun artean berdin banatu al daitezke jakitea.',
+  '¿Un número es múltiplo de otro?\n\nUn número es múltiplo de otro si se puede dividir exactamente entre él.\n\nEjemplo: 15 es múltiplo de 3 porque 15÷3 = 5 exacto.\n         15 NO es múltiplo de 4 porque 15÷4 no da exacto.':
+      'N zenbakia M-ren multiploa al den erabaki behar duzu.\n\nM-ren multiploak hauek dira: M, 2×M, 3×M, 4×M…\nAdibidea: 6ren multiploak: 6, 12, 18, 24, 30…\n\nTrukoa: N zatitu M-ren artean. Hondarrik ez badago, multiploa da.',
+  'En la vida: calcular cuándo coinciden dos eventos (cada 3 y cada 4 días).':
+      'Bizitzan: 30 minuturo aparkalekuaren erloju digitala — zer ordutan amaituko da?',
+  'Tres números son divisores. El cuarto es el intruso: no lo es.\n\nUn divisor de N es un número que divide a N exactamente (resto 0).\n\nComprueba cada candidato haciendo la división mental. El que no encaja es el intruso.':
+      'Zenbaki handi bat eta lau hautagai dituzu; hiru benetako zatitzaileak dira eta bat ez. Ez dena ukitu.\n\nZatitzaileak: N zehatz-mehatz zatitzen duten zenbakiak.\nAdibidea: 12ren zatitzaileak: 1, 2, 3, 4, 6, 12. 5 ez da zatitzailea.',
+  'En la vida: repartir equitativamente entre varias personas sin que sobre nada.':
+      'Bizitzan: 24 ikasle taldetan banatu, taldekide kopuru bera izanik.',
+  '¿El número es primo?\n\nUn número primo solo se puede dividir exactamente entre 1 y entre sí mismo.\n\nImportante: 1 NO es primo (solo tiene un divisor).\n2 es el único número primo par.':
+      'Erabaki zenbaki bat lehena al den (BAI/EZ).\n\nLehena: bi zatitzaile baino ez ditu: 1 eta bera.\nAdibideak: 2, 3, 5, 7, 11, 13, 17, 19…\n\nKontuz:\n  • 1 EZ da lehena.\n  • 2 lehen bakarra da bikoitia.\n  • 9 = 3×3, EZ da lehena.',
+  'En la vida: conceptos básicos de cifrado y seguridad digital.':
+      'Bizitzan: kriptografia eta zenbaki seguruen oinarria.',
+  'Verás dos números y cuatro candidatos. Fíjate primero en si la pantalla pide MCM o MCD: son cosas distintas.\n\n• MCM (mínimo común múltiplo) = el primer número que aparece en las dos tablas de multiplicar.\n    Ejemplo (4 y 6):\n      Tabla del 4 → 4, 8, 12, 16, 20…\n      Tabla del 6 → 6, 12, 18, 24…\n      El primero que se repite es 12. MCM(4, 6) = 12.\n\n• MCD (máximo común divisor) = el número más grande que divide a los dos exactamente.\n    Ejemplo (12 y 18):\n      Divisores de 12 → 1, 2, 3, 4, 6, 12\n      Divisores de 18 → 1, 2, 3, 6, 9, 18\n      El mayor común es 6. MCD(12, 18) = 6.\n\nTruco para no confundirlos: MCM siempre es igual o mayor que los dos números; MCD siempre es igual o menor.':
+      'Bi zenbaki eta lau hautagai ikusiko dituzu. Lehenik begiratu ea pantailak MKT ala ZKH eskatzen duen: gauza desberdinak dira.\n\n• MKT (multiplo komun txikiena) = bi biderketa-tauletan agertzen den lehen zenbakia.\n    Adibidea (4 eta 6):\n      4ren taula → 4, 8, 12, 16, 20…\n      6ren taula → 6, 12, 18, 24…\n      Errepikatzen den lehena 12 da. MKT(4, 6) = 12.\n\n• ZKH (zatitzaile komun handiena) = biak zehazki zatitzen dituen zenbakirik handiena.\n    Adibidea (12 eta 18):\n      12ren zatitzaileak → 1, 2, 3, 4, 6, 12\n      18ren zatitzaileak → 1, 2, 3, 6, 9, 18\n      Komuna handiena 6 da. ZKH(12, 18) = 6.\n\nNahasi ez izateko trukoa: MKT beti bi zenbaki baino berdina edo handiagoa; ZKH beti berdina edo txikiagoa.',
+  'En la vida: dos campanas que suenan cada 6 y cada 8 minutos coinciden por primera vez al cabo de MCM(6, 8) = 24 minutos.':
+      'Bizitzan: 6 eta 8 minuturo jotzen duten bi kanpaiak lehen aldiz MKT(6, 8) = 24 minuturen ondoren bat etortzen dira.',
+  'Calcula el porcentaje de una cantidad.\n\nFórmula: (porcentaje × cantidad) ÷ 100\n\nEjemplo: el 25% de 80 = (25 × 80) ÷ 100 = 2000 ÷ 100 = 20.':
+      'Kantitate baten ehunekoa kalkulatu.\n\nFormulea: % × kantitatea / 100\nAdibidea: 80ren % 25 = 25 × 80 / 100 = 2000 / 100 = 20.\n\nTrukoa: 50 % = erdia; 25 % = laurdena; 10 % = hamarrena.',
+  'En la vida: calcular el 15% de propina o el 21% de IVA.':
+      'Bizitzan: beherapenak kalkulatu, BEZa eta abar.',
+  'Una cantidad es ¿qué porcentaje del total?\n\nFórmula: (parte ÷ total) × 100\n\nEjemplo: 12 de 50 → (12 ÷ 50) × 100 = 0,24 × 100 = 24%.':
+      'Aurrekoaren alderantzia: zatia eta osoa dituzu, ehunekoa nahi duzu.\n\nFormulea: (zatia / osoa) × 100\nAdibidea: 50etik 12 → (12/50) × 100 = 24 %.',
+  'En la vida: saber qué nota sacaste (12/14 → 85%).':
+      'Bizitzan: zenbat lortu duzun proportzioan ehunekotan jakitea (12/50 = 24 %).',
+  'Calcula el resultado tras aplicar un aumento o descuento porcentual.\n\n1. Calcula el porcentaje de la cantidad.\n2. Si es aumento → suma el resultado.\n   Si es descuento → resta el resultado.\n\nEjemplo: aumenta un 15% sobre 200 → 15% de 200 = 30 → 200+30 = 230.':
+      'Kantitate bati ehuneko bat gehitu edo kendu.\n\n• Gehitu: kantitatea + (% × kantitatea / 100).\n  200i % 15 gehitu = 200 + 30 = 230.\n• Kendu: kantitatea − (% × kantitatea / 100).\n  80i % 20 kendu = 80 − 16 = 64.',
+  'En la vida: calcular rebajas (20% descuento) o subidas (10% aumento).':
+      'Bizitzan: dendako beherapenak (% 30 kendu) edo BEZa gehitu.',
+  'Completa la proporción: a:b = c:?\n\nDos ratios son proporcionales si el factor de escala es el mismo.\nPara encontrar el valor que falta: multiplica o divide por el mismo número ambos términos.':
+      'Bi magnituderen artean erlazio konstante bat dago.\n\nProportzio zuzena: bata gehitzean, bestea ere gehitzen da kopuru bera.\nProportzio alderantzizkoa: bata gehitzean, bestea txikitu.\n\nAdibidea: 3 sagar 2€ badira, 6 sagar 4€ izango dira (zuzena).',
+  'En la vida: mantener la misma relación al ampliar una receta o un plano.':
+      'Bizitzan: errezetak bikoiztu, neurri bera mantenduz.',
+  'Si "a → b", entonces "c → ?"\n\nFórmula: ? = (b × c) ÷ a\n\nEjemplo: si 3 kg cuestan 12 €, 5 kg cuestan (12 × 5) ÷ 3 = 60 ÷ 3 = 20 €.':
+      'Proportzio zuzena: a → b · c → ?\n\nFormulea: ? = b × c / a\n\nAdibidea: 3 sagar 2€ badira, 9 sagarrek zenbat balio dute?\n  ? = 2 × 9 / 3 = 18/3 = 6€.',
+  'En la vida: si 3 kg cuestan 12 €, ¿cuánto cuestan 5 kg?':
+      'Bizitzan: erosketak proportzio batekin, ahaztu gabe.',
+  'Elige la razón reducida que relaciona dos cantidades.\n\nUna razón compara dos cantidades. Se reduce dividiendo ambas entre el mismo número (el MCD).\n\nEjemplo: 12 manzanas y 8 naranjas → 12:8 → dividiendo entre 4 → 3:2.':
+      'Bi kantitateren arteko erlazioa, sinplifikatuta a:b moduan.\n\nAdibidea: 12 sagar eta 8 laranja → 12:8 = 3:2 (sinplifikatua).\n\nTrukoa: ZKH bilatu eta biak harekin zatitu.',
+  'En la vida: expresar relaciones (3:2 de manzanas a naranjas en una macedonia).':
+      'Bizitzan: errezeta proportzio batean (3 ur:1 erres), mapa eskala.',
+  'Calcula la fracción de una cantidad.\n\nFórmula: (cantidad ÷ denominador) × numerador\n\nEjemplo: los 3/5 de 25 → (25 ÷ 5) × 3 = 5 × 3 = 15.':
+      'Kantitate baten zatikia kalkulatu.\n\nFormulea: (zenbakitzailea × kantitatea) / izendatzailea\nAdibidea: 25en 3/5 = (3 × 25) / 5 = 75/5 = 15.',
+  'En la vida: calcular los 3/5 de 25 € que te tocan en un reparto.':
+      'Bizitzan: 30 gozokien 2/3 banatu = 20 gozoki.',
+  'Aplica la escala y convierte las unidades.\n\nEscala 1:500 significa que 1 cm en el plano son 500 cm (5 m) en la realidad.\n\n1. Multiplica la medida del plano por el denominador de la escala.\n2. Convierte el resultado a la unidad que te pidan (cm → m ÷ 100).':
+      'Mapa edo plano batean, eskalak adierazten du benetako neurriaren proportzioa.\n\nEskala 1:500 → planoko 1 cm = errealitatean 500 cm = 5 m.\nAdibidea: planoko 4 cm errealean = 4 × 500 = 2000 cm = 20 m.',
+  'En la vida: leer mapas y planos (1 cm en el mapa = 500 cm reales).':
+      'Bizitzan: mapak, planoak, jostailuzko maketak ulertu.',
+  'Lee el texto y elige la fracción correcta.\n\n"Tres quintos" → el numerador es 3 y el denominador es 5 → 3/5.\n\nCuidado: no inviertas numerador y denominador.':
+      'Hitzez emandako zatikia ("hiru bostenak") hautatu zenbakizko adierazpenetan.\n\n• Zenbakitzailea: kardinala (bat, bi, hiru…).\n• Izendatzailea: ordinala (laurden, bosten, seien…).\n\nAdibidea: "hiru bostenak" = 3/5.\nKontuz: "erdiak" = 1/2 ez 2/2.',
+  'En la vida: entender "tres quintos" en una receta o un reparto.':
+      'Bizitzan: errezetan eta hizketako neurriak ulertu.',
+  'Lee el texto y elige el decimal correcto.\n\n"Veinticinco centésimas" → 0,25\n"Tres décimas" → 0,3\n\nCuidado con las cifras: décimas (1 cifra), centésimas (2 cifras).':
+      'Hitzez emandako hamartarra hautatu zenbakizkoetan.\n\n• Hamarrenak: koma osteko lehen zifra.\n• Ehunenak: bigarrena.\n• Milarenak: hirugarrena.\n\nAdibidea: "hogeita bost ehunen" = 0,25.',
+  'En la vida: entender cuando alguien dice "cero coma veinticinco".':
+      'Bizitzan: prezioak ahoz ulertu, lasterketako denborak.',
+  'Redondea el decimal a la décima.\n\nPara redondear a la décima, mira la centésima:\n• Si es 5 o más → la décima sube una.\n• Si es menos de 5 → la décima se queda igual.\n\nEjemplo: 2,37 → la centésima es 7 ≥ 5 → 2,4.':
+      'Hurbildu hamartarra zifra gutxiagora.\n\nHamarrenera biribiltzeko:\n  • Begiratu ehunena.\n  • 0-4 → biribildu behera (hamarrena bere horretan utzi).\n  • 5-9 → biribildu gora (hamarrenari 1 gehitu).\n\nAdibidea: 2,37 → ehunena 7 → biribildu 2,4.',
+  'En la vida: dar un precio aproximado (2,37 € → 2,4 € al redondear).':
+      'Bizitzan: prezioak eta neurriak biribildu, kalkulu azkarrak.',
+  'Ordena los decimales de menor a mayor.\n\nCompara cifra a cifra empezando por la izquierda.\nMás cifras NO significa más grande: 0,35 > 0,4? No, 0,4 = 0,40.':
+      'Hiru hamartar sailkatu txikienetik handienera.\n\nKonparatu zifraz zifra ezkerretik. Kontuz: zifra gehiagok EZ du esan nahi handiagoa.\n\nAdibidea: 0,5 / 0,35 / 0,8 → ordena: 0,35 < 0,5 < 0,8.',
+  'En la vida: ordenar precios de menor a mayor sin confundirte.':
+      'Bizitzan: dendako prezioak ondo sailkatu merkeenetik garestienera.',
+  'Ordena las fracciones de menor a mayor.\n\nConviértelas a decimal (numerador ÷ denominador) para compararlas.\nO multiplica en cruz para ver cuál es mayor.':
+      'Hiru zatiki sailkatu txikienetik handienera.\n\nTrukoak:\n• Denak hamartarrera bihurtu (zenbakitzailea izendatzailearen artean zatitu) eta gero sailkatu.\n• Edo izendatzaile berdina bilatu eta zenbakitzaileak konparatu.',
+  'En la vida: ordenar medidas de ingredientes de menor a mayor.':
+      'Bizitzan: zatiketa errezetan, taldeen tamaina konparatu.',
+  'Convierte la fracción impropia en número mixto.\n\nDivide el numerador entre el denominador:\n  • el cociente es la parte entera\n  • el resto es el nuevo numerador\n  • el denominador se queda igual\n\nEjemplo: 7/4 → 7÷4 = 1 y resto 3 → 1 y 3/4.':
+      'Zatiki irregularra (zenbakitzailea > izendatzailea) zenbaki mistora bihurtu.\n\nZenbakitzailea izendatzailearen artean zatitu:\n  • Zatidura: parte osoa.\n  • Hondarra: zenbakitzaile berria (izendatzailea berdin mantenduta).\n\nAdibidea: 11/4 → 11÷4 = 2 hondar 3 → 2 eta 3/4.',
+  'En la vida: expresar 7/4 de pizza como "una pizza y tres cuartos".':
+      'Bizitzan: 7/4 pizza esan beharrean, 1 eta 3/4 pizza.',
+  'Convierte el número mixto en fracción impropia.\n\nFórmula: (entero × denominador + numerador) / denominador\n\nEjemplo: 2 y 3/4 → (2×4 + 3)/4 = (8+3)/4 = 11/4.':
+      'Zenbaki mistoa ("2 eta 3/4") zatiki irregularrera bihurtu.\n\nFormula: parte osoa × izendatzailea + zenbakitzailea = zenbakitzaile berria.\nAdibidea: 2 eta 3/4 → 2×4 + 3 = 11/4.',
+  'En la vida: convertir "2 horas y media" a fracción para operar.':
+      'Bizitzan: zatikiekin eragiketa egiteko forma erosoago bat lortzeko.',
+  'Convierte entre unidades de longitud.\n\nLa escalera métrica: km → hm → dam → m → dm → cm → mm\nCada paso multiplica o divide por 10.\n\nEjemplo: 5 m = ? cm → de m a cm son 2 pasos ×10 → 5×10×10 = 500 cm.':
+      'Metriko sistemaren eskaileran, maila bakoitzak ×10 (jaitsiz) edo ÷10 (igoz).\n\nkm → hm → dam → m → dm → cm → mm\n\nAdibidea: 5 m → cm: 2 maila jaitsi → ×100 → 500 cm.',
+  'En la vida: 5 m = 500 cm al medir una habitación o un mueble.':
+      'Bizitzan: distantziak unitate desberdinetan ulertu (km batetik m batera).',
+  'Convierte entre unidades de masa (g) o capacidad (L).\n\nMisma escalera que longitud: cada paso ×10.\n\nEjemplo: 3 kg = ? g → 3×10×10×10 = 3000 g.\nEjemplo: 5 L = ? mL → 5×10×10×10 = 5000 mL.':
+      'Masa (kg, g, mg) eta edukiera (L, dL, cL, mL) ere ×10 eskailera erabiltzen dute.\n\nMasa: kg → hg → dag → g → dg → cg → mg\nEdukiera: kL → hL → daL → L → dL → cL → mL\n\nAdibidea: 3 kg = 3000 g; 5 L = 500 cL.',
+  'En la vida: 1 kg = 1000 g para una receta, o 1 L = 1000 mL.':
+      'Bizitzan: errezeta unitateak konbinatu, edari botilen edukiera.',
+  'Convierte entre unidades de superficie (m², cm²…).\n\nCada paso multiplica o divide por 100 (NO por 10).\n\nEjemplo: 5 m² = ? cm² → 5×100×100 = 50.000 cm².\n¡Atento! Es fácil confundirlo con la longitud lineal (×10).':
+      'Azaleren eskailera maila bakoitzeko ×100 (luzeran ez bezala, ×10 baizik).\n\nAdibidea: 5 m² = ? cm²\n  Maila bakar bat jaitsi → ×100 → 500? EZ. m²→dm²→cm² bi maila → ×10 000 → 50 000 cm².\n\nBaina galdetzen badizute m²-tik dm² ondoz ondokorako: ×100 → 500 dm².',
+  'En la vida: calcular 5 m² en cm² para comprar baldosas.':
+      'Bizitzan: gelaren azalera neurri desberdinetan, baratzeko sailak.',
+  'Convierte entre horas, minutos y segundos.\n\nEl tiempo NO es decimal, es sexagesimal (base 60):\n  1 hora = 60 minutos\n  1 minuto = 60 segundos\n\nEjemplo: 2 h y 30 min = 2×60 + 30 = 150 min (NO 230).':
+      'Sexagesimala da: maila bakoitzak ×60 (×10 ez).\n\n1 h = 60 min\n1 min = 60 s\n1 h = 3600 s\n\nAdibideak:\n  3 h = 180 min\n  2 h eta 30 min = 2×60 + 30 = 150 min.\n\nKontuz: "2 h 30 min" EZ da 230 min, 150 min baizik.',
+  'En la vida: 2 h y 30 min = 150 min (no 230). Útil para planificar.':
+      'Bizitzan: bidaiaren denbora ulertu, errezeten denborak.',
+  'Elige el nombre del ángulo según su abertura.\n\n• Agudo: menos de 90°\n• Recto: exactamente 90°\n• Obtuso: más de 90° y menos de 180°\n• Llano: exactamente 180°':
+      'Begiratu pantailan dagoen angeluari eta sailkatu:\n\n• Zorrotza: 90° baino txikiagoa.\n• Zuzena: zehazki 90° (eskuadra).\n• Kameltsua: 90° eta 180° artean.\n• Lautua: zehazki 180° (lerro zuzena).',
+  'En la vida: identificar si una esquina es recta (90°) para muebles.':
+      'Bizitzan: gauzak laukizuzenak diren ala ez identifikatu, bidegurutzeak.',
+  'Elige el nombre del polígono según su número de lados.\n\n• 3 lados → triángulo\n• 4 lados → cuadrado (o rectángulo)\n• 5 lados → pentágono\n• 6 lados → hexágono\n• 7 lados → heptágono\n• 8 lados → octágono':
+      'Aldeen kopuruaren arabera izena:\n\n• 3 alde → triangelua\n• 4 alde → laukia / koadroa\n• 5 alde → pentagonoa\n• 6 alde → hexagonoa\n• 7 alde → heptagonoa\n• 8 alde → oktogonoa',
+  'En la vida: reconocer formas en señales, mosaicos y construcciones.':
+      'Bizitzan: trafiko-seinaleak (oktogonoa = STOP), errealitateko forma asko.',
+  'Calcula el perímetro del polígono.\n\nEl perímetro es la suma de todos los lados.\n\nEn un rectángulo: P = 2 × (base + altura).\nEn un polígono regular: P = lado × número de lados.':
+      'Poligono baten alde guztien batuketa.\n\nAdibideak:\n• Laukizuzena (3 cm × 5 cm): P = 2×(3+5) = 16 cm.\n• Triangelua aldeekin 4, 5, 6: P = 4+5+6 = 15 cm.\n• Hexagonoa erregularra alde 4-koa: P = 6×4 = 24 cm.',
+  'En la vida: cuánta valla necesitas para cercar un terreno o un jardín.':
+      'Bizitzan: itxitura baten luzera kalkulatu, koadro baten markoa.',
+  'Calcula el área del rectángulo.\n\nFórmula: Área = base × altura\n\nNo lo confundas con el perímetro (que suma los lados).':
+      'Formula: oinarria × altuera.\n\nAdibidea: 4 cm × 3 cm = 12 cm².\n\nKontuz: ez nahasi perimetroarekin (2×(b+h)).',
+  'En la vida: calcular la superficie de una habitación para poner suelo.':
+      'Bizitzan: gelaren azalera, lurpe edo pinturaren neurketa.',
+  'Calcula el área del triángulo.\n\nFórmula: Área = (base × altura) ÷ 2\n\n¡No olvides dividir entre 2!':
+      'Formula: (oinarria × altuera) / 2.\n\nAltuera oinarrira perpendikularra da.\n\nAdibidea: oinarria 6, altuera 4 → A = 6×4/2 = 12 cm².',
+  'En la vida: calcular el área de un tejado o un panel solar triangular.':
+      'Bizitzan: triangelu-formako sail bat neurtu, teilatu baten azalera.',
+  'Calcula el área o el perímetro del círculo.\n\nUsa π ≈ 3,14.\n\n• Perímetro (circunferencia) = 2 × π × radio\n• Área = π × radio²\n\nNo las confundas: el perímetro mide el borde, el área mide el interior.':
+      'Erradioa (r) erabiliz:\n\n• Perimetroa (zirkunferentzia): P = 2 × π × r.\n• Azalera: A = π × r².\n\nπ ≈ 3,14.\n\nAdibidea: r = 5 cm → P = 2×3,14×5 = 31,4 cm; A = 3,14×25 = 78,5 cm².',
+  'En la vida: calcular la superficie de una mesa redonda o su borde.':
+      'Bizitzan: pizza zirkular baten azalera, gurpilak.',
+  'Calcula el volumen de la caja.\n\nFórmula: Volumen = largo × ancho × alto\n\nNo lo confundas con el área superficial (que suma todas las caras).':
+      'Formula: luzera × zabalera × altuera.\n\nAdibidea: 3 × 4 × 5 = 60 cm³.\n\nKontuz: ez nahastu azalerarekin (2(la+lh+ah)).',
+  'En la vida: cuántos litros caben en una pecera o una caja.':
+      'Bizitzan: kaxa baten edukiera, akuario baten ura.',
+  '¿La figura es simétrica respecto al eje marcado?\n\nUna figura es simétrica si al doblarla por el eje, las dos mitades coinciden exactamente.\n\nImagina un espejo en la línea. ¿El reflejo sería idéntico?':
+      'Figura batek ardatz simetriko bat al du? (BAI/EZ).\n\nArdatzaren bi aldetan zati berdinak badaude, simetrikoa da.\n\nAdibideak:\n• Koadroa: ardatz horizontal, bertikal eta diagonalak ditu.\n• T letra: bertikala bakarrik.\n• R letra: bat ere ez.',
+  'En la vida: reconocer formas simétricas en la naturaleza y el arte.':
+      'Bizitzan: arkitektura, naturako patroiak (tximeletak, hostoak).',
+  'Lee el valor en el gráfico de barras.\n\nMira la altura de la barra señalada y compárala con los números del eje vertical.\nSi te piden el total, suma todas las barras.':
+      'Barra bakoitzaren altuera balio bati dagokio.\n\nGaldera bi mota:\n• Barra zehatz baten balioa irakurri.\n• Guztien batura kalkulatu.\n\nIrakurri Y ardatzaren eskala arretaz.',
+  'En la vida: leer datos en periódicos, informes y estadísticas.':
+      'Bizitzan: aurrekontuak, kirol estatistikak, klima.',
+  'Lee el porcentaje de la porción señalada.\n\nEl círculo entero representa el 100%. Cada porción es una parte.\nFíjate en el tamaño de la porción respecto al círculo completo.':
+      'Zirkulu osoa 100 % da. Zati bakoitzak portzentaia bat adierazten du.\n\nGaldera: zati nabarmenduak zer % adierazten duen.\n\nBegirada arinarekin: zati handiena > 50 %, txikiena < 25 %…',
+  'En la vida: entender porcentajes visuales en encuestas y resultados.':
+      'Bizitzan: hauteskunde emaitzak, bozketen banaketa.',
+  'Calcula la media de los números.\n\nFórmula: (suma de todos los números) ÷ (cantidad de números)\n\n1. Suma todos los números.\n2. Divide entre cuántos números hay.':
+      'Zenbaki guztien batuketa, zenbaki kopuruaren artean zatituta.\n\nAdibidea: 4, 6, 8 → batuketa 18, hiru zenbaki → 18/3 = 6.',
+  'En la vida: calcular la nota media o el gasto promedio por día.':
+      'Bizitzan: notaren batezbestekoa, bidaiaren abiadura.',
+  'Calcula la moda o la mediana.\n\n• Moda: el número que más se repite.\n• Mediana: ordena los números y elige el del centro. Si hay dos, haz la media.':
+      '• MODA: gehien errepikatzen den balioa.\n• MEDIANA: ordenatutako balio guztien erdiko balioa.\n\nAdibidea: 2, 3, 3, 5, 7 → moda 3, mediana 3.\nBalio kopurua bikoitia bada, erdiko bi balioen batezbestekoa.',
+  'En la vida: entender qué talla es la más común (moda) o el salario típico (mediana).':
+      'Bizitzan: galdetegietan erantzun ohikoenak, soldata tipikoak.',
+  'Calcula la probabilidad como fracción.\n\nFórmula: P = (casos favorables) / (casos totales)\n\nEjemplo: en una bolsa con 3 bolas rojas y 5 azules,\nP(roja) = 3/8. Simplifica si puedes.':
+      'Gertaera bat gertatzeko aukera.\n\nFormulea: gertaera onuragarriak / gertaera posible guztiak.\n\nAdibidea: txanpon bati buruz: P(burua) = 1/2.\nDado bati 6 ateratzea: P(6) = 1/6.',
+  'En la vida: calcular la probabilidad de que llueva o de ganar un juego.':
+      'Bizitzan: jokoetan, eguraldi iragarpenetan.',
+  'Convierte la probabilidad de fracción a porcentaje.\n\nFórmula: (numerador ÷ denominador) × 100\n\nEjemplo: P = 3/4 → (3÷4)×100 = 0,75×100 = 75%.':
+      'Probabilitatea zatiki gisa adierazi ondoren, hamartar eta ehuneko bihurtu.\n\nAdibidea: P = 1/4 = 0,25 = 25 %.\nP = 3/10 = 0,3 = 30 %.',
+  'En la vida: expresar "3 de cada 4" como 75% de probabilidad.':
+      'Bizitzan: eguraldiaren euri-probabilitatea ehunekotan.',
+  'Suma los dos números.\n\nSi necesitas, puedes usar los dedos o hacer la suma en tu cabeza.\nEs la operación más básica. Tómate tu tiempo.':
+      'Bi zenbakiren batuketa.\n\nTrukoa azkarra: zenbakiak deskonposatu hamarrekoen eta unitateen.\n  27 + 35 = (20 + 30) + (7 + 5) = 50 + 12 = 62.',
+  'En la vida: contar dinero, sumar objetos, calcular el total de una compra pequeña.':
+      'Bizitzan: erosketen kontu azkarrak, denboraren batuketa.',
+  'Encuentra el valor de x.\n\nPara despejar x, pasa los números al otro lado del signo =:\n  • si están sumando → pasan restando\n  • si están restando → pasan sumando\n  • si están multiplicando → pasan dividiendo\n\nEjemplo: x + 5 = 12 → x = 12 - 5 → x = 7.':
+      'Berdintza batean x bilatu.\n\nForma: a×x + b = c → x = (c − b) / a.\nAdibidea: 3x + 5 = 14 → 3x = 9 → x = 3.\n\nGogoratu: berdintzaren beste aldera doan zenbakia kontrako zeinuarekin doa.',
+  'En la vida: calcular cuánto tiempo falta para ahorrar suficiente dinero.':
+      'Bizitzan: ezezagun bat ebatzi (zenbat behar dut?).',
+  'Calcula la potencia.\n\naⁿ = a × a × a … (n veces)\n\nEjemplo: 2³ = 2 × 2 × 2 = 8.\n\n¡Cuidado! No multipliques base × exponente (2³ ≠ 2×3).':
+      'a^b adierazpenak a-ren b biderketa esan nahi du.\n\nAdibidea: 2³ = 2×2×2 = 8.\n5² = 5×5 = 25.\n\nKontuz: 2³ EZ da 2×3 = 6. Hori akats ohikoa da.',
+  'En la vida: calcular áreas (3² = 9) o crecimiento exponencial (doblar cada día).':
+      'Bizitzan: azalerak (m²), bolumenak (m³), informatika (bit, byte).',
+  'Calcula la raíz cuadrada.\n\n√x es el número que multiplicado por sí mismo da x.\n\nEjemplo: √25 = 5 porque 5 × 5 = 25.\n\nPista: aprende los cuadrados perfectos (1, 4, 9, 16, 25, 36…).':
+      '√n: zer zenbaki biderkatu bere buruaz n ematen du?\n\nAdibideak:\n  √16 = 4 (4×4 = 16)\n  √25 = 5 (5×5 = 25)\n  √49 = 7 (7×7 = 49)\n\nMemorizatu √1-√100 lehen erro karratuak.',
+  'En la vida: calcular el lado de un cuadrado a partir de su área.':
+      'Bizitzan: koadro baten aldea bere azaleratik abiatuta.',
+  'En un triángulo rectángulo:\n\nhipotenusa² = cateto₁² + cateto₂²\n\nIdentifica primero la hipotenusa (el lado más largo, frente al ángulo recto).\nDespués aplica la fórmula.':
+      'Triangelu zuzen batean: a² + b² = c²\n\n(a eta b kateakak; c hipotenusa).\n\nAdibidea: a=3, b=4 → c² = 9+16 = 25 → c = 5.\nTerna ezagunak: (3,4,5), (5,12,13), (8,15,17).',
+  'En la vida: calcular la altura de una escalera apoyada en la pared.':
+      'Bizitzan: distantziak kalkulatu, eskailera baten luzera.',
+  'La x aparece a los dos lados del signo =. Para despejarla, junta todas las x en un lado y todos los números en el otro.\n\nRegla de oro: lo que cruza el = cambia de papel. Lo que estaba sumando cruza restando. Lo que multiplicaba cruza dividiendo. Y al revés.\n\nPasos, con ejemplo:  3x + 2 = x + 8\n\n  1) Cruza la x de la derecha al lado izquierdo (entra como −x).\n     3x − x + 2 = 8 → 2x + 2 = 8.\n\n  2) Cruza el +2 al lado derecho (entra como −2).\n     2x = 8 − 2 → 2x = 6.\n\n  3) El 2 está multiplicando a x: cruza dividiendo.\n     x = 6 ÷ 2 = 3.\n\nComprueba: 3·3 + 2 = 11 y 3 + 8 = 11. ¡Coincide!':
+      'x berdintza zeinuaren bi aldeetan agertzen da. x kentzeko, x guztiak alde batean eta zenbaki guztiak bestean.\n\nUrrezko erregela: berdintzatik zeharkatzen duenak rola aldatzen du. Batzen ari zenak kentzen igarotzen du. Biderkatzen ari zenak zatitzen igarotzen du. Eta alderantziz.\n\nUrratsak, adibidearekin:  3x + 2 = x + 8\n\n  1) x eskubikoa ezkerrera zeharkatu (−x bezala sartzen da).\n     3x − x + 2 = 8 → 2x + 2 = 8.\n\n  2) +2 eskubira zeharkatu (−2 bezala sartzen da).\n     2x = 8 − 2 → 2x = 6.\n\n  3) 2 x biderkatzen ari da: zatitzen zeharkatu.\n     x = 6 ÷ 2 = 3.\n\nEgiaztatu: 3·3 + 2 = 11 eta 3 + 8 = 11. Bat dator!',
+  'En la vida: problemas donde una cantidad aparece dos veces, como comparar tu edad con la de alguien de tu familia.':
+      'Bizitzan: kantitate bat birritan agertzen den arazoak, adibidez familia bateko adinak konparatu.',
+  'Opera con números enteros que pueden tener signo negativo.\n\nRecuerda: -(-3) = +3  y  -3 × -2 = +6\n          -3 + (-2) = -5  y  -3 - (-2) = -1\n\nDos negativos seguidos se convierten en positivo.':
+      'Zeinudun zenbakiak: positiboak (+) eta negatiboak (−).\n\nBatuketa eta kenketa:\n  +3 + (+2) = +5\n  +3 + (−2) = +1\n  −3 + (−2) = −5\n\nZeinu berekoak: balioak batu eta zeinua mantendu.\nZeinu desberdinekoak: balioak kendu eta handienaren zeinua hartu.',
+  'En la vida: temperaturas bajo cero, deber dinero, profundidad marina.':
+      'Bizitzan: tenperaturak (−5 °C), zorrak (−10 €), itsas mailaren gainetik/azpitik.',
+  'El valor absoluto de un número es su distancia hasta el 0.\n\n|5| = 5 y |-5| = 5 — ambos están a 5 unidades del 0.\n\nEl valor absoluto siempre es positivo o cero.':
+      'Zenbaki baten balio absolutua zerotik duen distantzia da; beti positiboa.\n\nAdibideak:\n  |5| = 5\n  |−5| = 5\n  |0| = 0\n\nNotazioa: |x|.',
+  'En la vida: medir distancia entre dos puntos (da igual la dirección).':
+      'Bizitzan: bi tenperaturen arteko aldea, distantziak.',
+  'Dos ecuaciones con dos incógnitas (x e y) que se cumplen a la vez. La pareja (x, y) que las satisface las dos es la solución del sistema.\n\nMétodo de sustitución, paso a paso:\n  1) Coge la ecuación más sencilla y despeja una incógnita.\n  2) Sustituye su valor en la otra ecuación.\n  3) Resuelve esa ecuación, que ahora solo tiene una incógnita.\n  4) Vuelve atrás con ese valor y calcula la otra.\n\nEjemplo:\n   x + y = 7\n   x − y = 1\n\n  De la 1.ª despejo:  x = 7 − y.\n  Sustituyo en la 2.ª:  (7 − y) − y = 1 → 7 − 2y = 1 → y = 3.\n  Vuelvo:  x = 7 − 3 = 4.\n  Solución: x = 4, y = 3.':
+      'Bi ekuazio bi ezezagunekin (x eta y), aldi berean betetzen direnak. Biak betetzen dituen (x, y) bikotea sistemaren irtenbidea da.\n\nOrdezkapen metodoa, urratsez urrats:\n  1) Hartu errazena den ekuazioa eta ezezagun bat ebaki.\n  2) Bere balioa beste ekuazioan ordezkatu.\n  3) Ebatzi ekuazio hori, orain ezezagun bakar bat duena.\n  4) Itzuli balio horrekin eta beste ezezaguna kalkulatu.\n\nAdibidea:\n   x + y = 7\n   x − y = 1\n\n  1.etik ebaki:  x = 7 − y.\n  2.ean ordezkatu:  (7 − y) − y = 1 → 7 − 2y = 1 → y = 3.\n  Itzuli:  x = 7 − 3 = 4.\n  Irtenbidea: x = 4, y = 3.',
+  'En la vida: dos manzanas y una naranja cuestan 5 €; una manzana y una naranja cuestan 3 €. ¿Cuánto vale cada fruta?':
+      'Bizitzan: bi sagar eta laranja bat 5 € balio dute; sagar bat eta laranja bat 3 €. Zenbat balio du fruta bakoitzak?',
+  'Verás una tabla con pares (x, y). Tu trabajo es encontrar la regla que dice cómo se obtiene cada y a partir de su x.\n\nLa regla siempre tiene la forma:  y = m·x + n.\n\nPara descubrirla:\n  1) Cuánto sube y cuando x sube de 1 en 1. Eso es m.\n     Mira dos filas seguidas: m = (y₂ − y₁) ÷ (x₂ − x₁).\n  2) Cuánto vale y cuando x = 0. Eso es n.\n     Si esa fila no aparece, despeja con cualquier fila:\n     n = y − m·x.\n\nAntes de elegir, prueba la regla con otra fila de la tabla.':
+      '(x, y) bikoteen taula bat ikusiko duzu. Zure lana y bakoitza bere x-tik nola lortzen den arau bat aurkitzea.\n\nArauak beti forma hau du:  y = m·x + n.\n\nHori aurkitzeko:\n  1) Zenbat igotzen den y, x banaka igotzean. Hori da m.\n     Bi lerro segidakoak begiratu: m = (y₂ − y₁) ÷ (x₂ − x₁).\n  2) Zenbat balio duen y x = 0 denean. Hori da n.\n     Lerro hori ez bada agertzen, ebakitzen lerro bat erabiliz:\n     n = y − m·x.\n\nAukeratu aurretik, proba ezazu araua taularen beste lerro batekin.',
+  'En la vida: la factura de la luz — n es la cuota fija que pagas cada mes, m es lo que cuesta cada kWh consumido.':
+      'Bizitzan: argi-faktura — n da hilero ordaintzen duzun kuota finkoa, m kWh kontsumitutako bakoitzaren kostua.',
 };

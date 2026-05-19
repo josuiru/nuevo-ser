@@ -189,6 +189,21 @@ class _BloquePaqueteSonoroState extends State<_BloquePaqueteSonoro> {
       return;
     }
 
+    // Short-circuit: si la versión local coincide con la del servidor,
+    // no rebajar todo de nuevo — solo informar "ya estás al día". Esto
+    // evita el flujo destructivo (borrar cache + descomprimir) cuando
+    // el usuario pulsa "Comprobar" más de una vez, que era una fuente
+    // de errores reportada el 2026-05-19.
+    final versionLocal = await _descargador.versionLocal();
+    if (versionLocal == manifest.version) {
+      if (!mounted) return;
+      setState(() => _estadoEnVuelo = null);
+      _mostrarMensajeBreve(
+        'Ya tienes la última versión (v${manifest.version}).',
+      );
+      return;
+    }
+
     // Detener loops antes de tocar archivos en cache.
     for (final capa in CapaAudio.values) {
       await ServicioSonoro.instancia.detenerCapa(capa, msFade: 200);
