@@ -108,6 +108,33 @@ afirmar(
 	"validar_rol_login('admin_fosiles') acepta el nuevo rol"
 );
 
+// ----------------------------------------------------------------
+// Seed del catálogo de formaciones
+// ----------------------------------------------------------------
+// El JSON exportado desde el cliente Dart debe estar presente y
+// contener ≥25 entradas (Fase 1 del módulo).
+$ruta_seed = __DIR__ . '/../seeds/fosiles_formaciones.json';
+afirmar( true, is_readable( $ruta_seed ), 'seeds/fosiles_formaciones.json existe y se lee' );
+if ( is_readable( $ruta_seed ) ) {
+	$catalogo = json_decode( (string) file_get_contents( $ruta_seed ), true );
+	afirmar( true, is_array( $catalogo ), 'el JSON parsea como array' );
+	afirmar( true, count( (array) $catalogo ) >= 25, 'el catálogo tiene ≥25 formaciones' );
+
+	// Cada entrada debe tener al menos codigo + nombre_oficial — el
+	// seed PHP los exige para insertar.
+	$todas_completas = true;
+	foreach ( (array) $catalogo as $formacion ) {
+		if ( ! is_array( $formacion ) ) {
+			$todas_completas = false;
+			continue;
+		}
+		if ( empty( $formacion['codigo'] ) || empty( $formacion['nombre_oficial'] ) ) {
+			$todas_completas = false;
+		}
+	}
+	afirmar( true, $todas_completas, 'todas las formaciones traen codigo + nombre_oficial' );
+}
+
 if ( 0 === $fallos ) {
 	echo "OK\n";
 	exit( 0 );

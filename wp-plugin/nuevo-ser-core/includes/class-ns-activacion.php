@@ -29,6 +29,7 @@ class NS_Activacion {
 		self::aplicar_esquema();
 		self::sembrar_games();
 		self::registrar_roles_adultos();
+		self::sembrar_formaciones_fosiles();
 		update_option( self::OPCION_VERSION, NS_CORE_VERSION );
 		self::programar_cron();
 	}
@@ -75,6 +76,7 @@ class NS_Activacion {
 		self::aplicar_esquema();
 		self::sembrar_games();
 		self::registrar_roles_adultos();
+		self::sembrar_formaciones_fosiles();
 		update_option( self::OPCION_VERSION, NS_CORE_VERSION );
 		// Si el cron aún no estaba programado (sitio que se actualizó
 		// desde una versión antes de existir el cron), lo añadimos
@@ -206,6 +208,90 @@ class NS_Activacion {
 					$fila['age_min'],
 					$fila['age_max'],
 					$fila['schema_version']
+				)
+			);
+		}
+	}
+
+	/**
+	 * Siembra `wp_ns_fosiles_formaciones_catalogadas` con el catálogo
+	 * exportado desde el cliente Dart
+	 * (`apps/fosiles/lib/datos/formacion_a_fosiles.dart`).
+	 *
+	 * El JSON vive en `seeds/fosiles_formaciones.json`, regenerado a
+	 * mano con `flutter test test/exportar_formaciones_a_json_test.dart`
+	 * cada vez que el catálogo Dart cambia.
+	 *
+	 * Estrategia: INSERT ... ON DUPLICATE KEY UPDATE sobre `codigo`
+	 * (UNIQUE). Idempotente: reejecutarlo al actualizar el plugin
+	 * propaga cambios de nombre/descripción/regiones sin perder las
+	 * formaciones nuevas que un admin haya creado a mano por
+	 * wp-admin (los códigos a mano no chocan con los del seed).
+	 *
+	 * Si el JSON no está presente (caso poco común — desarrollador
+	 * que no haya ejecutado el exportador), se omite silenciosamente:
+	 * el admin podrá crear el catálogo a mano desde wp-admin →
+	 * Fósiles → Catálogo.
+	 */
+	private static function sembrar_formaciones_fosiles(): void {
+		$ruta_seed = NS_CORE_DIR . 'seeds/fosiles_formaciones.json';
+		if ( ! is_readable( $ruta_seed ) ) {
+			return;
+		}
+		$contenido = file_get_contents( $ruta_seed );
+		if ( false === $contenido ) {
+			return;
+		}
+		$catalogo = json_decode( $contenido, true );
+		if ( ! is_array( $catalogo ) ) {
+			return;
+		}
+
+		global $wpdb;
+		$tabla = NS_Esquema::nombre_tabla( 'fosiles_formaciones_catalogadas' );
+		$ahora = gmdate( 'Y-m-d H:i:s' );
+
+		foreach ( $catalogo as $formacion ) {
+			if ( ! is_array( $formacion ) ) {
+				continue;
+			}
+			$codigo = isset( $formacion['codigo'] ) ? (string) $formacion['codigo'] : '';
+			$nombre = isset( $formacion['nombre_oficial'] ) ? (string) $formacion['nombre_oficial'] : '';
+			if ( '' === $codigo || '' === $nombre ) {
+				continue;
+			}
+			$periodo         = isset( $formacion['periodo'] ) ? (string) $formacion['periodo'] : '';
+			$edad_aprox      = isset( $formacion['edad_aproximada'] ) ? (string) $formacion['edad_aproximada'] : '';
+			$descripcion     = isset( $formacion['descripcion'] ) ? (string) $formacion['descripcion'] : '';
+			$activo          = empty( $formacion['activo'] ) ? 0 : 1;
+			$regiones_json   = isset( $formacion['regiones'] ) ? wp_json_encode( $formacion['regiones'] ) : null;
+
+			// INSERT ... ON DUPLICATE KEY UPDATE preserva `id` y
+			// `creado_en` originales; solo refresca los campos
+			// derivables del catálogo Dart. El `actualizado_en` lo
+			// gestiona MySQL con ON UPDATE CURRENT_TIMESTAMP.
+			$sql = "INSERT INTO {$tabla}
+				(codigo, nombre_oficial, periodo, edad_aproximada, regiones, descripcion, activo, creado_en)
+				VALUES (%s, %s, %s, %s, %s, %s, %d, %s)
+				ON DUPLICATE KEY UPDATE
+					nombre_oficial = VALUES(nombre_oficial),
+					periodo = VALUES(periodo),
+					edad_aproximada = VALUES(edad_aproximada),
+					regiones = VALUES(regiones),
+					descripcion = VALUES(descripcion),
+					activo = VALUES(activo)";
+
+			$wpdb->query( // phpcs:ignore WordPress.DB.PreparedSQL
+				$wpdb->prepare(
+					$sql,
+					$codigo,
+					$nombre,
+					$periodo,
+					$edad_aprox,
+					$regiones_json,
+					$descripcion,
+					$activo,
+					$ahora
 				)
 			);
 		}
