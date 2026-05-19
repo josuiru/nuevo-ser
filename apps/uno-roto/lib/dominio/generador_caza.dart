@@ -166,23 +166,24 @@ class GeneradorCaza {
   }) {
 
     if (tipo == TipoFragmentoEnTejado.ecuacionLineal) {
-      final problema = GeneradorEcuacionLineal(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorEcuacionLineal(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
-        // Reusamos numerador/denominador como (a, c). El Fragmento del
-        // cazadero solo necesita identificarse visualmente; la pantalla
-        // genera su propio problema desde dificultad.
+        // (a, c) en numerador/denominador para la etiqueta del spawn.
+        // El puzzle real lo reconstruye la pantalla con `semillaProblema`.
         numerador: problema.a,
-        denominador: problema.c.abs(),
+        denominador: problema.c.abs() == 0 ? 1 : problema.c.abs(),
         tipo: tipo,
         etiquetaDecimal: problema.etiqueta,
         xNormalizado: 0.18 + _azar.nextDouble() * 0.64,
         yNormalizado: 0.2 + _azar.nextDouble() * 0.48,
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
+        dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
@@ -207,9 +208,9 @@ class GeneradorCaza {
     }
 
     if (tipo == TipoFragmentoEnTejado.potenciaNatural) {
-      final problema = GeneradorPotenciaNatural(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorPotenciaNatural(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -223,13 +224,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.raizCuadrada) {
-      final problema = GeneradorRaizCuadrada(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorRaizCuadrada(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -242,13 +244,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.ecuacionAmbosLados) {
-      final problema = GeneradorEcuacionAmbosLados(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorEcuacionAmbosLados(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -262,13 +265,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.pitagoras) {
-      final problema = GeneradorPitagoras(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorPitagoras(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -283,13 +287,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.enteroSigno) {
-      final problema = GeneradorEnteroSigno(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorEnteroSigno(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -302,13 +307,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.valorAbsoluto) {
-      final problema = GeneradorValorAbsoluto(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorValorAbsoluto(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -321,13 +327,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.sistemaDosXDos) {
-      final problema = GeneradorSistemaDosXDos(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorSistemaDosXDos(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -342,13 +349,14 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 
     if (tipo == TipoFragmentoEnTejado.relacionLineal) {
-      final problema = GeneradorRelacionLineal(
-        semilla: _azar.nextInt(1 << 30),
-      ).generar(dificultad: dificultad);
+      final semilla = _azar.nextInt(1 << 30);
+      final problema =
+          GeneradorRelacionLineal(semilla: semilla).generar(dificultad: dificultad);
       return FragmentoEnTejado(
         identificador: 'frag_${ahora.microsecondsSinceEpoch}_'
             '${_azar.nextInt(9999)}',
@@ -361,6 +369,7 @@ class GeneradorCaza {
         instanteAparicion: ahora,
         tiempoDeVida: _tiempoDeVida(dificultad),
         dificultadSugerida: dificultad,
+        semillaProblema: semilla,
       );
     }
 

@@ -120,6 +120,11 @@ uno-roto/
   - **Regla del descarte en `esquirlasSegunIntentos`**: aplica solo a puzzles con **3+ opciones**. En binarios (sí/no) el "último intento posible" sigue siendo razonamiento legítimo (no hay alternativa entre 1.º y descarte), así que se mantiene el mínimo de 1 esquirla incluso tras varios toques nerviosos. Antes binarios devolvían 0 al primer fallo seguido de acierto — corregido. **Tipo `unitario` (combate de enfoque)** queda fuera de la regla: `_totalOpcionesDePuzzle` devuelve 0 para que los fallos acumulados a lo largo de varios sub-combates no aterricen en descarte — la mecánica de cortar radios es continua, no de candidatos discretos.
 - **`dificultadSugerida` en `FragmentoEnTejado`**: campo `int?` que rellena el `GeneradorCaza` con el nivel calibrado por esquirlas (0..7). Las 8 pantallas Era 3 (raíz cuadrada, potencia, ecuación ambos lados, Pitágoras, entero con signo, valor absoluto, sistema 2×2, relación lineal) aceptan ahora `dificultad` en el constructor y lo pasan a su generador interno. Antes el cazadero pusheaba `const PantallaXxx()` y la pantalla regeneraba con `dificultad: 1` por defecto — un niño avanzado veía siempre los casos triviales en Era 3. Cableado en `pantalla_caza._abrirPuzzleSegunTipo`.
 - **Race condition flag de maestría**: callback `alSubirNivel` del `MotorMaestria` en `pantalla_caza.dart:305` ahora hace `await` en `activarFlagNarrativo`. Sin esto, si la app se cierra al fondo entre el momento de subir nivel y la persistencia en SharedPreferences, el flag `<id>_competente`/`<id>_maestria` se perdía y escenas como 1.9 (Los Plenos, requiere `fr_05_competente`) quedaban latentes sin razón aparente.
+- **Fixes informe testeo 2026-05-19 Izan (release `apks-2026-05-18`, v1.0.0+5)**: ver `apps/uno-roto/docs/testeos/2026-05-19-izan-1.0.0+5.md`. Cuatro bugs corregidos:
+  - **Pool monotemático por distrito**: cuando un distrito se desbloqueaba antes de que sus skills tuvieran `required_rank` alcanzable, el selector devolvía siempre la misma skill (Puerto a 100-149 esquirlas → solo DIV.01 → "todos los Fragmentos son de múltiplos"). Dos cambios complementarios. (1) `selector_habilidades.dart` (wrapper de Uno Roto): si tras filtros quedan <2 candidatas, devuelve `null` y el cazadero cae al reparto por `mezclaPuzzles` del distrito — garantía estructural de variedad ambiental aunque el motor de maestría no tenga material suficiente. (2) `assets/data/skills.json`: realineado el `required_rank` de las 66 skills al rango más bajo entre sus distritos de aparición — si una skill aparece en Puerto (desbloqueo Aprendiz_II), no puede exigir Iniciado_III. Los 7 distritos ahora ofrecen ≥3 skills disponibles desde su umbral de desbloqueo.
+  - **Gráfico de barras modo total — correcto = máximo trivial** (`problema_grafico_barras.dart`): en EST.01 modo `total`, los distractores eran "olvidar última barra", "máximo", "primer × 2" y "total − 1", todos menores que el correcto. Cualquier niño que aplicara "siempre el más grande" resolvía sin sumar. Sustituido "primer × 2" por `total + valores.first` (error real de contar dos veces una barra) — ahora hay un distractor mayor que el total en cada caso curado. Cubierto por test de regresión en `widget_test.dart`.
+  - **Era 3 — preview no coincide con puzzle** (`pantalla_caza.dart` + 9 generadores): el cazadero generaba "7³" en el Fragmento pero la pantalla recibía solo `dificultad`, regeneraba al azar y mostraba "2⁵" al niño. Añadido campo `semillaProblema` a `FragmentoEnTejado`; los 9 tipos Era 3 (potencia, raíz, ec.lineal, ec.ambos lados, pitágoras, entero con signo, valor absoluto, sistema 2×2, relación lineal) lo guardan en el spawn; el helper `_reconstruirEra3` lo usa para crear el `Generador*(semilla: ...)` y pasar el problema reconstruido como `problemaPredeterminado`. Tres tests de regresión en `widget_test.dart` (potencia, raíz, Pitágoras) verifican que `base/exponente/etiqueta` del Fragmento coinciden con los del problema reconstruido.
+  - **HUD desbordado en móviles ~390 dp** (`pantalla_mapa.dart`): la cabecera tenía 5 chips sueltos + el contador de esquirlas. Tras añadir Instrucciones y Tour Educadores el Row no cabía en un Redmi Note 8 (392 dp lógicos), arrastrando las esquirlas y la pantalla `PantallaAjustesSonido` fuera de pantalla. Sustituido por `_MenuOverflowAdulto` (`PopupMenuButton` con icono `more_vert`) que agrupa Instrucciones / Ajustes de sonido / Tour educadores en un solo punto de pulsado. Cabecera vuelve a tener 3 chips visibles + esquirlas. Ajustes de sonido ahora es accesible desde el mapa (antes solo desde Habilidades).
 - **`alEstablecerFlag` en `PantallaCinematica`**: tipo cambiado de `ValueChanged<String>` (sync) a `Future<void> Function(String)?`. `_elegirOpcion` ahora es async y hace `await` por cada flag antes de iniciar el reveal de respuesta. Mismo bug de race que el de maestría pero en `PlanoEleccion`.
 - **`_rangoAlcanza` conservador**: en `catalogo_habilidades.dart`, si el rango actual o el exigido no aparecen en la lista `rangos` del JSON, ahora devuelve `false` (la habilidad no se ofrece) en lugar de `true`. Evita abrir acceso silencioso cuando el catálogo se corrompe o aparece un rango heredado de una versión antigua.
 - **Sync periódico endurecido** (`pantalla_caza._iniciarSyncPeriodico`): tres cambios sobre el `Timer.periodic` cada 10 min que sube el progreso al backend. Antes era `catch (_) {}` ciego.
@@ -190,6 +195,14 @@ export PATH="$HOME/flutter/bin:$PATH"
 
 # Build Android requiere Java 17 (forzado en app/android/gradle.properties):
 # org.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64
+
+# Instalar APK en dispositivo SIN borrar los datos del usuario:
+adb install -r build/app/outputs/flutter-apk/app-release.apk
+# NUNCA usar `flutter install`: desinstala primero y borra
+# shared_preferences (progresos, perfiles, ajustes). Si la firma del
+# APK nuevo NO coincide con la del instalado, `adb install -r` falla
+# con INSTALL_FAILED_UPDATE_INCOMPATIBLE — en ese caso hay que
+# desinstalar a propósito, pero hay que avisar al usuario antes.
 ```
 
 ## Decisiones técnicas tomadas
@@ -224,6 +237,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 ## Incidentes conocidos (para no repetir)
 
 - **MIUI INSTALL_FAILED_USER_RESTRICTED**: aceptar popup manualmente en Redmi Note 8.
+- **`flutter install` borra datos del usuario**: incidente 2026-05-19 — `flutter install` desinstala primero y al fallar la nueva instalación por el popup MIUI dejó al tester sin app y sin progresos. Para actualizar sin borrar siempre `adb install -r <apk>` (ver bloque "Comandos habituales").
 - **shared_preferences_android jlink error**: requiere forzar Java 17 en gradle.properties.
 - **Niños testers dicen "es para clase"**: el pivote fue quitar sesiones dictadas y abrir cazadero libre. No volver al modelo "ejercicio-por-ejercicio".
 - **pumpAndSettle timeout en tests**: usar `pump(duration)` discretos.

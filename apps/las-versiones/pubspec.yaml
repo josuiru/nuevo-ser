@@ -49,6 +49,9 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  # Genera el splash nativo Android para que el primer arranque no
+  # sea una pantalla en blanco.
+  flutter_native_splash: ^2.4.1
 
 flutter:
   uses-material-design: true
@@ -74,3 +77,14 @@ flutter:
     # desde aquí. También disponible como asset en runtime para la
     # pantalla de inicio del juego.
     - assets/marca/
+
+# Splash nativo Android: fondo sepia oscuro coherente con la
+# PaletaArchivo provisional + logo de la marca centrado.
+flutter_native_splash:
+  color: "#1F1E1A"
+  image: assets/marca/las_versiones_logo.png
+  android: true
+  ios: false
+  android_12:
+    color: "#1F1E1A"
+    image: assets/marca/las_versiones_logo.png

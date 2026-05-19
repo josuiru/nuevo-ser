@@ -136,6 +136,72 @@ Doble capa de seguridad: el cliente Flutter filtra antes de enviar y el plugin f
 - Tracker: memoria personal del operador
   `project_el_cuaderno_decisiones_humanas_pendientes` ítem 5.
 
+## Módulo "ciencia ciudadana" de la app Fósiles (v0.16+)
+
+Añadido en `v0.16.0`. Permite que aficionados envíen fotos de hallazgos a una cola de moderación; un curador (geólogo/paleontólogo) las aprueba y aparecen dentro de la app, asociadas a la formación geológica catalogada (estilo "Wikipedia"). Diseño completo en el plan `~/.claude/plans/magical-tumbling-thunder.md`.
+
+### Tablas
+
+- `wp_ns_fosiles_aportaciones` — cola: foto + datos declarados + contacto (email + nombre opcional) + estado (`pendiente`/`aprobada`/`rechazada`/`archivada`) + campos curados.
+- `wp_ns_fosiles_fotos_blob` — archivo binario en `wp-content/uploads/fosiles-comunidad/YYYY/MM/<sha256>.<ext>`; UNIQUE por `sha256` para deduplicar.
+- `wp_ns_fosiles_formaciones_catalogadas` — catálogo de formaciones que el curador puede asociar a una aportación. Espejo manual de `apps/fosiles/lib/datos/formacion_a_fosiles.dart`.
+- `wp_ns_fosiles_borrados_rgpd` — tokens de un solo uso (24h) emitidos al solicitar borrado por email.
+
+### Roles
+
+- `nuevoser_curador_fosiles` — capability `nuevoser_fosiles_revisar`. Aprueba/rechaza/archiva.
+- `nuevoser_admin_fosiles` — además `nuevoser_fosiles_gestionar_catalogo` y `nuevoser_fosiles_gestionar_curadores`. Mantiene el catálogo de formaciones.
+- El rol `administrator` global de WP recibe automáticamente las tres capabilities al activar/actualizar el plugin.
+
+### Endpoints
+
+Bajo `/wp-json/nuevo-ser/v1/fosiles/*` (solo canónico).
+
+**Públicos** (sin auth, rate-limit 5/día por token de dispositivo + 10/día por IP):
+
+- `POST /fosiles/aportaciones` — multipart con `foto` + `datos` (JSON con `tipo`/`especie`/`edad`/`formacion`/`notas`/`email`/`nombre`/`token_dispositivo`/`consentimiento`). Devuelve `{id, estado:'pendiente'}` o `429` si rate-limit.
+- `GET /fosiles/fotos-comunidad/por-formacion/{codigo}` — galería de fotos aprobadas. SIN email/nombre/coords.
+- `POST /fosiles/aportaciones/borrar-mis-aportaciones` — body `{email}`. Envía email con enlace de un solo uso (24h).
+- `GET /fosiles/aportaciones/confirmar-borrado?token={hex}` — borra todas las aportaciones (y blobs huérfanos) asociadas al email. Devuelve HTML simple.
+
+**Curador** (sesión WP con `nuevoser_fosiles_revisar` o JWT `tipo='curador_fosiles'`/`'admin_fosiles'`):
+
+- `GET /fosiles/aportaciones?estado=pendiente&pag=N`
+- `GET /fosiles/aportaciones/{id}`
+- `POST /fosiles/aportaciones/{id}/aprobar` — body `{formacion_catalogada_id, especie_curada, edad_curada, comentarios?}`. Envía email al aficionado.
+- `POST /fosiles/aportaciones/{id}/rechazar` — body `{motivo}`. Envía email al aficionado.
+- `POST /fosiles/aportaciones/{id}/archivar` — sin email. Para spam.
+
+**Admin** (capability `nuevoser_fosiles_gestionar_catalogo`):
+
+- `GET/POST /fosiles/formaciones-catalogadas`
+- `PUT/DELETE /fosiles/formaciones-catalogadas/{id}` (DELETE = soft-delete via `activo=0`).
+
+### Panel wp-admin
+
+Submenú **Fósiles** con tres páginas:
+- **Aportaciones** — lista paginada por estado, con thumbnail.
+- **Revisar** — formulario con foto a tamaño completo, datos declarados, campos curados, selector de formación, botones aprobar/rechazar/archivar.
+- **Catálogo** — CRUD de formaciones (solo admin).
+
+Los curadores acceden con su cuenta WP en `/wp-login.php` y aterrizan en el panel.
+
+### Privacidad / RGPD
+
+- No se almacenan coordenadas precisas — la app NO las envía.
+- Email/nombre/IP/token_dispositivo quedan solo en backend; nunca aparecen en respuestas públicas.
+- Base legal: consentimiento explícito (RGPD art. 6.1.a) — checkbox obligatorio en la app antes de enviar.
+- Derecho de supresión: endpoint de borrado por email + token de un solo uso.
+- IP + token de dispositivo se usan solo para rate-limit. Documentar en política de privacidad antes de activar en producción.
+
+### Antes de activar en producción se requiere
+
+1. Al menos un curador real (geólogo / paleontólogo) dispuesto a moderar.
+2. Política de privacidad y T&Cs revisados jurídicamente (presupuesto 200-500 €).
+3. Configuración SMTP del servidor WP para que `wp_mail` salga (notificaciones de aprobación/rechazo + tokens RGPD).
+4. Sembrar el catálogo `wp_ns_fosiles_formaciones_catalogadas` con las 25 formaciones de `apps/fosiles/lib/datos/formacion_a_fosiles.dart`.
+5. Activar el feature flag en el cliente: `kFeatureComunidadHabilitada = true` en `apps/fosiles/lib/comunidad/feature_flag_comunidad.dart` + apuntar `urlBaseComunidad` a la instancia real.
+
 ## Licencia
 
 GPL-2.0-or-later (compatible con AGPL-3.0 del repo).

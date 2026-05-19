@@ -152,8 +152,12 @@ class GeneradorGraficoBarras {
       anyadir(total - valores.last);
       // Distractor 2: el valor más alto (confundir total con máximo).
       anyadir(valores.reduce((a, b) => a > b ? a : b));
-      // Distractor 3: el doble del primer valor.
-      anyadir(valores.first * 2);
+      // Distractor 3: contar dos veces el primer valor. Plausible y
+      // — clave pedagógicamente — **mayor** que el total. Sin este
+      // distractor el correcto era siempre el número mayor de la
+      // cuadrícula y el niño podía resolver el total con la
+      // heurística trivial "siempre el más grande".
+      anyadir(total + valores.first);
       // Distractor 4: total − 1.
       anyadir(total - 1);
     }

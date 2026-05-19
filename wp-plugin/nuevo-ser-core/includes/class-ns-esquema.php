@@ -62,6 +62,18 @@ class NS_Esquema {
 		// no es PII estructural — "El Roble Grande", "Mi banco").
 		'el_cuaderno_observaciones' => 'ns_el_cuaderno_observaciones',
 		'el_cuaderno_sit_spots'     => 'ns_el_cuaderno_sit_spots',
+		// Tablas específicas del módulo "ciencia ciudadana" de la app
+		// Fósiles (operador, adulto aficionado). Frontera de privacidad:
+		// las coordenadas precisas de cada hallazgo NO suben aquí — solo
+		// la foto + datos declarados (tipo, especie, edad, formación,
+		// notas) + contacto del aficionado (email + nombre opcional, NO
+		// publicables). El curador edita los campos `*_curada` antes de
+		// que la foto aparezca dentro de la app, asociada únicamente a
+		// la formación geológica catalogada (estilo "Wikipedia").
+		'fosiles_aportaciones'         => 'ns_fosiles_aportaciones',
+		'fosiles_fotos_blob'           => 'ns_fosiles_fotos_blob',
+		'fosiles_formaciones_catalogadas' => 'ns_fosiles_formaciones_catalogadas',
+		'fosiles_borrados_rgpd'        => 'ns_fosiles_borrados_rgpd',
 	);
 
 	/** Mapeo del prefijo viejo al nuevo. Lo usa la migración M001. */
@@ -115,6 +127,10 @@ class NS_Esquema {
 		$weekly_summaries = self::nombre_tabla( 'weekly_summaries' );
 		$el_cuaderno_observaciones = self::nombre_tabla( 'el_cuaderno_observaciones' );
 		$el_cuaderno_sit_spots     = self::nombre_tabla( 'el_cuaderno_sit_spots' );
+		$fosiles_aportaciones      = self::nombre_tabla( 'fosiles_aportaciones' );
+		$fosiles_fotos_blob        = self::nombre_tabla( 'fosiles_fotos_blob' );
+		$fosiles_formaciones       = self::nombre_tabla( 'fosiles_formaciones_catalogadas' );
+		$fosiles_borrados_rgpd     = self::nombre_tabla( 'fosiles_borrados_rgpd' );
 
 		return array(
 			"CREATE TABLE {$games} (
@@ -357,6 +373,103 @@ class NS_Esquema {
 				UNIQUE KEY uuid (uuid),
 				KEY user_game (user_id, game_id)
 			) {$charset_collate};",
+
+			// ---------------------------------------------------------
+			// Tablas de "ciencia ciudadana" para la app Fósiles.
+			//
+			// El aficionado NO tiene cuenta: envía la foto desde la app
+			// con un `token_dispositivo` (UUID v4 persistido en el
+			// SharedPreferences del móvil). Email + nombre son datos de
+			// contacto puntuales para que el curador notifique resultado;
+			// NUNCA se publican dentro de la app.
+			//
+			// El curador (WP user con rol `nuevoser_curador_fosiles`)
+			// edita `*_curada` y elige `formacion_catalogada_id` antes
+			// de aprobar. Solo entonces la foto aparece dentro de la
+			// galería pública de la formación.
+			//
+			// `wp_ns_fosiles_fotos_blob` desacopla el archivo binario
+			// del registro lógico: la misma foto subida dos veces se
+			// detecta por `sha256` y reusa la fila — ahorra disco y
+			// permite identificar spam fotos-clonadas.
+			// ---------------------------------------------------------
+
+			"CREATE TABLE {$fosiles_fotos_blob} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				ruta_archivo VARCHAR(512) NOT NULL,
+				mime VARCHAR(64) NOT NULL DEFAULT 'image/jpeg',
+				sha256 CHAR(64) NOT NULL,
+				tamano_bytes INT UNSIGNED NOT NULL DEFAULT 0,
+				ancho_px MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
+				alto_px MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
+				thumbnail_ruta VARCHAR(512) NOT NULL DEFAULT '',
+				creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY  (id),
+				UNIQUE KEY sha256 (sha256)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$fosiles_formaciones} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				codigo VARCHAR(96) NOT NULL,
+				nombre_oficial VARCHAR(255) NOT NULL,
+				periodo VARCHAR(64) NOT NULL DEFAULT '',
+				edad_aproximada VARCHAR(96) NOT NULL DEFAULT '',
+				regiones LONGTEXT NULL DEFAULT NULL,
+				descripcion LONGTEXT NULL DEFAULT NULL,
+				activo TINYINT(1) NOT NULL DEFAULT 1,
+				creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY  (id),
+				UNIQUE KEY codigo (codigo)
+			) {$charset_collate};",
+
+			"CREATE TABLE {$fosiles_aportaciones} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				fecha_revision DATETIME NULL DEFAULT NULL,
+				estado VARCHAR(16) NOT NULL DEFAULT 'pendiente',
+				tipo VARCHAR(16) NOT NULL DEFAULT 'fosil',
+				email_contacto VARCHAR(190) NOT NULL DEFAULT '',
+				nombre_contacto VARCHAR(120) NOT NULL DEFAULT '',
+				especie_declarada VARCHAR(255) NOT NULL DEFAULT '',
+				edad_declarada VARCHAR(128) NOT NULL DEFAULT '',
+				formacion_declarada VARCHAR(255) NOT NULL DEFAULT '',
+				notas_aficionado LONGTEXT NULL DEFAULT NULL,
+				formacion_catalogada_id BIGINT UNSIGNED NULL DEFAULT NULL,
+				especie_curada VARCHAR(255) NOT NULL DEFAULT '',
+				edad_curada VARCHAR(128) NOT NULL DEFAULT '',
+				comentarios_curador LONGTEXT NULL DEFAULT NULL,
+				motivo_rechazo LONGTEXT NULL DEFAULT NULL,
+				curador_user_id BIGINT UNSIGNED NULL DEFAULT NULL,
+				foto_blob_id BIGINT UNSIGNED NOT NULL,
+				token_dispositivo VARCHAR(64) NOT NULL DEFAULT '',
+				ip_subida VARCHAR(64) NOT NULL DEFAULT '',
+				consentimiento TINYINT(1) NOT NULL DEFAULT 0,
+				PRIMARY KEY  (id),
+				KEY estado (estado),
+				KEY formacion_catalogada (formacion_catalogada_id, estado),
+				KEY token_dia (token_dispositivo, fecha_creacion),
+				KEY ip_dia (ip_subida, fecha_creacion),
+				KEY email_contacto (email_contacto)
+			) {$charset_collate};",
+
+			// Tokens RGPD de un solo uso emitidos al solicitar borrado
+			// por email. La fila se inserta al solicitar, se marca
+			// `usado_en` cuando el usuario hace click, y a partir de
+			// ese momento el handler ejecuta el borrado de las
+			// aportaciones de ese email. Tokens caducan en 24h.
+			"CREATE TABLE {$fosiles_borrados_rgpd} (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				email_contacto VARCHAR(190) NOT NULL,
+				token_hash CHAR(64) NOT NULL,
+				expira_en DATETIME NOT NULL,
+				usado_en DATETIME NULL DEFAULT NULL,
+				ip_solicitud VARCHAR(64) NOT NULL DEFAULT '',
+				creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY  (id),
+				UNIQUE KEY token_hash (token_hash),
+				KEY email_expira (email_contacto, expira_en)
+			) {$charset_collate};",
 		);
 	}
 
@@ -394,6 +507,19 @@ class NS_Esquema {
 				'name'           => 'Las Versiones',
 				'age_min'        => 10,
 				'age_max'        => 14,
+				'schema_version' => '1.0',
+			),
+			// 'fosiles' es app **del operador para adulto aficionado**,
+			// no de la línea Kids. Se siembra el game_id porque las
+			// tablas de aportaciones a la comunidad lo referencian
+			// implícitamente (multi-tenancy del plugin); el age_min/max
+			// no se aplica al ser adulto, pero respetan el formato de la
+			// columna (TINYINT UNSIGNED NOT NULL).
+			array(
+				'id'             => 'fosiles',
+				'name'           => 'Fósiles',
+				'age_min'        => 16,
+				'age_max'        => 99,
 				'schema_version' => '1.0',
 			),
 		);

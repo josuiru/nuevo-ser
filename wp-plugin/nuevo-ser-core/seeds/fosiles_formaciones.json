@@ -1,0 +1,366 @@
+[
+  {
+    "codigo": "buntsandstein",
+    "nombre_oficial": "Buntsandstein",
+    "periodo": "Triásico",
+    "edad_aproximada": "252 – 201 Ma",
+    "regiones": [
+      "Cordillera Ibérica",
+      "Cordillera Vasco-Cantábrica",
+      "Pirineos"
+    ],
+    "descripcion": "Areniscas y lutitas rojas continentales del Triásico Inferior, base de la sucesión germánica ibérica.",
+    "activo": true
+  },
+  {
+    "codigo": "muschelkalk",
+    "nombre_oficial": "Muschelkalk",
+    "periodo": "Triásico",
+    "edad_aproximada": "252 – 201 Ma",
+    "regiones": [
+      "Cordillera Ibérica",
+      "Cordillera Vasco-Cantábrica",
+      "Cordilleras Costeras Catalanas"
+    ],
+    "descripcion": "Calizas y dolomías de plataforma marina somera del Triásico Medio (Anisiense-Ladiniense).",
+    "activo": true
+  },
+  {
+    "codigo": "keuper",
+    "nombre_oficial": "Keuper",
+    "periodo": "Triásico",
+    "edad_aproximada": "252 – 201 Ma",
+    "regiones": [
+      "Cordillera Ibérica",
+      "Cordillera Vasco-Cantábrica",
+      "Rioja Alavesa",
+      "Pirineos"
+    ],
+    "descripcion": "Arcillas abigarradas con yesos y halita, depositadas en lagunas marinas restringidas del Triásico Superior. Núcleos de diapiros en Iberia.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-aralar-lias",
+    "nombre_oficial": "Calizas De Aralar",
+    "periodo": "Jurásico",
+    "edad_aproximada": "201 – 145 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Pirineo navarro"
+    ],
+    "descripcion": "Calizas y margocalizas del Lías inferior y medio (Sinemuriense-Pliensbachiense) de la Sierra de Aralar.",
+    "activo": true
+  },
+  {
+    "codigo": "margas-toarcienses-bizkaia",
+    "nombre_oficial": "Margas Toarcienses",
+    "periodo": "Jurásico",
+    "edad_aproximada": "201 – 145 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Bizkaia"
+    ],
+    "descripcion": "Margas y margocalizas del Toarciense con abundantes ammonites y belemnites, depositadas en cuenca pelágica.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-lias-camero",
+    "nombre_oficial": "Lias De Camero",
+    "periodo": "Jurásico",
+    "edad_aproximada": "201 – 145 Ma",
+    "regiones": [
+      "Sistema Ibérico",
+      "La Rioja"
+    ],
+    "descripcion": "Calizas y margas marinas del Jurásico Inferior y Medio de la Sierra de Cameros.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-dogger-iberica",
+    "nombre_oficial": "Dogger",
+    "periodo": "Jurásico",
+    "edad_aproximada": "201 – 145 Ma",
+    "regiones": [
+      "Sistema Ibérico",
+      "Cordillera Vasco-Cantábrica"
+    ],
+    "descripcion": "Calizas y calizas margosas del Jurásico Medio (Bajociense-Bathoniense) de plataforma carbonatada.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-pelagicas-kimmeridgiense",
+    "nombre_oficial": "Kimmeridgiense",
+    "periodo": "Jurásico",
+    "edad_aproximada": "201 – 145 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Cordilleras Béticas"
+    ],
+    "descripcion": "Calizas y margas pelágicas del Jurásico Superior (Kimmeridgiense-Tithoniense).",
+    "activo": true
+  },
+  {
+    "codigo": "wealdiense-cameros",
+    "nombre_oficial": "Wealdiense",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Sistema Ibérico",
+      "La Rioja",
+      "Soria",
+      "Burgos"
+    ],
+    "descripcion": "Sucesión continental fluvio-lacustre del Cretácico Inferior de Cameros, famosa por icnitas de dinosaurios.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-urgonianas-aralar",
+    "nombre_oficial": "Calizas Urgonianas De Aralar",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Pirineo navarro"
+    ],
+    "descripcion": "Calizas masivas con rudistas y corales del Aptiense-Albiense en la Sierra de Aralar (facies Urgoniana).",
+    "activo": true
+  },
+  {
+    "codigo": "urgoniano-bizkaia",
+    "nombre_oficial": "Urgoniano De Bizkaia",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Bizkaia"
+    ],
+    "descripcion": "Complejo de calizas arrecifales con rudistas y corales del Aptiense-Albiense en Bizkaia (Ereño, Jata, Atxarte).",
+    "activo": true
+  },
+  {
+    "codigo": "urgoniano-cantabria",
+    "nombre_oficial": "Urgoniano De Cantabria",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Cantabria"
+    ],
+    "descripcion": "Calizas con rudistas y orbitolínidos del Aptiense-Albiense en Cantabria oriental.",
+    "activo": true
+  },
+  {
+    "codigo": "margas-aptienses-araba",
+    "nombre_oficial": "Margas Aptienses",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Álava"
+    ],
+    "descripcion": "Margas y margocalizas del Aptiense-Albiense de Araba, con ammonites abundantes (Salinillas, Nograro).",
+    "activo": true
+  },
+  {
+    "codigo": "ambar-penacerrada",
+    "nombre_oficial": "Peñacerrada",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Montes Obarenes",
+      "Álava",
+      "Burgos"
+    ],
+    "descripcion": "Niveles con ámbar fosilífero del Albiense en facies deltaicas; uno de los mejores yacimientos de ámbar con inclusiones del mundo.",
+    "activo": true
+  },
+  {
+    "codigo": "formacion-escucha",
+    "nombre_oficial": "Formacion Escucha",
+    "periodo": "Cretácico Inferior (Urgoniano)",
+    "edad_aproximada": "145 – 100 Ma",
+    "regiones": [
+      "Cordillera Ibérica",
+      "Maestrazgo",
+      "Teruel"
+    ],
+    "descripcion": "Lutitas y areniscas con niveles de carbón del Albiense del Maestrazgo, en facies deltaicas y pantanosas.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-cenomaniense-cuenca",
+    "nombre_oficial": "Cenomaniense De Cuenca",
+    "periodo": "Cretácico Superior",
+    "edad_aproximada": "100 – 66 Ma",
+    "regiones": [
+      "Cordillera Ibérica",
+      "Cuenca"
+    ],
+    "descripcion": "Calizas y dolomías de plataforma carbonatada somera del Cenomaniense en la Cordillera Ibérica.",
+    "activo": true
+  },
+  {
+    "codigo": "maastrichtiense-zumaia",
+    "nombre_oficial": "Maastrichtiense De Zumaia",
+    "periodo": "Cretácico Superior",
+    "edad_aproximada": "100 – 66 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Gipuzkoa"
+    ],
+    "descripcion": "Alternancia rítmica de margas y margocalizas del Maastrichtiense que contiene el GSSP del límite Cretácico-Paleógeno.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-lekeitio",
+    "nombre_oficial": "Calizas De Lekeitio",
+    "periodo": "Cretácico Superior",
+    "edad_aproximada": "100 – 66 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Bizkaia"
+    ],
+    "descripcion": "Calizas con rudistas hipuritidos del Maastrichtiense en la costa de Bizkaia oriental.",
+    "activo": true
+  },
+  {
+    "codigo": "margas-plentzia",
+    "nombre_oficial": "Margas De Plentzia",
+    "periodo": "Cretácico Superior",
+    "edad_aproximada": "100 – 66 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Bizkaia"
+    ],
+    "descripcion": "Margas pelágicas del Campaniense-Maastrichtiense en el arco vizcaíno.",
+    "activo": true
+  },
+  {
+    "codigo": "flysch-zumaia-paleogeno",
+    "nombre_oficial": "Flysch De Zumaia",
+    "periodo": "Paleoceno – Eoceno",
+    "edad_aproximada": "66 – 34 Ma",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Gipuzkoa"
+    ],
+    "descripcion": "Alternancia turbidítica margo-calcárea del Daniense al Ypresiense en la costa guipuzcoana; sección de referencia internacional.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-pamplona-eoceno",
+    "nombre_oficial": "Calizas De Pamplona",
+    "periodo": "Paleoceno – Eoceno",
+    "edad_aproximada": "66 – 34 Ma",
+    "regiones": [
+      "Pirineos",
+      "Cuenca de Pamplona",
+      "Navarra"
+    ],
+    "descripcion": "Calizas con grandes foraminíferos bentónicos (nummulites, alveolinas) del Eoceno medio en la Cuenca de Pamplona.",
+    "activo": true
+  },
+  {
+    "codigo": "margas-pamplona-eoceno",
+    "nombre_oficial": "Margas De Pamplona",
+    "periodo": "Paleoceno – Eoceno",
+    "edad_aproximada": "66 – 34 Ma",
+    "regiones": [
+      "Pirineos",
+      "Cuenca de Pamplona",
+      "Navarra"
+    ],
+    "descripcion": "Margas hemipelágicas grises del Eoceno superior de la Cuenca de Pamplona, sobre las calizas con nummulites.",
+    "activo": true
+  },
+  {
+    "codigo": "eoceno-iparralde",
+    "nombre_oficial": "Eoceno De Bidart",
+    "periodo": "Paleoceno – Eoceno",
+    "edad_aproximada": "66 – 34 Ma",
+    "regiones": [
+      "Pirineos",
+      "Iparralde",
+      "Gipuzkoa"
+    ],
+    "descripcion": "Calizas y margas eocenas de la costa labortana y de la divisoria pirenaica con nummulítidos y selacios.",
+    "activo": true
+  },
+  {
+    "codigo": "mioceno-rioja-alavesa",
+    "nombre_oficial": "Mioceno De La Rioja Alavesa",
+    "periodo": "Oligoceno – Mioceno",
+    "edad_aproximada": "34 – 5 Ma",
+    "regiones": [
+      "Cuenca del Ebro",
+      "La Rioja",
+      "Rioja Alavesa"
+    ],
+    "descripcion": "Calizas, margas y areniscas continentales del Mioceno medio-superior de la cuenca terciaria del Ebro en la Rioja Alavesa.",
+    "activo": true
+  },
+  {
+    "codigo": "mioceno-bardenas",
+    "nombre_oficial": "Mioceno De Bardenas",
+    "periodo": "Oligoceno – Mioceno",
+    "edad_aproximada": "34 – 5 Ma",
+    "regiones": [
+      "Cuenca del Ebro",
+      "Navarra"
+    ],
+    "descripcion": "Sucesión continental del Mioceno superior (Vallesiense-Turoliense) con fauna de grandes mamíferos en las Bardenas Reales.",
+    "activo": true
+  },
+  {
+    "codigo": "calizas-sastago-ebro",
+    "nombre_oficial": "Calizas De Sastago",
+    "periodo": "Oligoceno – Mioceno",
+    "edad_aproximada": "34 – 5 Ma",
+    "regiones": [
+      "Cuenca del Ebro",
+      "Zaragoza"
+    ],
+    "descripcion": "Calizas y margas lacustres del Mioceno medio del sector central de la Cuenca del Ebro.",
+    "activo": true
+  },
+  {
+    "codigo": "mioceno-marino-iparralde",
+    "nombre_oficial": "Mioceno Marino De Iparralde",
+    "periodo": "Oligoceno – Mioceno",
+    "edad_aproximada": "34 – 5 Ma",
+    "regiones": [
+      "Pirineos",
+      "Iparralde"
+    ],
+    "descripcion": "Calcarenitas, margas y arenas miocenas de la franja costera labortana, con macrofauna marina abundante.",
+    "activo": true
+  },
+  {
+    "codigo": "terrazas-marinas-pleistocenas",
+    "nombre_oficial": "Terraza Marina",
+    "periodo": "Cuaternario",
+    "edad_aproximada": "2,6 Ma – hoy",
+    "regiones": [
+      "Costa Cantábrica",
+      "Bizkaia",
+      "Cantabria",
+      "Iparralde"
+    ],
+    "descripcion": "Niveles de terrazas marinas pleistocenas escalonadas a lo largo de la costa cantábrica, con macrofauna marina retrabajada.",
+    "activo": true
+  },
+  {
+    "codigo": "rellenos-karsticos-pleistoceno",
+    "nombre_oficial": "Relleno Karstico",
+    "periodo": "Cuaternario",
+    "edad_aproximada": "2,6 Ma – hoy",
+    "regiones": [
+      "Cordillera Vasco-Cantábrica",
+      "Pirineos",
+      "Aralar",
+      "Bizkaia"
+    ],
+    "descripcion": "Rellenos sedimentarios pleistocenos de cuevas y abrigos kársticos con fauna fósil abundante.",
+    "activo": true
+  }
+]

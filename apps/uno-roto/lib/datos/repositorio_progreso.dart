@@ -42,6 +42,7 @@ class RepositorioProgreso {
   static const _sufVariantesMaquinasUsadas = 'variantes_maquinas_usadas';
   static const _sufVariantesEraDosUsadas = 'variantes_era_dos_usadas';
   static const _sufDemosPuzzlesVistos = 'demos_puzzles_vistos';
+  static const _sufAyudasPuzzlesVistas = 'ayudas_puzzles_vistas';
   static const _sufRitmoJuego = 'ritmo_juego';
   static const _sufModoExperto = 'modo_experto';
   static const _sufRutaAvatar = 'avatar.ruta';
@@ -440,6 +441,29 @@ class RepositorioProgreso {
     await prefs.setStringList(
       await _clave(_sufDemosPuzzlesVistos),
       vistos.toList(),
+    );
+  }
+
+  /// Conjunto de IDs de familias de puzzle cuya ayuda pedagógica (dialog
+  /// con la frase de AyudaPuzzle) ya se le mostró al niño en este perfil.
+  /// El dialog aparece la primera vez que el niño entra a cada familia
+  /// y le da tiempo a leer la instrucción sin presión. IDs como el name
+  /// del TipoFragmentoEnTejado: 'comparacion', 'amplificar'…
+  Future<Set<String>> cargarAyudasPuzzlesVistas() async {
+    final prefs = await _prefs();
+    final lista =
+        prefs.getStringList(await _clave(_sufAyudasPuzzlesVistas)) ?? [];
+    return lista.toSet();
+  }
+
+  Future<void> marcarAyudaPuzzleVista(String idAyuda) async {
+    final prefs = await _prefs();
+    final vistas = await cargarAyudasPuzzlesVistas();
+    if (vistas.contains(idAyuda)) return;
+    vistas.add(idAyuda);
+    await prefs.setStringList(
+      await _clave(_sufAyudasPuzzlesVistas),
+      vistas.toList(),
     );
   }
 

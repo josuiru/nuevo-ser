@@ -2,7 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:uno_roto/dominio/contador_intentos_puzzle.dart';
 
 void main() {
-  setUp(reiniciarIntentosPuzzle);
+  setUp(() {
+    reiniciarIntentosPuzzle();
+    reiniciarFallosParaTutor();
+  });
 
   group('esquirlasSegunIntentos — 4 opciones', () {
     test('acierto a la primera devuelve base completa', () {
@@ -58,6 +61,43 @@ void main() {
       contarFalloPuzzle();
       reiniciarIntentosPuzzle();
       expect(esquirlasSegunIntentos(base: 4, totalOpciones: 4), 4);
+    });
+  });
+
+  group('contador de fallos para el tutor', () {
+    test('cada contarFalloPuzzle incrementa también el contador del tutor',
+        () {
+      expect(fallosParaTutorPuzzleActual, 0);
+      contarFalloPuzzle();
+      contarFalloPuzzle();
+      contarFalloPuzzle();
+      expect(fallosParaTutorPuzzleActual, 3);
+    });
+
+    test(
+        'reiniciarIntentosPuzzle no toca el contador del tutor — '
+        'el dialog tras-5-fallos lo llama para evitar la regla del descarte '
+        'pero la oferta de Eco se basa en lo que de verdad le costó al niño',
+        () {
+      for (var i = 0; i < 5; i++) {
+        contarFalloPuzzle();
+      }
+      expect(intentosPuzzleActual, 6); // 1 inicial + 5 fallos
+      expect(fallosParaTutorPuzzleActual, 5);
+
+      reiniciarIntentosPuzzle();
+      expect(intentosPuzzleActual, 1);
+      expect(fallosParaTutorPuzzleActual, 5,
+          reason: 'los 5 fallos previos siguen contando para el tutor');
+    });
+
+    test('reiniciarFallosParaTutor sí lo borra (lo usa el cazadero al '
+        'iniciar cada Fragmento)', () {
+      contarFalloPuzzle();
+      contarFalloPuzzle();
+      expect(fallosParaTutorPuzzleActual, 2);
+      reiniciarFallosParaTutor();
+      expect(fallosParaTutorPuzzleActual, 0);
     });
   });
 }

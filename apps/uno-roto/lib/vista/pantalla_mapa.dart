@@ -290,6 +290,17 @@ class _PantallaMapaState extends State<PantallaMapa>
     );
   }
 
+  Future<void> _abrirAjustesSonido() async {
+    HapticFeedback.selectionClick();
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaAjustesSonido(
+          repositorio: widget.repositorio,
+        ),
+      ),
+    );
+  }
+
   Future<void> _abrirFaro() async {
     HapticFeedback.selectionClick();
     final banco = await _cargarBancoFaroSiHaceFalta();
@@ -378,6 +389,7 @@ class _PantallaMapaState extends State<PantallaMapa>
                         alAbrirFaro: _abrirFaro,
                         alAbrirInstrucciones: _abrirInstrucciones,
                         alAbrirTour: _abrirTour,
+                        alAbrirAjustesSonido: _abrirAjustesSonido,
                       ),
                     ),
                     Expanded(
@@ -415,6 +427,7 @@ class _Encabezado extends StatelessWidget {
   final VoidCallback alAbrirFaro;
   final VoidCallback alAbrirInstrucciones;
   final VoidCallback alAbrirTour;
+  final VoidCallback alAbrirAjustesSonido;
 
   const _Encabezado({
     required this.esquirlas,
@@ -428,6 +441,7 @@ class _Encabezado extends StatelessWidget {
     required this.alAbrirFaro,
     required this.alAbrirInstrucciones,
     required this.alAbrirTour,
+    required this.alAbrirAjustesSonido,
   });
 
   @override
@@ -516,18 +530,16 @@ class _Encabezado extends StatelessWidget {
             tooltip: AppLocalizations.of(contexto).mapaBotonEntrenar,
           ),
           const SizedBox(width: 8),
-          _ChipAccion(
-            icono: Icons.help_outline,
-            color: PaletaNeon.textoTenue,
-            alPulsar: alAbrirInstrucciones,
-            tooltip: AppLocalizations.of(contexto).mapaBotonInstrucciones,
-          ),
-          const SizedBox(width: 8),
-          _ChipAccion(
-            icono: Icons.school,
-            color: PaletaNeon.exitoSuave,
-            alPulsar: alAbrirTour,
-            tooltip: 'Tour para educadores',
+          // Menú overflow con Instrucciones / Tour educadores / Ajustes
+          // sonido. Antes los dos primeros eran chips sueltos en la
+          // barra: con 5 chips la cabecera reventaba en móviles
+          // ~390 dp (informe Izan 2026-05-19, dejaba inaccesibles los
+          // ajustes de sonido). El menú agrupa los tres accesos
+          // adultos en un solo punto de pulsado y devuelve aire al HUD.
+          _MenuOverflowAdulto(
+            alAbrirInstrucciones: alAbrirInstrucciones,
+            alAbrirTour: alAbrirTour,
+            alAbrirAjustesSonido: alAbrirAjustesSonido,
           ),
           const SizedBox(width: 8),
           Tooltip(
@@ -554,6 +566,106 @@ class _Encabezado extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Menú overflow del encabezado: agrupa instrucciones, tour de
+/// educadores y ajustes de sonido en un solo punto de pulsado para
+/// no inflar la barra del HUD. Se introdujo tras el informe de
+/// testeo del 2026-05-19 (Izan), donde la cabecera con cinco chips
+/// sueltos desbordaba el ancho en teléfonos ~390 dp y dejaba los
+/// ajustes de sonido fuera de pantalla.
+class _MenuOverflowAdulto extends StatelessWidget {
+  final VoidCallback alAbrirInstrucciones;
+  final VoidCallback alAbrirTour;
+  final VoidCallback alAbrirAjustesSonido;
+
+  const _MenuOverflowAdulto({
+    required this.alAbrirInstrucciones,
+    required this.alAbrirTour,
+    required this.alAbrirAjustesSonido,
+  });
+
+  @override
+  Widget build(BuildContext contexto) {
+    final color = PaletaNeon.textoTenue;
+    return Tooltip(
+      message: 'Más opciones',
+      child: PopupMenuButton<int>(
+        tooltip: '',
+        color: PaletaNeon.fondoMedio,
+        padding: EdgeInsets.zero,
+        onSelected: (valor) {
+          switch (valor) {
+            case 0:
+              alAbrirInstrucciones();
+              break;
+            case 1:
+              alAbrirAjustesSonido();
+              break;
+            case 2:
+              alAbrirTour();
+              break;
+          }
+        },
+        itemBuilder: (_) => [
+          PopupMenuItem<int>(
+            value: 0,
+            child: _ItemMenuAdulto(
+              icono: Icons.help_outline,
+              etiqueta:
+                  AppLocalizations.of(contexto).mapaBotonInstrucciones,
+            ),
+          ),
+          const PopupMenuItem<int>(
+            value: 1,
+            child: _ItemMenuAdulto(
+              icono: Icons.volume_up,
+              etiqueta: 'Ajustes de sonido',
+            ),
+          ),
+          const PopupMenuItem<int>(
+            value: 2,
+            child: _ItemMenuAdulto(
+              icono: Icons.school,
+              etiqueta: 'Tour para educadores',
+            ),
+          ),
+        ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          decoration: BoxDecoration(
+            border: Border.all(color: color.withOpacity(0.5)),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Icon(Icons.more_vert, size: 16, color: color.withOpacity(0.85)),
+        ),
+      ),
+    );
+  }
+}
+
+class _ItemMenuAdulto extends StatelessWidget {
+  final IconData icono;
+  final String etiqueta;
+  const _ItemMenuAdulto({required this.icono, required this.etiqueta});
+
+  @override
+  Widget build(BuildContext contexto) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icono, size: 18, color: PaletaNeon.textoPrincipal),
+        const SizedBox(width: 12),
+        Text(
+          etiqueta,
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 13,
+          ),
+        ),
+      ],
     );
   }
 }

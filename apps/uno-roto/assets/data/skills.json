@@ -71,7 +71,7 @@
         "tejados"
       ],
       "intro_rank": "Aprendiz_I",
-      "required_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -94,7 +94,7 @@
         "tejados"
       ],
       "intro_rank": "Aprendiz_I",
-      "required_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         3,
@@ -116,7 +116,7 @@
         "tejados"
       ],
       "intro_rank": "Aprendiz_II",
-      "required_rank": "Aprendiz_III",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.9,
       "time_median_seconds": [
         2,
@@ -138,7 +138,7 @@
         "tejados"
       ],
       "intro_rank": "Aprendiz_II",
-      "required_rank": "Aprendiz_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.9,
       "time_median_seconds": [
         2,
@@ -161,7 +161,7 @@
         "tejados"
       ],
       "intro_rank": "Aprendiz_II",
-      "required_rank": "Aprendiz_III",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         3,
@@ -185,7 +185,7 @@
         "tejados"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         6,
@@ -207,7 +207,7 @@
         "tejados"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         15,
@@ -230,7 +230,7 @@
         "canales"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -252,7 +252,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -274,7 +274,7 @@
         "canales"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -296,7 +296,7 @@
         "industria"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         5,
@@ -317,7 +317,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -340,7 +340,7 @@
         "canales"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.9,
       "time_median_seconds": [
         3,
@@ -362,7 +362,7 @@
         "canales"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.9,
       "time_median_seconds": [
         3,
@@ -385,7 +385,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         10,
@@ -406,7 +406,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         10,
@@ -428,7 +428,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         5,
@@ -451,7 +451,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -473,7 +473,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         6,
@@ -495,7 +495,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         10,
@@ -518,7 +518,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         8,
@@ -537,7 +537,7 @@
         "industria"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.9,
       "time_median_seconds": [
         3,
@@ -558,7 +558,7 @@
         "canales"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         3,
@@ -579,7 +579,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         12,
@@ -600,7 +600,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         6,
@@ -621,7 +621,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -642,7 +642,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         10,
@@ -663,7 +663,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         12,
@@ -687,7 +687,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -708,7 +708,7 @@
         "canales"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         3,
@@ -729,7 +729,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         5,
@@ -750,7 +750,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -773,7 +773,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         15,
@@ -795,7 +795,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         8,
@@ -817,7 +817,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         12,
@@ -838,7 +838,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         15,
@@ -860,7 +860,7 @@
         "mercado"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.7,
       "time_median_seconds": [
         15,
@@ -879,7 +879,7 @@
         "puerto"
       ],
       "intro_rank": "Aprendiz_II",
-      "required_rank": "Aprendiz_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.9,
       "time_median_seconds": [
         3,
@@ -901,7 +901,7 @@
         "puerto"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         10,
@@ -922,7 +922,7 @@
         "puerto"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         2,
@@ -943,7 +943,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         3,
@@ -965,7 +965,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         5,
@@ -987,7 +987,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         10,
@@ -1009,7 +1009,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         10,
@@ -1026,7 +1026,7 @@
         "canales"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_I",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         8,
@@ -1050,7 +1050,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.7,
       "time_median_seconds": [
         20,
@@ -1074,7 +1074,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista_Mayor",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.7,
       "time_median_seconds": [
         25,
@@ -1095,7 +1095,7 @@
         "industria"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -1116,7 +1116,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         4,
@@ -1133,7 +1133,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         10,
@@ -1150,7 +1150,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -1171,7 +1171,7 @@
         "industria"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         8,
@@ -1190,7 +1190,7 @@
         "afueras"
       ],
       "intro_rank": "Aprendiz_III",
-      "required_rank": "Iniciado_I",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         3,
@@ -1210,7 +1210,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         5,
@@ -1230,7 +1230,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         5,
@@ -1249,7 +1249,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         6,
@@ -1269,7 +1269,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         10,
@@ -1288,7 +1288,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -1309,7 +1309,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         5,
@@ -1346,7 +1346,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         8,
@@ -1365,7 +1365,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_I",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.85,
       "time_median_seconds": [
         8,
@@ -1384,7 +1384,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         10,
@@ -1404,7 +1404,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         10,
@@ -1425,7 +1425,7 @@
         "puerto"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_II",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         8,
@@ -1462,7 +1462,7 @@
         "afueras"
       ],
       "intro_rank": "Iniciado_II",
-      "required_rank": "Fraccionista",
+      "required_rank": "Aprendiz_III",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         8,
@@ -1498,7 +1498,7 @@
         "montana"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Iniciado_I",
       "precision_threshold": 0.8,
       "time_median_seconds": [
         4,
@@ -1517,7 +1517,7 @@
         "montana"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Fraccionista",
+      "required_rank": "Iniciado_I",
       "precision_threshold": 0.7,
       "time_median_seconds": [
         12,
@@ -1537,7 +1537,7 @@
         "montana"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Iniciado_I",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         15,
@@ -1592,7 +1592,7 @@
         "montana"
       ],
       "intro_rank": "Fraccionista",
-      "required_rank": "Iniciado_III",
+      "required_rank": "Iniciado_I",
       "precision_threshold": 0.7,
       "time_median_seconds": [
         20,
@@ -1611,7 +1611,7 @@
         "montana"
       ],
       "intro_rank": "Iniciado_III",
-      "required_rank": "Iniciado_II",
+      "required_rank": "Iniciado_I",
       "precision_threshold": 0.75,
       "time_median_seconds": [
         12,

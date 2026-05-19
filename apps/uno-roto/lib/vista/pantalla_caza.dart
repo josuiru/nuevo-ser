@@ -67,6 +67,15 @@ import '../dominio/problema_mixto_a_impropio.dart'
     show ProblemaMixtoAImpropio;
 import '../dominio/problema_redondeo_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
+import '../dominio/problema_potencia_natural.dart';
+import '../dominio/problema_raiz_cuadrada.dart';
+import '../dominio/problema_pitagoras.dart';
+import '../dominio/problema_ecuacion_lineal.dart';
+import '../dominio/problema_ecuacion_ambos_lados.dart';
+import '../dominio/problema_entero_signo.dart';
+import '../dominio/problema_valor_absoluto.dart';
+import '../dominio/problema_sistema_dos_x_dos.dart';
+import '../dominio/problema_relacion_lineal.dart';
 import '../dominio/selector_habilidades.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
@@ -193,7 +202,7 @@ class _PantallaCazaState extends State<PantallaCaza>
   // Fragmento de ella en la sesión actual; los siguientes sin extra.
   final Set<String> _habilidadesRemontadasEstaSesion = <String>{};
   String? _lineaAmbienteSora;
-  String? _skillPreview;
+  Set<String> _ayudasPuzzlesVistas = <String>{};
   /// Fallback local de fallos consecutivos cuando no hay tutor backend.
   /// Permite ofrecer ayuda local aunque no haya token de servidor.
   final Map<String, int> _fallosLocalesConsecutivos = {};
@@ -350,11 +359,16 @@ class _PantallaCazaState extends State<PantallaCaza>
       catalogo: catalogo,
       cargarEstado: widget.repositorio.cargarEstadoHabilidad,
     );
-    // Precargar estados para _mostrarSkillPreview (evitar async delay)
+    // Precargar estados de habilidades en caché — los usan varias
+    // ramas (cambio de nivel, oferta de tutor, etc.).
     for (final id in catalogo.habilidades.keys) {
       final estado = await widget.repositorio.cargarEstadoHabilidad(id);
       if (estado != null) _estadosCache[id] = estado;
     }
+    // Precargar el set de ayudas-de-puzzle ya vistas para que el dialog
+    // de bienvenida pueda decidir sin ir a disco cada vez que el niño
+    // toca un Fragmento.
+    _ayudasPuzzlesVistas = await widget.repositorio.cargarAyudasPuzzlesVistas();
   }
 
   Future<void> _cargarEstadoInicial() async {
@@ -494,9 +508,16 @@ class _PantallaCazaState extends State<PantallaCaza>
     // puzzle lo incrementa; al volver, [intentosPuzzleActual] nos
     // dice en qué intento acertó el niño y escalamos las esquirlas.
     reiniciarIntentosPuzzle();
-    // Mostrar el nombre de la skill antes de abrir el puzzle
-    _mostrarSkillPreview(fragmento);
-    await Future.delayed(const Duration(milliseconds: 2400));
+    // Y el contador paralelo de fallos para el tutor, que sobrevive al
+    // reset del dialog "tras-5-fallos" para que la oferta de Eco se
+    // base en lo que de verdad le costó al niño este Fragmento.
+    reiniciarFallosParaTutor();
+    // La primera vez que el niño abre un puzzle de este tipo en este
+    // perfil, le mostramos la instrucción pedagógica como dialog
+    // modal — sin presión de tiempo, hasta que toque EMPEZAR. A partir
+    // de la segunda captura del mismo tipo el toque lleva directo al
+    // puzzle, sin intermedios.
+    await _mostrarAyudaPuzzleSiPrimeraVez(fragmento);
     if (!mounted) return;
     final capturado = await _abrirPuzzleSegunTipo(fragmento);
     // Si la pantalla de puzzle no registró su propia respuesta
@@ -528,12 +549,17 @@ class _PantallaCazaState extends State<PantallaCaza>
     // intentos.
     await _registrarResultadoMaestria(fragmento, capturado == true);
     if (!mounted) return;
-    // Registramos los fallos PREVIOS al resultado final (intentos-1)
-    // para que el contador del tutor refleje cuánto le costó este
-    // puzzle, no solo el resultado binario. Así "tres errores aunque
-    // al final acertara" puede activar la oferta de Eco igual que
-    // "tres Fragmentos seguidos escapados".
-    for (var i = 1; i < intentos; i++) {
+    // Registramos los fallos PREVIOS al resultado final para que el
+    // contador del tutor refleje cuánto le costó este puzzle, no solo
+    // el resultado binario. Así "tres errores aunque al final acertara"
+    // puede activar la oferta de Eco igual que "tres Fragmentos
+    // seguidos escapados". Usamos [fallosParaTutorPuzzleActual] —no
+    // [intentos]— porque el dialog "¿Necesitas ayuda?" tras 5 fallos
+    // reinicia [intentosPuzzleActual] (para evitar la regla del
+    // descarte) y antes de este cambio nos hacía perder esos 5 fallos
+    // a ojos del tutor.
+    final fallosPreviosParaTutor = fallosParaTutorPuzzleActual;
+    for (var i = 0; i < fallosPreviosParaTutor; i++) {
       await _registrarEnTutor(fragmento, false);
     }
     if (!mounted) return;
@@ -734,13 +760,24 @@ class _PantallaCazaState extends State<PantallaCaza>
       case TipoFragmentoEnTejado.ecuacionLineal:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaEcuacionLineal(),
+            builder: (_) => PantallaEcuacionLineal(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorEcuacionLineal(semilla: semilla).generar(dificultad: dif),
+              ),
+            ),
           ),
         );
       case TipoFragmentoEnTejado.potenciaNatural:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaPotenciaNatural(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorPotenciaNatural(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -749,6 +786,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaRaizCuadrada(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorRaizCuadrada(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -757,6 +799,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaEcuacionAmbosLados(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) => GeneradorEcuacionAmbosLados(semilla: semilla)
+                    .generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -765,6 +812,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaPitagoras(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorPitagoras(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -773,6 +825,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaEnteroSigno(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorEnteroSigno(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -781,6 +838,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaValorAbsoluto(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorValorAbsoluto(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -789,6 +851,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaSistemaDosXDos(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorSistemaDosXDos(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -797,6 +864,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaRelacionLineal(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorRelacionLineal(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -1545,6 +1617,20 @@ class _PantallaCazaState extends State<PantallaCaza>
     return null;
   }
 
+  /// Reconstruye el problema de una pantalla Era 3 desde la semilla
+  /// guardada en el Fragmento. Sin esto, la pantalla genera un problema
+  /// nuevo aleatorio al abrir y el "7³" del spawn aparece como "2⁵".
+  /// Si el Fragmento viene de un test sin semilla, devuelve null y la
+  /// pantalla cae a `generar(dificultad)` con su propia semilla.
+  T? _reconstruirEra3<T>(
+    FragmentoEnTejado fragmento,
+    T Function(int semilla, int dificultad) generador,
+  ) {
+    final semilla = fragmento.semillaProblema;
+    if (semilla == null) return null;
+    return generador(semilla, fragmento.dificultadSugerida ?? 1);
+  }
+
   /// Comprueba si el total acumulado de esquirlas implica subir de
   /// rango y, si es así, lo persiste y activa el flag narrativo de
   /// **cada rango intermedio** para que las escenas que dependen de
@@ -1792,37 +1878,101 @@ class _PantallaCazaState extends State<PantallaCaza>
     );
   }
 
-  /// Muestra brevemente el nombre de la skill antes de abrir el puzzle.
-  void _mostrarSkillPreview(FragmentoEnTejado fragmento) async {
-    final id = idHabilidadPrincipal(fragmento);
-    final nombre = _nombreVisibleDeHabilidad(id);
-    final (_, _, transferencia) = AyudaPuzzle.paraTipo(fragmento.tipo);
-    // Incluir el nivel actual de la skill (desde cache)
-    final estado = _estadosCache[id];
-    final nivelTexto = _nivelLocalizado(estado?.nivel);
-    final lineaNivel = nivelTexto != null ? ' · $nivelTexto' : '';
-    final texto = transferencia.isNotEmpty
-        ? '$nombre$lineaNivel\n$transferencia'
-        : '$nombre$lineaNivel';
-    setState(() => _skillPreview = texto);
-    Future.delayed(const Duration(milliseconds: 2600), () {
-      if (!mounted) return;
-      setState(() {
-        if (_skillPreview == texto) _skillPreview = null;
-      });
-    });
-  }
-
-  String? _nivelLocalizado(NivelMaestria? nivel) {
-    if (nivel == null || nivel == NivelMaestria.inexplorada) return null;
-    final textos = AppLocalizations.of(context);
-    return switch (nivel) {
-      NivelMaestria.introducida => textos.habNivelIntroducida,
-      NivelMaestria.enDesarrollo => textos.habNivelEnDesarrollo,
-      NivelMaestria.competente => textos.habNivelCompetente,
-      NivelMaestria.maestria => textos.habNivelMaestria,
-      _ => null,
-    };
+  /// Si es la primera vez que el niño se enfrenta a esta familia de
+  /// puzzle en este perfil, abre un AlertDialog con la explicación
+  /// pedagógica de AyudaPuzzle (título + texto + transferencia) y un
+  /// botón EMPEZAR. Sin temporizador: el niño dispone del tiempo que
+  /// necesite. Tras cerrar, marca la familia como vista y vuelve para
+  /// que el flujo de [_alTocarFragmento] abra el puzzle.
+  Future<void> _mostrarAyudaPuzzleSiPrimeraVez(
+      FragmentoEnTejado fragmento) async {
+    final idTipo = fragmento.tipo.name;
+    if (_ayudasPuzzlesVistas.contains(idTipo)) return;
+    final (titulo, texto, transferencia) = AyudaPuzzle.paraTipo(fragmento.tipo);
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.6),
+      builder: (ctx) => AlertDialog(
+        backgroundColor: PaletaNeon.fondoMedio,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: PaletaNeon.textoTenue.withOpacity(0.2),
+          ),
+        ),
+        title: Text(
+          titulo,
+          style: const TextStyle(
+            color: PaletaNeon.textoPrincipal,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 1.5,
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                texto,
+                style: const TextStyle(
+                  color: PaletaNeon.textoTenue,
+                  fontSize: 14,
+                  height: 1.6,
+                ),
+              ),
+              if (transferencia.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: PaletaNeon.fondoProfundo.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '\u{1F4A1} ',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Expanded(
+                        child: Text(
+                          transferencia,
+                          style: const TextStyle(
+                            color: PaletaNeon.textoPrincipal,
+                            fontSize: 13,
+                            height: 1.4,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text(
+              'EMPEZAR',
+              style: TextStyle(
+                color: PaletaNeon.violetaNeon,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    await widget.repositorio.marcarAyudaPuzzleVista(idTipo);
+    _ayudasPuzzlesVistas = {..._ayudasPuzzlesVistas, idTipo};
   }
 
   String _nombreVisibleDeHabilidad(String id) {
@@ -2296,38 +2446,6 @@ Error típico en esta skill: $errorTipico$respuestaTexto''';
                         },
                       ),
                     ),
-                    if (_skillPreview != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 80),
-                        child: Center(
-                          child: AnimatedOpacity(
-                            opacity: _skillPreview != null ? 1.0 : 0.0,
-                            duration: const Duration(milliseconds: 300),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: PaletaNeon.fondoMedio.withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: PaletaNeon.violetaNeon
-                                      .withOpacity(0.3),
-                                ),
-                              ),
-                              child: Text(
-                                _skillPreview!,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: PaletaNeon.textoPrincipal,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w300,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     SoraPresencia(
                       textoActivo: _lineaAmbienteSora == null
                           ? null
