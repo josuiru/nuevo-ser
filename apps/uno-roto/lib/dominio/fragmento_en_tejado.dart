@@ -309,6 +309,18 @@ class FragmentoEnTejado {
   /// guionadas) donde no hay calibración que respetar.
   final int? dificultadSugerida;
 
+  /// Semilla del generador que produjo el problema asociado al
+  /// Fragmento. Las pantallas Era 3 (potencia, raíz, Pitágoras,
+  /// ec. ambos lados, entero con signo, valor absoluto, sistema 2×2,
+  /// relación lineal, ecuación lineal) la usan para regenerar
+  /// **exactamente el mismo** problema que vio el niño al spawn — sin
+  /// esto, la pantalla regeneraba uno nuevo aleatorio y el "7³" del
+  /// Fragmento aparecía como "2⁵" al abrir. Null en Fragmentos cuyo
+  /// puzzle se reconstruye desde numerador/denominador/etiquetaDecimal
+  /// directamente (la mayoría — esto solo aplica a las Era 3 que usan
+  /// `Generador.generar(dificultad:)` con aleatoriedad interna).
+  final int? semillaProblema;
+
   const FragmentoEnTejado({
     required this.identificador,
     required this.numerador,
@@ -326,6 +338,7 @@ class FragmentoEnTejado {
     this.decimalB,
     this.modoComparacion,
     this.dificultadSugerida,
+    this.semillaProblema,
   });
 
   bool get esCompuesto => numerador > 1;

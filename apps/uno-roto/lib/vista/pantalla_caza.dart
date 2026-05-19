@@ -67,6 +67,15 @@ import '../dominio/problema_mixto_a_impropio.dart'
     show ProblemaMixtoAImpropio;
 import '../dominio/problema_redondeo_decimal.dart';
 import '../dominio/problema_porcentaje.dart';
+import '../dominio/problema_potencia_natural.dart';
+import '../dominio/problema_raiz_cuadrada.dart';
+import '../dominio/problema_pitagoras.dart';
+import '../dominio/problema_ecuacion_lineal.dart';
+import '../dominio/problema_ecuacion_ambos_lados.dart';
+import '../dominio/problema_entero_signo.dart';
+import '../dominio/problema_valor_absoluto.dart';
+import '../dominio/problema_sistema_dos_x_dos.dart';
+import '../dominio/problema_relacion_lineal.dart';
 import '../dominio/selector_habilidades.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
@@ -751,13 +760,24 @@ class _PantallaCazaState extends State<PantallaCaza>
       case TipoFragmentoEnTejado.ecuacionLineal:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
-            builder: (_) => const PantallaEcuacionLineal(),
+            builder: (_) => PantallaEcuacionLineal(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorEcuacionLineal(semilla: semilla).generar(dificultad: dif),
+              ),
+            ),
           ),
         );
       case TipoFragmentoEnTejado.potenciaNatural:
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaPotenciaNatural(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorPotenciaNatural(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -766,6 +786,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaRaizCuadrada(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorRaizCuadrada(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -774,6 +799,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaEcuacionAmbosLados(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) => GeneradorEcuacionAmbosLados(semilla: semilla)
+                    .generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -782,6 +812,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaPitagoras(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorPitagoras(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -790,6 +825,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaEnteroSigno(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorEnteroSigno(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -798,6 +838,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaValorAbsoluto(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorValorAbsoluto(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -806,6 +851,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaSistemaDosXDos(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorSistemaDosXDos(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -814,6 +864,11 @@ class _PantallaCazaState extends State<PantallaCaza>
         return Navigator.of(context).push<bool>(
           MaterialPageRoute(
             builder: (_) => PantallaRelacionLineal(
+              problemaPredeterminado: _reconstruirEra3(
+                fragmento,
+                (semilla, dif) =>
+                    GeneradorRelacionLineal(semilla: semilla).generar(dificultad: dif),
+              ),
               dificultad: fragmento.dificultadSugerida ?? 1,
             ),
           ),
@@ -1560,6 +1615,20 @@ class _PantallaCazaState extends State<PantallaCaza>
       if (p.etiqueta == etiqueta) return p;
     }
     return null;
+  }
+
+  /// Reconstruye el problema de una pantalla Era 3 desde la semilla
+  /// guardada en el Fragmento. Sin esto, la pantalla genera un problema
+  /// nuevo aleatorio al abrir y el "7³" del spawn aparece como "2⁵".
+  /// Si el Fragmento viene de un test sin semilla, devuelve null y la
+  /// pantalla cae a `generar(dificultad)` con su propia semilla.
+  T? _reconstruirEra3<T>(
+    FragmentoEnTejado fragmento,
+    T Function(int semilla, int dificultad) generador,
+  ) {
+    final semilla = fragmento.semillaProblema;
+    if (semilla == null) return null;
+    return generador(semilla, fragmento.dificultadSugerida ?? 1);
   }
 
   /// Comprueba si el total acumulado de esquirlas implica subir de

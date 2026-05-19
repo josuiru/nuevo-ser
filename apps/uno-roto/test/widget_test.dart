@@ -57,6 +57,9 @@ import 'package:uno_roto/dominio/problema_porcentaje_cantidad.dart';
 import 'package:uno_roto/dominio/problema_mixto_a_impropio.dart';
 import 'package:uno_roto/dominio/problema_redondeo_decimal.dart';
 import 'package:uno_roto/dominio/problema_simplificar.dart';
+import 'package:uno_roto/dominio/problema_potencia_natural.dart';
+import 'package:uno_roto/dominio/problema_raiz_cuadrada.dart';
+import 'package:uno_roto/dominio/problema_pitagoras.dart';
 import 'package:nuevo_ser_tutor/nuevo_ser_tutor.dart';
 import 'package:uno_roto/dominio/voz_personaje.dart';
 import 'package:uno_roto/dominio/plano_escena.dart';
@@ -2870,6 +2873,29 @@ void main() {
     expect(problema.respuesta, 19);
   });
 
+  test(
+    'GeneradorGraficoBarras modo total: existe un distractor mayor que '
+    'el correcto en cada caso curado (regresión informe Izan 2026-05-19, '
+    'donde el correcto era trivialmente el número más grande)',
+    () {
+      for (var i = 0; i < GeneradorGraficoBarras.cantidadDeCasosCurados; i++) {
+        final problema = GeneradorGraficoBarras(semilla: i)
+            .generarPorIndiceYModo(i, ModoGraficoBarras.total);
+        final correcto = problema.respuesta;
+        final maxCandidato = problema.candidatos.reduce(
+          (a, b) => a > b ? a : b,
+        );
+        expect(
+          maxCandidato > correcto,
+          isTrue,
+          reason: 'Caso $i: candidatos ${problema.candidatos} con correcto '
+              '$correcto. El correcto es el máximo — la heurística trivial '
+              '"siempre el más grande" resolvería el puzzle sin sumar.',
+        );
+      }
+    },
+  );
+
   // ═══ Puzzle de simetría (GEO.07) ═══
 
   test('GEO.07 está mapeada al tipo simetria', () {
@@ -4669,6 +4695,70 @@ void main() {
       expect(restaurado.fallosConsecutivos, 0);
       expect(restaurado.ultimaOferta, isNull);
       expect(restaurado.vecesUsado, 0);
+    });
+  });
+
+  // ═══ Reconstrucción determinista Era 3 (regresión Izan 2026-05-19) ═══
+  //
+  // Los puzzles Era 3 generan su problema con una semilla aleatoria al
+  // spawnear el Fragmento. El cazadero guarda la semilla en
+  // [FragmentoEnTejado.semillaProblema] y la pantalla la usa para
+  // regenerar **el mismo** problema al abrirlo. Sin este cableado, un
+  // "7³" visto en el tejado aparecía como "2⁵" en el puzzle.
+  group('Reconstrucción determinista Era 3 por semilla', () {
+    final ahoraFijo = DateTime(2026, 5, 19, 12);
+
+    test('potenciaNatural: misma semilla → mismo problema', () {
+      final generador = GeneradorCaza(semilla: 42);
+      final fragmento = generador.siguienteParaSkill(
+        idHabilidad: 'ARI.02',
+        esquirlasAcumuladas: 200,
+        ahora: ahoraFijo,
+      );
+      expect(fragmento.tipo, TipoFragmentoEnTejado.potenciaNatural);
+      expect(fragmento.semillaProblema, isNotNull);
+      expect(fragmento.dificultadSugerida, isNotNull);
+
+      final reconstruido = GeneradorPotenciaNatural(
+        semilla: fragmento.semillaProblema,
+      ).generar(dificultad: fragmento.dificultadSugerida!);
+      expect(reconstruido.base, fragmento.numerador);
+      expect(reconstruido.exponente, fragmento.denominador);
+      expect(reconstruido.etiqueta, fragmento.etiquetaDecimal);
+    });
+
+    test('raizCuadrada: misma semilla → mismo problema', () {
+      final generador = GeneradorCaza(semilla: 7);
+      final fragmento = generador.siguienteParaSkill(
+        idHabilidad: 'ARI.03',
+        esquirlasAcumuladas: 250,
+        ahora: ahoraFijo,
+      );
+      expect(fragmento.tipo, TipoFragmentoEnTejado.raizCuadrada);
+      expect(fragmento.semillaProblema, isNotNull);
+
+      final reconstruido = GeneradorRaizCuadrada(
+        semilla: fragmento.semillaProblema,
+      ).generar(dificultad: fragmento.dificultadSugerida!);
+      expect(reconstruido.radicando, fragmento.numerador);
+      expect(reconstruido.etiqueta, fragmento.etiquetaDecimal);
+    });
+
+    test('pitagoras: misma semilla → mismo problema', () {
+      final generador = GeneradorCaza(semilla: 99);
+      final fragmento = generador.siguienteParaSkill(
+        idHabilidad: 'GEO.08',
+        esquirlasAcumuladas: 250,
+        ahora: ahoraFijo,
+      );
+      expect(fragmento.tipo, TipoFragmentoEnTejado.pitagoras);
+      expect(fragmento.semillaProblema, isNotNull);
+
+      final reconstruido = GeneradorPitagoras(
+        semilla: fragmento.semillaProblema,
+      ).generar(dificultad: fragmento.dificultadSugerida!);
+      expect(reconstruido.a, fragmento.numerador);
+      expect(reconstruido.hipotenusa, fragmento.denominador);
     });
   });
 }

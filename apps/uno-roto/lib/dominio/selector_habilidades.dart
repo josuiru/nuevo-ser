@@ -37,6 +37,15 @@ class SelectorHabilidades {
   /// [rangoActual] es el nombre del rango del niño en formato JSON
   /// (p. ej. `'Aprendiz_II'`, `'Iniciado_I'`). Si no se proporciona,
   /// no se filtra por rango (comportamiento predeterminado).
+  ///
+  /// Devuelve `null` si el pool tras filtros tiene **menos de 2**
+  /// candidatas. Eso garantiza variedad en distritos donde un solo
+  /// `required_rank` permitido convertiría el cazadero en monotemático
+  /// (el síntoma reportado en Puerto Silencioso 2026-05-19, donde solo
+  /// DIV.01 cumplía rango y todos los Fragmentos salían de "múltiplos").
+  /// El cazadero detecta el null y cae al reparto por `mezclaPuzzles`
+  /// del distrito, que sí da variedad ambiental aunque el motor de
+  /// maestría todavía no tenga skills suficientes en rango.
   Future<String?> elegirSiguienteHabilidad({
     required Distrito distrito,
     String? dominioFiltrado,
@@ -46,7 +55,9 @@ class SelectorHabilidades {
             ? catalogo.delDominio(dominioFiltrado, rangoActual: rangoActual)
             : catalogo.delDistrito(distrito.identificador,
                 rangoActual: rangoActual))
-        .where((h) => skillsConPuzzleImplementado.contains(h.identificador));
+        .where((h) => skillsConPuzzleImplementado.contains(h.identificador))
+        .toList();
+    if (candidatas.length < 2) return Future.value(null);
     return _selectorCore.elegirSiguienteHabilidad(
       candidatas: candidatas,
       contextoBonusId: distrito.identificador,
