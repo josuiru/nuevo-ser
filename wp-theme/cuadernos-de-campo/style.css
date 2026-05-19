@@ -1,0 +1,18 @@
+/*
+Theme Name: Cuadernos de Campo
+Theme URI: https://github.com/JosuIru/cuadernos-de-campo
+Author: Josu Iru
+Author URI: https://github.com/JosuIru
+Description: Landing promocional de las apps Fósiles y Naturaleza (Cuadernos de Campo). Editable desde wp-admin (Apariencia → Personalizar + CPTs: Especímenes, Códigos de campo, Anotaciones del mapa, Periodos geológicos, Pasos del proceso, Características). El CSS real vive en assets/css/ — este archivo solo contiene la cabecera obligatoria del tema.
+Version: 1.0.0
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 8.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: cuadernos-de-campo
+Tags: landing-page, custom-colors, custom-menu, editor-style
+*/
+
+/* El CSS real está en assets/css/tokens.css + assets/css/landing.css
+   y se encola desde functions.php con wp_enqueue_style(). */
