@@ -11,9 +11,13 @@ import '../dominio/ritmo_juego.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/traducciones_narrativa.dart';
 import '../nucleo/paleta.dart';
+import '../dominio/voz_personaje.dart';
 import '../sonido/catalogo_voces.dart';
 import '../sonido/servicio_sonoro.dart';
 import 'escenario.dart';
+import 'kai_presencia.dart';
+import 'oryn_presencia.dart';
+import 'sora_presencia.dart';
 import 'widget_fragmento_tutorial.dart';
 
 /// Reproductor de escenas cinemáticas. Recorre los planos uno a uno
@@ -200,6 +204,50 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
     final planos = widget.escena.planos;
     final indice = _indicePlano.clamp(0, planos.length - 1);
     return planos[indice];
+  }
+
+  /// Voz "visible" del plano actual: la del diálogo si es PlanoDialogo,
+  /// la del prompt si es PlanoEleccion, null en ambientes y cierres.
+  /// Se usa para decidir qué avatar de personaje superponer.
+  VozPersonajeContrato? get _vozActivaPlano {
+    final plano = _planoActual;
+    if (plano is PlanoDialogo) return plano.voz;
+    if (plano is PlanoEleccion) return plano.voz;
+    return null;
+  }
+
+  /// Devuelve el avatar de presencia del personaje que está hablando en
+  /// el plano actual. Sora a la izquierda, Kai a la derecha, Oryn
+  /// centrado — siempre sin bocadillo porque el texto del diálogo ya
+  /// se pinta encima en `_VistaDialogo`/`_VistaEleccion`. Acompaña el
+  /// fade-out del plano para no quedar congelado al avanzar. Devuelve
+  /// SizedBox vacío para voces sin avatar definido (Irune, Rexán, Ari,
+  /// los Fragmentos nombrados, narrador…).
+  Widget _construirPresenciaPersonaje() {
+    final voz = _vozActivaPlano;
+    Widget? presencia;
+    if (voz == VozPersonaje.sora) {
+      presencia = const SoraPresencia(textoActivo: null);
+    } else if (voz == VozPersonaje.kai) {
+      presencia = const KaiPresencia(textoActivo: null);
+    } else if (voz == VozPersonaje.oryn) {
+      presencia = const OrynPresencia(textoActivo: null);
+    }
+    if (presencia == null) return const SizedBox.shrink();
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: IgnorePointer(
+        child: SafeArea(
+          child: AnimatedOpacity(
+            opacity: _fase == _FaseReproduccion.saliendo ? 0.0 : 1.0,
+            duration: const Duration(milliseconds: 320),
+            child: presencia,
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _iniciarPlanoActual() async {
@@ -431,6 +479,7 @@ class _PantallaCinematicaState extends State<PantallaCinematica>
                 ),
               ),
             ),
+            _construirPresenciaPersonaje(),
             _IndicadorSaltar(alPulsar: widget.alTerminar),
           ],
         ),

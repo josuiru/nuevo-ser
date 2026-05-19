@@ -52,131 +52,19 @@ class _AvatarKai extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexto) {
-    return CustomPaint(
-      size: const Size(70, 90),
-      painter: _PintorSiluetaKai(),
+    // PNG escaneado del concept-art original (kai.pdf). Cabe en el
+    // SizedBox de 120 del padre — si lo subimos más rompemos el
+    // layout de pantalla_combate (que asume franja de 120 al fondo).
+    return Image.asset(
+      'assets/personajes/kai.png',
+      width: 95,
+      height: 120,
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.medium,
     );
   }
 }
 
-class _PintorSiluetaKai extends CustomPainter {
-  // Paleta canónica (concept-art, ver biblia_visual.md):
-  //  • Silueta: oscura azul-violeta (tono de fondo de la figura).
-  //  • Sudadera azul cielo con capucha visible en la nuca.
-  //  • Mechones borgoña en picos sobre la frente.
-  //  • Pantalón morado oscuro asomando bajo la sudadera.
-  //  • Zapatillas turquesa muy contrastadas.
-  static const _siluetaCuerpo = Color(0xFF1B0C2A);
-  static const _contornoAzul = Color(0xFF3FA9DE);
-  static const _sudadera = Color(0xFF3FA9DE);
-  static const _capucha = Color(0xFF2A7BAA);
-  static const _peloPico = Color(0xFF6F2247);
-  static const _pantalon = Color(0xFF5A2A4B);
-  static const _zapatilla = Color(0xFF65D9C7);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final pinturaContorno = Paint()
-      ..color = _contornoAzul.withOpacity(0.85)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    final centroCabeza = Offset(size.width / 2, size.height * 0.26);
-    final radioCabeza = size.width * 0.23;
-
-    // Sudadera: caja redondeada amplia, larga (le llega casi al pie).
-    final rectSudadera = Rect.fromLTWH(
-      size.width * 0.20,
-      size.height * 0.42,
-      size.width * 0.60,
-      size.height * 0.42,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rectSudadera, const Radius.circular(8)),
-      Paint()..color = _sudadera,
-    );
-
-    // Capucha caída por detrás del cuello (semicírculo oscuro detrás
-    // de los hombros).
-    final rectCapucha = Rect.fromCenter(
-      center: Offset(centroCabeza.dx, size.height * 0.43),
-      width: size.width * 0.45,
-      height: size.height * 0.16,
-    );
-    canvas.drawArc(rectCapucha, 3.14, 3.14, true,
-        Paint()..color = _capucha);
-
-    // Cabeza con tez clara que destaca sobre la sudadera azul.
-    canvas.drawCircle(
-      centroCabeza,
-      radioCabeza,
-      Paint()..color = _siluetaCuerpo,
-    );
-
-    // Picos del pelo: 3 trazos cortos sobre la coronilla.
-    final pinturaPelo = Paint()
-      ..color = _peloPico
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round;
-    for (final desplaza in const [-0.55, 0.0, 0.55]) {
-      canvas.drawLine(
-        Offset(centroCabeza.dx + radioCabeza * desplaza,
-            centroCabeza.dy - radioCabeza * 0.4),
-        Offset(centroCabeza.dx + radioCabeza * desplaza * 1.2,
-            centroCabeza.dy - radioCabeza * 1.25),
-        pinturaPelo,
-      );
-    }
-
-    // Contorno del torso por encima del relleno.
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rectSudadera, const Radius.circular(8)),
-      pinturaContorno,
-    );
-    // Contorno de la cabeza.
-    canvas.drawCircle(centroCabeza, radioCabeza, pinturaContorno);
-
-    // Pantalón morado: dos trapecios verticales bajo la sudadera.
-    final pinturaPantalon = Paint()..color = _pantalon;
-    final rectPantalonIzq = Rect.fromLTWH(
-      size.width * 0.32,
-      size.height * 0.84,
-      size.width * 0.14,
-      size.height * 0.10,
-    );
-    final rectPantalonDer = Rect.fromLTWH(
-      size.width * 0.54,
-      size.height * 0.84,
-      size.width * 0.14,
-      size.height * 0.10,
-    );
-    canvas.drawRect(rectPantalonIzq, pinturaPantalon);
-    canvas.drawRect(rectPantalonDer, pinturaPantalon);
-
-    // Zapatillas turquesa: óvalos achatados al final de cada pierna.
-    final pinturaZapatilla = Paint()..color = _zapatilla;
-    final rectZapaIzq = Rect.fromLTWH(
-      size.width * 0.30,
-      size.height * 0.93,
-      size.width * 0.18,
-      size.height * 0.05,
-    );
-    final rectZapaDer = Rect.fromLTWH(
-      size.width * 0.52,
-      size.height * 0.93,
-      size.width * 0.18,
-      size.height * 0.05,
-    );
-    canvas.drawOval(rectZapaIzq, pinturaZapatilla);
-    canvas.drawOval(rectZapaDer, pinturaZapatilla);
-  }
-
-  @override
-  bool shouldRepaint(covariant _PintorSiluetaKai oldDelegate) => false;
-}
 
 class _BocadilloKai extends StatelessWidget {
   final String texto;

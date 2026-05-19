@@ -17,8 +17,6 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 │   ├── las-versiones/    juego de pensamiento histórico 10-14 (Kids, Fase 10)
 │   ├── el-cuaderno/      cuaderno de campo digital 9-13 (Kids, Bloque B)
 │   ├── el-descifrador/   juego de oficio civil para descifrar documentos 11-14 (Kids, esqueleto v0.1.0)
-│   ├── fosiles/          cuaderno de campo de fósiles (adulto aficionado, operador)
-│   ├── naturaleza/       cuaderno de campo de naturaleza (adulto aficionado, operador)
 │   ├── agro/             Solera — gestor de fincas (producto comercial)
 │   ├── solera-viticultura/   Solera Viticultura (bodegas pequeñas/medias)
 │   ├── solera-apicola/       Solera Apícola (apicultores 20-200 colmenas)
@@ -49,16 +47,15 @@ Cuando los docs de este repo dicen "la Colección" sin más, se refieren a Kids.
 
 **El Descifrador (esqueleto v0.1.0)**: cuarto juego Kids aprobado el 2026-05-13 a Fase 1. Verbo motor: *descifrar*. Edad 11-14. Mundo: La Estafeta — puerto atlántico ficticio peninsular. Materia: lengua + idiomas L2 lectura asistida + pensamiento crítico + redacción. Las cuatro cooficiales (es/eu/ca/gl) como contenido nuclear desde día uno. Esqueleto Flutter+Melos creado, smoke test verde. Paquete documental v0.1 con 18 documentos fuera del monorepo en `~/Projects/games/el-descifrador-paquete-documental-v0.1/`. 12 decisiones cerradas, 13 bloqueos pendientes (asesoría lingüística cuatro cooficiales primero, corpus seminal mixto, ilustrador, compositor). Sin mecánica todavía. Ver `apps/el-descifrador/CLAUDE.md` y `apps/el-descifrador/BLOQUEOS-PENDIENTES.md`.
 
-## Apps del operador (no Kids)
+## Apps del operador — extraídas a `cuadernos-de-campo/`
 
-`apps/fosiles/` y `apps/naturaleza/` son apps **del operador (Josu) para adulto aficionado**, traídas al monorepo desde `~/Projects/{fosiles,naturaleza}-flutter/` para reutilizar plataforma compartida. **No son juegos Kids** y por tanto:
+`fosiles` y `naturaleza` (apps de operador para adulto aficionado) se separaron de este monorepo el **2026-05-19** y viven ahora en el repo sibling `~/Projects/games/cuadernos-de-campo/`. Mantienen su historia git completa vía `git subtree split`.
 
-- NO aplica la voz adulta amable de la biblia del cuaderno.
-- NO aplican los hard limits §2 del cuaderno (sin XP/quiz/estadísticas).
-- SÍ se respeta privacidad estructural al sincronizar al backend.
-- NO se fusionan con el cuaderno. Si el cuaderno necesita identificar algo, el adulto lanza esta app.
+**Dependencia que sigue viva**: ambas apps importan `packages/nuevo_ser_core` de ESTE repo vía `path: ../../../nuevo-ser/packages/nuevo_ser_core` en sus pubspec.yaml. Cuando se actualiza `nuevo_ser_core` aquí, las apps del otro repo lo recogen al hacer `flutter pub get`.
 
-Catálogos curados (`datos_guia.dart`, `datos_minerales.dart`, `cronoestratigrafia.dart`, `yacimientos_curados.dart`) son candidatos a moverse a `content/` cuando el comité científico los audite.
+**Backend de Fósiles Comunidad**: el wp-plugin (`wp-plugin/nuevo-ser-core/`, clases `class-ns-fosiles-comunidad.php` y `class-ns-fosiles-admin.php`) y el seed JSON (`wp-plugin/nuevo-ser-core/seeds/fosiles_formaciones.json`) **siguen en este repo**, ride sobre la infraestructura compartida del plugin (NS_Esquema, NS_Activacion, NS_Auth_Adulto). El cliente Flutter del módulo está en cuadernos-de-campo, el servidor aquí.
+
+**Si actualizas el catálogo de formaciones** desde cuadernos-de-campo (regenerar JSON), el path relativo del test escribe a `../../../nuevo-ser/wp-plugin/...` — para que el seed siga sincronizado.
 
 ## Producto comercial — Solera (apps/agro)
 
