@@ -47,13 +47,18 @@ class AyudaPuzzle {
     ),
     TipoFragmentoEnTejado.comparacionMedia: _Ayuda(
       'COMPARAR CON 1/2',
-      '¿La fracción es menor, igual o mayor que un medio?\n\n'
-          'Aplica esta regla:\n'
-          '  2 × numerador < denominador → menor que 1/2\n'
-          '  2 × numerador = denominador → igual a 1/2\n'
-          '  2 × numerador > denominador → mayor que 1/2\n\n'
-          'Ejemplo: 5/9 → 2×5 = 10 > 9 → 5/9 es mayor que 1/2.',
-      'En la vida: estimar si un depósito está más de la mitad lleno o menos.',
+      'Verás una fracción y tres botones: <1/2, =1/2, >1/2.\n\n'
+          'Truco: una fracción vale 1/2 cuando el denominador es el '
+          'doble del numerador (2/4, 3/6, 5/10…). Desde ahí:\n\n'
+          '  • Dobla el numerador y compáralo con el denominador.\n'
+          '  • Si NO llega al denominador → la fracción es MENOR que 1/2.\n'
+          '    Ejemplo: 4/9 → doble de 4 = 8, no llega a 9 → 4/9 < 1/2.\n\n'
+          '  • Si da justo el denominador → IGUAL a 1/2.\n'
+          '    Ejemplo: 3/6 → doble de 3 = 6 → 3/6 = 1/2.\n\n'
+          '  • Si se pasa del denominador → MAYOR que 1/2.\n'
+          '    Ejemplo: 5/9 → doble de 5 = 10, mayor que 9 → 5/9 > 1/2.',
+      'En la vida: estimar de un vistazo si un vaso o un depósito '
+          'está más de la mitad lleno, sin medir.',
     ),
     TipoFragmentoEnTejado.espejo: _Ayuda(
       'FRACCIONES EQUIVALENTES',
@@ -95,11 +100,21 @@ class AyudaPuzzle {
     ),
     TipoFragmentoEnTejado.dual: _Ayuda(
       'OPERAR CON FRACCIONES',
-      'Calcula el resultado de la operación entre dos fracciones.\n\n'
-          '• SUMA y RESTA: iguala los denominadores (mínimo común múltiplo) y suma o resta los numeradores.\n'
-          '• MULTIPLICACIÓN: multiplica numerador × numerador y denominador × denominador.\n'
-          '• DIVISIÓN: multiplica en cruz (la primera por la inversa de la segunda).',
-      'En la vida: sumar ingredientes (1/2 taza + 1/4 taza = 3/4 taza).',
+      'Mira qué operador hay entre las dos fracciones y aplica la regla '
+          'correspondiente.\n\n'
+          '• SUMA o RESTA (a/b + c/d):\n'
+          '    1) Iguala los denominadores buscando el MCM.\n'
+          '    2) Suma o resta los numeradores; el denominador no cambia.\n'
+          '    Ejemplo: 1/2 + 1/4 → 2/4 + 1/4 = 3/4.\n\n'
+          '• MULTIPLICACIÓN (a/b × c/d):\n'
+          '    Multiplica numerador × numerador y denominador × denominador.\n'
+          '    Ejemplo: 2/3 × 4/5 = 8/15.\n\n'
+          '• DIVISIÓN (a/b ÷ c/d):\n'
+          '    Invierte la segunda fracción y multiplica.\n'
+          '    Ejemplo: 2/3 ÷ 4/5 = 2/3 × 5/4 = 10/12 = 5/6.\n\n'
+          'Simplifica el resultado siempre que puedas.',
+      'En la vida: sumar ingredientes en cocina '
+          '(1/2 taza + 1/4 taza = 3/4 taza).',
     ),
     TipoFragmentoEnTejado.operacionDecimal: _Ayuda(
       'OPERAR CON DECIMALES',
@@ -167,12 +182,25 @@ class AyudaPuzzle {
       'En la vida: conceptos básicos de cifrado y seguridad digital.',
     ),
     TipoFragmentoEnTejado.mcmMcd: _Ayuda(
-      'MCM y MCD',
-      'Calcula el Mínimo Común Múltiplo o el Máximo Común Divisor.\n\n'
-          '• MCM: descompón los números en factores primos y coge los factores comunes y no comunes con el mayor exponente.\n'
-          '• MCD: descompón los números y coge solo los factores comunes con el menor exponente.\n\n'
-          'No los confundas: MCM siempre es ≥ que los números; MCD siempre es ≤.',
-      'En la vida: sincronizar tiempos (cada 6 y 8 min → cada 24 min coinciden).',
+      'MCM Y MCD',
+      'Verás dos números y cuatro candidatos. Fíjate primero en si la '
+          'pantalla pide MCM o MCD: son cosas distintas.\n\n'
+          '• MCM (mínimo común múltiplo) = el primer número que aparece '
+          'en las dos tablas de multiplicar.\n'
+          '    Ejemplo (4 y 6):\n'
+          '      Tabla del 4 → 4, 8, 12, 16, 20…\n'
+          '      Tabla del 6 → 6, 12, 18, 24…\n'
+          '      El primero que se repite es 12. MCM(4, 6) = 12.\n\n'
+          '• MCD (máximo común divisor) = el número más grande que '
+          'divide a los dos exactamente.\n'
+          '    Ejemplo (12 y 18):\n'
+          '      Divisores de 12 → 1, 2, 3, 4, 6, 12\n'
+          '      Divisores de 18 → 1, 2, 3, 6, 9, 18\n'
+          '      El mayor común es 6. MCD(12, 18) = 6.\n\n'
+          'Truco para no confundirlos: MCM siempre es igual o mayor '
+          'que los dos números; MCD siempre es igual o menor.',
+      'En la vida: dos campanas que suenan cada 6 y cada 8 minutos '
+          'coinciden por primera vez al cabo de MCM(6, 8) = 24 minutos.',
     ),
     TipoFragmentoEnTejado.porcentajeCantidad: _Ayuda(
       'PORCENTAJE DE UNA CANTIDAD',
@@ -473,11 +501,21 @@ class AyudaPuzzle {
     ),
     TipoFragmentoEnTejado.ecuacionAmbosLados: _Ayuda(
       'ECUACIÓN EN AMBOS LADOS',
-      'La incógnita está en los dos lados de la ecuación.\n\n'
-          '1. Agrupa las x en un lado (pásalas todas a la izquierda).\n'
-          '2. Agrupa los números en el otro lado.\n'
-          '3. Despeja x.',
-      'En la vida: resolver problemas donde la incógnita aparece dos veces.',
+      'La x aparece a los dos lados del signo =. Para despejarla, junta '
+          'todas las x en un lado y todos los números en el otro.\n\n'
+          'Regla de oro: lo que cruza el = cambia de papel. Lo que '
+          'estaba sumando cruza restando. Lo que multiplicaba cruza '
+          'dividiendo. Y al revés.\n\n'
+          'Pasos, con ejemplo:  3x + 2 = x + 8\n\n'
+          '  1) Cruza la x de la derecha al lado izquierdo (entra como −x).\n'
+          '     3x − x + 2 = 8 → 2x + 2 = 8.\n\n'
+          '  2) Cruza el +2 al lado derecho (entra como −2).\n'
+          '     2x = 8 − 2 → 2x = 6.\n\n'
+          '  3) El 2 está multiplicando a x: cruza dividiendo.\n'
+          '     x = 6 ÷ 2 = 3.\n\n'
+          'Comprueba: 3·3 + 2 = 11 y 3 + 8 = 11. ¡Coincide!',
+      'En la vida: problemas donde una cantidad aparece dos veces, como '
+          'comparar tu edad con la de alguien de tu familia.',
     ),
     TipoFragmentoEnTejado.enteroSigno: _Ayuda(
       'ENTEROS CON SIGNO',
@@ -496,22 +534,38 @@ class AyudaPuzzle {
     ),
     TipoFragmentoEnTejado.sistemaDosXDos: _Ayuda(
       'SISTEMA DE ECUACIONES',
-      'Resuelve el sistema de dos ecuaciones.\n\n'
-          'Método de sustitución:\n'
-          '1. Despeja una incógnita en una ecuación.\n'
-          '2. Sustitúyela en la otra ecuación.\n'
-          '3. Resuelve la ecuación de una incógnita.\n'
-          '4. Calcula la otra incógnita.',
-      'En la vida: calcular dos cosas a la vez (precio de una manzana y una naranja).',
+      'Dos ecuaciones con dos incógnitas (x e y) que se cumplen a la '
+          'vez. La pareja (x, y) que las satisface las dos es la '
+          'solución del sistema.\n\n'
+          'Método de sustitución, paso a paso:\n'
+          '  1) Coge la ecuación más sencilla y despeja una incógnita.\n'
+          '  2) Sustituye su valor en la otra ecuación.\n'
+          '  3) Resuelve esa ecuación, que ahora solo tiene una incógnita.\n'
+          '  4) Vuelve atrás con ese valor y calcula la otra.\n\n'
+          'Ejemplo:\n'
+          '   x + y = 7\n'
+          '   x − y = 1\n\n'
+          '  De la 1.ª despejo:  x = 7 − y.\n'
+          '  Sustituyo en la 2.ª:  (7 − y) − y = 1 → 7 − 2y = 1 → y = 3.\n'
+          '  Vuelvo:  x = 7 − 3 = 4.\n'
+          '  Solución: x = 4, y = 3.',
+      'En la vida: dos manzanas y una naranja cuestan 5 €; una '
+          'manzana y una naranja cuestan 3 €. ¿Cuánto vale cada fruta?',
     ),
     TipoFragmentoEnTejado.relacionLineal: _Ayuda(
       'RELACIÓN LINEAL',
-      'Encuentra la regla que relaciona los datos.\n\n'
-          'Una relación lineal es de la forma y = mx + n.\n'
-          '  • m es la pendiente (cuánto sube y cuando x aumenta 1).\n'
-          '  • n es el valor de y cuando x = 0.\n\n'
-          'Busca el patrón: ¿cuánto cambia y cada vez que x cambia 1?',
-      'En la vida: calcular cuánto pagas según los kWh consumidos.',
+      'Verás una tabla con pares (x, y). Tu trabajo es encontrar la '
+          'regla que dice cómo se obtiene cada y a partir de su x.\n\n'
+          'La regla siempre tiene la forma:  y = m·x + n.\n\n'
+          'Para descubrirla:\n'
+          '  1) Cuánto sube y cuando x sube de 1 en 1. Eso es m.\n'
+          '     Mira dos filas seguidas: m = (y₂ − y₁) ÷ (x₂ − x₁).\n'
+          '  2) Cuánto vale y cuando x = 0. Eso es n.\n'
+          '     Si esa fila no aparece, despeja con cualquier fila:\n'
+          '     n = y − m·x.\n\n'
+          'Antes de elegir, prueba la regla con otra fila de la tabla.',
+      'En la vida: la factura de la luz — n es la cuota fija que pagas '
+          'cada mes, m es lo que cuesta cada kWh consumido.',
     ),
   };
 
