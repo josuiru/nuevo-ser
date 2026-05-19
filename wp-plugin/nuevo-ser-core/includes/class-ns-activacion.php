@@ -98,17 +98,57 @@ class NS_Activacion {
 	 * de datos, mejor que el operador humano lo decida).
 	 */
 	private static function registrar_roles_adultos(): void {
-		if ( function_exists( 'add_role' ) ) {
-			add_role(
-				NS_Auth_Adulto::ROL_WP_PROFESOR,
-				'Nuevo Ser — Profesor',
-				array( 'read' => true )
-			);
-			add_role(
-				NS_Auth_Adulto::ROL_WP_CUIDADOR,
-				'Nuevo Ser — Cuidador',
-				array( 'read' => true )
-			);
+		if ( ! function_exists( 'add_role' ) ) {
+			return;
+		}
+		add_role(
+			NS_Auth_Adulto::ROL_WP_PROFESOR,
+			'Nuevo Ser — Profesor',
+			array( 'read' => true )
+		);
+		add_role(
+			NS_Auth_Adulto::ROL_WP_CUIDADOR,
+			'Nuevo Ser — Cuidador',
+			array( 'read' => true )
+		);
+
+		// Curador de Fósiles — revisa las aportaciones de la comunidad
+		// (foto + datos declarados) que llegan al moderation queue
+		// desde la app. Capability propia para que los endpoints REST
+		// puedan autorizar con `current_user_can()` y el submenú de
+		// wp-admin filtre la visibilidad.
+		add_role(
+			NS_Auth_Adulto::ROL_WP_CURADOR_FOSILES,
+			'Nuevo Ser — Curador de Fósiles',
+			array(
+				'read'                        => true,
+				'nuevoser_fosiles_revisar'    => true,
+			)
+		);
+
+		// Admin de Fósiles — además de revisar, gestiona el catálogo
+		// de formaciones geológicas catalogadas y la lista de curadores.
+		// Sin acceso a `manage_options` (no toca configuración global
+		// de WordPress).
+		add_role(
+			NS_Auth_Adulto::ROL_WP_ADMIN_FOSILES,
+			'Nuevo Ser — Admin de Fósiles',
+			array(
+				'read'                                     => true,
+				'nuevoser_fosiles_revisar'                 => true,
+				'nuevoser_fosiles_gestionar_catalogo'      => true,
+				'nuevoser_fosiles_gestionar_curadores'     => true,
+			)
+		);
+
+		// El administrador global de WP también puede revisar y gestionar
+		// el catálogo — útil para entornos de demo y para el operador
+		// del proyecto (Josu) sin necesitar otra cuenta.
+		$administrator = get_role( 'administrator' );
+		if ( $administrator instanceof WP_Role ) {
+			$administrator->add_cap( 'nuevoser_fosiles_revisar' );
+			$administrator->add_cap( 'nuevoser_fosiles_gestionar_catalogo' );
+			$administrator->add_cap( 'nuevoser_fosiles_gestionar_curadores' );
 		}
 	}
 

@@ -34,12 +34,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class NS_Auth_Adulto {
 
-	public const ROL_PROFESOR = 'profesor';
-	public const ROL_CUIDADOR = 'cuidador';
+	public const ROL_PROFESOR        = 'profesor';
+	public const ROL_CUIDADOR        = 'cuidador';
+	public const ROL_CURADOR_FOSILES = 'curador_fosiles';
+	public const ROL_ADMIN_FOSILES   = 'admin_fosiles';
 
 	/** Roles WP custom que el plugin registra en activación. */
-	public const ROL_WP_PROFESOR = 'nuevoser_profesor';
-	public const ROL_WP_CUIDADOR = 'nuevoser_cuidador';
+	public const ROL_WP_PROFESOR        = 'nuevoser_profesor';
+	public const ROL_WP_CUIDADOR        = 'nuevoser_cuidador';
+	public const ROL_WP_CURADOR_FOSILES = 'nuevoser_curador_fosiles';
+	public const ROL_WP_ADMIN_FOSILES   = 'nuevoser_admin_fosiles';
 
 	/**
 	 * Mapa rol-de-token → rol-WP. Si añadimos más roles (p. ej.
@@ -47,8 +51,10 @@ class NS_Auth_Adulto {
 	 * correspondiente; el handler trabaja sólo con esto.
 	 */
 	private const MAPA_ROL_WP = array(
-		self::ROL_PROFESOR => self::ROL_WP_PROFESOR,
-		self::ROL_CUIDADOR => self::ROL_WP_CUIDADOR,
+		self::ROL_PROFESOR        => self::ROL_WP_PROFESOR,
+		self::ROL_CUIDADOR        => self::ROL_WP_CUIDADOR,
+		self::ROL_CURADOR_FOSILES => self::ROL_WP_CURADOR_FOSILES,
+		self::ROL_ADMIN_FOSILES   => self::ROL_WP_ADMIN_FOSILES,
 	);
 
 	/**

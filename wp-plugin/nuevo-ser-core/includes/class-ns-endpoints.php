@@ -50,7 +50,170 @@ class NS_Endpoints {
 		// Endpoints específicos del juego El Cuaderno. Solo en canónico —
 		// el alias `uno-roto/v1` no debería llevar deuda nueva.
 		self::registrar_el_cuaderno_real( self::NAMESPACE_CANONICO );
+		// Endpoints del módulo de ciencia ciudadana de la app Fósiles
+		// (`/nuevo-ser/v1/fosiles/*`). Mismo principio: solo canónico.
+		self::registrar_fosiles_comunidad( self::NAMESPACE_CANONICO );
 		add_filter( 'rest_post_dispatch', array( __CLASS__, 'marcar_alias_deprecado' ), 10, 3 );
+	}
+
+	/**
+	 * Endpoints del módulo de ciencia ciudadana de la app Fósiles
+	 * (NS_Fosiles_Comunidad). Tres bloques:
+	 *
+	 *   - Públicos (sin auth, rate-limited en handler):
+	 *       POST /fosiles/aportaciones
+	 *       GET  /fosiles/fotos-comunidad/por-formacion/{codigo}
+	 *       POST /fosiles/aportaciones/borrar-mis-aportaciones
+	 *       GET  /fosiles/aportaciones/confirmar-borrado
+	 *
+	 *   - Curador (JWT curador/admin o capability nuevoser_fosiles_revisar):
+	 *       GET  /fosiles/aportaciones
+	 *       GET  /fosiles/aportaciones/{id}
+	 *       POST /fosiles/aportaciones/{id}/aprobar
+	 *       POST /fosiles/aportaciones/{id}/rechazar
+	 *       POST /fosiles/aportaciones/{id}/archivar
+	 *
+	 *   - Admin (capability nuevoser_fosiles_gestionar_catalogo):
+	 *       GET    /fosiles/formaciones-catalogadas
+	 *       POST   /fosiles/formaciones-catalogadas
+	 *       PUT    /fosiles/formaciones-catalogadas/{id}
+	 *       DELETE /fosiles/formaciones-catalogadas/{id}
+	 */
+	private static function registrar_fosiles_comunidad( string $namespace ): void {
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'crear_aportacion' ),
+					'permission_callback' => '__return_true',
+				),
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'listar_aportaciones_curador' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_curador' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones/borrar-mis-aportaciones',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'solicitar_borrado_rgpd' ),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones/confirmar-borrado',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'confirmar_borrado_rgpd' ),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones/(?P<id>\d+)',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'ver_aportacion_curador' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_curador' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones/(?P<id>\d+)/aprobar',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'aprobar_aportacion' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_curador' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones/(?P<id>\d+)/rechazar',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'rechazar_aportacion' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_curador' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/aportaciones/(?P<id>\d+)/archivar',
+			array(
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'archivar_aportacion' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_curador' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/fotos-comunidad/por-formacion/(?P<codigo>[A-Za-z0-9_\-]+)',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'listar_fotos_por_formacion' ),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/formaciones-catalogadas',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'listar_formaciones_admin' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_admin' ),
+				),
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'crear_formacion_admin' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_admin' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$namespace,
+			'/fosiles/formaciones-catalogadas/(?P<id>\d+)',
+			array(
+				array(
+					'methods'             => 'PUT',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'actualizar_formacion_admin' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_admin' ),
+				),
+				array(
+					'methods'             => 'DELETE',
+					'callback'            => array( 'NS_Fosiles_Comunidad', 'borrar_formacion_admin' ),
+					'permission_callback' => array( 'NS_Fosiles_Comunidad', 'permiso_admin' ),
+				),
+			)
+		);
 	}
 
 	/**
