@@ -13,6 +13,7 @@ import '../main.dart' show localeAppUnoRoto;
 import '../nucleo/paleta.dart';
 import 'pantalla_acerca_de.dart';
 import 'pantalla_ajustes_sonido.dart';
+import 'pantalla_copia_seguridad.dart';
 import 'pantalla_cuenta.dart';
 import 'pantalla_perfiles.dart';
 import 'pantalla_tutor.dart';
@@ -137,6 +138,8 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
                   _sincronizar();
                 case 'tutor':
                   _probarTutor();
+                case 'copia':
+                  _abrirCopiaSeguridad();
                 case 'reiniciar':
                   _confirmarYReiniciar();
               }
@@ -172,6 +175,11 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
                 id: 'tutor',
                 icono: Icons.chat_bubble_outline,
                 etiqueta: textos.habTooltipDebugTutor,
+              ),
+              _itemMenu(
+                id: 'copia',
+                icono: Icons.save_alt,
+                etiqueta: 'Copia de seguridad',
               ),
               _itemMenu(
                 id: 'reiniciar',
@@ -372,6 +380,18 @@ class _PantallaHabilidadesState extends State<PantallaHabilidades> {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => const PantallaAcercaDe(),
     ));
+  }
+
+  Future<void> _abrirCopiaSeguridad() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => PantallaCopiaSeguridad(
+        repositorio: widget.repositorio,
+      ),
+    ));
+    if (!mounted) return;
+    // Tras volver puede haber datos restaurados: refrescamos los
+    // estados visibles (nivel/precisión por habilidad).
+    setState(() {});
   }
 
   /// Abre el selector de idioma. Persiste la elección como clave global
