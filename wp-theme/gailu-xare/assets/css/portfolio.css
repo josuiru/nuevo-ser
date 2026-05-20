@@ -9,6 +9,13 @@
    para que ganen en especificidad contra flavor-platform y otros
    plugins que declaran reglas globales. */
 body.wp-theme-gailu-xare * { box-sizing: border-box; }
+
+/* Compensar topbar sticky (≈76px) al navegar a una ancla
+   #proyectos/#descargas/#sobre. Sin esto el browser scrollea al
+   target con offset 0 y el topbar tapa el título de la sección.
+   scroll-padding-top es la propiedad estándar para esto. */
+html { scroll-padding-top: 90px; }
+body.wp-theme-gailu-xare .gxare-section { scroll-margin-top: 90px; }
 body.wp-theme-gailu-xare,
 body.wp-theme-gailu-xare html { margin: 0; }
 
