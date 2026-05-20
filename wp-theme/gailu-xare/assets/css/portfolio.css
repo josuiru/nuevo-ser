@@ -547,6 +547,23 @@ body.wp-theme-gailu-xare .cdc-embed .process,
 body.wp-theme-gailu-xare .cdc-embed .field-notes {
 	animation-play-state: running !important;
 }
+
+/* Garantizar matrix3d y perspective inheritance para que el
+   lift-the-flap transicione (no salte). El truco real está en
+   `landing.css` del tema cuadernos-de-campo: cada keyframe de
+   specimen-drop lleva `rotateX(0.0001deg)` para serializar a
+   matrix3d. Aquí solo asegura la perspective del padre. */
+body.wp-theme-gailu-xare .cdc-embed .specimen-grid {
+	perspective: 1400px;
+	transform-style: preserve-3d;
+}
+body.wp-theme-gailu-xare .cdc-embed .flap-cell {
+	transform-style: preserve-3d;
+}
+body.wp-theme-gailu-xare .cdc-embed .specimen {
+	will-change: transform;
+	cursor: pointer;
+}
 /* Anular el rojo de flavor en los .btn del design system cuadernos-de-campo */
 body.wp-theme-gailu-xare .cdc-embed .btn,
 body.wp-theme-gailu-xare .cdc-embed .btn:link,
