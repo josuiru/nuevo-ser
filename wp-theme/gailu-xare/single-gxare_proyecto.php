@@ -22,6 +22,12 @@ while ( have_posts() ) :
 		case 'cuadernos-de-campo':
 			get_template_part( 'template-parts/landing-cdc' );
 			break;
+		case 'solera':
+			// Landing del ecosistema Solera — paraguas de las 6
+			// verticales agrarias (agro, viticultura, apícola,
+			// arbolado urbano, quesera, aceitera).
+			get_template_part( 'template-parts/landing-solera' );
+			break;
 		case 'bloques':
 			// Landing montada con bloques tipo VBP, importados desde
 			// flavor-platform o creados directamente en el meta. El

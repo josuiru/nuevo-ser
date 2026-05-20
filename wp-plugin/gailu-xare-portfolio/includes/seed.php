@@ -293,6 +293,41 @@ function gxare_seed_proyectos(): array {
 		// ║ SOLERA (agro + 5 verticales)
 		// ╚════════════════════════════════════════════════════════════
 
+		// El proyecto paraguas — landing del ecosistema completo
+		// (las 6 verticales agrarias presentadas como una sola
+		// familia). Renderiza con template-parts/landing-solera.php,
+		// no con la genérica. Va primero en orden dentro de la
+		// colección porque es la puerta de entrada al resto.
+		array(
+			'seed_id'   => 'proy-solera-ecosistema',
+			'post_type' => 'gxare_proyecto',
+			'slug'      => 'solera-ecosistema',
+			'orden'     => 39,
+			'coleccion' => 'solera',
+			'title'     => 'Solera — el ecosistema',
+			'excerpt'   => 'Ecosistema de cuadernos de campo para oficios de la tierra: agro, viticultura, apícola, arbolado urbano, quesera y aceitera.',
+			'content'   => 'Una raíz común (nuevo_ser_core) y seis cuadernos especializados por oficio. Offline de raíz, libros oficiales en PDF y catálogos curados.',
+			'meta'      => array(
+				'gxare_proyecto_subtitulo'   => 'Seis cuadernos · una misma raíz.',
+				'gxare_proyecto_audiencia'   => 'Profesionales de oficios de la tierra (agricultores, viticultores, apicultores, técnicos municipales, queseros, almazareros)',
+				'gxare_proyecto_estado'      => 'produccion',
+				'gxare_proyecto_tipo'        => 'ecosistema',
+				'gxare_proyecto_tech'        => 'Flutter, Melos monorepo, sqflite, Claude Vision BYO key, Material 3',
+				'gxare_proyecto_marca'       => 'Solera',
+				'gxare_proyecto_url_repo'    => 'https://github.com/JosuIru/nuevo-ser',
+				'gxare_proyecto_color'       => '#5E7D3A',
+				'gxare_proyecto_destacado'   => '1',
+				// Render con la plantilla específica del ecosistema.
+				'gxare_proyecto_landing'     => 'solera',
+				'gxare_proyecto_que_hace_largo' => 'Solera es un ecosistema de aplicaciones móviles para profesionales que trabajan con plantas, animales y patrimonio vivo. Una finca, un viñedo, un colmenar, un arbolado municipal, una quesería o una almazara — cada oficio en su cuaderno, con sus catálogos curados, su libro oficial en PDF y su libro económico REAGP. Las seis verticales comparten núcleo técnico (nuevo_ser_core) y vocabulario, pero cada una verticaliza para los tiempos, normativa y categorías de su materia.',
+				'gxare_proyecto_para_quien'  => 'Profesionales y semi-profesionales de oficios de la tierra que llevan o quieren llevar un cuaderno de campo serio: viticultor o enólogo de bodega 5-30 ha, apicultor con 20-200 colmenas, técnico de arbolado municipal, quesería artesanal, maestro almazarero. También aficionado avanzado con explotación mixta. Las apps no explican el oficio — lo acompañan.',
+				'gxare_proyecto_virtudes'    => "Offline de raíz: el cuaderno vive en sqflite local, la nube sólo entra cuando tú lo decides\nLibros oficiales (PAC, REGA, AICA, APPCC, partes municipales) en PDF listos para inspección\nIA visual con Claude — BYO key, sin captura de datos en nuestros servidores\nCatálogos curados con fuente pública verificable, editables por tu asesor en CSV\nLibro económico REAGP por vertical con compensación correcta (12% aceituna, 4% aceite, 10% envasado…)\nUn solo monorepo con Melos: si tienes olivar y colmenar, las dos apps comparten plataforma técnica",
+				'gxare_proyecto_pedagogia'   => '',
+				'gxare_proyecto_estado_largo'=> 'Cuatro verticales estables (agro, viticultura, apícola, aceitera) con APK release publicada. Quesera en beta interno (catálogos provisionales). Arbolado urbano estable con asesor fiscal trabajando F1U-10. Los PDFs llevan sello PROVISIONAL hasta firma del asesor humano de referencia de cada vertical (técnico OCA, veterinario apícola, auditor AICA, inspector autonómico).',
+				'gxare_proyecto_faq'         => "¿Las apps son gratis u open source? :: Código bajo AGPL-3.0, contenidos bajo CC-BY-SA 4.0. El plan comercial cubre soporte, hospedaje futuro de sync y validación profesional continua.\n¿Qué datos suben a la nube? :: Ninguno por defecto. Las apps son offline de raíz; coordenadas y fotos viven en sqflite local. Sólo sale del móvil lo que tú decides compartir.\n¿Hay versión iOS o web? :: Por ahora sólo Android. Compilan a iOS técnicamente pero el roadmap prioriza estabilidad sobre cobertura de plataforma.\n¿Los libros oficiales son válidos para inspección? :: Estructura conforme a normativa pero con sello PROVISIONAL hasta firma del asesor humano de referencia. La auditoría final es responsabilidad del titular.",
+			),
+		),
+
 		array(
 			'seed_id'   => 'proy-solera-agro',
 			'post_type' => 'gxare_proyecto',
