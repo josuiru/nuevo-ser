@@ -84,3 +84,5 @@ export 'src/ui/selector_fotos.dart';
 export 'src/ui/selector_idioma.dart';
 export 'src/ui/tarjeta_observacion.dart';
 export 'src/ui/tarjeta_resumen.dart';
+export 'src/actualizaciones/banner_actualizacion.dart';
+export 'src/actualizaciones/checker_actualizaciones.dart';
