@@ -13,6 +13,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function gxare_cpts_registrar(): void {
+
+	// Taxonomía "colección" — agrupa los proyectos en líneas
+	// editoriales (Cuadernos de Campo, Nuevo Ser Kids, Solera, Flavor).
+	register_taxonomy(
+		'gxare_coleccion',
+		array( 'gxare_proyecto' ),
+		array(
+			'public'             => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'show_in_rest'       => false,
+			'show_admin_column'  => true,
+			'show_in_nav_menus'  => false,
+			'hierarchical'       => true,
+			'publicly_queryable' => false,
+			'rewrite'            => false,
+			'labels' => array(
+				'name'          => 'Colecciones',
+				'singular_name' => 'Colección',
+				'add_new_item'  => 'Añadir colección',
+				'edit_item'     => 'Editar colección',
+				'menu_name'     => 'Colecciones',
+			),
+		)
+	);
+
 	$base = array(
 		'public'              => false,
 		'show_ui'             => true,

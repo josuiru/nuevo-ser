@@ -54,6 +54,20 @@ function gxare_metaboxes_defs(): array {
 						'flavor-chat-ia'  => 'Flavor Chat IA (plugin flavor-landing)',
 					),
 					'desc' => 'Si pones una landing custom, single-gxare_proyecto.php delega su render a esa landing en vez de la página genérica.' ),
+
+				// ─── Contenido rico para la ficha de detalle ───
+				array( 'key' => 'gxare_proyecto_que_hace_largo', 'label' => 'Qué hace (descripción larga)', 'tipo' => 'textarea',
+					'desc' => 'Párrafo de 80-120 palabras. Explica qué hace el proyecto en concreto, mecánicas/funcionalidades clave, ventajas. Tono divulgativo para cliente / colaborador.' ),
+				array( 'key' => 'gxare_proyecto_para_quien', 'label' => 'Para quién', 'tipo' => 'textarea',
+					'desc' => 'Audiencia detallada: perfil, edad, problema que soluciona, contexto profesional o doméstico.' ),
+				array( 'key' => 'gxare_proyecto_virtudes', 'label' => 'Virtudes (una por línea)', 'tipo' => 'textarea',
+					'desc' => 'Lista de 4-6 virtudes, cada una en su línea. Aparecen como bullets en la ficha.' ),
+				array( 'key' => 'gxare_proyecto_pedagogia', 'label' => 'Pedagogía (solo Kids)', 'tipo' => 'textarea',
+					'desc' => 'Explicación pedagógica de por qué enseña lo que enseña y cómo. Dejar vacío si el proyecto no es un juego Kids.' ),
+				array( 'key' => 'gxare_proyecto_estado_largo', 'label' => 'Estado detallado', 'tipo' => 'textarea',
+					'desc' => '2-3 frases sobre la fase, lo que está cerrado, lo pendiente.' ),
+				array( 'key' => 'gxare_proyecto_faq', 'label' => 'Preguntas frecuentes (formato Q :: A, una por línea)', 'tipo' => 'textarea',
+					'desc' => 'Cada FAQ en una línea como "¿Pregunta? :: Respuesta". Aparecen como acordeón en la ficha.' ),
 			),
 		),
 		'gxare_descarga' => array(

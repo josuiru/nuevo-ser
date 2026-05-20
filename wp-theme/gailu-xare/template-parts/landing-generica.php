@@ -1,29 +1,74 @@
 <?php
 /**
- * Landing genérica de un proyecto: hero + descripción + chips + tech +
- * enlaces + bloque de descargas filtradas por slug.
+ * Landing genérica de un proyecto: hero + contenido rico + chips +
+ * tech + enlaces + bloque de descargas filtradas por slug.
  *
- * Se usa para todos los proyectos que no tienen meta
- * `gxare_proyecto_landing` con un valor reconocido.
+ * Diseñada para clientes / partners / colaboradores que llegan a la
+ * ficha por primera vez. Si el operador rellena los metas
+ * gxare_proyecto_*_largo, _para_quien, _virtudes, _pedagogia y _faq,
+ * la ficha se vuelve mucho más informativa.
  *
  * @package gailu-xare
  */
 
-$proyecto_id  = get_the_ID();
-$subtitulo    = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_subtitulo', true );
-$audiencia    = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_audiencia', true );
-$estado       = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_estado', true );
-$tipo         = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_tipo', true );
-$tech         = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_tech', true );
-$marca        = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_marca', true );
-$url_web      = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_url_web', true );
-$url_repo     = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_url_repo', true );
-$url_demo     = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_url_demo', true );
-$color        = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_color', true );
-$slug         = get_post_field( 'post_name', $proyecto_id );
+$proyecto_id   = get_the_ID();
+$subtitulo     = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_subtitulo', true );
+$audiencia     = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_audiencia', true );
+$estado        = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_estado', true );
+$tipo          = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_tipo', true );
+$tech          = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_tech', true );
+$marca         = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_marca', true );
+$url_web       = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_url_web', true );
+$url_repo      = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_url_repo', true );
+$url_demo      = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_url_demo', true );
+$color         = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_color', true );
+$slug          = get_post_field( 'post_name', $proyecto_id );
+$que_hace      = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_que_hace_largo', true );
+$para_quien    = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_para_quien', true );
+$virtudes_raw  = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_virtudes', true );
+$pedagogia     = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_pedagogia', true );
+$estado_largo  = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_estado_largo', true );
+$faq_raw       = (string) get_post_meta( $proyecto_id, 'gxare_proyecto_faq', true );
 
-$techs = array_filter( array_map( 'trim', explode( ',', $tech ) ) );
+$virtudes = array_filter( array_map( 'trim', preg_split( "/\r?\n/", $virtudes_raw ) ) );
+$techs    = array_filter( array_map( 'trim', explode( ',', $tech ) ) );
+
+// Parsear FAQs en formato "pregunta :: respuesta"
+$faqs = array();
+foreach ( preg_split( "/\r?\n/", $faq_raw ) as $linea ) {
+	if ( strpos( $linea, '::' ) === false ) {
+		continue;
+	}
+	list( $pregunta, $respuesta ) = explode( '::', $linea, 2 );
+	$faqs[] = array(
+		'q' => trim( $pregunta ),
+		'a' => trim( $respuesta ),
+	);
+}
+
 $style_acento = '' !== $color ? sprintf( '--gxare-acento: %s;', esc_attr( $color ) ) : '';
+
+// Otros proyectos de la misma colección
+$colecciones = wp_get_post_terms( $proyecto_id, 'gxare_coleccion' );
+$relacionados = array();
+if ( ! empty( $colecciones ) && ! is_wp_error( $colecciones ) ) {
+	$relacionados = get_posts(
+		array(
+			'post_type'      => 'gxare_proyecto',
+			'post_status'    => 'publish',
+			'posts_per_page' => 4,
+			'post__not_in'   => array( $proyecto_id ),
+			'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'ASC' ),
+			'tax_query'      => array(
+				array(
+					'taxonomy' => 'gxare_coleccion',
+					'field'    => 'term_id',
+					'terms'    => array( $colecciones[0]->term_id ),
+				),
+			),
+		)
+	);
+}
 ?>
 
 <article class="gxare-proyecto-page" style="<?php echo esc_attr( $style_acento ); ?>">
@@ -71,13 +116,60 @@ $style_acento = '' !== $color ? sprintf( '--gxare-acento: %s;', esc_attr( $color
 		<?php endif; ?>
 	</header>
 
-	<section class="gxare-proyecto-page__cuerpo">
-		<?php the_content(); ?>
-	</section>
+	<?php if ( '' !== $que_hace ) : ?>
+		<section class="gxare-proyecto-page__bloque">
+			<h2>Qué hace</h2>
+			<div class="gxare-proyecto-page__texto-largo">
+				<?php echo wp_kses_post( wpautop( $que_hace ) ); ?>
+			</div>
+		</section>
+	<?php else : // fallback al post_content si no hay descripción rica ?>
+		<section class="gxare-proyecto-page__bloque">
+			<?php the_content(); ?>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( '' !== $para_quien ) : ?>
+		<section class="gxare-proyecto-page__bloque">
+			<h2>Para quién</h2>
+			<div class="gxare-proyecto-page__texto-largo">
+				<?php echo wp_kses_post( wpautop( $para_quien ) ); ?>
+			</div>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( ! empty( $virtudes ) ) : ?>
+		<section class="gxare-proyecto-page__bloque">
+			<h2>Virtudes</h2>
+			<ul class="gxare-proyecto-page__virtudes">
+				<?php foreach ( $virtudes as $v ) : ?>
+					<li><?php echo esc_html( $v ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( '' !== $pedagogia ) : ?>
+		<section class="gxare-proyecto-page__bloque gxare-proyecto-page__bloque--pedagogia">
+			<h2>Pedagogía</h2>
+			<div class="gxare-proyecto-page__texto-largo">
+				<?php echo wp_kses_post( wpautop( $pedagogia ) ); ?>
+			</div>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( '' !== $estado_largo ) : ?>
+		<section class="gxare-proyecto-page__bloque">
+			<h2>Estado actual</h2>
+			<div class="gxare-proyecto-page__texto-largo">
+				<?php echo wp_kses_post( wpautop( $estado_largo ) ); ?>
+			</div>
+		</section>
+	<?php endif; ?>
 
 	<?php if ( ! empty( $techs ) ) : ?>
-		<section class="gxare-proyecto-page__tech-section">
-			<h3>Tech stack</h3>
+		<section class="gxare-proyecto-page__bloque">
+			<h2>Tech stack</h2>
 			<div class="gxare-proyecto-page__tech">
 				<?php foreach ( $techs as $t ) : ?>
 					<span><?php echo esc_html( $t ); ?></span>
@@ -100,9 +192,40 @@ $style_acento = '' !== $color ? sprintf( '--gxare-acento: %s;', esc_attr( $color
 	);
 	if ( ! empty( $descargas ) ) :
 	?>
-		<section class="gxare-proyecto-page__descargas">
-			<h3>Descargas</h3>
+		<section class="gxare-proyecto-page__bloque">
+			<h2>Descargas</h2>
 			<?php echo do_shortcode( '[gxare_descargas proyecto="' . esc_attr( $slug ) . '"]' ); ?>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( ! empty( $faqs ) ) : ?>
+		<section class="gxare-proyecto-page__bloque gxare-proyecto-page__bloque--faq">
+			<h2>Preguntas frecuentes</h2>
+			<div class="gxare-faqs">
+				<?php foreach ( $faqs as $faq ) : ?>
+					<details class="gxare-faq">
+						<summary><?php echo esc_html( $faq['q'] ); ?></summary>
+						<div class="gxare-faq__a"><?php echo wp_kses_post( wpautop( $faq['a'] ) ); ?></div>
+					</details>
+				<?php endforeach; ?>
+			</div>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( ! empty( $relacionados ) ) : ?>
+		<section class="gxare-proyecto-page__bloque gxare-proyecto-page__bloque--relacionados">
+			<h2>Otros proyectos de <?php echo esc_html( $colecciones[0]->name ); ?></h2>
+			<div class="gxare-relacionados">
+				<?php foreach ( $relacionados as $rel ) :
+					$rel_sub   = (string) get_post_meta( $rel->ID, 'gxare_proyecto_subtitulo', true );
+					$rel_color = (string) get_post_meta( $rel->ID, 'gxare_proyecto_color', true );
+				?>
+					<a class="gxare-relacionado" href="<?php echo esc_url( get_permalink( $rel ) ); ?>" style="<?php echo $rel_color ? 'border-left-color: ' . esc_attr( $rel_color ) . ';' : ''; ?>">
+						<h3><?php echo esc_html( $rel->post_title ); ?></h3>
+						<p><?php echo esc_html( $rel_sub ); ?></p>
+					</a>
+				<?php endforeach; ?>
+			</div>
 		</section>
 	<?php endif; ?>
 

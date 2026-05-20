@@ -559,6 +559,189 @@ body.wp-theme-gailu-xare .cdc-embed a:visited {
 	color: var(--verde-olivo-1);
 }
 
+/* ─── Colecciones agrupadas en el home ───────────────────────── */
+body.wp-theme-gailu-xare .gxare-coleccion {
+	margin-bottom: 56px;
+}
+body.wp-theme-gailu-xare .gxare-coleccion__head {
+	margin-bottom: 24px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid var(--linea);
+	position: relative;
+}
+body.wp-theme-gailu-xare .gxare-coleccion__titulo {
+	font: var(--tipo-headline);
+	font-family: var(--tipo-display);
+	font-size: 30px;
+	margin: 0 0 6px;
+	color: var(--tinta);
+	letter-spacing: -0.01em;
+}
+body.wp-theme-gailu-xare .gxare-coleccion__desc {
+	color: var(--tinta-2);
+	font-size: 15px;
+	line-height: 1.5;
+	max-width: 720px;
+	margin: 0;
+}
+body.wp-theme-gailu-xare .gxare-coleccion__count {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font: var(--tipo-overline);
+	color: var(--tinta-3);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+/* ─── Bloques de la ficha rica ────────────────────────────────── */
+body.wp-theme-gailu-xare .gxare-proyecto-page__bloque {
+	margin-bottom: 56px;
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__bloque h2 {
+	font-family: var(--tipo-display);
+	font-size: 28px;
+	font-weight: 600;
+	color: var(--tinta);
+	margin: 0 0 18px;
+	letter-spacing: -0.01em;
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__texto-largo {
+	max-width: 720px;
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--tinta-2);
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__texto-largo p {
+	margin: 0 0 16px;
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__virtudes {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	max-width: 720px;
+	display: grid;
+	gap: 12px;
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__virtudes li {
+	position: relative;
+	padding: 16px 20px 16px 56px;
+	background: var(--papel-2);
+	border-radius: var(--radio-md);
+	color: var(--tinta);
+	font-size: 16px;
+	line-height: 1.5;
+	border-left: 3px solid var(--verde-olivo);
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__virtudes li::before {
+	content: "·";
+	position: absolute;
+	left: 24px;
+	top: 16px;
+	font-size: 28px;
+	color: var(--verde-olivo);
+	font-weight: 700;
+	line-height: 1;
+}
+
+/* Bloque pedagogía con fondo destacado */
+body.wp-theme-gailu-xare .gxare-proyecto-page__bloque--pedagogia {
+	background: var(--papel-2);
+	padding: 32px;
+	border-radius: var(--radio-lg);
+	border-left: 4px solid var(--ocre);
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__bloque--pedagogia h2 {
+	color: var(--bosque);
+}
+body.wp-theme-gailu-xare .gxare-proyecto-page__bloque--pedagogia h2::before {
+	content: "✦ ";
+	color: var(--ocre);
+}
+
+/* FAQ acordeón */
+body.wp-theme-gailu-xare .gxare-faqs {
+	max-width: 800px;
+}
+body.wp-theme-gailu-xare .gxare-faq {
+	background: var(--papel-2);
+	border-radius: var(--radio-md);
+	margin-bottom: 8px;
+	overflow: hidden;
+	border-left: 3px solid var(--linea-fuerte);
+	transition: border-left-color 160ms ease;
+}
+body.wp-theme-gailu-xare .gxare-faq[open] {
+	border-left-color: var(--verde-olivo);
+}
+body.wp-theme-gailu-xare .gxare-faq summary {
+	padding: 16px 20px;
+	cursor: pointer;
+	font: var(--tipo-title-m);
+	color: var(--tinta);
+	list-style: none;
+	user-select: none;
+	transition: background 160ms ease;
+}
+body.wp-theme-gailu-xare .gxare-faq summary:hover {
+	background: var(--papel-3);
+}
+body.wp-theme-gailu-xare .gxare-faq summary::-webkit-details-marker {
+	display: none;
+}
+body.wp-theme-gailu-xare .gxare-faq summary::after {
+	content: "+";
+	float: right;
+	font-size: 20px;
+	color: var(--tinta-3);
+	transition: transform 160ms ease;
+}
+body.wp-theme-gailu-xare .gxare-faq[open] summary::after {
+	content: "−";
+}
+body.wp-theme-gailu-xare .gxare-faq__a {
+	padding: 0 20px 20px;
+	color: var(--tinta-2);
+	font-size: 15px;
+	line-height: 1.6;
+}
+body.wp-theme-gailu-xare .gxare-faq__a p {
+	margin: 0 0 8px;
+}
+
+/* Relacionados */
+body.wp-theme-gailu-xare .gxare-relacionados {
+	display: grid;
+	grid-template-columns: repeat( auto-fill, minmax(280px, 1fr) );
+	gap: 16px;
+	max-width: 1080px;
+}
+body.wp-theme-gailu-xare .gxare-relacionado {
+	display: block;
+	padding: 20px 24px;
+	background: var(--papel-2);
+	border-radius: var(--radio-md);
+	border-left: 3px solid var(--verde-olivo);
+	color: var(--tinta);
+	text-decoration: none;
+	transition: transform 200ms ease, box-shadow 200ms ease;
+}
+body.wp-theme-gailu-xare .gxare-relacionado:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--sombra-1);
+}
+body.wp-theme-gailu-xare .gxare-relacionado h3 {
+	font: var(--tipo-title-m);
+	margin: 0 0 6px;
+	color: var(--tinta) !important;
+}
+body.wp-theme-gailu-xare .gxare-relacionado p {
+	color: var(--tinta-2);
+	font-size: 14px;
+	margin: 0;
+	line-height: 1.4;
+}
+
 /* ─── Vacío / aviso ──────────────────────────────────────────── */
 .gxare-vacio {
 	color: var(--tinta-3);
