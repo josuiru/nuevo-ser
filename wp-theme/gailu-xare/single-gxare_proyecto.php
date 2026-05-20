@@ -22,6 +22,13 @@ while ( have_posts() ) :
 		case 'cuadernos-de-campo':
 			get_template_part( 'template-parts/landing-cdc' );
 			break;
+		case 'bloques':
+			// Landing montada con bloques tipo VBP, importados desde
+			// flavor-platform o creados directamente en el meta. El
+			// portfolio renderiza con sus propios partials, sin tocar
+			// código del plugin Flavor.
+			get_template_part( 'template-parts/landing-bloques' );
+			break;
 		case 'flavor-chat-ia':
 			// Si el plugin flavor-landing está activo y expone un
 			// template, lo dejamos pintar. Si no, caemos a genérica.

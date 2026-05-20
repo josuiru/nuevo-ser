@@ -28,6 +28,7 @@ require_once GXARE_PORTFOLIO_DIR . 'includes/cpts.php';
 require_once GXARE_PORTFOLIO_DIR . 'includes/metaboxes.php';
 require_once GXARE_PORTFOLIO_DIR . 'includes/shortcodes.php';
 require_once GXARE_PORTFOLIO_DIR . 'includes/seed.php';
+require_once GXARE_PORTFOLIO_DIR . 'includes/importer-flavor.php';
 
 register_activation_hook( __FILE__, 'gxare_portfolio_activar' );
 

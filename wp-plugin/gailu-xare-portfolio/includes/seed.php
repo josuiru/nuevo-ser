@@ -512,6 +512,11 @@ function gxare_seed_proyectos(): array {
 				'gxare_proyecto_url_repo'    => 'https://github.com/JosuIru/flavor-news-hub',
 				'gxare_proyecto_color'       => '#B05E3B',
 				'gxare_proyecto_destacado'   => '0',
+				// Renderiza con bloques importados del Visual Builder
+				// Pro de flavor-platform. Tras importar (wp gxare
+				// importar-flavor-landing <id> --proyecto=...), el
+				// portfolio no depende del plugin Flavor para mostrarla.
+				'gxare_proyecto_landing'     => 'bloques',
 				'gxare_proyecto_que_hace_largo' => 'Plugin headless de WordPress que actúa como backend agregador de medios alternativos, radios libres y colectivos activistas. Expone cuatro Custom Post Types (fuente, noticia, colectivo, radio) más una taxonomía compartida de temáticas canónicas. Ingesta automatizada de feeds RSS/Atom/YouTube/Mastodon/podcast cada 30 minutos vía wp_cron con dedupe por GUID y URL original. API REST pública flavor-news/v1 sin autenticación de lectura con filtros por temática, territorio, idioma y fecha. Plantillas web públicas /n/, /c/, /f/ independientes del tema activo (HTML de 10-15 KB sin enqueues de terceros).',
 				'gxare_proyecto_para_quien'  => 'Proyectos de medios federados, radios libres, agregadores de prensa alternativa y colectivos que quieren disponer de un catálogo curado y federado de fuentes sin pagar APIs comerciales. Pensado para alimentar tanto la web pública como una app Flutter de lectura con catálogo offline. Licencia AGPL-3.0-or-later: si despliegas instancia modificada accesible por red, publicas los cambios.',
 				'gxare_proyecto_virtudes'    => "Ingesta automatizada cada 30 minutos con dedupe idempotente por GUID y URL original\nAPI REST pública sin auth, filtrable por temática, territorio, idioma, fecha desde\nPlantillas públicas independientes del tema, 10-15 KB, sin JS, accesibles AA y prefers-color-scheme\nCriterio de reutilización claro: sólo metadatos y enlace canónico, nunca artículo completo\nSuite PHPUnit con WP_UnitTestCase y bootstrap real de WordPress",
