@@ -136,3 +136,59 @@ if ( ! function_exists( 'cdc_asset' ) ) {
 		return CDC_THEME_URL . '/assets/' . ltrim( $ruta, '/' );
 	}
 }
+
+/**
+ * Devuelve la URL de la miniatura de Wikipedia para un título dado
+ * (artículo en es.wikipedia.org), o cadena vacía si no hay foto.
+ * Cachea el resultado durante 30 días vía transient — la API REST
+ * de Wikipedia rate-limita, pero el cache lo absorbe.
+ *
+ * Legal: la API REST de Wikipedia es libre, las miniaturas vienen
+ * bajo CC-BY-SA o dominio público. Basta enlazar al artículo para
+ * cumplir la atribución (lo hacemos en .bk-coord con "Wikipedia").
+ *
+ * @param string $titulo Título exacto del artículo en es.wikipedia.org.
+ */
+if ( ! function_exists( 'cdc_wikipedia_thumb' ) ) {
+	function cdc_wikipedia_thumb( string $titulo ): string {
+		if ( '' === trim( $titulo ) ) {
+			return '';
+		}
+		$clave_cache = 'cdc_wiki_thumb_' . md5( strtolower( $titulo ) );
+		$cacheado    = get_transient( $clave_cache );
+		if ( false !== $cacheado ) {
+			// 'none' = se intentó y no había foto, evita re-pedir.
+			return 'none' === $cacheado ? '' : (string) $cacheado;
+		}
+
+		$url = 'https://es.wikipedia.org/api/rest_v1/page/summary/' . rawurlencode( $titulo );
+		$resp = wp_remote_get(
+			$url,
+			array(
+				'timeout'    => 6,
+				'user-agent' => 'Cuadernos-de-Campo/1.0 (https://github.com/JosuIru/cuadernos-de-campo; contacto: gailu.net)',
+				'headers'    => array( 'Accept' => 'application/json' ),
+			)
+		);
+
+		if ( is_wp_error( $resp ) || 200 !== (int) wp_remote_retrieve_response_code( $resp ) ) {
+			// Cachear el fallo 1 día para no machacar la API.
+			set_transient( $clave_cache, 'none', DAY_IN_SECONDS );
+			return '';
+		}
+
+		$body = json_decode( (string) wp_remote_retrieve_body( $resp ), true );
+		$thumb = '';
+		if ( is_array( $body ) ) {
+			// thumbnail (256) o originalimage (más grande, pesa más).
+			$thumb = (string) ( $body['thumbnail']['source'] ?? $body['originalimage']['source'] ?? '' );
+		}
+
+		set_transient(
+			$clave_cache,
+			'' === $thumb ? 'none' : $thumb,
+			30 * DAY_IN_SECONDS
+		);
+		return $thumb;
+	}
+}

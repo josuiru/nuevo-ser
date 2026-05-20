@@ -63,9 +63,22 @@ $especimenes = cdc_listar_cpt( 'cdc_especimen', 6 );
 				$lat          = (string) get_post_meta( $sp->ID, 'cdc_coord_lat', true );
 				$lng          = (string) get_post_meta( $sp->ID, 'cdc_coord_lng', true );
 				$clase_visual = (string) get_post_meta( $sp->ID, 'cdc_clase_visual', true );
-				$tiene_foto   = has_post_thumbnail( $sp->ID );
-				$photo_style  = $tiene_foto
-					? sprintf( 'background: url(%s) center/cover no-repeat;', esc_url( get_the_post_thumbnail_url( $sp->ID, 'large' ) ) )
+				// Prioridad de la foto: 1) foto destacada del post 2) Wikipedia.
+				// Para Wikipedia, busca el meta `cdc_wiki_titulo` (override
+				// manual desde wp-admin) y si no, usa el post_title.
+				$tiene_foto = has_post_thumbnail( $sp->ID );
+				$foto_url   = '';
+				if ( $tiene_foto ) {
+					$foto_url = get_the_post_thumbnail_url( $sp->ID, 'large' );
+				} elseif ( function_exists( 'cdc_wikipedia_thumb' ) ) {
+					$titulo_wiki = (string) get_post_meta( $sp->ID, 'cdc_wiki_titulo', true );
+					if ( '' === $titulo_wiki ) {
+						$titulo_wiki = $sp->post_title;
+					}
+					$foto_url = cdc_wikipedia_thumb( $titulo_wiki );
+				}
+				$photo_style = $foto_url
+					? sprintf( 'background: url(%s) center/cover no-repeat;', esc_url( $foto_url ) )
 					: '';
 				$delay_style  = $delay === 0 ? '' : 'style="--d:.' . sprintf( '%02d', $delay ) . 's"';
 				$delay += 8;
@@ -91,6 +104,16 @@ $especimenes = cdc_listar_cpt( 'cdc_especimen', 6 );
 							<?php if ( '' !== $lat && '' !== $lng ) : ?>
 								· <?php echo esc_html( $lat ); ?>° N · <?php echo esc_html( $lng ); ?>° W
 							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+					<?php if ( ! $tiene_foto && '' !== $foto_url ) :
+						$titulo_wiki = (string) get_post_meta( $sp->ID, 'cdc_wiki_titulo', true );
+						if ( '' === $titulo_wiki ) {
+							$titulo_wiki = $sp->post_title;
+						}
+					?>
+						<div class="bk-credito">
+							Foto: <a href="<?php echo esc_url( 'https://es.wikipedia.org/wiki/' . rawurlencode( $titulo_wiki ) ); ?>" target="_blank" rel="noopener">Wikipedia</a>
 						</div>
 					<?php endif; ?>
 				</div>

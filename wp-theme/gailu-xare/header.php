@@ -20,9 +20,9 @@
 			<span class="gxare-brand__sub">taller de Josu Iru</span>
 		</a>
 		<nav class="gxare-topbar__menu">
-			<a href="#proyectos">Proyectos</a>
-			<a href="#descargas">Descargas</a>
-			<a href="#sobre">Sobre</a>
+			<a href="<?php echo esc_url( home_url( '/#proyectos' ) ); ?>">Proyectos</a>
+			<a href="<?php echo esc_url( home_url( '/#descargas' ) ); ?>">Descargas</a>
+			<a href="<?php echo esc_url( home_url( '/#sobre' ) ); ?>">Sobre</a>
 			<a href="https://github.com/JosuIru" target="_blank" rel="noopener">GitHub</a>
 		</nav>
 	</div>

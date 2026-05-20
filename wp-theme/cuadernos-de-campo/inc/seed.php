@@ -39,6 +39,14 @@ function cdc_seed_insertar( array $entry ): void {
 		)
 	);
 	if ( ! empty( $existente ) ) {
+		// Si ya existe, refrescar los metas (no toca title/content
+		// para no pisar edición humana posterior; sí los metas
+		// porque permite añadir overrides nuevos al seed sin borrar
+		// el contenido).
+		$post_id = (int) $existente[0]->ID;
+		foreach ( ( $entry['meta'] ?? array() ) as $key => $value ) {
+			update_post_meta( $post_id, $key, $value );
+		}
 		return;
 	}
 
@@ -101,6 +109,7 @@ function cdc_seed_data(): array {
 				'cdc_distintivos'       => "Concha enrollada espiralada\nPared gruesa, 5–15 cm\nSustituyó a corales en arrecifes someros",
 				'cdc_donde'             => 'Caliza urgoniana de Bizkaia: Ereño, Atxarte, Jata.',
 				'cdc_clase_visual'      => 'bivalve',
+				'cdc_wiki_titulo'       => 'Rudista',
 			),
 		),
 		array(
@@ -120,6 +129,7 @@ function cdc_seed_data(): array {
 				'cdc_distintivos'       => "Resina amarilla-ambarina semitransparente\nInclusiones: insectos, fragmentos vegetales\nFluorescente bajo luz UV",
 				'cdc_donde'             => 'Peñacerrada (Álava), Moraza (Burgos). Uno de los mejores yacimientos del mundo.',
 				'cdc_clase_visual'      => 'amber',
+				'cdc_wiki_titulo'       => 'Ámbar',
 			),
 		),
 		array(
