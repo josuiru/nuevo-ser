@@ -605,16 +605,16 @@ function gxare_seed_descargas(): array {
 		array(
 			'seed_id'  => 'desc-flavor-news-0.16.6',
 			'post_type'=> 'gxare_descarga',
-			'slug'     => 'flavor-news-hub-0-16-6',
+			'slug'     => 'flavor-news-hub-apk',
 			'orden'    => 40,
-			'title'    => 'Flavor News Hub — ZIP WordPress',
+			'title'    => 'Flavor News Hub — APK Android',
 			'meta' => array(
 				'gxare_descarga_proyecto_slug' => 'flavor-news-hub',
 				'gxare_descarga_version'       => '0.16.6',
 				'gxare_descarga_fecha'         => '2026-05-19',
-				'gxare_descarga_plataforma'    => 'wp',
-				'gxare_descarga_url'           => 'https://github.com/JosuIru/flavor-news-hub',
-				'gxare_descarga_notas'         => 'Backend headless de noticias y colectivos. AGPL-3.0.',
+				'gxare_descarga_plataforma'    => 'android',
+				'gxare_descarga_url'           => 'https://github.com/JosuIru/flavor-news-hub/releases',
+				'gxare_descarga_notas'         => 'App cliente de lectura del catálogo agregado. Consume la API REST flavor-news/v1 del backend. AGPL-3.0.',
 			),
 		),
 	);
