@@ -26,11 +26,21 @@ function gxare_cpts_registrar(): void {
 		'capability_type'     => 'page',
 	);
 
+	// Proyectos sí queremos servirlos como páginas públicas para que
+	// cada tarjeta del home enlace a su URL (/p/<slug>/) con su
+	// propia landing renderizada por single-gxare_proyecto.php. Las
+	// descargas siguen siendo internas — solo el shortcode las
+	// expone.
 	register_post_type(
 		'gxare_proyecto',
 		array_merge(
 			$base,
 			array(
+				'public'              => true,
+				'publicly_queryable'  => true,
+				'exclude_from_search' => false,
+				'has_archive'         => false,
+				'rewrite'             => array( 'slug' => 'p', 'with_front' => false ),
 				'labels' => array(
 					'name'          => 'Proyectos',
 					'singular_name' => 'Proyecto',

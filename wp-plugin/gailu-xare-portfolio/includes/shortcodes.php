@@ -83,11 +83,12 @@ function gxare_render_tarjeta_proyecto( WP_Post $proyecto ): void {
 		echo '<div class="gxare-proyecto__logo">' . get_the_post_thumbnail( $proyecto->ID, 'medium' ) . '</div>';
 	}
 
+	$permalink = (string) get_permalink( $proyecto );
 	echo '<header class="gxare-proyecto__head">';
 	if ( '' !== $marca ) {
 		echo '<span class="gxare-proyecto__marca">' . esc_html( $marca ) . '</span>';
 	}
-	echo '<h3 class="gxare-proyecto__titulo">' . esc_html( $proyecto->post_title ) . '</h3>';
+	echo '<h3 class="gxare-proyecto__titulo"><a href="' . esc_url( $permalink ) . '">' . esc_html( $proyecto->post_title ) . '</a></h3>';
 	if ( '' !== $subtitulo ) {
 		echo '<p class="gxare-proyecto__sub">' . esc_html( $subtitulo ) . '</p>';
 	}
@@ -124,21 +125,22 @@ function gxare_render_tarjeta_proyecto( WP_Post $proyecto ): void {
 	}
 
 	$enlaces = array();
+	// El enlace principal es a la página interna del proyecto.
+	$enlaces[] = array( 'href' => $permalink, 'label' => 'Ver detalle', 'extern' => false );
 	if ( '' !== $url_web )  { $enlaces[] = array( 'href' => $url_web,  'label' => 'Web',         'extern' => true ); }
 	if ( '' !== $url_demo ) { $enlaces[] = array( 'href' => $url_demo, 'label' => 'Demo',        'extern' => true ); }
 	if ( '' !== $url_repo ) { $enlaces[] = array( 'href' => $url_repo, 'label' => 'Repositorio', 'extern' => true ); }
-	if ( ! empty( $enlaces ) ) {
-		echo '<nav class="gxare-proyecto__enlaces">';
-		foreach ( $enlaces as $e ) {
-			printf(
-				'<a href="%s"%s>%s →</a>',
-				esc_url( $e['href'] ),
-				$e['extern'] ? ' target="_blank" rel="noopener"' : '',
-				esc_html( $e['label'] )
-			);
-		}
-		echo '</nav>';
+
+	echo '<nav class="gxare-proyecto__enlaces">';
+	foreach ( $enlaces as $e ) {
+		printf(
+			'<a href="%s"%s>%s →</a>',
+			esc_url( $e['href'] ),
+			$e['extern'] ? ' target="_blank" rel="noopener"' : '',
+			esc_html( $e['label'] )
+		);
 	}
+	echo '</nav>';
 
 	echo '</article>';
 }

@@ -17,7 +17,11 @@
    the geometric numerics we want for the geological-time labels. */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap");
 
-:root {
+/* Scope: aplica solo al body del tema gailu-xare (clase añadida por WP
+   automáticamente como `wp-theme-gailu-xare`). Así las variables --papel,
+   --tinta, etc. ganan sobre las `:root` que plugins como flavor-platform
+   declaran globalmente. */
+body.wp-theme-gailu-xare {
   /* === BRAND COLOR — fósiles =====================================
      Source of truth: apps/fosiles/lib/main.dart
        seedColor                = Color(0xFF5E7D3A)   -> --verde-olivo

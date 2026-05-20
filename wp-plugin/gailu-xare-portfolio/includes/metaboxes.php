@@ -47,6 +47,13 @@ function gxare_metaboxes_defs(): array {
 				array( 'key' => 'gxare_proyecto_destacado','label' => '¿Destacado?', 'tipo' => 'select',
 					'opciones' => array( '0' => 'No', '1' => 'Sí' ),
 					'desc' => 'Los destacados van en grande arriba del grid.' ),
+				array( 'key' => 'gxare_proyecto_landing', 'label' => 'Landing custom', 'tipo' => 'select',
+					'opciones' => array(
+						''                => '— Página genérica del tema —',
+						'cuadernos-de-campo' => 'Cuadernos de Campo (design system completo)',
+						'flavor-chat-ia'  => 'Flavor Chat IA (plugin flavor-landing)',
+					),
+					'desc' => 'Si pones una landing custom, single-gxare_proyecto.php delega su render a esa landing en vez de la página genérica.' ),
 			),
 		),
 		'gxare_descarga' => array(

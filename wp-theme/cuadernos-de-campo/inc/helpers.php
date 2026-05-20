@@ -12,9 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Devuelve el valor de un Customizer con fallback. Wrapper trivial
  * para que el template no tenga que repetir el default.
+ *
+ * Guarda function_exists para permitir que otro tema (p. ej.
+ * gailu-xare cargando este helper para embeber la landing en su
+ * single-gxare_proyecto) declare una versión con sus propios
+ * defaults antes de cargar este fichero.
  */
-function cdc_mod( string $clave, $defecto = '' ) {
-	return get_theme_mod( $clave, $defecto );
+if ( ! function_exists( 'cdc_mod' ) ) {
+	function cdc_mod( string $clave, $defecto = '' ) {
+		return get_theme_mod( $clave, $defecto );
+	}
 }
 
 /**
@@ -25,6 +32,7 @@ function cdc_mod( string $clave, $defecto = '' ) {
  * Los IDs coinciden con los del catálogo Dart de Fósiles
  * (`apps/fosiles/lib/datos/datos_guia.dart`).
  */
+if ( ! function_exists( 'cdc_periodos_canonicos' ) ) :
 function cdc_periodos_canonicos(): array {
 	return array(
 		array( 'id' => 'precambrico',        'name' => 'Precámbrico',        'age' => '4567 – 541 Ma',  'flex' => 2.2, 'text' => 'Hadeano, Arcaico y Proterozoico. Los afloramientos accesibles en Iberia son escasos (núcleos de Ossa-Morena, Centro-Ibérica). Los fósiles plausibles son estromatolitos del Proterozoico tardío.' ),
@@ -43,12 +51,14 @@ function cdc_periodos_canonicos(): array {
 		array( 'id' => 'cuaternario',        'name' => 'Cuaternario',        'age' => '2,6 Ma – hoy',   'flex' => 1.0, 'text' => 'Pleistoceno: oso de las cavernas (Ursus spelaeus), Megaloceros, fauna fría en cuevas vascas (Santimamiñe, Arrikrutz).' ),
 	);
 }
+endif;
 
 /**
  * Construye el mapa periodo_id → { name, age, text } combinando el
  * catálogo canónico con cualquier sobrescritura publicada desde
  * wp-admin como CPT `cdc_periodo`. Se inyecta al JS via wp_add_inline.
  */
+if ( ! function_exists( 'cdc_periodos_map' ) ) :
 function cdc_periodos_map(): array {
 	$resultado = array();
 	foreach ( cdc_periodos_canonicos() as $p ) {
@@ -89,33 +99,40 @@ function cdc_periodos_map(): array {
 	}
 	return $resultado;
 }
+endif;
 
 /**
  * Renderiza un icono Material Symbols. Sin emoji.
  */
-function cdc_icon( string $nombre ): string {
-	return '<span class="material-symbols-outlined">' . esc_html( $nombre ) . '</span>';
+if ( ! function_exists( 'cdc_icon' ) ) {
+	function cdc_icon( string $nombre ): string {
+		return '<span class="material-symbols-outlined">' . esc_html( $nombre ) . '</span>';
+	}
 }
 
 /**
  * Devuelve los posts publicados de un CPT del tema, ordenados por
  * `menu_order` ascendente (y, si empata, por fecha ascendente).
  */
-function cdc_listar_cpt( string $post_type, int $limite = -1 ): array {
-	return get_posts(
-		array(
-			'post_type'      => $post_type,
-			'posts_per_page' => $limite,
-			'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'ASC' ),
-			'post_status'    => 'publish',
-			'no_found_rows'  => true,
-		)
-	);
+if ( ! function_exists( 'cdc_listar_cpt' ) ) {
+	function cdc_listar_cpt( string $post_type, int $limite = -1 ): array {
+		return get_posts(
+			array(
+				'post_type'      => $post_type,
+				'posts_per_page' => $limite,
+				'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'ASC' ),
+				'post_status'    => 'publish',
+				'no_found_rows'  => true,
+			)
+		);
+	}
 }
 
 /**
  * URL absoluta de un asset del tema.
  */
-function cdc_asset( string $ruta ): string {
-	return CDC_THEME_URL . '/assets/' . ltrim( $ruta, '/' );
+if ( ! function_exists( 'cdc_asset' ) ) {
+	function cdc_asset( string $ruta ): string {
+		return CDC_THEME_URL . '/assets/' . ltrim( $ruta, '/' );
+	}
 }

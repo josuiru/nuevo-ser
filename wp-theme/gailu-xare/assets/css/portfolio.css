@@ -5,16 +5,68 @@
    cuaderno: aquí el aire es de "muestrario sobrio", no de diario.
    ───────────────────────────────────────────────────────────────── */
 
-* { box-sizing: border-box; }
-html, body { margin: 0; }
+/* Todos los selectores se prefijan con `body.wp-theme-gailu-xare`
+   para que ganen en especificidad contra flavor-platform y otros
+   plugins que declaran reglas globales. */
+body.wp-theme-gailu-xare * { box-sizing: border-box; }
+body.wp-theme-gailu-xare,
+body.wp-theme-gailu-xare html { margin: 0; }
 
-body {
-	background: var(--papel);
-	color: var(--tinta);
+body.wp-theme-gailu-xare {
+	background: var(--papel) !important;
+	color: var(--tinta) !important;
 	font: var(--tipo-body-l);
 }
 
-a { transition: color 160ms ease; }
+body.wp-theme-gailu-xare a { transition: color 160ms ease; }
+body.wp-theme-gailu-xare a:link,
+body.wp-theme-gailu-xare a:visited {
+	color: var(--verde-olivo-1) !important;
+}
+body.wp-theme-gailu-xare a:hover {
+	color: var(--bosque) !important;
+}
+
+/* Brand y menú del topbar — neutralizar el rojo coral de flavor */
+body.wp-theme-gailu-xare .gxare-brand,
+body.wp-theme-gailu-xare .gxare-brand:link,
+body.wp-theme-gailu-xare .gxare-brand:visited {
+	color: var(--tinta) !important;
+}
+body.wp-theme-gailu-xare .gxare-brand__nombre { color: var(--tinta) !important; }
+body.wp-theme-gailu-xare .gxare-topbar__menu a,
+body.wp-theme-gailu-xare .gxare-topbar__menu a:link,
+body.wp-theme-gailu-xare .gxare-topbar__menu a:visited {
+	color: var(--tinta-2) !important;
+}
+body.wp-theme-gailu-xare .gxare-topbar__menu a:hover { color: var(--bosque) !important; }
+
+/* Botones */
+body.wp-theme-gailu-xare .gxare-btn,
+body.wp-theme-gailu-xare .gxare-btn:link,
+body.wp-theme-gailu-xare .gxare-btn:visited {
+	color: var(--tinta) !important;
+}
+body.wp-theme-gailu-xare .gxare-btn--primary,
+body.wp-theme-gailu-xare .gxare-btn--primary:link,
+body.wp-theme-gailu-xare .gxare-btn--primary:visited {
+	color: var(--on-bosque) !important;
+}
+
+/* Títulos h3 de tarjetas (los nombres "Fósiles", "Uno Roto") */
+body.wp-theme-gailu-xare .gxare-proyecto__titulo a,
+body.wp-theme-gailu-xare .gxare-proyecto__titulo a:link,
+body.wp-theme-gailu-xare .gxare-proyecto__titulo a:visited {
+	color: var(--tinta) !important;
+}
+body.wp-theme-gailu-xare .gxare-proyecto__titulo a:hover { color: var(--bosque) !important; }
+
+/* Botón "Descargar" de los descargas */
+body.wp-theme-gailu-xare .gxare-descarga__boton,
+body.wp-theme-gailu-xare .gxare-descarga__boton:link,
+body.wp-theme-gailu-xare .gxare-descarga__boton:visited {
+	color: var(--on-bosque) !important;
+}
 
 /* ─── Topbar ─────────────────────────────────────────────────── */
 .gxare-topbar {
@@ -374,6 +426,137 @@ a { transition: color 160ms ease; }
 .gxare-pie__legal {
 	font-size: 13px;
 	color: rgba( 245, 241, 232, 0.55 );
+}
+
+/* ─── Página single de proyecto ──────────────────────────────── */
+body.wp-theme-gailu-xare .gxare-proyecto__titulo a {
+	color: var(--tinta);
+	text-decoration: none;
+}
+body.wp-theme-gailu-xare .gxare-proyecto__titulo a:hover { color: var(--bosque); }
+
+body.wp-theme-gailu-xare .gxare-proyecto-page {
+	max-width: 1080px;
+	margin: 0 auto;
+	padding: 80px 28px 120px;
+}
+.gxare-proyecto-page__hero {
+	display: grid;
+	grid-template-columns: 1.4fr 1fr;
+	gap: 48px;
+	align-items: center;
+	padding: 56px 0 32px;
+	border-bottom: 1px solid var(--linea);
+	margin-bottom: 56px;
+}
+@media (max-width: 768px) {
+	.gxare-proyecto-page__hero { grid-template-columns: 1fr; }
+}
+.gxare-proyecto-page__volver {
+	display: inline-block;
+	margin-bottom: 24px;
+	color: var(--tinta-3);
+	text-decoration: none;
+	font: var(--tipo-label-l);
+}
+.gxare-proyecto-page__volver:hover { color: var(--bosque); }
+.gxare-proyecto-page__titulo {
+	font-family: var(--tipo-display);
+	font-size: clamp( 36px, 5vw, 56px );
+	font-weight: 600;
+	color: var(--tinta);
+	margin: 12px 0 12px;
+	letter-spacing: -0.01em;
+}
+.gxare-proyecto-page__sub {
+	color: var(--tinta-2);
+	font-size: 18px;
+	line-height: 1.5;
+	max-width: 640px;
+	margin: 0 0 20px;
+}
+.gxare-proyecto-page__chips {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 24px;
+}
+.gxare-proyecto-page__cta {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.gxare-proyecto-page__hero-img img {
+	width: 100%;
+	height: auto;
+	border-radius: var(--radio-md);
+	box-shadow: var(--sombra-2);
+}
+.gxare-proyecto-page__cuerpo {
+	max-width: 720px;
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--tinta-2);
+	margin-bottom: 48px;
+}
+.gxare-proyecto-page__cuerpo p { margin: 0 0 16px; }
+.gxare-proyecto-page__tech-section,
+.gxare-proyecto-page__descargas {
+	margin-bottom: 48px;
+}
+.gxare-proyecto-page__tech-section h3,
+.gxare-proyecto-page__descargas h3 {
+	font-family: var(--tipo-display);
+	font-size: 24px;
+	margin: 0 0 16px;
+	color: var(--tinta);
+}
+.gxare-proyecto-page__tech {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+.gxare-proyecto-page__tech span {
+	font: var(--tipo-label-l);
+	color: var(--tinta-2);
+	background: var(--papel-2);
+	border: 1px solid var(--linea);
+	padding: 6px 12px;
+	border-radius: var(--radio-xs);
+}
+.gxare-proyecto-page__nav {
+	margin-top: 48px;
+	padding-top: 24px;
+	border-top: 1px solid var(--linea);
+}
+
+/* Cuando se embebe la landing custom de cuadernos-de-campo */
+body.wp-theme-gailu-xare .cdc-embed {
+	margin: 0 -28px;
+}
+/* Anular el rojo de flavor en los .btn del design system cuadernos-de-campo */
+body.wp-theme-gailu-xare .cdc-embed .btn,
+body.wp-theme-gailu-xare .cdc-embed .btn:link,
+body.wp-theme-gailu-xare .cdc-embed .btn:visited {
+	color: var(--bosque) !important;
+}
+body.wp-theme-gailu-xare .cdc-embed .btn-fill,
+body.wp-theme-gailu-xare .cdc-embed .btn-fill:link,
+body.wp-theme-gailu-xare .cdc-embed .btn-fill:visited {
+	color: var(--on-bosque) !important;
+}
+body.wp-theme-gailu-xare .cdc-embed .btn-tape,
+body.wp-theme-gailu-xare .cdc-embed .btn-tape:link,
+body.wp-theme-gailu-xare .cdc-embed .btn-tape:visited {
+	color: var(--tinta) !important;
+}
+/* Enlaces internos de la landing cdc (chips, opens, etc.) tienen
+   tonos olivo/bosque/terracota distintos. Lo blindamos contra
+   flavor-platform por bloque. */
+body.wp-theme-gailu-xare .cdc-embed a,
+body.wp-theme-gailu-xare .cdc-embed a:link,
+body.wp-theme-gailu-xare .cdc-embed a:visited {
+	color: var(--verde-olivo-1);
 }
 
 /* ─── Vacío / aviso ──────────────────────────────────────────── */

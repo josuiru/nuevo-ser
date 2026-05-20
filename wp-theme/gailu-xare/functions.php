@@ -77,10 +77,43 @@ add_action(
 );
 
 /**
- * Helper: lee un Customizer con fallback.
+ * Mapa centralizado de defaults para los textos editables del
+ * Customizer. Se usa tanto en `customize_register` (para mostrar los
+ * defaults en wp-admin) como en `gxare_mod()` (para devolverlos al
+ * template cuando el operador todavía no ha guardado nada).
+ *
+ * Sin esto, get_theme_mod devuelve string vacío en una instalación
+ * recién activada y la portada sale con hero/sobre/pie vacíos hasta
+ * que el operador entra al Customizer y pulsa "Publicar".
+ */
+function gxare_defaults(): array {
+	return array(
+		'gxare_hero_eyebrow'  => 'Gailu Xare',
+		'gxare_hero_titulo'   => 'Trabajos del taller, listos para usar.',
+		'gxare_hero_lead'     => 'Portfolio público del operador y hub de descargas: cuadernos de campo digitales, plataformas de comunidad, plugins WordPress y herramientas de IA. Cada proyecto se enlaza a su repo, su demo y su versión actual descargable.',
+		'gxare_sobre_titulo'  => 'Sobre Gailu Xare',
+		'gxare_sobre_cuerpo'  => 'Gailu Xare es el taller público de Josu Iru: software libre y de pago, divulgación y herramientas para colectivos. Tres líneas de trabajo conviven aquí: <b>Cuadernos de Campo</b> (apps para adulto aficionado), <b>Solera</b> (gestor agrícola para Iberia con verticales especializadas) y <b>Flavor</b> (plataforma WordPress y plugins de comunidad e IA).',
+		'gxare_desc_titulo'   => 'Hub de descargas',
+		'gxare_desc_lead'     => 'APKs Android, plugins WordPress y otros artefactos. Cada release lleva versión, fecha y notas — siempre verificable contra el repo o el SHA-256 cuando corresponde.',
+		'gxare_pie_credito'   => 'Construido por Josu Iru · <a href="https://github.com/JosuIru">github.com/JosuIru</a> · <a href="https://gailu.net">gailu.net</a>',
+	);
+}
+
+/**
+ * Helper: lee un Customizer con fallback al default centralizado. Si
+ * el segundo argumento es no-vacío gana sobre el default centralizado
+ * (uso ad-hoc desde un template puntual).
  */
 function gxare_mod( string $clave, $defecto = '' ) {
-	return get_theme_mod( $clave, $defecto );
+	$defaults = gxare_defaults();
+	$valor = get_theme_mod( $clave, null );
+	if ( null !== $valor && '' !== $valor ) {
+		return $valor;
+	}
+	if ( '' !== $defecto ) {
+		return $defecto;
+	}
+	return $defaults[ $clave ] ?? '';
 }
 
 /**
@@ -89,6 +122,7 @@ function gxare_mod( string $clave, $defecto = '' ) {
 add_action(
 	'customize_register',
 	static function ( WP_Customize_Manager $wp_customize ): void {
+		$defaults = gxare_defaults();
 		$wp_customize->add_panel(
 			'gxare_portfolio',
 			array( 'title' => 'Gailu Xare · Portfolio', 'priority' => 30 )
@@ -96,23 +130,23 @@ add_action(
 
 		// Hero
 		$wp_customize->add_section( 'gxare_hero', array( 'title' => 'Cabecera (Hero)', 'panel' => 'gxare_portfolio' ) );
-		gxare_settings_add( $wp_customize, 'gxare_hero_eyebrow', 'Antetítulo', 'Gailu Xare', 'gxare_hero' );
-		gxare_settings_add( $wp_customize, 'gxare_hero_titulo',  'Título', 'Trabajos del taller, listos para usar.', 'gxare_hero', 'textarea' );
-		gxare_settings_add( $wp_customize, 'gxare_hero_lead',    'Lead', 'Portfolio público del operador y hub de descargas: cuadernos de campo digitales, plataformas de comunidad, plugins WordPress y herramientas de IA. Cada proyecto se enlaza a su repo, su demo y su versión actual descargable.', 'gxare_hero', 'textarea' );
+		gxare_settings_add( $wp_customize, 'gxare_hero_eyebrow', 'Antetítulo', $defaults['gxare_hero_eyebrow'], 'gxare_hero' );
+		gxare_settings_add( $wp_customize, 'gxare_hero_titulo',  'Título', $defaults['gxare_hero_titulo'], 'gxare_hero', 'textarea' );
+		gxare_settings_add( $wp_customize, 'gxare_hero_lead',    'Lead', $defaults['gxare_hero_lead'], 'gxare_hero', 'textarea' );
 
 		// Sobre
 		$wp_customize->add_section( 'gxare_sobre', array( 'title' => 'Sobre Gailu Xare', 'panel' => 'gxare_portfolio' ) );
-		gxare_settings_add( $wp_customize, 'gxare_sobre_titulo',  'Título', 'Sobre Gailu Xare', 'gxare_sobre' );
-		gxare_settings_add( $wp_customize, 'gxare_sobre_cuerpo',  'Cuerpo', 'Gailu Xare es el taller público de Josu Iru: software libre y de pago, divulgación y herramientas para colectivos. Tres líneas de trabajo conviven aquí: <b>Cuadernos de Campo</b> (apps para adulto aficionado), <b>Solera</b> (gestor agrícola para Iberia con verticales especializadas) y <b>Flavor</b> (plataforma WordPress y plugins de comunidad e IA).', 'gxare_sobre', 'textarea' );
+		gxare_settings_add( $wp_customize, 'gxare_sobre_titulo',  'Título', $defaults['gxare_sobre_titulo'], 'gxare_sobre' );
+		gxare_settings_add( $wp_customize, 'gxare_sobre_cuerpo',  'Cuerpo', $defaults['gxare_sobre_cuerpo'], 'gxare_sobre', 'textarea' );
 
 		// Descargas
 		$wp_customize->add_section( 'gxare_descargas_section', array( 'title' => 'Sección de Descargas', 'panel' => 'gxare_portfolio' ) );
-		gxare_settings_add( $wp_customize, 'gxare_desc_titulo',   'Título', 'Hub de descargas', 'gxare_descargas_section' );
-		gxare_settings_add( $wp_customize, 'gxare_desc_lead',     'Lead',   'APKs Android, plugins WordPress y otros artefactos. Cada release lleva versión, fecha y notas — siempre verificable contra el repo o el SHA-256 cuando corresponde.', 'gxare_descargas_section', 'textarea' );
+		gxare_settings_add( $wp_customize, 'gxare_desc_titulo',   'Título', $defaults['gxare_desc_titulo'], 'gxare_descargas_section' );
+		gxare_settings_add( $wp_customize, 'gxare_desc_lead',     'Lead',   $defaults['gxare_desc_lead'], 'gxare_descargas_section', 'textarea' );
 
 		// Pie
 		$wp_customize->add_section( 'gxare_pie', array( 'title' => 'Pie', 'panel' => 'gxare_portfolio' ) );
-		gxare_settings_add( $wp_customize, 'gxare_pie_credito', 'Crédito', 'Construido por Josu Iru · <a href="https://github.com/JosuIru">github.com/JosuIru</a> · <a href="https://gailu.net">gailu.net</a>', 'gxare_pie', 'textarea' );
+		gxare_settings_add( $wp_customize, 'gxare_pie_credito', 'Crédito', $defaults['gxare_pie_credito'], 'gxare_pie', 'textarea' );
 	}
 );
 
