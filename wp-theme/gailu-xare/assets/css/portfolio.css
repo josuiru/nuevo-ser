@@ -534,6 +534,19 @@ body.wp-theme-gailu-xare .gxare-proyecto-page {
 body.wp-theme-gailu-xare .cdc-embed {
 	margin: 0 -28px;
 }
+/* El IntersectionObserver del landing.js del tema cuadernos-de-campo
+   no fiabilizó en este contexto embebido — la animación
+   `specimen-drop` se queda pausada en el frame 0% (opacity 0) y los
+   especímenes quedan invisibles. Forzamos play state running para
+   que la animación se ejecute al cargar la página. Lo mismo para
+   timescale/map-card/process/field-notes, que comparten patrón. */
+body.wp-theme-gailu-xare .cdc-embed .specimen,
+body.wp-theme-gailu-xare .cdc-embed .timescale,
+body.wp-theme-gailu-xare .cdc-embed .map-card,
+body.wp-theme-gailu-xare .cdc-embed .process,
+body.wp-theme-gailu-xare .cdc-embed .field-notes {
+	animation-play-state: running !important;
+}
 /* Anular el rojo de flavor en los .btn del design system cuadernos-de-campo */
 body.wp-theme-gailu-xare .cdc-embed .btn,
 body.wp-theme-gailu-xare .cdc-embed .btn:link,

@@ -80,11 +80,16 @@
   if (inicialActivo) selectPeriod(inicialActivo.dataset.id);
   else if (segs.length) selectPeriod('jurasico');
 
-  // ── Lift-the-flap · click en los especímenes ─────────────────────
+  // ── Lift-the-flap · click en la celda entera ─────────────────────
+  // El listener va en `.flap-cell` (no en `.specimen`) porque al
+  // lifted la lámina rota fuera del plano y los clicks siguientes
+  // aterrizan sobre el flap-back, dejando la tarjeta atascada en
+  // estado abierto. Con el listener en la celda, el toggle funciona
+  // en cualquiera de los dos estados.
   document.querySelectorAll('.flap-cell').forEach(cell => {
-    const flap = cell.querySelector('.specimen');
-    if (!flap) return;
-    flap.addEventListener('click', () => cell.classList.toggle('lifted'));
+    if (!cell.querySelector('.specimen')) return;
+    cell.style.cursor = 'pointer';
+    cell.addEventListener('click', () => cell.classList.toggle('lifted'));
   });
 
   // ── Hero title · ink reveal letra a letra ────────────────────────
