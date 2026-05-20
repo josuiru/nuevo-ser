@@ -8,7 +8,7 @@
      ICS oficiales y los logos
    ========================================================================= */
 
-@import url("../colors_and_type.css");
+@import url("./tokens.css");
 /* Manuscrita para anotaciones marginales tipo álbum */
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap");
 :root { --tipo-manuscrita: "Caveat", "Bradley Hand", cursive; }
@@ -268,7 +268,7 @@ img { display: block; max-width: 100%; }
   position: absolute;
   right: -10%; bottom: -120px;
   width: 620px; height: 620px;
-  background-image: url("../assets/fosiles-icon-foreground.png");
+  background-image: url("../img/fosiles-icon-foreground.png");
   background-size: contain; background-repeat: no-repeat;
   filter:
     sepia(0.2)
@@ -394,8 +394,8 @@ img { display: block; max-width: 100%; }
   transition: transform .6s cubic-bezier(.2,.7,.2,1);
 }
 .tomo:hover .tomo-card .figure { transform: scale(1.05) rotate(-4deg); }
-.tomo.fosiles .tomo-card .figure { background-image: url("../assets/fosiles-icon.png"); }
-.tomo.naturaleza .tomo-card .figure { background-image: url("../assets/naturaleza-logo.png"); }
+.tomo.fosiles .tomo-card .figure { background-image: url("../img/fosiles-icon.png"); }
+.tomo.naturaleza .tomo-card .figure { background-image: url("../img/naturaleza-logo.png"); }
 
 .tomo-card .tag {
   display: inline-block;
