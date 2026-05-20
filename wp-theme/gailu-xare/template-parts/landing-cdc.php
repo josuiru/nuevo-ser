@@ -37,68 +37,54 @@ if ( ! defined( 'CDC_THEME_URL' ) ) {
 	define( 'CDC_THEME_URL', $url_tema_cdc );
 }
 
-// Declaramos primero NUESTRA versión de cdc_mod con los defaults que
-// las template-parts del tema cuadernos-de-campo esperan. Como
-// cuadernos-de-campo no está activo, get_theme_mod no encontraría
-// nada y devolvería el segundo argumento (que las template-parts
-// pasan como '' en la mayoría de las llamadas). Por eso aquí ponemos
-// los defaults explícitamente.
-//
-// Los valores son los que aparecen en cuadernos-de-campo/inc/customizer.php
-// como defaults del Customizer.
-function cdc_mod( string $clave, $defecto = '' ) {
-	// Si el operador alguna vez activó el tema cuadernos-de-campo
-	// y dejó settings guardados, los respetamos.
-	$guardado = get_theme_mod( $clave, null );
-	if ( null !== $guardado && '' !== $guardado ) {
-		return $guardado;
-	}
-	$defaults = array(
-		'cdc_hero_brand_version'   => 'Cuadernos de Campo · v1.0 · 2026',
-		'cdc_hero_eyebrow'         => 'Tomo I & II · 2026',
-		'cdc_hero_titulo'          => 'Anota lo que encuentras, y lo que encuentras deja huella.',
-		'cdc_hero_lead'            => 'Dos cuadernos de campo digitales para adulto aficionado. Fósiles para paleontología y mineralogía. Naturaleza para flora, fauna e insectos. Privacidad estructural y certificado verificable de cada hallazgo.',
-		'cdc_hero_count_fosiles'      => '103',
-		'cdc_hero_count_formaciones'  => '41',
-		'cdc_hero_count_periodos'     => '14',
-		'cdc_hero_repo_url'           => 'https://github.com/JosuIru/cuadernos-de-campo',
-		'cdc_hero_stamp_texto'        => 'CUADERNO DE CAMPO · MAYO · 2026 · NORTE PENÍNSULA · ',
-		'cdc_hero_stamp_iniciales'    => 'JOSU',
-		'cdc_tomo1_titulo'       => 'Fósiles',
-		'cdc_tomo1_sub'          => 'Paleontología y mineralogía. Hallazgos con foto, edad, formación y orientación de estrato. Asistente IGME contextual.',
-		'cdc_tomo1_chips'        => 'GEODE 50|MAGNA 50|strike / dip|certificado SHA-256|comunidad opcional',
-		'cdc_tomo1_version'      => '1.0.14+15',
-		'cdc_tomo1_plataforma'   => 'Android · Linux desktop',
-		'cdc_tomo1_color'        => '#5E7D3A · verde olivo',
-		'cdc_tomo1_url_prototipo'=> '#',
-		'cdc_tomo2_titulo'       => 'Naturaleza',
-		'cdc_tomo2_sub'          => 'Avistamientos de fauna, flora e insectos. Identificación con Claude o Pl@ntNet. GBIF cercano.',
-		'cdc_tomo2_chips'        => 'GBIF|Pl@ntNet|Wikipedia|identificación IA|quiz',
-		'cdc_tomo2_version'      => '1.0 · alineada con Fósiles',
-		'cdc_tomo2_plataforma'   => 'Android · Linux desktop',
-		'cdc_tomo2_color'        => '#3A7D5A · verde naturaleza',
-		'cdc_tomo2_url_prototipo'=> '#',
-		'cdc_descarga_fosiles_url'     => 'https://github.com/JosuIru/cuadernos-de-campo/releases',
-		'cdc_descarga_fosiles_meta'    => 'v1.0.14+15 · Android 7+ · ~71 MB',
-		'cdc_descarga_naturaleza_url'  => 'https://github.com/JosuIru/cuadernos-de-campo/releases',
-		'cdc_descarga_naturaleza_meta' => 'v1.0 · Android 7+ · ~32 MB',
-		'cdc_descarga_aviso'           => 'iOS no soportado de momento. El proyecto es de un operador independiente, sin presupuesto comercial. Reportes y mejoras: vía GitHub Issues.',
-		'cdc_descarga_coord'           => '43.2871° N · −2.6113° W',
-		'cdc_pie_colofon'   => 'Cuadernos de Campo es un proyecto del operador <b>Josu Iru</b>. Las apps nacen del repositorio <a href="https://github.com/JosuIru/cuadernos-de-campo">JosuIru/cuadernos-de-campo</a>.',
-		'cdc_pie_linea_carto' => 'Cartografía: IGME · GEODE 50, MAGNA 50, Edades 1M, Litologías 1M.',
-		'cdc_pie_linea_tipo'  => 'Tipografía: Inter · Fraunces · JetBrains Mono.',
-		'cdc_pie_linea_coord' => '43.2871° N · −2.6113° W · ±4 m',
+// Defaults para los settings del Customizer de cuadernos-de-campo.
+// Como el tema no es el activo, set_theme_mod nunca se llamó y
+// get_theme_mod devuelve string vacío. Registramos filtros
+// `theme_mod_<key>` que devuelven el default si no hay nada guardado.
+$cdc_defaults = array(
+	'cdc_hero_brand_version'   => 'Cuadernos de Campo · v1.0 · 2026',
+	'cdc_hero_eyebrow'         => 'Tomo I & II · 2026',
+	'cdc_hero_titulo'          => 'Anota lo que encuentras, y lo que encuentras deja huella.',
+	'cdc_hero_lead'            => 'Dos cuadernos de campo digitales para adulto aficionado. Fósiles para paleontología y mineralogía. Naturaleza para flora, fauna e insectos. Privacidad estructural y certificado verificable de cada hallazgo.',
+	'cdc_hero_count_fosiles'      => '103',
+	'cdc_hero_count_formaciones'  => '41',
+	'cdc_hero_count_periodos'     => '14',
+	'cdc_hero_repo_url'           => 'https://github.com/JosuIru/cuadernos-de-campo',
+	'cdc_hero_stamp_texto'        => 'CUADERNO DE CAMPO · MAYO · 2026 · NORTE PENÍNSULA · ',
+	'cdc_hero_stamp_iniciales'    => 'JOSU',
+	'cdc_tomo1_titulo'       => 'Fósiles',
+	'cdc_tomo1_sub'          => 'Paleontología y mineralogía. Hallazgos con foto, edad, formación y orientación de estrato. Asistente IGME contextual.',
+	'cdc_tomo1_chips'        => 'GEODE 50|MAGNA 50|strike / dip|certificado SHA-256|comunidad opcional',
+	'cdc_tomo1_version'      => '1.0.14+15',
+	'cdc_tomo1_plataforma'   => 'Android · Linux desktop',
+	'cdc_tomo1_color'        => '#5E7D3A · verde olivo',
+	'cdc_tomo1_url_prototipo'=> '#',
+	'cdc_tomo2_titulo'       => 'Naturaleza',
+	'cdc_tomo2_sub'          => 'Avistamientos de fauna, flora e insectos. Identificación con Claude o Pl@ntNet. GBIF cercano.',
+	'cdc_tomo2_chips'        => 'GBIF|Pl@ntNet|Wikipedia|identificación IA|quiz',
+	'cdc_tomo2_version'      => '1.0 · alineada con Fósiles',
+	'cdc_tomo2_plataforma'   => 'Android · Linux desktop',
+	'cdc_tomo2_color'        => '#3A7D5A · verde naturaleza',
+	'cdc_tomo2_url_prototipo'=> '#',
+	'cdc_descarga_fosiles_url'     => 'https://github.com/JosuIru/cuadernos-de-campo/releases',
+	'cdc_descarga_fosiles_meta'    => 'v1.0.14+15 · Android 7+ · ~71 MB',
+	'cdc_descarga_naturaleza_url'  => 'https://github.com/JosuIru/cuadernos-de-campo/releases',
+	'cdc_descarga_naturaleza_meta' => 'v1.0 · Android 7+ · ~32 MB',
+	'cdc_descarga_aviso'           => 'iOS no soportado de momento. El proyecto es de un operador independiente, sin presupuesto comercial. Reportes y mejoras: vía GitHub Issues.',
+	'cdc_descarga_coord'           => '43.2871° N · −2.6113° W',
+	'cdc_pie_colofon'   => 'Cuadernos de Campo es un proyecto del operador <b>Josu Iru</b>. Las apps nacen del repositorio <a href="https://github.com/JosuIru/cuadernos-de-campo">JosuIru/cuadernos-de-campo</a>.',
+	'cdc_pie_linea_carto' => 'Cartografía: IGME · GEODE 50, MAGNA 50, Edades 1M, Litologías 1M.',
+	'cdc_pie_linea_tipo'  => 'Tipografía: Inter · Fraunces · JetBrains Mono.',
+	'cdc_pie_linea_coord' => '43.2871° N · −2.6113° W · ±4 m',
+);
+foreach ( $cdc_defaults as $cdc_key => $cdc_default ) {
+	add_filter(
+		'theme_mod_' . $cdc_key,
+		static function ( $valor ) use ( $cdc_default ) {
+			return ( null === $valor || '' === $valor || false === $valor ) ? $cdc_default : $valor;
+		}
 	);
-	if ( '' !== $defecto ) {
-		return $defecto;
-	}
-	return $defaults[ $clave ] ?? '';
 }
-
-// Cargar el resto de helpers del otro tema (icon, asset, listar_cpt,
-// periodos…). cdc_mod ya está declarada, así que su function_exists
-// guard la saltará.
-require_once $ruta_tema_cdc . '/inc/helpers.php';
 ?>
 
 <link rel="stylesheet" href="<?php echo esc_url( $url_tema_cdc . '/assets/css/tokens.css' ); ?>?ver=cdc">
@@ -123,10 +109,34 @@ $secciones = array(
 );
 
 echo '<div class="cdc-embed cdc-embed--' . esc_attr( get_post_field( 'post_name', get_the_ID() ) ) . '">';
+// Wrapper de "cuaderno abierto": lomo izquierdo con la columna
+// cronoestratigráfica + el resto del cuaderno en .page. Reproducción
+// fiel del header.php del tema cuadernos-de-campo (que no podemos
+// llamar tal cual porque renderiza <html>/<body>).
+?>
+<div class="book">
+	<aside class="spine" aria-hidden="true">
+		<div class="spine-label">Cuadernos de Campo</div>
+		<div class="spine-strata">
+			<?php foreach ( cdc_periodos_canonicos() as $p ) : ?>
+				<div class="layer" style="background: var(--era-<?php echo esc_attr( $p['id'] ); ?>);">
+					<span class="lbl"><?php echo esc_html( $p['name'] ); ?></span>
+				</div>
+			<?php endforeach; ?>
+			<div class="spine-bookmark"></div>
+		</div>
+		<div class="spine-foot">pág. <span class="pag">01</span></div>
+	</aside>
+	<main class="page">
+<?php
 foreach ( $secciones as $sec ) {
 	$archivo = $ruta_tema_cdc . '/template-parts/section-' . $sec . '.php';
 	if ( file_exists( $archivo ) ) {
 		include $archivo;
 	}
 }
+?>
+	</main>
+</div>
+<?php
 echo '</div>';

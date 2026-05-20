@@ -18,6 +18,32 @@ define( 'GXARE_THEME_VERSION', '1.0.0' );
 define( 'GXARE_THEME_DIR', get_template_directory() );
 define( 'GXARE_THEME_URL', get_template_directory_uri() );
 
+/**
+ * Cargamos los CPTs y el seed del tema `cuadernos-de-campo` aunque
+ * no esté activo. Esto registra `cdc_especimen`, `cdc_periodo`,
+ * `cdc_mapa`, `cdc_paso`, `cdc_caract`, `cdc_codigo` como tipos de
+ * post disponibles vía `init` action — necesario para que las
+ * landings custom que embebemos los puedan listar con get_posts().
+ *
+ * Constantes que esperan esos archivos:
+ */
+$gxare_ruta_cdc = get_theme_root() . '/cuadernos-de-campo';
+if ( is_dir( $gxare_ruta_cdc ) ) {
+	if ( ! defined( 'CDC_THEME_VERSION' ) ) define( 'CDC_THEME_VERSION', '1.0.0' );
+	if ( ! defined( 'CDC_THEME_DIR' ) )     define( 'CDC_THEME_DIR', $gxare_ruta_cdc );
+	if ( ! defined( 'CDC_THEME_URL' ) )     define( 'CDC_THEME_URL', get_theme_root_uri() . '/cuadernos-de-campo' );
+	if ( is_readable( $gxare_ruta_cdc . '/inc/helpers.php' ) ) {
+		require_once $gxare_ruta_cdc . '/inc/helpers.php';
+	}
+	if ( is_readable( $gxare_ruta_cdc . '/inc/cpts.php' ) ) {
+		require_once $gxare_ruta_cdc . '/inc/cpts.php';
+	}
+	if ( is_readable( $gxare_ruta_cdc . '/inc/seed.php' ) ) {
+		require_once $gxare_ruta_cdc . '/inc/seed.php';
+	}
+}
+unset( $gxare_ruta_cdc );
+
 add_action(
 	'after_setup_theme',
 	static function (): void {
