@@ -1,0 +1,136 @@
+<?php
+/**
+ * Tema "Gailu Xare" — portfolio del ecosistema del operador.
+ *
+ * Requiere el plugin `gailu-xare-portfolio` para los CPTs y los
+ * shortcodes que el `front-page.php` consume. Sin el plugin, el tema
+ * funciona pero no muestra proyectos ni descargas; en su lugar pinta
+ * un aviso en wp-admin.
+ *
+ * @package gailu-xare
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+define( 'GXARE_THEME_VERSION', '1.0.0' );
+define( 'GXARE_THEME_DIR', get_template_directory() );
+define( 'GXARE_THEME_URL', get_template_directory_uri() );
+
+add_action(
+	'after_setup_theme',
+	static function (): void {
+		add_theme_support( 'title-tag' );
+		add_theme_support( 'post-thumbnails' );
+		add_theme_support( 'custom-logo' );
+		add_theme_support( 'html5', array( 'script', 'style', 'caption', 'gallery' ) );
+	}
+);
+
+add_action(
+	'wp_enqueue_scripts',
+	static function (): void {
+		wp_enqueue_style(
+			'gxare-material-symbols',
+			'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap',
+			array(),
+			null
+		);
+		wp_enqueue_style(
+			'gxare-tokens',
+			GXARE_THEME_URL . '/assets/css/tokens.css',
+			array(),
+			GXARE_THEME_VERSION
+		);
+		wp_enqueue_style(
+			'gxare-portfolio',
+			GXARE_THEME_URL . '/assets/css/portfolio.css',
+			array( 'gxare-tokens' ),
+			GXARE_THEME_VERSION
+		);
+		wp_enqueue_script(
+			'gxare-portfolio',
+			GXARE_THEME_URL . '/assets/js/portfolio.js',
+			array(),
+			GXARE_THEME_VERSION,
+			array( 'in_footer' => true, 'strategy' => 'defer' )
+		);
+	}
+);
+
+/**
+ * Aviso en wp-admin si el plugin del portfolio no está activo. Sin él
+ * la portada queda vacía y no es obvio por qué — este aviso lo
+ * explica al primer login.
+ */
+add_action(
+	'admin_notices',
+	static function (): void {
+		if ( shortcode_exists( 'gxare_proyectos' ) ) {
+			return;
+		}
+		echo '<div class="notice notice-warning is-dismissible"><p>';
+		echo '<strong>Gailu Xare:</strong> activa también el plugin <code>gailu-xare-portfolio</code> para que la portada muestre proyectos y descargas.';
+		echo '</p></div>';
+	}
+);
+
+/**
+ * Helper: lee un Customizer con fallback.
+ */
+function gxare_mod( string $clave, $defecto = '' ) {
+	return get_theme_mod( $clave, $defecto );
+}
+
+/**
+ * Customizer: textos editables de hero / sobre / pie.
+ */
+add_action(
+	'customize_register',
+	static function ( WP_Customize_Manager $wp_customize ): void {
+		$wp_customize->add_panel(
+			'gxare_portfolio',
+			array( 'title' => 'Gailu Xare · Portfolio', 'priority' => 30 )
+		);
+
+		// Hero
+		$wp_customize->add_section( 'gxare_hero', array( 'title' => 'Cabecera (Hero)', 'panel' => 'gxare_portfolio' ) );
+		gxare_settings_add( $wp_customize, 'gxare_hero_eyebrow', 'Antetítulo', 'Gailu Xare', 'gxare_hero' );
+		gxare_settings_add( $wp_customize, 'gxare_hero_titulo',  'Título', 'Trabajos del taller, listos para usar.', 'gxare_hero', 'textarea' );
+		gxare_settings_add( $wp_customize, 'gxare_hero_lead',    'Lead', 'Portfolio público del operador y hub de descargas: cuadernos de campo digitales, plataformas de comunidad, plugins WordPress y herramientas de IA. Cada proyecto se enlaza a su repo, su demo y su versión actual descargable.', 'gxare_hero', 'textarea' );
+
+		// Sobre
+		$wp_customize->add_section( 'gxare_sobre', array( 'title' => 'Sobre Gailu Xare', 'panel' => 'gxare_portfolio' ) );
+		gxare_settings_add( $wp_customize, 'gxare_sobre_titulo',  'Título', 'Sobre Gailu Xare', 'gxare_sobre' );
+		gxare_settings_add( $wp_customize, 'gxare_sobre_cuerpo',  'Cuerpo', 'Gailu Xare es el taller público de Josu Iru: software libre y de pago, divulgación y herramientas para colectivos. Tres líneas de trabajo conviven aquí: <b>Cuadernos de Campo</b> (apps para adulto aficionado), <b>Solera</b> (gestor agrícola para Iberia con verticales especializadas) y <b>Flavor</b> (plataforma WordPress y plugins de comunidad e IA).', 'gxare_sobre', 'textarea' );
+
+		// Descargas
+		$wp_customize->add_section( 'gxare_descargas_section', array( 'title' => 'Sección de Descargas', 'panel' => 'gxare_portfolio' ) );
+		gxare_settings_add( $wp_customize, 'gxare_desc_titulo',   'Título', 'Hub de descargas', 'gxare_descargas_section' );
+		gxare_settings_add( $wp_customize, 'gxare_desc_lead',     'Lead',   'APKs Android, plugins WordPress y otros artefactos. Cada release lleva versión, fecha y notas — siempre verificable contra el repo o el SHA-256 cuando corresponde.', 'gxare_descargas_section', 'textarea' );
+
+		// Pie
+		$wp_customize->add_section( 'gxare_pie', array( 'title' => 'Pie', 'panel' => 'gxare_portfolio' ) );
+		gxare_settings_add( $wp_customize, 'gxare_pie_credito', 'Crédito', 'Construido por Josu Iru · <a href="https://github.com/JosuIru">github.com/JosuIru</a> · <a href="https://gailu.net">gailu.net</a>', 'gxare_pie', 'textarea' );
+	}
+);
+
+function gxare_settings_add( WP_Customize_Manager $wp_customize, string $clave, string $etiqueta, string $defecto, string $seccion, string $tipo = 'text' ): void {
+	$wp_customize->add_setting(
+		$clave,
+		array(
+			'default'           => $defecto,
+			'sanitize_callback' => 'textarea' === $tipo ? 'sanitize_textarea_field' : 'sanitize_text_field',
+			'transport'         => 'refresh',
+		)
+	);
+	$wp_customize->add_control(
+		$clave,
+		array(
+			'label'   => $etiqueta,
+			'section' => $seccion,
+			'type'    => $tipo,
+		)
+	);
+}

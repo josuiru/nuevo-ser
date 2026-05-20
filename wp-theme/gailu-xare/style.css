@@ -1,0 +1,18 @@
+/*
+Theme Name: Gailu Xare
+Theme URI: https://gailu.net
+Author: Josu Iru · Gailu Labs
+Author URI: https://github.com/JosuIru
+Description: Portfolio del ecosistema Gailu: Cuadernos de Campo, Solera, Flavor Platform / News Hub / Chat IA. Hub público de descargas. Requiere el plugin "Gailu Xare Portfolio" para los CPTs y shortcodes. Convive sin colisión con flavor-platform, flavor-news-hub y flavor-landing en el mismo wp-admin.
+Version: 1.0.0
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 8.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: gailu-xare
+Tags: portfolio, downloads, two-columns, custom-colors
+*/
+
+/* El CSS real está en assets/css/. Este archivo solo aloja la
+   cabecera del tema. */

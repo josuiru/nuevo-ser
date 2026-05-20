@@ -1,0 +1,64 @@
+<?php
+/**
+ * CPTs del plugin Gailu Xare Portfolio.
+ *
+ * - gxare_proyecto: un trabajo del operador (app, plugin, theme, servicio).
+ * - gxare_descarga: un release descargable (APK, plugin zip, theme zip).
+ *
+ * @package GailuXarePortfolio
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+function gxare_cpts_registrar(): void {
+	$base = array(
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_rest'        => false,
+		'hierarchical'        => false,
+		'exclude_from_search' => true,
+		'publicly_queryable'  => false,
+		'has_archive'         => false,
+		'supports'            => array( 'title', 'editor', 'page-attributes', 'thumbnail', 'excerpt' ),
+		'capability_type'     => 'page',
+	);
+
+	register_post_type(
+		'gxare_proyecto',
+		array_merge(
+			$base,
+			array(
+				'labels' => array(
+					'name'          => 'Proyectos',
+					'singular_name' => 'Proyecto',
+					'add_new_item'  => 'Añadir proyecto',
+					'edit_item'     => 'Editar proyecto',
+					'menu_name'     => 'Gailu · Proyectos',
+				),
+				'menu_icon' => 'dashicons-portfolio',
+				'menu_position' => 24,
+			)
+		)
+	);
+
+	register_post_type(
+		'gxare_descarga',
+		array_merge(
+			$base,
+			array(
+				'labels' => array(
+					'name'          => 'Descargas',
+					'singular_name' => 'Descarga',
+					'add_new_item'  => 'Añadir descarga',
+					'edit_item'     => 'Editar descarga',
+					'menu_name'     => 'Gailu · Descargas',
+				),
+				'menu_icon' => 'dashicons-download',
+				'menu_position' => 25,
+			)
+		)
+	);
+}

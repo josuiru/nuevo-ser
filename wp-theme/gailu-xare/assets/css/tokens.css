@@ -1,0 +1,175 @@
+/* =====================================================================
+   Cuadernos de Campo — colors & type
+   ---------------------------------------------------------------------
+   Brand tokens for a web translation of the Fósiles / Naturaleza apps.
+   The native apps are Flutter Material 3 with ColorScheme.fromSeed
+   (seed #5E7D3A). Here we lift the canonical hex values directly from
+   the source (lib/main.dart, pantalla_inicio.dart, cronoestratigrafia)
+   and expose them as CSS variables.
+
+   Spirit: cuaderno de campo de adulto. Paper-and-ink, earthy, calm.
+   No emoji in UI chrome. Castellano descriptivo.
+   ===================================================================== */
+
+/* Inter is a sensible web fallback for Material's Roboto. The native
+   apps use Roboto via Material 3 defaults — we substitute Inter on the
+   web because it has better screen rendering at body sizes and ships
+   the geometric numerics we want for the geological-time labels. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* === BRAND COLOR — fósiles =====================================
+     Source of truth: apps/fosiles/lib/main.dart
+       seedColor                = Color(0xFF5E7D3A)   -> --verde-olivo
+       scaffoldBackgroundColor  = Color(0xFFF5F1E8)   -> --papel
+       launcher background      = #2D3A2E             -> --bosque
+  */
+  --bosque:           #2D3A2E;  /* deep forest green — splash, headers */
+  --bosque-1:         #3A4A3B;  /* hover/raised on bosque */
+  --verde-olivo:      #5E7D3A;  /* primary olive — fósiles seed */
+  --verde-olivo-1:    #4D6A2E;  /* pressed/hover */
+  --verde-olivo-2:    #C3D2A8;  /* tonal container (Material primaryContainer-ish) */
+  --verde-musgo:      #8AA66B;  /* secondary olive — chips, illustrations */
+
+  /* === BRAND COLOR — naturaleza ================================== */
+  --verde-naturaleza: #3A7D5A;  /* primary green — naturaleza inicio header */
+  --verde-naturaleza-1:#2E6648;
+  --verde-naturaleza-2:#B7D6C4;
+
+  /* === SHARED ACCENTS ============================================ */
+  --ocre:             #C99A3B;  /* mustard ochre — from naturaleza butterfly */
+  --ocre-claro:       #E6C275;
+  --terracota:        #B05E3B;  /* brick — secondary accent, "found" highlights */
+  --azul-niebla:      #6C8AA0;  /* foggy blue — for maps & meteo */
+
+  /* === NEUTRALS — paper & ink ==================================== */
+  --papel:            #F5F1E8;  /* page bg — scaffoldBackgroundColor */
+  --papel-2:          #ECE5D2;  /* card-on-page, surface variant */
+  --papel-3:          #DED4BB;  /* divider on paper */
+  --tinta:            #1F2A20;  /* near-black ink (off-black so prints "warm") */
+  --tinta-2:          #3A4A3B;  /* secondary text */
+  --tinta-3:          #6B7A6C;  /* tertiary text / hint */
+  --linea:            rgba(45, 58, 46, 0.14); /* hairline rule */
+  --linea-fuerte:     rgba(45, 58, 46, 0.28);
+
+  /* === SEMANTIC =================================================== */
+  --exito:            #5E7D3A;  /* reuse olive — "saved", "synced" */
+  --aviso:            #C99A3B;  /* ochre */
+  --error:            #B0413E;
+  --info:             #6C8AA0;
+
+  /* === GEOLOGIC PERIOD CHIPS =====================================
+     Verbatim from apps/fosiles/lib/datos/datos_guia.dart — these are
+     the colors stratigraphers use on geological maps. They appear as
+     small headers between fossil groupings; treat as data tokens, not
+     part of the general palette. Text on top of these chips is
+     always --bosque (#2D3A2E). */
+  --era-precambrico:        #E6749E;
+  --era-cambrico:           #A8C593;
+  --era-ordovicico:         #53A47C;
+  --era-silurico:           #99CFB0;
+  --era-devonico:           #CB8C5B;
+  --era-carbonifero:        #8FB9A8;
+  --era-permico:            #E08766;
+  --era-triasico:           #A87F9C;
+  --era-jurasico:           #34B2C9;
+  --era-cretacico-inferior: #7FC64E;
+  --era-cretacico-superior: #A6D84A;
+  --era-paleoceno-eoceno:   #FDB462;
+  --era-oligoceno-mioceno:  #FFE45E;
+  --era-cuaternario:        #FFF7C2;
+
+  /* === FOREGROUNDS ON COLORED SURFACES =========================== */
+  --on-bosque:        #F5F1E8;
+  --on-olivo:         #FFFFFF;
+  --on-papel:         var(--tinta);
+  --on-era:           var(--bosque); /* period chips always use --bosque text */
+
+  /* === RADII =====================================================
+     Source: Flutter code uses BorderRadius.circular(4 / 12 / 16) plus
+     CircleAvatar. We map to a small ramp. */
+  --radio-xs:  4px;   /* tags, mini chips (period labels) */
+  --radio-sm:  8px;
+  --radio-md:  12px;  /* cards, action tiles */
+  --radio-lg:  16px;  /* hero header tile */
+  --radio-pill: 999px;
+
+  /* === SHADOWS =================================================== */
+  --sombra-sutil: 0 1px 2px rgba(31, 42, 32, 0.06),
+                  0 1px 1px rgba(31, 42, 32, 0.04);
+  --sombra-1:    0 2px 6px rgba(31, 42, 32, 0.08),
+                 0 1px 2px rgba(31, 42, 32, 0.04);
+  --sombra-2:    0 8px 24px rgba(31, 42, 32, 0.10),
+                 0 2px 6px rgba(31, 42, 32, 0.06);
+  --sombra-fab:  0 6px 16px rgba(94, 125, 58, 0.30),
+                 0 2px 4px rgba(31, 42, 32, 0.10);
+  --foco-anillo: 0 0 0 3px rgba(94, 125, 58, 0.35);
+
+  /* === SPACING ===================================================
+     Material 3 uses a 4 dp grid. The Flutter code mostly steps in 4 /
+     8 / 12 / 16 / 24 (see EdgeInsets.all(20) for header). */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 48px;
+
+  /* === TYPE STACKS =============================================== */
+  --tipo-ui:      "Inter", "Roboto", system-ui, -apple-system, "Segoe UI",
+                  "Helvetica Neue", Arial, sans-serif;
+  --tipo-display: "Fraunces", "Iowan Old Style", "Palatino Linotype",
+                  Georgia, "Times New Roman", serif;
+  --tipo-mono:    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono",
+                  Menlo, monospace;
+
+  /* === TYPE SCALE (Material 3-aligned, slightly tightened) ======= */
+  --tipo-display-l: 700 56px/1.05 var(--tipo-display);
+  --tipo-display-m: 600 44px/1.08 var(--tipo-display);
+  --tipo-headline:  600 32px/1.15 var(--tipo-display);
+  --tipo-title-l:   600 22px/1.25 var(--tipo-ui);   /* AppBar title */
+  --tipo-title-m:   600 18px/1.30 var(--tipo-ui);   /* section header */
+  --tipo-title-s:   600 14px/1.30 var(--tipo-ui);   /* card title */
+  --tipo-body-l:    400 16px/1.50 var(--tipo-ui);
+  --tipo-body-m:    400 14px/1.45 var(--tipo-ui);
+  --tipo-body-s:    400 13px/1.45 var(--tipo-ui);
+  --tipo-label-l:   500 14px/1.20 var(--tipo-ui);
+  --tipo-label-m:   500 12px/1.20 var(--tipo-ui);
+  --tipo-overline:  500 11px/1.20 var(--tipo-ui);   /* letter-spaced */
+}
+
+/* === SEMANTIC ELEMENT BINDINGS ====================================
+   So you can write plain HTML and pick up the brand by default. */
+
+html, body {
+  font: var(--tipo-body-l);
+  color: var(--on-papel);
+  background: var(--papel);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1 { font: var(--tipo-display-m); color: var(--tinta); letter-spacing: -0.01em; margin: 0 0 var(--space-4); }
+h2 { font: var(--tipo-headline);  color: var(--tinta); letter-spacing: -0.005em; margin: 0 0 var(--space-3); }
+h3 { font: var(--tipo-title-l);   color: var(--tinta); margin: 0 0 var(--space-3); }
+h4 { font: var(--tipo-title-m);   color: var(--tinta); margin: 0 0 var(--space-2); }
+h5 { font: var(--tipo-title-s);   color: var(--tinta); margin: 0 0 var(--space-2); }
+p  { font: var(--tipo-body-l); margin: 0 0 var(--space-3); }
+small { font: var(--tipo-body-s); color: var(--tinta-3); }
+code, kbd, samp, pre { font-family: var(--tipo-mono); font-size: 0.9em; }
+hr { border: 0; border-top: 1px solid var(--linea); margin: var(--space-5) 0; }
+a { color: var(--verde-olivo-1); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--bosque); }
+
+::selection { background: var(--verde-olivo-2); color: var(--bosque); }
+
+/* Utility helpers used across UI kits and preview cards ============ */
+.overline {
+  font: var(--tipo-overline);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+.divider { height: 1px; background: var(--linea); }

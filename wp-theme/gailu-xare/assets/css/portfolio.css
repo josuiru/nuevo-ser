@@ -1,0 +1,388 @@
+/* ─────────────────────────────────────────────────────────────────
+   Gailu Xare — estilos del portfolio.
+   Hereda tokens.css. Mantiene la familia visual de cuadernos-de-campo
+   (papel + bosque + olivo + Inter/Fraunces) pero sin la metáfora de
+   cuaderno: aquí el aire es de "muestrario sobrio", no de diario.
+   ───────────────────────────────────────────────────────────────── */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+
+body {
+	background: var(--papel);
+	color: var(--tinta);
+	font: var(--tipo-body-l);
+}
+
+a { transition: color 160ms ease; }
+
+/* ─── Topbar ─────────────────────────────────────────────────── */
+.gxare-topbar {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	background: rgba(245, 241, 232, 0.92);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid var(--linea);
+}
+.gxare-topbar__inner {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 16px 28px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+}
+.gxare-brand {
+	display: flex;
+	flex-direction: column;
+	text-decoration: none;
+	color: var(--tinta);
+}
+.gxare-brand__nombre {
+	font: var(--tipo-title-l);
+	font-family: var(--tipo-display);
+	letter-spacing: -0.01em;
+}
+.gxare-brand__sub {
+	font: var(--tipo-overline);
+	color: var(--tinta-3);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	margin-top: 2px;
+}
+.gxare-topbar__menu {
+	display: flex;
+	gap: 22px;
+}
+.gxare-topbar__menu a {
+	color: var(--tinta-2);
+	text-decoration: none;
+	font: var(--tipo-label-l);
+}
+.gxare-topbar__menu a:hover { color: var(--bosque); }
+
+/* ─── Hero ──────────────────────────────────────────────────── */
+.gxare-hero {
+	padding: 112px 28px 96px;
+}
+.gxare-hero__inner {
+	max-width: 1180px;
+	margin: 0 auto;
+}
+.gxare-eyebrow {
+	font: var(--tipo-overline);
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--verde-olivo-1);
+	margin-bottom: 12px;
+}
+.gxare-hero__titulo {
+	font: var(--tipo-display-l);
+	font-size: clamp( 40px, 6vw, 72px );
+	font-family: var(--tipo-display);
+	letter-spacing: -0.015em;
+	color: var(--tinta);
+	max-width: 880px;
+	margin: 0 0 24px;
+}
+.gxare-hero__lead {
+	max-width: 720px;
+	font-size: 18px;
+	line-height: 1.55;
+	color: var(--tinta-2);
+	margin: 0 0 32px;
+}
+.gxare-hero__cta {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.gxare-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 20px;
+	border-radius: var(--radio-md);
+	background: var(--papel-2);
+	color: var(--tinta);
+	text-decoration: none;
+	font: var(--tipo-label-l);
+	border: 1px solid var(--linea-fuerte);
+	transition: background 160ms ease, border-color 160ms ease;
+}
+.gxare-btn:hover { background: var(--papel-3); }
+.gxare-btn--primary {
+	background: var(--bosque);
+	color: var(--on-bosque);
+	border-color: var(--bosque);
+}
+.gxare-btn--primary:hover { background: var(--bosque-1); color: var(--on-bosque); }
+
+/* ─── Section ───────────────────────────────────────────────── */
+.gxare-section {
+	padding: 88px 28px;
+}
+.gxare-section--alt {
+	background: var(--papel-2);
+	border-top: 1px solid var(--linea);
+	border-bottom: 1px solid var(--linea);
+}
+.gxare-section__head {
+	max-width: 1180px;
+	margin: 0 auto 48px;
+}
+.gxare-section__head h2 {
+	font-family: var(--tipo-display);
+	font-size: clamp( 32px, 4.2vw, 48px );
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	color: var(--tinta);
+	margin: 0 0 16px;
+}
+.gxare-lead {
+	max-width: 720px;
+	font-size: 17px;
+	line-height: 1.55;
+	color: var(--tinta-2);
+	margin: 0;
+}
+.gxare-section__body {
+	max-width: 1180px;
+	margin: 0 auto;
+}
+
+/* ─── Grid de proyectos ──────────────────────────────────────── */
+.gxare-proyectos-grid {
+	display: grid;
+	grid-template-columns: repeat( auto-fill, minmax(320px, 1fr) );
+	gap: 24px;
+}
+
+.gxare-proyecto {
+	background: var(--papel-2);
+	border-radius: var(--radio-md);
+	padding: 28px 24px;
+	box-shadow: var(--sombra-1);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	border-left: 4px solid var(--verde-olivo);
+	transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.gxare-proyecto:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--sombra-2);
+}
+.gxare-proyecto--destacado {
+	grid-column: span 2;
+	background: linear-gradient(135deg, var(--papel-2) 0%, var(--papel) 100%);
+}
+@media (max-width: 768px) {
+	.gxare-proyecto--destacado { grid-column: span 1; }
+}
+.gxare-proyecto__logo img {
+	max-width: 80px;
+	height: auto;
+	border-radius: var(--radio-sm);
+}
+.gxare-proyecto__marca {
+	font: var(--tipo-overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--tinta-3);
+}
+.gxare-proyecto__titulo {
+	font: var(--tipo-headline);
+	font-family: var(--tipo-display);
+	font-size: 28px;
+	margin: 4px 0 6px;
+	color: var(--tinta);
+}
+.gxare-proyecto__sub {
+	color: var(--tinta-2);
+	font-size: 15px;
+	line-height: 1.45;
+	margin: 0;
+}
+.gxare-proyecto__cuerpo {
+	color: var(--tinta-2);
+	font-size: 14px;
+	line-height: 1.55;
+}
+.gxare-proyecto__cuerpo p { margin: 0 0 8px; }
+.gxare-proyecto__chips {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+.gxare-chip {
+	display: inline-flex;
+	padding: 4px 10px;
+	border-radius: var(--radio-xs);
+	background: var(--papel-3);
+	color: var(--bosque);
+	font: var(--tipo-label-m);
+}
+.gxare-chip--tipo {
+	background: var(--verde-olivo-2);
+	color: var(--bosque);
+}
+.gxare-chip--estado {
+	background: var(--bosque);
+	color: var(--on-bosque);
+}
+.gxare-proyecto__tech {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+.gxare-proyecto__tech span {
+	font: var(--tipo-label-m);
+	color: var(--tinta-3);
+	background: var(--papel);
+	border: 1px solid var(--linea);
+	padding: 3px 8px;
+	border-radius: var(--radio-xs);
+}
+.gxare-proyecto__enlaces {
+	display: flex;
+	gap: 14px;
+	flex-wrap: wrap;
+	margin-top: 4px;
+}
+.gxare-proyecto__enlaces a {
+	color: var(--verde-olivo-1);
+	text-decoration: none;
+	font: var(--tipo-label-l);
+}
+.gxare-proyecto__enlaces a:hover { color: var(--bosque); }
+
+/* ─── Descargas ──────────────────────────────────────────────── */
+.gxare-descargas {
+	display: grid;
+	grid-template-columns: repeat( auto-fill, minmax(360px, 1fr) );
+	gap: 16px;
+}
+.gxare-descarga {
+	background: var(--papel);
+	border-radius: var(--radio-md);
+	padding: 20px 22px;
+	border: 1px solid var(--linea);
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.gxare-descarga__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+.gxare-descarga__titulo {
+	font: var(--tipo-title-m);
+	color: var(--tinta);
+	margin: 0;
+}
+.gxare-descarga__slug {
+	font-family: var(--tipo-mono);
+	color: var(--tinta-3);
+	font-size: 12px;
+}
+.gxare-descarga__meta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: flex-end;
+}
+.gxare-pill {
+	font: var(--tipo-label-m);
+	background: var(--papel-2);
+	color: var(--bosque);
+	padding: 3px 10px;
+	border-radius: var(--radio-pill);
+	border: 1px solid var(--linea);
+}
+.gxare-pill--plat {
+	background: var(--verde-olivo-2);
+	border-color: var(--verde-olivo);
+}
+.gxare-descarga__fecha {
+	color: var(--tinta-3);
+	font-size: 12px;
+}
+.gxare-descarga__notas {
+	color: var(--tinta-2);
+	font-size: 14px;
+	margin: 0;
+}
+.gxare-descarga__sha {
+	font-family: var(--tipo-mono);
+	color: var(--tinta-3);
+	font-size: 12px;
+	background: var(--papel-2);
+	padding: 4px 8px;
+	border-radius: var(--radio-xs);
+	display: inline-block;
+}
+.gxare-descarga__boton {
+	display: inline-flex;
+	align-self: flex-start;
+	padding: 10px 18px;
+	background: var(--bosque);
+	color: var(--on-bosque);
+	border-radius: var(--radio-md);
+	text-decoration: none;
+	font: var(--tipo-label-l);
+	transition: background 160ms ease;
+}
+.gxare-descarga__boton:hover { background: var(--bosque-1); color: var(--on-bosque); }
+
+/* ─── Sobre ──────────────────────────────────────────────────── */
+.gxare-sobre {
+	max-width: 720px;
+	font-size: 18px;
+	line-height: 1.6;
+	color: var(--tinta-2);
+}
+.gxare-sobre p { margin: 0 0 16px; }
+.gxare-sobre b { color: var(--bosque); }
+
+/* ─── Pie ────────────────────────────────────────────────────── */
+.gxare-pie {
+	background: var(--bosque);
+	color: var(--on-bosque);
+	padding: 56px 28px;
+}
+.gxare-pie__inner {
+	max-width: 1180px;
+	margin: 0 auto;
+}
+.gxare-pie p {
+	color: rgba( 245, 241, 232, 0.85 );
+	font-size: 15px;
+	line-height: 1.55;
+	margin: 0 0 8px;
+}
+.gxare-pie a {
+	color: var(--ocre-claro);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+}
+.gxare-pie__legal {
+	font-size: 13px;
+	color: rgba( 245, 241, 232, 0.55 );
+}
+
+/* ─── Vacío / aviso ──────────────────────────────────────────── */
+.gxare-vacio {
+	color: var(--tinta-3);
+	font-style: italic;
+	text-align: center;
+	padding: 24px;
+	background: var(--papel-2);
+	border-radius: var(--radio-md);
+	border: 1px dashed var(--linea-fuerte);
+}
