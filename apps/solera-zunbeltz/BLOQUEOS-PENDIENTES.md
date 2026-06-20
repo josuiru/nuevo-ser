@@ -36,6 +36,17 @@ Decisiones que requieren a una persona (equipo de Zunbeltz Elkartea, asesor téc
 
 17. **Libro ingresos/gastos + extracto** (FZ-8): régimen REAGP ganadero, IVA de venta de terneros/corderos y venta directa, prima PAC/ecorégimen como bloque aparte. Banner PROVISIONAL hasta firma. Coherente con la memoria del repo: *contabilidad por vertical, gateada por el contexto fiscal español*.
 
+## E. Distribución y costes externos (decisión comercial — hablado 2026-06-19)
+
+18. **Plataformas de publicación**: la Fase 1 es single-device y **no necesita servidor ni dominio** (todo el coste es desarrollo). Para distribuir: **Google Play Console** son 25 USD pago único; **Apple Developer** 99 USD/año si se quiere iPhone/iPad; alternativa sin tienda: APK directo (0 €). Decidir con Zunbeltz si se publica en tienda y en qué plataformas. La app ya tiene target Android (`com.coleccionnuevoser.solera_zunbeltz`) y compila en Linux.
+19. **Costes recurrentes a partir de FZ-9 (multiusuario)**: servidor en la nube + base de datos, dominio (~10-15 €/año), SSL (gratis Let's Encrypt), mantenimiento y **asesoría RGPD** (la evaluación de testadores es dato personal sensible). Comparte la decisión de stack con F4 de agro.
+
+## F. Estado de lo construido (FZ-1 → FZ-3) — validaciones pendientes
+
+20. **Euskera de los ARB (`lib/l10n/app_eu.arb`) y de los catálogos (`lib/modelos/constantes.dart`) = borrador propio**. Revisión nativa pendiente (ver A-bis 9-bis), sobre todo la terminología agroganadera (manga de manejo, larre-saila, askatokia…).
+21. **Datos de fincas = seed de ejemplo** (`sembrarFincasDemoSiVacia`: Zunbeltz 231 ha, La Planilla 197 ha, centroides aproximados). Los recintos SIGPAC, infraestructuras y tareas reales se cargan con el equipo (A4/A5).
+22. **Parte de mantenimiento PDF** sale con sello PROVISIONAL; formato a validar antes de uso oficial.
+
 ---
 
 **Principio rector**: esta app se **co-diseña** con Zunbeltz Elkartea. La propuesta (CLAUDE.md + presentación) es un punto de partida sólido para que ellas lo discutan y aporten, no un diseño cerrado.

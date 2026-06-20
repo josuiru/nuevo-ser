@@ -2,7 +2,9 @@
 
 Cerebro persistente del proyecto. Se lee al inicio de cada sesión.
 
-> **Estado**: propuesta v0.1 (pre-reunión con Zunbeltz Elkartea, semana del 2026-06-01). Todavía **no hay código Flutter**: existe este CLAUDE.md, `BLOQUEOS-PENDIENTES.md` y la página de presentación en `presentacion/index.html`. El objetivo de la primera reunión es llevar una propuesta sólida y dejar que el equipo de Zunbeltz aporte y la moldee antes de escribir una línea de app.
+> **Estado**: **FZ-1 → FZ-3 implementados** (2026-06-21). La reunión inicial con Zunbeltz Elkartea se pospuso; la persona de contacto dejó el puesto. Zunbeltz mantiene el interés y prepara una **solicitud de subvención** (~7.770 € IVA incl.) para la que se les entregó **factura proforma** (`comercial/factura-proforma.html`) y **presentación v0.2** (`presentacion/index.html`, ahora con financiación por fases atada a subvenciones reales: TEDER/LEADER, innovación PEPAC Navarra, RETA).
+>
+> Construido (single-device, offline, bilingüe es/eu): esqueleto Flutter+Melos con i18n y branding monte+crema+ocre (FZ-1); modelos `Finca`/`PuntoInfraestructura`/`TareaMantenimiento` + BD sqflite con tests (FZ-2); **módulo de gestión de fincas demoable** — mapa de las 2 fincas con puntos por GPS, ficha con tareas, tablero filtrable y parte PDF (FZ-3). 15 tests verdes, analyze limpio, build Linux OK. **El euskera de los ARB es borrador pendiente de revisión nativa**; los datos de fincas son un seed de ejemplo (los reales se cargan con Zunbeltz). Co-diseño con el equipo sigue pendiente para el resto de fases.
 
 ## Encuadre
 
@@ -134,9 +136,9 @@ Referencia: el patrón puede extenderse a otros ETAs en zonas con lengua coofici
 | Fase | Estado | Entregable |
 |---|---|---|
 | **FZ-0 Propuesta** | 🟡 en curso | CLAUDE.md + BLOQUEOS + `presentacion/index.html` para la reunión con Zunbeltz Elkartea. **Recoger su aportación antes de escribir código.** |
-| **FZ-1 Esqueleto** | pendiente | `apps/solera-zunbeltz/` Flutter+Melos, branding (monte + crema + ocre), dependencia del core, smoke test |
-| **FZ-2 Modelos + BD fincas/infra** | pendiente | Finca, PuntoInfraestructura, TareaMantenimiento sobre `BaseDatosSolera`. Tests POJO |
-| **FZ-3 Gestión de fincas** ⭐ | pendiente | **El módulo destacado**: mapa de las 2 fincas con puntos de infraestructura (alta con GPS), tablero de tareas de mantenimiento asignables con estado, parte PDF. Single-device primero. *Demoable y de valor inmediato para Zunbeltz.* |
+| **FZ-1 Esqueleto** | ✅ hecho | `apps/solera-zunbeltz/` Flutter+Melos, branding (monte + crema + ocre), dependencia del core, i18n es/eu, smoke test |
+| **FZ-2 Modelos + BD fincas/infra** | ✅ hecho | Finca, PuntoInfraestructura, TareaMantenimiento sobre patrón Solera (BaseDatosSolera aún sin extraer del core). Tests POJO + BD (ffi) |
+| **FZ-3 Gestión de fincas** ⭐ | ✅ hecho | **El módulo destacado**: mapa de las 2 fincas con puntos de infraestructura (alta con GPS), tablero de tareas de mantenimiento asignables con estado, parte PDF. Single-device. *Demoable y de valor inmediato para Zunbeltz.* |
 | **FZ-4 Cuaderno ganadero** | pendiente | Animal/Lote/Parcela + eventos (pesaje/parto/tratamiento/movimiento/incidencia/saca), timeline ficha animal |
 | **FZ-5 Catálogos provisionales** | pendiente | 5 CSVs ganaderos + compilador + autocomplete + banners declaración obligatoria |
 | **FZ-6 Libro de explotación ganadera** | pendiente | PDF censo/tratamientos/movimientos conforme + trazabilidad ecológica CPAEN (provisional) |
