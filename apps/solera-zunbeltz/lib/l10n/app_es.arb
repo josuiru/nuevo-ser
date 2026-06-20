@@ -18,6 +18,7 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "hoyVacio": "Aún no hay nada registrado. Empieza por marcar una infraestructura en el mapa de Fincas.",
+  "hoyVerTablero": "Ver tareas",
 
   "cuadernoProximamente": "Cuaderno ganadero",
   "cuadernoProximamenteCuerpo": "Animales, lotes, pastoreo y eventos del día a día. Disponible en una fase posterior.",
@@ -30,5 +31,76 @@
   "@ajustesVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "ajustesProvisional": "Versión provisional — pendiente de validación de los contenidos normativos por los técnicos competentes."
+  "ajustesProvisional": "Versión provisional — pendiente de validación de los contenidos normativos por los técnicos competentes.",
+
+  "comunGuardar": "Guardar",
+  "comunCancelar": "Cancelar",
+  "comunBorrar": "Borrar",
+
+  "mapaNuevoPunto": "Nuevo punto",
+  "mapaUsarGps": "Usar GPS actual",
+  "mapaUsarCentro": "Usar centro del mapa",
+  "mapaElegirFinca": "¿En qué finca?",
+  "mapaSinPuntos": "Aún no hay puntos. Pulsa «Nuevo punto» para marcar el primero.",
+  "mapaGpsNoDisponible": "GPS no disponible — rellena la ubicación a mano.",
+  "mapaCapas": "Capas",
+  "mapaMapa": "Mapa",
+  "mapaGps": "GPS",
+  "mapaTablero": "Tareas",
+
+  "puntoNuevoTitulo": "Nuevo punto de infraestructura",
+  "puntoFinca": "Finca",
+  "puntoTipo": "Tipo",
+  "puntoNombre": "Nombre",
+  "puntoEstado": "Estado",
+  "puntoNotas": "Notas",
+  "puntoFotos": "Fotos",
+  "puntoLatitud": "Latitud",
+  "puntoLongitud": "Longitud",
+  "puntoGuardado": "Punto guardado",
+
+  "fichaPuntoTareas": "Tareas del punto",
+  "fichaSinTareas": "Sin tareas en este punto.",
+  "fichaNuevaTarea": "Nueva tarea",
+  "fichaBorrarPunto": "Borrar punto",
+  "fichaCoordenadas": "Coordenadas",
+  "fichaSinCoordenadas": "Sin coordenadas",
+
+  "tareaNuevaTitulo": "Nueva tarea",
+  "tareaTitulo": "Título",
+  "tareaDescripcion": "Descripción",
+  "tareaResponsable": "Responsable",
+  "tareaPrioridad": "Prioridad",
+  "tareaEstado": "Estado",
+  "tareaFechaObjetivo": "Fecha objetivo",
+  "tareaSinFecha": "Sin fecha",
+  "tareaFotosAntes": "Fotos antes",
+  "tareaFotosDespues": "Fotos después",
+  "tareaCoste": "Coste (€)",
+  "tareaGuardada": "Tarea guardada",
+  "tareaTituloObligatorio": "Pon un título a la tarea.",
+
+  "tableroTitulo": "Tareas de mantenimiento",
+  "tableroTodas": "Todas",
+  "tableroFiltroFinca": "Finca",
+  "tableroFiltroEstado": "Estado",
+  "tableroSinTareas": "No hay tareas con estos filtros.",
+  "tableroPartePdf": "Parte PDF",
+  "tableroGenerandoPdf": "Generando parte…",
+  "tareaDeFinca": "Tarea de finca",
+
+  "parteTitulo": "Parte de mantenimiento",
+  "parteSubtitulo": "Espacio Test Agrario Zunbeltz · documento PROVISIONAL",
+  "parteProvisional": "DOCUMENTO PROVISIONAL — formato pendiente de validación.",
+  "parteResumenTareas": "Tareas incluidas: {n}",
+  "@parteResumenTareas": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "parteColPunto": "Punto",
+  "parteColTarea": "Tarea",
+  "parteColResponsable": "Responsable",
+  "parteColPrioridad": "Prioridad",
+  "parteColEstado": "Estado",
+  "parteColFecha": "Fecha objetivo",
+  "parteSinResponsable": "Sin asignar"
 }

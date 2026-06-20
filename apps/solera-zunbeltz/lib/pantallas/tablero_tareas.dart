@@ -1,0 +1,216 @@
+import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+
+import '../datos/base_datos.dart';
+import '../l10n/app_localizations.dart';
+import '../modelos/constantes.dart';
+import '../modelos/finca.dart';
+import '../modelos/punto_infraestructura.dart';
+import '../modelos/tarea_mantenimiento.dart';
+import '../servicios/generador_parte_mantenimiento.dart';
+import 'widgets/tile_tarea.dart';
+
+/// Tablero de tareas de mantenimiento: lista filtrable por finca y estado,
+/// con exportación del parte en PDF.
+class TableroTareas extends StatefulWidget {
+  const TableroTareas({super.key});
+
+  @override
+  State<TableroTareas> createState() => _TableroTareasState();
+}
+
+class _TableroTareasState extends State<TableroTareas> {
+  final _bd = BaseDatosSoleraZunbeltz();
+  List<Finca> _fincas = const [];
+  List<TareaMantenimiento> _tareas = const [];
+  Map<int, PuntoInfraestructura> _puntosPorId = const {};
+  bool _cargando = true;
+  bool _generandoPdf = false;
+
+  int? _filtroFincaId;
+  String? _filtroEstado;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargar();
+  }
+
+  Future<void> _cargar() async {
+    final fincas = await _bd.listarFincas();
+    final tareas = await _bd.listarTareas();
+    final puntos = await _bd.listarPuntos();
+    if (!mounted) return;
+    setState(() {
+      _fincas = fincas;
+      _tareas = tareas;
+      _puntosPorId = {for (final p in puntos) if (p.id != null) p.id!: p};
+      _cargando = false;
+    });
+  }
+
+  List<TareaMantenimiento> get _tareasFiltradas => _tareas.where((t) {
+        if (_filtroFincaId != null && t.fincaId != _filtroFincaId) return false;
+        if (_filtroEstado != null && t.estado != _filtroEstado) return false;
+        return true;
+      }).toList(growable: false);
+
+  String _subtitulo(TareaMantenimiento tarea, AppLocalizations textos) {
+    final finca = _fincas.firstWhere(
+      (f) => f.id == tarea.fincaId,
+      orElse: () => Finca(),
+    );
+    final punto = tarea.puntoId == null ? null : _puntosPorId[tarea.puntoId];
+    final idioma = Localizations.localeOf(context).languageCode;
+    final nombrePunto = punto == null
+        ? textos.tareaDeFinca
+        : (punto.nombre.isNotEmpty
+            ? punto.nombre
+            : buscarOpcion(tiposPunto, punto.tipo)?.etiqueta(idioma) ??
+                punto.tipo);
+    return '${finca.nombre} · $nombrePunto';
+  }
+
+  Future<void> _generarParte() async {
+    final textos = AppLocalizations.of(context);
+    final idioma = Localizations.localeOf(context).languageCode;
+    setState(() => _generandoPdf = true);
+    try {
+      final fichero = await generarParteMantenimientoPdf(
+        textos: textos,
+        idioma: idioma,
+        fincas: _fincas,
+        tareas: _tareasFiltradas,
+        puntosPorId: _puntosPorId,
+      );
+      final bytes = await fichero.readAsBytes();
+      await Printing.sharePdf(
+        bytes: bytes,
+        filename: fichero.uri.pathSegments.last,
+      );
+    } finally {
+      if (mounted) setState(() => _generandoPdf = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = AppLocalizations.of(context);
+    final idioma = Localizations.localeOf(context).languageCode;
+    final tareas = _tareasFiltradas;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(textos.tableroTitulo),
+        actions: [
+          IconButton(
+            tooltip: textos.tableroPartePdf,
+            icon: _generandoPdf
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2))
+                : const Icon(Icons.picture_as_pdf_outlined),
+            onPressed:
+                (_generandoPdf || tareas.isEmpty) ? null : _generarParte,
+          ),
+        ],
+      ),
+      body: _cargando
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                _Filtros(
+                  fincas: _fincas,
+                  idioma: idioma,
+                  textos: textos,
+                  fincaId: _filtroFincaId,
+                  estado: _filtroEstado,
+                  onFinca: (v) => setState(() => _filtroFincaId = v),
+                  onEstado: (v) => setState(() => _filtroEstado = v),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: tareas.isEmpty
+                      ? Center(child: Text(textos.tableroSinTareas))
+                      : ListView(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          children: [
+                            for (final tarea in tareas)
+                              TileTarea(
+                                tarea: tarea,
+                                idioma: idioma,
+                                subtitulo: _subtitulo(tarea, textos),
+                              ),
+                          ],
+                        ),
+                ),
+              ],
+            ),
+    );
+  }
+}
+
+class _Filtros extends StatelessWidget {
+  const _Filtros({
+    required this.fincas,
+    required this.idioma,
+    required this.textos,
+    required this.fincaId,
+    required this.estado,
+    required this.onFinca,
+    required this.onEstado,
+  });
+
+  final List<Finca> fincas;
+  final String idioma;
+  final AppLocalizations textos;
+  final int? fincaId;
+  final String? estado;
+  final ValueChanged<int?> onFinca;
+  final ValueChanged<String?> onEstado;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
+      child: Row(
+        children: [
+          Expanded(
+            child: DropdownButtonFormField<int?>(
+              initialValue: fincaId,
+              isExpanded: true,
+              decoration: InputDecoration(
+                labelText: textos.tableroFiltroFinca,
+                isDense: true,
+              ),
+              items: [
+                DropdownMenuItem(value: null, child: Text(textos.tableroTodas)),
+                for (final f in fincas)
+                  DropdownMenuItem(value: f.id, child: Text(f.nombre)),
+              ],
+              onChanged: onFinca,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: DropdownButtonFormField<String?>(
+              initialValue: estado,
+              isExpanded: true,
+              decoration: InputDecoration(
+                labelText: textos.tableroFiltroEstado,
+                isDense: true,
+              ),
+              items: [
+                DropdownMenuItem(value: null, child: Text(textos.tableroTodas)),
+                for (final e in estadosTarea)
+                  DropdownMenuItem(
+                      value: e.codigo, child: Text(e.etiqueta(idioma))),
+              ],
+              onChanged: onEstado,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

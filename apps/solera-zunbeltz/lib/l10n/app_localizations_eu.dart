@@ -53,6 +53,9 @@ class AppLocalizationsEu extends AppLocalizations {
       'Oraindik ez dago ezer erregistratuta. Hasi azpiegitura bat mapan markatuz, Finketan.';
 
   @override
+  String get hoyVerTablero => 'Ikusi zereginak';
+
+  @override
   String get cuadernoProximamente => 'Abeltzaintza-koadernoa';
 
   @override
@@ -79,4 +82,193 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get ajustesProvisional =>
       'Behin-behineko bertsioa — eduki arautzaileak teknikari eskudunek baliozkotzeko zain.';
+
+  @override
+  String get comunGuardar => 'Gorde';
+
+  @override
+  String get comunCancelar => 'Utzi';
+
+  @override
+  String get comunBorrar => 'Ezabatu';
+
+  @override
+  String get mapaNuevoPunto => 'Puntu berria';
+
+  @override
+  String get mapaUsarGps => 'Erabili uneko GPSa';
+
+  @override
+  String get mapaUsarCentro => 'Erabili maparen erdigunea';
+
+  @override
+  String get mapaElegirFinca => 'Zein finkatan?';
+
+  @override
+  String get mapaSinPuntos =>
+      'Oraindik ez dago punturik. Sakatu «Puntu berria» lehena markatzeko.';
+
+  @override
+  String get mapaGpsNoDisponible =>
+      'GPSa ez dago eskuragarri — bete kokapena eskuz.';
+
+  @override
+  String get mapaCapas => 'Geruzak';
+
+  @override
+  String get mapaMapa => 'Mapa';
+
+  @override
+  String get mapaGps => 'GPS';
+
+  @override
+  String get mapaTablero => 'Zereginak';
+
+  @override
+  String get puntoNuevoTitulo => 'Azpiegitura-puntu berria';
+
+  @override
+  String get puntoFinca => 'Finka';
+
+  @override
+  String get puntoTipo => 'Mota';
+
+  @override
+  String get puntoNombre => 'Izena';
+
+  @override
+  String get puntoEstado => 'Egoera';
+
+  @override
+  String get puntoNotas => 'Oharrak';
+
+  @override
+  String get puntoFotos => 'Argazkiak';
+
+  @override
+  String get puntoLatitud => 'Latitudea';
+
+  @override
+  String get puntoLongitud => 'Longitudea';
+
+  @override
+  String get puntoGuardado => 'Puntua gordeta';
+
+  @override
+  String get fichaPuntoTareas => 'Puntuaren zereginak';
+
+  @override
+  String get fichaSinTareas => 'Puntu honetan zereginik ez.';
+
+  @override
+  String get fichaNuevaTarea => 'Zeregin berria';
+
+  @override
+  String get fichaBorrarPunto => 'Ezabatu puntua';
+
+  @override
+  String get fichaCoordenadas => 'Koordenatuak';
+
+  @override
+  String get fichaSinCoordenadas => 'Koordenaturik gabe';
+
+  @override
+  String get tareaNuevaTitulo => 'Zeregin berria';
+
+  @override
+  String get tareaTitulo => 'Izenburua';
+
+  @override
+  String get tareaDescripcion => 'Deskribapena';
+
+  @override
+  String get tareaResponsable => 'Arduraduna';
+
+  @override
+  String get tareaPrioridad => 'Lehentasuna';
+
+  @override
+  String get tareaEstado => 'Egoera';
+
+  @override
+  String get tareaFechaObjetivo => 'Helburu-data';
+
+  @override
+  String get tareaSinFecha => 'Datarik gabe';
+
+  @override
+  String get tareaFotosAntes => 'Aurreko argazkiak';
+
+  @override
+  String get tareaFotosDespues => 'Ondorengo argazkiak';
+
+  @override
+  String get tareaCoste => 'Kostua (€)';
+
+  @override
+  String get tareaGuardada => 'Zeregina gordeta';
+
+  @override
+  String get tareaTituloObligatorio => 'Jarri izenburua zereginari.';
+
+  @override
+  String get tableroTitulo => 'Mantentze-zereginak';
+
+  @override
+  String get tableroTodas => 'Guztiak';
+
+  @override
+  String get tableroFiltroFinca => 'Finka';
+
+  @override
+  String get tableroFiltroEstado => 'Egoera';
+
+  @override
+  String get tableroSinTareas => 'Ez dago zereginik iragazki hauekin.';
+
+  @override
+  String get tableroPartePdf => 'PDF txostena';
+
+  @override
+  String get tableroGenerandoPdf => 'Txostena sortzen…';
+
+  @override
+  String get tareaDeFinca => 'Finkaren zeregina';
+
+  @override
+  String get parteTitulo => 'Mantentze-txostena';
+
+  @override
+  String get parteSubtitulo =>
+      'Zunbeltz Nekazaritza Saiakuntza Gunea · BEHIN-BEHINEKO dokumentua';
+
+  @override
+  String get parteProvisional =>
+      'BEHIN-BEHINEKO DOKUMENTUA — formatua baliozkotzeke.';
+
+  @override
+  String parteResumenTareas(int n) {
+    return 'Sartutako zereginak: $n';
+  }
+
+  @override
+  String get parteColPunto => 'Puntua';
+
+  @override
+  String get parteColTarea => 'Zeregina';
+
+  @override
+  String get parteColResponsable => 'Arduraduna';
+
+  @override
+  String get parteColPrioridad => 'Lehentasuna';
+
+  @override
+  String get parteColEstado => 'Egoera';
+
+  @override
+  String get parteColFecha => 'Helburu-data';
+
+  @override
+  String get parteSinResponsable => 'Esleitu gabe';
 }
