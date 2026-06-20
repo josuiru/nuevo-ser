@@ -1,0 +1,66 @@
+name: solera_zunbeltz
+description: "Solera Zunbeltz — herramienta para el Espacio Test Agrario Zunbeltz. Gestión de fincas e infraestructuras compartidas, tareas de mantenimiento y cuaderno ganadero extensivo ecológico. Bilingüe castellano/euskera, funciona sin cobertura."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Internacionalización: castellano + euskera desde el día uno (decisión cerrada).
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  cupertino_icons: ^1.0.8
+
+  # Mapa de las dos fincas (Zunbeltz + La Planilla) con puntos de infraestructura.
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_marker_cluster: ^1.4.0
+
+  # GPS y permisos: marcar puntos en el monte al pie del abrevadero/manga.
+  geolocator: 12.0.0
+  permission_handler: ^11.3.1
+
+  # Cámara y archivos: fotos de infraestructuras y antes/después de tareas.
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Almacenamiento local (single-device, offline).
+  sqflite: ^2.3.3
+  shared_preferences: ^2.3.2
+
+  # HTTP (reservado para IA visual ganadera en fase posterior).
+  http: ^1.2.2
+
+  # Compartir y exportar partes/informes en PDF.
+  share_plus: ^10.0.2
+
+  # Utilidades.
+  url_launcher: ^6.3.0
+
+  # Generación de PDF (parte de mantenimiento). `pdf` viene transitivo via
+  # nuevo_ser_core; `printing` se queda en la app para abrir el visor del SO.
+  pdf: ^3.11.1
+  printing: ^5.13.4
+
+  # Plataforma compartida del monorepo (GestorFotos, SelectorFotos,
+  # CampoAutocompleteCatalogo, CruzCentroMapa, informe PDF, RepositorioIdiomaApp…).
+  nuevo_ser_core:
+    path: ../../packages/nuevo_ser_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # Tests de base de datos en memoria (sin emulador).
+  sqflite_common_ffi: ^2.3.3
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/

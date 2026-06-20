@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solera · Zunbeltz — Propuesta de herramienta para el Espacio Test Agrario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --monte:#1f2e22;
+    --monte-2:#2b3d2e;
+    --pasto:#5e7d3a;
+    --pasto-1:#4d6a2e;
+    --musgo:#8aa66b;
+    --musgo-claro:#c3d2a8;
+    --ocre:#c99a3b;
+    --ocre-claro:#e6c275;
+    --terracota:#b05e3b;
+    --niebla:#6c8aa0;
+    --crema:#f4f0e4;
+    --crema-2b:#eae3d2;
+    --crema-3:#ded4bb;
+    --tinta:#1c241b;
+    --tinta-2:#3a4a3b;
+    --tinta-3:#6b7a6c;
+    --beltz:#14180f;
+    --linea:rgba(31,46,34,.14);
+    --linea-fuerte:rgba(31,46,34,.30);
+    --sombra:0 1px 2px rgba(20,24,15,.06), 0 8px 30px rgba(20,24,15,.08);
+    --sombra-alta:0 2px 6px rgba(20,24,15,.10), 0 20px 50px rgba(20,24,15,.16);
+    --r:14px;
+    --serif:"Fraunces", Georgia, "Times New Roman", serif;
+    --sans:"Archivo", system-ui, -apple-system, sans-serif;
+    --narrow:"Archivo Narrow","Archivo",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--tinta);background:var(--crema);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .contenedor{max-width:1140px;margin:0 auto;padding:0 28px}
+  a{color:inherit}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:-.015em}
+
+  /* ===== topbar ===== */
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(244,240,228,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
+  .topbar .contenedor{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+  .marca{display:flex;align-items:center;gap:11px;font-family:var(--narrow);font-weight:700;letter-spacing:.02em}
+  .marca .glifo{width:26px;height:26px;border-radius:7px;background:var(--monte);position:relative;flex:0 0 auto}
+  .marca .glifo::after{content:"";position:absolute;inset:6px 6px auto 6px;height:7px;border-radius:2px;background:var(--ocre)}
+  .marca .glifo::before{content:"";position:absolute;inset:auto 6px 6px 6px;height:7px;border-radius:2px;background:var(--musgo)}
+  .marca b{font-size:15px;text-transform:uppercase}
+  .marca span{color:var(--tinta-3);font-weight:600;font-size:13px}
+  .topbar nav{display:flex;gap:24px;font-family:var(--narrow);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+  .topbar nav a{text-decoration:none;color:var(--tinta-2);padding:4px 0;border-bottom:2px solid transparent;transition:.2s}
+  .topbar nav a:hover{color:var(--pasto-1);border-color:var(--ocre)}
+  @media(max-width:780px){.topbar nav{display:none}}
+
+  /* ===== hero ===== */
+  .hero{position:relative;padding:84px 0 64px;background:radial-gradient(120% 90% at 88% -10%, rgba(138,166,107,.30), transparent 55%),radial-gradient(100% 80% at -5% 110%, rgba(201,154,59,.18), transparent 50%);overflow:hidden}
+  .hero .kicker{display:inline-flex;align-items:center;gap:9px;font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--pasto-1);background:var(--crema-2b);border:1px solid var(--linea-fuerte);padding:7px 14px;border-radius:100px}
+  .kicker .punto{width:8px;height:8px;border-radius:50%;background:var(--ocre);box-shadow:0 0 0 4px rgba(201,154,59,.22);flex:0 0 auto}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.6rem);margin:26px 0 0;max-width:16ch;font-weight:600}
+  .hero h1 .acc{font-style:italic;font-weight:500;color:var(--pasto-1)}
+  .hero .bajada{font-size:clamp(1.05rem,1.8vw,1.32rem);color:var(--tinta-2);max-width:62ch;margin-top:24px}
+  .hero .sello-eus{display:inline-flex;align-items:center;gap:9px;margin-top:22px;font-family:var(--narrow);font-weight:600;font-size:13.5px;color:var(--pasto-1);background:var(--musgo-claro);border:1px solid var(--linea-fuerte);padding:8px 15px;border-radius:100px}
+  .hero .sello-eus b{font-weight:700}
+  .hero .cifras{display:flex;flex-wrap:wrap;gap:38px;margin-top:40px}
+  .cifra .n{font-family:var(--serif);font-size:2.5rem;font-weight:600;line-height:1;color:var(--monte)}
+  .cifra .l{font-family:var(--narrow);text-transform:uppercase;letter-spacing:.06em;font-size:12.5px;color:var(--tinta-3);margin-top:8px;font-weight:600}
+  .cifra .n small{font-size:1.1rem;color:var(--tinta-3)}
+
+  .reveal{opacity:0;transform:translateY(18px);animation:subir .8s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes subir{to{opacity:1;transform:none}}
+  .d1{animation-delay:.05s}.d2{animation-delay:.16s}.d3{animation-delay:.28s}.d4{animation-delay:.42s}.d5{animation-delay:.54s}
+  .sr{opacity:0;transform:translateY(26px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)}
+  .sr.visible{opacity:1;transform:none}
+
+  section{padding:78px 0;position:relative}
+  .seccion-cabecera{max-width:74ch;margin-bottom:42px}
+  .ojo{font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--ocre)}
+  .ojo::before{content:"";display:inline-block;width:26px;height:2px;background:var(--ocre);vertical-align:middle;margin-right:11px;margin-bottom:4px}
+  h2.titulo{font-size:clamp(1.9rem,3.6vw,2.9rem);margin:16px 0 0;font-weight:600}
+  .seccion-cabecera p{font-size:1.1rem;color:var(--tinta-2);margin-top:16px}
+
+  .banda-oscura{background:var(--monte);color:#eef0e6}
+  .banda-oscura .ojo{color:var(--ocre-claro)}
+  .banda-oscura h2.titulo,.banda-oscura h3{color:#fff}
+  .banda-oscura .seccion-cabecera p{color:rgba(238,240,230,.78)}
+
+  .capas{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:860px){.capas{grid-template-columns:1fr}}
+  .capa{background:var(--monte-2);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:30px;position:relative;overflow:hidden}
+  .capa .etq{font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--monte);background:var(--musgo);display:inline-block;padding:5px 11px;border-radius:6px}
+  .capa h3{font-size:1.55rem;margin:18px 0 6px}
+  .capa .sub{font-family:var(--narrow);color:var(--ocre-claro);font-weight:600;letter-spacing:.02em;margin-bottom:14px}
+  .capa .intro{color:rgba(238,240,230,.8);font-size:.96rem}
+  .capa ul{list-style:none;margin-top:10px}
+  .capa li{padding:9px 0 9px 26px;position:relative;border-top:1px solid rgba(255,255,255,.1);font-size:.97rem;color:rgba(238,240,230,.86)}
+  .capa li::before{content:"";position:absolute;left:2px;top:16px;width:9px;height:9px;border-radius:2px;background:var(--ocre);transform:rotate(45deg)}
+
+  .destacado-marco{background:var(--crema-2b);border:1px solid var(--linea-fuerte);border-radius:20px;box-shadow:var(--sombra-alta);overflow:hidden}
+  .destacado-top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 22px;background:var(--monte);color:#eef0e6;flex-wrap:wrap}
+  .destacado-top .tit{display:flex;align-items:center;gap:12px;font-family:var(--narrow);font-weight:700;letter-spacing:.03em}
+  .destacado-top .tit .pin{width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--ocre);box-shadow:inset 0 0 0 4px var(--monte);flex:0 0 auto}
+  .leyenda{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--narrow);font-size:12.5px;font-weight:600}
+  .leyenda span{display:inline-flex;align-items:center;gap:7px;color:rgba(238,240,230,.85)}
+  .leyenda i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .lg-pend{background:var(--ocre)} .lg-curso{background:var(--niebla)} .lg-hecha{background:var(--musgo)}
+
+  .mapa-wrap{display:grid;grid-template-columns:1.55fr 1fr;gap:0}
+  @media(max-width:900px){.mapa-wrap{grid-template-columns:1fr}}
+  .mapa-lienzo{position:relative;background:linear-gradient(135deg,#e9ecdc,#dfe6cf 60%,#d4dec0);min-height:460px;border-right:1px solid var(--linea-fuerte)}
+  @media(max-width:900px){.mapa-lienzo{border-right:none;border-bottom:1px solid var(--linea-fuerte)}}
+  .mapa-lienzo svg{display:block;width:100%;height:100%}
+  .pt{cursor:pointer;transition:transform .15s}
+  .pt:hover{transform:translateY(-2px)}
+  .pt .halo{opacity:0;transition:.2s}
+  .pt.activo .halo{opacity:1}
+  .pt .cuerpo{stroke:#fff;stroke-width:2.5}
+  .pt .num{font-family:var(--narrow);font-weight:700;font-size:12px;fill:#fff;pointer-events:none}
+  .et-finca{font-family:var(--serif);font-style:italic;font-weight:600;fill:rgba(31,46,34,.45);font-size:19px}
+  .et-ha{font-family:var(--narrow);font-weight:600;fill:rgba(31,46,34,.42);font-size:12px;letter-spacing:.05em}
+
+  .panel{padding:6px 0 10px;display:flex;flex-direction:column;max-height:460px}
+  .panel-cab{padding:16px 22px 12px;border-bottom:1px solid var(--linea)}
+  .panel-cab h4{font-family:var(--serif);font-size:1.15rem;font-weight:600}
+  .panel-cab p{font-size:12.5px;color:var(--tinta-3);font-family:var(--narrow);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+  .tareas-lista{overflow:auto;padding:8px}
+  .tarea{display:flex;gap:12px;padding:13px 14px;border-radius:11px;cursor:pointer;transition:.16s;align-items:flex-start}
+  .tarea:hover{background:var(--crema)}
+  .tarea.activa{background:#fff;box-shadow:var(--sombra)}
+  .tarea .estado{flex:0 0 auto;width:11px;height:11px;border-radius:3px;margin-top:5px}
+  .e-pendiente{background:var(--ocre)}.e-en_curso{background:var(--niebla)}.e-hecha{background:var(--musgo)}
+  .tarea .cont{flex:1;min-width:0}
+  .tarea .pto{font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:11px;color:var(--tinta-3)}
+  .tarea .titu{font-weight:600;font-size:.96rem;margin:1px 0 5px;color:var(--tinta)}
+  .tarea .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chip{font-family:var(--narrow);font-weight:600;font-size:11.5px;padding:3px 9px;border-radius:100px;letter-spacing:.02em}
+  .chip-estado{color:#fff}
+  .c-pendiente{background:var(--ocre)}.c-en_curso{background:var(--niebla)}.c-hecha{background:var(--pasto)}
+  .chip-resp{background:var(--crema-3);color:var(--tinta-2)}
+  .nota-demo{font-size:12px;color:var(--tinta-3);font-style:italic;padding:10px 22px 4px;border-top:1px solid var(--linea)}
+
+  .capac{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  @media(max-width:860px){.capac{grid-template-columns:1fr}}
+  .capac .item{background:var(--crema);border:1px solid var(--linea);border-radius:12px;padding:20px}
+  .capac .item .ic{width:38px;height:38px;border-radius:10px;background:var(--musgo-claro);display:grid;place-items:center;margin-bottom:13px}
+  .capac .item .ic svg{width:20px;height:20px;stroke:var(--pasto-1);fill:none;stroke-width:1.9}
+  .capac .item h4{font-family:var(--serif);font-size:1.12rem;font-weight:600;margin-bottom:5px}
+  .capac .item p{font-size:.92rem;color:var(--tinta-2)}
+
+  .resuelve{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px}
+  @media(max-width:760px){.resuelve{grid-template-columns:1fr}}
+  .resuelve .fila{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--linea)}
+  .resuelve .fila .marca-check{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--pasto);display:grid;place-items:center}
+  .resuelve .fila .marca-check svg{width:16px;height:16px;stroke:#fff;stroke-width:2.4;fill:none}
+  .resuelve .fila b{font-family:var(--serif);font-weight:600;font-size:1.05rem;display:block;margin-bottom:2px}
+  .resuelve .fila p{font-size:.94rem;color:var(--tinta-2)}
+
+  .road{display:flex;flex-direction:column;gap:0;margin-top:10px}
+  .fase{display:grid;grid-template-columns:104px 1fr;gap:22px;padding:20px 0;border-top:1px solid rgba(255,255,255,.12);align-items:start}
+  .fase:last-child{border-bottom:1px solid rgba(255,255,255,.12)}
+  .fase .cod{font-family:var(--serif);font-weight:600;font-size:1.45rem;color:var(--ocre-claro)}
+  .fase .cuerpo h4{font-size:1.18rem;font-weight:600;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .fase .cuerpo p{color:rgba(238,240,230,.74);font-size:.95rem}
+  .badge{font-family:var(--narrow);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:5px}
+  .b-mvp{background:var(--ocre);color:var(--monte)} .b-humano{background:var(--terracota);color:#fff}
+
+  .financ{background:linear-gradient(180deg, var(--crema), #eef1e3)}
+  .vias{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px}
+  @media(max-width:900px){.vias{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.vias{grid-template-columns:1fr}}
+  .via{background:var(--crema);border:1px solid var(--linea);border-radius:13px;padding:22px 20px;transition:.2s}
+  .via:hover{box-shadow:var(--sombra);transform:translateY(-2px)}
+  .via .paso{font-family:var(--serif);font-weight:600;font-size:1.1rem;color:var(--pasto-1);width:36px;height:36px;border-radius:9px;background:var(--musgo-claro);display:grid;place-items:center;margin-bottom:14px}
+  .via h4{font-family:var(--serif);font-size:1.12rem;font-weight:600;margin-bottom:6px;line-height:1.15}
+  .via p{font-size:.92rem;color:var(--tinta-2)}
+  .reaseguro{margin-top:30px;background:var(--monte);color:#eef0e6;border-radius:14px;padding:26px 30px;display:flex;gap:18px;align-items:center}
+  .reaseguro .ic{flex:0 0 auto;width:42px;height:42px;border-radius:11px;background:rgba(201,154,59,.22);display:grid;place-items:center}
+  .reaseguro .ic svg{width:22px;height:22px;stroke:var(--ocre-claro);fill:none;stroke-width:1.9}
+  .reaseguro p{font-family:var(--serif);font-size:1.18rem;font-weight:500;line-height:1.35}
+  .reaseguro p b{font-weight:600;color:#fff}
+  @media(max-width:560px){.reaseguro{flex-direction:column;align-items:flex-start}}
+
+  /* ===== financiación por fases ===== */
+  .fin-fase1{background:#fff;border:1px solid var(--linea-fuerte);border-top:4px solid var(--ocre);border-radius:16px;box-shadow:var(--sombra-alta);padding:28px 30px;margin-top:8px}
+  .f1-cab{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .f1-etq{font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--monte);background:var(--ocre-claro);padding:6px 12px;border-radius:7px}
+  .f1-importe{text-align:right;line-height:1.12}
+  .f1-importe b{font-family:var(--serif);font-size:1.9rem;font-weight:600;color:var(--monte);display:block}
+  .f1-importe span{font-family:var(--narrow);font-weight:600;font-size:11.5px;color:var(--tinta-3);text-transform:uppercase;letter-spacing:.04em}
+  @media(max-width:520px){.f1-importe{text-align:left}}
+  .fin-fase1 h3{font-size:1.5rem;margin:16px 0 4px}
+  .f1-claim{font-family:var(--serif);font-style:italic;font-size:1.08rem;color:var(--pasto-1);margin:0 0 4px;max-width:70ch}
+  .f1-intro{color:var(--tinta-2);font-size:1rem;max-width:74ch}
+  .f1-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+  @media(max-width:760px){.f1-grid{grid-template-columns:1fr}}
+  .f1-item{background:var(--crema);border:1px solid var(--linea);border-radius:11px;padding:16px}
+  .f1-item b{font-family:var(--serif);font-weight:600;font-size:1.02rem;display:block;margin-bottom:5px}
+  .f1-item p{font-size:.9rem;color:var(--tinta-2)}
+  .fin-sub{font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--tinta-3);margin:34px 0 14px}
+  .fin-fases{display:flex;flex-direction:column;gap:14px}
+  .fin-fase{display:grid;grid-template-columns:54px 1fr;gap:18px;background:var(--crema);border:1px solid var(--linea);border-radius:13px;padding:20px 22px;align-items:start}
+  @media(max-width:520px){.fin-fase{grid-template-columns:1fr;gap:10px}}
+  .ff-num{font-family:var(--serif);font-weight:600;font-size:1.6rem;color:var(--pasto-1);width:46px;height:46px;border-radius:11px;background:var(--musgo-claro);display:grid;place-items:center}
+  .ff-cuerpo h4{font-family:var(--serif);font-size:1.16rem;font-weight:600;margin-bottom:4px}
+  .ff-cuerpo>p{font-size:.94rem;color:var(--tinta-2);margin-bottom:12px}
+  .ff-via{display:block;background:#fff;border:1px solid var(--linea);border-left:3px solid var(--pasto);border-radius:9px;padding:11px 14px;font-size:.9rem;color:var(--tinta-2)}
+  .ff-via b{color:var(--pasto-1);font-weight:700}
+  .ff-via i{display:block;font-style:normal;font-size:.85rem;color:var(--tinta-3);margin-top:3px}
+
+  .pregunta{background:var(--crema);border:1px solid var(--linea-fuerte);border-left:4px solid var(--ocre);border-radius:12px;padding:22px 24px;margin-bottom:16px;display:flex;gap:18px;align-items:flex-start;transition:.2s}
+  .pregunta:hover{box-shadow:var(--sombra);transform:translateX(3px)}
+  .pregunta .q{font-family:var(--serif);font-weight:700;font-size:1.5rem;color:var(--ocre);flex:0 0 auto;line-height:1}
+  .pregunta h4{font-size:1.08rem;font-weight:600;margin-bottom:4px}
+  .pregunta p{font-size:.95rem;color:var(--tinta-2)}
+  .invitacion{background:var(--musgo-claro);border-radius:16px;padding:32px;margin-bottom:40px;border:1px solid var(--linea-fuerte)}
+  .invitacion p{font-size:1.12rem;color:var(--tinta);max-width:68ch}
+  .invitacion .eus{font-family:var(--serif);font-style:italic;color:var(--pasto-1);font-weight:600}
+
+  footer{background:var(--beltz);color:rgba(244,240,228,.66);padding:54px 0 40px;font-size:.88rem}
+  footer .contenedor{display:grid;grid-template-columns:1.4fr 1fr;gap:30px}
+  @media(max-width:700px){footer .contenedor{grid-template-columns:1fr}}
+  footer h5{font-family:var(--narrow);text-transform:uppercase;letter-spacing:.1em;color:var(--ocre-claro);font-size:12px;margin-bottom:12px;font-weight:700}
+  footer a{color:rgba(244,240,228,.82)}
+  .provisional{display:inline-block;background:rgba(201,154,59,.16);color:var(--ocre-claro);border:1px solid rgba(201,154,59,.4);border-radius:8px;padding:8px 14px;font-family:var(--narrow);font-weight:600;font-size:13px;margin-bottom:22px}
+  footer ul{list-style:none;font-size:.84rem;line-height:1.9}
+
+  /* ===== términos / glosario ===== */
+  abbr.term{text-decoration:none;border-bottom:1px dotted var(--ocre);cursor:help;font-style:normal}
+  .glos-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-top:6px}
+  @media(max-width:760px){.glos-grid{grid-template-columns:1fr}}
+  .glos{padding:14px 0;border-top:1px solid var(--linea)}
+  .glos b{font-family:var(--serif);font-weight:600;font-size:1.04rem;color:var(--monte);display:block;margin-bottom:3px}
+  .glos p{font-size:.92rem;color:var(--tinta-2)}
+
+  /* ===== pedís / entregamos (fase 1) ===== */
+  .pedimos{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  @media(max-width:680px){.pedimos{grid-template-columns:1fr}}
+  .ped-col{border-radius:12px;padding:18px 20px}
+  .ped-piden{background:var(--crema);border:1px solid var(--linea)}
+  .ped-damos{background:#fff;border:1px solid var(--linea);border-left:3px solid var(--pasto)}
+  .ped-col h5{font-family:var(--narrow);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:700;margin-bottom:8px}
+  .ped-piden h5{color:var(--tinta-3)} .ped-damos h5{color:var(--pasto-1)}
+  .ped-col ul{list-style:none}
+  .ped-col li{position:relative;padding:8px 0 8px 22px;font-size:.92rem;color:var(--tinta-2);border-top:1px solid var(--linea)}
+  .ped-col li:first-child{border-top:none}
+  .ped-piden li::before{content:"›";position:absolute;left:3px;top:7px;color:var(--tinta-3);font-weight:700}
+  .ped-damos li::before{content:"✓";position:absolute;left:2px;top:8px;color:var(--pasto);font-weight:700;font-size:.82rem}
+  .f1-nota{margin-top:16px;font-size:.9rem;color:var(--tinta-3);font-style:italic}
+
+  /* ===== detalle de fases ===== */
+  .ff-extra{list-style:none;margin:2px 0 12px}
+  .ff-extra li{position:relative;padding:5px 0 5px 18px;font-size:.92rem;color:var(--tinta-2)}
+  .ff-extra li::before{content:"";position:absolute;left:0;top:11px;width:7px;height:7px;border-radius:2px;background:var(--musgo);transform:rotate(45deg)}
+</style>
+</head>
+<body>
+
+<!-- ====== TOPBAR ====== -->
+<header class="topbar">
+  <div class="contenedor">
+    <div class="marca"><span class="glifo"></span><b>Solera</b><span>· Zunbeltz</span></div>
+    <nav>
+      <a href="#contexto">El reto</a>
+      <a href="#fincas">Gestión de fincas</a>
+      <a href="#capas">Las dos capas</a>
+      <a href="#roadmap">Por dónde</a>
+      <a href="#financiacion">Cómo se sostiene</a>
+      <a href="#glosario">Glosario</a>
+      <a href="#discusion">Hablemos</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====== HERO ====== -->
+<section class="hero">
+  <div class="contenedor">
+    <span class="kicker reveal d1"><span class="punto"></span>Propuesta de herramienta · primer paso financiable</span>
+    <h1 class="reveal d2">Una herramienta hecha a medida del <span class="acc">Espacio Test Agrario</span> Zunbeltz</h1>
+    <p class="bajada reveal d3">Un espacio test no es una explotación cualquiera: son dos fincas grandes que se comparten, varias personas testando a la vez y un acompañamiento que evalúa viabilidad y relevo. Esta propuesta parte de las apps <strong>Solera</strong> ya construidas y añade lo que Zunbeltz necesita de propio — empezando por <strong>gestionar las fincas sobre el mapa y repartir las tareas de mantenimiento</strong>.</p>
+    <span class="sello-eus reveal d4">◆ Bilingüe — <b>castellano y euskera</b> desde el primer día, y preparada para añadir más lenguas</span>
+    <div class="cifras reveal d5">
+      <div class="cifra"><div class="n">428<small> ha</small></div><div class="l">Zunbeltz + La Planilla</div></div>
+      <div class="cifra"><div class="n">2</div><div class="l">fincas compartidas</div></div>
+      <div class="cifra"><div class="n">10<small> años</small></div><div class="l">de cesión de uso</div></div>
+      <div class="cifra"><div class="n">∞</div><div class="l">proyectos en prueba</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--tinta-3);margin-top:30px;font-family:var(--narrow);letter-spacing:.02em">Documento de trabajo en castellano; la herramienta final se entregará en castellano y euskera, con la arquitectura preparada para sumar más lenguas (catalán, gallego…) si la plataforma se replica.</p>
+  </div>
+</section>
+
+<!-- ====== CONTEXTO ====== -->
+<section id="contexto">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">El reto que tenéis entre manos</span>
+      <h2 class="titulo">Mucha tierra, varias manos, un proceso que acompañar</h2>
+      <p>Zunbeltz da a personas emprendedoras un entorno seguro para testar un proyecto de ganadería ecológica extensiva durante un tiempo acotado, con acompañamiento de ganaderas y ganaderos expertos, y conecta el relevo generacional a través de un banco de tierras. Coordinar eso hoy — quién usa qué pasto, qué infraestructura toca arreglar, cómo va cada proyecto — suele acabar en cuadernos, Excel y memoria de la gente. La idea es darle a ese trabajo una herramienta tranquila, bilingüe (castellano y euskera), que funciona también sin cobertura en el monte.</p>
+    </div>
+    <div class="capac">
+      <div class="item sr"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3z"/><path d="M9 4v13M15 7v13"/></svg></div><h4>Fincas que se comparten</h4><p>428 ha entre Zunbeltz y La Planilla, cedidas para uso común. Varios proyectos conviven sobre el mismo terreno y las mismas instalaciones.</p></div>
+      <div class="item sr"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 7.5a3 3 0 010 6M19 19c0-2.3-1.2-4-3-4.6"/></svg></div><h4>Personas en aprendizaje</h4><p>No son explotaciones consolidadas: son emprendedoras probando, a quienes hay que acompañar, formar y evaluar.</p></div>
+      <div class="item sr"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a7 7 0 0114 0c0 5.5-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg></div><h4>Relevo generacional</h4><p>Quien termina su prueba debería poder instalarse. El banco de tierras une a quien se jubila con quien empieza.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MÓDULO DESTACADO: GESTIÓN DE FINCAS ====== -->
+<section id="fincas" style="padding-top:30px">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">El corazón del primer paso</span>
+      <h2 class="titulo">Gestión de fincas: marcar los puntos y repartir las tareas</h2>
+      <p>Lo más útil desde el día uno y lo que antes podríamos enseñaros funcionando. Cada infraestructura de la finca — abrevaderos, mangas, cierres, refugios, balsas, almacenes — se marca como un punto en el mapa. A cada punto se le cuelgan <strong>tareas de mantenimiento</strong> con responsable, prioridad y estado. Pincha en un punto del plano para ver sus tareas.</p>
+    </div>
+
+    <div class="destacado-marco sr">
+      <div class="destacado-top">
+        <div class="tit"><span class="pin"></span> Zunbeltz · La Planilla — mapa de infraestructuras y tareas</div>
+        <div class="leyenda">
+          <span><i class="lg-pend"></i>Pendiente</span>
+          <span><i class="lg-curso"></i>En curso</span>
+          <span><i class="lg-hecha"></i>Hecha</span>
+        </div>
+      </div>
+      <div class="mapa-wrap">
+        <div class="mapa-lienzo">
+          <svg viewBox="0 0 640 480" preserveAspectRatio="xMidYMid meet" aria-label="Zunbeltz / La Planilla">
+            <path d="M70,90 C150,55 300,60 360,110 C410,150 400,230 360,270 C300,330 150,330 95,280 C40,230 30,130 70,90 Z" fill="#aebf8e" fill-opacity="0.55" stroke="#5e7d3a" stroke-opacity="0.5" stroke-width="2"/>
+            <path d="M205,72 C215,160 200,250 185,318" fill="none" stroke="#5e7d3a" stroke-opacity="0.28" stroke-width="1.5" stroke-dasharray="5 6"/>
+            <path d="M80,180 C180,165 290,175 372,200" fill="none" stroke="#5e7d3a" stroke-opacity="0.28" stroke-width="1.5" stroke-dasharray="5 6"/>
+            <text x="120" y="150" class="et-finca">Zunbeltz</text>
+            <text x="120" y="172" class="et-ha">231 ha</text>
+            <path d="M400,300 C470,270 580,280 600,335 C616,378 590,440 525,452 C455,464 405,430 395,378 C388,340 372,318 400,300 Z" fill="#c3d2a8" fill-opacity="0.6" stroke="#5e7d3a" stroke-opacity="0.5" stroke-width="2"/>
+            <text x="438" y="372" class="et-finca">La Planilla</text>
+            <text x="438" y="392" class="et-ha">197 ha</text>
+            <path d="M340,255 C370,275 380,285 402,305" fill="none" stroke="#b08a55" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <g id="puntos"></g>
+          </svg>
+        </div>
+        <div class="panel">
+          <div class="panel-cab">
+            <h4 id="panel-titulo">Todas las tareas</h4>
+            <p id="panel-sub">8 puntos · 8 tareas abiertas</p>
+          </div>
+          <div class="tareas-lista" id="tareas-lista"></div>
+          <div class="nota-demo">Maqueta de demostración con datos de ejemplo. Los puntos e infraestructuras reales de Zunbeltz los cargaríamos con vosotras.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="capac">
+      <div class="item sr"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a7 7 0 0114 0c0 5.5-7 10-7 10z"/><circle cx="12" cy="11" r="2.4"/></svg></div><h4>Marcar puntos con GPS</h4><p>Te plantas junto al abrevadero, pulsas y queda fijado en el mapa con su tipo, su estado y sus fotos. Funciona sin cobertura.</p></div>
+      <div class="item sr"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><h4>Asignar y seguir tareas</h4><p>Cada tarea lleva responsable, prioridad y estado (pendiente / en curso / hecha). Sabes de un vistazo qué falta y quién la tiene.</p></div>
+      <div class="item sr"><div class="ic"><svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 001 1h4"/><path d="M5 3h9l5 5v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M8 13h8M8 17h6"/></svg></div><h4>Parte de mantenimiento</h4><p>Cierre de temporada en un PDF: actuaciones por finca, antes/después, quién las hizo. Listo para la Mancomunidad o la memoria anual.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== LAS DOS CAPAS ====== -->
+<section id="capas" class="banda-oscura">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">La idea en una frase</span>
+      <h2 class="titulo">Dos capas sobre una misma base</h2>
+      <p>Debajo, el cuaderno de quien produce. Encima, el panel de quien acompaña. La gestión de fincas que acabáis de ver vive entre las dos: la usa todo el mundo.</p>
+    </div>
+    <div class="capas">
+      <div class="capa sr">
+        <span class="etq">Capa A · para cada testador</span>
+        <h3>El cuaderno ganadero</h3>
+        <div class="sub">Solera Ganadería Extensiva Ecológica</div>
+        <p class="intro">El cuaderno de campo de cada proyecto en prueba. Hermano de las Solera que ya existen, pero pensado para vacuno y ovino en extensivo y ecológico.</p>
+        <ul>
+          <li>Cada animal con su <abbr class="term" title="El crotal es la chapa numerada de la oreja; el DIB, su documento de identificación. Identifican a cada res.">crotal/DIB</abbr> e historia: pesajes, partos, sanidad, movimientos</li>
+          <li>Pastoreo y <abbr class="term" title="Cuántos animales pastan por hectárea. Controlarla evita sobrepastorear y es requisito de la PAC y del ecológico.">carga ganadera</abbr> por parcela — clave en extensivo y en la <abbr class="term" title="Política Agraria Común: el marco europeo de ayudas al campo.">PAC</abbr></li>
+          <li>Libro de explotación y <abbr class="term" title="El documento oficial que acompaña a los animales cuando se trasladan de una explotación a otra.">guías de movimiento</abbr> en PDF</li>
+          <li><abbr class="term" title="Poder seguir el rastro de un animal o producto desde el origen hasta la venta.">Trazabilidad</abbr> ecológica (<abbr class="term" title="Consejo de la Producción Agraria Ecológica de Navarra: certifica lo ecológico en Navarra.">CPAEN/NNPEK</abbr>) y plazos de medicamentos</li>
+          <li>Identificación por foto con <abbr class="term" title="Inteligencia artificial: el móvil sugiere a partir de una foto; nunca sustituye al veterinario.">IA</abbr> (lesiones, condición corporal)</li>
+        </ul>
+      </div>
+      <div class="capa sr">
+        <span class="etq">Capa B · para quien coordina y acompaña</span>
+        <h3>El panel del Espacio Test</h3>
+        <div class="sub">Convocatorias · acompañamiento · relevo</div>
+        <p class="intro">Lo que es propio de un espacio test y no existe en ninguna app de gestión agrícola del mercado. Aquí reutilizamos el motor de acompañamiento que ya tenemos construido para otros proyectos.</p>
+        <ul>
+          <li>Convocatorias y selección de proyectos candidatos</li>
+          <li>Cesión de parcelas, instalaciones y cabezas a cada testador por su periodo</li>
+          <li>Plan de acompañamiento: hitos, tutorías y formación con el mentor</li>
+          <li>Evaluación de viabilidad del proyecto y de competencias</li>
+          <li>Banco de tierras: relevo entre quien se jubila y quien empieza</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== QUÉ RESUELVE ====== -->
+<section id="resuelve">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">Para qué sirve, en concreto</span>
+      <h2 class="titulo">Lo que cambia para Zunbeltz</h2>
+    </div>
+    <div class="resuelve">
+      <div class="fila sr"><div class="marca-check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></div><div><b>Nadie sobrecarga el mismo pasto</b><p>Las cesiones y la carga ganadera por parcela quedan registradas; dos proyectos no pisan el mismo recurso sin saberlo.</p></div></div>
+      <div class="fila sr"><div class="marca-check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></div><div><b>El mantenimiento deja de perderse</b><p>Cada arreglo del cierre, el abrevadero o el tejado es una tarea con responsable y estado, no un "ya lo apunté en algún sitio".</p></div></div>
+      <div class="fila sr"><div class="marca-check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></div><div><b>El acompañamiento queda documentado</b><p>Hitos, tutorías y evaluación en un mismo hilo: defendible ante financiadores y útil para el propio emprendedor.</p></div></div>
+      <div class="fila sr"><div class="marca-check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></div><div><b>El papeleo oficial sale solo</b><p>Libro de explotación, movimientos y trazabilidad ecológica generados desde lo que ya se anota en el campo.</p></div></div>
+      <div class="fila sr"><div class="marca-check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></div><div><b>En castellano y euskera (y más)</b><p>Bilingüe de raíz: cada persona la usa en el idioma que prefiera y el papeleo puede salir en los dos. La base queda preparada para añadir otras lenguas si la herramienta se lleva a más espacios test.</p></div></div>
+      <div class="fila sr"><div class="marca-check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></div><div><b>Replicable a otros espacios test</b><p>Lo que hagamos para Zunbeltz sirve de molde para la red estatal de Espacios Test Agrarios.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== ROADMAP ====== -->
+<section id="roadmap" class="banda-oscura">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">Por dónde empezaríamos</span>
+      <h2 class="titulo">Paso a paso, cada fase a su tiempo</h2>
+      <p>Primero lo demostrable y sin trámites; el papeleo oficial y el backend multiusuario, después y siempre validado por quien sabe.</p>
+    </div>
+    <div class="road">
+      <div class="fase sr"><div class="cod">01</div><div class="cuerpo"><h4>Gestión de fincas <span class="badge b-mvp">primera versión demostrable</span></h4><p>Mapa de las dos fincas, puntos de infraestructura con GPS y tablero de tareas de mantenimiento. Parte en PDF. Es lo que habéis visto arriba.</p></div></div>
+      <div class="fase sr"><div class="cod">02</div><div class="cuerpo"><h4>Cuaderno ganadero</h4><p>Animales con <abbr class="term" title="El crotal es la chapa numerada de la oreja; el DIB, su documento de identificación.">crotal/DIB</abbr>, lotes, pastoreo y los eventos del día a día: pesajes, partos, sanidad, movimientos.</p></div></div>
+      <div class="fase sr"><div class="cod">03</div><div class="cuerpo"><h4>Papeleo oficial <span class="badge b-humano">con asesor</span></h4><p>Libro de explotación, <abbr class="term" title="El documento oficial que acompaña a los animales al trasladarse entre explotaciones.">guías de movimiento</abbr> y trazabilidad ecológica <abbr class="term" title="Consejo de la Producción Agraria Ecológica de Navarra.">CPAEN</abbr>. Todo en provisional hasta que lo firme veterinario y técnico.</p></div></div>
+      <div class="fase sr"><div class="cod">04</div><div class="cuerpo"><h4>Cuentas e IA</h4><p>Libro de ingresos y gastos (régimen agrario), venta directa de La Venta, e identificación por foto con IA.</p></div></div>
+      <div class="fase sr"><div class="cod">05</div><div class="cuerpo"><h4>Varias personas a la vez <span class="badge b-humano">decisión a tomar</span></h4><p>Cuentas para testador, mentor y coordinador, con permisos. Necesita decidir juntos cómo se guardan y comparten los datos.</p></div></div>
+      <div class="fase sr"><div class="cod">06</div><div class="cuerpo"><h4>Panel del Espacio Test</h4><p>Convocatorias, cesiones, acompañamiento, evaluación de viabilidad y banco de tierras. La Capa B completa.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FINANCIACIÓN ====== -->
+<section id="financiacion" class="financ">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">Cómo se sostiene</span>
+      <h2 class="titulo">Por fases, y cada fase con su ayuda</h2>
+      <p>La Fase 1 cubre <strong>exactamente lo que nos pedís</strong> y ya es útil por sí sola. Pero no es un punto final: es la base de un proyecto <strong>más amplio y versátil</strong>, que las fases siguientes convierten en la plataforma completa del Espacio Test. No hace falta financiar todo de golpe ni que salga entero de vuestra caja — cada fase se construye sobre la anterior y se presenta a la línea de ayuda que le corresponde.</p>
+    </div>
+
+    <div class="fin-fase1 sr">
+      <div class="f1-cab">
+        <span class="f1-etq">Fase 1 · ahora</span>
+        <span class="f1-etq" style="background:var(--musgo-claro)">Esta solicitud</span>
+      </div>
+      <h3>Piloto de gestión y seguimiento</h3>
+      <p class="f1-claim">Exactamente lo que pedís hoy — y, a la vez, la base ampliable de toda la plataforma del Espacio Test.</p>
+      <p class="f1-intro">Lo demostrable y sin trámite oficial, aprovechando todo lo que la familia Solera ya tiene construido — por eso cabe en este presupuesto. Punto por punto, esto es lo que nos planteáis en vuestro correo y cómo lo resuelve la Fase 1:</p>
+      <div class="pedimos">
+        <div class="ped-col ped-piden">
+          <h5>Lo que nos pedís</h5>
+          <ul>
+            <li>Registrar y sistematizar los trabajos de la finca</li>
+            <li>Mejorar la comunicación interna del equipo</li>
+            <li>Un histórico de las actuaciones realizadas</li>
+            <li>Kg de alimentación, pariciones y productos comercializados</li>
+            <li>Costes, ingresos y otros indicadores de seguimiento</li>
+          </ul>
+        </div>
+        <div class="ped-col ped-damos">
+          <h5>Lo que entrega la Fase 1</h5>
+          <ul>
+            <li>Cada trabajo es una tarea anclada a un punto del mapa, con responsable, fecha y estado</li>
+            <li>Un tablero compartido: quién hace qué y dónde, de un vistazo</li>
+            <li>Toda actuación queda guardada con fecha, autor y fotos de antes/después</li>
+            <li>Registro sencillo de alimentación, partos y ventas por lote o rebaño</li>
+            <li>Anotación de gastos e ingresos y un resumen de indicadores del periodo</li>
+          </ul>
+        </div>
+      </div>
+      <p class="f1-nota">Todo en un mismo dispositivo, funcionando sin cobertura en el monte, y bilingüe castellano/euskera desde el primer día. Los datos reales de Zunbeltz (infraestructuras, lotes…) los cargaríamos con vosotras.</p>
+    </div>
+
+    <p class="fin-sub sr">Y a partir de ahí, cada fase a su convocatoria</p>
+    <div class="fin-fases">
+      <div class="fin-fase sr">
+        <div class="ff-num">2</div>
+        <div class="ff-cuerpo">
+          <h4>Cuaderno ganadero y papeleo oficial</h4>
+          <p>El día a día del rebaño y todo el papeleo que de él se deriva, generado a partir de lo que ya se anota en el campo:</p>
+          <ul class="ff-extra">
+            <li>Ficha de cada animal con su historia completa: nacimiento, madre, pesajes, partos, sanidad y movimientos.</li>
+            <li>Lotes y rebaños, pastoreo rotacional y <abbr class="term" title="Cuántos animales pastan por hectárea; requisito de la PAC y del ecológico.">carga ganadera</abbr> por parcela.</li>
+            <li>Catálogos del oficio: razas autóctonas (Pirenaica, Betizu, Latxa…), patologías y medicamentos con sus plazos.</li>
+            <li>Libro de explotación, guías de movimiento y trazabilidad ecológica en PDF, listos para presentar (provisional hasta firma técnica).</li>
+          </ul>
+          <span class="ff-via">Encaja en → <b>LEADER Tierra Estella (TEDER)</b><i>Convocatoria anual de ayudas <abbr class="term" title="Programa europeo de desarrollo rural gestionado por Grupos de Acción Local (GAL) como TEDER.">LEADER</abbr> (<abbr class="term" title="Plan Estratégico de la PAC en España 2023-2027.">PEPAC</abbr> Navarra 2023-2027 + <abbr class="term" title="Fondo Europeo Agrícola de Desarrollo Rural.">FEADER</abbr>), con eje de digitalización rural en el marco de «Conecta Navarra Rural».</i></span>
+        </div>
+      </div>
+      <div class="fin-fase sr">
+        <div class="ff-num">3</div>
+        <div class="ff-cuerpo">
+          <h4>Varias personas a la vez y panel del Espacio Test</h4>
+          <p>La herramienta deja de ser de una sola persona y pasa a ser del Espacio Test entero. Es la parte verdaderamente innovadora, que no existe en ninguna app del mercado:</p>
+          <ul class="ff-extra">
+            <li>Cada persona con su cuenta y permisos: el testador ve lo suyo, el mentor a sus testadores y el coordinador el conjunto.</li>
+            <li>Convocatorias y selección de proyectos candidatos.</li>
+            <li>Cesión de parcelas, instalaciones y cabezas a cada testador durante su periodo de prueba.</li>
+            <li>Plan de acompañamiento (hitos, tutorías) y evaluación de viabilidad y de competencias.</li>
+            <li>Los datos dejan de vivir en un solo móvil: se guardan y sincronizan en la nube.</li>
+          </ul>
+          <span class="ff-via">Encaja en → <b>Innovación agraria del Gobierno de Navarra</b><i>Ayudas a proyectos piloto en cooperación para la innovación agraria (intervención 7162, <abbr class="term" title="Plan Estratégico de la PAC en España 2023-2027.">PEPAC</abbr> 2023-2027), presentándonos como grupo de cooperación de varias entidades.</i></span>
+        </div>
+      </div>
+      <div class="fin-fase sr">
+        <div class="ff-num">4</div>
+        <div class="ff-cuerpo">
+          <h4>Replicable a la red de espacios test</h4>
+          <p>Lo construido para Zunbeltz, convertido en plantilla para cualquier otro espacio test del Estado:</p>
+          <ul class="ff-extra">
+            <li>Dar de alta otro espacio con sus propias fincas, mentores y producción, sin reprogramar la app.</li>
+            <li>Aprovechar las verticales Solera ya hechas (viticultura, apicultura, quesería, olivar…) según lo que produzca cada espacio.</li>
+            <li>Panel de red con indicadores comparables entre espacios.</li>
+            <li>Soporte para otras lenguas cooficiales (catalán, gallego…) según la zona de cada espacio.</li>
+            <li>Zunbeltz como caso de referencia ante la red y los financiadores.</li>
+          </ul>
+          <span class="ff-via">Encaja en → <b>Red de Espacios Test Agrarios (RETA)</b><i>Convocatoria de proyectos de <abbr class="term" title="Red Estatal de Espacios Test Agrarios: agrupa, asesora y financia iniciativas como Zunbeltz.">RETA</abbr> con la Fundación Carasso (2026: 85.000 € Línea 1 / 185.000 € Línea 2) para prototipado y desarrollo de espacios test.</i></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reaseguro sr">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.4 8-8 9-4.6-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <p>Así <b>la Fase 1 resuelve lo que necesitáis ahora</b>, sin un desembolso grande, y a la vez deja sembrado un proyecto que puede crecer hasta la plataforma completa del Espacio Test — cada fase a su convocatoria, sin atarse a nada de golpe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== DISCUSIÓN ====== -->
+<section id="discusion">
+  <div class="contenedor">
+    <div class="invitacion sr">
+      <span class="ojo">Esto se construye con vosotras</span>
+      <h2 class="titulo" style="margin:14px 0 16px">No es un diseño cerrado: es un punto de partida</h2>
+      <p>Lo de arriba es una propuesta sólida para tener de qué hablar, no una decisión tomada. El proceso de acompañamiento, qué se evalúa, cómo se reparten las tareas o qué infraestructuras hay en cada finca lo sabéis vosotras. Estas son las preguntas que nos gustaría llevar a la reunión. <span class="eus">Zuen ekarpenak oso ongi etorriak izango dira.</span></p>
+    </div>
+
+    <div class="pregunta sr"><div class="q">1</div><div><h4>¿Empezamos por la gestión de fincas?</h4><p>Es lo más útil desde ya y lo menos atado a trámites. ¿Os encaja como primer paso, dejando el cuaderno ganadero y el panel para después?</p></div></div>
+    <div class="pregunta sr"><div class="q">2</div><div><h4>¿Qué infraestructuras hay realmente en Zunbeltz y La Planilla?</h4><p>Abrevaderos, mangas, cierres, refugios, cuadras, almacenes, balsas, cargaderos… El mapa lo sembramos con vuestros datos reales, no de ejemplo.</p></div></div>
+    <div class="pregunta sr"><div class="q">3</div><div><h4>¿Quién hace el mantenimiento y cómo se reparte?</h4><p>¿Los propios testadores como contraprestación, un operario de la Mancomunidad, empresa externa? ¿Qué tareas son las habituales y cada cuánto?</p></div></div>
+    <div class="pregunta sr"><div class="q">4</div><div><h4>¿Cómo es vuestro proceso de acompañamiento y evaluación?</h4><p>Qué hitos, qué competencias y con qué criterios decidís que un proyecto es viable. Eso es saber vuestro; sin vosotras no lo modelamos.</p></div></div>
+    <div class="pregunta sr"><div class="q">5</div><div><h4>¿Qué ve cada rol?</h4><p>La evaluación de cada emprendedor es información sensible. ¿La ve el mentor, también el coordinador, nunca el resto de testadores? Lo decidimos juntas.</p></div></div>
+    <div class="pregunta sr"><div class="q">6</div><div><h4>¿En qué idiomas y con qué términos?</h4><p>La app irá en castellano y euskera. La terminología agroganadera en euskera nos gustaría fijarla con vosotras, para que suene a vuestra zona y no a traducción.</p></div></div>
+  </div>
+</section>
+
+<!-- ====== GLOSARIO ====== -->
+<section id="glosario" class="financ">
+  <div class="contenedor">
+    <div class="seccion-cabecera sr">
+      <span class="ojo">Palabras que usamos</span>
+      <h2 class="titulo">Las palabras, explicadas</h2>
+      <p>Términos del oficio y del papeleo, por si esta propuesta la lee alguien de fuera del sector. En el texto van <abbr class="term" title="así, con subrayado de puntitos">subrayados con puntos</abbr>; aquí van explicados.</p>
+    </div>
+    <div class="glos-grid">
+      <div class="glos sr"><b>Crotal y DIB</b><p>El crotal es la chapa numerada que cada res lleva en la oreja; el DIB (Documento de Identificación Bovina) es su «carné». Juntos identifican a cada animal de forma única.</p></div>
+      <div class="glos sr"><b>Carga ganadera</b><p>Cuántos animales pastan por hectárea. Controlarla evita agotar el pasto y es requisito tanto de la PAC como de la certificación ecológica.</p></div>
+      <div class="glos sr"><b>Trazabilidad</b><p>Poder seguir el rastro de un animal o de un producto desde su origen hasta su venta. La exigen la sanidad animal y el sello ecológico.</p></div>
+      <div class="glos sr"><b>Guía de movimiento</b><p>El documento oficial que tiene que acompañar a los animales cada vez que se trasladan de una explotación a otra.</p></div>
+      <div class="glos sr"><b>CPAEN/NNPEK</b><p>El Consejo de la Producción Agraria Ecológica de Navarra: el organismo que certifica y controla que un producto es ecológico en Navarra.</p></div>
+      <div class="glos sr"><b>PAC · PEPAC · FEADER</b><p>La PAC es la política europea de ayudas al campo; el PEPAC, su plan en España (2023-2027); el FEADER, el fondo europeo con el que se pagan, en parte, esas ayudas.</p></div>
+      <div class="glos sr"><b>LEADER y GAL</b><p>LEADER es el programa europeo de desarrollo rural, gestionado en cada comarca por un Grupo de Acción Local (GAL). En Tierra Estella, el GAL es TEDER.</p></div>
+      <div class="glos sr"><b>RETA</b><p>La Red Estatal de Espacios Test Agrarios: agrupa, asesora y financia iniciativas como Zunbeltz por todo el Estado.</p></div>
+      <div class="glos sr"><b>Offline / sin cobertura</b><p>Que funciona sin conexión a internet: los datos se guardan en el propio móvil y se sincronizan cuando vuelve a haber señal.</p></div>
+      <div class="glos sr"><b>IA</b><p>Inteligencia artificial. Aquí, que el móvil sugiera algo a partir de una foto. Siempre como ayuda; nunca sustituye al veterinario.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="contenedor">
+    <div>
+      <div class="provisional">Documento de trabajo · propuesta v0.2 · junio 2026</div>
+      <h5>Solera · Zunbeltz</h5>
+      <p>Propuesta de herramienta digital para el Espacio Test Agrario Zunbeltz, dentro de la Suite Solera. Pensada para co-diseñarse con la Asociación Zunbeltz Elkartea. La app será bilingüe (castellano y euskera), con la arquitectura preparada para sumar más lenguas; funciona offline; y respeta el papeleo oficial y la sanidad como competencia veterinaria. Este documento está redactado en castellano.</p>
+    </div>
+    <div>
+      <h5>Fuentes consultadas</h5>
+      <ul>
+        <li><a href="http://www.guesalaz.es/zunbeltz-espacio-test-agrario/">Guesálaz / Gesalatz — Zunbeltz</a></li>
+        <li><a href="https://andiamank.com/proyecto/espacio-test-agrario-zunbeltz/">Mancomunidad de Andía / Andia Mankomunitatea</a></li>
+        <li><a href="https://zunbeltz.com/">zunbeltz.com</a></li>
+        <li><a href="https://espaciostestagrarios.org/">Red de Espacios Test Agrarios (RETA)</a></li>
+        <li><a href="https://teder.org/">TEDER · LEADER Tierra Estella</a></li>
+        <li><a href="https://www.navarra.es/es/tramites/on/-/line/ayudas-a-proyectos-piloto-en-cooperacion-para-la-innovacion-agraria-2025">Innovación agraria · Gobierno de Navarra (PEPAC, interv. 7162)</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ---- datos de demostración: puntos + tareas ----
+const PUNTOS = [
+  {n:1, nombre:"Abrevadero Norte",       finca:"Zunbeltz",   x:150, y:130, titulo:"Revisar fuga en el bebedero",        estado:"en_curso",  resp:"Maite"},
+  {n:2, nombre:"Manga de manejo",        finca:"Zunbeltz",   x:262, y:118, titulo:"Reparar tablones del callejón",      estado:"pendiente", resp:"Iñaki"},
+  {n:3, nombre:"Refugio de altura",      finca:"Zunbeltz",   x:318, y:178, titulo:"Revisar el tejado tras el temporal", estado:"pendiente", resp:"Sin asignar"},
+  {n:4, nombre:"Cierre perimetral Este", finca:"Zunbeltz",   x:340, y:240, titulo:"Tensar 200 m de alambrada",          estado:"pendiente", resp:"Aitor"},
+  {n:5, nombre:"Cargadero",              finca:"Zunbeltz",   x:140, y:235, titulo:"Pintar la señalización de carga",     estado:"hecha",     resp:"Iñaki"},
+  {n:6, nombre:"Balsa / punto de agua",  finca:"La Planilla",x:470, y:330, titulo:"Limpieza de la balsa",               estado:"hecha",     resp:"Maite"},
+  {n:7, nombre:"Cuadra y almacén",       finca:"La Planilla",x:545, y:380, titulo:"Revisar la instalación eléctrica",   estado:"en_curso",  resp:"Externo"},
+  {n:8, nombre:"Parcela de pasto P-3",   finca:"La Planilla",x:455, y:418, titulo:"Desbroce antes de entrar el rebaño", estado:"pendiente", resp:"Nerea · testadora"},
+];
+const COLOR = {pendiente:"#c99a3b", en_curso:"#6c8aa0", hecha:"#8aa66b"};
+const ETIQ  = {pendiente:"Pendiente", en_curso:"En curso", hecha:"Hecha"};
+
+const g = document.getElementById("puntos");
+const SVGNS = "http://www.w3.org/2000/svg";
+PUNTOS.forEach(p=>{
+  const grp = document.createElementNS(SVGNS,"g");
+  grp.setAttribute("class","pt"); grp.setAttribute("data-n",p.n); grp.setAttribute("transform",`translate(${p.x},${p.y})`);
+  grp.innerHTML =
+    `<circle class="halo" r="17" fill="${COLOR[p.estado]}" fill-opacity="0.22"/>`+
+    `<circle class="cuerpo" r="11" fill="${COLOR[p.estado]}"/>`+
+    `<text class="num" x="0" y="4" text-anchor="middle">${p.n}</text>`;
+  grp.addEventListener("click",()=>seleccionar(p.n));
+  g.appendChild(grp);
+});
+
+const lista = document.getElementById("tareas-lista");
+let SELECCION = null;
+function pintarLista(){
+  lista.innerHTML="";
+  PUNTOS.forEach(p=>{
+    const t = document.createElement("div");
+    t.className="tarea"+(SELECCION===p.n?" activa":"");
+    t.setAttribute("data-n",p.n);
+    t.innerHTML =
+      `<span class="estado e-${p.estado}"></span>`+
+      `<div class="cont">`+
+        `<div class="pto">${p.n} · ${p.nombre} — ${p.finca}</div>`+
+        `<div class="titu">${p.titulo}</div>`+
+        `<div class="meta"><span class="chip chip-estado c-${p.estado}">${ETIQ[p.estado]}</span>`+
+        `<span class="chip chip-resp">${p.resp}</span></div>`+
+      `</div>`;
+    t.addEventListener("click",()=>seleccionar(p.n));
+    lista.appendChild(t);
+  });
+}
+function seleccionar(n){
+  SELECCION = (SELECCION===n) ? null : n;
+  document.querySelectorAll(".pt").forEach(e=>e.classList.toggle("activo", e.getAttribute("data-n")==SELECCION));
+  const p = PUNTOS.find(x=>x.n===SELECCION);
+  document.getElementById("panel-titulo").textContent = p ? p.nombre : "Todas las tareas";
+  document.getElementById("panel-sub").textContent = p ? `${p.finca} · 1 tarea` : "8 puntos · 8 tareas abiertas";
+  pintarLista();
+  const fila = lista.querySelector(`.tarea[data-n="${SELECCION}"]`);
+  if(fila) fila.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+pintarLista();
+
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target);} });
+},{threshold:.12});
+document.querySelectorAll(".sr").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

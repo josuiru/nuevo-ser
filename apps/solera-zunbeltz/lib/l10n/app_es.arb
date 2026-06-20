@@ -1,0 +1,34 @@
+{
+  "@@locale": "es",
+
+  "appTitulo": "Solera Zunbeltz",
+
+  "navHoy": "Hoy",
+  "navFincas": "Fincas",
+  "navCuaderno": "Cuaderno",
+  "navAjustes": "Ajustes",
+
+  "onboardingTitulo": "Solera Zunbeltz",
+  "onboardingCuerpo": "La herramienta del Espacio Test Agrario: gestiona las fincas, reparte las tareas de mantenimiento y lleva el seguimiento del testaje. Funciona sin cobertura en el monte.",
+  "onboardingBoton": "Empezar",
+
+  "hoyTitulo": "Hoy",
+  "hoyResumenTareas": "{n, plural, =0{Sin tareas abiertas} =1{1 tarea abierta} other{{n} tareas abiertas}}",
+  "@hoyResumenTareas": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "hoyVacio": "Aún no hay nada registrado. Empieza por marcar una infraestructura en el mapa de Fincas.",
+
+  "cuadernoProximamente": "Cuaderno ganadero",
+  "cuadernoProximamenteCuerpo": "Animales, lotes, pastoreo y eventos del día a día. Disponible en una fase posterior.",
+
+  "ajustesIdioma": "Idioma",
+  "ajustesIdiomaCastellano": "Castellano",
+  "ajustesIdiomaEuskera": "Euskara",
+  "ajustesAcercaDe": "Acerca de",
+  "ajustesVersion": "Versión {version}",
+  "@ajustesVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "ajustesProvisional": "Versión provisional — pendiente de validación de los contenidos normativos por los técnicos competentes."
+}

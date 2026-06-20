@@ -1,0 +1,28 @@
+{
+  "@@locale": "eu",
+
+  "appTitulo": "Solera Zunbeltz",
+
+  "navHoy": "Gaur",
+  "navFincas": "Finkak",
+  "navCuaderno": "Koadernoa",
+  "navAjustes": "Ezarpenak",
+
+  "onboardingTitulo": "Solera Zunbeltz",
+  "onboardingCuerpo": "Nekazaritza Saiakuntza Guneko tresna: kudeatu finkak, banatu mantentze-lanak eta egin saiakuntzaren jarraipena. Estaldurarik gabe ere funtzionatzen du mendian.",
+  "onboardingBoton": "Hasi",
+
+  "hoyTitulo": "Gaur",
+  "hoyResumenTareas": "{n, plural, =0{Zereginik gabe} =1{Zeregin 1 zabalik} other{{n} zeregin zabalik}}",
+  "hoyVacio": "Oraindik ez dago ezer erregistratuta. Hasi azpiegitura bat mapan markatuz, Finketan.",
+
+  "cuadernoProximamente": "Abeltzaintza-koadernoa",
+  "cuadernoProximamenteCuerpo": "Animaliak, sortak, larreratzea eta eguneroko gertaerak. Geroagoko fase batean eskuragarri.",
+
+  "ajustesIdioma": "Hizkuntza",
+  "ajustesIdiomaCastellano": "Gaztelania",
+  "ajustesIdiomaEuskera": "Euskara",
+  "ajustesAcercaDe": "Honi buruz",
+  "ajustesVersion": "{version} bertsioa",
+  "ajustesProvisional": "Behin-behineko bertsioa — eduki arautzaileak teknikari eskudunek baliozkotzeko zain."
+}
