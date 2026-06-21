@@ -383,4 +383,49 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get informeSegColImporte => 'Zenbatekoa (€)';
+
+  @override
+  String get meteoTitulo => 'Iragarpena';
+
+  @override
+  String get meteoHoy => 'Gaur';
+
+  @override
+  String get meteoSinConexion =>
+      'Ezin izan da iragarpena lortu. Egiaztatu konexioa eta saiatu berriro.';
+
+  @override
+  String get meteoReintentar => 'Saiatu berriro';
+
+  @override
+  String get meteoOrientativo =>
+      'Iragarpen orientagarria (Open-Meteo). Ez du ordezkatzen abeltzainaren ezta albaitariaren irizpidea.';
+
+  @override
+  String get avisoHelada => 'Izotza';
+
+  @override
+  String get avisoLluvia => 'Euria';
+
+  @override
+  String get avisoViento => 'Haize bortitza';
+
+  @override
+  String get avisoCalor => 'Beroa';
+
+  @override
+  String get avisoBuenManejo => 'Lan egiteko egun ona';
+
+  @override
+  String get acercaTitulo => 'Saiakuntza Guneari buruz';
+
+  @override
+  String get acercaIntro =>
+      'Zunbeltz Nafarroako lehen Nekazaritza eta Abeltzaintza Saiakuntza Gunea da: ekintzaileek abeltzaintza ekologiko estentsiboko proiektu bat denbora-tarte mugatu batean probatzeko inkubagailua, abeltzain adituen laguntzarekin, Zunbeltz (231 ha) eta La Planilla (197 ha) finketan. Nafarroako Gobernuak, Andiako Mankomunitateak eta inguruko udalerriek bultzatua, EBren finantzaketarekin, eta Zunbeltz Elkarteak kudeatua.';
+
+  @override
+  String get acercaEnlaces => 'Estekak';
+
+  @override
+  String get acercaFuentes => 'Informazioa iturri publikoetatik.';
 }

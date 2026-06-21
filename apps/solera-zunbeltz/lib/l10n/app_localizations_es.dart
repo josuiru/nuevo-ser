@@ -383,4 +383,49 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get informeSegColImporte => 'Importe (€)';
+
+  @override
+  String get meteoTitulo => 'Previsión';
+
+  @override
+  String get meteoHoy => 'Hoy';
+
+  @override
+  String get meteoSinConexion =>
+      'No se pudo obtener la previsión. Revisa la conexión e inténtalo de nuevo.';
+
+  @override
+  String get meteoReintentar => 'Reintentar';
+
+  @override
+  String get meteoOrientativo =>
+      'Previsión orientativa (Open-Meteo). No sustituye el criterio del ganadero ni del veterinario.';
+
+  @override
+  String get avisoHelada => 'Helada';
+
+  @override
+  String get avisoLluvia => 'Lluvia';
+
+  @override
+  String get avisoViento => 'Viento fuerte';
+
+  @override
+  String get avisoCalor => 'Calor';
+
+  @override
+  String get avisoBuenManejo => 'Buen día de manejo';
+
+  @override
+  String get acercaTitulo => 'Acerca del Espacio Test';
+
+  @override
+  String get acercaIntro =>
+      'Zunbeltz es el primer Espacio Test Agroganadero de Navarra: una incubadora donde personas emprendedoras prueban un proyecto de ganadería ecológica extensiva durante un periodo acotado, con acompañamiento de ganaderas y ganaderos expertos, sobre las fincas de Zunbeltz (231 ha) y La Planilla (197 ha). Impulsado por el Gobierno de Navarra, la Mancomunidad de Andía y los municipios de la zona, con financiación de la UE, y gestionado por la Asociación Zunbeltz Elkartea.';
+
+  @override
+  String get acercaEnlaces => 'Enlaces';
+
+  @override
+  String get acercaFuentes => 'Información de fuentes públicas.';
 }

@@ -133,5 +133,21 @@
   "informeSegColTipo": "Mota",
   "informeSegColCantidad": "Kopurua",
   "informeSegColConcepto": "Kontzeptua",
-  "informeSegColImporte": "Zenbatekoa (€)"
+  "informeSegColImporte": "Zenbatekoa (€)",
+
+  "meteoTitulo": "Iragarpena",
+  "meteoHoy": "Gaur",
+  "meteoSinConexion": "Ezin izan da iragarpena lortu. Egiaztatu konexioa eta saiatu berriro.",
+  "meteoReintentar": "Saiatu berriro",
+  "meteoOrientativo": "Iragarpen orientagarria (Open-Meteo). Ez du ordezkatzen abeltzainaren ezta albaitariaren irizpidea.",
+  "avisoHelada": "Izotza",
+  "avisoLluvia": "Euria",
+  "avisoViento": "Haize bortitza",
+  "avisoCalor": "Beroa",
+  "avisoBuenManejo": "Lan egiteko egun ona",
+
+  "acercaTitulo": "Saiakuntza Guneari buruz",
+  "acercaIntro": "Zunbeltz Nafarroako lehen Nekazaritza eta Abeltzaintza Saiakuntza Gunea da: ekintzaileek abeltzaintza ekologiko estentsiboko proiektu bat denbora-tarte mugatu batean probatzeko inkubagailua, abeltzain adituen laguntzarekin, Zunbeltz (231 ha) eta La Planilla (197 ha) finketan. Nafarroako Gobernuak, Andiako Mankomunitateak eta inguruko udalerriek bultzatua, EBren finantzaketarekin, eta Zunbeltz Elkarteak kudeatua.",
+  "acercaEnlaces": "Estekak",
+  "acercaFuentes": "Informazioa iturri publikoetatik."
 }

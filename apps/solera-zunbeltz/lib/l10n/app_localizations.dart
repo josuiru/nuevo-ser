@@ -805,6 +805,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Importe (€)'**
   String get informeSegColImporte;
+
+  /// No description provided for @meteoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Previsión'**
+  String get meteoTitulo;
+
+  /// No description provided for @meteoHoy.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy'**
+  String get meteoHoy;
+
+  /// No description provided for @meteoSinConexion.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo obtener la previsión. Revisa la conexión e inténtalo de nuevo.'**
+  String get meteoSinConexion;
+
+  /// No description provided for @meteoReintentar.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get meteoReintentar;
+
+  /// No description provided for @meteoOrientativo.
+  ///
+  /// In es, this message translates to:
+  /// **'Previsión orientativa (Open-Meteo). No sustituye el criterio del ganadero ni del veterinario.'**
+  String get meteoOrientativo;
+
+  /// No description provided for @avisoHelada.
+  ///
+  /// In es, this message translates to:
+  /// **'Helada'**
+  String get avisoHelada;
+
+  /// No description provided for @avisoLluvia.
+  ///
+  /// In es, this message translates to:
+  /// **'Lluvia'**
+  String get avisoLluvia;
+
+  /// No description provided for @avisoViento.
+  ///
+  /// In es, this message translates to:
+  /// **'Viento fuerte'**
+  String get avisoViento;
+
+  /// No description provided for @avisoCalor.
+  ///
+  /// In es, this message translates to:
+  /// **'Calor'**
+  String get avisoCalor;
+
+  /// No description provided for @avisoBuenManejo.
+  ///
+  /// In es, this message translates to:
+  /// **'Buen día de manejo'**
+  String get avisoBuenManejo;
+
+  /// No description provided for @acercaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Acerca del Espacio Test'**
+  String get acercaTitulo;
+
+  /// No description provided for @acercaIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Zunbeltz es el primer Espacio Test Agroganadero de Navarra: una incubadora donde personas emprendedoras prueban un proyecto de ganadería ecológica extensiva durante un periodo acotado, con acompañamiento de ganaderas y ganaderos expertos, sobre las fincas de Zunbeltz (231 ha) y La Planilla (197 ha). Impulsado por el Gobierno de Navarra, la Mancomunidad de Andía y los municipios de la zona, con financiación de la UE, y gestionado por la Asociación Zunbeltz Elkartea.'**
+  String get acercaIntro;
+
+  /// No description provided for @acercaEnlaces.
+  ///
+  /// In es, this message translates to:
+  /// **'Enlaces'**
+  String get acercaEnlaces;
+
+  /// No description provided for @acercaFuentes.
+  ///
+  /// In es, this message translates to:
+  /// **'Información de fuentes públicas.'**
+  String get acercaFuentes;
 }
 
 class _AppLocalizationsDelegate

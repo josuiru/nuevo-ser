@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../estado/idioma_app.dart';
 import '../l10n/app_localizations.dart';
+import 'pantalla_acerca_espacio_test.dart';
 
 /// Versión visible de la app. Se mantiene a mano sincronizada con `version`
 /// del `pubspec.yaml` (campo antes del `+`).
@@ -52,6 +53,15 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
             ),
           ),
           const Divider(),
+          ListTile(
+            leading: const Icon(Icons.landscape_outlined),
+            title: Text(textos.acercaTitulo),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (_) => const PantallaAcercaEspacioTest()),
+            ),
+          ),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: Text(textos.ajustesAcercaDe),

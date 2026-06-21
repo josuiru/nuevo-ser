@@ -13,6 +13,7 @@ import '../utiles/estilos_tarea.dart';
 import '../utiles/permisos_gps.dart';
 import 'ficha_punto.dart';
 import 'nuevo_punto.dart';
+import 'pantalla_meteo.dart';
 import 'tablero_tareas.dart';
 
 enum _EstiloMapa { calle, satelite }
@@ -269,6 +270,13 @@ class _PantallaFincasState extends State<PantallaFincas> {
       appBar: AppBar(
         title: Text(textos.navFincas),
         actions: [
+          IconButton(
+            tooltip: textos.meteoTitulo,
+            icon: const Icon(Icons.cloud_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const PantallaMeteo()),
+            ),
+          ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const TableroTareas()),
