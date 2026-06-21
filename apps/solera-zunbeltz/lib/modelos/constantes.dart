@@ -62,8 +62,35 @@ const List<OpcionCatalogo> prioridadesTarea = [
   OpcionCatalogo('alta', 'Alta', 'Altua'),
 ];
 
+/// Tipos de registro de actividad del seguimiento del testaje.
+const List<OpcionCatalogo> tiposActividad = [
+  OpcionCatalogo('alimentacion', 'Alimentación', 'Elikadura'),
+  OpcionCatalogo('paricion', 'Pariciones', 'Erditzeak'),
+  OpcionCatalogo('producto', 'Producto comercializado', 'Merkaturatutako produktua'),
+];
+
+/// Unidad de la cantidad según el tipo de actividad.
+String unidadActividad(String tipoActividad, String idioma) {
+  switch (tipoActividad) {
+    case 'alimentacion':
+      return 'kg';
+    case 'paricion':
+      return idioma == 'eu' ? 'kume' : 'crías';
+    default:
+      return idioma == 'eu' ? 'unitate' : 'uds';
+  }
+}
+
+/// Tipos de apunte económico simple.
+const List<OpcionCatalogo> tiposApunte = [
+  OpcionCatalogo('ingreso', 'Ingreso', 'Sarrera'),
+  OpcionCatalogo('gasto', 'Gasto', 'Gastua'),
+];
+
 /// Códigos por defecto (primer alta).
 const String tipoPuntoPorDefecto = 'abrevadero';
 const String estadoPuntoPorDefecto = 'operativo';
 const String estadoTareaPorDefecto = 'pendiente';
 const String prioridadTareaPorDefecto = 'media';
+const String tipoActividadPorDefecto = 'alimentacion';
+const String tipoApuntePorDefecto = 'gasto';

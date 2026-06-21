@@ -5,7 +5,7 @@
 
   "navHoy": "Gaur",
   "navFincas": "Finkak",
-  "navCuaderno": "Koadernoa",
+  "navSeguimiento": "Jarraipena",
   "navAjustes": "Ezarpenak",
 
   "onboardingTitulo": "Solera Zunbeltz",
@@ -17,9 +17,6 @@
   "hoyVacio": "Oraindik ez dago ezer erregistratuta. Hasi azpiegitura bat mapan markatuz, Finketan.",
   "hoyVerTablero": "Ikusi zereginak",
 
-  "cuadernoProximamente": "Abeltzaintza-koadernoa",
-  "cuadernoProximamenteCuerpo": "Animaliak, sortak, larreratzea eta eguneroko gertaerak. Geroagoko fase batean eskuragarri.",
-
   "ajustesIdioma": "Hizkuntza",
   "ajustesIdiomaCastellano": "Gaztelania",
   "ajustesIdiomaEuskera": "Euskara",
@@ -30,6 +27,7 @@
   "comunGuardar": "Gorde",
   "comunCancelar": "Utzi",
   "comunBorrar": "Ezabatu",
+  "comunFecha": "Data",
 
   "mapaNuevoPunto": "Puntu berria",
   "mapaUsarGps": "Erabili uneko GPSa",
@@ -93,5 +91,47 @@
   "parteColPrioridad": "Lehentasuna",
   "parteColEstado": "Egoera",
   "parteColFecha": "Helburu-data",
-  "parteSinResponsable": "Esleitu gabe"
+  "parteSinResponsable": "Esleitu gabe",
+
+  "segTitulo": "Jarraipena",
+  "segIndicadores": "Aldiko adierazleak",
+  "segTodasFincas": "Finka guztiak",
+  "segAlimentacion": "Elikadura (kg)",
+  "segPariciones": "Erditzeak",
+  "segProductos": "Merkaturatutako produktuak",
+  "segIngresos": "Sarrerak",
+  "segGastos": "Gastuak",
+  "segBalance": "Balantzea",
+  "segPestanaActividad": "Jarduera",
+  "segPestanaEconomico": "Ekonomikoa",
+  "segNuevaActividad": "Erregistratu jarduera",
+  "segNuevoApunte": "Apunte ekonomikoa",
+  "segSinRegistros": "Oraindik erregistrorik ez.",
+  "segInformePdf": "Jarraipen-txostena (PDF)",
+  "segGenerandoInforme": "Txostena sortzen…",
+
+  "actNuevaTitulo": "Erregistratu jarduera",
+  "actTipo": "Jarduera mota",
+  "actCantidad": "Kopurua",
+  "actLote": "Sorta / artaldea",
+  "actNotas": "Oharrak",
+  "actGuardada": "Jarduera erregistratuta",
+  "actCantidadObligatoria": "Adierazi zerotik gorako kopuru bat.",
+
+  "apuNuevoTitulo": "Apunte ekonomiko berria",
+  "apuTipo": "Mota",
+  "apuConcepto": "Kontzeptua",
+  "apuImporte": "Zenbatekoa (€)",
+  "apuNotas": "Oharrak",
+  "apuGuardado": "Apuntea gordeta",
+  "apuImporteObligatorio": "Adierazi zerotik gorako zenbateko bat.",
+
+  "informeSegTitulo": "Jarraipen-txostena",
+  "informeSegResumenPeriodo": "Erregistroak: {actividades} · apunteak: {apuntes}",
+  "informeSegTablaActividad": "Jarduera-erregistroak",
+  "informeSegTablaEconomico": "Apunte ekonomikoak",
+  "informeSegColTipo": "Mota",
+  "informeSegColCantidad": "Kopurua",
+  "informeSegColConcepto": "Kontzeptua",
+  "informeSegColImporte": "Zenbatekoa (€)"
 }

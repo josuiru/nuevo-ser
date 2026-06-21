@@ -5,7 +5,7 @@
 
   "navHoy": "Hoy",
   "navFincas": "Fincas",
-  "navCuaderno": "Cuaderno",
+  "navSeguimiento": "Seguimiento",
   "navAjustes": "Ajustes",
 
   "onboardingTitulo": "Solera Zunbeltz",
@@ -20,9 +20,6 @@
   "hoyVacio": "Aún no hay nada registrado. Empieza por marcar una infraestructura en el mapa de Fincas.",
   "hoyVerTablero": "Ver tareas",
 
-  "cuadernoProximamente": "Cuaderno ganadero",
-  "cuadernoProximamenteCuerpo": "Animales, lotes, pastoreo y eventos del día a día. Disponible en una fase posterior.",
-
   "ajustesIdioma": "Idioma",
   "ajustesIdiomaCastellano": "Castellano",
   "ajustesIdiomaEuskera": "Euskara",
@@ -36,6 +33,7 @@
   "comunGuardar": "Guardar",
   "comunCancelar": "Cancelar",
   "comunBorrar": "Borrar",
+  "comunFecha": "Fecha",
 
   "mapaNuevoPunto": "Nuevo punto",
   "mapaUsarGps": "Usar GPS actual",
@@ -102,5 +100,53 @@
   "parteColPrioridad": "Prioridad",
   "parteColEstado": "Estado",
   "parteColFecha": "Fecha objetivo",
-  "parteSinResponsable": "Sin asignar"
+  "parteSinResponsable": "Sin asignar",
+
+  "segTitulo": "Seguimiento",
+  "segIndicadores": "Indicadores del periodo",
+  "segTodasFincas": "Todas las fincas",
+  "segAlimentacion": "Alimentación (kg)",
+  "segPariciones": "Pariciones",
+  "segProductos": "Productos comercializados",
+  "segIngresos": "Ingresos",
+  "segGastos": "Gastos",
+  "segBalance": "Balance",
+  "segPestanaActividad": "Actividad",
+  "segPestanaEconomico": "Económico",
+  "segNuevaActividad": "Registrar actividad",
+  "segNuevoApunte": "Apunte económico",
+  "segSinRegistros": "Sin registros todavía.",
+  "segInformePdf": "Informe de seguimiento (PDF)",
+  "segGenerandoInforme": "Generando informe…",
+
+  "actNuevaTitulo": "Registrar actividad",
+  "actTipo": "Tipo de actividad",
+  "actCantidad": "Cantidad",
+  "actLote": "Lote / rebaño",
+  "actNotas": "Notas",
+  "actGuardada": "Actividad registrada",
+  "actCantidadObligatoria": "Indica una cantidad mayor que cero.",
+
+  "apuNuevoTitulo": "Nuevo apunte económico",
+  "apuTipo": "Tipo",
+  "apuConcepto": "Concepto",
+  "apuImporte": "Importe (€)",
+  "apuNotas": "Notas",
+  "apuGuardado": "Apunte guardado",
+  "apuImporteObligatorio": "Indica un importe mayor que cero.",
+
+  "informeSegTitulo": "Informe de seguimiento",
+  "informeSegResumenPeriodo": "Registros: {actividades} · apuntes: {apuntes}",
+  "@informeSegResumenPeriodo": {
+    "placeholders": {
+      "actividades": { "type": "int" },
+      "apuntes": { "type": "int" }
+    }
+  },
+  "informeSegTablaActividad": "Registros de actividad",
+  "informeSegTablaEconomico": "Apuntes económicos",
+  "informeSegColTipo": "Tipo",
+  "informeSegColCantidad": "Cantidad",
+  "informeSegColConcepto": "Concepto",
+  "informeSegColImporte": "Importe (€)"
 }

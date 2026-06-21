@@ -2,9 +2,12 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:solera_zunbeltz/modelos/apunte_economico.dart';
 import 'package:solera_zunbeltz/modelos/constantes.dart';
 import 'package:solera_zunbeltz/modelos/finca.dart';
+import 'package:solera_zunbeltz/modelos/indicadores_seguimiento.dart';
 import 'package:solera_zunbeltz/modelos/punto_infraestructura.dart';
+import 'package:solera_zunbeltz/modelos/registro_actividad.dart';
 import 'package:solera_zunbeltz/modelos/tarea_mantenimiento.dart';
 
 void main() {
@@ -103,6 +106,52 @@ void main() {
 
     test('buscarOpcion devuelve null si el código no existe', () {
       expect(buscarOpcion(estadosTarea, 'inexistente'), isNull);
+    });
+  });
+
+  group('RegistroActividad', () {
+    test('toMap / fromMap conserva tipo y cantidad', () {
+      final r = RegistroActividad(
+        fincaId: 1,
+        tipo: 'alimentacion',
+        cantidad: 120.5,
+        fechaMs: 9000,
+        lote: 'Rebaño A',
+      );
+      final recuperado = RegistroActividad.fromMap(r.toMap());
+      expect(recuperado.tipo, 'alimentacion');
+      expect(recuperado.cantidad, closeTo(120.5, 1e-9));
+      expect(recuperado.lote, 'Rebaño A');
+    });
+  });
+
+  group('ApunteEconomico', () {
+    test('toMap / fromMap conserva importe en céntimos', () {
+      final a = ApunteEconomico(
+        fincaId: 1,
+        tipo: 'ingreso',
+        concepto: 'Venta de corderos',
+        importeCentimos: 45000,
+        fechaMs: 1000,
+      );
+      final recuperado = ApunteEconomico.fromMap(a.toMap());
+      expect(recuperado.tipo, 'ingreso');
+      expect(recuperado.importeCentimos, 45000);
+      expect(recuperado.concepto, 'Venta de corderos');
+    });
+  });
+
+  group('IndicadoresSeguimiento', () {
+    test('balance = ingresos - gastos', () {
+      const ind = IndicadoresSeguimiento(
+          ingresosCentimos: 50000, gastosCentimos: 18000);
+      expect(ind.balanceCentimos, 32000);
+    });
+
+    test('eurosDesdeCentimos y cantidadBonita formatean bien', () {
+      expect(eurosDesdeCentimos(45000), '450,00');
+      expect(cantidadBonita(3), '3');
+      expect(cantidadBonita(12.5), '12,5');
     });
   });
 }

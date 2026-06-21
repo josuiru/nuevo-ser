@@ -3,8 +3,10 @@ import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../modelos/apunte_economico.dart';
 import '../modelos/finca.dart';
 import '../modelos/punto_infraestructura.dart';
+import '../modelos/registro_actividad.dart';
 import '../modelos/tarea_mantenimiento.dart';
 
 /// Acceso a la base de datos local de Solera Zunbeltz. Singleton con
@@ -14,8 +16,10 @@ import '../modelos/tarea_mantenimiento.dart';
 /// destructivas. Cada subida de versión es un paso aditivo en `onUpgrade`.
 ///
 /// v1 arranca con el módulo de gestión de fincas (FZ-2/FZ-3): `fincas`,
-/// `puntos_infraestructura` y `tareas_mantenimiento`. El cuaderno ganadero y
-/// el resto de tablas llegan en fases posteriores como migraciones aditivas.
+/// `puntos_infraestructura` y `tareas_mantenimiento`.
+/// v2 añade el seguimiento del testaje: `registros_actividad` (alimentación,
+/// pariciones, productos) y `apuntes_economicos` (ingresos/gastos). El
+/// cuaderno ganadero completo llega en fases posteriores.
 class BaseDatosSoleraZunbeltz {
   static final BaseDatosSoleraZunbeltz instancia =
       BaseDatosSoleraZunbeltz._interno();
@@ -35,13 +39,17 @@ class BaseDatosSoleraZunbeltz {
     final ruta = path_lib.join(directorio.path, 'solera_zunbeltz.db');
     _basedatos = await openDatabase(
       ruta,
-      version: 1,
+      version: 2,
       onConfigure: (db) async {
         // ON DELETE CASCADE / SET NULL requieren FKs activas.
         await db.execute('PRAGMA foreign_keys = ON');
       },
       onCreate: (db, version) async {
         await crearEsquemaV1(db);
+        await aplicarMigracionV2(db);
+      },
+      onUpgrade: (db, anterior, actual) async {
+        if (anterior < 2) await aplicarMigracionV2(db);
       },
     );
     return _basedatos!;
@@ -105,6 +113,42 @@ class BaseDatosSoleraZunbeltz {
         'CREATE INDEX idx_tareas_finca ON tareas_mantenimiento(finca_id)');
     await db.execute(
         'CREATE INDEX idx_tareas_punto ON tareas_mantenimiento(punto_id)');
+  }
+
+  /// Migración v1 → v2: seguimiento del testaje. Aditiva (no destructiva).
+  @visibleForTesting
+  static Future<void> aplicarMigracionV2(Database db) async {
+    await db.execute('''
+      CREATE TABLE registros_actividad (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        finca_id INTEGER NOT NULL,
+        tipo TEXT NOT NULL DEFAULT 'alimentacion',
+        cantidad REAL NOT NULL DEFAULT 0,
+        fecha_ms INTEGER NOT NULL DEFAULT 0,
+        lote TEXT NOT NULL DEFAULT '',
+        notas TEXT NOT NULL DEFAULT '',
+        fecha_creacion_ms INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (finca_id) REFERENCES fincas(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+        'CREATE INDEX idx_actividad_finca ON registros_actividad(finca_id)');
+
+    await db.execute('''
+      CREATE TABLE apuntes_economicos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        finca_id INTEGER NOT NULL,
+        tipo TEXT NOT NULL DEFAULT 'gasto',
+        concepto TEXT NOT NULL DEFAULT '',
+        importe_centimos INTEGER NOT NULL DEFAULT 0,
+        fecha_ms INTEGER NOT NULL DEFAULT 0,
+        notas TEXT NOT NULL DEFAULT '',
+        fecha_creacion_ms INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (finca_id) REFERENCES fincas(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+        'CREATE INDEX idx_apuntes_finca ON apuntes_economicos(finca_id)');
   }
 
   // ─── Fincas ─────────────────────────────────────────────
@@ -251,6 +295,136 @@ class BaseDatosSoleraZunbeltz {
     return Sqflite.firstIntValue(resultado) ?? 0;
   }
 
+  // ─── Registros de actividad (seguimiento) ──────────────
+
+  Future<int> guardarRegistro(RegistroActividad registro) async {
+    final db = await basedatos;
+    return db.insert('registros_actividad', registro.toMap()..remove('id'));
+  }
+
+  Future<List<RegistroActividad>> listarRegistros({
+    int? fincaId,
+    String? tipo,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+    final filas = await db.query(
+      'registros_actividad',
+      where: filtro.where,
+      whereArgs: filtro.args,
+      orderBy: 'fecha_ms DESC',
+    );
+    return filas.map(RegistroActividad.fromMap).toList();
+  }
+
+  Future<void> borrarRegistro(int id) async {
+    final db = await basedatos;
+    await db.delete('registros_actividad', where: 'id = ?', whereArgs: [id]);
+  }
+
+  /// Suma de cantidades de actividad de un tipo (kg de alimentación, nº de
+  /// pariciones, uds comercializadas) con filtros opcionales de finca y fechas.
+  Future<double> sumarCantidadActividad(
+    String tipo, {
+    int? fincaId,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+    final resultado = await db.rawQuery(
+      'SELECT COALESCE(SUM(cantidad), 0) AS total FROM registros_actividad'
+      '${filtro.where == null ? '' : ' WHERE ${filtro.where}'}',
+      filtro.args,
+    );
+    final total = resultado.first['total'];
+    return (total as num).toDouble();
+  }
+
+  // ─── Apuntes económicos (seguimiento) ───────────────────
+
+  Future<int> guardarApunte(ApunteEconomico apunte) async {
+    final db = await basedatos;
+    return db.insert('apuntes_economicos', apunte.toMap()..remove('id'));
+  }
+
+  Future<List<ApunteEconomico>> listarApuntes({
+    int? fincaId,
+    String? tipo,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+    final filas = await db.query(
+      'apuntes_economicos',
+      where: filtro.where,
+      whereArgs: filtro.args,
+      orderBy: 'fecha_ms DESC',
+    );
+    return filas.map(ApunteEconomico.fromMap).toList();
+  }
+
+  Future<void> borrarApunte(int id) async {
+    final db = await basedatos;
+    await db.delete('apuntes_economicos', where: 'id = ?', whereArgs: [id]);
+  }
+
+  /// Suma de importes (en céntimos) de un tipo de apunte (ingreso / gasto)
+  /// con filtros opcionales de finca y fechas.
+  Future<int> sumarImporteEconomico(
+    String tipo, {
+    int? fincaId,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+    final resultado = await db.rawQuery(
+      'SELECT COALESCE(SUM(importe_centimos), 0) AS total FROM apuntes_economicos'
+      '${filtro.where == null ? '' : ' WHERE ${filtro.where}'}',
+      filtro.args,
+    );
+    return (resultado.first['total'] as num).toInt();
+  }
+
+  /// Construye el WHERE común de seguimiento (finca + tipo + rango de fechas).
+  _FiltroSql _filtroSeguimiento({
+    int? fincaId,
+    String? tipo,
+    int? desdeMs,
+    int? hastaMs,
+  }) {
+    final condiciones = <String>[];
+    final args = <Object?>[];
+    if (fincaId != null) {
+      condiciones.add('finca_id = ?');
+      args.add(fincaId);
+    }
+    if (tipo != null) {
+      condiciones.add('tipo = ?');
+      args.add(tipo);
+    }
+    if (desdeMs != null) {
+      condiciones.add('fecha_ms >= ?');
+      args.add(desdeMs);
+    }
+    if (hastaMs != null) {
+      condiciones.add('fecha_ms <= ?');
+      args.add(hastaMs);
+    }
+    return _FiltroSql(
+      condiciones.isEmpty ? null : condiciones.join(' AND '),
+      args.isEmpty ? null : args,
+    );
+  }
+
   // ─── Semilla de ejemplo ─────────────────────────────────
 
   /// Inserta las dos fincas de Zunbeltz si la BD está vacía. **Son datos de
@@ -276,4 +450,12 @@ class BaseDatosSoleraZunbeltz {
     ));
     return true;
   }
+}
+
+/// Cláusula WHERE construida (texto + argumentos) o `null` si no hay filtros.
+class _FiltroSql {
+  _FiltroSql(this.where, this.args);
+
+  final String? where;
+  final List<Object?>? args;
 }

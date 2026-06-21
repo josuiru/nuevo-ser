@@ -19,10 +19,10 @@ import 'branding.dart';
 import 'estado/idioma_app.dart';
 import 'l10n/app_localizations.dart';
 import 'pantallas/pantalla_ajustes.dart';
-import 'pantallas/pantalla_cuaderno.dart';
 import 'pantallas/pantalla_fincas.dart';
 import 'pantallas/pantalla_inicio.dart';
 import 'pantallas/pantalla_onboarding.dart';
+import 'pantallas/pantalla_seguimiento.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -121,7 +121,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   static const _pantallas = <Widget>[
     PantallaInicio(),
     PantallaFincas(),
-    PantallaCuaderno(),
+    PantallaSeguimiento(),
     PantallaAjustes(),
   ];
 
@@ -145,9 +145,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             label: textos.navFincas,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.menu_book_outlined),
-            selectedIcon: const Icon(Icons.menu_book),
-            label: textos.navCuaderno,
+            icon: const Icon(Icons.insights_outlined),
+            selectedIcon: const Icon(Icons.insights),
+            label: textos.navSeguimiento,
           ),
           NavigationDestination(
             icon: const Icon(Icons.settings_outlined),

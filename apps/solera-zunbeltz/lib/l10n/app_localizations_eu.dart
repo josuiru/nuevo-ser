@@ -18,7 +18,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get navFincas => 'Finkak';
 
   @override
-  String get navCuaderno => 'Koadernoa';
+  String get navSeguimiento => 'Jarraipena';
 
   @override
   String get navAjustes => 'Ezarpenak';
@@ -56,13 +56,6 @@ class AppLocalizationsEu extends AppLocalizations {
   String get hoyVerTablero => 'Ikusi zereginak';
 
   @override
-  String get cuadernoProximamente => 'Abeltzaintza-koadernoa';
-
-  @override
-  String get cuadernoProximamenteCuerpo =>
-      'Animaliak, sortak, larreratzea eta eguneroko gertaerak. Geroagoko fase batean eskuragarri.';
-
-  @override
   String get ajustesIdioma => 'Hizkuntza';
 
   @override
@@ -91,6 +84,9 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get comunBorrar => 'Ezabatu';
+
+  @override
+  String get comunFecha => 'Data';
 
   @override
   String get mapaNuevoPunto => 'Puntu berria';
@@ -271,4 +267,120 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get parteSinResponsable => 'Esleitu gabe';
+
+  @override
+  String get segTitulo => 'Jarraipena';
+
+  @override
+  String get segIndicadores => 'Aldiko adierazleak';
+
+  @override
+  String get segTodasFincas => 'Finka guztiak';
+
+  @override
+  String get segAlimentacion => 'Elikadura (kg)';
+
+  @override
+  String get segPariciones => 'Erditzeak';
+
+  @override
+  String get segProductos => 'Merkaturatutako produktuak';
+
+  @override
+  String get segIngresos => 'Sarrerak';
+
+  @override
+  String get segGastos => 'Gastuak';
+
+  @override
+  String get segBalance => 'Balantzea';
+
+  @override
+  String get segPestanaActividad => 'Jarduera';
+
+  @override
+  String get segPestanaEconomico => 'Ekonomikoa';
+
+  @override
+  String get segNuevaActividad => 'Erregistratu jarduera';
+
+  @override
+  String get segNuevoApunte => 'Apunte ekonomikoa';
+
+  @override
+  String get segSinRegistros => 'Oraindik erregistrorik ez.';
+
+  @override
+  String get segInformePdf => 'Jarraipen-txostena (PDF)';
+
+  @override
+  String get segGenerandoInforme => 'Txostena sortzen…';
+
+  @override
+  String get actNuevaTitulo => 'Erregistratu jarduera';
+
+  @override
+  String get actTipo => 'Jarduera mota';
+
+  @override
+  String get actCantidad => 'Kopurua';
+
+  @override
+  String get actLote => 'Sorta / artaldea';
+
+  @override
+  String get actNotas => 'Oharrak';
+
+  @override
+  String get actGuardada => 'Jarduera erregistratuta';
+
+  @override
+  String get actCantidadObligatoria => 'Adierazi zerotik gorako kopuru bat.';
+
+  @override
+  String get apuNuevoTitulo => 'Apunte ekonomiko berria';
+
+  @override
+  String get apuTipo => 'Mota';
+
+  @override
+  String get apuConcepto => 'Kontzeptua';
+
+  @override
+  String get apuImporte => 'Zenbatekoa (€)';
+
+  @override
+  String get apuNotas => 'Oharrak';
+
+  @override
+  String get apuGuardado => 'Apuntea gordeta';
+
+  @override
+  String get apuImporteObligatorio => 'Adierazi zerotik gorako zenbateko bat.';
+
+  @override
+  String get informeSegTitulo => 'Jarraipen-txostena';
+
+  @override
+  String informeSegResumenPeriodo(int actividades, int apuntes) {
+    return 'Erregistroak: $actividades · apunteak: $apuntes';
+  }
+
+  @override
+  String get informeSegTablaActividad => 'Jarduera-erregistroak';
+
+  @override
+  String get informeSegTablaEconomico => 'Apunte ekonomikoak';
+
+  @override
+  String get informeSegColTipo => 'Mota';
+
+  @override
+  String get informeSegColCantidad => 'Kopurua';
+
+  @override
+  String get informeSegColConcepto => 'Kontzeptua';
+
+  @override
+  String get informeSegColImporte => 'Zenbatekoa (€)';
 }

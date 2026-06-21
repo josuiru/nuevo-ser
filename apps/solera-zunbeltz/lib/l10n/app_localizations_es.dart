@@ -18,7 +18,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navFincas => 'Fincas';
 
   @override
-  String get navCuaderno => 'Cuaderno';
+  String get navSeguimiento => 'Seguimiento';
 
   @override
   String get navAjustes => 'Ajustes';
@@ -56,13 +56,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hoyVerTablero => 'Ver tareas';
 
   @override
-  String get cuadernoProximamente => 'Cuaderno ganadero';
-
-  @override
-  String get cuadernoProximamenteCuerpo =>
-      'Animales, lotes, pastoreo y eventos del día a día. Disponible en una fase posterior.';
-
-  @override
   String get ajustesIdioma => 'Idioma';
 
   @override
@@ -91,6 +84,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get comunBorrar => 'Borrar';
+
+  @override
+  String get comunFecha => 'Fecha';
 
   @override
   String get mapaNuevoPunto => 'Nuevo punto';
@@ -271,4 +267,120 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get parteSinResponsable => 'Sin asignar';
+
+  @override
+  String get segTitulo => 'Seguimiento';
+
+  @override
+  String get segIndicadores => 'Indicadores del periodo';
+
+  @override
+  String get segTodasFincas => 'Todas las fincas';
+
+  @override
+  String get segAlimentacion => 'Alimentación (kg)';
+
+  @override
+  String get segPariciones => 'Pariciones';
+
+  @override
+  String get segProductos => 'Productos comercializados';
+
+  @override
+  String get segIngresos => 'Ingresos';
+
+  @override
+  String get segGastos => 'Gastos';
+
+  @override
+  String get segBalance => 'Balance';
+
+  @override
+  String get segPestanaActividad => 'Actividad';
+
+  @override
+  String get segPestanaEconomico => 'Económico';
+
+  @override
+  String get segNuevaActividad => 'Registrar actividad';
+
+  @override
+  String get segNuevoApunte => 'Apunte económico';
+
+  @override
+  String get segSinRegistros => 'Sin registros todavía.';
+
+  @override
+  String get segInformePdf => 'Informe de seguimiento (PDF)';
+
+  @override
+  String get segGenerandoInforme => 'Generando informe…';
+
+  @override
+  String get actNuevaTitulo => 'Registrar actividad';
+
+  @override
+  String get actTipo => 'Tipo de actividad';
+
+  @override
+  String get actCantidad => 'Cantidad';
+
+  @override
+  String get actLote => 'Lote / rebaño';
+
+  @override
+  String get actNotas => 'Notas';
+
+  @override
+  String get actGuardada => 'Actividad registrada';
+
+  @override
+  String get actCantidadObligatoria => 'Indica una cantidad mayor que cero.';
+
+  @override
+  String get apuNuevoTitulo => 'Nuevo apunte económico';
+
+  @override
+  String get apuTipo => 'Tipo';
+
+  @override
+  String get apuConcepto => 'Concepto';
+
+  @override
+  String get apuImporte => 'Importe (€)';
+
+  @override
+  String get apuNotas => 'Notas';
+
+  @override
+  String get apuGuardado => 'Apunte guardado';
+
+  @override
+  String get apuImporteObligatorio => 'Indica un importe mayor que cero.';
+
+  @override
+  String get informeSegTitulo => 'Informe de seguimiento';
+
+  @override
+  String informeSegResumenPeriodo(int actividades, int apuntes) {
+    return 'Registros: $actividades · apuntes: $apuntes';
+  }
+
+  @override
+  String get informeSegTablaActividad => 'Registros de actividad';
+
+  @override
+  String get informeSegTablaEconomico => 'Apuntes económicos';
+
+  @override
+  String get informeSegColTipo => 'Tipo';
+
+  @override
+  String get informeSegColCantidad => 'Cantidad';
+
+  @override
+  String get informeSegColConcepto => 'Concepto';
+
+  @override
+  String get informeSegColImporte => 'Importe (€)';
 }

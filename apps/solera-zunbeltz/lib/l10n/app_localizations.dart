@@ -116,11 +116,11 @@ abstract class AppLocalizations {
   /// **'Fincas'**
   String get navFincas;
 
-  /// No description provided for @navCuaderno.
+  /// No description provided for @navSeguimiento.
   ///
   /// In es, this message translates to:
-  /// **'Cuaderno'**
-  String get navCuaderno;
+  /// **'Seguimiento'**
+  String get navSeguimiento;
 
   /// No description provided for @navAjustes.
   ///
@@ -169,18 +169,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ver tareas'**
   String get hoyVerTablero;
-
-  /// No description provided for @cuadernoProximamente.
-  ///
-  /// In es, this message translates to:
-  /// **'Cuaderno ganadero'**
-  String get cuadernoProximamente;
-
-  /// No description provided for @cuadernoProximamenteCuerpo.
-  ///
-  /// In es, this message translates to:
-  /// **'Animales, lotes, pastoreo y eventos del día a día. Disponible en una fase posterior.'**
-  String get cuadernoProximamenteCuerpo;
 
   /// No description provided for @ajustesIdioma.
   ///
@@ -235,6 +223,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Borrar'**
   String get comunBorrar;
+
+  /// No description provided for @comunFecha.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get comunFecha;
 
   /// No description provided for @mapaNuevoPunto.
   ///
@@ -583,6 +577,234 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Sin asignar'**
   String get parteSinResponsable;
+
+  /// No description provided for @segTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguimiento'**
+  String get segTitulo;
+
+  /// No description provided for @segIndicadores.
+  ///
+  /// In es, this message translates to:
+  /// **'Indicadores del periodo'**
+  String get segIndicadores;
+
+  /// No description provided for @segTodasFincas.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas las fincas'**
+  String get segTodasFincas;
+
+  /// No description provided for @segAlimentacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Alimentación (kg)'**
+  String get segAlimentacion;
+
+  /// No description provided for @segPariciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Pariciones'**
+  String get segPariciones;
+
+  /// No description provided for @segProductos.
+  ///
+  /// In es, this message translates to:
+  /// **'Productos comercializados'**
+  String get segProductos;
+
+  /// No description provided for @segIngresos.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresos'**
+  String get segIngresos;
+
+  /// No description provided for @segGastos.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos'**
+  String get segGastos;
+
+  /// No description provided for @segBalance.
+  ///
+  /// In es, this message translates to:
+  /// **'Balance'**
+  String get segBalance;
+
+  /// No description provided for @segPestanaActividad.
+  ///
+  /// In es, this message translates to:
+  /// **'Actividad'**
+  String get segPestanaActividad;
+
+  /// No description provided for @segPestanaEconomico.
+  ///
+  /// In es, this message translates to:
+  /// **'Económico'**
+  String get segPestanaEconomico;
+
+  /// No description provided for @segNuevaActividad.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar actividad'**
+  String get segNuevaActividad;
+
+  /// No description provided for @segNuevoApunte.
+  ///
+  /// In es, this message translates to:
+  /// **'Apunte económico'**
+  String get segNuevoApunte;
+
+  /// No description provided for @segSinRegistros.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin registros todavía.'**
+  String get segSinRegistros;
+
+  /// No description provided for @segInformePdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe de seguimiento (PDF)'**
+  String get segInformePdf;
+
+  /// No description provided for @segGenerandoInforme.
+  ///
+  /// In es, this message translates to:
+  /// **'Generando informe…'**
+  String get segGenerandoInforme;
+
+  /// No description provided for @actNuevaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar actividad'**
+  String get actNuevaTitulo;
+
+  /// No description provided for @actTipo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de actividad'**
+  String get actTipo;
+
+  /// No description provided for @actCantidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get actCantidad;
+
+  /// No description provided for @actLote.
+  ///
+  /// In es, this message translates to:
+  /// **'Lote / rebaño'**
+  String get actLote;
+
+  /// No description provided for @actNotas.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get actNotas;
+
+  /// No description provided for @actGuardada.
+  ///
+  /// In es, this message translates to:
+  /// **'Actividad registrada'**
+  String get actGuardada;
+
+  /// No description provided for @actCantidadObligatoria.
+  ///
+  /// In es, this message translates to:
+  /// **'Indica una cantidad mayor que cero.'**
+  String get actCantidadObligatoria;
+
+  /// No description provided for @apuNuevoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo apunte económico'**
+  String get apuNuevoTitulo;
+
+  /// No description provided for @apuTipo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get apuTipo;
+
+  /// No description provided for @apuConcepto.
+  ///
+  /// In es, this message translates to:
+  /// **'Concepto'**
+  String get apuConcepto;
+
+  /// No description provided for @apuImporte.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe (€)'**
+  String get apuImporte;
+
+  /// No description provided for @apuNotas.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get apuNotas;
+
+  /// No description provided for @apuGuardado.
+  ///
+  /// In es, this message translates to:
+  /// **'Apunte guardado'**
+  String get apuGuardado;
+
+  /// No description provided for @apuImporteObligatorio.
+  ///
+  /// In es, this message translates to:
+  /// **'Indica un importe mayor que cero.'**
+  String get apuImporteObligatorio;
+
+  /// No description provided for @informeSegTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe de seguimiento'**
+  String get informeSegTitulo;
+
+  /// No description provided for @informeSegResumenPeriodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Registros: {actividades} · apuntes: {apuntes}'**
+  String informeSegResumenPeriodo(int actividades, int apuntes);
+
+  /// No description provided for @informeSegTablaActividad.
+  ///
+  /// In es, this message translates to:
+  /// **'Registros de actividad'**
+  String get informeSegTablaActividad;
+
+  /// No description provided for @informeSegTablaEconomico.
+  ///
+  /// In es, this message translates to:
+  /// **'Apuntes económicos'**
+  String get informeSegTablaEconomico;
+
+  /// No description provided for @informeSegColTipo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get informeSegColTipo;
+
+  /// No description provided for @informeSegColCantidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get informeSegColCantidad;
+
+  /// No description provided for @informeSegColConcepto.
+  ///
+  /// In es, this message translates to:
+  /// **'Concepto'**
+  String get informeSegColConcepto;
+
+  /// No description provided for @informeSegColImporte.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe (€)'**
+  String get informeSegColImporte;
 }
 
 class _AppLocalizationsDelegate
