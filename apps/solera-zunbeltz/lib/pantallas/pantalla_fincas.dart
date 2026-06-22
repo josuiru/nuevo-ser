@@ -38,6 +38,9 @@ class _PantallaFincasState extends State<PantallaFincas> {
   bool _cargando = true;
   _EstiloMapa _estiloMapa = _EstiloMapa.calle;
   LatLng? _posicionGps;
+  // Id del punto que se está recolocando (el siguiente toque fija su nueva
+  // posición); null = modo normal (el toque añade un punto nuevo).
+  int? _recolocandoId;
   // Centro aproximado de la zona de Andía / Tierra Estella (Navarra).
   LatLng _centroActual = const LatLng(42.793, -1.958);
   double _zoomActual = 12;
@@ -236,6 +239,17 @@ class _PantallaFincasState extends State<PantallaFincas> {
     if (creado == true && mounted) await _cargar();
   }
 
+  /// Fija la nueva posición de un punto existente (modo recolocar).
+  Future<void> _moverPunto(int puntoId, LatLng punto) async {
+    await _bd.actualizarPuntoCoords(puntoId, punto.latitude, punto.longitude);
+    if (!mounted) return;
+    setState(() => _recolocandoId = null);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).puntoRecolocado)),
+    );
+    await _cargar();
+  }
+
   /// Id de la finca cuyo centroide está más cerca del punto tocado.
   int? _fincaMasCercana(LatLng p) {
     const distancia = Distance();
@@ -278,10 +292,19 @@ class _PantallaFincasState extends State<PantallaFincas> {
           height: 40,
           child: GestureDetector(
             onTap: () async {
-              final cambiado = await Navigator.of(context).push<bool>(
+              final res = await Navigator.of(context).push<Object?>(
                 MaterialPageRoute(builder: (_) => FichaPunto(punto: punto)),
               );
-              if (cambiado == true && mounted) await _cargar();
+              if (!mounted) return;
+              if (res == 'recolocar') {
+                setState(() => _recolocandoId = punto.id);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content:
+                      Text(AppLocalizations.of(context).mapaTocaNuevaUbicacion),
+                ));
+              } else if (res == true) {
+                await _cargar();
+              }
             },
             child: Icon(Icons.location_on,
                 size: 38, color: colorEstadoPunto(punto.estado)),
@@ -332,8 +355,15 @@ class _PantallaFincasState extends State<PantallaFincas> {
                 _centroActual = cam.center;
                 _zoomActual = cam.zoom;
               },
-              // Tocar/clicar el mapa coloca un punto en esas coordenadas.
-              onTap: (_, punto) => _anadirEnPunto(punto),
+              // Tocar/clicar el mapa: recoloca el punto en curso, o si no
+              // hay ninguno en curso, añade uno nuevo en esas coordenadas.
+              onTap: (_, punto) {
+                if (_recolocandoId != null) {
+                  _moverPunto(_recolocandoId!, punto);
+                } else {
+                  _anadirEnPunto(punto);
+                }
+              },
             ),
             children: [
               TileLayer(
@@ -382,7 +412,7 @@ class _PantallaFincasState extends State<PantallaFincas> {
                 ),
               ),
             ),
-          if (_conCoords.isNotEmpty)
+          if (_conCoords.isNotEmpty || _recolocandoId != null)
             Positioned(
               top: 10,
               left: 0,
@@ -398,9 +428,16 @@ class _PantallaFincasState extends State<PantallaFincas> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.touch_app_outlined, size: 16),
+                        Icon(
+                            _recolocandoId != null
+                                ? Icons.edit_location_alt_outlined
+                                : Icons.touch_app_outlined,
+                            size: 16),
                         const SizedBox(width: 6),
-                        Text(textos.mapaTocaParaAnadir,
+                        Text(
+                            _recolocandoId != null
+                                ? textos.mapaTocaNuevaUbicacion
+                                : textos.mapaTocaParaAnadir,
                             style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),

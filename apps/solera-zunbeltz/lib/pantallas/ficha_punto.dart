@@ -92,6 +92,11 @@ class _FichaPuntoState extends State<FichaPunto> {
         title: Text(titulo),
         actions: [
           IconButton(
+            tooltip: textos.fichaRecolocar,
+            icon: const Icon(Icons.edit_location_alt_outlined),
+            onPressed: () => Navigator.of(context).pop('recolocar'),
+          ),
+          IconButton(
             tooltip: textos.fichaBorrarPunto,
             icon: const Icon(Icons.delete_outline),
             onPressed: _borrarPunto,

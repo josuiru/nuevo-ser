@@ -108,6 +108,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mapaTocaParaAnadir => 'Toca el mapa para añadir un punto';
 
   @override
+  String get mapaTocaNuevaUbicacion => 'Toca la nueva ubicación del punto';
+
+  @override
+  String get puntoRecolocado => 'Punto recolocado';
+
+  @override
+  String get fichaRecolocar => 'Recolocar en el mapa';
+
+  @override
   String get mapaGpsNoDisponible =>
       'GPS no disponible — rellena la ubicación a mano.';
 

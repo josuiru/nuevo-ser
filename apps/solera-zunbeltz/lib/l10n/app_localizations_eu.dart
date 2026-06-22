@@ -108,6 +108,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get mapaTocaParaAnadir => 'Ukitu mapa puntu bat gehitzeko';
 
   @override
+  String get mapaTocaNuevaUbicacion => 'Ukitu puntuaren kokaleku berria';
+
+  @override
+  String get puntoRecolocado => 'Puntua birkokatuta';
+
+  @override
+  String get fichaRecolocar => 'Kokatu berriro mapan';
+
+  @override
   String get mapaGpsNoDisponible =>
       'GPSa ez dago eskuragarri — bete kokapena eskuz.';
 

@@ -266,6 +266,24 @@ abstract class AppLocalizations {
   /// **'Toca el mapa para añadir un punto'**
   String get mapaTocaParaAnadir;
 
+  /// No description provided for @mapaTocaNuevaUbicacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca la nueva ubicación del punto'**
+  String get mapaTocaNuevaUbicacion;
+
+  /// No description provided for @puntoRecolocado.
+  ///
+  /// In es, this message translates to:
+  /// **'Punto recolocado'**
+  String get puntoRecolocado;
+
+  /// No description provided for @fichaRecolocar.
+  ///
+  /// In es, this message translates to:
+  /// **'Recolocar en el mapa'**
+  String get fichaRecolocar;
+
   /// No description provided for @mapaGpsNoDisponible.
   ///
   /// In es, this message translates to:
