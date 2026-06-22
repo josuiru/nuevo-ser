@@ -28,7 +28,7 @@
   "@ajustesVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "ajustesProvisional": "Versión provisional — pendiente de validación de los contenidos normativos por los técnicos competentes.",
+  "ajustesProvisional": "Versión preliminar. Los partes e informes que genera son orientativos y su formato está pendiente de validación. El papeleo oficial (libro de explotación, cuaderno PAC, trazabilidad…) llega en fases posteriores.",
 
   "comunGuardar": "Guardar",
   "comunCancelar": "Cancelar",

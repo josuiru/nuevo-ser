@@ -203,7 +203,7 @@ abstract class AppLocalizations {
   /// No description provided for @ajustesProvisional.
   ///
   /// In es, this message translates to:
-  /// **'Versión provisional — pendiente de validación de los contenidos normativos por los técnicos competentes.'**
+  /// **'Versión preliminar. Los partes e informes que genera son orientativos y su formato está pendiente de validación. El papeleo oficial (libro de explotación, cuaderno PAC, trazabilidad…) llega en fases posteriores.'**
   String get ajustesProvisional;
 
   /// No description provided for @comunGuardar.

@@ -74,7 +74,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ajustesProvisional =>
-      'Versión provisional — pendiente de validación de los contenidos normativos por los técnicos competentes.';
+      'Versión preliminar. Los partes e informes que genera son orientativos y su formato está pendiente de validación. El papeleo oficial (libro de explotación, cuaderno PAC, trazabilidad…) llega en fases posteriores.';
 
   @override
   String get comunGuardar => 'Guardar';

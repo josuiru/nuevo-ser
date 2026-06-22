@@ -74,7 +74,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get ajustesProvisional =>
-      'Behin-behineko bertsioa — eduki arautzaileak teknikari eskudunek baliozkotzeko zain.';
+      'Aurretiazko bertsioa. Sortzen dituen parte eta txostenak orientagarriak dira eta haien formatua baliozkotzeke dago. Paper-lan ofiziala (ustiategi-liburua, PAC koadernoa, trazabilitatea…) geroagoko faseetan iritsiko da.';
 
   @override
   String get comunGuardar => 'Gorde';
