@@ -37,9 +37,16 @@ class _TableroTareasState extends State<TableroTareas> {
   }
 
   Future<void> _cargar() async {
-    final fincas = await _bd.listarFincas();
-    final tareas = await _bd.listarTareas();
-    final puntos = await _bd.listarPuntos();
+    var fincas = <Finca>[];
+    var tareas = <TareaMantenimiento>[];
+    var puntos = <PuntoInfraestructura>[];
+    try {
+      fincas = await _bd.listarFincas();
+      tareas = await _bd.listarTareas();
+      puntos = await _bd.listarPuntos();
+    } catch (_) {
+      // Sin BD disponible mostramos el tablero vacío en vez de romper.
+    }
     if (!mounted) return;
     setState(() {
       _fincas = fincas;

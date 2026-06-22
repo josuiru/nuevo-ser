@@ -31,6 +31,9 @@ dependencies:
 
   # Almacenamiento local (single-device, offline).
   sqflite: ^2.3.3
+  # En escritorio (Linux/Windows/macOS) sqflite usa el backend ffi; en
+  # móvil (Android/iOS) usa el nativo. Se inicializa en main() según plataforma.
+  sqflite_common_ffi: ^2.3.3
   shared_preferences: ^2.3.2
 
   # HTTP (reservado para IA visual ganadera en fase posterior).
@@ -56,8 +59,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  # Tests de base de datos en memoria (sin emulador).
-  sqflite_common_ffi: ^2.3.3
   # Generadores de icono de launcher y splash (no son runtime deps; se
   # invocan a mano cuando cambia el logo).
   flutter_launcher_icons: ^0.14.1

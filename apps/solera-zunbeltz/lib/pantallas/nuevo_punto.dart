@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../modelos/constantes.dart';
 import '../modelos/finca.dart';
 import '../modelos/punto_infraestructura.dart';
+import 'widgets/cuerpo_responsivo.dart';
 
 /// Alta de un punto de infraestructura. Recibe las fincas disponibles y,
 /// opcionalmente, una finca y unas coordenadas iniciales (del GPS o del
@@ -88,7 +89,7 @@ class _NuevoPuntoState extends State<NuevoPunto> {
     final idioma = Localizations.localeOf(context).languageCode;
     return Scaffold(
       appBar: AppBar(title: Text(textos.puntoNuevoTitulo)),
-      body: ListView(
+      body: CuerpoResponsivo(child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           DropdownButtonFormField<int>(
@@ -167,7 +168,7 @@ class _NuevoPuntoState extends State<NuevoPunto> {
             label: Text(textos.comunGuardar),
           ),
         ],
-      ),
+      )),
     );
   }
 }

@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../modelos/apunte_economico.dart';
 import '../modelos/constantes.dart';
 import '../modelos/finca.dart';
+import 'widgets/cuerpo_responsivo.dart';
 
 /// Alta de un apunte económico simple (ingreso o gasto).
 class NuevoApunte extends StatefulWidget {
@@ -82,7 +83,7 @@ class _NuevoApunteState extends State<NuevoApunte> {
     final idioma = Localizations.localeOf(context).languageCode;
     return Scaffold(
       appBar: AppBar(title: Text(textos.apuNuevoTitulo)),
-      body: ListView(
+      body: CuerpoResponsivo(child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           DropdownButtonFormField<int>(
@@ -138,7 +139,7 @@ class _NuevoApunteState extends State<NuevoApunte> {
             label: Text(textos.comunGuardar),
           ),
         ],
-      ),
+      )),
     );
   }
 }

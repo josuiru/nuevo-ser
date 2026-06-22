@@ -6,6 +6,7 @@ import '../datos/base_datos.dart';
 import '../l10n/app_localizations.dart';
 import '../modelos/constantes.dart';
 import '../modelos/tarea_mantenimiento.dart';
+import 'widgets/cuerpo_responsivo.dart';
 
 /// Alta de una tarea de mantenimiento, anclada a una finca y opcionalmente
 /// a un punto de infraestructura.
@@ -97,7 +98,7 @@ class _NuevaTareaState extends State<NuevaTarea> {
         : DateFormat('dd/MM/yyyy', idioma).format(_fechaObjetivo!);
     return Scaffold(
       appBar: AppBar(title: Text(textos.tareaNuevaTitulo)),
-      body: ListView(
+      body: CuerpoResponsivo(child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           TextField(
@@ -173,7 +174,7 @@ class _NuevaTareaState extends State<NuevaTarea> {
             label: Text(textos.comunGuardar),
           ),
         ],
-      ),
+      )),
     );
   }
 }

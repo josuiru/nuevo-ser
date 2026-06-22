@@ -11,9 +11,13 @@
 //
 // Detalle de fase y decisiones en `CLAUDE.md` del paquete.
 
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'branding.dart';
 import 'estado/idioma_app.dart';
@@ -26,6 +30,12 @@ import 'pantallas/pantalla_seguimiento.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // En escritorio (Linux/Windows/macOS) sqflite necesita el backend ffi;
+  // en móvil usa el nativo y esto no se toca.
+  if (!kIsWeb && (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   await initializeDateFormatting();
   // Precarga el idioma elegido en sesiones previas antes del primer build,
   // para evitar un parpadeo con el idioma del sistema.

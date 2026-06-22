@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../modelos/constantes.dart';
 import '../modelos/finca.dart';
 import '../modelos/registro_actividad.dart';
+import 'widgets/cuerpo_responsivo.dart';
 
 /// Alta de un registro de actividad (alimentación, paricion, producto).
 class NuevaActividad extends StatefulWidget {
@@ -83,7 +84,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
     final unidad = unidadActividad(_tipo, idioma);
     return Scaffold(
       appBar: AppBar(title: Text(textos.actNuevaTitulo)),
-      body: ListView(
+      body: CuerpoResponsivo(child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           DropdownButtonFormField<int>(
@@ -141,7 +142,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
             label: Text(textos.comunGuardar),
           ),
         ],
-      ),
+      )),
     );
   }
 }

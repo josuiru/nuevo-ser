@@ -37,66 +37,71 @@ class _PantallaOnboardingState extends State<PantallaOnboarding> {
     return Scaffold(
       backgroundColor: colorMonteZunbeltz,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Spacer(),
-              Text(
-                textos.onboardingTitulo,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                textos.onboardingCuerpo,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.82),
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-              ),
-              const Spacer(),
-              // Selector de idioma: ambos de primera clase desde el día uno.
-              Wrap(
-                spacing: 10,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _ChipIdioma(
-                    etiqueta: textos.ajustesIdiomaCastellano,
-                    activo: localeActivo == 'es',
-                    alPulsar: () => elegirIdiomaZunbeltz('es'),
-                  ),
-                  _ChipIdioma(
-                    etiqueta: textos.ajustesIdiomaEuskera,
-                    activo: localeActivo == 'eu',
-                    alPulsar: () => elegirIdiomaZunbeltz('eu'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: colorOcreZunbeltz,
-                    foregroundColor: colorMonteZunbeltz,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: _empezar,
-                  child: Text(
-                    textos.onboardingBoton,
+                  Text(
+                    textos.onboardingTitulo,
                     style: const TextStyle(
-                      fontSize: 16,
+                      color: Colors.white,
+                      fontSize: 34,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  Text(
+                    textos.onboardingCuerpo,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.82),
+                      fontSize: 16,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  // Selector de idioma: ambos de primera clase desde el día uno.
+                  Wrap(
+                    spacing: 10,
+                    children: [
+                      _ChipIdioma(
+                        etiqueta: textos.ajustesIdiomaCastellano,
+                        activo: localeActivo == 'es',
+                        alPulsar: () => elegirIdiomaZunbeltz('es'),
+                      ),
+                      _ChipIdioma(
+                        etiqueta: textos.ajustesIdiomaEuskera,
+                        activo: localeActivo == 'eu',
+                        alPulsar: () => elegirIdiomaZunbeltz('eu'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: colorOcreZunbeltz,
+                        foregroundColor: colorMonteZunbeltz,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: _empezar,
+                      child: Text(
+                        textos.onboardingBoton,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
