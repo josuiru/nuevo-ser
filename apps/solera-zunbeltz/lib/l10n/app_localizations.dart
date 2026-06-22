@@ -257,8 +257,14 @@ abstract class AppLocalizations {
   /// No description provided for @mapaSinPuntos.
   ///
   /// In es, this message translates to:
-  /// **'Aún no hay puntos. Pulsa «Nuevo punto» para marcar el primero.'**
+  /// **'Aún no hay puntos. Toca el mapa o pulsa «Nuevo punto» para marcar el primero.'**
   String get mapaSinPuntos;
+
+  /// No description provided for @mapaTocaParaAnadir.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca el mapa para añadir un punto'**
+  String get mapaTocaParaAnadir;
 
   /// No description provided for @mapaGpsNoDisponible.
   ///

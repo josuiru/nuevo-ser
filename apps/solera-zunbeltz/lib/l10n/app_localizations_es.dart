@@ -102,7 +102,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mapaSinPuntos =>
-      'Aún no hay puntos. Pulsa «Nuevo punto» para marcar el primero.';
+      'Aún no hay puntos. Toca el mapa o pulsa «Nuevo punto» para marcar el primero.';
+
+  @override
+  String get mapaTocaParaAnadir => 'Toca el mapa para añadir un punto';
 
   @override
   String get mapaGpsNoDisponible =>

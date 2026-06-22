@@ -102,7 +102,10 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get mapaSinPuntos =>
-      'Oraindik ez dago punturik. Sakatu «Puntu berria» lehena markatzeko.';
+      'Oraindik ez dago punturik. Ukitu mapa edo sakatu «Puntu berria» lehena markatzeko.';
+
+  @override
+  String get mapaTocaParaAnadir => 'Ukitu mapa puntu bat gehitzeko';
 
   @override
   String get mapaGpsNoDisponible =>

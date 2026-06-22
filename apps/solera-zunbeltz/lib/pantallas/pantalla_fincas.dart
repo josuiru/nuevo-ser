@@ -220,6 +220,39 @@ class _PantallaFincasState extends State<PantallaFincas> {
     if (creado == true) await _cargar();
   }
 
+  /// Alta de un punto en las coordenadas tocadas en el mapa, con la finca
+  /// más cercana ya preseleccionada (editable en el formulario).
+  Future<void> _anadirEnPunto(LatLng punto) async {
+    if (_fincas.isEmpty) return;
+    final fincaId = _fincaMasCercana(punto) ?? _fincas.first.id;
+    final creado = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: (_) => NuevoPunto(
+        fincas: _fincas,
+        fincaIdInicial: fincaId,
+        latitudInicial: punto.latitude,
+        longitudInicial: punto.longitude,
+      ),
+    ));
+    if (creado == true && mounted) await _cargar();
+  }
+
+  /// Id de la finca cuyo centroide está más cerca del punto tocado.
+  int? _fincaMasCercana(LatLng p) {
+    const distancia = Distance();
+    int? mejor;
+    var mejorMetros = double.infinity;
+    for (final f in _fincas) {
+      if (f.latitud == null || f.longitud == null) continue;
+      final d =
+          distancia.as(LengthUnit.Meter, p, LatLng(f.latitud!, f.longitud!));
+      if (d < mejorMetros) {
+        mejorMetros = d;
+        mejor = f.id;
+      }
+    }
+    return mejor;
+  }
+
   List<Marker> _marcadores() {
     return [
       if (_posicionGps != null)
@@ -299,6 +332,8 @@ class _PantallaFincasState extends State<PantallaFincas> {
                 _centroActual = cam.center;
                 _zoomActual = cam.zoom;
               },
+              // Tocar/clicar el mapa coloca un punto en esas coordenadas.
+              onTap: (_, punto) => _anadirEnPunto(punto),
             ),
             children: [
               TileLayer(
@@ -344,6 +379,32 @@ class _PantallaFincasState extends State<PantallaFincas> {
                   padding: const EdgeInsets.all(12),
                   child: Text(textos.mapaSinPuntos,
                       style: Theme.of(context).textTheme.bodyMedium),
+                ),
+              ),
+            ),
+          if (_conCoords.isNotEmpty)
+            Positioned(
+              top: 10,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Material(
+                  elevation: 2,
+                  borderRadius: BorderRadius.circular(100),
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.touch_app_outlined, size: 16),
+                        const SizedBox(width: 6),
+                        Text(textos.mapaTocaParaAnadir,
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
