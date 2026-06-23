@@ -624,4 +624,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ivaNoFiscal =>
       'Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor.';
+
+  @override
+  String get detExportarCsv => 'Exportar CSV';
 }

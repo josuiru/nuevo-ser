@@ -1273,6 +1273,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor.'**
   String get ivaNoFiscal;
+
+  /// No description provided for @detExportarCsv.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar CSV'**
+  String get detExportarCsv;
 }
 
 class _AppLocalizationsDelegate

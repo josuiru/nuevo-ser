@@ -242,5 +242,6 @@
   "apuCategoria": "Categoría",
   "apuIva": "IVA",
   "comIva": "IVA",
-  "ivaNoFiscal": "Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor."
+  "ivaNoFiscal": "Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor.",
+  "detExportarCsv": "Exportar CSV"
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:printing/printing.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../branding.dart';
 import '../datos/base_datos.dart';
@@ -13,6 +14,7 @@ import '../modelos/registro_actividad.dart';
 import '../modelos/registro_comercializacion.dart';
 import '../modelos/rentabilidad_proyecto.dart';
 import '../modelos/validacion_producto.dart';
+import '../servicios/generador_csv_proyecto.dart';
 import '../servicios/generador_informe_proyecto.dart';
 import '../utiles/periodo.dart';
 import 'nueva_actividad.dart';
@@ -182,6 +184,29 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
     }
   }
 
+  Future<void> _exportarCsv() async {
+    final textos = AppLocalizations.of(context);
+    final idioma = Localizations.localeOf(context).languageCode;
+    final fichero = await generarCsvProyecto(
+      textos: textos,
+      idioma: idioma,
+      proyecto: widget.proyecto,
+      apuntes: _apuntes,
+      ventas: _ventas,
+    );
+    try {
+      await Share.shareXFiles([XFile(fichero.path)],
+          subject: widget.proyecto.nombre);
+    } catch (_) {
+      // En escritorio el menú de compartir puede no estar disponible: al
+      // menos indicamos dónde quedó el CSV.
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('CSV: ${fichero.path}')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textos = AppLocalizations.of(context);
@@ -233,6 +258,11 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
                       child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.picture_as_pdf_outlined),
               onPressed: _generando ? null : _informe,
+            ),
+            IconButton(
+              tooltip: textos.detExportarCsv,
+              icon: const Icon(Icons.table_view_outlined),
+              onPressed: _exportarCsv,
             ),
             IconButton(
               tooltip: textos.proyectoBorrar,

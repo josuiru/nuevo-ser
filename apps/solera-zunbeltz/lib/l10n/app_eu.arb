@@ -221,5 +221,6 @@
   "apuCategoria": "Kategoria",
   "apuIva": "BEZ",
   "comIva": "BEZ",
-  "ivaNoFiscal": "Kalkulu orientagarria. Ez da zerga-aitorpenerako modulua: araubidea (REAGP / orokorra) zuen aholkulariak zehazten du."
+  "ivaNoFiscal": "Kalkulu orientagarria. Ez da zerga-aitorpenerako modulua: araubidea (REAGP / orokorra) zuen aholkulariak zehazten du.",
+  "detExportarCsv": "Esportatu CSV"
 }

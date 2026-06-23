@@ -624,4 +624,7 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get ivaNoFiscal =>
       'Kalkulu orientagarria. Ez da zerga-aitorpenerako modulua: araubidea (REAGP / orokorra) zuen aholkulariak zehazten du.';
+
+  @override
+  String get detExportarCsv => 'Esportatu CSV';
 }
