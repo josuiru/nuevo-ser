@@ -80,11 +80,44 @@
   if (inicialActivo) selectPeriod(inicialActivo.dataset.id);
   else if (segs.length) selectPeriod('jurasico');
 
-  // ── Lift-the-flap · click en los especímenes ─────────────────────
+  // ── Lift-the-flap · animación vía Web Animations API ────────────
+  // El CSS `transition` + `animation: specimen-drop both` no
+  // interpolaba entre estados (el browser saltaba sin animar). Usamos
+  // element.animate() para tener control imperativo sobre keyframes
+  // y duración. Inmune a conflictos de !important y animation: both.
   document.querySelectorAll('.flap-cell').forEach(cell => {
     const flap = cell.querySelector('.specimen');
     if (!flap) return;
-    flap.addEventListener('click', () => cell.classList.toggle('lifted'));
+    cell.style.cursor = 'pointer';
+
+    // Lee el tilt base de la variable CSS para que respete el ángulo
+    // ligero distinto que tiene cada tarjeta (--tilt -0.6deg, 0.4deg, -0.2deg).
+    const baseTilt = getComputedStyle(flap).getPropertyValue('--tilt').trim() || '-0.6deg';
+    const transformBase = `rotate(${baseTilt}) rotateX(0deg) translateY(0)`;
+    const transformLifted = 'rotate(0deg) rotateX(-150deg) translateY(-6px)';
+
+    // Para que Web Animations API tenga el control completo del
+    // transform, neutralizamos la `animation: specimen-drop` CSS
+    // (que con fill-mode both pisaría con su keyframe 100%).
+    flap.style.animation = 'none';
+
+    let lifted = false;
+    let activeAnim = null;
+    cell.addEventListener('click', () => {
+      lifted = !lifted;
+      cell.classList.toggle('lifted', lifted);
+
+      const keyframes = lifted
+        ? [{ transform: transformBase }, { transform: transformLifted }]
+        : [{ transform: transformLifted }, { transform: transformBase }];
+
+      if (activeAnim) activeAnim.cancel();
+      activeAnim = flap.animate(keyframes, {
+        duration: 800,
+        easing: 'cubic-bezier(.3,.7,.2,1)',
+        fill: 'forwards',
+      });
+    });
   });
 
   // ── Hero title · ink reveal letra a letra ────────────────────────

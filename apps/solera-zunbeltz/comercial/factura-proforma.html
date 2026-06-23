@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factura proforma · Solera Zunbeltz — Fase 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --monte:#1f2e22; --pasto:#5e7d3a; --pasto-1:#4d6a2e; --ocre:#c99a3b; --ocre-claro:#e6c275;
+    --crema:#f4f0e4; --crema-2b:#eae3d2; --crema-3:#ded4bb;
+    --tinta:#1c241b; --tinta-2:#3a4a3b; --tinta-3:#6b7a6c; --beltz:#14180f;
+    --linea:rgba(31,46,34,.16); --linea-fuerte:rgba(31,46,34,.32);
+    --serif:"Fraunces",Georgia,serif; --sans:"Archivo",system-ui,sans-serif; --narrow:"Archivo Narrow","Archivo",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--tinta);background:#cfc9b8;line-height:1.5;-webkit-font-smoothing:antialiased;padding:28px 14px}
+  .hoja{max-width:820px;margin:0 auto;background:var(--crema);box-shadow:0 10px 40px rgba(20,24,15,.18);border-radius:6px;overflow:hidden}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em}
+
+  /* cabecera */
+  .cab{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:34px 40px 26px;background:var(--monte);color:#eef0e6;flex-wrap:wrap}
+  .marca{display:flex;align-items:center;gap:12px}
+  .glifo{width:34px;height:34px;border-radius:9px;background:var(--crema);position:relative;flex:0 0 auto}
+  .glifo::after{content:"";position:absolute;inset:8px 8px auto 8px;height:8px;border-radius:2px;background:var(--ocre)}
+  .glifo::before{content:"";position:absolute;inset:auto 8px 8px 8px;height:8px;border-radius:2px;background:var(--pasto)}
+  .marca b{font-family:var(--narrow);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:19px;display:block;line-height:1.1}
+  .marca span{font-family:var(--narrow);font-weight:600;font-size:13px;color:rgba(238,240,230,.72)}
+  .doc-tipo{text-align:right}
+  .doc-tipo .t{font-family:var(--serif);font-size:1.5rem;font-weight:600;color:#fff}
+  .doc-tipo .eu{font-family:var(--narrow);font-size:12.5px;color:var(--ocre-claro);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+  .doc-tipo .meta{font-family:var(--narrow);font-size:13px;color:rgba(238,240,230,.82);margin-top:10px;line-height:1.7}
+  .doc-tipo .meta b{color:#fff}
+
+  /* partes */
+  .partes{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .parte{padding:22px 40px}
+  .parte:first-child{border-right:1px solid var(--linea)}
+  .parte h3{font-family:var(--narrow);text-transform:uppercase;letter-spacing:.1em;font-size:11.5px;font-weight:700;color:var(--ocre);margin-bottom:9px}
+  .parte .nombre{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--monte)}
+  .parte p{font-size:13.5px;color:var(--tinta-2);margin-top:3px}
+  .falta{background:var(--ocre-claro);color:#5a4410;border-radius:4px;padding:1px 6px;font-family:var(--narrow);font-weight:600;font-size:12px;white-space:nowrap}
+
+  /* concepto */
+  .cuerpo{padding:26px 40px 8px}
+  .resumen{background:var(--crema-2b);border:1px solid var(--linea);border-left:4px solid var(--pasto);border-radius:8px;padding:16px 18px;margin-bottom:22px}
+  .resumen b{font-family:var(--serif);font-weight:600}
+  .resumen p{font-size:13.5px;color:var(--tinta-2);margin-top:4px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{font-family:var(--narrow);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px;color:var(--tinta-3);text-align:left;padding:0 10px 9px;border-bottom:2px solid var(--linea-fuerte)}
+  thead th.num{text-align:right}
+  tbody td{padding:13px 10px;border-bottom:1px solid var(--linea);vertical-align:top}
+  tbody td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  tbody .concepto b{font-family:var(--serif);font-weight:600;font-size:14.5px;color:var(--monte);display:block;margin-bottom:2px}
+  tbody .concepto span{font-size:12.5px;color:var(--tinta-3)}
+
+  /* totales */
+  .totales{display:flex;justify-content:flex-end;padding:18px 40px 8px}
+  .tot-box{width:300px;max-width:100%}
+  .tot-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;color:var(--tinta-2);font-variant-numeric:tabular-nums}
+  .tot-row.sub{border-bottom:1px solid var(--linea)}
+  .tot-row.total{margin-top:8px;background:var(--monte);color:#fff;border-radius:9px;padding:14px 18px;font-family:var(--serif);font-size:1.25rem;font-weight:600}
+  .tot-row.total .iva-nota{display:block;font-family:var(--narrow);font-size:11px;font-weight:600;color:var(--ocre-claro);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+
+  /* condiciones */
+  .cond{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:18px 0 0;border-top:1px solid var(--linea)}
+  .cond .c{padding:18px 40px}
+  .cond .c:first-child{border-right:1px solid var(--linea)}
+  .cond h4{font-family:var(--narrow);text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:700;color:var(--ocre);margin-bottom:7px}
+  .cond p, .cond li{font-size:13px;color:var(--tinta-2)}
+  .cond ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .cond li{position:relative;padding-left:15px}
+  .cond li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--musgo,#8aa66b);background:var(--pasto);transform:rotate(45deg)}
+
+  .pie{background:var(--beltz);color:rgba(244,240,228,.62);padding:18px 40px;font-size:11.5px;line-height:1.6;font-family:var(--narrow)}
+  .pie b{color:var(--ocre-claro)}
+
+  .barra-print{max-width:820px;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--narrow);font-size:13px;color:#3a4a3b}
+  .barra-print button{font-family:var(--narrow);font-weight:700;font-size:13px;border:none;background:var(--monte);color:#eef0e6;padding:9px 18px;border-radius:8px;cursor:pointer;letter-spacing:.03em}
+  @media print{ body{background:#fff;padding:0} .hoja{box-shadow:none;border-radius:0;max-width:none} .barra-print{display:none} @page{margin:14mm} }
+  @media(max-width:620px){ .partes,.cond{grid-template-columns:1fr} .parte:first-child,.cond .c:first-child{border-right:none;border-bottom:1px solid var(--linea)} }
+</style>
+</head>
+<body>
+
+<div class="barra-print">
+  <span>Borrador de proforma · revisa los campos marcados «completar» antes de enviar.</span>
+  <button onclick="window.print()">Imprimir / Guardar PDF</button>
+</div>
+
+<div class="hoja">
+
+  <!-- CABECERA -->
+  <div class="cab">
+    <div class="marca">
+      <span class="glifo"></span>
+      <div><b>Gailu Xare</b><span>Estudio · Suite Solera</span></div>
+    </div>
+    <div class="doc-tipo">
+      <div class="t">Factura proforma</div>
+      <div class="eu">Pro forma faktura</div>
+      <div class="meta">
+        Nº <b>PRO-2026-001</b><br>
+        Fecha: <b>19 / 06 / 2026</b><br>
+        Validez: <b>30 días</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMISOR / RECEPTOR -->
+  <div class="partes">
+    <div class="parte">
+      <h3>Emisor</h3>
+      <div class="nombre">Gailu Xare</div>
+      <p>Titular: Josu <span class="falta">apellidos — completar</span></p>
+      <p>NIF: <span class="falta">completar</span></p>
+      <p>Domicilio fiscal: <span class="falta">completar</span></p>
+      <p>irurag@gmail.com</p>
+    </div>
+    <div class="parte">
+      <h3>Destinatario</h3>
+      <div class="nombre">Asociación Zunbeltz Elkartea</div>
+      <p>Espacio Test Agrario Zunbeltz</p>
+      <p>CIF: <span class="falta">completar</span></p>
+      <p>Domicilio: <span class="falta">completar</span> · Navarra</p>
+      <p style="margin-top:4px;font-size:12px;color:var(--tinta-3)">Si la solicitud la presenta la <b>Mancomunidad de Andía</b>, sustituir destinatario y CIF.</p>
+    </div>
+  </div>
+
+  <!-- CONCEPTO -->
+  <div class="cuerpo">
+    <div class="resumen">
+      <b>Objeto: Solera Zunbeltz — Aplicación de seguimiento y gestión del proceso de test</b>
+      <p>Diseño y desarrollo de una aplicación digital que actúa como herramienta de seguimiento y gestión para las personas tester, para el control integral de su proceso de test. Facilita la recopilación sistemática de datos relativos a la producción, la validación de productos y la experiencia de comercialización, y genera información para el análisis y la evaluación de resultados. Estos datos sirven de base para la toma de decisiones, la planificación estratégica y la mejora continua, tanto en los procesos productivos como en las fases de comercialización y acceso al mercado. App de un solo dispositivo, funciona sin cobertura (offline) y bilingüe castellano/euskera.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          <th class="num">Importe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="concepto"><b>Análisis funcional y diseño con Zunbeltz</b><span>Recogida de necesidades, modelo de datos del proceso de test, definición de los indicadores de producción, validación de producto y comercialización, y diseño de la interfaz bilingüe.</span></td>
+          <td class="num">800,00 €</td>
+        </tr>
+        <tr>
+          <td class="concepto"><b>Seguimiento del proceso de test por persona tester</b><span>Recopilación sistemática de datos por proyecto: producción, validación de producto y experiencia de comercialización (canales, precios, ventas), con histórico y ficha de cada tester.</span></td>
+          <td class="num">2.600,00 €</td>
+        </tr>
+        <tr>
+          <td class="concepto"><b>Análisis y evaluación de resultados</b><span>Costes e ingresos por proyecto con desglose por categorías e IVA (orientativo, no fiscal), rentabilidad y margen, indicadores por periodo (trimestre/año) y proyección anual; informe en PDF, comparativa entre proyectos y exportación a CSV. Base para la toma de decisiones, la planificación y la mejora continua.</span></td>
+          <td class="num">1.500,00 €</td>
+        </tr>
+        <tr>
+          <td class="concepto"><b>Gestión de fincas e infraestructuras (apoyo)</b><span>Módulo de soporte operativo: mapa de las fincas, puntos de infraestructura con GPS y fotos, y tareas de mantenimiento con responsable y estado.</span></td>
+          <td class="num">600,00 €</td>
+        </tr>
+        <tr>
+          <td class="concepto"><b>Bilingüismo, empaquetado y entrega</b><span>Interfaz en castellano y euskera, generación del instalable Android (APK), carga de datos iniciales reales, manual breve y sesión de formación de uso.</span></td>
+          <td class="num">921,49 €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TOTALES -->
+  <div class="totales">
+    <div class="tot-box">
+      <div class="tot-row sub"><span>Base imponible</span><span>6.421,49 €</span></div>
+      <div class="tot-row"><span>IVA (21 %)</span><span>1.348,51 €</span></div>
+      <div class="tot-row total"><span>Total<span class="iva-nota">IVA incluido</span></span><span>7.770,00 €</span></div>
+    </div>
+  </div>
+
+  <!-- CONDICIONES -->
+  <div class="cond">
+    <div class="c">
+      <h4>Forma y plazo de pago</h4>
+      <ul>
+        <li>Transferencia bancaria.</li>
+        <li>IBAN: <span class="falta">completar</span></li>
+        <li>Propuesta: 50 % al inicio · 50 % a la entrega (ajustable a las bases de la subvención).</li>
+      </ul>
+    </div>
+    <div class="c">
+      <h4>Plazo de ejecución</h4>
+      <ul>
+        <li>Estimado: 8–10 semanas desde la aceptación y la recogida de datos.</li>
+        <li>Entrega: aplicación Android instalable + manual breve.</li>
+        <li>No incluye costes recurrentes (servidor, dominio): la Fase 1 funciona en un solo dispositivo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PIE -->
+  <div class="pie">
+    <b>Documento proforma</b> — presupuesto sin validez fiscal. No sustituye a la factura definitiva, que se emitirá conforme a la legislación vigente una vez aceptada la propuesta. Importes en euros. La Fase 1 se entrega con los contenidos normativos/sanitarios marcados como PROVISIONALES hasta validación por los técnicos competentes. Las fases siguientes (cuaderno ganadero, papeleo oficial, multiusuario y panel del Espacio Test) se presupuestan por separado y se prevé financiarlas mediante otras líneas de ayuda (LEADER/TEDER, innovación agraria del Gobierno de Navarra, RETA).
+  </div>
+
+</div>
+
+</body>
+</html>

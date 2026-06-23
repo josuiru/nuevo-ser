@@ -87,10 +87,17 @@ foreach ( $cdc_defaults as $cdc_key => $cdc_default ) {
 }
 ?>
 
-<link rel="stylesheet" href="<?php echo esc_url( $url_tema_cdc . '/assets/css/tokens.css' ); ?>?ver=cdc">
-<link rel="stylesheet" href="<?php echo esc_url( $url_tema_cdc . '/assets/css/landing.css' ); ?>?ver=cdc">
+<?php
+// Versionado de assets basado en el mtime del fichero. Garantiza
+// que cualquier cambio en landing.css/landing.js invalida la cache
+// del navegador en el siguiente request.
+$cdc_css_v = (string) @filemtime( $ruta_tema_cdc . '/assets/css/landing.css' );
+$cdc_js_v  = (string) @filemtime( $ruta_tema_cdc . '/assets/js/landing.js' );
+?>
+<link rel="stylesheet" href="<?php echo esc_url( $url_tema_cdc . '/assets/css/tokens.css' ); ?>?ver=<?php echo esc_attr( $cdc_css_v ); ?>">
+<link rel="stylesheet" href="<?php echo esc_url( $url_tema_cdc . '/assets/css/landing.css' ); ?>?ver=<?php echo esc_attr( $cdc_css_v ); ?>">
 <script>window.CDC_PERIODOS = <?php echo wp_json_encode( cdc_periodos_map() ); ?>;</script>
-<script defer src="<?php echo esc_url( $url_tema_cdc . '/assets/js/landing.js' ); ?>?ver=cdc"></script>
+<script defer src="<?php echo esc_url( $url_tema_cdc . '/assets/js/landing.js' ); ?>?ver=<?php echo esc_attr( $cdc_js_v ); ?>"></script>
 
 <?php
 // Las template-parts esperan que estemos "dentro del cuaderno" — su

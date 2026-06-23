@@ -9,6 +9,13 @@
    para que ganen en especificidad contra flavor-platform y otros
    plugins que declaran reglas globales. */
 body.wp-theme-gailu-xare * { box-sizing: border-box; }
+
+/* Compensar topbar sticky (≈76px) al navegar a una ancla
+   #proyectos/#descargas/#sobre. Sin esto el browser scrollea al
+   target con offset 0 y el topbar tapa el título de la sección.
+   scroll-padding-top es la propiedad estándar para esto. */
+html { scroll-padding-top: 90px; }
+body.wp-theme-gailu-xare .gxare-section { scroll-margin-top: 90px; }
 body.wp-theme-gailu-xare,
 body.wp-theme-gailu-xare html { margin: 0; }
 
@@ -533,6 +540,36 @@ body.wp-theme-gailu-xare .gxare-proyecto-page {
 /* Cuando se embebe la landing custom de cuadernos-de-campo */
 body.wp-theme-gailu-xare .cdc-embed {
 	margin: 0 -28px;
+}
+/* El IntersectionObserver del landing.js del tema cuadernos-de-campo
+   no fiabilizó en este contexto embebido — la animación
+   `specimen-drop` se queda pausada en el frame 0% (opacity 0) y los
+   especímenes quedan invisibles. Forzamos play state running para
+   que la animación se ejecute al cargar la página. Lo mismo para
+   timescale/map-card/process/field-notes, que comparten patrón. */
+body.wp-theme-gailu-xare .cdc-embed .specimen,
+body.wp-theme-gailu-xare .cdc-embed .timescale,
+body.wp-theme-gailu-xare .cdc-embed .map-card,
+body.wp-theme-gailu-xare .cdc-embed .process,
+body.wp-theme-gailu-xare .cdc-embed .field-notes {
+	animation-play-state: running !important;
+}
+
+/* Garantizar matrix3d y perspective inheritance para que el
+   lift-the-flap transicione (no salte). El truco real está en
+   `landing.css` del tema cuadernos-de-campo: cada keyframe de
+   specimen-drop lleva `rotateX(0.0001deg)` para serializar a
+   matrix3d. Aquí solo asegura la perspective del padre. */
+body.wp-theme-gailu-xare .cdc-embed .specimen-grid {
+	perspective: 1400px;
+	transform-style: preserve-3d;
+}
+body.wp-theme-gailu-xare .cdc-embed .flap-cell {
+	transform-style: preserve-3d;
+}
+body.wp-theme-gailu-xare .cdc-embed .specimen {
+	will-change: transform;
+	cursor: pointer;
 }
 /* Anular el rojo de flavor en los .btn del design system cuadernos-de-campo */
 body.wp-theme-gailu-xare .cdc-embed .btn,

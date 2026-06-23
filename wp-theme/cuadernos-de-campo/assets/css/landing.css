@@ -688,6 +688,9 @@ img { display: block; max-width: 100%; }
 .flap-back .bk-meta li { font: var(--tipo-body-s); color: var(--tinta-2); }
 .flap-back .bk-where { font: var(--tipo-body-s); color: var(--tinta-2); padding-top: 8px; border-top: 1px dashed var(--linea); }
 .flap-back .bk-coord { font-family: var(--tipo-mono); font-size: 10px; color: var(--tinta-3); margin-top: auto; padding-top: 6px; }
+.flap-back .bk-credito { font-family: var(--tipo-mono); font-size: 9px; color: var(--tinta-3); padding-top: 4px; }
+.flap-back .bk-credito a { color: var(--tinta-3); text-decoration: underline; text-decoration-thickness: 1px; }
+.flap-back .bk-credito a:hover { color: var(--verde-olivo-1); }
 
 /* La lámina ahora es la "solapa" */
 .specimen {
@@ -729,10 +732,12 @@ img { display: block; max-width: 100%; }
 /* La cinta de arriba se "rompe" un poco antes de despegar (efecto papel) */
 .flap-cell.lifted .specimen::before { transform: rotate(-50deg) translate(-6px, -4px); }
 
-/* Estado levantado: 3D flap hinged en el borde superior */
+/* Estado levantado: el transform lo controla Web Animations API
+   desde landing.js (`element.animate()`) porque CSS transitions no
+   interpolaban entre animation `specimen-drop` y este estado. La
+   clase `.lifted` sigue marcando el cambio en el DOM para los
+   selectores hermanos (mostrar flap-back, ocultar cintas). */
 .flap-cell.lifted .specimen {
-  animation: none;
-  transform: rotate(0) rotateX(-150deg) translateY(-6px);
   box-shadow:
     0 -20px 36px rgba(31,42,32,0.20),
     0 -2px 6px rgba(31,42,32,0.10);
@@ -1394,9 +1399,12 @@ img { display: block; max-width: 100%; }
 .specimen:nth-child(5) { animation-delay: 0.32s; }
 .specimen:nth-child(6) { animation-delay: 0.40s; }
 @keyframes specimen-drop {
-  0%   { opacity: 0; transform: translateY(-40px) rotate(-8deg); }
-  60%  { opacity: 1; transform: translateY(4px) rotate(calc(var(--tilt, -0.6deg) - 1deg)); }
-  100% { opacity: 1; transform: rotate(var(--tilt, -0.6deg)); }
+  /* Cada keyframe lleva `rotateX(0.0001deg)` para que el navegador
+     serialice a matrix3d. Sin esto la animación termina en 2D y la
+     transición al lifted (rotateX -150deg) salta sin interpolar. */
+  0%   { opacity: 0; transform: translateY(-40px) rotate(-8deg) rotateX(0.0001deg); }
+  60%  { opacity: 1; transform: translateY(4px) rotate(calc(var(--tilt, -0.6deg) - 1deg)) rotateX(0.0001deg); }
+  100% { opacity: 1; transform: rotate(var(--tilt, -0.6deg)) rotateX(0.0001deg); }
 }
 /* Ken-burns suave en la foto al hover */
 .specimen .photo { transition: transform 1.6s cubic-bezier(.2,.7,.2,1); }

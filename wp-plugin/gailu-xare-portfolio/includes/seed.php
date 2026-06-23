@@ -293,6 +293,41 @@ function gxare_seed_proyectos(): array {
 		// ║ SOLERA (agro + 5 verticales)
 		// ╚════════════════════════════════════════════════════════════
 
+		// El proyecto paraguas — landing del ecosistema completo
+		// (las 6 verticales agrarias presentadas como una sola
+		// familia). Renderiza con template-parts/landing-solera.php,
+		// no con la genérica. Va primero en orden dentro de la
+		// colección porque es la puerta de entrada al resto.
+		array(
+			'seed_id'   => 'proy-solera-ecosistema',
+			'post_type' => 'gxare_proyecto',
+			'slug'      => 'solera-ecosistema',
+			'orden'     => 39,
+			'coleccion' => 'solera',
+			'title'     => 'Solera — el ecosistema',
+			'excerpt'   => 'Ecosistema de cuadernos de campo para oficios de la tierra: agro, viticultura, apícola, arbolado urbano, quesera y aceitera.',
+			'content'   => 'Una raíz común (nuevo_ser_core) y seis cuadernos especializados por oficio. Offline de raíz, libros oficiales en PDF y catálogos curados.',
+			'meta'      => array(
+				'gxare_proyecto_subtitulo'   => 'Seis cuadernos · una misma raíz.',
+				'gxare_proyecto_audiencia'   => 'Profesionales de oficios de la tierra (agricultores, viticultores, apicultores, técnicos municipales, queseros, almazareros)',
+				'gxare_proyecto_estado'      => 'produccion',
+				'gxare_proyecto_tipo'        => 'ecosistema',
+				'gxare_proyecto_tech'        => 'Flutter, Melos monorepo, sqflite, Claude Vision BYO key, Material 3',
+				'gxare_proyecto_marca'       => 'Solera',
+				'gxare_proyecto_url_repo'    => 'https://github.com/JosuIru/nuevo-ser',
+				'gxare_proyecto_color'       => '#5E7D3A',
+				'gxare_proyecto_destacado'   => '1',
+				// Render con la plantilla específica del ecosistema.
+				'gxare_proyecto_landing'     => 'solera',
+				'gxare_proyecto_que_hace_largo' => 'Solera es un ecosistema de aplicaciones móviles para profesionales que trabajan con plantas, animales y patrimonio vivo. Una finca, un viñedo, un colmenar, un arbolado municipal, una quesería o una almazara — cada oficio en su cuaderno, con sus catálogos curados, su libro oficial en PDF y su libro económico REAGP. Las seis verticales comparten núcleo técnico (nuevo_ser_core) y vocabulario, pero cada una verticaliza para los tiempos, normativa y categorías de su materia.',
+				'gxare_proyecto_para_quien'  => 'Profesionales y semi-profesionales de oficios de la tierra que llevan o quieren llevar un cuaderno de campo serio: viticultor o enólogo de bodega 5-30 ha, apicultor con 20-200 colmenas, técnico de arbolado municipal, quesería artesanal, maestro almazarero. También aficionado avanzado con explotación mixta. Las apps no explican el oficio — lo acompañan.',
+				'gxare_proyecto_virtudes'    => "Offline de raíz: el cuaderno vive en sqflite local, la nube sólo entra cuando tú lo decides\nLibros oficiales (PAC, REGA, AICA, APPCC, partes municipales) en PDF listos para inspección\nIA visual con Claude — BYO key, sin captura de datos en nuestros servidores\nCatálogos curados con fuente pública verificable, editables por tu asesor en CSV\nLibro económico REAGP por vertical con compensación correcta (12% aceituna, 4% aceite, 10% envasado…)\nUn solo monorepo con Melos: si tienes olivar y colmenar, las dos apps comparten plataforma técnica",
+				'gxare_proyecto_pedagogia'   => '',
+				'gxare_proyecto_estado_largo'=> 'Cuatro verticales estables (agro, viticultura, apícola, aceitera) con APK release publicada. Quesera en beta interno (catálogos provisionales). Arbolado urbano estable con asesor fiscal trabajando F1U-10. Los PDFs llevan sello PROVISIONAL hasta firma del asesor humano de referencia de cada vertical (técnico OCA, veterinario apícola, auditor AICA, inspector autonómico).',
+				'gxare_proyecto_faq'         => "¿Las apps son gratis u open source? :: Código bajo AGPL-3.0, contenidos bajo CC-BY-SA 4.0. El plan comercial cubre soporte, hospedaje futuro de sync y validación profesional continua.\n¿Qué datos suben a la nube? :: Ninguno por defecto. Las apps son offline de raíz; coordenadas y fotos viven en sqflite local. Sólo sale del móvil lo que tú decides compartir.\n¿Hay versión iOS o web? :: Por ahora sólo Android. Compilan a iOS técnicamente pero el roadmap prioriza estabilidad sobre cobertura de plataforma.\n¿Los libros oficiales son válidos para inspección? :: Estructura conforme a normativa pero con sello PROVISIONAL hasta firma del asesor humano de referencia. La auditoría final es responsabilidad del titular.",
+			),
+		),
+
 		array(
 			'seed_id'   => 'proy-solera-agro',
 			'post_type' => 'gxare_proyecto',
@@ -512,6 +547,11 @@ function gxare_seed_proyectos(): array {
 				'gxare_proyecto_url_repo'    => 'https://github.com/JosuIru/flavor-news-hub',
 				'gxare_proyecto_color'       => '#B05E3B',
 				'gxare_proyecto_destacado'   => '0',
+				// Renderiza con bloques importados del Visual Builder
+				// Pro de flavor-platform. Tras importar (wp gxare
+				// importar-flavor-landing <id> --proyecto=...), el
+				// portfolio no depende del plugin Flavor para mostrarla.
+				'gxare_proyecto_landing'     => 'bloques',
 				'gxare_proyecto_que_hace_largo' => 'Plugin headless de WordPress que actúa como backend agregador de medios alternativos, radios libres y colectivos activistas. Expone cuatro Custom Post Types (fuente, noticia, colectivo, radio) más una taxonomía compartida de temáticas canónicas. Ingesta automatizada de feeds RSS/Atom/YouTube/Mastodon/podcast cada 30 minutos vía wp_cron con dedupe por GUID y URL original. API REST pública flavor-news/v1 sin autenticación de lectura con filtros por temática, territorio, idioma y fecha. Plantillas web públicas /n/, /c/, /f/ independientes del tema activo (HTML de 10-15 KB sin enqueues de terceros).',
 				'gxare_proyecto_para_quien'  => 'Proyectos de medios federados, radios libres, agregadores de prensa alternativa y colectivos que quieren disponer de un catálogo curado y federado de fuentes sin pagar APIs comerciales. Pensado para alimentar tanto la web pública como una app Flutter de lectura con catálogo offline. Licencia AGPL-3.0-or-later: si despliegas instancia modificada accesible por red, publicas los cambios.',
 				'gxare_proyecto_virtudes'    => "Ingesta automatizada cada 30 minutos con dedupe idempotente por GUID y URL original\nAPI REST pública sin auth, filtrable por temática, territorio, idioma, fecha desde\nPlantillas públicas independientes del tema, 10-15 KB, sin JS, accesibles AA y prefers-color-scheme\nCriterio de reutilización claro: sólo metadatos y enlace canónico, nunca artículo completo\nSuite PHPUnit con WP_UnitTestCase y bootstrap real de WordPress",
@@ -556,35 +596,35 @@ function gxare_seed_proyectos(): array {
 function gxare_seed_descargas(): array {
 	return array(
 		array(
-			'seed_id'  => 'desc-fosiles-1.0.14',
+			'seed_id'  => 'desc-fosiles-1.0.13',
 			'post_type'=> 'gxare_descarga',
-			'slug'     => 'fosiles-apk-1-0-14',
+			'slug'     => 'fosiles-apk-1-0-13',
 			'orden'    => 10,
 			'title'    => 'Fósiles — APK Android',
 			'meta' => array(
 				'gxare_descarga_proyecto_slug' => 'cuadernos-de-campo-fosiles',
-				'gxare_descarga_version'       => '1.0.14+15',
+				'gxare_descarga_version'       => '1.0.13+14',
 				'gxare_descarga_fecha'         => '2026-05-19',
 				'gxare_descarga_plataforma'    => 'android',
-				'gxare_descarga_url'           => 'https://github.com/JosuIru/cuadernos-de-campo/releases',
-				'gxare_descarga_peso'          => '~71 MB',
-				'gxare_descarga_notas'         => 'Cobertura desde Precámbrico hasta Cuaternario. 12 formaciones paleozoicas nuevas. Política privacidad v2.0.',
+				'gxare_descarga_url'           => 'https://github.com/JosuIru/nuevo-ser/releases/download/apks-2026-05-19/fosiles-1.0.13+14.apk',
+				'gxare_descarga_peso'          => '~68 MB',
+				'gxare_descarga_notas'         => 'Asistente IGME estable, motor de sugerencias enriquecido, visor de fotos, navegación entre fichas, clustering, onboarding. Cobertura IGME nacional.',
 			),
 		),
 		array(
-			'seed_id'  => 'desc-naturaleza-1.0',
+			'seed_id'  => 'desc-naturaleza-1.0.6',
 			'post_type'=> 'gxare_descarga',
-			'slug'     => 'naturaleza-apk-1-0',
+			'slug'     => 'naturaleza-apk-1-0-6',
 			'orden'    => 20,
 			'title'    => 'Naturaleza — APK Android',
 			'meta' => array(
 				'gxare_descarga_proyecto_slug' => 'cuadernos-de-campo-naturaleza',
-				'gxare_descarga_version'       => '1.0',
-				'gxare_descarga_fecha'         => '2026-05-19',
+				'gxare_descarga_version'       => '1.0.6+7',
+				'gxare_descarga_fecha'         => '2026-05-20',
 				'gxare_descarga_plataforma'    => 'android',
-				'gxare_descarga_url'           => 'https://github.com/JosuIru/cuadernos-de-campo/releases',
-				'gxare_descarga_peso'          => '~32 MB',
-				'gxare_descarga_notas'         => 'Versión alineada con Fósiles. Identificación IA opcional.',
+				'gxare_descarga_url'           => 'https://github.com/JosuIru/cuadernos-de-campo/releases/download/naturaleza-v1.0.6/naturaleza-1.0.6+7.apk',
+				'gxare_descarga_peso'          => '~77 MB',
+				'gxare_descarga_notas'         => 'Tipo de evidencia filtrado por categoría, especie corregida visible en lista, borrar anotaciones al margen, banner de actualización en Mapa y Lista. Mi fenología, Tasa de acierto, Salidas como unidad narrativa, hipótesis personal.',
 			),
 		),
 		array(
@@ -605,16 +645,16 @@ function gxare_seed_descargas(): array {
 		array(
 			'seed_id'  => 'desc-flavor-news-0.16.6',
 			'post_type'=> 'gxare_descarga',
-			'slug'     => 'flavor-news-hub-0-16-6',
+			'slug'     => 'flavor-news-hub-apk',
 			'orden'    => 40,
-			'title'    => 'Flavor News Hub — ZIP WordPress',
+			'title'    => 'Flavor News Hub — APK Android',
 			'meta' => array(
 				'gxare_descarga_proyecto_slug' => 'flavor-news-hub',
 				'gxare_descarga_version'       => '0.16.6',
-				'gxare_descarga_fecha'         => '2026-05-19',
-				'gxare_descarga_plataforma'    => 'wp',
-				'gxare_descarga_url'           => 'https://github.com/JosuIru/flavor-news-hub',
-				'gxare_descarga_notas'         => 'Backend headless de noticias y colectivos. AGPL-3.0.',
+				'gxare_descarga_fecha'         => '2026-05-05',
+				'gxare_descarga_plataforma'    => 'android',
+				'gxare_descarga_url'           => 'https://github.com/JosuIru/flavor-news-hub/releases/download/v0.16.6/flavor-news-hub-app-v0.16.6.apk',
+				'gxare_descarga_notas'         => 'App cliente de lectura del catálogo agregado. Consume la API REST flavor-news/v1 del backend. AGPL-3.0.',
 			),
 		),
 	);
