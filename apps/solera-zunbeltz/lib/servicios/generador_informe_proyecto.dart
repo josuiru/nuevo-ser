@@ -23,6 +23,9 @@ Future<File> generarInformeProyectoPdf({
   required List<RegistroComercializacion> comercializacion,
   required List<ValidacionProducto> validaciones,
   required List<RegistroActividad> actividades,
+  Map<String, int> desgloseGastos = const {},
+  int ivaSoportadoCentimos = 0,
+  int ivaRepercutidoCentimos = 0,
 }) async {
   final formatoFecha = DateFormat('dd/MM/yyyy', idioma);
   String fecha(int ms) =>
@@ -41,8 +44,24 @@ Future<File> generarInformeProyectoPdf({
       '${textos.rentOtrosIngresos}: ${euros(rentabilidad.ingresosApuntesCentimos)}',
       '${textos.rentGastos}: ${euros(rentabilidad.gastosCentimos)}',
       '${textos.rentBalance}: ${euros(rentabilidad.balanceCentimos)} (${textos.rentMargen} ${rentabilidad.margenPorcentaje.toStringAsFixed(0)} %)',
+      if (ivaSoportadoCentimos != 0 || ivaRepercutidoCentimos != 0) ...[
+        '${textos.detIvaSoportado}: ${euros(ivaSoportadoCentimos)} · ${textos.detIvaRepercutido}: ${euros(ivaRepercutidoCentimos)}',
+        textos.ivaNoFiscal,
+      ],
     ],
     tablas: [
+      TablaInforme(
+        titulo: textos.detDesgloseGastos,
+        headers: [textos.apuCategoria, textos.rentGastos],
+        filas: [
+          for (final e in desgloseGastos.entries)
+            [
+              buscarOpcion(categoriasGasto, e.key)?.etiqueta(idioma) ??
+                  (e.key.isEmpty ? '—' : e.key),
+              eurosDesdeCentimos(e.value),
+            ],
+        ],
+      ),
       TablaInforme(
         titulo: textos.detComercial,
         headers: [

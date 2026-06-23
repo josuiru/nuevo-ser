@@ -26,6 +26,7 @@ class _NuevaComercializacionState extends State<NuevaComercializacion> {
   final _ingreso = TextEditingController();
 
   String _canal = canalComercializacionPorDefecto;
+  int _iva = ivaPorDefecto;
   DateTime _fecha = DateTime.now();
 
   @override
@@ -69,6 +70,7 @@ class _NuevaComercializacionState extends State<NuevaComercializacion> {
       unidad: _unidad.text.trim().isEmpty ? 'uds' : _unidad.text.trim(),
       precioUnitarioCentimos: precioCent,
       ingresoCentimos: ingresoCent,
+      ivaPorcentaje: _iva,
       fechaCreacionMs: DateTime.now().millisecondsSinceEpoch,
     ));
     if (!mounted) return;
@@ -141,6 +143,19 @@ class _NuevaComercializacionState extends State<NuevaComercializacion> {
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(labelText: textos.comIngreso),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 100,
+                  child: DropdownButtonFormField<int>(
+                    initialValue: _iva,
+                    decoration: InputDecoration(labelText: textos.comIva),
+                    items: [
+                      for (final v in tiposIva)
+                        DropdownMenuItem(value: v, child: Text('$v %')),
+                    ],
+                    onChanged: (v) => setState(() => _iva = v ?? _iva),
                   ),
                 ),
               ],

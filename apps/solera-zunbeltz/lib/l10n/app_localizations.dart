@@ -1201,6 +1201,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Total'**
   String get comparativaTotal;
+
+  /// No description provided for @periodoEtiqueta.
+  ///
+  /// In es, this message translates to:
+  /// **'Periodo'**
+  String get periodoEtiqueta;
+
+  /// No description provided for @periodoTodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo'**
+  String get periodoTodo;
+
+  /// No description provided for @periodoAnio.
+  ///
+  /// In es, this message translates to:
+  /// **'Este año'**
+  String get periodoAnio;
+
+  /// No description provided for @periodoTrimestre.
+  ///
+  /// In es, this message translates to:
+  /// **'Este trimestre'**
+  String get periodoTrimestre;
+
+  /// No description provided for @periodoTrimestreAnterior.
+  ///
+  /// In es, this message translates to:
+  /// **'Trimestre anterior'**
+  String get periodoTrimestreAnterior;
+
+  /// No description provided for @detDesgloseGastos.
+  ///
+  /// In es, this message translates to:
+  /// **'Desglose de gastos'**
+  String get detDesgloseGastos;
+
+  /// No description provided for @detIvaSoportado.
+  ///
+  /// In es, this message translates to:
+  /// **'IVA soportado'**
+  String get detIvaSoportado;
+
+  /// No description provided for @detIvaRepercutido.
+  ///
+  /// In es, this message translates to:
+  /// **'IVA repercutido'**
+  String get detIvaRepercutido;
+
+  /// No description provided for @apuCategoria.
+  ///
+  /// In es, this message translates to:
+  /// **'Categoría'**
+  String get apuCategoria;
+
+  /// No description provided for @apuIva.
+  ///
+  /// In es, this message translates to:
+  /// **'IVA'**
+  String get apuIva;
+
+  /// No description provided for @comIva.
+  ///
+  /// In es, this message translates to:
+  /// **'IVA'**
+  String get comIva;
+
+  /// No description provided for @ivaNoFiscal.
+  ///
+  /// In es, this message translates to:
+  /// **'Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor.'**
+  String get ivaNoFiscal;
 }
 
 class _AppLocalizationsDelegate

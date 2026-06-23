@@ -228,5 +228,19 @@
   "comparativaTitulo": "Comparativa de proyectos de test",
   "comparativaColProyecto": "Proyecto",
   "comparativaColTester": "Tester",
-  "comparativaTotal": "Total"
+  "comparativaTotal": "Total",
+
+  "periodoEtiqueta": "Periodo",
+  "periodoTodo": "Todo",
+  "periodoAnio": "Este año",
+  "periodoTrimestre": "Este trimestre",
+  "periodoTrimestreAnterior": "Trimestre anterior",
+
+  "detDesgloseGastos": "Desglose de gastos",
+  "detIvaSoportado": "IVA soportado",
+  "detIvaRepercutido": "IVA repercutido",
+  "apuCategoria": "Categoría",
+  "apuIva": "IVA",
+  "comIva": "IVA",
+  "ivaNoFiscal": "Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor."
 }

@@ -587,4 +587,41 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get comparativaTotal => 'Guztira';
+
+  @override
+  String get periodoEtiqueta => 'Aldia';
+
+  @override
+  String get periodoTodo => 'Dena';
+
+  @override
+  String get periodoAnio => 'Aurten';
+
+  @override
+  String get periodoTrimestre => 'Hiruhileko hau';
+
+  @override
+  String get periodoTrimestreAnterior => 'Aurreko hiruhilekoa';
+
+  @override
+  String get detDesgloseGastos => 'Gastuen banakapena';
+
+  @override
+  String get detIvaSoportado => 'Jasandako BEZa';
+
+  @override
+  String get detIvaRepercutido => 'Jasanarazitako BEZa';
+
+  @override
+  String get apuCategoria => 'Kategoria';
+
+  @override
+  String get apuIva => 'BEZ';
+
+  @override
+  String get comIva => 'BEZ';
+
+  @override
+  String get ivaNoFiscal =>
+      'Kalkulu orientagarria. Ez da zerga-aitorpenerako modulua: araubidea (REAGP / orokorra) zuen aholkulariak zehazten du.';
 }

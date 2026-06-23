@@ -207,5 +207,19 @@
   "comparativaTitulo": "Test-proiektuen konparaketa",
   "comparativaColProyecto": "Proiektua",
   "comparativaColTester": "Testerra",
-  "comparativaTotal": "Guztira"
+  "comparativaTotal": "Guztira",
+
+  "periodoEtiqueta": "Aldia",
+  "periodoTodo": "Dena",
+  "periodoAnio": "Aurten",
+  "periodoTrimestre": "Hiruhileko hau",
+  "periodoTrimestreAnterior": "Aurreko hiruhilekoa",
+
+  "detDesgloseGastos": "Gastuen banakapena",
+  "detIvaSoportado": "Jasandako BEZa",
+  "detIvaRepercutido": "Jasanarazitako BEZa",
+  "apuCategoria": "Kategoria",
+  "apuIva": "BEZ",
+  "comIva": "BEZ",
+  "ivaNoFiscal": "Kalkulu orientagarria. Ez da zerga-aitorpenerako modulua: araubidea (REAGP / orokorra) zuen aholkulariak zehazten du."
 }

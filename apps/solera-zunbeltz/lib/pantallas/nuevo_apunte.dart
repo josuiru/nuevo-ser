@@ -29,7 +29,18 @@ class _NuevoApunteState extends State<NuevoApunte> {
   final _notas = TextEditingController();
 
   String _tipo = tipoApuntePorDefecto;
+  String _categoria = categoriaGastoPorDefecto;
+  int _iva = ivaPorDefecto;
   DateTime _fecha = DateTime.now();
+
+  void _cambiarTipo(String? v) {
+    if (v == null) return;
+    setState(() {
+      _tipo = v;
+      // Al cambiar gasto/ingreso, la categoría debe ser del catálogo correcto.
+      _categoria = categoriasDe(v).first.codigo;
+    });
+  }
 
   @override
   void dispose() {
@@ -61,8 +72,10 @@ class _NuevoApunteState extends State<NuevoApunte> {
       fincaId: widget.fincaId,
       proyectoId: widget.proyectoId,
       tipo: _tipo,
+      categoria: _categoria,
       concepto: _concepto.text.trim(),
       importeCentimos: (euros * 100).round(),
+      ivaPorcentaje: _iva,
       fechaMs: _fecha.millisecondsSinceEpoch,
       notas: _notas.text.trim(),
       fechaCreacionMs: DateTime.now().millisecondsSinceEpoch,
@@ -91,18 +104,50 @@ class _NuevoApunteState extends State<NuevoApunte> {
                   DropdownMenuItem(
                       value: t.codigo, child: Text(t.etiqueta(idioma))),
               ],
-              onChanged: (v) => setState(() => _tipo = v ?? _tipo),
+              onChanged: _cambiarTipo,
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              key: ValueKey(_tipo),
+              initialValue: _categoria,
+              decoration: InputDecoration(labelText: textos.apuCategoria),
+              items: [
+                for (final c in categoriasDe(_tipo))
+                  DropdownMenuItem(
+                      value: c.codigo, child: Text(c.etiqueta(idioma))),
+              ],
+              onChanged: (v) => setState(() => _categoria = v ?? _categoria),
             ),
             const SizedBox(height: 12),
             TextField(
                 controller: _concepto,
                 decoration: InputDecoration(labelText: textos.apuConcepto)),
             const SizedBox(height: 12),
-            TextField(
-              controller: _importe,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration:
-                  InputDecoration(labelText: textos.apuImporte, suffixText: '€'),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _importe,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                        labelText: textos.apuImporte, suffixText: '€'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 110,
+                  child: DropdownButtonFormField<int>(
+                    initialValue: _iva,
+                    decoration: InputDecoration(labelText: textos.apuIva),
+                    items: [
+                      for (final v in tiposIva)
+                        DropdownMenuItem(value: v, child: Text('$v %')),
+                    ],
+                    onChanged: (v) => setState(() => _iva = v ?? _iva),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             ListTile(

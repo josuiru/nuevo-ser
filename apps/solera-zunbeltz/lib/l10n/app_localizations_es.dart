@@ -587,4 +587,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get comparativaTotal => 'Total';
+
+  @override
+  String get periodoEtiqueta => 'Periodo';
+
+  @override
+  String get periodoTodo => 'Todo';
+
+  @override
+  String get periodoAnio => 'Este año';
+
+  @override
+  String get periodoTrimestre => 'Este trimestre';
+
+  @override
+  String get periodoTrimestreAnterior => 'Trimestre anterior';
+
+  @override
+  String get detDesgloseGastos => 'Desglose de gastos';
+
+  @override
+  String get detIvaSoportado => 'IVA soportado';
+
+  @override
+  String get detIvaRepercutido => 'IVA repercutido';
+
+  @override
+  String get apuCategoria => 'Categoría';
+
+  @override
+  String get apuIva => 'IVA';
+
+  @override
+  String get comIva => 'IVA';
+
+  @override
+  String get ivaNoFiscal =>
+      'Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor.';
 }

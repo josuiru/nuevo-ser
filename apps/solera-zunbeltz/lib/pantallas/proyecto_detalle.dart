@@ -14,6 +14,7 @@ import '../modelos/registro_comercializacion.dart';
 import '../modelos/rentabilidad_proyecto.dart';
 import '../modelos/validacion_producto.dart';
 import '../servicios/generador_informe_proyecto.dart';
+import '../utiles/periodo.dart';
 import 'nueva_actividad.dart';
 import 'nueva_comercializacion.dart';
 import 'nueva_validacion.dart';
@@ -37,8 +38,12 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
   List<RegistroActividad> _produccion = const [];
   List<ValidacionProducto> _validaciones = const [];
   List<ApunteEconomico> _apuntes = const [];
+  Map<String, int> _desgloseGastos = const {};
+  TipoPeriodo _periodo = TipoPeriodo.todo;
   bool _cargando = true;
   bool _generando = false;
+
+  RangoPeriodo get _rango => rangoDePeriodo(_periodo, DateTime.now());
 
   int get _proyectoId => widget.proyecto.id!;
   int get _fincaId => widget.proyecto.fincaId ?? 0;
@@ -50,12 +55,20 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
   }
 
   Future<void> _cargar() async {
+    final desde = _rango.desdeMs;
+    final hasta = _rango.hastaMs;
     try {
-      final rent = await _bd.rentabilidadProyecto(_proyectoId);
-      final ventas = await _bd.listarComercializacion(proyectoId: _proyectoId);
-      final produccion = await _bd.listarRegistros(proyectoId: _proyectoId);
+      final rent = await _bd.rentabilidadProyecto(_proyectoId,
+          desdeMs: desde, hastaMs: hasta);
+      final ventas = await _bd.listarComercializacion(
+          proyectoId: _proyectoId, desdeMs: desde, hastaMs: hasta);
+      final produccion = await _bd.listarRegistros(
+          proyectoId: _proyectoId, desdeMs: desde, hastaMs: hasta);
       final validaciones = await _bd.listarValidaciones(proyectoId: _proyectoId);
-      final apuntes = await _bd.listarApuntes(proyectoId: _proyectoId);
+      final apuntes = await _bd.listarApuntes(
+          proyectoId: _proyectoId, desdeMs: desde, hastaMs: hasta);
+      final desglose = await _bd.desglosePorCategoria('gasto',
+          proyectoId: _proyectoId, desdeMs: desde, hastaMs: hasta);
       if (!mounted) return;
       setState(() {
         _rent = rent;
@@ -63,6 +76,7 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
         _produccion = produccion;
         _validaciones = validaciones;
         _apuntes = apuntes;
+        _desgloseGastos = desglose;
         _cargando = false;
       });
     } catch (_) {
@@ -71,12 +85,35 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
   }
 
   int? _diasPeriodo() {
+    // Si hay periodo acotado, sus días; si no, los del proyecto.
+    final delPeriodo = _rango.dias;
+    if (delPeriodo != null) return delPeriodo;
     final inicio = widget.proyecto.fechaInicioMs;
     if (inicio == null) return null;
     final fin =
         widget.proyecto.fechaFinMs ?? DateTime.now().millisecondsSinceEpoch;
     final dias = ((fin - inicio) / 86400000).round();
     return dias > 0 ? dias : null;
+  }
+
+  /// IVA soportado (gastos) y repercutido (ventas + otros ingresos), céntimos.
+  (int, int) _ivaTotales() {
+    var soportado = 0;
+    for (final a in _apuntes) {
+      if (a.tipo == 'gasto') {
+        soportado += cuotaIva(a.importeCentimos, a.ivaPorcentaje);
+      }
+    }
+    var repercutido = 0;
+    for (final v in _ventas) {
+      repercutido += cuotaIva(v.ingresoCentimos, v.ivaPorcentaje);
+    }
+    for (final a in _apuntes) {
+      if (a.tipo == 'ingreso') {
+        repercutido += cuotaIva(a.importeCentimos, a.ivaPorcentaje);
+      }
+    }
+    return (soportado, repercutido);
   }
 
   Future<void> _abrir(Widget pantalla) async {
@@ -124,6 +161,7 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
     final idioma = Localizations.localeOf(context).languageCode;
     setState(() => _generando = true);
     try {
+      final (ivaSoportado, ivaRepercutido) = _ivaTotales();
       final fichero = await generarInformeProyectoPdf(
         textos: textos,
         idioma: idioma,
@@ -132,6 +170,9 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
         comercializacion: _ventas,
         validaciones: _validaciones,
         actividades: _produccion,
+        desgloseGastos: _desgloseGastos,
+        ivaSoportadoCentimos: ivaSoportado,
+        ivaRepercutidoCentimos: ivaRepercutido,
       );
       await Printing.sharePdf(
           bytes: await fichero.readAsBytes(),
@@ -159,6 +200,30 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
         appBar: AppBar(
           title: Text(p.nombre),
           actions: [
+            PopupMenuButton<TipoPeriodo>(
+              icon: const Icon(Icons.filter_list),
+              tooltip: textos.periodoEtiqueta,
+              initialValue: _periodo,
+              onSelected: (per) {
+                setState(() {
+                  _periodo = per;
+                  _cargando = true;
+                });
+                _cargar();
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                    value: TipoPeriodo.todo, child: Text(textos.periodoTodo)),
+                PopupMenuItem(
+                    value: TipoPeriodo.anio, child: Text(textos.periodoAnio)),
+                PopupMenuItem(
+                    value: TipoPeriodo.trimestre,
+                    child: Text(textos.periodoTrimestre)),
+                PopupMenuItem(
+                    value: TipoPeriodo.trimestreAnterior,
+                    child: Text(textos.periodoTrimestreAnterior)),
+              ],
+            ),
             IconButton(
               tooltip: textos.detInformePdf,
               icon: _generando
@@ -201,6 +266,13 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
               ),
             _PanelRentabilidad(
                 rent: _rent, dias: _diasPeriodo(), textos: textos),
+            if (_desgloseGastos.isNotEmpty)
+              _DesgloseIva(
+                desgloseGastos: _desgloseGastos,
+                ivaTotales: _ivaTotales(),
+                idioma: idioma,
+                textos: textos,
+              ),
             const Divider(height: 1),
             Expanded(
               child: TabBarView(
@@ -388,5 +460,53 @@ class _ListaApuntes extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w600)),
         ),
     ]);
+  }
+}
+
+class _DesgloseIva extends StatelessWidget {
+  const _DesgloseIva({
+    required this.desgloseGastos,
+    required this.ivaTotales,
+    required this.idioma,
+    required this.textos,
+  });
+
+  final Map<String, int> desgloseGastos;
+  final (int, int) ivaTotales;
+  final String idioma;
+  final AppLocalizations textos;
+
+  @override
+  Widget build(BuildContext context) {
+    final (soportado, repercutido) = ivaTotales;
+    return ExpansionTile(
+      title: Text(textos.detDesgloseGastos),
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      children: [
+        for (final e in desgloseGastos.entries)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(buscarOpcion(categoriasGasto, e.key)?.etiqueta(idioma) ??
+                    (e.key.isEmpty ? '—' : e.key)),
+                Text('${eurosDesdeCentimos(e.value)} €'),
+              ],
+            ),
+          ),
+        const Divider(),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(textos.detIvaSoportado),
+          Text('${eurosDesdeCentimos(soportado)} €'),
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(textos.detIvaRepercutido),
+          Text('${eurosDesdeCentimos(repercutido)} €'),
+        ]),
+        const SizedBox(height: 6),
+        Text(textos.ivaNoFiscal, style: Theme.of(context).textTheme.bodySmall),
+      ],
+    );
   }
 }
