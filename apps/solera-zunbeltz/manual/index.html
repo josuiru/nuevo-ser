@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solera Zunbeltz — Manual breve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --monte:#1f2e22; --pasto:#5e7d3a; --pasto-1:#4d6a2e; --ocre:#c99a3b; --ocre-claro:#e6c275;
+    --musgo:#8aa66b; --crema:#f4f0e4; --crema-2b:#eae3d2; --tinta:#1c241b; --tinta-2:#3a4a3b; --tinta-3:#6b7a6c; --beltz:#14180f;
+    --linea:rgba(31,46,34,.16); --serif:"Fraunces",Georgia,serif; --sans:"Archivo",system-ui,sans-serif; --narrow:"Archivo Narrow","Archivo",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--tinta);background:#cfc9b8;line-height:1.55;-webkit-font-smoothing:antialiased;padding:24px 12px}
+  .hoja{max-width:840px;margin:0 auto;background:var(--crema);box-shadow:0 10px 40px rgba(20,24,15,.18);border-radius:6px;overflow:hidden}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em}
+
+  .cab{display:flex;align-items:center;gap:14px;padding:30px 40px 24px;background:var(--monte);color:#eef0e6}
+  .glifo{width:38px;height:38px;border-radius:10px;background:var(--crema);position:relative;flex:0 0 auto}
+  .glifo::after{content:"";position:absolute;inset:9px 9px auto 9px;height:8px;border-radius:2px;background:var(--ocre)}
+  .glifo::before{content:"";position:absolute;inset:auto 9px 9px 9px;height:8px;border-radius:2px;background:var(--pasto)}
+  .cab h1{font-size:1.7rem;color:#fff;line-height:1.1}
+  .cab .sub{font-family:var(--narrow);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;color:var(--ocre-claro);margin-top:2px}
+
+  .cuerpo{padding:26px 40px 8px}
+  .intro{font-size:1.02rem;color:var(--tinta-2);margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 22px}
+  .chip{font-family:var(--narrow);font-weight:600;font-size:12px;background:var(--crema-2b);border:1px solid var(--linea);border-radius:100px;padding:5px 12px;color:var(--tinta-2)}
+
+  h2{font-size:1.25rem;margin:26px 0 6px;color:var(--monte);border-bottom:2px solid var(--linea);padding-bottom:6px}
+  h2 .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--monte);color:var(--ocre-claro);font-size:.85rem;margin-right:9px;vertical-align:middle}
+  p.lead{color:var(--tinta-2);margin:6px 0 8px}
+  ol,ul{margin:6px 0 6px 4px;padding-left:20px}
+  li{margin:5px 0;color:var(--tinta-2)}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+  @media(max-width:620px){.tabs{grid-template-columns:1fr}}
+  .tab{background:var(--crema-2b);border:1px solid var(--linea);border-left:3px solid var(--pasto);border-radius:9px;padding:12px 14px}
+  .tab b{font-family:var(--serif);font-weight:600}
+  .tab span{display:block;font-size:.92rem;color:var(--tinta-2);margin-top:2px}
+  kbd{font-family:var(--narrow);font-weight:700;background:var(--monte);color:#eef0e6;border-radius:5px;padding:1px 7px;font-size:.85em}
+  .nota{background:#fff;border:1px solid var(--linea);border-left:4px solid var(--ocre);border-radius:9px;padding:12px 16px;margin:10px 0;font-size:.94rem;color:var(--tinta-2)}
+  .nota b{color:var(--monte)}
+
+  .pie{background:var(--beltz);color:rgba(244,240,228,.7);padding:18px 40px;font-size:12px;line-height:1.6;font-family:var(--narrow);margin-top:20px}
+  .pie b{color:var(--ocre-claro)}
+  .barra{max-width:840px;margin:0 auto 12px;display:flex;justify-content:flex-end}
+  .barra button{font-family:var(--narrow);font-weight:700;font-size:13px;border:none;background:var(--monte);color:#eef0e6;padding:9px 18px;border-radius:8px;cursor:pointer}
+  @media print{body{background:#fff;padding:0}.hoja{box-shadow:none;border-radius:0;max-width:none}.barra{display:none}@page{margin:14mm}}
+</style>
+</head>
+<body>
+
+<div class="barra"><button onclick="window.print()">Imprimir / Guardar PDF</button></div>
+
+<div class="hoja">
+  <div class="cab">
+    <span class="glifo"></span>
+    <div>
+      <h1>Solera Zunbeltz</h1>
+      <div class="sub">Manual breve · Fase 1</div>
+    </div>
+  </div>
+
+  <div class="cuerpo">
+    <p class="intro">App para el Espacio Test Agrario Zunbeltz: gestiona las fincas e infraestructuras, reparte las tareas de mantenimiento y lleva el seguimiento del testaje. Funciona en un solo dispositivo, también sin cobertura en el monte.</p>
+    <div class="chips">
+      <span class="chip">◆ Castellano y euskera</span>
+      <span class="chip">◆ Funciona offline</span>
+      <span class="chip">◆ Un dispositivo</span>
+    </div>
+
+    <h2><span class="n">1</span>Primer arranque</h2>
+    <p class="lead">Al abrir la app por primera vez verás la bienvenida. Elige el idioma (<b>Castellano</b> o <b>Euskara</b>) y pulsa <kbd>Empezar</kbd>. Podrás cambiarlo cuando quieras en <b>Ajustes</b>.</p>
+    <p class="lead">Abajo tienes cuatro pestañas:</p>
+    <div class="tabs">
+      <div class="tab"><b>Hoy</b><span>Resumen: cuántas tareas tienes abiertas y acceso rápido al tablero.</span></div>
+      <div class="tab"><b>Fincas</b><span>El mapa de Zunbeltz y La Planilla con sus puntos de infraestructura.</span></div>
+      <div class="tab"><b>Seguimiento</b><span>Alimentación, pariciones, ventas, ingresos y gastos, con indicadores.</span></div>
+      <div class="tab"><b>Ajustes</b><span>Idioma e información del Espacio Test.</span></div>
+    </div>
+
+    <h2><span class="n">2</span>Marcar una infraestructura en el mapa</h2>
+    <p class="lead">En la pestaña <b>Fincas</b>, un punto es cada infraestructura (abrevadero, manga, cierre, refugio, balsa…). Para añadir uno tienes tres formas:</p>
+    <ol>
+      <li><b>Tocando el mapa</b>: haz clic en el sitio exacto y se abre la ficha con esas coordenadas y la finca más cercana ya elegida.</li>
+      <li><b>Con el botón <kbd>Nuevo punto</kbd></b> (abajo a la derecha): elige <i>usar GPS actual</i> (estando junto a la instalación) o <i>centro del mapa</i>.</li>
+      <li>Rellena <b>tipo</b>, <b>nombre</b>, <b>estado</b> y, si quieres, <b>fotos</b>, y pulsa <kbd>Guardar</kbd>.</li>
+    </ol>
+    <p class="lead">Cada punto aparece con un color según su estado: verde (operativo), ocre (revisar), rojizo (averiado). Pulsa <kbd>GPS</kbd> abajo para centrar el mapa en tu posición, o <kbd>Capas</kbd> para alternar mapa de calle / satélite.</p>
+
+    <h2><span class="n">3</span>Recolocar o borrar un punto</h2>
+    <ol>
+      <li>Toca el <b>marcador</b> en el mapa para abrir su ficha.</li>
+      <li>Para moverlo: pulsa <b>Recolocar en el mapa</b> (icono arriba) y luego <b>toca la nueva ubicación</b>.</li>
+      <li>Para borrarlo: pulsa la <b>papelera</b> y confirma.</li>
+    </ol>
+
+    <h2><span class="n">4</span>Tareas de mantenimiento</h2>
+    <ol>
+      <li>Abre la ficha de un punto y pulsa <kbd>Nueva tarea</kbd> (o créala desde el punto correspondiente).</li>
+      <li>Pon <b>título</b>, y si quieres descripción, <b>responsable</b>, <b>prioridad</b>, <b>estado</b>, <b>fecha objetivo</b>, fotos de antes/después y un coste. Guarda.</li>
+      <li>En <b>Fincas → Tareas</b> tienes el <b>tablero</b>: filtra por finca y por estado para ver de un vistazo qué falta y quién lo tiene.</li>
+      <li>Para el <b>parte de mantenimiento en PDF</b>, pulsa el icono de PDF arriba del tablero: se genera y puedes compartirlo o guardarlo.</li>
+    </ol>
+
+    <h2><span class="n">5</span>Seguimiento del testaje</h2>
+    <p class="lead">En la pestaña <b>Seguimiento</b> ves los <b>indicadores del periodo</b> (kg de alimentación, pariciones, productos comercializados, ingresos, gastos y balance), filtrables por finca.</p>
+    <ol>
+      <li>Pulsa el botón <kbd>+</kbd> y elige <b>Registrar actividad</b> (alimentación en kg, pariciones, productos) o <b>Apunte económico</b> (ingreso o gasto).</li>
+      <li>Rellena los datos y guarda; los indicadores se actualizan solos.</li>
+      <li>Para el <b>informe de seguimiento en PDF</b>, pulsa el icono de PDF arriba.</li>
+    </ol>
+
+    <h2><span class="n">6</span>Previsión del tiempo</h2>
+    <p class="lead">En <b>Fincas</b>, el icono de <b>nube</b> (arriba) muestra la previsión de 7 días sobre la finca, con avisos útiles para el manejo: helada, lluvia, viento, calor y «buen día de manejo». <span style="color:var(--tinta-3)">Es lo único que necesita internet; el resto de la app funciona sin cobertura.</span></p>
+
+    <div class="nota"><b>Bueno saber.</b> Las fotos se guardan en el propio dispositivo. La previsión y los avisos son orientativos y no sustituyen el criterio del ganadero ni del veterinario. Esta es una <b>versión preliminar</b>: los partes e informes tienen formato provisional, y el papeleo oficial (libro de explotación, cuaderno PAC, trazabilidad) llega en fases posteriores. Las fincas que aparecen al inicio son datos de ejemplo hasta cargar los reales con vosotras.</div>
+  </div>
+
+  <div class="pie">
+    <b>Solera Zunbeltz · Manual breve v1 · Fase 1</b> — documento de trabajo. La versión en euskera se entregará tras la revisión nativa de la terminología. App bilingüe (castellano/euskera), funciona offline; un solo dispositivo por ahora (el uso multiusuario es una fase posterior).
+  </div>
+</div>
+
+</body>
+</html>
