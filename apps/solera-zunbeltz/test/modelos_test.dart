@@ -6,9 +6,13 @@ import 'package:solera_zunbeltz/modelos/apunte_economico.dart';
 import 'package:solera_zunbeltz/modelos/constantes.dart';
 import 'package:solera_zunbeltz/modelos/finca.dart';
 import 'package:solera_zunbeltz/modelos/indicadores_seguimiento.dart';
+import 'package:solera_zunbeltz/modelos/proyecto_test.dart';
 import 'package:solera_zunbeltz/modelos/punto_infraestructura.dart';
 import 'package:solera_zunbeltz/modelos/registro_actividad.dart';
+import 'package:solera_zunbeltz/modelos/registro_comercializacion.dart';
+import 'package:solera_zunbeltz/modelos/rentabilidad_proyecto.dart';
 import 'package:solera_zunbeltz/modelos/tarea_mantenimiento.dart';
+import 'package:solera_zunbeltz/modelos/validacion_producto.dart';
 
 void main() {
   group('Finca', () {
@@ -152,6 +156,72 @@ void main() {
       expect(eurosDesdeCentimos(45000), '450,00');
       expect(cantidadBonita(3), '3');
       expect(cantidadBonita(12.5), '12,5');
+    });
+  });
+
+  group('ProyectoTest', () {
+    test('toMap / fromMap conserva persona, actividad y finca', () {
+      final p = ProyectoTest(
+        nombre: 'Quesería test',
+        persona: 'Maite',
+        actividad: 'ovino de leche',
+        fincaId: 2,
+        fechaInicioMs: 1000,
+      );
+      final r = ProyectoTest.fromMap(p.toMap());
+      expect(r.nombre, 'Quesería test');
+      expect(r.persona, 'Maite');
+      expect(r.actividad, 'ovino de leche');
+      expect(r.fincaId, 2);
+      expect(r.fechaInicioMs, 1000);
+    });
+  });
+
+  group('RegistroComercializacion', () {
+    test('toMap / fromMap conserva canal, precio e ingreso', () {
+      final c = RegistroComercializacion(
+        proyectoId: 1,
+        producto: 'Queso',
+        canal: 'mercado',
+        cantidad: 8,
+        precioUnitarioCentimos: 1500,
+        ingresoCentimos: 12000,
+      );
+      final r = RegistroComercializacion.fromMap(c.toMap());
+      expect(r.canal, 'mercado');
+      expect(r.precioUnitarioCentimos, 1500);
+      expect(r.ingresoCentimos, 12000);
+      expect(r.producto, 'Queso');
+    });
+  });
+
+  group('ValidacionProducto', () {
+    test('toMap / fromMap conserva resultado y valoración', () {
+      final v = ValidacionProducto(
+        proyectoId: 1,
+        descripcion: 'Curación 60 días',
+        resultado: 'ajustar',
+        valoracion: 3,
+      );
+      final r = ValidacionProducto.fromMap(v.toMap());
+      expect(r.resultado, 'ajustar');
+      expect(r.valoracion, 3);
+      expect(r.descripcion, 'Curación 60 días');
+    });
+  });
+
+  group('RentabilidadProyecto', () {
+    test('balance, margen y extrapolación anual', () {
+      const r = RentabilidadProyecto(
+        ingresosComercializacionCentimos: 30000,
+        ingresosApuntesCentimos: 5000,
+        gastosCentimos: 14000,
+      );
+      expect(r.ingresosTotalesCentimos, 35000);
+      expect(r.balanceCentimos, 21000);
+      expect(r.margenPorcentaje, closeTo(60, 0.01)); // 21000/35000
+      expect(r.balanceAnualExtrapoladoCentimos(73), 105000); // 21000*365/73
+      expect(r.balanceAnualExtrapoladoCentimos(0), isNull);
     });
   });
 }

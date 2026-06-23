@@ -87,6 +87,24 @@ const List<OpcionCatalogo> tiposApunte = [
   OpcionCatalogo('gasto', 'Gasto', 'Gastua'),
 ];
 
+/// Canales de comercialización del proyecto de test.
+const List<OpcionCatalogo> canalesComercializacion = [
+  OpcionCatalogo('directa', 'Venta directa', 'Zuzeneko salmenta'),
+  OpcionCatalogo('mercado', 'Mercado / feria', 'Azoka / feria'),
+  OpcionCatalogo('tienda', 'Tienda / grupo de consumo', 'Denda / kontsumo-taldea'),
+  OpcionCatalogo('online', 'Online', 'Online'),
+  OpcionCatalogo('mayorista', 'Mayorista / distribuidor', 'Handizkaria / banatzailea'),
+  OpcionCatalogo('restauracion', 'Restauración', 'Ostalaritza'),
+  OpcionCatalogo('otro', 'Otro', 'Bestelakoa'),
+];
+
+/// Resultado de una prueba de validación de producto.
+const List<OpcionCatalogo> resultadosValidacion = [
+  OpcionCatalogo('validado', 'Validado', 'Baliozkotua'),
+  OpcionCatalogo('ajustar', 'Ajustar', 'Doitu'),
+  OpcionCatalogo('descartar', 'Descartar', 'Baztertu'),
+];
+
 /// Códigos por defecto (primer alta).
 const String tipoPuntoPorDefecto = 'abrevadero';
 const String estadoPuntoPorDefecto = 'operativo';
@@ -94,3 +112,5 @@ const String estadoTareaPorDefecto = 'pendiente';
 const String prioridadTareaPorDefecto = 'media';
 const String tipoActividadPorDefecto = 'alimentacion';
 const String tipoApuntePorDefecto = 'gasto';
+const String canalComercializacionPorDefecto = 'directa';
+const String resultadoValidacionPorDefecto = 'validado';

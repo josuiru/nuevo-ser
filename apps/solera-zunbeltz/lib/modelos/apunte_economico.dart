@@ -7,6 +7,7 @@ class ApunteEconomico {
   ApunteEconomico({
     this.id,
     required this.fincaId,
+    this.proyectoId,
     this.tipo = tipoApuntePorDefecto,
     this.concepto = '',
     this.importeCentimos = 0,
@@ -17,6 +18,9 @@ class ApunteEconomico {
 
   final int? id;
   final int fincaId;
+
+  /// Proyecto de test al que pertenece (opcional).
+  final int? proyectoId;
 
   /// Código de `tiposApunte` (ingreso / gasto).
   final String tipo;
@@ -33,6 +37,7 @@ class ApunteEconomico {
   Map<String, Object?> toMap() => {
         'id': id,
         'finca_id': fincaId,
+        'proyecto_id': proyectoId,
         'tipo': tipo,
         'concepto': concepto,
         'importe_centimos': importeCentimos,
@@ -44,6 +49,7 @@ class ApunteEconomico {
   factory ApunteEconomico.fromMap(Map<String, Object?> mapa) => ApunteEconomico(
         id: mapa['id'] as int?,
         fincaId: (mapa['finca_id'] as int?) ?? 0,
+        proyectoId: mapa['proyecto_id'] as int?,
         tipo: (mapa['tipo'] as String?) ?? tipoApuntePorDefecto,
         concepto: (mapa['concepto'] as String?) ?? '',
         importeCentimos: (mapa['importe_centimos'] as int?) ?? 0,

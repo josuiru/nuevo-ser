@@ -8,6 +8,7 @@ class RegistroActividad {
   RegistroActividad({
     this.id,
     required this.fincaId,
+    this.proyectoId,
     this.tipo = tipoActividadPorDefecto,
     this.cantidad = 0,
     this.fechaMs = 0,
@@ -18,6 +19,10 @@ class RegistroActividad {
 
   final int? id;
   final int fincaId;
+
+  /// Proyecto de test al que pertenece (opcional; el seguimiento se cuelga
+  /// del proyecto/tester).
+  final int? proyectoId;
 
   /// Código de `tiposActividad` (alimentacion / paricion / producto).
   final String tipo;
@@ -34,6 +39,7 @@ class RegistroActividad {
   Map<String, Object?> toMap() => {
         'id': id,
         'finca_id': fincaId,
+        'proyecto_id': proyectoId,
         'tipo': tipo,
         'cantidad': cantidad,
         'fecha_ms': fechaMs,
@@ -46,6 +52,7 @@ class RegistroActividad {
       RegistroActividad(
         id: mapa['id'] as int?,
         fincaId: (mapa['finca_id'] as int?) ?? 0,
+        proyectoId: mapa['proyecto_id'] as int?,
         tipo: (mapa['tipo'] as String?) ?? tipoActividadPorDefecto,
         cantidad: (mapa['cantidad'] as num?)?.toDouble() ?? 0,
         fechaMs: (mapa['fecha_ms'] as int?) ?? 0,

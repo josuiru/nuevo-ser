@@ -11,9 +11,12 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:solera_zunbeltz/datos/base_datos.dart';
 import 'package:solera_zunbeltz/modelos/apunte_economico.dart';
 import 'package:solera_zunbeltz/modelos/finca.dart';
+import 'package:solera_zunbeltz/modelos/proyecto_test.dart';
 import 'package:solera_zunbeltz/modelos/punto_infraestructura.dart';
 import 'package:solera_zunbeltz/modelos/registro_actividad.dart';
+import 'package:solera_zunbeltz/modelos/registro_comercializacion.dart';
 import 'package:solera_zunbeltz/modelos/tarea_mantenimiento.dart';
+import 'package:solera_zunbeltz/modelos/validacion_producto.dart';
 
 void main() {
   setUpAll(sqfliteFfiInit);
@@ -22,7 +25,7 @@ void main() {
     final db = await databaseFactoryFfi.openDatabase(
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
-        version: 2,
+        version: 3,
         // BD nueva por test: sin esto, todas las llamadas comparten la
         // misma BD en memoria y el estado se filtra entre tests.
         singleInstance: false,
@@ -30,6 +33,7 @@ void main() {
         onCreate: (d, v) async {
           await BaseDatosSoleraZunbeltz.crearEsquemaV1(d);
           await BaseDatosSoleraZunbeltz.aplicarMigracionV2(d);
+          await BaseDatosSoleraZunbeltz.aplicarMigracionV3(d);
         },
       ),
     );
@@ -143,7 +147,8 @@ void main() {
     expect((await bd.listarApuntes(fincaId: fincaId)).length, 2);
   });
 
-  test('migración v1 → v2 conserva datos y habilita seguimiento', () async {
+  test('migración v1 → v3 (cadena completa) conserva datos y habilita seguimiento',
+      () async {
     final dir = await Directory.systemTemp.createTemp('zunbeltz_mig');
     final ruta = '${dir.path}/migracion.db';
     // Abrimos en v1 (solo gestión de fincas) y metemos una finca.
@@ -158,25 +163,136 @@ void main() {
     await v1.insert('fincas', Finca(nombre: 'Zunbeltz').toMap()..remove('id'));
     await v1.close();
 
-    // Reabrimos en v2: la migración debe correr y conservar la finca.
+    // Reabrimos en v3: las migraciones v2 y v3 deben correr en cadena y
+    // conservar la finca.
+    final v3 = await databaseFactoryFfi.openDatabase(
+      ruta,
+      options: OpenDatabaseOptions(
+        version: 3,
+        onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
+        onUpgrade: (d, anterior, actual) async {
+          if (anterior < 2) await BaseDatosSoleraZunbeltz.aplicarMigracionV2(d);
+          if (anterior < 3) await BaseDatosSoleraZunbeltz.aplicarMigracionV3(d);
+        },
+      ),
+    );
+    final bd = BaseDatosSoleraZunbeltz.paraTests(v3);
+    expect((await bd.listarFincas()).single.nombre, 'Zunbeltz');
+    // El seguimiento existe y funciona (incluida la columna proyecto_id de v3).
+    final fincaId = (await bd.listarFincas()).single.id!;
+    await bd.guardarRegistro(RegistroActividad(
+        fincaId: fincaId, tipo: 'alimentacion', cantidad: 10));
+    expect(await bd.sumarCantidadActividad('alimentacion'), 10);
+    await v3.close();
+    await dir.delete(recursive: true);
+  });
+
+  test('proceso de test: proyecto + comercialización + validación', () async {
+    final bd = await abrirBdEnMemoria();
+    final proyectoId = await bd.guardarProyecto(
+        ProyectoTest(nombre: 'Quesería test', persona: 'Maite'));
+    await bd.guardarComercializacion(RegistroComercializacion(
+        proyectoId: proyectoId,
+        producto: 'Queso',
+        canal: 'directa',
+        cantidad: 10,
+        precioUnitarioCentimos: 1200,
+        ingresoCentimos: 12000));
+    await bd.guardarValidacion(ValidacionProducto(
+        proyectoId: proyectoId,
+        descripcion: 'Curación 60 días',
+        resultado: 'validado',
+        valoracion: 4));
+
+    expect((await bd.listarProyectos()).single.persona, 'Maite');
+    expect((await bd.listarComercializacion(proyectoId: proyectoId)).single.producto, 'Queso');
+    expect(await bd.sumarIngresoComercializacion(proyectoId: proyectoId), 12000);
+    expect((await bd.listarValidaciones(proyectoId: proyectoId)).single.resultado, 'validado');
+  });
+
+  test('rentabilidad por proyecto = ingresos (comercial+apuntes) − gastos',
+      () async {
+    final bd = await abrirBdEnMemoria();
+    final fincaId = await bd.guardarFinca(Finca(nombre: 'Zunbeltz'));
+    final proyectoId = await bd.guardarProyecto(
+        ProyectoTest(nombre: 'P', persona: 'Iñaki', fincaId: fincaId));
+    await bd.guardarComercializacion(RegistroComercializacion(
+        proyectoId: proyectoId, ingresoCentimos: 30000));
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: 'ingreso',
+        importeCentimos: 5000));
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: 'gasto',
+        importeCentimos: 12000));
+
+    final r = await bd.rentabilidadProyecto(proyectoId);
+    expect(r.ingresosComercializacionCentimos, 30000);
+    expect(r.ingresosApuntesCentimos, 5000);
+    expect(r.gastosCentimos, 12000);
+    expect(r.balanceCentimos, 23000); // 35000 - 12000
+    expect(r.balanceAnualExtrapoladoCentimos(73), 115000); // 23000 * 365/73
+  });
+
+  test('borrar proyecto arrastra su comercialización y validaciones (CASCADE)',
+      () async {
+    final bd = await abrirBdEnMemoria();
+    final proyectoId =
+        await bd.guardarProyecto(ProyectoTest(nombre: 'P', persona: 'A'));
+    await bd.guardarComercializacion(
+        RegistroComercializacion(proyectoId: proyectoId, ingresoCentimos: 100));
+    await bd.guardarValidacion(ValidacionProducto(proyectoId: proyectoId));
+
+    await bd.borrarProyecto(proyectoId);
+
+    expect(await bd.listarProyectos(), isEmpty);
+    expect(await bd.listarComercializacion(proyectoId: proyectoId), isEmpty);
+    expect(await bd.listarValidaciones(proyectoId: proyectoId), isEmpty);
+  });
+
+  test('migración v2 → v3 conserva datos y habilita proceso de test', () async {
+    final dir = await Directory.systemTemp.createTemp('zunbeltz_mig3');
+    final ruta = '${dir.path}/m3.db';
     final v2 = await databaseFactoryFfi.openDatabase(
       ruta,
       options: OpenDatabaseOptions(
         version: 2,
         onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
-        onUpgrade: (d, anterior, actual) async {
-          if (anterior < 2) await BaseDatosSoleraZunbeltz.aplicarMigracionV2(d);
+        onCreate: (d, v) async {
+          await BaseDatosSoleraZunbeltz.crearEsquemaV1(d);
+          await BaseDatosSoleraZunbeltz.aplicarMigracionV2(d);
         },
       ),
     );
-    final bd = BaseDatosSoleraZunbeltz.paraTests(v2);
-    expect((await bd.listarFincas()).single.nombre, 'Zunbeltz');
-    // La tabla nueva existe y funciona.
-    final fincaId = (await bd.listarFincas()).single.id!;
-    await bd.guardarRegistro(RegistroActividad(
-        fincaId: fincaId, tipo: 'alimentacion', cantidad: 10));
-    expect(await bd.sumarCantidadActividad('alimentacion'), 10);
+    await v2.insert('fincas', Finca(nombre: 'Zunbeltz').toMap()..remove('id'));
     await v2.close();
+
+    final v3 = await databaseFactoryFfi.openDatabase(
+      ruta,
+      options: OpenDatabaseOptions(
+        version: 3,
+        onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
+        onUpgrade: (d, anterior, actual) async {
+          if (anterior < 3) await BaseDatosSoleraZunbeltz.aplicarMigracionV3(d);
+        },
+      ),
+    );
+    final bd = BaseDatosSoleraZunbeltz.paraTests(v3);
+    expect((await bd.listarFincas()).single.nombre, 'Zunbeltz');
+    // La tabla nueva funciona y el seguimiento ya admite proyecto_id.
+    final proyectoId =
+        await bd.guardarProyecto(ProyectoTest(nombre: 'P', persona: 'A'));
+    final fincaId = (await bd.listarFincas()).single.id!;
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: 'gasto',
+        importeCentimos: 999));
+    expect(await bd.sumarImporteEconomico('gasto', proyectoId: proyectoId), 999);
+    await v3.close();
     await dir.delete(recursive: true);
   });
 }

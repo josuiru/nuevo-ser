@@ -5,9 +5,13 @@ import 'package:sqflite/sqflite.dart';
 
 import '../modelos/apunte_economico.dart';
 import '../modelos/finca.dart';
+import '../modelos/proyecto_test.dart';
 import '../modelos/punto_infraestructura.dart';
 import '../modelos/registro_actividad.dart';
+import '../modelos/registro_comercializacion.dart';
+import '../modelos/rentabilidad_proyecto.dart';
 import '../modelos/tarea_mantenimiento.dart';
+import '../modelos/validacion_producto.dart';
 
 /// Acceso a la base de datos local de Solera Zunbeltz. Singleton con
 /// inicialización perezosa: la primera lectura crea la BD.
@@ -18,8 +22,10 @@ import '../modelos/tarea_mantenimiento.dart';
 /// v1 arranca con el módulo de gestión de fincas (FZ-2/FZ-3): `fincas`,
 /// `puntos_infraestructura` y `tareas_mantenimiento`.
 /// v2 añade el seguimiento del testaje: `registros_actividad` (alimentación,
-/// pariciones, productos) y `apuntes_economicos` (ingresos/gastos). El
-/// cuaderno ganadero completo llega en fases posteriores.
+/// pariciones, productos) y `apuntes_economicos` (ingresos/gastos).
+/// v3 introduce el proceso de test por persona tester: `proyectos_test`,
+/// `registros_comercializacion` y `validaciones_producto`, y cuelga el
+/// seguimiento del proyecto (columna `proyecto_id`).
 class BaseDatosSoleraZunbeltz {
   static final BaseDatosSoleraZunbeltz instancia =
       BaseDatosSoleraZunbeltz._interno();
@@ -39,7 +45,7 @@ class BaseDatosSoleraZunbeltz {
     final ruta = path_lib.join(directorio.path, 'solera_zunbeltz.db');
     _basedatos = await openDatabase(
       ruta,
-      version: 2,
+      version: 3,
       onConfigure: (db) async {
         // ON DELETE CASCADE / SET NULL requieren FKs activas.
         await db.execute('PRAGMA foreign_keys = ON');
@@ -47,9 +53,11 @@ class BaseDatosSoleraZunbeltz {
       onCreate: (db, version) async {
         await crearEsquemaV1(db);
         await aplicarMigracionV2(db);
+        await aplicarMigracionV3(db);
       },
       onUpgrade: (db, anterior, actual) async {
         if (anterior < 2) await aplicarMigracionV2(db);
+        if (anterior < 3) await aplicarMigracionV3(db);
       },
     );
     return _basedatos!;
@@ -149,6 +157,67 @@ class BaseDatosSoleraZunbeltz {
     ''');
     await db.execute(
         'CREATE INDEX idx_apuntes_finca ON apuntes_economicos(finca_id)');
+  }
+
+  /// Migración v2 → v3: proceso de test por persona tester. Aditiva.
+  @visibleForTesting
+  static Future<void> aplicarMigracionV3(Database db) async {
+    await db.execute('''
+      CREATE TABLE proyectos_test (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL DEFAULT '',
+        persona TEXT NOT NULL DEFAULT '',
+        actividad TEXT NOT NULL DEFAULT '',
+        finca_id INTEGER,
+        fecha_inicio_ms INTEGER,
+        fecha_fin_ms INTEGER,
+        notas TEXT NOT NULL DEFAULT '',
+        fecha_creacion_ms INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (finca_id) REFERENCES fincas(id) ON DELETE SET NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE registros_comercializacion (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        proyecto_id INTEGER NOT NULL,
+        fecha_ms INTEGER NOT NULL DEFAULT 0,
+        producto TEXT NOT NULL DEFAULT '',
+        canal TEXT NOT NULL DEFAULT 'directa',
+        cantidad REAL NOT NULL DEFAULT 0,
+        unidad TEXT NOT NULL DEFAULT 'uds',
+        precio_unitario_centimos INTEGER NOT NULL DEFAULT 0,
+        ingreso_centimos INTEGER NOT NULL DEFAULT 0,
+        notas TEXT NOT NULL DEFAULT '',
+        fecha_creacion_ms INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (proyecto_id) REFERENCES proyectos_test(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+        'CREATE INDEX idx_comercial_proyecto ON registros_comercializacion(proyecto_id)');
+
+    await db.execute('''
+      CREATE TABLE validaciones_producto (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        proyecto_id INTEGER NOT NULL,
+        fecha_ms INTEGER NOT NULL DEFAULT 0,
+        descripcion TEXT NOT NULL DEFAULT '',
+        resultado TEXT NOT NULL DEFAULT 'validado',
+        valoracion INTEGER NOT NULL DEFAULT 0,
+        notas TEXT NOT NULL DEFAULT '',
+        fecha_creacion_ms INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (proyecto_id) REFERENCES proyectos_test(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+        'CREATE INDEX idx_validacion_proyecto ON validaciones_producto(proyecto_id)');
+
+    // El seguimiento existente se cuelga del proyecto (columna nullable;
+    // SQLite no permite añadir FK por ALTER, se respeta por código).
+    await db.execute(
+        'ALTER TABLE registros_actividad ADD COLUMN proyecto_id INTEGER');
+    await db.execute(
+        'ALTER TABLE apuntes_economicos ADD COLUMN proyecto_id INTEGER');
   }
 
   // ─── Fincas ─────────────────────────────────────────────
@@ -304,13 +373,18 @@ class BaseDatosSoleraZunbeltz {
 
   Future<List<RegistroActividad>> listarRegistros({
     int? fincaId,
+    int? proyectoId,
     String? tipo,
     int? desdeMs,
     int? hastaMs,
   }) async {
     final db = await basedatos;
     final filtro = _filtroSeguimiento(
-        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: tipo,
+        desdeMs: desdeMs,
+        hastaMs: hastaMs);
     final filas = await db.query(
       'registros_actividad',
       where: filtro.where,
@@ -330,12 +404,17 @@ class BaseDatosSoleraZunbeltz {
   Future<double> sumarCantidadActividad(
     String tipo, {
     int? fincaId,
+    int? proyectoId,
     int? desdeMs,
     int? hastaMs,
   }) async {
     final db = await basedatos;
     final filtro = _filtroSeguimiento(
-        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: tipo,
+        desdeMs: desdeMs,
+        hastaMs: hastaMs);
     final resultado = await db.rawQuery(
       'SELECT COALESCE(SUM(cantidad), 0) AS total FROM registros_actividad'
       '${filtro.where == null ? '' : ' WHERE ${filtro.where}'}',
@@ -354,13 +433,18 @@ class BaseDatosSoleraZunbeltz {
 
   Future<List<ApunteEconomico>> listarApuntes({
     int? fincaId,
+    int? proyectoId,
     String? tipo,
     int? desdeMs,
     int? hastaMs,
   }) async {
     final db = await basedatos;
     final filtro = _filtroSeguimiento(
-        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: tipo,
+        desdeMs: desdeMs,
+        hastaMs: hastaMs);
     final filas = await db.query(
       'apuntes_economicos',
       where: filtro.where,
@@ -380,12 +464,17 @@ class BaseDatosSoleraZunbeltz {
   Future<int> sumarImporteEconomico(
     String tipo, {
     int? fincaId,
+    int? proyectoId,
     int? desdeMs,
     int? hastaMs,
   }) async {
     final db = await basedatos;
     final filtro = _filtroSeguimiento(
-        fincaId: fincaId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: tipo,
+        desdeMs: desdeMs,
+        hastaMs: hastaMs);
     final resultado = await db.rawQuery(
       'SELECT COALESCE(SUM(importe_centimos), 0) AS total FROM apuntes_economicos'
       '${filtro.where == null ? '' : ' WHERE ${filtro.where}'}',
@@ -394,15 +483,20 @@ class BaseDatosSoleraZunbeltz {
     return (resultado.first['total'] as num).toInt();
   }
 
-  /// Construye el WHERE común de seguimiento (finca + tipo + rango de fechas).
+  /// Construye el WHERE común de seguimiento (proyecto + finca + tipo + fechas).
   _FiltroSql _filtroSeguimiento({
     int? fincaId,
+    int? proyectoId,
     String? tipo,
     int? desdeMs,
     int? hastaMs,
   }) {
     final condiciones = <String>[];
     final args = <Object?>[];
+    if (proyectoId != null) {
+      condiciones.add('proyecto_id = ?');
+      args.add(proyectoId);
+    }
     if (fincaId != null) {
       condiciones.add('finca_id = ?');
       args.add(fincaId);
@@ -422,6 +516,125 @@ class BaseDatosSoleraZunbeltz {
     return _FiltroSql(
       condiciones.isEmpty ? null : condiciones.join(' AND '),
       args.isEmpty ? null : args,
+    );
+  }
+
+  // ─── Proyectos de test ──────────────────────────────────
+
+  Future<int> guardarProyecto(ProyectoTest proyecto) async {
+    final db = await basedatos;
+    return db.insert('proyectos_test', proyecto.toMap()..remove('id'));
+  }
+
+  Future<void> actualizarProyecto(int id, Map<String, Object?> cambios) async {
+    final db = await basedatos;
+    await db.update('proyectos_test', cambios, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<ProyectoTest>> listarProyectos() async {
+    final db = await basedatos;
+    final filas = await db.query('proyectos_test', orderBy: 'nombre ASC');
+    return filas.map(ProyectoTest.fromMap).toList();
+  }
+
+  Future<ProyectoTest?> obtenerProyecto(int id) async {
+    final db = await basedatos;
+    final filas = await db.query('proyectos_test',
+        where: 'id = ?', whereArgs: [id], limit: 1);
+    if (filas.isEmpty) return null;
+    return ProyectoTest.fromMap(filas.first);
+  }
+
+  Future<void> borrarProyecto(int id) async {
+    final db = await basedatos;
+    await db.delete('proyectos_test', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // ─── Comercialización ───────────────────────────────────
+
+  Future<int> guardarComercializacion(RegistroComercializacion registro) async {
+    final db = await basedatos;
+    return db.insert('registros_comercializacion', registro.toMap()..remove('id'));
+  }
+
+  Future<List<RegistroComercializacion>> listarComercializacion({
+    int? proyectoId,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        proyectoId: proyectoId, desdeMs: desdeMs, hastaMs: hastaMs);
+    final filas = await db.query('registros_comercializacion',
+        where: filtro.where, whereArgs: filtro.args, orderBy: 'fecha_ms DESC');
+    return filas.map(RegistroComercializacion.fromMap).toList();
+  }
+
+  Future<void> borrarComercializacion(int id) async {
+    final db = await basedatos;
+    await db
+        .delete('registros_comercializacion', where: 'id = ?', whereArgs: [id]);
+  }
+
+  /// Suma de ingresos (céntimos) de comercialización del proyecto/periodo.
+  Future<int> sumarIngresoComercializacion({
+    int? proyectoId,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        proyectoId: proyectoId, desdeMs: desdeMs, hastaMs: hastaMs);
+    final resultado = await db.rawQuery(
+      'SELECT COALESCE(SUM(ingreso_centimos), 0) AS total FROM registros_comercializacion'
+      '${filtro.where == null ? '' : ' WHERE ${filtro.where}'}',
+      filtro.args,
+    );
+    return (resultado.first['total'] as num).toInt();
+  }
+
+  // ─── Validación de producto ─────────────────────────────
+
+  Future<int> guardarValidacion(ValidacionProducto validacion) async {
+    final db = await basedatos;
+    return db.insert('validaciones_producto', validacion.toMap()..remove('id'));
+  }
+
+  Future<List<ValidacionProducto>> listarValidaciones({int? proyectoId}) async {
+    final db = await basedatos;
+    final filas = proyectoId == null
+        ? await db.query('validaciones_producto', orderBy: 'fecha_ms DESC')
+        : await db.query('validaciones_producto',
+            where: 'proyecto_id = ?',
+            whereArgs: [proyectoId],
+            orderBy: 'fecha_ms DESC');
+    return filas.map(ValidacionProducto.fromMap).toList();
+  }
+
+  Future<void> borrarValidacion(int id) async {
+    final db = await basedatos;
+    await db.delete('validaciones_producto', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // ─── Rentabilidad por proyecto ──────────────────────────
+
+  /// Análisis económico de un proyecto: ingresos (comercialización + apuntes),
+  /// gastos y balance del periodo.
+  Future<RentabilidadProyecto> rentabilidadProyecto(
+    int proyectoId, {
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final ingresosComercial = await sumarIngresoComercializacion(
+        proyectoId: proyectoId, desdeMs: desdeMs, hastaMs: hastaMs);
+    final ingresosApuntes = await sumarImporteEconomico('ingreso',
+        proyectoId: proyectoId, desdeMs: desdeMs, hastaMs: hastaMs);
+    final gastos = await sumarImporteEconomico('gasto',
+        proyectoId: proyectoId, desdeMs: desdeMs, hastaMs: hastaMs);
+    return RentabilidadProyecto(
+      ingresosComercializacionCentimos: ingresosComercial,
+      ingresosApuntesCentimos: ingresosApuntes,
+      gastosCentimos: gastos,
     );
   }
 
