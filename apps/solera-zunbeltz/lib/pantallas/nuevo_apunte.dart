@@ -5,15 +5,18 @@ import '../datos/base_datos.dart';
 import '../l10n/app_localizations.dart';
 import '../modelos/apunte_economico.dart';
 import '../modelos/constantes.dart';
-import '../modelos/finca.dart';
 import 'widgets/cuerpo_responsivo.dart';
 
-/// Alta de un apunte económico simple (ingreso o gasto).
+/// Alta de un apunte económico (ingreso o gasto) de un proyecto de test.
 class NuevoApunte extends StatefulWidget {
-  const NuevoApunte({super.key, required this.fincas, this.fincaIdInicial});
+  const NuevoApunte({
+    super.key,
+    required this.proyectoId,
+    required this.fincaId,
+  });
 
-  final List<Finca> fincas;
-  final int? fincaIdInicial;
+  final int proyectoId;
+  final int fincaId;
 
   @override
   State<NuevoApunte> createState() => _NuevoApunteState();
@@ -25,16 +28,8 @@ class _NuevoApunteState extends State<NuevoApunte> {
   final _importe = TextEditingController();
   final _notas = TextEditingController();
 
-  late int? _fincaId;
   String _tipo = tipoApuntePorDefecto;
   DateTime _fecha = DateTime.now();
-
-  @override
-  void initState() {
-    super.initState();
-    _fincaId = widget.fincaIdInicial ??
-        (widget.fincas.isNotEmpty ? widget.fincas.first.id : null);
-  }
 
   @override
   void dispose() {
@@ -57,13 +52,14 @@ class _NuevoApunteState extends State<NuevoApunte> {
   Future<void> _guardar() async {
     final textos = AppLocalizations.of(context);
     final euros = double.tryParse(_importe.text.trim().replaceAll(',', '.'));
-    if (_fincaId == null || euros == null || euros <= 0) {
+    if (euros == null || euros <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(textos.apuImporteObligatorio)));
       return;
     }
     await _bd.guardarApunte(ApunteEconomico(
-      fincaId: _fincaId!,
+      fincaId: widget.fincaId,
+      proyectoId: widget.proyectoId,
       tipo: _tipo,
       concepto: _concepto.text.trim(),
       importeCentimos: (euros * 100).round(),
@@ -83,63 +79,54 @@ class _NuevoApunteState extends State<NuevoApunte> {
     final idioma = Localizations.localeOf(context).languageCode;
     return Scaffold(
       appBar: AppBar(title: Text(textos.apuNuevoTitulo)),
-      body: CuerpoResponsivo(child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          DropdownButtonFormField<int>(
-            initialValue: _fincaId,
-            decoration: InputDecoration(labelText: textos.puntoFinca),
-            items: [
-              for (final f in widget.fincas)
-                DropdownMenuItem(value: f.id, child: Text(f.nombre)),
-            ],
-            onChanged: (v) => setState(() => _fincaId = v),
-          ),
-          const SizedBox(height: 12),
-          DropdownButtonFormField<String>(
-            initialValue: _tipo,
-            decoration: InputDecoration(labelText: textos.apuTipo),
-            items: [
-              for (final t in tiposApunte)
-                DropdownMenuItem(value: t.codigo, child: Text(t.etiqueta(idioma))),
-            ],
-            onChanged: (v) => setState(() => _tipo = v ?? _tipo),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _concepto,
-            decoration: InputDecoration(labelText: textos.apuConcepto),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _importe,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-                labelText: textos.apuImporte, suffixText: '€'),
-          ),
-          const SizedBox(height: 12),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.event_outlined),
-            title: Text(textos.comunFecha),
-            subtitle: Text(DateFormat('dd/MM/yyyy', idioma).format(_fecha)),
-            trailing: const Icon(Icons.edit_calendar_outlined),
-            onTap: _elegirFecha,
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _notas,
-            maxLines: 2,
-            decoration: InputDecoration(labelText: textos.apuNotas),
-          ),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: _fincaId == null ? null : _guardar,
-            icon: const Icon(Icons.save),
-            label: Text(textos.comunGuardar),
-          ),
-        ],
-      )),
+      body: CuerpoResponsivo(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            DropdownButtonFormField<String>(
+              initialValue: _tipo,
+              decoration: InputDecoration(labelText: textos.apuTipo),
+              items: [
+                for (final t in tiposApunte)
+                  DropdownMenuItem(
+                      value: t.codigo, child: Text(t.etiqueta(idioma))),
+              ],
+              onChanged: (v) => setState(() => _tipo = v ?? _tipo),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+                controller: _concepto,
+                decoration: InputDecoration(labelText: textos.apuConcepto)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _importe,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              decoration:
+                  InputDecoration(labelText: textos.apuImporte, suffixText: '€'),
+            ),
+            const SizedBox(height: 12),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.event_outlined),
+              title: Text(textos.comunFecha),
+              subtitle: Text(DateFormat('dd/MM/yyyy', idioma).format(_fecha)),
+              trailing: const Icon(Icons.edit_calendar_outlined),
+              onTap: _elegirFecha,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+                controller: _notas,
+                maxLines: 2,
+                decoration: InputDecoration(labelText: textos.apuNotas)),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _guardar,
+              icon: const Icon(Icons.save),
+              label: Text(textos.comunGuardar),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

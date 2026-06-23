@@ -168,5 +168,59 @@
   "acercaTitulo": "Acerca del Espacio Test",
   "acercaIntro": "Zunbeltz es el primer Espacio Test Agroganadero de Navarra: una incubadora donde personas emprendedoras prueban un proyecto de ganadería ecológica extensiva durante un periodo acotado, con acompañamiento de ganaderas y ganaderos expertos, sobre las fincas de Zunbeltz (231 ha) y La Planilla (197 ha). Impulsado por el Gobierno de Navarra, la Mancomunidad de Andía y los municipios de la zona, con financiación de la UE, y gestionado por la Asociación Zunbeltz Elkartea.",
   "acercaEnlaces": "Enlaces",
-  "acercaFuentes": "Información de fuentes públicas."
+  "acercaFuentes": "Información de fuentes públicas.",
+
+  "navProyectos": "Proyectos",
+  "proyectosTitulo": "Proyectos de test",
+  "proyectosVacio": "Aún no hay proyectos. Pulsa + para añadir el primero.",
+  "proyectoNuevo": "Nuevo proyecto",
+  "proyectoNombre": "Nombre del proyecto",
+  "proyectoPersona": "Persona tester",
+  "proyectoActividad": "Actividad / vertical",
+  "proyectoFinca": "Finca (apoyo)",
+  "proyectoSinFinca": "Sin finca",
+  "proyectoFechaInicio": "Inicio",
+  "proyectoFechaFin": "Fin",
+  "proyectoGuardado": "Proyecto guardado",
+  "proyectoNombreObligatorio": "Pon un nombre al proyecto.",
+  "proyectoBorrar": "Borrar proyecto",
+
+  "rentTitulo": "Rentabilidad",
+  "rentVentas": "Ventas",
+  "rentOtrosIngresos": "Otros ingresos",
+  "rentGastos": "Gastos",
+  "rentBalance": "Balance",
+  "rentMargen": "Margen",
+  "rentProyeccion": "Proyección anual",
+  "detProduccion": "Producción",
+  "detValidacion": "Validación",
+  "detComercial": "Comercialización",
+  "detEconomico": "Económico",
+  "detSinDatos": "Sin datos todavía.",
+  "detInformePdf": "Informe del proyecto (PDF)",
+
+  "comNuevaTitulo": "Nueva venta",
+  "comProducto": "Producto",
+  "comCanal": "Canal",
+  "comCantidad": "Cantidad",
+  "comUnidad": "Unidad",
+  "comPrecio": "Precio unitario (€)",
+  "comIngreso": "Ingreso (€)",
+  "comGuardada": "Venta guardada",
+
+  "valNuevaTitulo": "Nueva validación de producto",
+  "valDescripcion": "¿Qué se valida?",
+  "valResultado": "Resultado",
+  "valValoracion": "Valoración",
+  "valSinValorar": "Sin valorar",
+  "valGuardada": "Validación guardada",
+
+  "infProyTitulo": "Informe del proyecto de test",
+  "infProyResumen": "Proyecto: {nombre} · tester: {persona}",
+  "@infProyResumen": {
+    "placeholders": {
+      "nombre": { "type": "String" },
+      "persona": { "type": "String" }
+    }
+  }
 }

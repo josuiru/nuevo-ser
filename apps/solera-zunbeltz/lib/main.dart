@@ -26,7 +26,7 @@ import 'pantallas/pantalla_ajustes.dart';
 import 'pantallas/pantalla_fincas.dart';
 import 'pantallas/pantalla_inicio.dart';
 import 'pantallas/pantalla_onboarding.dart';
-import 'pantallas/pantalla_seguimiento.dart';
+import 'pantallas/pantalla_proyectos.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -131,7 +131,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   static const _pantallas = <Widget>[
     PantallaInicio(),
     PantallaFincas(),
-    PantallaSeguimiento(),
+    PantallaProyectos(),
     PantallaAjustes(),
   ];
 
@@ -155,9 +155,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             label: textos.navFincas,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.insights_outlined),
-            selectedIcon: const Icon(Icons.insights),
-            label: textos.navSeguimiento,
+            icon: const Icon(Icons.science_outlined),
+            selectedIcon: const Icon(Icons.science),
+            label: textos.navProyectos,
           ),
           NavigationDestination(
             icon: const Icon(Icons.settings_outlined),

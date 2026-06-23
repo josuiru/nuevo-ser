@@ -913,6 +913,264 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Información de fuentes públicas.'**
   String get acercaFuentes;
+
+  /// No description provided for @navProyectos.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyectos'**
+  String get navProyectos;
+
+  /// No description provided for @proyectosTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyectos de test'**
+  String get proyectosTitulo;
+
+  /// No description provided for @proyectosVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay proyectos. Pulsa + para añadir el primero.'**
+  String get proyectosVacio;
+
+  /// No description provided for @proyectoNuevo.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo proyecto'**
+  String get proyectoNuevo;
+
+  /// No description provided for @proyectoNombre.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del proyecto'**
+  String get proyectoNombre;
+
+  /// No description provided for @proyectoPersona.
+  ///
+  /// In es, this message translates to:
+  /// **'Persona tester'**
+  String get proyectoPersona;
+
+  /// No description provided for @proyectoActividad.
+  ///
+  /// In es, this message translates to:
+  /// **'Actividad / vertical'**
+  String get proyectoActividad;
+
+  /// No description provided for @proyectoFinca.
+  ///
+  /// In es, this message translates to:
+  /// **'Finca (apoyo)'**
+  String get proyectoFinca;
+
+  /// No description provided for @proyectoSinFinca.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin finca'**
+  String get proyectoSinFinca;
+
+  /// No description provided for @proyectoFechaInicio.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicio'**
+  String get proyectoFechaInicio;
+
+  /// No description provided for @proyectoFechaFin.
+  ///
+  /// In es, this message translates to:
+  /// **'Fin'**
+  String get proyectoFechaFin;
+
+  /// No description provided for @proyectoGuardado.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyecto guardado'**
+  String get proyectoGuardado;
+
+  /// No description provided for @proyectoNombreObligatorio.
+  ///
+  /// In es, this message translates to:
+  /// **'Pon un nombre al proyecto.'**
+  String get proyectoNombreObligatorio;
+
+  /// No description provided for @proyectoBorrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar proyecto'**
+  String get proyectoBorrar;
+
+  /// No description provided for @rentTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Rentabilidad'**
+  String get rentTitulo;
+
+  /// No description provided for @rentVentas.
+  ///
+  /// In es, this message translates to:
+  /// **'Ventas'**
+  String get rentVentas;
+
+  /// No description provided for @rentOtrosIngresos.
+  ///
+  /// In es, this message translates to:
+  /// **'Otros ingresos'**
+  String get rentOtrosIngresos;
+
+  /// No description provided for @rentGastos.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos'**
+  String get rentGastos;
+
+  /// No description provided for @rentBalance.
+  ///
+  /// In es, this message translates to:
+  /// **'Balance'**
+  String get rentBalance;
+
+  /// No description provided for @rentMargen.
+  ///
+  /// In es, this message translates to:
+  /// **'Margen'**
+  String get rentMargen;
+
+  /// No description provided for @rentProyeccion.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyección anual'**
+  String get rentProyeccion;
+
+  /// No description provided for @detProduccion.
+  ///
+  /// In es, this message translates to:
+  /// **'Producción'**
+  String get detProduccion;
+
+  /// No description provided for @detValidacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Validación'**
+  String get detValidacion;
+
+  /// No description provided for @detComercial.
+  ///
+  /// In es, this message translates to:
+  /// **'Comercialización'**
+  String get detComercial;
+
+  /// No description provided for @detEconomico.
+  ///
+  /// In es, this message translates to:
+  /// **'Económico'**
+  String get detEconomico;
+
+  /// No description provided for @detSinDatos.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin datos todavía.'**
+  String get detSinDatos;
+
+  /// No description provided for @detInformePdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe del proyecto (PDF)'**
+  String get detInformePdf;
+
+  /// No description provided for @comNuevaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva venta'**
+  String get comNuevaTitulo;
+
+  /// No description provided for @comProducto.
+  ///
+  /// In es, this message translates to:
+  /// **'Producto'**
+  String get comProducto;
+
+  /// No description provided for @comCanal.
+  ///
+  /// In es, this message translates to:
+  /// **'Canal'**
+  String get comCanal;
+
+  /// No description provided for @comCantidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get comCantidad;
+
+  /// No description provided for @comUnidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Unidad'**
+  String get comUnidad;
+
+  /// No description provided for @comPrecio.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio unitario (€)'**
+  String get comPrecio;
+
+  /// No description provided for @comIngreso.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingreso (€)'**
+  String get comIngreso;
+
+  /// No description provided for @comGuardada.
+  ///
+  /// In es, this message translates to:
+  /// **'Venta guardada'**
+  String get comGuardada;
+
+  /// No description provided for @valNuevaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva validación de producto'**
+  String get valNuevaTitulo;
+
+  /// No description provided for @valDescripcion.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué se valida?'**
+  String get valDescripcion;
+
+  /// No description provided for @valResultado.
+  ///
+  /// In es, this message translates to:
+  /// **'Resultado'**
+  String get valResultado;
+
+  /// No description provided for @valValoracion.
+  ///
+  /// In es, this message translates to:
+  /// **'Valoración'**
+  String get valValoracion;
+
+  /// No description provided for @valSinValorar.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin valorar'**
+  String get valSinValorar;
+
+  /// No description provided for @valGuardada.
+  ///
+  /// In es, this message translates to:
+  /// **'Validación guardada'**
+  String get valGuardada;
+
+  /// No description provided for @infProyTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe del proyecto de test'**
+  String get infProyTitulo;
+
+  /// No description provided for @infProyResumen.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyecto: {nombre} · tester: {persona}'**
+  String infProyResumen(String nombre, String persona);
 }
 
 class _AppLocalizationsDelegate

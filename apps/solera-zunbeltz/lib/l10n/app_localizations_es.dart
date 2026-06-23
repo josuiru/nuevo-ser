@@ -440,4 +440,136 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get acercaFuentes => 'Información de fuentes públicas.';
+
+  @override
+  String get navProyectos => 'Proyectos';
+
+  @override
+  String get proyectosTitulo => 'Proyectos de test';
+
+  @override
+  String get proyectosVacio =>
+      'Aún no hay proyectos. Pulsa + para añadir el primero.';
+
+  @override
+  String get proyectoNuevo => 'Nuevo proyecto';
+
+  @override
+  String get proyectoNombre => 'Nombre del proyecto';
+
+  @override
+  String get proyectoPersona => 'Persona tester';
+
+  @override
+  String get proyectoActividad => 'Actividad / vertical';
+
+  @override
+  String get proyectoFinca => 'Finca (apoyo)';
+
+  @override
+  String get proyectoSinFinca => 'Sin finca';
+
+  @override
+  String get proyectoFechaInicio => 'Inicio';
+
+  @override
+  String get proyectoFechaFin => 'Fin';
+
+  @override
+  String get proyectoGuardado => 'Proyecto guardado';
+
+  @override
+  String get proyectoNombreObligatorio => 'Pon un nombre al proyecto.';
+
+  @override
+  String get proyectoBorrar => 'Borrar proyecto';
+
+  @override
+  String get rentTitulo => 'Rentabilidad';
+
+  @override
+  String get rentVentas => 'Ventas';
+
+  @override
+  String get rentOtrosIngresos => 'Otros ingresos';
+
+  @override
+  String get rentGastos => 'Gastos';
+
+  @override
+  String get rentBalance => 'Balance';
+
+  @override
+  String get rentMargen => 'Margen';
+
+  @override
+  String get rentProyeccion => 'Proyección anual';
+
+  @override
+  String get detProduccion => 'Producción';
+
+  @override
+  String get detValidacion => 'Validación';
+
+  @override
+  String get detComercial => 'Comercialización';
+
+  @override
+  String get detEconomico => 'Económico';
+
+  @override
+  String get detSinDatos => 'Sin datos todavía.';
+
+  @override
+  String get detInformePdf => 'Informe del proyecto (PDF)';
+
+  @override
+  String get comNuevaTitulo => 'Nueva venta';
+
+  @override
+  String get comProducto => 'Producto';
+
+  @override
+  String get comCanal => 'Canal';
+
+  @override
+  String get comCantidad => 'Cantidad';
+
+  @override
+  String get comUnidad => 'Unidad';
+
+  @override
+  String get comPrecio => 'Precio unitario (€)';
+
+  @override
+  String get comIngreso => 'Ingreso (€)';
+
+  @override
+  String get comGuardada => 'Venta guardada';
+
+  @override
+  String get valNuevaTitulo => 'Nueva validación de producto';
+
+  @override
+  String get valDescripcion => '¿Qué se valida?';
+
+  @override
+  String get valResultado => 'Resultado';
+
+  @override
+  String get valValoracion => 'Valoración';
+
+  @override
+  String get valSinValorar => 'Sin valorar';
+
+  @override
+  String get valGuardada => 'Validación guardada';
+
+  @override
+  String get infProyTitulo => 'Informe del proyecto de test';
+
+  @override
+  String infProyResumen(String nombre, String persona) {
+    return 'Proyecto: $nombre · tester: $persona';
+  }
 }

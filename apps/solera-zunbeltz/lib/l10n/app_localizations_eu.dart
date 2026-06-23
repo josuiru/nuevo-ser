@@ -440,4 +440,136 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get acercaFuentes => 'Informazioa iturri publikoetatik.';
+
+  @override
+  String get navProyectos => 'Proiektuak';
+
+  @override
+  String get proyectosTitulo => 'Test-proiektuak';
+
+  @override
+  String get proyectosVacio =>
+      'Oraindik ez dago proiekturik. Sakatu + lehena gehitzeko.';
+
+  @override
+  String get proyectoNuevo => 'Proiektu berria';
+
+  @override
+  String get proyectoNombre => 'Proiektuaren izena';
+
+  @override
+  String get proyectoPersona => 'Tester pertsona';
+
+  @override
+  String get proyectoActividad => 'Jarduera / bertikala';
+
+  @override
+  String get proyectoFinca => 'Finka (laguntza)';
+
+  @override
+  String get proyectoSinFinca => 'Finkarik gabe';
+
+  @override
+  String get proyectoFechaInicio => 'Hasiera';
+
+  @override
+  String get proyectoFechaFin => 'Amaiera';
+
+  @override
+  String get proyectoGuardado => 'Proiektua gordeta';
+
+  @override
+  String get proyectoNombreObligatorio => 'Jarri izena proiektuari.';
+
+  @override
+  String get proyectoBorrar => 'Ezabatu proiektua';
+
+  @override
+  String get rentTitulo => 'Errentagarritasuna';
+
+  @override
+  String get rentVentas => 'Salmentak';
+
+  @override
+  String get rentOtrosIngresos => 'Beste sarrera batzuk';
+
+  @override
+  String get rentGastos => 'Gastuak';
+
+  @override
+  String get rentBalance => 'Balantzea';
+
+  @override
+  String get rentMargen => 'Marjina';
+
+  @override
+  String get rentProyeccion => 'Urteko proiekzioa';
+
+  @override
+  String get detProduccion => 'Ekoizpena';
+
+  @override
+  String get detValidacion => 'Balidazioa';
+
+  @override
+  String get detComercial => 'Merkaturatzea';
+
+  @override
+  String get detEconomico => 'Ekonomikoa';
+
+  @override
+  String get detSinDatos => 'Oraindik daturik ez.';
+
+  @override
+  String get detInformePdf => 'Proiektuaren txostena (PDF)';
+
+  @override
+  String get comNuevaTitulo => 'Salmenta berria';
+
+  @override
+  String get comProducto => 'Produktua';
+
+  @override
+  String get comCanal => 'Kanala';
+
+  @override
+  String get comCantidad => 'Kopurua';
+
+  @override
+  String get comUnidad => 'Unitatea';
+
+  @override
+  String get comPrecio => 'Unitateko prezioa (€)';
+
+  @override
+  String get comIngreso => 'Sarrera (€)';
+
+  @override
+  String get comGuardada => 'Salmenta gordeta';
+
+  @override
+  String get valNuevaTitulo => 'Produktuaren balidazio berria';
+
+  @override
+  String get valDescripcion => 'Zer balidatzen da?';
+
+  @override
+  String get valResultado => 'Emaitza';
+
+  @override
+  String get valValoracion => 'Balorazioa';
+
+  @override
+  String get valSinValorar => 'Baloratu gabe';
+
+  @override
+  String get valGuardada => 'Balidazioa gordeta';
+
+  @override
+  String get infProyTitulo => 'Test-proiektuaren txostena';
+
+  @override
+  String infProyResumen(String nombre, String persona) {
+    return 'Proiektua: $nombre · testerra: $persona';
+  }
 }
