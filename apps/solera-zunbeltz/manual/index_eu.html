@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solera Zunbeltz — Eskuliburu laburra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --monte:#1f2e22; --pasto:#5e7d3a; --pasto-1:#4d6a2e; --ocre:#c99a3b; --ocre-claro:#e6c275;
+    --musgo:#8aa66b; --crema:#f4f0e4; --crema-2b:#eae3d2; --tinta:#1c241b; --tinta-2:#3a4a3b; --tinta-3:#6b7a6c; --beltz:#14180f;
+    --linea:rgba(31,46,34,.16); --serif:"Fraunces",Georgia,serif; --sans:"Archivo",system-ui,sans-serif; --narrow:"Archivo Narrow","Archivo",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--tinta);background:#cfc9b8;line-height:1.55;-webkit-font-smoothing:antialiased;padding:24px 12px}
+  .hoja{max-width:840px;margin:0 auto;background:var(--crema);box-shadow:0 10px 40px rgba(20,24,15,.18);border-radius:6px;overflow:hidden}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em}
+
+  .cab{display:flex;align-items:center;gap:14px;padding:30px 40px 24px;background:var(--monte);color:#eef0e6}
+  .glifo{width:38px;height:38px;border-radius:10px;background:var(--crema);position:relative;flex:0 0 auto}
+  .glifo::after{content:"";position:absolute;inset:9px 9px auto 9px;height:8px;border-radius:2px;background:var(--ocre)}
+  .glifo::before{content:"";position:absolute;inset:auto 9px 9px 9px;height:8px;border-radius:2px;background:var(--pasto)}
+  .cab h1{font-size:1.7rem;color:#fff;line-height:1.1}
+  .cab .sub{font-family:var(--narrow);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;color:var(--ocre-claro);margin-top:2px}
+
+  .zirriborro{background:var(--ocre-claro);color:#5a4410;font-family:var(--narrow);font-weight:700;font-size:13px;padding:8px 40px;border-bottom:1px solid var(--linea)}
+  .idioma{padding:10px 40px 0;font-family:var(--narrow);font-size:12.5px}
+  .idioma a{color:var(--pasto-1);font-weight:700;text-decoration:none}
+
+  .cuerpo{padding:14px 40px 8px}
+  .intro{font-size:1.02rem;color:var(--tinta-2);margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 22px}
+  .chip{font-family:var(--narrow);font-weight:600;font-size:12px;background:var(--crema-2b);border:1px solid var(--linea);border-radius:100px;padding:5px 12px;color:var(--tinta-2)}
+
+  h2{font-size:1.25rem;margin:26px 0 6px;color:var(--monte);border-bottom:2px solid var(--linea);padding-bottom:6px}
+  h2 .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--monte);color:var(--ocre-claro);font-size:.85rem;margin-right:9px;vertical-align:middle}
+  p.lead{color:var(--tinta-2);margin:6px 0 8px}
+  ol,ul{margin:6px 0 6px 4px;padding-left:20px}
+  li{margin:5px 0;color:var(--tinta-2)}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+  @media(max-width:620px){.tabs{grid-template-columns:1fr}}
+  .tab{background:var(--crema-2b);border:1px solid var(--linea);border-left:3px solid var(--pasto);border-radius:9px;padding:12px 14px}
+  .tab b{font-family:var(--serif);font-weight:600}
+  .tab span{display:block;font-size:.92rem;color:var(--tinta-2);margin-top:2px}
+  kbd{font-family:var(--narrow);font-weight:700;background:var(--monte);color:#eef0e6;border-radius:5px;padding:1px 7px;font-size:.85em}
+  .nota{background:#fff;border:1px solid var(--linea);border-left:4px solid var(--ocre);border-radius:9px;padding:12px 16px;margin:10px 0;font-size:.94rem;color:var(--tinta-2)}
+  .nota b{color:var(--monte)}
+
+  .pie{background:var(--beltz);color:rgba(244,240,228,.7);padding:18px 40px;font-size:12px;line-height:1.6;font-family:var(--narrow);margin-top:20px}
+  .pie b{color:var(--ocre-claro)}
+  .barra{max-width:840px;margin:0 auto 12px;display:flex;justify-content:flex-end}
+  .barra button{font-family:var(--narrow);font-weight:700;font-size:13px;border:none;background:var(--monte);color:#eef0e6;padding:9px 18px;border-radius:8px;cursor:pointer}
+  @media print{body{background:#fff;padding:0}.hoja{box-shadow:none;border-radius:0;max-width:none}.barra{display:none}@page{margin:14mm}}
+</style>
+</head>
+<body>
+
+<div class="barra"><button onclick="window.print()">Inprimatu / PDF gisa gorde</button></div>
+
+<div class="hoja">
+  <div class="cab">
+    <span class="glifo"></span>
+    <div>
+      <h1>Solera Zunbeltz</h1>
+      <div class="sub">Eskuliburu laburra · 1. Fasea</div>
+    </div>
+  </div>
+  <div class="zirriborro">⚠ ZIRRIBORROA — euskara berrikuspen natiboaren zain (terminologia agroabeltzaina barne).</div>
+  <div class="idioma"><a href="index.html">Gaztelaniaz / En castellano →</a></div>
+
+  <div class="cuerpo">
+    <p class="intro">Zunbeltz Nekazaritza Saiakuntza Gunerako aplikazioa: finkak eta azpiegiturak kudeatzen ditu, mantentze-lanak banatzen ditu eta saiakuntzaren jarraipena egiten du. Gailu bakarrean funtzionatzen du, mendian estaldurarik gabe ere.</p>
+    <div class="chips">
+      <span class="chip">◆ Gaztelania eta euskara</span>
+      <span class="chip">◆ Offline funtzionatzen du</span>
+      <span class="chip">◆ Gailu bakarra</span>
+    </div>
+
+    <h2><span class="n">1</span>Lehen abioa</h2>
+    <p class="lead">Aplikazioa lehen aldiz irekitzean ongietorria ikusiko duzu. Aukeratu hizkuntza (<b>Gaztelania</b> edo <b>Euskara</b>) eta sakatu <kbd>Hasi</kbd>. Nahi duzunean alda dezakezu <b>Ezarpenak</b> atalean.</p>
+    <p class="lead">Behean lau fitxa dituzu:</p>
+    <div class="tabs">
+      <div class="tab"><b>Gaur</b><span>Laburpena: zenbat zeregin dituzun zabalik eta sarbide azkarra zereginen taulara.</span></div>
+      <div class="tab"><b>Finkak</b><span>Zunbeltz eta La Planilla finken mapa, azpiegitura-puntuekin.</span></div>
+      <div class="tab"><b>Jarraipena</b><span>Elikadura, erditzeak, salmentak, sarrerak eta gastuak, adierazleekin.</span></div>
+      <div class="tab"><b>Ezarpenak</b><span>Hizkuntza eta Saiakuntza Guneari buruzko informazioa.</span></div>
+    </div>
+
+    <h2><span class="n">2</span>Azpiegitura bat mapan markatu</h2>
+    <p class="lead"><b>Finkak</b> fitxan, puntu bakoitza azpiegitura bat da (aska, manga, hesia, aterpea, urmaela…). Bat gehitzeko hiru modu dituzu:</p>
+    <ol>
+      <li><b>Mapa ukituz</b>: egin klik kokaleku zehatzean eta fitxa irekiko da koordenatu horiekin eta finka hurbilena aukeratuta.</li>
+      <li><b><kbd>Puntu berria</kbd> botoiarekin</b> (behean eskuinean): aukeratu <i>uneko GPSa erabili</i> (instalazioaren ondoan zaudela) edo <i>maparen erdigunea</i>.</li>
+      <li>Bete <b>mota</b>, <b>izena</b>, <b>egoera</b> eta, nahi baduzu, <b>argazkiak</b>, eta sakatu <kbd>Gorde</kbd>.</li>
+    </ol>
+    <p class="lead">Puntu bakoitza kolore batekin agertzen da egoeraren arabera: berdea (operatibo), okrea (berrikusteke), gorrixka (matxuratuta). Sakatu <kbd>GPS</kbd> behean mapa zure kokapenean zentratzeko, edo <kbd>Geruzak</kbd> kale-mapa / satelite artean txandakatzeko.</p>
+
+    <h2><span class="n">3</span>Puntu bat birkokatu edo ezabatu</h2>
+    <ol>
+      <li>Ukitu mapako <b>markatzailea</b> bere fitxa irekitzeko.</li>
+      <li>Mugitzeko: sakatu <b>Kokatu berriro mapan</b> (goiko ikonoa) eta gero <b>ukitu kokaleku berria</b>.</li>
+      <li>Ezabatzeko: sakatu <b>zakarrontzia</b> eta berretsi.</li>
+    </ol>
+
+    <h2><span class="n">4</span>Mantentze-zereginak</h2>
+    <ol>
+      <li>Ireki puntu baten fitxa eta sakatu <kbd>Zeregin berria</kbd>.</li>
+      <li>Jarri <b>izenburua</b>, eta nahi baduzu deskribapena, <b>arduraduna</b>, <b>lehentasuna</b>, <b>egoera</b>, <b>helburu-data</b>, aurreko/ondorengo argazkiak eta kostua. Gorde.</li>
+      <li><b>Finkak → Zereginak</b> atalean <b>taula</b> duzu: iragazi finkaren eta egoeraren arabera, zer falta den eta nork duen begirada batean ikusteko.</li>
+      <li><b>Mantentze-partea PDFan</b> ateratzeko, sakatu PDF ikonoa taularen goialdean: sortu eta partekatu edo gorde dezakezu.</li>
+    </ol>
+
+    <h2><span class="n">5</span>Saiakuntzaren jarraipena</h2>
+    <p class="lead"><b>Jarraipena</b> fitxan <b>aldiko adierazleak</b> ikusten dituzu (elikadura kg, erditzeak, merkaturatutako produktuak, sarrerak, gastuak eta balantzea), finkaren arabera iragazgarriak.</p>
+    <ol>
+      <li>Sakatu <kbd>+</kbd> botoia eta aukeratu <b>Erregistratu jarduera</b> (elikadura kg-tan, erditzeak, produktuak) edo <b>Apunte ekonomikoa</b> (sarrera edo gastua).</li>
+      <li>Bete datuak eta gorde; adierazleak berez eguneratzen dira.</li>
+      <li><b>Jarraipen-txostena PDFan</b> ateratzeko, sakatu goiko PDF ikonoa.</li>
+    </ol>
+
+    <h2><span class="n">6</span>Eguraldiaren iragarpena</h2>
+    <p class="lead"><b>Finkak</b> atalean, <b>hodei</b> ikonoak (goian) finkaren gaineko 7 eguneko iragarpena erakusten du, kudeaketarako abisu erabilgarriekin: izotza, euria, haizea, beroa eta «lan egiteko egun ona». <span style="color:var(--tinta-3)">Interneta behar duen gauza bakarra da; gainerakoa estaldurarik gabe funtzionatzen du.</span></p>
+
+    <div class="nota"><b>Jakitea ona.</b> Argazkiak gailuan bertan gordetzen dira. Iragarpena eta abisuak orientagarriak dira eta ez dute ordezkatzen abeltzainaren ezta albaitariaren irizpidea. <b>Aurretiazko bertsioa</b> da: parte eta txostenek behin-behineko formatua dute, eta paper-lan ofiziala (ustiategi-liburua, PAC koadernoa, trazabilitatea) geroagoko faseetan iritsiko da. Hasieran agertzen diren finkak adibidezko datuak dira, zuekin benetakoak kargatu arte.</div>
+  </div>
+
+  <div class="pie">
+    <b>Solera Zunbeltz · Eskuliburu laburra v1 · 1. Fasea</b> — lan-dokumentua. ZIRRIBORROA: euskara berrikuspen natiboaren zain dago. Aplikazio elebiduna (gaztelania/euskara), offline funtzionatzen du; gailu bakarra oraingoz (erabilera anitza geroagoko fasea da).
+  </div>
+</div>
+
+</body>
+</html>
