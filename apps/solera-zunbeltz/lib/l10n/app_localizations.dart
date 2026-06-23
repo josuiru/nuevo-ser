@@ -1171,6 +1171,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Proyecto: {nombre} · tester: {persona}'**
   String infProyResumen(String nombre, String persona);
+
+  /// No description provided for @comparativaPdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparativa (PDF)'**
+  String get comparativaPdf;
+
+  /// No description provided for @comparativaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparativa de proyectos de test'**
+  String get comparativaTitulo;
+
+  /// No description provided for @comparativaColProyecto.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyecto'**
+  String get comparativaColProyecto;
+
+  /// No description provided for @comparativaColTester.
+  ///
+  /// In es, this message translates to:
+  /// **'Tester'**
+  String get comparativaColTester;
+
+  /// No description provided for @comparativaTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Total'**
+  String get comparativaTotal;
 }
 
 class _AppLocalizationsDelegate

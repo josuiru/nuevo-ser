@@ -572,4 +572,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String infProyResumen(String nombre, String persona) {
     return 'Proyecto: $nombre · tester: $persona';
   }
+
+  @override
+  String get comparativaPdf => 'Comparativa (PDF)';
+
+  @override
+  String get comparativaTitulo => 'Comparativa de proyectos de test';
+
+  @override
+  String get comparativaColProyecto => 'Proyecto';
+
+  @override
+  String get comparativaColTester => 'Tester';
+
+  @override
+  String get comparativaTotal => 'Total';
 }

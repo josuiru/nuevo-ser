@@ -1,0 +1,72 @@
+import 'dart:io';
+
+import 'package:nuevo_ser_core/nuevo_ser_core.dart';
+
+import '../l10n/app_localizations.dart';
+import '../modelos/indicadores_seguimiento.dart';
+import '../modelos/proyecto_test.dart';
+import '../modelos/rentabilidad_proyecto.dart';
+
+/// Fila de la comparativa: un proyecto con su rentabilidad.
+typedef FilaComparativa = ({ProyectoTest proyecto, RentabilidadProyecto rentabilidad});
+
+/// Comparativa de rentabilidad entre proyectos de test, en PDF. Es la vista
+/// de análisis del coordinador (comparable/extrapolable). Sello PROVISIONAL.
+Future<File> generarComparativaProyectosPdf({
+  required AppLocalizations textos,
+  required String idioma,
+  required List<FilaComparativa> filas,
+}) async {
+  var totalVentas = 0;
+  var totalGastos = 0;
+  var totalBalance = 0;
+  for (final f in filas) {
+    totalVentas += f.rentabilidad.ingresosComercializacionCentimos;
+    totalGastos += f.rentabilidad.gastosCentimos;
+    totalBalance += f.rentabilidad.balanceCentimos;
+  }
+
+  return generarInformePeriodicoPdf(
+    tituloCabecera: textos.comparativaTitulo,
+    subtituloCabecera: textos.parteSubtitulo,
+    bulletsResumen: [
+      textos.parteProvisional,
+      '${textos.comparativaColProyecto}: ${filas.length}',
+    ],
+    tablas: [
+      TablaInforme(
+        titulo: textos.comparativaTitulo,
+        headers: [
+          textos.comparativaColProyecto,
+          textos.comparativaColTester,
+          textos.rentVentas,
+          textos.rentGastos,
+          textos.rentBalance,
+          textos.rentMargen,
+        ],
+        mensajeSiVacia: textos.detSinDatos,
+        filas: [
+          for (final f in filas)
+            [
+              f.proyecto.nombre,
+              f.proyecto.persona,
+              eurosDesdeCentimos(f.rentabilidad.ingresosComercializacionCentimos),
+              eurosDesdeCentimos(f.rentabilidad.gastosCentimos),
+              eurosDesdeCentimos(f.rentabilidad.balanceCentimos),
+              '${f.rentabilidad.margenPorcentaje.toStringAsFixed(0)} %',
+            ],
+          if (filas.isNotEmpty)
+            [
+              textos.comparativaTotal,
+              '',
+              eurosDesdeCentimos(totalVentas),
+              eurosDesdeCentimos(totalGastos),
+              eurosDesdeCentimos(totalBalance),
+              '',
+            ],
+        ],
+      ),
+    ],
+    prefijoNombreFichero: 'comparativa_proyectos',
+  );
+}

@@ -201,5 +201,11 @@
   "valGuardada": "Balidazioa gordeta",
 
   "infProyTitulo": "Test-proiektuaren txostena",
-  "infProyResumen": "Proiektua: {nombre} · testerra: {persona}"
+  "infProyResumen": "Proiektua: {nombre} · testerra: {persona}",
+
+  "comparativaPdf": "Konparaketa (PDF)",
+  "comparativaTitulo": "Test-proiektuen konparaketa",
+  "comparativaColProyecto": "Proiektua",
+  "comparativaColTester": "Testerra",
+  "comparativaTotal": "Guztira"
 }
