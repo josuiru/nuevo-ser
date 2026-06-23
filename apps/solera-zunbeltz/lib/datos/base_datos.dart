@@ -45,7 +45,7 @@ class BaseDatosSoleraZunbeltz {
     final ruta = path_lib.join(directorio.path, 'solera_zunbeltz.db');
     _basedatos = await openDatabase(
       ruta,
-      version: 3,
+      version: 4,
       onConfigure: (db) async {
         // ON DELETE CASCADE / SET NULL requieren FKs activas.
         await db.execute('PRAGMA foreign_keys = ON');
@@ -54,10 +54,12 @@ class BaseDatosSoleraZunbeltz {
         await crearEsquemaV1(db);
         await aplicarMigracionV2(db);
         await aplicarMigracionV3(db);
+        await aplicarMigracionV4(db);
       },
       onUpgrade: (db, anterior, actual) async {
         if (anterior < 2) await aplicarMigracionV2(db);
         if (anterior < 3) await aplicarMigracionV3(db);
+        if (anterior < 4) await aplicarMigracionV4(db);
       },
     );
     return _basedatos!;
@@ -218,6 +220,17 @@ class BaseDatosSoleraZunbeltz {
         'ALTER TABLE registros_actividad ADD COLUMN proyecto_id INTEGER');
     await db.execute(
         'ALTER TABLE apuntes_economicos ADD COLUMN proyecto_id INTEGER');
+  }
+
+  /// Migración v3 → v4: desglose por categorías e IVA. Aditiva.
+  @visibleForTesting
+  static Future<void> aplicarMigracionV4(Database db) async {
+    await db.execute(
+        "ALTER TABLE apuntes_economicos ADD COLUMN categoria TEXT NOT NULL DEFAULT ''");
+    await db.execute(
+        'ALTER TABLE apuntes_economicos ADD COLUMN iva_porcentaje INTEGER NOT NULL DEFAULT 0');
+    await db.execute(
+        'ALTER TABLE registros_comercializacion ADD COLUMN iva_porcentaje INTEGER NOT NULL DEFAULT 0');
   }
 
   // ─── Fincas ─────────────────────────────────────────────
@@ -636,6 +649,30 @@ class BaseDatosSoleraZunbeltz {
       ingresosApuntesCentimos: ingresosApuntes,
       gastosCentimos: gastos,
     );
+  }
+
+  /// Desglose de importes (céntimos) por categoría para un tipo de apunte
+  /// (gasto / ingreso) de un proyecto/periodo. Devuelve categoría → total.
+  Future<Map<String, int>> desglosePorCategoria(
+    String tipo, {
+    int? proyectoId,
+    int? desdeMs,
+    int? hastaMs,
+  }) async {
+    final db = await basedatos;
+    final filtro = _filtroSeguimiento(
+        proyectoId: proyectoId, tipo: tipo, desdeMs: desdeMs, hastaMs: hastaMs);
+    final filas = await db.rawQuery(
+      'SELECT categoria, COALESCE(SUM(importe_centimos), 0) AS total FROM apuntes_economicos'
+      '${filtro.where == null ? '' : ' WHERE ${filtro.where}'}'
+      ' GROUP BY categoria ORDER BY total DESC',
+      filtro.args,
+    );
+    final mapa = <String, int>{};
+    for (final f in filas) {
+      mapa[(f['categoria'] as String?) ?? ''] = (f['total'] as num).toInt();
+    }
+    return mapa;
   }
 
   // ─── Semilla de ejemplo ─────────────────────────────────

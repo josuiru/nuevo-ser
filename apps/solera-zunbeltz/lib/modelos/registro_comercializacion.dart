@@ -14,6 +14,7 @@ class RegistroComercializacion {
     this.unidad = 'uds',
     this.precioUnitarioCentimos = 0,
     this.ingresoCentimos = 0,
+    this.ivaPorcentaje = 0,
     this.notas = '',
     this.fechaCreacionMs = 0,
   });
@@ -37,6 +38,9 @@ class RegistroComercializacion {
   /// precio, pero se guarda explícito por si hay descuentos o lotes).
   final int ingresoCentimos;
 
+  /// Tipo de IVA aplicado (%); 0 = sin IVA. El ingreso es el total (con IVA).
+  final int ivaPorcentaje;
+
   final String notas;
   final int fechaCreacionMs;
 
@@ -50,6 +54,7 @@ class RegistroComercializacion {
         'unidad': unidad,
         'precio_unitario_centimos': precioUnitarioCentimos,
         'ingreso_centimos': ingresoCentimos,
+        'iva_porcentaje': ivaPorcentaje,
         'notas': notas,
         'fecha_creacion_ms': fechaCreacionMs,
       };
@@ -65,6 +70,7 @@ class RegistroComercializacion {
         unidad: (mapa['unidad'] as String?) ?? 'uds',
         precioUnitarioCentimos: (mapa['precio_unitario_centimos'] as int?) ?? 0,
         ingresoCentimos: (mapa['ingreso_centimos'] as int?) ?? 0,
+        ivaPorcentaje: (mapa['iva_porcentaje'] as int?) ?? 0,
         notas: (mapa['notas'] as String?) ?? '',
         fechaCreacionMs: (mapa['fecha_creacion_ms'] as int?) ?? 0,
       );

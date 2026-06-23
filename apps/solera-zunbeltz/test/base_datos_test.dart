@@ -25,7 +25,7 @@ void main() {
     final db = await databaseFactoryFfi.openDatabase(
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
-        version: 3,
+        version: 4,
         // BD nueva por test: sin esto, todas las llamadas comparten la
         // misma BD en memoria y el estado se filtra entre tests.
         singleInstance: false,
@@ -34,6 +34,7 @@ void main() {
           await BaseDatosSoleraZunbeltz.crearEsquemaV1(d);
           await BaseDatosSoleraZunbeltz.aplicarMigracionV2(d);
           await BaseDatosSoleraZunbeltz.aplicarMigracionV3(d);
+          await BaseDatosSoleraZunbeltz.aplicarMigracionV4(d);
         },
       ),
     );
@@ -273,10 +274,11 @@ void main() {
     final v3 = await databaseFactoryFfi.openDatabase(
       ruta,
       options: OpenDatabaseOptions(
-        version: 3,
+        version: 4,
         onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
         onUpgrade: (d, anterior, actual) async {
           if (anterior < 3) await BaseDatosSoleraZunbeltz.aplicarMigracionV3(d);
+          if (anterior < 4) await BaseDatosSoleraZunbeltz.aplicarMigracionV4(d);
         },
       ),
     );
@@ -293,6 +295,84 @@ void main() {
         importeCentimos: 999));
     expect(await bd.sumarImporteEconomico('gasto', proyectoId: proyectoId), 999);
     await v3.close();
+    await dir.delete(recursive: true);
+  });
+
+  test('desglose por categoría y persistencia de IVA', () async {
+    final bd = await abrirBdEnMemoria();
+    final fincaId = await bd.guardarFinca(Finca(nombre: 'Zunbeltz'));
+    final proyectoId =
+        await bd.guardarProyecto(ProyectoTest(nombre: 'P', persona: 'A'));
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: 'gasto',
+        categoria: 'alimentacion',
+        importeCentimos: 10000,
+        ivaPorcentaje: 10));
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: 'gasto',
+        categoria: 'sanidad',
+        importeCentimos: 4000));
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        proyectoId: proyectoId,
+        tipo: 'gasto',
+        categoria: 'alimentacion',
+        importeCentimos: 6000));
+
+    final desglose =
+        await bd.desglosePorCategoria('gasto', proyectoId: proyectoId);
+    expect(desglose['alimentacion'], 16000);
+    expect(desglose['sanidad'], 4000);
+    // El IVA se persiste.
+    final apunte = (await bd.listarApuntes(proyectoId: proyectoId))
+        .firstWhere((a) => a.categoria == 'alimentacion' && a.ivaPorcentaje == 10);
+    expect(apunte.ivaPorcentaje, 10);
+  });
+
+  test('migración v3 → v4 conserva datos y añade categoría/IVA', () async {
+    final dir = await Directory.systemTemp.createTemp('zunbeltz_mig4');
+    final ruta = '${dir.path}/m4.db';
+    final v3 = await databaseFactoryFfi.openDatabase(
+      ruta,
+      options: OpenDatabaseOptions(
+        version: 3,
+        onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
+        onCreate: (d, v) async {
+          await BaseDatosSoleraZunbeltz.crearEsquemaV1(d);
+          await BaseDatosSoleraZunbeltz.aplicarMigracionV2(d);
+          await BaseDatosSoleraZunbeltz.aplicarMigracionV3(d);
+        },
+      ),
+    );
+    final fincaId =
+        await v3.insert('fincas', Finca(nombre: 'Zunbeltz').toMap()..remove('id'));
+    await v3.close();
+
+    final v4 = await databaseFactoryFfi.openDatabase(
+      ruta,
+      options: OpenDatabaseOptions(
+        version: 4,
+        onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
+        onUpgrade: (d, anterior, actual) async {
+          if (anterior < 4) await BaseDatosSoleraZunbeltz.aplicarMigracionV4(d);
+        },
+      ),
+    );
+    final bd = BaseDatosSoleraZunbeltz.paraTests(v4);
+    expect((await bd.listarFincas()).single.nombre, 'Zunbeltz');
+    // La columna categoría existe y funciona el desglose.
+    await bd.guardarApunte(ApunteEconomico(
+        fincaId: fincaId,
+        tipo: 'gasto',
+        categoria: 'insumos',
+        importeCentimos: 500));
+    final desglose = await bd.desglosePorCategoria('gasto');
+    expect(desglose['insumos'], 500);
+    await v4.close();
     await dir.delete(recursive: true);
   });
 }

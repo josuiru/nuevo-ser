@@ -105,6 +105,32 @@ const List<OpcionCatalogo> resultadosValidacion = [
   OpcionCatalogo('descartar', 'Descartar', 'Baztertu'),
 ];
 
+/// Categorías de gasto (desglose de costes del proyecto de test).
+const List<OpcionCatalogo> categoriasGasto = [
+  OpcionCatalogo('alimentacion', 'Alimentación', 'Elikadura'),
+  OpcionCatalogo('sanidad', 'Sanidad / veterinario', 'Osasuna / albaitaritza'),
+  OpcionCatalogo('insumos', 'Insumos / materiales', 'Hornidurak / materialak'),
+  OpcionCatalogo('mano_obra', 'Mano de obra', 'Eskulana'),
+  OpcionCatalogo('alquiler', 'Alquiler / cesión', 'Alokairua / lagapena'),
+  OpcionCatalogo('maquinaria', 'Maquinaria / combustible', 'Makineria / erregaia'),
+  OpcionCatalogo('servicios', 'Servicios', 'Zerbitzuak'),
+  OpcionCatalogo('otros', 'Otros', 'Bestelakoak'),
+];
+
+/// Categorías de ingreso (desglose de ingresos del proyecto de test).
+const List<OpcionCatalogo> categoriasIngreso = [
+  OpcionCatalogo('venta', 'Venta', 'Salmenta'),
+  OpcionCatalogo('ayuda', 'Ayuda / prima', 'Laguntza / saria'),
+  OpcionCatalogo('otros', 'Otros', 'Bestelakoak'),
+];
+
+/// Devuelve el catálogo de categorías según el tipo de apunte.
+List<OpcionCatalogo> categoriasDe(String tipoApunte) =>
+    tipoApunte == 'ingreso' ? categoriasIngreso : categoriasGasto;
+
+/// Tipos de IVA aplicables (España). 0 = sin IVA / exento.
+const List<int> tiposIva = [0, 4, 10, 21];
+
 /// Códigos por defecto (primer alta).
 const String tipoPuntoPorDefecto = 'abrevadero';
 const String estadoPuntoPorDefecto = 'operativo';
@@ -114,3 +140,6 @@ const String tipoActividadPorDefecto = 'alimentacion';
 const String tipoApuntePorDefecto = 'gasto';
 const String canalComercializacionPorDefecto = 'directa';
 const String resultadoValidacionPorDefecto = 'validado';
+const String categoriaGastoPorDefecto = 'otros';
+const String categoriaIngresoPorDefecto = 'venta';
+const int ivaPorDefecto = 0;
