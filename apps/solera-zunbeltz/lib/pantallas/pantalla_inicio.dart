@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../datos/base_datos.dart';
 import '../l10n/app_localizations.dart';
+import 'pantalla_ayuda.dart';
 import 'tablero_tareas.dart';
 
 /// Pestaña "Hoy": resumen del día. Muestra el número de tareas abiertas y
@@ -43,7 +44,18 @@ class _PantallaInicioState extends State<PantallaInicio> {
   Widget build(BuildContext context) {
     final textos = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(textos.hoyTitulo)),
+      appBar: AppBar(
+        title: Text(textos.hoyTitulo),
+        actions: [
+          IconButton(
+            tooltip: textos.ayudaTitulo,
+            icon: const Icon(Icons.help_outline),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const PantallaAyuda()),
+            ),
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: _cargar,
         child: ListView(

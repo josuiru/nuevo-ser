@@ -647,4 +647,64 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get coordinadorCorreo => 'Koordinatzailearen helbide elektronikoa';
+
+  @override
+  String get ayudaTitulo => 'Laguntza';
+
+  @override
+  String get ayudaIntro =>
+      'Gida erraza, urratsez urrats. Ukitu atal bakoitza irekitzeko. Ez da app-etan jakitea behar: galtzen bazara, beti itzul zaitezke atzera, goian ezkerrean dagoen geziarekin.';
+
+  @override
+  String get ayudaQueEsT => 'Zer da app hau?';
+
+  @override
+  String get ayudaQueEsB =>
+      'Zure Saiakuntza Guneko koadernoa da. Finkak eramateko balio du eta, batez ere, zure test-proiektuaren jarraipena egiteko: zer ekoizten duzun, zer saltzen duzun, zer gastatzen duzun eta zer irabazten duzun. Zure mugikorrean funtzionatzen du, estaldurarik ez baduzu ere.';
+
+  @override
+  String get ayudaPestanasT => 'Beheko lau fitxak';
+
+  @override
+  String get ayudaPestanasB =>
+      'Gaur: laburpena. Finkak: mapa, puntuekin eta zereginekin. Proiektuak: zure test-prozesua eta zure zenbakiak. Ezarpenak: hizkuntza, laguntza eta gehiago. Ukitu bakoitza pantailaz aldatzeko.';
+
+  @override
+  String get ayudaFincasT => 'Puntu bat markatu mapan';
+
+  @override
+  String get ayudaFincasB =>
+      'Sartu Finketan. Aska bat, manga bat, hesi bat… gehitzeko, ukitu lekua mapan (edo beheko eskuineko «Puntu berria» botoia). Bete mota eta izena eta sakatu Gorde. Ukitu mapako puntu bat bere fitxa ikusteko.';
+
+  @override
+  String get ayudaTareasT => 'Mantentze-zeregin bat apuntatu';
+
+  @override
+  String get ayudaTareasB =>
+      'Ireki puntu baten fitxa eta sakatu «Zeregin berria». Jarri zer egin behar den, nork eta noizko. Finkak → Zereginak atalean ikusten duzu egiteke dagoen guztia. PDF botoiarekin partea ateratzen duzu.';
+
+  @override
+  String get ayudaProyectosT => 'Zure test-proiektua eta zure zenbakiak';
+
+  @override
+  String get ayudaProyectosB =>
+      'Proiektuetan, sakatu + zure proiektua sortzeko. Barruan, sakatu + eta aukeratu zer apuntatu: ekoizpena, salmenta bat (merkaturatzea), produktu-proba bat edo gastu/sarrera bat. Goian zeure zenbakiak ikusiko dituzu: salmentak, gastuak, balantzea eta errentagarritasuna. Hiruhilekoka ikus ditzakezu goiko iragazkiarekin.';
+
+  @override
+  String get ayudaInformesT => 'Txostenak atera eta bidali';
+
+  @override
+  String get ayudaInformesB =>
+      'Zure proiektuan, partekatzeko botoiak (goian) PDF txostena ateratzen, Excelera (CSV) esportatzen edo «Koordinatzaileari bidaltzen» uzten dizu. Azken horretarako, jarri lehenik koordinatzailearen helbidea Ezarpenetan.';
+
+  @override
+  String get ayudaIdiomaDatosT => 'Hizkuntza, argazkiak eta internet';
+
+  @override
+  String get ayudaIdiomaDatosB =>
+      'Aldatu gaztelania eta euskara artean Ezarpenetan. Argazkiak zure mugikorrean gordetzen dira. Dena internetik gabe funtzionatzen du; eguraldiaren iragarpenak bakarrik behar du konexioa.';
+
+  @override
+  String get ayudaPie =>
+      'Zerbait argi ez badago, galdetu Saiakuntza Guneko koordinatzaileari.';
 }

@@ -647,4 +647,64 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get coordinadorCorreo => 'Correo del coordinador';
+
+  @override
+  String get ayudaTitulo => 'Ayuda';
+
+  @override
+  String get ayudaIntro =>
+      'Una guía sencilla, paso a paso. Toca cada apartado para abrirlo. No hace falta saber de apps: si te pierdes, siempre puedes volver atrás con la flecha de arriba a la izquierda.';
+
+  @override
+  String get ayudaQueEsT => '¿Qué es esta app?';
+
+  @override
+  String get ayudaQueEsB =>
+      'Es tu cuaderno del Espacio Test. Sirve para llevar las fincas y, sobre todo, el seguimiento de tu proyecto de test: lo que produces, lo que vendes, lo que gastas y lo que ganas. Funciona en tu móvil aunque no tengas cobertura.';
+
+  @override
+  String get ayudaPestanasT => 'Las cuatro pestañas de abajo';
+
+  @override
+  String get ayudaPestanasB =>
+      'Hoy: un resumen. Fincas: el mapa con los puntos y las tareas. Proyectos: tu proceso de test y tus números. Ajustes: idioma, ayuda y más. Toca cada una para cambiar de pantalla.';
+
+  @override
+  String get ayudaFincasT => 'Marcar un punto en el mapa';
+
+  @override
+  String get ayudaFincasB =>
+      'Entra en Fincas. Para añadir un abrevadero, una manga, un cierre… toca el sitio en el mapa (o el botón «Nuevo punto» de abajo a la derecha). Rellena el tipo y el nombre y pulsa Guardar. Toca un punto del mapa para ver su ficha.';
+
+  @override
+  String get ayudaTareasT => 'Apuntar una tarea de mantenimiento';
+
+  @override
+  String get ayudaTareasB =>
+      'Abre la ficha de un punto y pulsa «Nueva tarea». Pon qué hay que hacer, quién y para cuándo. En Fincas → Tareas ves todo lo pendiente. Con el botón de PDF sacas el parte.';
+
+  @override
+  String get ayudaProyectosT => 'Tu proyecto de test y tus números';
+
+  @override
+  String get ayudaProyectosB =>
+      'En Proyectos, pulsa + para crear tu proyecto. Dentro, pulsa + y elige qué apuntar: producción, una venta (comercialización), una prueba de producto o un gasto/ingreso. Arriba verás solos tus números: ventas, gastos, balance y rentabilidad. Puedes mirarlos por trimestre con el filtro de arriba.';
+
+  @override
+  String get ayudaInformesT => 'Sacar informes y enviarlos';
+
+  @override
+  String get ayudaInformesB =>
+      'En tu proyecto, el botón de compartir (arriba) te deja sacar el informe en PDF, exportar a Excel (CSV) o «Enviar al coordinador». Para esto último, primero pon el correo del coordinador en Ajustes.';
+
+  @override
+  String get ayudaIdiomaDatosT => 'Idioma, fotos e internet';
+
+  @override
+  String get ayudaIdiomaDatosB =>
+      'Cambia entre castellano y euskera en Ajustes. Las fotos se guardan en tu móvil. Todo funciona sin internet; solo la previsión del tiempo necesita conexión.';
+
+  @override
+  String get ayudaPie =>
+      'Si algo no queda claro, pregunta al coordinador del Espacio Test.';
 }

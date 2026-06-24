@@ -1315,6 +1315,108 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Correo del coordinador'**
   String get coordinadorCorreo;
+
+  /// No description provided for @ayudaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Ayuda'**
+  String get ayudaTitulo;
+
+  /// No description provided for @ayudaIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Una guía sencilla, paso a paso. Toca cada apartado para abrirlo. No hace falta saber de apps: si te pierdes, siempre puedes volver atrás con la flecha de arriba a la izquierda.'**
+  String get ayudaIntro;
+
+  /// No description provided for @ayudaQueEsT.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué es esta app?'**
+  String get ayudaQueEsT;
+
+  /// No description provided for @ayudaQueEsB.
+  ///
+  /// In es, this message translates to:
+  /// **'Es tu cuaderno del Espacio Test. Sirve para llevar las fincas y, sobre todo, el seguimiento de tu proyecto de test: lo que produces, lo que vendes, lo que gastas y lo que ganas. Funciona en tu móvil aunque no tengas cobertura.'**
+  String get ayudaQueEsB;
+
+  /// No description provided for @ayudaPestanasT.
+  ///
+  /// In es, this message translates to:
+  /// **'Las cuatro pestañas de abajo'**
+  String get ayudaPestanasT;
+
+  /// No description provided for @ayudaPestanasB.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy: un resumen. Fincas: el mapa con los puntos y las tareas. Proyectos: tu proceso de test y tus números. Ajustes: idioma, ayuda y más. Toca cada una para cambiar de pantalla.'**
+  String get ayudaPestanasB;
+
+  /// No description provided for @ayudaFincasT.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar un punto en el mapa'**
+  String get ayudaFincasT;
+
+  /// No description provided for @ayudaFincasB.
+  ///
+  /// In es, this message translates to:
+  /// **'Entra en Fincas. Para añadir un abrevadero, una manga, un cierre… toca el sitio en el mapa (o el botón «Nuevo punto» de abajo a la derecha). Rellena el tipo y el nombre y pulsa Guardar. Toca un punto del mapa para ver su ficha.'**
+  String get ayudaFincasB;
+
+  /// No description provided for @ayudaTareasT.
+  ///
+  /// In es, this message translates to:
+  /// **'Apuntar una tarea de mantenimiento'**
+  String get ayudaTareasT;
+
+  /// No description provided for @ayudaTareasB.
+  ///
+  /// In es, this message translates to:
+  /// **'Abre la ficha de un punto y pulsa «Nueva tarea». Pon qué hay que hacer, quién y para cuándo. En Fincas → Tareas ves todo lo pendiente. Con el botón de PDF sacas el parte.'**
+  String get ayudaTareasB;
+
+  /// No description provided for @ayudaProyectosT.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu proyecto de test y tus números'**
+  String get ayudaProyectosT;
+
+  /// No description provided for @ayudaProyectosB.
+  ///
+  /// In es, this message translates to:
+  /// **'En Proyectos, pulsa + para crear tu proyecto. Dentro, pulsa + y elige qué apuntar: producción, una venta (comercialización), una prueba de producto o un gasto/ingreso. Arriba verás solos tus números: ventas, gastos, balance y rentabilidad. Puedes mirarlos por trimestre con el filtro de arriba.'**
+  String get ayudaProyectosB;
+
+  /// No description provided for @ayudaInformesT.
+  ///
+  /// In es, this message translates to:
+  /// **'Sacar informes y enviarlos'**
+  String get ayudaInformesT;
+
+  /// No description provided for @ayudaInformesB.
+  ///
+  /// In es, this message translates to:
+  /// **'En tu proyecto, el botón de compartir (arriba) te deja sacar el informe en PDF, exportar a Excel (CSV) o «Enviar al coordinador». Para esto último, primero pon el correo del coordinador en Ajustes.'**
+  String get ayudaInformesB;
+
+  /// No description provided for @ayudaIdiomaDatosT.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma, fotos e internet'**
+  String get ayudaIdiomaDatosT;
+
+  /// No description provided for @ayudaIdiomaDatosB.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambia entre castellano y euskera en Ajustes. Las fotos se guardan en tu móvil. Todo funciona sin internet; solo la previsión del tiempo necesita conexión.'**
+  String get ayudaIdiomaDatosB;
+
+  /// No description provided for @ayudaPie.
+  ///
+  /// In es, this message translates to:
+  /// **'Si algo no queda claro, pregunta al coordinador del Espacio Test.'**
+  String get ayudaPie;
 }
 
 class _AppLocalizationsDelegate
