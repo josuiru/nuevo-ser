@@ -122,15 +122,29 @@ class _ChipIdioma extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChoiceChip(
-      selected: activo,
-      label: Text(etiqueta),
-      onSelected: (_) => alPulsar(),
-      selectedColor: colorMusgoZunbeltz,
-      backgroundColor: Colors.white.withValues(alpha: 0.12),
-      labelStyle: TextStyle(
-        color: activo ? colorMonteZunbeltz : Colors.white,
-        fontWeight: FontWeight.w600,
+    // Botón propio (no ChoiceChip) para controlar el contraste sobre el fondo
+    // oscuro del onboarding: activo = musgo + texto oscuro; inactivo =
+    // translúcido con borde y texto blancos.
+    return Material(
+      color: activo ? colorMusgoZunbeltz : Colors.white.withValues(alpha: 0.14),
+      shape: StadiumBorder(
+        side: BorderSide(
+          color: activo ? Colors.transparent : Colors.white70,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: alPulsar,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+          child: Text(
+            etiqueta,
+            style: TextStyle(
+              color: activo ? colorMonteZunbeltz : Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ),
     );
   }
