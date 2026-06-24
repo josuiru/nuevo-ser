@@ -75,24 +75,6 @@ class AppSoleraZunbeltz extends StatelessWidget {
             }
             return const Locale('es');
           },
-          // Mitigación del cierre del motor de Flutter en escritorio Linux al
-          // desmontar una pantalla con un campo de texto enfocado: quitamos el
-          // foco en cada toque. En móvil no se aplica (allí no ocurre y cerraría
-          // el teclado innecesariamente).
-          builder: (context, child) {
-            final contenido = child ?? const SizedBox.shrink();
-            if (!kIsWeb &&
-                (Platform.isLinux ||
-                    Platform.isWindows ||
-                    Platform.isMacOS)) {
-              return Listener(
-                onPointerDown: (_) =>
-                    FocusManager.instance.primaryFocus?.unfocus(),
-                child: contenido,
-              );
-            }
-            return contenido;
-          },
           home: const _Orquestador(),
         );
       },
