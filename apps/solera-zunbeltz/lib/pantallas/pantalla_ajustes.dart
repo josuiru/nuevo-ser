@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../datos/base_datos.dart';
 import '../estado/coordinador.dart';
 import '../estado/datos_notificador.dart';
+import '../servicios/exportador_espacio.dart';
 import '../estado/idioma_app.dart';
 import '../l10n/app_localizations.dart';
 import 'pantalla_acerca_espacio_test.dart';
@@ -35,6 +37,20 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   Future<void> _cambiarIdioma(String codigo) async {
     await elegirIdiomaZunbeltz(codigo);
     if (mounted) setState(() {});
+  }
+
+  Future<void> _exportarEspacio() async {
+    final ficheros = await exportarEspacioCsv();
+    if (!mounted) return;
+    try {
+      await Share.shareXFiles(ficheros.map((f) => XFile(f.path)).toList(),
+          subject: 'Espacio Solera Zunbeltz (CSV)');
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(ficheros.map((f) => f.path).join('\n'))));
+      }
+    }
   }
 
   Future<void> _cargarDemo() async {
@@ -136,6 +152,12 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
             leading: const Icon(Icons.info_outline),
             title: Text(textos.ajustesAcercaDe),
             subtitle: Text(textos.ajustesVersion(versionAppZunbeltz)),
+          ),
+          ListTile(
+            leading: const Icon(Icons.upload_file_outlined),
+            title: Text(textos.ajustesExportarEspacio),
+            trailing: const Icon(Icons.ios_share),
+            onTap: _exportarEspacio,
           ),
           if (kDebugMode)
             ListTile(

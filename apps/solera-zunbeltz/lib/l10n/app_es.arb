@@ -269,6 +269,7 @@
   "ayudaIdiomaDatosT": "Idioma, fotos e internet",
   "ayudaIdiomaDatosB": "Cambia entre castellano y euskera en Ajustes. Las fotos se guardan en tu móvil. Todo funciona sin internet; solo la previsión del tiempo necesita conexión.",
   "ayudaPie": "Si algo no queda claro, pregunta al coordinador del Espacio Test.",
+  "ajustesExportarEspacio": "Exportar espacio (CSV)",
   "ajustesDemo": "Cargar datos de demostración",
   "demoCargada": "Datos de demostración cargados",
   "demoYaHay": "Ya hay proyectos; bórralos para recargar la demostración."

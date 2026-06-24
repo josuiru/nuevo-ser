@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../modelos/apunte_economico.dart';
 import '../modelos/finca.dart';
+import 'espacio_generado.dart';
 import '../modelos/proyecto_test.dart';
 import '../modelos/punto_infraestructura.dart';
 import '../modelos/registro_actividad.dart';
@@ -698,6 +699,44 @@ class BaseDatosSoleraZunbeltz {
       superficieHa: 197,
       notas: 'Datos de ejemplo · superficie pública, centroide aproximado.',
     ));
+    return true;
+  }
+
+  /// Siembra el **espacio real** (fincas + puntos de infraestructura) desde
+  /// los CSV compilados (`espacio_generado.dart`) si la BD no tiene fincas.
+  /// Es el seed que se entrega de serie a los testadores. Devuelve true si
+  /// sembró. Cuando Zunbeltz aporte los puntos, se rellenan los CSV y se
+  /// recompila con `dart run tool/compilar_espacio.dart`.
+  Future<bool> sembrarEspacioRealSiVacia() async {
+    if (fincasEspacio.isEmpty) return false;
+    if ((await listarFincas()).isNotEmpty) return false;
+    final ahora = DateTime.now().millisecondsSinceEpoch;
+    final idPorFinca = <String, int>{};
+    for (final f in fincasEspacio) {
+      final id = await guardarFinca(Finca(
+        nombre: f.nombre,
+        latitud: f.latitud,
+        longitud: f.longitud,
+        superficieHa: f.superficieHa,
+        recintosSigpac: f.recintosSigpac,
+        notas: f.notas,
+      ));
+      idPorFinca[f.nombre] = id;
+    }
+    for (final p in puntosEspacio) {
+      final fincaId = idPorFinca[p.finca];
+      if (fincaId == null) continue;
+      await guardarPunto(PuntoInfraestructura(
+        fincaId: fincaId,
+        tipo: p.tipo,
+        nombre: p.nombre,
+        latitud: p.latitud,
+        longitud: p.longitud,
+        estado: p.estado,
+        notas: p.notas,
+        fechaCreacionMs: ahora,
+      ));
+    }
     return true;
   }
 

@@ -1424,6 +1424,12 @@ abstract class AppLocalizations {
   /// **'Si algo no queda claro, pregunta al coordinador del Espacio Test.'**
   String get ayudaPie;
 
+  /// No description provided for @ajustesExportarEspacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar espacio (CSV)'**
+  String get ajustesExportarEspacio;
+
   /// No description provided for @ajustesDemo.
   ///
   /// In es, this message translates to:

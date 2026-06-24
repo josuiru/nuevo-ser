@@ -67,7 +67,7 @@ class _PantallaFincasState extends State<PantallaFincas> {
     var fincas = <Finca>[];
     var puntos = <PuntoInfraestructura>[];
     try {
-      await _bd.sembrarFincasDemoSiVacia();
+      await _bd.sembrarEspacioRealSiVacia();
       fincas = await _bd.listarFincas();
       puntos = await _bd.listarPuntos();
     } catch (_) {

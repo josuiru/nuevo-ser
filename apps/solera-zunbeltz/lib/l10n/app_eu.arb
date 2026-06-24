@@ -248,6 +248,7 @@
   "ayudaIdiomaDatosT": "Hizkuntza, argazkiak eta internet",
   "ayudaIdiomaDatosB": "Aldatu gaztelania eta euskara artean Ezarpenetan. Argazkiak zure mugikorrean gordetzen dira. Dena internetik gabe funtzionatzen du; eguraldiaren iragarpenak bakarrik behar du konexioa.",
   "ayudaPie": "Zerbait argi ez badago, galdetu Saiakuntza Guneko koordinatzaileari.",
+  "ajustesExportarEspacio": "Esportatu gunea (CSV)",
   "ajustesDemo": "Kargatu demostrazio-datuak",
   "demoCargada": "Demostrazio-datuak kargatuta",
   "demoYaHay": "Jada badaude proiektuak; ezabatu itzazu demoa berriz kargatzeko."

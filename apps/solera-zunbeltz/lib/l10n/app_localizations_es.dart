@@ -713,6 +713,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Si algo no queda claro, pregunta al coordinador del Espacio Test.';
 
   @override
+  String get ajustesExportarEspacio => 'Exportar espacio (CSV)';
+
+  @override
   String get ajustesDemo => 'Cargar datos de demostración';
 
   @override

@@ -712,6 +712,9 @@ class AppLocalizationsEu extends AppLocalizations {
       'Zerbait argi ez badago, galdetu Saiakuntza Guneko koordinatzaileari.';
 
   @override
+  String get ajustesExportarEspacio => 'Esportatu gunea (CSV)';
+
+  @override
   String get ajustesDemo => 'Kargatu demostrazio-datuak';
 
   @override
