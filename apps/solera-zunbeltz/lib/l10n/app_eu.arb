@@ -222,5 +222,11 @@
   "apuIva": "BEZ",
   "comIva": "BEZ",
   "ivaNoFiscal": "Kalkulu orientagarria. Ez da zerga-aitorpenerako modulua: araubidea (REAGP / orokorra) zuen aholkulariak zehazten du.",
-  "detExportarCsv": "Esportatu CSV"
+  "detExportarCsv": "Esportatu CSV",
+  "enviarCoordinador": "Bidali koordinatzaileari",
+  "enviarCoordinadorTexto": "Zunbeltz Saiakuntza Guneko koordinatzailearentzako test-proiektuaren txostena.",
+  "enviarCoordinadorSinDestino": "Konfiguratu koordinatzailearen helbidea Ezarpenetan.",
+  "ajustesCoordinador": "Koordinatzailea (txostenak bidaltzea)",
+  "ajustesCoordinadorVacio": "Konfiguratu gabe",
+  "coordinadorCorreo": "Koordinatzailearen helbide elektronikoa"
 }

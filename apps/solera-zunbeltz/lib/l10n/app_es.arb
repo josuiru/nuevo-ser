@@ -243,5 +243,11 @@
   "apuIva": "IVA",
   "comIva": "IVA",
   "ivaNoFiscal": "Cálculo orientativo. No es un módulo de declaración fiscal: el régimen (REAGP / general) lo define vuestro asesor.",
-  "detExportarCsv": "Exportar CSV"
+  "detExportarCsv": "Exportar CSV",
+  "enviarCoordinador": "Enviar al coordinador",
+  "enviarCoordinadorTexto": "Informe del proyecto de test para el coordinador del Espacio Test Zunbeltz.",
+  "enviarCoordinadorSinDestino": "Configura el correo del coordinador en Ajustes.",
+  "ajustesCoordinador": "Coordinador (envío de informes)",
+  "ajustesCoordinadorVacio": "Sin configurar",
+  "coordinadorCorreo": "Correo del coordinador"
 }

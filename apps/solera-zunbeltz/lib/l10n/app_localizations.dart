@@ -1279,6 +1279,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Exportar CSV'**
   String get detExportarCsv;
+
+  /// No description provided for @enviarCoordinador.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar al coordinador'**
+  String get enviarCoordinador;
+
+  /// No description provided for @enviarCoordinadorTexto.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe del proyecto de test para el coordinador del Espacio Test Zunbeltz.'**
+  String get enviarCoordinadorTexto;
+
+  /// No description provided for @enviarCoordinadorSinDestino.
+  ///
+  /// In es, this message translates to:
+  /// **'Configura el correo del coordinador en Ajustes.'**
+  String get enviarCoordinadorSinDestino;
+
+  /// No description provided for @ajustesCoordinador.
+  ///
+  /// In es, this message translates to:
+  /// **'Coordinador (envío de informes)'**
+  String get ajustesCoordinador;
+
+  /// No description provided for @ajustesCoordinadorVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin configurar'**
+  String get ajustesCoordinadorVacio;
+
+  /// No description provided for @coordinadorCorreo.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo del coordinador'**
+  String get coordinadorCorreo;
 }
 
 class _AppLocalizationsDelegate

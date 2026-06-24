@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../branding.dart';
 import '../datos/base_datos.dart';
+import '../estado/coordinador.dart';
 import '../l10n/app_localizations.dart';
 import '../modelos/apunte_economico.dart';
 import '../modelos/constantes.dart';
@@ -207,6 +208,45 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
     }
   }
 
+  /// Genera el informe y lo comparte indicando el coordinador (opción B, sin
+  /// backend): el envío real lo hace la app de correo/mensajería que elija el
+  /// usuario; el correo del coordinador se sugiere en el cuerpo.
+  Future<void> _enviarCoordinador() async {
+    final textos = AppLocalizations.of(context);
+    final idioma = Localizations.localeOf(context).languageCode;
+    final correo = await Coordinador.cargarCorreo();
+    setState(() => _generando = true);
+    try {
+      final (ivaSoportado, ivaRepercutido) = _ivaTotales();
+      final fichero = await generarInformeProyectoPdf(
+        textos: textos,
+        idioma: idioma,
+        proyecto: widget.proyecto,
+        rentabilidad: _rent,
+        comercializacion: _ventas,
+        validaciones: _validaciones,
+        actividades: _produccion,
+        desgloseGastos: _desgloseGastos,
+        ivaSoportadoCentimos: ivaSoportado,
+        ivaRepercutidoCentimos: ivaRepercutido,
+      );
+      final asunto = 'Solera Zunbeltz · ${widget.proyecto.nombre}'
+          '${widget.proyecto.persona.isEmpty ? '' : ' (${widget.proyecto.persona})'}';
+      final texto = correo.isEmpty
+          ? textos.enviarCoordinadorTexto
+          : '${textos.enviarCoordinadorTexto}\n$correo';
+      await Share.shareXFiles([XFile(fichero.path)],
+          subject: asunto, text: texto);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(textos.enviarCoordinadorSinDestino)));
+      }
+    } finally {
+      if (mounted) setState(() => _generando = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textos = AppLocalizations.of(context);
@@ -249,20 +289,47 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
                     child: Text(textos.periodoTrimestreAnterior)),
               ],
             ),
-            IconButton(
-              tooltip: textos.detInformePdf,
+            PopupMenuButton<int>(
+              enabled: !_generando,
               icon: _generando
                   ? const SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Icon(Icons.picture_as_pdf_outlined),
-              onPressed: _generando ? null : _informe,
-            ),
-            IconButton(
-              tooltip: textos.detExportarCsv,
-              icon: const Icon(Icons.table_view_outlined),
-              onPressed: _exportarCsv,
+                  : const Icon(Icons.ios_share),
+              onSelected: (v) {
+                switch (v) {
+                  case 0:
+                    _informe();
+                  case 1:
+                    _exportarCsv();
+                  case 2:
+                    _enviarCoordinador();
+                }
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  value: 0,
+                  child: ListTile(
+                      leading: const Icon(Icons.picture_as_pdf_outlined),
+                      title: Text(textos.detInformePdf),
+                      contentPadding: EdgeInsets.zero),
+                ),
+                PopupMenuItem(
+                  value: 1,
+                  child: ListTile(
+                      leading: const Icon(Icons.table_view_outlined),
+                      title: Text(textos.detExportarCsv),
+                      contentPadding: EdgeInsets.zero),
+                ),
+                PopupMenuItem(
+                  value: 2,
+                  child: ListTile(
+                      leading: const Icon(Icons.outgoing_mail),
+                      title: Text(textos.enviarCoordinador),
+                      contentPadding: EdgeInsets.zero),
+                ),
+              ],
             ),
             IconButton(
               tooltip: textos.proyectoBorrar,

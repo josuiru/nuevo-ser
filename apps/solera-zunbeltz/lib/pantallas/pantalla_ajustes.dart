@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../estado/coordinador.dart';
 import '../estado/idioma_app.dart';
 import '../l10n/app_localizations.dart';
 import 'pantalla_acerca_espacio_test.dart';
@@ -17,9 +18,47 @@ class PantallaAjustes extends StatefulWidget {
 }
 
 class _PantallaAjustesState extends State<PantallaAjustes> {
+  String _coordinador = '';
+
+  @override
+  void initState() {
+    super.initState();
+    Coordinador.cargarCorreo().then((c) {
+      if (mounted) setState(() => _coordinador = c);
+    });
+  }
+
   Future<void> _cambiarIdioma(String codigo) async {
     await elegirIdiomaZunbeltz(codigo);
     if (mounted) setState(() {});
+  }
+
+  Future<void> _editarCoordinador() async {
+    final textos = AppLocalizations.of(context);
+    final controlador = TextEditingController(text: _coordinador);
+    final correo = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(textos.ajustesCoordinador),
+        content: TextField(
+          controller: controlador,
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(labelText: textos.coordinadorCorreo),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(textos.comunCancelar)),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, controlador.text.trim()),
+              child: Text(textos.comunGuardar)),
+        ],
+      ),
+    );
+    if (correo == null) return;
+    await Coordinador.guardarCorreo(correo);
+    if (mounted) setState(() => _coordinador = correo);
   }
 
   @override
@@ -51,6 +90,15 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
                 ],
               ),
             ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.outgoing_mail),
+            title: Text(textos.ajustesCoordinador),
+            subtitle: Text(
+                _coordinador.isEmpty ? textos.ajustesCoordinadorVacio : _coordinador),
+            trailing: const Icon(Icons.edit_outlined),
+            onTap: _editarCoordinador,
           ),
           const Divider(),
           ListTile(

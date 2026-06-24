@@ -627,4 +627,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get detExportarCsv => 'Exportar CSV';
+
+  @override
+  String get enviarCoordinador => 'Enviar al coordinador';
+
+  @override
+  String get enviarCoordinadorTexto =>
+      'Informe del proyecto de test para el coordinador del Espacio Test Zunbeltz.';
+
+  @override
+  String get enviarCoordinadorSinDestino =>
+      'Configura el correo del coordinador en Ajustes.';
+
+  @override
+  String get ajustesCoordinador => 'Coordinador (envío de informes)';
+
+  @override
+  String get ajustesCoordinadorVacio => 'Sin configurar';
+
+  @override
+  String get coordinadorCorreo => 'Correo del coordinador';
 }

@@ -627,4 +627,24 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get detExportarCsv => 'Esportatu CSV';
+
+  @override
+  String get enviarCoordinador => 'Bidali koordinatzaileari';
+
+  @override
+  String get enviarCoordinadorTexto =>
+      'Zunbeltz Saiakuntza Guneko koordinatzailearentzako test-proiektuaren txostena.';
+
+  @override
+  String get enviarCoordinadorSinDestino =>
+      'Konfiguratu koordinatzailearen helbidea Ezarpenetan.';
+
+  @override
+  String get ajustesCoordinador => 'Koordinatzailea (txostenak bidaltzea)';
+
+  @override
+  String get ajustesCoordinadorVacio => 'Konfiguratu gabe';
+
+  @override
+  String get coordinadorCorreo => 'Koordinatzailearen helbide elektronikoa';
 }
