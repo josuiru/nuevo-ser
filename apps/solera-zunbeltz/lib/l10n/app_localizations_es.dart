@@ -640,6 +640,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Configura el correo del coordinador en Ajustes.';
 
   @override
+  String get enviarCoordinadorAdjuntar =>
+      'Adjunta el informe (ya generado en):';
+
+  @override
   String get ajustesCoordinador => 'Coordinador (envío de informes)';
 
   @override

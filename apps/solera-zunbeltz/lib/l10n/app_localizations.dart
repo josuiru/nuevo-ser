@@ -1298,6 +1298,12 @@ abstract class AppLocalizations {
   /// **'Configura el correo del coordinador en Ajustes.'**
   String get enviarCoordinadorSinDestino;
 
+  /// No description provided for @enviarCoordinadorAdjuntar.
+  ///
+  /// In es, this message translates to:
+  /// **'Adjunta el informe (ya generado en):'**
+  String get enviarCoordinadorAdjuntar;
+
   /// No description provided for @ajustesCoordinador.
   ///
   /// In es, this message translates to:

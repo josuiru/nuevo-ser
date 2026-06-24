@@ -640,6 +640,9 @@ class AppLocalizationsEu extends AppLocalizations {
       'Konfiguratu koordinatzailearen helbidea Ezarpenetan.';
 
   @override
+  String get enviarCoordinadorAdjuntar => 'Erantsi txostena (hemen sortuta):';
+
+  @override
   String get ajustesCoordinador => 'Koordinatzailea (txostenak bidaltzea)';
 
   @override

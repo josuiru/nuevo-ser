@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../branding.dart';
 import '../datos/base_datos.dart';
@@ -215,6 +216,12 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
     final textos = AppLocalizations.of(context);
     final idioma = Localizations.localeOf(context).languageCode;
     final correo = await Coordinador.cargarCorreo();
+    if (!mounted) return;
+    if (correo.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(textos.enviarCoordinadorSinDestino)));
+      return;
+    }
     setState(() => _generando = true);
     try {
       final (ivaSoportado, ivaRepercutido) = _ivaTotales();
@@ -232,15 +239,27 @@ class _ProyectoDetalleState extends State<ProyectoDetalle> {
       );
       final asunto = 'Solera Zunbeltz · ${widget.proyecto.nombre}'
           '${widget.proyecto.persona.isEmpty ? '' : ' (${widget.proyecto.persona})'}';
-      final texto = correo.isEmpty
-          ? textos.enviarCoordinadorTexto
-          : '${textos.enviarCoordinadorTexto}\n$correo';
-      await Share.shareXFiles([XFile(fichero.path)],
-          subject: asunto, text: texto);
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(textos.enviarCoordinadorSinDestino)));
+      try {
+        // Móvil: hoja de compartir con el PDF adjunto (eliges tu correo).
+        await Share.shareXFiles([XFile(fichero.path)],
+            subject: asunto, text: '${textos.enviarCoordinadorTexto}\n$correo');
+      } catch (_) {
+        // Escritorio (sin hoja de compartir): abrir el cliente de correo ya
+        // dirigido al coordinador. mailto no admite adjuntos, así que la ruta
+        // del PDF va en el cuerpo para adjuntarlo a mano.
+        final uri = Uri(
+          scheme: 'mailto',
+          path: correo,
+          query: 'subject=${Uri.encodeComponent(asunto)}'
+              '&body=${Uri.encodeComponent('${textos.enviarCoordinadorTexto}\n\n${textos.enviarCoordinadorAdjuntar}\n${fichero.path}')}',
+        );
+        try {
+          await launchUrl(uri);
+        } catch (_) {}
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(fichero.path)));
+        }
       }
     } finally {
       if (mounted) setState(() => _generando = false);

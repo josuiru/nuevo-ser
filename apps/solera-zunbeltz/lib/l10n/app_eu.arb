@@ -226,6 +226,7 @@
   "enviarCoordinador": "Bidali koordinatzaileari",
   "enviarCoordinadorTexto": "Zunbeltz Saiakuntza Guneko koordinatzailearentzako test-proiektuaren txostena.",
   "enviarCoordinadorSinDestino": "Konfiguratu koordinatzailearen helbidea Ezarpenetan.",
+  "enviarCoordinadorAdjuntar": "Erantsi txostena (hemen sortuta):",
   "ajustesCoordinador": "Koordinatzailea (txostenak bidaltzea)",
   "ajustesCoordinadorVacio": "Konfiguratu gabe",
   "coordinadorCorreo": "Koordinatzailearen helbide elektronikoa",

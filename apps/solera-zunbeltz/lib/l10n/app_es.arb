@@ -247,6 +247,7 @@
   "enviarCoordinador": "Enviar al coordinador",
   "enviarCoordinadorTexto": "Informe del proyecto de test para el coordinador del Espacio Test Zunbeltz.",
   "enviarCoordinadorSinDestino": "Configura el correo del coordinador en Ajustes.",
+  "enviarCoordinadorAdjuntar": "Adjunta el informe (ya generado en):",
   "ajustesCoordinador": "Coordinador (envío de informes)",
   "ajustesCoordinadorVacio": "Sin configurar",
   "coordinadorCorreo": "Correo del coordinador",
