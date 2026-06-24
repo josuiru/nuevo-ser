@@ -267,5 +267,8 @@
   "ayudaInformesB": "En tu proyecto, el botón de compartir (arriba) te deja sacar el informe en PDF, exportar a Excel (CSV) o «Enviar al coordinador». Para esto último, primero pon el correo del coordinador en Ajustes.",
   "ayudaIdiomaDatosT": "Idioma, fotos e internet",
   "ayudaIdiomaDatosB": "Cambia entre castellano y euskera en Ajustes. Las fotos se guardan en tu móvil. Todo funciona sin internet; solo la previsión del tiempo necesita conexión.",
-  "ayudaPie": "Si algo no queda claro, pregunta al coordinador del Espacio Test."
+  "ayudaPie": "Si algo no queda claro, pregunta al coordinador del Espacio Test.",
+  "ajustesDemo": "Cargar datos de demostración",
+  "demoCargada": "Datos de demostración cargados",
+  "demoYaHay": "Ya hay proyectos; bórralos para recargar la demostración."
 }

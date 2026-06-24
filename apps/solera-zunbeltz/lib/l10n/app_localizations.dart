@@ -1417,6 +1417,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Si algo no queda claro, pregunta al coordinador del Espacio Test.'**
   String get ayudaPie;
+
+  /// No description provided for @ajustesDemo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargar datos de demostración'**
+  String get ajustesDemo;
+
+  /// No description provided for @demoCargada.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos de demostración cargados'**
+  String get demoCargada;
+
+  /// No description provided for @demoYaHay.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya hay proyectos; bórralos para recargar la demostración.'**
+  String get demoYaHay;
 }
 
 class _AppLocalizationsDelegate

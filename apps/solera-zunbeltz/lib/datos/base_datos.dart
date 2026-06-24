@@ -700,6 +700,87 @@ class BaseDatosSoleraZunbeltz {
     ));
     return true;
   }
+
+  /// Carga un juego de **datos de demostración** (dos proyectos de test con
+  /// producción, comercialización, validación de producto e ingresos/gastos
+  /// con categorías e IVA) para ver la app con datos sin teclearlos. No hace
+  /// nada si ya hay proyectos. Devuelve true si sembró.
+  Future<bool> sembrarDemostracionSiVacia() async {
+    if ((await listarProyectos()).isNotEmpty) return false;
+    await sembrarFincasDemoSiVacia();
+    final fincas = await listarFincas();
+    final fincaId = fincas.isEmpty ? 0 : (fincas.first.id ?? 0);
+    final ahora = DateTime.now();
+    int hace(int dias) =>
+        ahora.subtract(Duration(days: dias)).millisecondsSinceEpoch;
+    final creado = ahora.millisecondsSinceEpoch;
+
+    // ── Proyecto 1: quesería (rentable) ──
+    final p1 = await guardarProyecto(ProyectoTest(
+      nombre: 'Quesería de prueba',
+      persona: 'Maite Etxeberria',
+      actividad: 'Ovino de leche · quesería',
+      fincaId: fincaId,
+      fechaInicioMs: hace(150),
+      fechaCreacionMs: creado,
+    ));
+    for (final r in [
+      RegistroActividad(fincaId: fincaId, proyectoId: p1, tipo: 'alimentacion', cantidad: 1200, fechaMs: hace(120), lote: 'Rebaño A'),
+      RegistroActividad(fincaId: fincaId, proyectoId: p1, tipo: 'paricion', cantidad: 18, fechaMs: hace(100)),
+      RegistroActividad(fincaId: fincaId, proyectoId: p1, tipo: 'producto', cantidad: 320, fechaMs: hace(40)),
+    ]) {
+      await guardarRegistro(r);
+    }
+    for (final v in [
+      RegistroComercializacion(proyectoId: p1, fechaMs: hace(60), producto: 'Queso curado', canal: 'directa', cantidad: 40, unidad: 'uds', precioUnitarioCentimos: 1200, ingresoCentimos: 48000, ivaPorcentaje: 10),
+      RegistroComercializacion(proyectoId: p1, fechaMs: hace(30), producto: 'Queso curado', canal: 'mercado', cantidad: 55, unidad: 'uds', precioUnitarioCentimos: 1300, ingresoCentimos: 71500, ivaPorcentaje: 10),
+      RegistroComercializacion(proyectoId: p1, fechaMs: hace(10), producto: 'Requesón', canal: 'tienda', cantidad: 30, unidad: 'uds', precioUnitarioCentimos: 450, ingresoCentimos: 13500, ivaPorcentaje: 4),
+    ]) {
+      await guardarComercializacion(v);
+    }
+    for (final val in [
+      ValidacionProducto(proyectoId: p1, fechaMs: hace(70), descripcion: 'Curación a 60 días', resultado: 'validado', valoracion: 4),
+      ValidacionProducto(proyectoId: p1, fechaMs: hace(20), descripcion: 'Formato cuña 250 g', resultado: 'ajustar', valoracion: 3),
+    ]) {
+      await guardarValidacion(val);
+    }
+    for (final g in [
+      ApunteEconomico(fincaId: fincaId, proyectoId: p1, tipo: 'gasto', categoria: 'alimentacion', concepto: 'Pienso y forraje', importeCentimos: 42000, ivaPorcentaje: 10, fechaMs: hace(115)),
+      ApunteEconomico(fincaId: fincaId, proyectoId: p1, tipo: 'gasto', categoria: 'sanidad', concepto: 'Veterinario', importeCentimos: 9000, ivaPorcentaje: 21, fechaMs: hace(80)),
+      ApunteEconomico(fincaId: fincaId, proyectoId: p1, tipo: 'gasto', categoria: 'insumos', concepto: 'Cuajo y sal', importeCentimos: 6000, ivaPorcentaje: 21, fechaMs: hace(50)),
+      ApunteEconomico(fincaId: fincaId, proyectoId: p1, tipo: 'gasto', categoria: 'mano_obra', concepto: 'Jornales', importeCentimos: 30000, fechaMs: hace(25)),
+      ApunteEconomico(fincaId: fincaId, proyectoId: p1, tipo: 'ingreso', categoria: 'ayuda', concepto: 'Prima PAC / ecorégimen', importeCentimos: 28000, fechaMs: hace(90)),
+    ]) {
+      await guardarApunte(g);
+    }
+
+    // ── Proyecto 2: huerta (más ajustado) ──
+    final p2 = await guardarProyecto(ProyectoTest(
+      nombre: 'Huerta de prueba',
+      persona: 'Iñaki Larrea',
+      actividad: 'Horticultura ecológica',
+      fincaId: fincaId,
+      fechaInicioMs: hace(90),
+      fechaCreacionMs: creado,
+    ));
+    await guardarRegistro(RegistroActividad(fincaId: fincaId, proyectoId: p2, tipo: 'producto', cantidad: 180, fechaMs: hace(20)));
+    for (final v in [
+      RegistroComercializacion(proyectoId: p2, fechaMs: hace(35), producto: 'Cesta de verdura', canal: 'directa', cantidad: 25, unidad: 'uds', precioUnitarioCentimos: 1500, ingresoCentimos: 37500, ivaPorcentaje: 4),
+      RegistroComercializacion(proyectoId: p2, fechaMs: hace(7), producto: 'Tomate', canal: 'restauracion', cantidad: 60, unidad: 'kg', precioUnitarioCentimos: 250, ingresoCentimos: 15000, ivaPorcentaje: 4),
+    ]) {
+      await guardarComercializacion(v);
+    }
+    await guardarValidacion(ValidacionProducto(proyectoId: p2, fechaMs: hace(15), descripcion: 'Variedad de tomate local', resultado: 'validado', valoracion: 5));
+    for (final g in [
+      ApunteEconomico(fincaId: fincaId, proyectoId: p2, tipo: 'gasto', categoria: 'insumos', concepto: 'Semilla y plantel', importeCentimos: 12000, ivaPorcentaje: 10, fechaMs: hace(85)),
+      ApunteEconomico(fincaId: fincaId, proyectoId: p2, tipo: 'gasto', categoria: 'maquinaria', concepto: 'Gasoil motoazada', importeCentimos: 8000, ivaPorcentaje: 21, fechaMs: hace(40)),
+      ApunteEconomico(fincaId: fincaId, proyectoId: p2, tipo: 'gasto', categoria: 'alquiler', concepto: 'Cesión de parcela', importeCentimos: 24000, fechaMs: hace(60)),
+    ]) {
+      await guardarApunte(g);
+    }
+
+    return true;
+  }
 }
 
 /// Cláusula WHERE construida (texto + argumentos) o `null` si no hay filtros.

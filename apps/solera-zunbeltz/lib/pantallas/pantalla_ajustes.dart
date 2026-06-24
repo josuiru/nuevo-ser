@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
+import '../datos/base_datos.dart';
 import '../estado/coordinador.dart';
 import '../estado/idioma_app.dart';
 import '../l10n/app_localizations.dart';
@@ -32,6 +34,14 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   Future<void> _cambiarIdioma(String codigo) async {
     await elegirIdiomaZunbeltz(codigo);
     if (mounted) setState(() {});
+  }
+
+  Future<void> _cargarDemo() async {
+    final textos = AppLocalizations.of(context);
+    final sembrado = await BaseDatosSoleraZunbeltz().sembrarDemostracionSiVacia();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(sembrado ? textos.demoCargada : textos.demoYaHay)));
   }
 
   Future<void> _editarCoordinador() async {
@@ -125,6 +135,13 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
             title: Text(textos.ajustesAcercaDe),
             subtitle: Text(textos.ajustesVersion(versionAppZunbeltz)),
           ),
+          if (kDebugMode)
+            ListTile(
+              leading: const Icon(Icons.science_outlined),
+              title: Text(textos.ajustesDemo),
+              trailing: const Icon(Icons.download),
+              onTap: _cargarDemo,
+            ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             child: Text(

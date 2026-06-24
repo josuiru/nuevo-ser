@@ -707,4 +707,14 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get ayudaPie =>
       'Zerbait argi ez badago, galdetu Saiakuntza Guneko koordinatzaileari.';
+
+  @override
+  String get ajustesDemo => 'Kargatu demostrazio-datuak';
+
+  @override
+  String get demoCargada => 'Demostrazio-datuak kargatuta';
+
+  @override
+  String get demoYaHay =>
+      'Jada badaude proiektuak; ezabatu itzazu demoa berriz kargatzeko.';
 }

@@ -707,4 +707,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ayudaPie =>
       'Si algo no queda claro, pregunta al coordinador del Espacio Test.';
+
+  @override
+  String get ajustesDemo => 'Cargar datos de demostración';
+
+  @override
+  String get demoCargada => 'Datos de demostración cargados';
+
+  @override
+  String get demoYaHay =>
+      'Ya hay proyectos; bórralos para recargar la demostración.';
 }
