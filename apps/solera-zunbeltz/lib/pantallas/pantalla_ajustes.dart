@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../datos/base_datos.dart';
 import '../estado/coordinador.dart';
+import '../estado/datos_notificador.dart';
 import '../estado/idioma_app.dart';
 import '../l10n/app_localizations.dart';
 import 'pantalla_acerca_espacio_test.dart';
@@ -39,6 +40,7 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
   Future<void> _cargarDemo() async {
     final textos = AppLocalizations.of(context);
     final sembrado = await BaseDatosSoleraZunbeltz().sembrarDemostracionSiVacia();
+    if (sembrado) avisarCambioDatos();
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(sembrado ? textos.demoCargada : textos.demoYaHay)));

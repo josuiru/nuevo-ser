@@ -3,6 +3,7 @@ import 'package:printing/printing.dart';
 
 import '../branding.dart';
 import '../datos/base_datos.dart';
+import '../estado/datos_notificador.dart';
 import '../l10n/app_localizations.dart';
 import '../modelos/finca.dart';
 import '../modelos/indicadores_seguimiento.dart';
@@ -34,7 +35,16 @@ class _PantallaProyectosState extends State<PantallaProyectos> {
   void initState() {
     super.initState();
     _cargar();
+    notificadorDatos.addListener(_recargar);
   }
+
+  @override
+  void dispose() {
+    notificadorDatos.removeListener(_recargar);
+    super.dispose();
+  }
+
+  void _recargar() => _cargar();
 
   Future<void> _cargar() async {
     var proyectos = <ProyectoTest>[];

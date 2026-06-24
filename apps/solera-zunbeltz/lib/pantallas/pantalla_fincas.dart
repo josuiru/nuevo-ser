@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../branding.dart';
 import '../datos/base_datos.dart';
+import '../estado/datos_notificador.dart';
 import '../l10n/app_localizations.dart';
 import '../modelos/finca.dart';
 import '../modelos/punto_infraestructura.dart';
@@ -51,7 +52,16 @@ class _PantallaFincasState extends State<PantallaFincas> {
     super.initState();
     _cargar();
     _resolverCentroInicial();
+    notificadorDatos.addListener(_recargar);
   }
+
+  @override
+  void dispose() {
+    notificadorDatos.removeListener(_recargar);
+    super.dispose();
+  }
+
+  void _recargar() => _cargar();
 
   Future<void> _cargar() async {
     var fincas = <Finca>[];

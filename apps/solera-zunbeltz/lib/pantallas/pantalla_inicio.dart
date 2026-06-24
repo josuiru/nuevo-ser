@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../datos/base_datos.dart';
+import '../estado/datos_notificador.dart';
 import '../l10n/app_localizations.dart';
 import 'pantalla_ayuda.dart';
 import 'tablero_tareas.dart';
@@ -23,7 +24,16 @@ class _PantallaInicioState extends State<PantallaInicio> {
   void initState() {
     super.initState();
     _cargar();
+    notificadorDatos.addListener(_recargar);
   }
+
+  @override
+  void dispose() {
+    notificadorDatos.removeListener(_recargar);
+    super.dispose();
+  }
+
+  void _recargar() => _cargar();
 
   Future<void> _cargar() async {
     var abiertas = 0;
