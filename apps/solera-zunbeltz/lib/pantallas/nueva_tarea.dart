@@ -62,6 +62,7 @@ class _NuevaTareaState extends State<NuevaTarea> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final textos = AppLocalizations.of(context);
     if (_titulo.text.trim().isEmpty) {
       ScaffoldMessenger.of(context)

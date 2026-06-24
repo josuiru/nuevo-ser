@@ -54,6 +54,7 @@ class _NuevaComercializacionState extends State<NuevaComercializacion> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final textos = AppLocalizations.of(context);
     final cantidad = _num(_cantidad);
     final precioCent = (_num(_precio) * 100).round();

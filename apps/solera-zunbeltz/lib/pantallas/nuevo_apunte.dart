@@ -61,6 +61,7 @@ class _NuevoApunteState extends State<NuevoApunte> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final textos = AppLocalizations.of(context);
     final euros = double.tryParse(_importe.text.trim().replaceAll(',', '.'));
     if (euros == null || euros <= 0) {

@@ -52,6 +52,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final textos = AppLocalizations.of(context);
     final cantidad = double.tryParse(_cantidad.text.trim().replaceAll(',', '.'));
     if (cantidad == null || cantidad <= 0) {

@@ -47,6 +47,7 @@ class _NuevoProyectoState extends State<NuevoProyecto> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final textos = AppLocalizations.of(context);
     if (_nombre.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

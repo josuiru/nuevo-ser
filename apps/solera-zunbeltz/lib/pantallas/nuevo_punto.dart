@@ -62,6 +62,7 @@ class _NuevoPuntoState extends State<NuevoPunto> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final fincaId = _fincaId;
     if (fincaId == null) return;
     final punto = PuntoInfraestructura(

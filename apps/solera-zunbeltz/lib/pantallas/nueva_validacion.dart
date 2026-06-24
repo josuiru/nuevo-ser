@@ -44,6 +44,7 @@ class _NuevaValidacionState extends State<NuevaValidacion> {
   }
 
   Future<void> _guardar() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final textos = AppLocalizations.of(context);
     await _bd.guardarValidacion(ValidacionProducto(
       proyectoId: widget.proyectoId,
