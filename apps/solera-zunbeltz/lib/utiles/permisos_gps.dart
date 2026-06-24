@@ -5,15 +5,21 @@ import 'package:geolocator/geolocator.dart';
 /// resto de la suite Solera: si el servicio está apagado o el permiso
 /// denegado, el caller avisa y deja rellenar las coordenadas a mano.
 Future<bool> asegurarPermisoUbicacion() async {
-  final servicioActivo = await Geolocator.isLocationServiceEnabled();
-  if (!servicioActivo) return false;
-  var permiso = await Geolocator.checkPermission();
-  if (permiso == LocationPermission.denied) {
-    permiso = await Geolocator.requestPermission();
-  }
-  if (permiso == LocationPermission.denied ||
-      permiso == LocationPermission.deniedForever) {
+  try {
+    final servicioActivo = await Geolocator.isLocationServiceEnabled();
+    if (!servicioActivo) return false;
+    var permiso = await Geolocator.checkPermission();
+    if (permiso == LocationPermission.denied) {
+      permiso = await Geolocator.requestPermission();
+    }
+    if (permiso == LocationPermission.denied ||
+        permiso == LocationPermission.deniedForever) {
+      return false;
+    }
+    return true;
+  } catch (_) {
+    // En plataformas sin geolocator (p. ej. escritorio Linux) no hay GPS:
+    // devolvemos false en vez de lanzar una excepción sin capturar.
     return false;
   }
-  return true;
 }
